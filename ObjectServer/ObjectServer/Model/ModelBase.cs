@@ -66,7 +66,13 @@ namespace ObjectServer
         }
 
         [ServiceMethod]
-        public Dictionary<long, Dictionary<string, object>> Read(ISession session, IEnumerable<string> fields, IEnumerable<long> ids)
+        public virtual long[] Search(ISession session, string exp)
+        {
+            throw new NotImplementedException();
+        }
+
+        [ServiceMethod]
+        public virtual Dictionary<long, Dictionary<string, object>> Read(ISession session, IEnumerable<string> fields, IEnumerable<long> ids)
         {
             var allFields = new List<string>();
             allFields.Add("id");
@@ -99,7 +105,7 @@ namespace ObjectServer
         }
 
         [ServiceMethod]
-        public void Create(ISession session, Dictionary<string, object> values)
+        public virtual void Create(ISession session, Dictionary<string, object> values)
         {
             var sql = string.Format(
                 "INSERT INTO \"{0}\" ({1}) VALUES ({2});",
@@ -120,7 +126,7 @@ namespace ObjectServer
         }
 
         [ServiceMethod]
-        public void Write(ISession session, long id, Dictionary<string, object> values)
+        public virtual void Write(ISession session, long id, Dictionary<string, object> values)
         {
             using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
             {
@@ -130,7 +136,7 @@ namespace ObjectServer
 
 
         [ServiceMethod]
-        public void Delete(ISession session, IEnumerable<long> ids)
+        public virtual void Delete(ISession session, IEnumerable<long> ids)
         {
             var sql = string.Format(
                 "DELETE FROM \"{0}\" ({1}) WHERE \"id\" in ({2});",

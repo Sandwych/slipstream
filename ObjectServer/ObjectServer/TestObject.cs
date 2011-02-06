@@ -20,7 +20,7 @@ namespace ObjectServer
             this.TableName = "test_test_object";
         }
 
-
+        [ServiceMethod]
         public int GetSum(IDbConnection conn)        
         {
             return 1 + 1;
