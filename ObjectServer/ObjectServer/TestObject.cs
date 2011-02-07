@@ -5,9 +5,7 @@ using System.Text;
 using System.Data;
 using System.Data.Common;
 
-
-
-namespace ObjectServer
+namespace ObjectServer.Model
 {
     [ModelObject]
     public class TestObject : ModelBase

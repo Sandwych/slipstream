@@ -10,7 +10,7 @@ using NpgsqlTypes;
 using ObjectServer.Utility;
 
 
-namespace ObjectServer
+namespace ObjectServer.Model
 {
     [ModelObject]
     public class Model : ModelBase

@@ -15,7 +15,7 @@ namespace ObjectServer
             TcpChannel chan = new TcpChannel(5000);
             ChannelServices.RegisterChannel(chan, false);
             RemotingConfiguration.RegisterWellKnownServiceType
-                (typeof(ObjectProxy), "ObjectProxy", WellKnownObjectMode.SingleCall);
+                (typeof(ObjectProxy), "ObjectProxy", WellKnownObjectMode.Singleton);
             System.Console.WriteLine("Hit <enter> to exit...");
             System.Console.ReadLine();
 

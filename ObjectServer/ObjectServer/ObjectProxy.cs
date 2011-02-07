@@ -12,27 +12,21 @@ namespace ObjectServer
 
         public object Execute(string objectName, string name, object[] args)
         {
-            string connectionString =
-                "Server=localhost;" +
-                "Database=objectserver;" +
-                "Encoding=UNICODE;" +
-                "User ID=postgres;" +
-                "Password=postgres;";
-            using (var conn = new NpgsqlConnection(connectionString))
+            using (var db = new Database("objectserver"))
             {
-                conn.Open();
-                var session = new Session(conn);
+                db.Open();
+                var session = new Session(db.Connection);
 
-                var model = (ModelBase)ObjectPool.Instance.LookupObject(objectName);
-                var method = model.GetServiceMethod(name);
+                var obj = ObjectPool.Instance.LookupObject(objectName);
+                var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[args.Length + 1];
                 internalArgs[0] = session;
                 args.CopyTo(internalArgs, 1);
 
-                NpgsqlTransaction tx = conn.BeginTransaction();
+                var tx = session.Connection.BeginTransaction();
                 try
                 {
-                    var result = method.Invoke(model, internalArgs);
+                    var result = method.Invoke(obj, internalArgs);
                     tx.Commit();
                     return result;
                 }

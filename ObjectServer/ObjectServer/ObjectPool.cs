@@ -27,7 +27,7 @@ namespace ObjectServer
                 var assemblies = t.GetCustomAttributes(typeof(ModelObjectAttribute), false);
                 if (assemblies.Length > 0)
                 {
-                    var modelObj = (ModelBase)Activator.CreateInstance(t);
+                    var modelObj = (IServiceObject)Activator.CreateInstance(t);
                     this.RegisterModel(modelObj.Name, modelObj);
                 }
             }

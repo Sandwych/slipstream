@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Data;
@@ -35,16 +36,17 @@ namespace ObjectServer.Test
             {
                 { "name", "Oh my new record!" },
             };
-            proxy.Execute(modelName, "Create", new object[] { values });
+            var id = (long)proxy.Execute(modelName, "Create", new object[] { values });
+            Console.WriteLine("id=[{0}]", id);
 
-            var ids = new long[] { 1, 2, 17,18 };
+            var ids = new long[] { 1, 2, 17, 18 };
             var fields = new string[] { "name" };
             var args = new object[] { fields, ids };
-            var dt = (Dictionary<long, Dictionary<string, object>>)proxy.Execute(modelName, "Read", args);
+            var dt = (Hashtable[])proxy.Execute(modelName, "Read", args);
 
-            foreach (KeyValuePair<long, Dictionary<string, object>> pair in dt)
+            foreach (Hashtable row in dt)
             {
-                Console.WriteLine("resule: id=[{0}], name=[{1}]", pair.Value["id"], pair.Value["name"]);
+                Console.WriteLine("resule: id=[{0}], name=[{1}]", row["id"], row["name"]);
             }
 
             Console.ReadLine();

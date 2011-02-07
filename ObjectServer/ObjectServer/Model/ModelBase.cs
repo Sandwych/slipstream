@@ -1,19 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Data;
 using System.Reflection;
+
+using log4net;
 using Npgsql;
 using NpgsqlTypes;
 
+using ObjectServer.Backend;
 using ObjectServer.Utility;
 
-namespace ObjectServer
+namespace ObjectServer.Model
 {
     public abstract class ModelBase : IServiceObject
     {
+        protected static readonly ILog Log = LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+
+        private string tableName = null;
+
         private Dictionary<string, MethodInfo> serviceMethods =
             new Dictionary<string, MethodInfo>();
 
@@ -23,7 +32,19 @@ namespace ObjectServer
         public bool CanDelete { get; protected set; }
 
         public string Name { get; protected set; }
-        public string TableName { get; protected set; }
+        public string TableName
+        {
+            get
+            {
+                return this.tableName;
+            }
+            protected set
+            {
+                this.tableName = value;
+                this.SequenceName = value + "_id_seq";
+            }
+        }
+        public string SequenceName { get; protected set; }
 
         protected ModelBase()
         {
@@ -36,6 +57,13 @@ namespace ObjectServer
             this.TableName = null;
 
             this.RegisterAllServiceMethods();
+        }
+
+        /// <summary>
+        /// 初始化数据库信息
+        /// </summary>
+        internal void Initialize()
+        {
         }
 
         private void RegisterAllServiceMethods()
@@ -72,7 +100,7 @@ namespace ObjectServer
         }
 
         [ServiceMethod]
-        public virtual Dictionary<long, Dictionary<string, object>> Read(ISession session, IEnumerable<string> fields, IEnumerable<long> ids)
+        public virtual Hashtable[] Read(ISession session, IEnumerable<string> fields, IEnumerable<long> ids)
         {
             var allFields = new List<string>();
             allFields.Add("id");
@@ -83,35 +111,48 @@ namespace ObjectServer
                 this.TableName,
                 ids.ToCommaList());
 
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(sql);
+            }
+
             using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
             {
                 cmd.CommandText = sql;
                 using (IDataReader reader = cmd.ExecuteReader())
                 {
-                    var result = new Dictionary<long, Dictionary<string, object>>();
+                    var result = new List<Hashtable>();
                     while (reader.Read())
                     {
-                        var rec = new Dictionary<string, object>();
-                        var id = reader.GetInt64(reader.GetOrdinal("id"));
+                        var rec = new Hashtable(reader.FieldCount);
                         foreach (var field in allFields)
                         {
                             rec.Add(field, reader.GetValue(reader.GetOrdinal(field)));
                         }
-                        result.Add(id, rec);
+                        result.Add(rec);
                     }
-                    return result;
+                    return result.ToArray();
                 }
             }
         }
 
         [ServiceMethod]
-        public virtual void Create(ISession session, Dictionary<string, object> values)
+        public virtual long Create(ISession session, IDictionary<string, object> values)
         {
+            //获取下一个 SEQ id，这里可能要移到 backend 里，利于跨数据库
+            var serial = NextSerial(session.Connection);
+
             var sql = string.Format(
-                "INSERT INTO \"{0}\" ({1}) VALUES ({2});",
-                this.TableName,
-                values.Keys.ToSqlColumns(),
-                values.Keys.ToSqlParameters());
+              "INSERT INTO \"{0}\" (id, {1}) VALUES ({2}, {3});",
+              this.TableName,
+              values.Keys.ToSqlColumns(),
+              serial,
+              values.Keys.ToSqlParameters());
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(sql);
+            }
 
             using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
             {
@@ -121,12 +162,32 @@ namespace ObjectServer
                     cmd.Parameters.AddWithValue(pair.Key, pair.Value);
                 }
 
-                cmd.ExecuteNonQuery();
+                var rows = cmd.ExecuteNonQuery();
+                if (rows != 1)
+                {
+                    Log.ErrorFormat("Failed to insert row, SQL: {0}", sql);
+                    throw new DataException();
+                }
             }
+
+            return serial;
+        }
+
+        private long NextSerial(IDbConnection conn)
+        {
+            var seqSql = string.Format("SELECT nextval('{0}');",
+                this.SequenceName);
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(seqSql);
+            }
+            var serial = (long)conn.ExecuteScalar(seqSql);
+            return serial;
         }
 
         [ServiceMethod]
-        public virtual void Write(ISession session, long id, Dictionary<string, object> values)
+        public virtual void Write(ISession session, long id, IDictionary<string, object> values)
         {
             using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
             {
@@ -141,6 +202,11 @@ namespace ObjectServer
             var sql = string.Format(
                 "DELETE FROM \"{0}\" ({1}) WHERE \"id\" in ({2});",
                 this.TableName, ids.ToCommaList());
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(sql);
+            }
 
             using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
             {

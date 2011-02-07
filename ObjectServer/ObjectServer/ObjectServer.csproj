@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\npgsql\Mono.Security.dll</HintPath>
@@ -61,12 +65,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backend\Database.cs" />
+    <Compile Include="Backend\DataExtensions.cs" />
     <Compile Include="IServiceObject.cs" />
+    <Compile Include="Model\FieldBase.cs" />
     <Compile Include="Model\ModelObjectAttribute.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="ObjectProxy.cs" />
     <Compile Include="RemotingServer.cs" />
+    <Compile Include="Resources\User.cs" />
     <Compile Include="TestObject.cs" />
     <Compile Include="Model\FieldType.cs" />
     <Compile Include="ISession.cs" />
@@ -76,6 +84,11 @@
     <Compile Include="ServiceMethodAttribute.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Backend\init_db.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
