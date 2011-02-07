@@ -4,15 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Data;
 
+using ObjectServer.Backend;
+
 namespace ObjectServer
 {
     internal class Session : ISession
     {
+        private Database db;
 
-        public Session(string db, IDbConnection conn)
+        public Session(string dbName)
         {
-            this.Database = db;
-            this.Connection = conn;
+            this.Database = dbName;
+            this.db = new Database(dbName);
+            this.db.Open();
         }
 
         #region ISession 成员
@@ -25,8 +29,7 @@ namespace ObjectServer
 
         public IDbConnection Connection
         {
-            get;
-            private set;
+            get { return this.db.Connection; }
         }
 
         public ObjectPool Pool
@@ -35,6 +38,16 @@ namespace ObjectServer
             {
                 return Pooler.Instance.GetPool(this.Database);
             }
+        }
+
+        #endregion
+
+        #region IDisposable 成员
+
+        public void Dispose()
+        {
+            this.db.Close();
+            this.db = null;
         }
 
         #endregion

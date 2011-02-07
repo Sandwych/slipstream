@@ -8,6 +8,9 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
+    /// <summary>
+    /// Singleton
+    /// </summary>
     public sealed class Pooler
     {
         private static readonly Pooler s_instance = new Pooler();
@@ -22,7 +25,7 @@ namespace ObjectServer
 
         private void RegisterAllDatabases()
         {
-            using (var db = new Database("postgres"))
+            using (var db = new Database())
             {
                 db.Open();
                 var allDbNames = db.List();

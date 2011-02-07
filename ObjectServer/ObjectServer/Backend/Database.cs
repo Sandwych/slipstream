@@ -25,6 +25,11 @@ namespace ObjectServer.Backend
             this.conn = new NpgsqlConnection(connectionString);
         }
 
+        public Database()
+            : this("template1")
+        {
+        }
+
         public void Open()
         {
             this.conn.Open();

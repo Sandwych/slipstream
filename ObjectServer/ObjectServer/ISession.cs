@@ -7,7 +7,7 @@ using System.Data.Common;
 
 namespace ObjectServer
 {
-    public interface ISession
+    public interface ISession : IDisposable
     {
         string Database { get; }
         IDbConnection Connection { get; }

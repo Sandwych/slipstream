@@ -14,11 +14,8 @@ namespace ObjectServer
 
         public object Execute(string dbName, string objectName, string name, object[] args)
         {
-            using (var db = new Database("objectserver"))
+            using (var session = new Session(dbName))
             {
-                db.Open();
-                var session = new Session(dbName, db.Connection);
-
                 var obj = session.Pool.LookupObject(objectName);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[args.Length + 1];
