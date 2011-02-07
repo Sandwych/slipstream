@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Data.Common;
+using System.Diagnostics;
+
+using Npgsql;
+
+namespace ObjectServer
+{
+    public class Database : IDisposable
+    {
+        private IDbConnection conn = null;
+
+        public Database(string dbName)
+        {
+            string connectionString =
+              "Server=localhost;" +
+              "Database=objectserver;" +
+              "Encoding=UNICODE;" +
+              "User ID=postgres;" +
+              "Password=postgres;";
+            this.conn = new NpgsqlConnection(connectionString);
+        }
+
+        public void Open()
+        {
+            this.conn.Open();
+        }
+
+        public void Close()
+        {
+            if (this.Connected)
+            {
+                this.conn.Close();
+            }
+        }
+
+        public void Create(string dbName)
+        {
+            //TODO 检查连接
+            var sql = string.Format(
+                @"CREATE DATABASE ""{0}"" TEMPLATE template0 ENCODING 'unicode'",
+                dbName);
+            var cmd = this.Connection.CreateCommand();
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
+        }
+
+        public void Delete(string dbName)
+        {
+            var sql = string.Format(
+                "DROP DATABASE \"{0}\"", dbName);
+            var cmd = this.Connection.CreateCommand();
+            cmd.CommandText = sql;
+            cmd.ExecuteNonQuery();
+        }
+
+        public bool TableExists(string tableName)
+        {
+            //检查连接
+            var sql = string.Format(
+                "select count(relname) from pg_class " +
+                "   where relkind IN ('r','v') and relname='{0}'",
+                tableName);
+
+            var cmd = this.conn.CreateCommand();
+            cmd.CommandText = sql;
+            var n = (long)cmd.ExecuteScalar();
+            return n > 0;
+        }
+
+        public IDbConnection Connection { get { return this.conn; } }
+
+        public bool Connected
+        {
+            get
+            {
+                return this.conn.State != ConnectionState.Closed &&
+                    this.conn.State != ConnectionState.Broken;
+            }
+        }
+
+        #region IDisposable 成员
+
+        public void Dispose()
+        {
+            this.Close();
+
+        }
+
+        #endregion
+    }
+}
