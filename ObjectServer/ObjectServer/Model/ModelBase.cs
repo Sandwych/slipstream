@@ -22,6 +22,7 @@ namespace ObjectServer.Model
             MethodBase.GetCurrentMethod().DeclaringType);
 
         private string tableName = null;
+        private string name = null;
 
         private Dictionary<string, MethodInfo> serviceMethods =
             new Dictionary<string, MethodInfo>();
@@ -31,7 +32,27 @@ namespace ObjectServer.Model
         public bool CanWrite { get; protected set; }
         public bool CanDelete { get; protected set; }
 
-        public string Name { get; protected set; }
+        public string Name
+        {
+            get
+            {
+                return this.name;
+            }
+            protected set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Log.Error("Model name cannot be empty");
+                    throw new ArgumentNullException("value");
+                }
+
+                this.name = value;
+                this.TableName = value.ToLowerInvariant().Replace('.', '_');
+
+            }
+        }
+
+
         public string TableName
         {
             get
@@ -40,6 +61,12 @@ namespace ObjectServer.Model
             }
             protected set
             {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Log.Error("Table name cannot be empty");
+                    throw new ArgumentNullException("value");
+                }
+
                 this.tableName = value;
                 this.SequenceName = value + "_id_seq";
             }
@@ -52,9 +79,6 @@ namespace ObjectServer.Model
             this.CanRead = true;
             this.CanWrite = true;
             this.CanDelete = true;
-
-            this.Name = null;
-            this.TableName = null;
 
             this.RegisterAllServiceMethods();
         }

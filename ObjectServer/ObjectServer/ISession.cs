@@ -9,6 +9,8 @@ namespace ObjectServer
 {
     public interface ISession
     {
+        string Database { get; }
         IDbConnection Connection { get; }
+        ObjectPool Pool { get; }
     }
 }

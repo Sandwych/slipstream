@@ -36,13 +36,13 @@ namespace ObjectServer.Test
             {
                 { "name", "Oh my new record!" },
             };
-            var id = (long)proxy.Execute(modelName, "Create", new object[] { values });
+            var id = (long)proxy.Execute("objectserver", modelName, "Create", new object[] { values });
             Console.WriteLine("id=[{0}]", id);
 
             var ids = new long[] { 1, 2, 17, 18 };
             var fields = new string[] { "name" };
             var args = new object[] { fields, ids };
-            var dt = (Hashtable[])proxy.Execute(modelName, "Read", args);
+            var dt = (Hashtable[])proxy.Execute("objectserver", modelName, "Read", args);
 
             foreach (Hashtable row in dt)
             {

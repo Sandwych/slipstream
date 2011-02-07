@@ -4,19 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
+using log4net;
+
 namespace ObjectServer
 {
     public sealed class ObjectPool
     {
-        private static readonly ObjectPool instance = new ObjectPool();
+        protected static readonly ILog Log = LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
 
         private Dictionary<string, IServiceObject> objects =
             new Dictionary<string, IServiceObject>();
 
-        private ObjectPool()
+        public ObjectPool(string db)
         {
+            this.Database = db;
             this.RegisterAllCoreModels();
         }
+
+        public string Database { get; private set; }
 
         private void RegisterAllCoreModels()
         {
@@ -24,26 +30,22 @@ namespace ObjectServer
             var types = a.GetTypes();
             foreach (var t in types)
             {
-                var assemblies = t.GetCustomAttributes(typeof(ModelObjectAttribute), false);
+                var assemblies = t.GetCustomAttributes(typeof(ServiceObjectAttribute), false);
                 if (assemblies.Length > 0)
                 {
-                    var modelObj = (IServiceObject)Activator.CreateInstance(t);
-                    this.RegisterModel(modelObj.Name, modelObj);
+                    var obj = Activator.CreateInstance(t) as IServiceObject;
+                    if (obj == null)
+                    {
+                        Log.ErrorFormat("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
+                    }
+                    this.RegisterModel(obj.Name, obj);
                 }
-            }
-        }
-
-        public static ObjectPool Instance
-        {
-            get
-            {
-                return instance;
             }
         }
 
         public void RegisterModel(string name, IServiceObject so)
         {
-            this.objects.Add(name, so);
+            this.objects[name] = so;
         }
 
         public IServiceObject LookupObject(string name)

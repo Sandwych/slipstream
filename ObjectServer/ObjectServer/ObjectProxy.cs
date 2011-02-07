@@ -5,19 +5,21 @@ using System.Text;
 using System.Transactions;
 using Npgsql;
 
+using ObjectServer.Backend;
+
 namespace ObjectServer
 {
     public class ObjectProxy : MarshalByRefObject
     {
 
-        public object Execute(string objectName, string name, object[] args)
+        public object Execute(string dbName, string objectName, string name, object[] args)
         {
             using (var db = new Database("objectserver"))
             {
                 db.Open();
-                var session = new Session(db.Connection);
+                var session = new Session(dbName, db.Connection);
 
-                var obj = ObjectPool.Instance.LookupObject(objectName);
+                var obj = session.Pool.LookupObject(objectName);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[args.Length + 1];
                 internalArgs[0] = session;

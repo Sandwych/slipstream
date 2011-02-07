@@ -12,7 +12,7 @@ using ObjectServer.Utility;
 
 namespace ObjectServer.Model
 {
-    [ModelObject]
+    [ServiceObject]
     public class Model : ModelBase
     {
         public Model() : base()

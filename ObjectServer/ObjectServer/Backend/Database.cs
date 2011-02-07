@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 using Npgsql;
 
-namespace ObjectServer
+namespace ObjectServer.Backend
 {
     public class Database : IDisposable
     {
@@ -70,6 +70,30 @@ namespace ObjectServer
             cmd.CommandText = sql;
             var n = (long)cmd.ExecuteScalar();
             return n > 0;
+        }
+
+        public string[] List()
+        {
+            var dbUser = "postgres"; //TODO: 改成可配置的
+            var sql = @"
+                SELECT datname FROM pg_database  
+                    WHERE	datdba = (SELECT distinct usesysid FROM pg_user WHERE usename=:dbUser) AND 
+	                    datname not in ('template0', 'template1', 'postgres')  
+	                ORDER BY datname ASC;";
+            using (var cmd = (NpgsqlCommand)this.conn.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("dbUser", dbUser);
+                var result = new List<string>();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(reader.GetString(0));
+                    }
+                }
+                return result.ToArray();
+            }
         }
 
         public IDbConnection Connection { get { return this.conn; } }

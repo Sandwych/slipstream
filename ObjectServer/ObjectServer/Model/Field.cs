@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    [ModelObject] 
-    public class Field : Model
+    [ServiceObject] 
+    public class Field : ModelBase
     {
 
         public Field()
