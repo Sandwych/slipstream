@@ -63,19 +63,6 @@ namespace ObjectServer.Backend
             cmd.ExecuteNonQuery();
         }
 
-        public bool TableExists(string tableName)
-        {
-            //检查连接
-            var sql = string.Format(
-                "select count(relname) from pg_class " +
-                "   where relkind IN ('r','v') and relname='{0}'",
-                tableName);
-
-            var cmd = this.conn.CreateCommand();
-            cmd.CommandText = sql;
-            var n = (long)cmd.ExecuteScalar();
-            return n > 0;
-        }
 
         public string[] List()
         {

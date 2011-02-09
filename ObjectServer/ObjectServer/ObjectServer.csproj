@@ -68,12 +68,14 @@
   <ItemGroup>
     <Compile Include="Backend\Database.cs" />
     <Compile Include="Backend\DataExtensions.cs" />
+    <Compile Include="Backend\Table.cs" />
     <Compile Include="Core\Group.cs" />
     <Compile Include="Core\Action.cs" />
     <Compile Include="Core\View.cs" />
     <Compile Include="Core\Menu.cs" />
     <Compile Include="IServiceObject.cs" />
-    <Compile Include="Model\FieldBase.cs" />
+    <Compile Include="Model\Fields\SimpleField.cs" />
+    <Compile Include="Model\IFieldInfo.cs" />
     <Compile Include="Model\ServiceObjectAttribute.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="ObjectPool.cs" />

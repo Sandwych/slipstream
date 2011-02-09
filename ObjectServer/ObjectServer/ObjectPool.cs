@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Transactions;
+using System.Data;
 
 using log4net;
 
@@ -10,41 +12,51 @@ namespace ObjectServer
 {
     public sealed class ObjectPool
     {
-        protected static readonly ILog Log = LogManager.GetLogger(
+        private static readonly ILog Log = LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
         private Dictionary<string, IServiceObject> objects =
             new Dictionary<string, IServiceObject>();
 
-        public ObjectPool(string db)
+        public ObjectPool(string db, IDbConnection conn)
         {
             this.Database = db;
-            this.RegisterAllCoreModels();
+            this.RegisterAllCoreModels(conn);
         }
 
         public string Database { get; private set; }
 
-        private void RegisterAllCoreModels()
+        private void RegisterAllCoreModels(IDbConnection conn)
         {
-            var a = Assembly.GetExecutingAssembly();
-            var types = a.GetTypes();
-            foreach (var t in types)
+            if (Log.IsInfoEnabled)
             {
-                var assemblies = t.GetCustomAttributes(typeof(ServiceObjectAttribute), false);
-                if (assemblies.Length > 0)
+                Log.InfoFormat("Start to register all core models...");
+            }
+            var types = Model.ModelBase.GetAllCoreModels();
+
+            using (var db = new Backend.Database(this.Database))
+            {
+                db.Open();
+                foreach (var t in types)
                 {
-                    var obj = Activator.CreateInstance(t) as IServiceObject;
-                    if (obj == null)
-                    {
-                        Log.ErrorFormat("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
-                    }
-                    this.RegisterModel(obj.Name, obj);
+                    var obj = Model.ModelBase.CreateModelInstance(db, t);
+                    this.RegisterServiceObject(obj.Name, obj);
                 }
+            }
+
+            if (Log.IsInfoEnabled)
+            {
+                Log.InfoFormat("Done");
             }
         }
 
-        public void RegisterModel(string name, IServiceObject so)
+        public void RegisterServiceObject(string name, IServiceObject so)
         {
+            if (Log.IsInfoEnabled)
+            {
+                Log.InfoFormat("Register model: {0}", name);
+            }
+
             this.objects[name] = so;
         }
 

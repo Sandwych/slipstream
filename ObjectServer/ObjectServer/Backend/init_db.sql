@@ -1,8 +1,8 @@
 ﻿CREATE TABLE core_model (
-    id bigserial NOT NULL,
-    model varchar NOT NULL,
-    "name" varchar,
-    info TEXT,
+    id bigserial not null,
+    "name" varchar not null,
+    label varchar,
+    info text,
     module varchar,
     PRIMARY KEY(id)
 );

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Data;
+using System.Transactions;
 
 using ObjectServer.Backend;
 
@@ -25,21 +27,25 @@ namespace ObjectServer
 
         private void RegisterAllDatabases()
         {
+            //
             using (var db = new Database())
+            using (var tx = new TransactionScope())
             {
                 db.Open();
                 var allDbNames = db.List();
 
                 foreach (var dbName in allDbNames)
                 {
-                    this.RegisterPool(dbName);
+                    this.RegisterPool(db.Connection, dbName);
                 }
+
+                tx.Complete();
             }
         }
 
-        private void RegisterPool(string dbName)
+        private void RegisterPool(IDbConnection conn, string dbName)
         {
-            var pool = new ObjectPool(dbName);
+            var pool = new ObjectPool(dbName, conn);
             this.pools.Add(dbName, pool);
         }
 

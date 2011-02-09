@@ -28,5 +28,10 @@ namespace ObjectServer.Backend
             }
         }
 
+        public static string EscapeSqlString(this string str)
+        {
+            return str.Replace("'", "''");
+        }
+
     }
 }
