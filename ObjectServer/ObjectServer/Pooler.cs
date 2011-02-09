@@ -29,7 +29,6 @@ namespace ObjectServer
         {
             //
             using (var db = new Database())
-            using (var tx = new TransactionScope())
             {
                 db.Open();
                 var allDbNames = db.List();
@@ -38,15 +37,18 @@ namespace ObjectServer
                 {
                     this.RegisterPool(db.Connection, dbName);
                 }
-
-                tx.Complete();
             }
         }
 
         private void RegisterPool(IDbConnection conn, string dbName)
         {
-            var pool = new ObjectPool(dbName, conn);
-            this.pools.Add(dbName, pool);
+            using (var tx = new TransactionScope())
+            {
+                var pool = new ObjectPool(dbName, conn);
+                this.pools.Add(dbName, pool);
+
+                tx.Complete();
+            }
         }
 
         public ObjectPool GetPool(string dbName)

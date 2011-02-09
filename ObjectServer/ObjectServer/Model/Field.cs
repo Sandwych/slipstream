@@ -5,16 +5,16 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    [ServiceObject] 
+    //[ServiceObject] 
     public class Field : ModelBase
     {
 
         public Field()
             : base()
         {
-            this.Name = "Core.MetaField";
-            this.TableName = "core_metafield";
-
+            this.Automatic = false;
+            this.Name = "Core.Field";
+            this.TableName = "core_field";
         }
 
 
