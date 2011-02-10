@@ -12,6 +12,10 @@ namespace ObjectServer
         [STAThread]
         static void Main(string[] args)
         {
+
+
+          
+
             TcpChannel chan = new TcpChannel(5000);
             ChannelServices.RegisterChannel(chan, false);
             RemotingConfiguration.RegisterWellKnownServiceType
