@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ObjectServer.Runtime
 {
-    internal interface ICompiler
+    public interface ICompiler
     {
         Assembly Compile(IEnumerable<string> sourceFiles);
     }

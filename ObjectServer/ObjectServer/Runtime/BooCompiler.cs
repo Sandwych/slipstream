@@ -15,7 +15,7 @@ namespace ObjectServer.Runtime
     /// <summary>
     /// Boo 语言代码编译器，用于把模块的代码编译成内存中的 Assembly
     /// </summary>
-    internal class BooCompiler : ICompiler
+    public class BooCompiler : ICompiler
     {
         protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
            MethodBase.GetCurrentMethod().DeclaringType);

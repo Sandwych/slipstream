@@ -23,6 +23,7 @@ namespace ObjectServer.Test
         }
 
 
+        /*
         public static void Main()
         {
             TcpChannel chan = new TcpChannel();
@@ -51,6 +52,7 @@ namespace ObjectServer.Test
 
             Console.ReadLine();
         }
+        */
 
     }
 }
