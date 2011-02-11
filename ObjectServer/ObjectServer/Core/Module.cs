@@ -9,12 +9,13 @@ namespace ObjectServer.Core
 {
 
     [ServiceObject]
-    public sealed class Group : ModelBase
+    public sealed class Module : ModelBase
     {
 
-        public Group()
+        public Module()
         {
-            this.Name = "Core.Group";
+            this.Automatic = false;
+            this.Name = "Core.Module";
         }
 
     }
