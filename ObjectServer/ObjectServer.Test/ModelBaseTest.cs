@@ -29,12 +29,11 @@ namespace ObjectServer.Test
         [Fact]
         public static void TestCrud()
         {
-
             var modelName = "test.test_object";
             var dbName = "objectserver";
 
             var proxy = new ObjectProxy();
-            var values = new Dictionary<string, object>()
+            var values = new Dictionary<string, object>
             {
                 { "name", "sweet_name" },
             };
@@ -42,21 +41,25 @@ namespace ObjectServer.Test
                 dbName, modelName, "Create", values);
             Assert.True(id > 0);
 
-            var exp = new EqualExpression(new FieldExpression("name"), new StringValueExpression("sweet_name"));
-            var foundIds = (long[])proxy.Execute(dbName, modelName, "Search", exp);
+            var foundIds = (long[])proxy.Execute(dbName, modelName, "Search", "(equal name 'sweet_name')");
             Assert.Equal(1, foundIds.Length);
             Assert.Equal(id, foundIds[0]);
 
+            var newValues = new Dictionary<string, object> {
+                { "name", "changed_name" },
+            };
+            proxy.Execute(dbName, modelName, "Write", id, newValues);
+
             var ids = new long[] { id };
             var fields = new string[] { "name" };
-            var data = (Hashtable[])proxy.Execute(dbName, modelName, "Read", fields, ids);
+            var data = (Dictionary<string, object>[])proxy.Execute(dbName, modelName, "Read", fields, ids);
             Assert.Equal(1, data.Length);
-            Assert.Equal("sweet_name", data[0]["name"]);
+            Assert.Equal("changed_name", data[0]["name"]);
 
 
             proxy.Execute(dbName, modelName, "Delete", ids);
 
-            foundIds = (long[])proxy.Execute(dbName, modelName, "Search", new TrueExpression());
+            foundIds = (long[])proxy.Execute(dbName, modelName, "Search", "(equal name 'sweet_name')");
             Assert.Equal(0, foundIds.Length);
         }
 

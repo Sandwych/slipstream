@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
@@ -216,17 +215,19 @@ namespace ObjectServer.Model
             return this.serviceMethods[name];
         }
 
-        [ServiceMethod]
-        public virtual long[] Search(ISession session, IExpression exp)
+
+        public long[] Search(ISession session, IExpression exp)
         {
             if (exp == null)
             {
                 throw new ArgumentNullException("exp");
             }
 
+            var ruleExp = new TrueExpression();
+
             var sql = string.Format(
-                "select id from \"{0}\" where {1};",
-                this.TableName, exp.ToSqlString());
+                "select id from \"{0}\" where ({1}) and ({2});",
+                this.TableName, exp.ToSqlString(), ruleExp.ToSqlString());
 
             using (var cmd = session.Connection.CreateCommand())
             {
@@ -244,8 +245,21 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual Hashtable[] Read(ISession session, IEnumerable<string> fields, IEnumerable<long> ids)
+        public virtual long[] Search(ISession session, string exp)
         {
+            //TODO: exp to IExpression
+            //example: "and((like name '%test%') (equal address 'street1'))"
+            return this.Search(session, new TrueExpression());
+        }
+
+        [ServiceMethod]
+        public virtual Dictionary<string, object>[] Read(ISession session, IEnumerable<string> fields, IEnumerable<long> ids)
+        {
+            if (!this.CanRead)
+            {
+                throw new NotSupportedException();
+            }
+
             var allFields = new List<string>();
             allFields.Add("id");
             allFields.AddRange(fields);
@@ -265,10 +279,10 @@ namespace ObjectServer.Model
                 cmd.CommandText = sql;
                 using (IDataReader reader = cmd.ExecuteReader())
                 {
-                    var result = new List<Hashtable>();
+                    var result = new List<Dictionary<string, object>>();
                     while (reader.Read())
                     {
-                        var rec = new Hashtable(reader.FieldCount);
+                        var rec = new Dictionary<string, object>(reader.FieldCount);
                         foreach (var field in allFields)
                         {
                             rec.Add(field, reader.GetValue(reader.GetOrdinal(field)));
@@ -283,6 +297,11 @@ namespace ObjectServer.Model
         [ServiceMethod]
         public virtual long Create(ISession session, IDictionary<string, object> values)
         {
+            if (!this.CanCreate)
+            {
+                throw new NotSupportedException();
+            }
+
             //TODO 检测是否含有 id 列
 
             //获取下一个 SEQ id，这里可能要移到 backend 里，利于跨数据库
@@ -335,9 +354,42 @@ namespace ObjectServer.Model
         [ServiceMethod]
         public virtual void Write(ISession session, long id, IDictionary<string, object> values)
         {
+            if (!this.CanWrite)
+            {
+                throw new NotSupportedException();
+            }
+
+            var sbFieldValues = new StringBuilder();
+            bool isFirstLine = true;
+            foreach (var pair in values)
+            {
+                if (!isFirstLine)
+                {
+                    sbFieldValues.Append(",");
+                    isFirstLine = false;
+                }
+                sbFieldValues.AppendFormat("{0} = :{0}", pair.Key);
+            }
+
+            var sql = string.Format(
+                "UPDATE \"{0}\" SET {1} WHERE id = {2};",
+                this.TableName,
+                sbFieldValues.ToString(),
+                id);
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(sql);
+            }
+
             using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
             {
-
+                cmd.CommandText = sql;
+                foreach (var pair in values)
+                {
+                    cmd.Parameters.AddWithValue(pair.Key, pair.Value);
+                }
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -345,6 +397,11 @@ namespace ObjectServer.Model
         [ServiceMethod]
         public virtual void Delete(ISession session, IEnumerable<long> ids)
         {
+            if (!this.CanDelete)
+            {
+                throw new NotSupportedException();
+            }
+
             var sql = string.Format(
                 "delete from \"{0}\" where \"id\" in ({1});",
                 this.TableName, ids.ToCommaList());
