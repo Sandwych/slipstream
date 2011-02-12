@@ -12,6 +12,9 @@ using System.Runtime.Remoting.Channels.Tcp;
 
 using Xunit;
 
+using ObjectServer.Model;
+using ObjectServer.Model.Query;
+
 namespace ObjectServer.Test
 {
 
@@ -39,7 +42,8 @@ namespace ObjectServer.Test
                 dbName, modelName, "Create", values);
             Assert.True(id > 0);
 
-            var foundIds = (long[])proxy.Execute(dbName, modelName, "Search", "");
+            var exp = new EqualExpression(new FieldExpression("name"), new StringValueExpression("sweet_name"));
+            var foundIds = (long[])proxy.Execute(dbName, modelName, "Search", exp);
             Assert.Equal(1, foundIds.Length);
             Assert.Equal(id, foundIds[0]);
 
@@ -52,7 +56,7 @@ namespace ObjectServer.Test
 
             proxy.Execute(dbName, modelName, "Delete", ids);
 
-            foundIds = (long[])proxy.Execute(dbName, modelName, "Search", "");
+            foundIds = (long[])proxy.Execute(dbName, modelName, "Search", new TrueExpression());
             Assert.Equal(0, foundIds.Length);
         }
 

@@ -13,6 +13,7 @@ using NpgsqlTypes;
 
 using ObjectServer.Backend;
 using ObjectServer.Utility;
+using ObjectServer.Model.Query;
 
 namespace ObjectServer.Model
 {
@@ -216,11 +217,17 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual long[] Search(ISession session, string exp)
+        public virtual long[] Search(ISession session, IExpression exp)
         {
+            if (exp == null)
+            {
+                throw new ArgumentNullException("exp");
+            }
+
             var sql = string.Format(
-                "select id from \"{0}\" ;",
-                this.TableName);
+                "select id from \"{0}\" where {1};",
+                this.TableName, exp.ToSqlString());
+
             using (var cmd = session.Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
