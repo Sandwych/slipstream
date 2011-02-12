@@ -15,8 +15,7 @@ namespace ObjectServer.Core
             : base()
         {
             this.Automatic = false;
-            this.Name = "Core.Field";
-            this.TableName = "core_field";
+            this.Name = "core.field";
         }
 
 

@@ -12,7 +12,7 @@ namespace ObjectServer
     public class ObjectProxy : MarshalByRefObject
     {
 
-        public object Execute(string dbName, string objectName, string name, object[] args)
+        public object Execute(string dbName, string objectName, string name, params object[] args)
         {
             using (var session = new Session(dbName))
             {

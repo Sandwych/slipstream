@@ -14,8 +14,13 @@ namespace ObjectServer.Core
 
         public Module()
         {
+            this.Name = "core.module";
             this.Automatic = false;
-            this.Name = "Core.Module";
+
+
+            this.DefineField("name", "Name", "varchar", 128);
+            this.DefineField("state", "State", "varchar", 16);
+            this.DefineField("description", "Description", "text", 0xffff);
         }
 
     }

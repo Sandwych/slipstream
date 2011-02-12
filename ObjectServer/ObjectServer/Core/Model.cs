@@ -18,8 +18,7 @@ namespace ObjectServer.Core
         public Model() : base()
         {
             this.Automatic = false;
-            this.Name = "Core.Model";
-            this.TableName = "core_model";
+            this.Name = "core.model";
         }
     }
 }

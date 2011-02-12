@@ -14,7 +14,7 @@ namespace ObjectServer.Core
 
         public User()
         {
-            this.Name = "Core.User";
+            this.Name = "core.user";
         }
 
     }

@@ -14,7 +14,7 @@ namespace ObjectServer.Core
 
         public View()
         {
-            this.Name = "View.Action";
+            this.Name = "view.action";
         }
 
     }

@@ -14,7 +14,6 @@ namespace ObjectServer.Test.Runtime
     public class BooCompilerTest
     {
 
-        [Fact]
         public void TestBooCompiler()
         {
 

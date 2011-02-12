@@ -324,7 +324,7 @@ namespace ObjectServer.Model
         public virtual void Delete(ISession session, IEnumerable<long> ids)
         {
             var sql = string.Format(
-                "DELETE FROM \"{0}\" ({1}) WHERE \"id\" in ({2});",
+                "delete from \"{0}\" where \"id\" in ({1});",
                 this.TableName, ids.ToCommaList());
 
             if (Log.IsDebugEnabled)

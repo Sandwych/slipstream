@@ -20,8 +20,8 @@ namespace ObjectServer.Backend
               "Server=localhost;" +
               "Database=objectserver;" +
               "Encoding=UNICODE;" +
-              "User ID=postgres;" +
-              "Password=postgres;";
+              "User ID=objectserver;" +
+              "Password=objectserver;";
             this.conn = new NpgsqlConnection(connectionString);
         }
 
@@ -66,12 +66,12 @@ namespace ObjectServer.Backend
 
         public string[] List()
         {
-            var dbUser = "postgres"; //TODO: 改成可配置的
+            var dbUser = "objectserver"; //TODO: 改成可配置的
             var sql = @"
-                SELECT datname FROM pg_database  
-                    WHERE	datdba = (SELECT distinct usesysid FROM pg_user WHERE usename=:dbUser) AND 
-	                    datname not in ('template0', 'template1', 'postgres')  
-	                ORDER BY datname ASC;";
+                select datname from pg_database  
+                    where datdba = (select distinct usesysid from pg_user where usename=:dbUser) 
+                        and datname not in ('template0', 'template1', 'postgres')  
+	                order by datname asc;";
             using (var cmd = (NpgsqlCommand)this.conn.CreateCommand())
             {
                 cmd.CommandText = sql;

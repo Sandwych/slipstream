@@ -14,7 +14,7 @@ namespace ObjectServer.Core
 
         public Action()
         {
-            this.Name = "Core.Action";
+            this.Name = "core.action";
         }
 
     }

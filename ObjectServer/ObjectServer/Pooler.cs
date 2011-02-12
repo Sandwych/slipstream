@@ -15,6 +15,9 @@ namespace ObjectServer
     /// </summary>
     public sealed class Pooler
     {
+        protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly Pooler s_instance = new Pooler();
 
         private Dictionary<string, ObjectPool> pools =
@@ -35,6 +38,10 @@ namespace ObjectServer
 
                 foreach (var dbName in allDbNames)
                 {
+                    if (Log.IsInfoEnabled)
+                    {
+                        Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
+                    }
                     this.RegisterPool(db.Connection, dbName);
                 }
             }
@@ -45,15 +52,14 @@ namespace ObjectServer
             using (var tx = new TransactionScope())
             {
                 var pool = new ObjectPool(dbName, conn);
-                this.pools.Add(dbName, pool);
-
+                this.pools.Add(dbName.Trim(), pool);
                 tx.Complete();
             }
         }
 
         public ObjectPool GetPool(string dbName)
         {
-            return this.pools[dbName];
+            return this.pools[dbName.Trim()];
         }
 
         public ICollection<string> ObjectNames

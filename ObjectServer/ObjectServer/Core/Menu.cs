@@ -14,7 +14,7 @@ namespace ObjectServer.Core
 
         public Menu()
         {
-            this.Name = "Core.Menu";
+            this.Name = "core.menu";
         }
 
     }

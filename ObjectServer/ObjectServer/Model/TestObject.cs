@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using System.Data.Common;
 
+
 namespace ObjectServer.Model
 {
     [ServiceObject]
@@ -12,9 +13,8 @@ namespace ObjectServer.Model
     {
 
         public TestObject()
-            : base()
         {
-            this.Name = "Test.TestObject";
+            this.Name = "test.test_object";
 
             this.DefineField("name", "姓名", "varchar", 64);
             this.DefineField("address", "地址", "varchar", 200);
