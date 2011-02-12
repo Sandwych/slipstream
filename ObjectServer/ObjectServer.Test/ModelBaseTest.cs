@@ -39,15 +39,21 @@ namespace ObjectServer.Test
                 dbName, modelName, "Create", values);
             Assert.True(id > 0);
 
+            var foundIds = (long[])proxy.Execute(dbName, modelName, "Search", "");
+            Assert.Equal(1, foundIds.Length);
+            Assert.Equal(id, foundIds[0]);
+
             var ids = new long[] { id };
             var fields = new string[] { "name" };
             var data = (Hashtable[])proxy.Execute(dbName, modelName, "Read", fields, ids);
-
             Assert.Equal(1, data.Length);
             Assert.Equal("sweet_name", data[0]["name"]);
 
-            var args2 = new object[] { ids };
+
             proxy.Execute(dbName, modelName, "Delete", ids);
+
+            foundIds = (long[])proxy.Execute(dbName, modelName, "Search", "");
+            Assert.Equal(0, foundIds.Length);
         }
 
         /*

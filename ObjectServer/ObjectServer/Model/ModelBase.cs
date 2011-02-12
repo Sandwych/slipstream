@@ -218,7 +218,22 @@ namespace ObjectServer.Model
         [ServiceMethod]
         public virtual long[] Search(ISession session, string exp)
         {
-            throw new NotImplementedException();
+            var sql = string.Format(
+                "select id from \"{0}\" ;",
+                this.TableName);
+            using (var cmd = session.Connection.CreateCommand())
+            {
+                cmd.CommandText = sql;
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var result = new List<long>();
+                    while (reader.Read())
+                    {
+                        result.Add(reader.GetInt64(0));
+                    }
+                    return result.ToArray();
+                }
+            }
         }
 
         [ServiceMethod]
