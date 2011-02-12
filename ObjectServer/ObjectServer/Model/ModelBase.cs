@@ -338,19 +338,6 @@ namespace ObjectServer.Model
             return serial;
         }
 
-        private long NextSerial(IDbConnection conn)
-        {
-            var seqSql = string.Format("SELECT nextval('{0}');",
-                this.SequenceName);
-
-            if (Log.IsDebugEnabled)
-            {
-                Log.Debug(seqSql);
-            }
-            var serial = (long)conn.ExecuteScalar(seqSql);
-            return serial;
-        }
-
         [ServiceMethod]
         public virtual void Write(ISession session, long id, IDictionary<string, object> values)
         {
@@ -359,16 +346,16 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
-            var sbFieldValues = new StringBuilder();
+            var sbFieldValues = new StringBuilder(15 * values.Count);
             bool isFirstLine = true;
             foreach (var pair in values)
             {
                 if (!isFirstLine)
                 {
-                    sbFieldValues.Append(",");
+                    sbFieldValues.Append(", ");
                     isFirstLine = false;
                 }
-                sbFieldValues.AppendFormat("{0} = :{0}", pair.Key);
+                sbFieldValues.AppendFormat("{0}=:{0}", pair.Key);
             }
 
             var sql = string.Format(
@@ -416,6 +403,19 @@ namespace ObjectServer.Model
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        private long NextSerial(IDbConnection conn)
+        {
+            var seqSql = string.Format("SELECT nextval('{0}');",
+                this.SequenceName);
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Debug(seqSql);
+            }
+            var serial = (long)conn.ExecuteScalar(seqSql);
+            return serial;
         }
 
     }
