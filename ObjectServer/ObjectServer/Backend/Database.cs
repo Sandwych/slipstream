@@ -23,6 +23,7 @@ namespace ObjectServer.Backend
               "User ID=objectserver;" +
               "Password=objectserver;";
             this.conn = new NpgsqlConnection(connectionString);
+            this.DatabaseName = dbName;
         }
 
         public Database()
@@ -52,6 +53,8 @@ namespace ObjectServer.Backend
             var cmd = this.Connection.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
+
+            this.DatabaseName = dbName;
         }
 
         public void Delete(string dbName)
@@ -98,6 +101,8 @@ namespace ObjectServer.Backend
                     this.conn.State != ConnectionState.Broken;
             }
         }
+
+        public string DatabaseName { get; private set; }
 
         #region IDisposable 成员
 
