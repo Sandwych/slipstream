@@ -12,5 +12,6 @@ namespace ObjectServer.Model
         string SqlType { get; }
         string Type { get; }
         int Size { get; }
+        bool Required { get; }
     }
 }

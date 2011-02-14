@@ -17,10 +17,11 @@ namespace ObjectServer.Core
         {
             this.Name = "core.module";
             this.Automatic = false;
+            this.Versioned = false;
 
-            this.DefineField("name", "Name", "varchar", 128);
-            this.DefineField("state", "State", "varchar", 16);
-            this.DefineField("description", "Description", "text", 0xffff);
+            this.DefineField("name", "Name", "varchar", 128, true);
+            this.DefineField("state", "State", "varchar", 16, true);
+            this.DefineField("description", "Description", "text", 0xffff, false);
         }
 
         public static void LoadModules(string dbName, IDbConnection conn)

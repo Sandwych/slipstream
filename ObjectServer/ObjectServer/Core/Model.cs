@@ -19,6 +19,7 @@ namespace ObjectServer.Core
         {
             this.Automatic = false;
             this.Name = "core.model";
+            this.Versioned = false;
         }
     }
 }

@@ -54,6 +54,7 @@ namespace ObjectServer.Backend
 
         public void AddColumn(string colName, string sqlType)
         {
+            //TODO: 目前只支持空表，如果有数据的话就涉及迁移了
             var sql = string.Format(
                 @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2}",
                 this.Name, colName, sqlType);

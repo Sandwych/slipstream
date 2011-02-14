@@ -35,12 +35,14 @@ namespace ObjectServer.Test
             var values = new Dictionary<string, object>
             {
                 { "name", "sweet_name" },
+                { "address", "my address" },
             };
             var id = (long)proxy.Execute(
                 dbName, modelName, "Create", values);
             Assert.True(id > 0);
 
-            var foundIds = (long[])proxy.Execute(dbName, modelName, "Search", "(equal name 'sweet_name')");
+            var foundIds = (long[])proxy.Execute(
+                dbName, modelName, "Search", "(equal name 'sweet_name')", 0, 100);
             Assert.Equal(1, foundIds.Length);
             Assert.Equal(id, foundIds[0]);
 
@@ -58,7 +60,8 @@ namespace ObjectServer.Test
 
             proxy.Execute(dbName, modelName, "Delete", ids);
 
-            foundIds = (long[])proxy.Execute(dbName, modelName, "Search", "(equal name 'sweet_name')");
+            foundIds = (long[])proxy.Execute(
+                dbName, modelName, "Search", "(equal name 'sweet_name')", 0, 100);
             Assert.Equal(0, foundIds.Length);
         }
 

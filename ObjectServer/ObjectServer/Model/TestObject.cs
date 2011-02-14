@@ -16,8 +16,8 @@ namespace ObjectServer.Model
         {
             this.Name = "test.test_object";
 
-            this.DefineField("name", "姓名", "varchar", 64);
-            this.DefineField("address", "地址", "varchar", 200);
+            this.DefineField("name", "姓名", "varchar", 64, true);
+            this.DefineField("address", "地址", "varchar", 200, true);
         }
 
         [ServiceMethod]

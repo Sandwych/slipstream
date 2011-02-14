@@ -16,6 +16,7 @@ namespace ObjectServer.Core
         {
             this.Automatic = false;
             this.Name = "core.field";
+            this.Versioned = false;
         }
 
 

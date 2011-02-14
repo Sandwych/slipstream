@@ -37,6 +37,7 @@ namespace ObjectServer.Model
         public bool Automatic { get; protected set; }
         public string Label { get; protected set; }
         public bool Hierarchy { get; protected set; }
+        public bool Versioned { get; protected set; }
 
         public string Name
         {
@@ -91,6 +92,7 @@ namespace ObjectServer.Model
             this.CanDelete = true;
             this.Automatic = true;
             this.Hierarchy = false;
+            this.Versioned = true;
 
             this.RegisterAllServiceMethods();
         }
@@ -100,6 +102,8 @@ namespace ObjectServer.Model
         /// </summary>
         public void Initialize(Database db)
         {
+            this.AddInternalFields();
+
             //检测此模块是否存在于数据库 core_model 表
             var sql = string.Format(
                 "SELECT DISTINCT COUNT(id) FROM core_model WHERE name='{0}'",
@@ -119,6 +123,17 @@ namespace ObjectServer.Model
                     this.CreateTable(db.Connection);
                 }
             }
+        }
+
+        private void AddInternalFields()
+        {
+
+            if (this.Versioned)
+            {
+                DefineField("_version", "Version", "BIGINT", -1, true);
+            }
+            //DefineField("_creator", "Creation User", "BIGINT", 1);
+            //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
         }
 
         private void CreateModel(IDbConnection conn)
@@ -147,16 +162,18 @@ namespace ObjectServer.Model
             {
                 var field = pair.Value;
                 table.AddColumn(field.Name, field.SqlType);
+                Console.WriteLine(field.Name);
             }
         }
 
-        protected void DefineField(string name, string label, string type, int size)
+        protected void DefineField(string name, string label, string type, int size, bool required)
         {
             var field = new Fields.SimpleField();
             field.Name = name;
             field.Label = label;
             field.Type = type;
             field.Size = size;
+            field.Required = required;
             declaredFields.Add(name, field);
         }
 
@@ -245,7 +262,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual long[] Search(ISession session, string exp)
+        public virtual long[] Search(ISession session, string domain, long offset, long limit)
         {
             //TODO: exp to IExpression
             //example: "and((like name '%test%') (equal address 'street1'))"
@@ -309,7 +326,7 @@ namespace ObjectServer.Model
             var serial = table.NextSerial(this.SequenceName);
 
             var sql = string.Format(
-              "INSERT INTO \"{0}\" (id, {1}) VALUES ({2}, {3});",
+              "INSERT INTO \"{0}\" (id, _version, {1}) VALUES ({2}, 0, {3});",
               this.TableName,
               values.Keys.ToSqlColumns(),
               serial,
@@ -346,6 +363,10 @@ namespace ObjectServer.Model
             {
                 throw new NotSupportedException();
             }
+
+
+            //TODO: 并发检查，处理 _version 字段
+            //客户端也需要提供 _version 字段
 
             var sbFieldValues = new StringBuilder(15 * values.Count);
             bool isFirstLine = true;
