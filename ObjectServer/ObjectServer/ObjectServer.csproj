@@ -120,6 +120,7 @@
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Core\Module.cs" />
     <Compile Include="Model\TestObject.cs" />
+    <Compile Include="Core\ModuleInfo.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="ObjectProxy.cs" />
     <Compile Include="Pooler.cs" />

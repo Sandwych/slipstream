@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<module>
+    <name>os_demo</name>
+    <label>演示模块</label>
+    <description></description>
+
+    <!-- Code files -->
+    <source-files>
+        <file>demo.boo</file>
+    </source-files>
+
+    <!-- Initialization data files -->
+    <data-file>demo.xml</data-file>
+</module>

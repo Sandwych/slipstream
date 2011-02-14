@@ -43,19 +43,20 @@ namespace ObjectServer
                     {
                         Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
                     }
-                    this.RegisterPool(db.Connection, dbName);
-                    ObjectServer.Core.Module.LoadModules(dbName, db.Connection);
+                    var pool = this.RegisterPool(db.Connection, dbName);
+                    ObjectServer.Core.Module.LoadModules(db.Connection, dbName, pool);
                 }
             }
         }
 
-        private void RegisterPool(IDbConnection conn, string dbName)
+        private ObjectPool RegisterPool(IDbConnection conn, string dbName)
         {
             using (var tx = new TransactionScope())
             {
                 var pool = new ObjectPool(dbName, conn);
                 this.pools.Add(dbName.Trim(), pool);
                 tx.Complete();
+                return pool;
             }
         }
 

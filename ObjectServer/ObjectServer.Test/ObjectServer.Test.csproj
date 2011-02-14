@@ -64,7 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Test.boo" />
-    <None Include="ObjectServerTest.xunit" />
+    <None Include="ObjectServerTest.xunit">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

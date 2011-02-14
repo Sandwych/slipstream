@@ -10,6 +10,7 @@ using log4net;
 
 namespace ObjectServer
 {
+    //TODO: Thread Safty
     public sealed class ObjectPool
     {
         private static readonly ILog Log = LogManager.GetLogger(
@@ -21,18 +22,25 @@ namespace ObjectServer
         public ObjectPool(string db, IDbConnection conn)
         {
             this.Database = db;
-            this.RegisterAllCoreModels(conn);
+            this.RegisterAllCoreModels();
         }
 
         public string Database { get; private set; }
 
-        private void RegisterAllCoreModels(IDbConnection conn)
+        private void RegisterAllCoreModels()
+        {
+            var a = typeof(ObjectPool).Assembly;
+            this.RegisterModelsInAssembly(a);
+        }
+
+        public void RegisterModelsInAssembly(Assembly assembly)
         {
             if (Log.IsInfoEnabled)
             {
-                Log.InfoFormat("Start to register all core models...");
+                Log.InfoFormat("Start to register all models for assembly [{0}]...", assembly.FullName);
             }
-            var types = Model.ModelBase.GetAllCoreModels();
+
+            var types = Model.ModelBase.GetModelsFromAssembly(assembly);
 
             using (var db = new Backend.Database(this.Database))
             {

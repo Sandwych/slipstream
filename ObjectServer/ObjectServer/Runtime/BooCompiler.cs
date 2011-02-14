@@ -8,6 +8,7 @@ using System.Reflection;
 using Boo.Lang.Compiler;
 using Boo.Lang.Compiler.IO;
 using Boo.Lang.Compiler.Pipelines;
+using Boo.Lang.Parser;
 
 
 namespace ObjectServer.Runtime
@@ -24,12 +25,15 @@ namespace ObjectServer.Runtime
 
         public Assembly Compile(IEnumerable<string> sourceFiles)
         {
-            var coreAssembly = typeof(Model.ModelBase).Assembly;
             var compiler = new Boo.Lang.Compiler.BooCompiler();
+            var coreAssembly = typeof(Model.ModelBase).Assembly;
             compiler.Parameters.Pipeline = new CompileToMemory();
             compiler.Parameters.Ducky = true;
-            compiler.Parameters.WarnAsError = true;
+            compiler.Parameters.WarnAsError = false;
+
             compiler.Parameters.AddAssembly(coreAssembly);
+            compiler.Parameters.AddAssembly(typeof(log4net.ILog).Assembly);
+            var t1 = typeof(Boo.Lang.Parser.BooParser);//WORKAROUND
 
             foreach (var source in sourceFiles)
             {
@@ -38,16 +42,32 @@ namespace ObjectServer.Runtime
 
             CompilerContext context = compiler.Run();
 
+            LogWarnings(context);
+
             //编译失败
-            if (context.GeneratedAssembly == null)         
+            if (context.GeneratedAssembly == null)
             {
-                LogError(context);
+                Console.WriteLine("Failed to compile");
+                LogErrors(context);
+                throw new Exception("Failed to compile module");
             }
 
             return context.GeneratedAssembly;
         }
 
-        private static void LogError(CompilerContext context)
+        private static void LogWarnings(CompilerContext context)
+        {
+
+            if (Log.IsWarnEnabled)
+            {
+                foreach (var w in context.Warnings)
+                {
+                    Log.WarnFormat("WARNING: {0}", w.Message);
+                }
+            }
+        }
+
+        private static void LogErrors(CompilerContext context)
         {
             foreach (CompilerError error in context.Errors)
             {

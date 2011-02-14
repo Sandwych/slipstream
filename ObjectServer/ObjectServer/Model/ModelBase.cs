@@ -194,7 +194,12 @@ namespace ObjectServer.Model
         public static Type[] GetAllCoreModels()
         {
             var a = Assembly.GetExecutingAssembly();
-            var types = a.GetTypes();
+            return GetModelsFromAssembly(a);
+        }
+
+        public static Type[] GetModelsFromAssembly(Assembly assembly)
+        {
+            var types = assembly.GetTypes();
             var result = new List<Type>();
             foreach (var t in types)
             {
