@@ -13,7 +13,6 @@ using System.Runtime.Remoting.Channels.Tcp;
 using Xunit;
 
 using ObjectServer.Model;
-using ObjectServer.Model.Query;
 
 namespace ObjectServer.Test
 {

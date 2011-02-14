@@ -113,8 +113,8 @@ namespace ObjectServer.Model
             //如果需要自动建表就建
             if (this.Automatic)
             {
-                var table = new Table();
-                if (!table.TableExists(db.Connection, this.TableName))
+                var table = new Table(db.Connection, this.TableName);
+                if (!table.TableExists(this.TableName))
                 {
                     this.CreateTable(db.Connection);
                 }
@@ -134,8 +134,8 @@ namespace ObjectServer.Model
 
         private void CreateTable(IDbConnection conn)
         {
-            var table = new Table();
-            table.CreateTable(conn, this.TableName, this.Label);
+            var table = new Table(conn, this.TableName);
+            table.CreateTable(this.TableName, this.Label);
 
             //创建字段
             if (this.Hierarchy)
@@ -146,7 +146,7 @@ namespace ObjectServer.Model
             foreach (var pair in this.declaredFields)
             {
                 var field = pair.Value;
-                table.AddColumn(conn, this.tableName, field.Name, field.SqlType);
+                table.AddColumn(field.Name, field.SqlType);
             }
         }
 
@@ -305,7 +305,8 @@ namespace ObjectServer.Model
             //TODO 检测是否含有 id 列
 
             //获取下一个 SEQ id，这里可能要移到 backend 里，利于跨数据库
-            var serial = NextSerial(session.Connection);
+            var table = new Table(session.Connection, this.TableName);
+            var serial = table.NextSerial(this.SequenceName);
 
             var sql = string.Format(
               "INSERT INTO \"{0}\" (id, {1}) VALUES ({2}, {3});",
@@ -403,19 +404,6 @@ namespace ObjectServer.Model
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
             }
-        }
-
-        private long NextSerial(IDbConnection conn)
-        {
-            var seqSql = string.Format("SELECT nextval('{0}');",
-                this.SequenceName);
-
-            if (Log.IsDebugEnabled)
-            {
-                Log.Debug(seqSql);
-            }
-            var serial = (long)conn.ExecuteScalar(seqSql);
-            return serial;
         }
 
     }
