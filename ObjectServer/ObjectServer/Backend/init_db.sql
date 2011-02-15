@@ -1,31 +1,31 @@
-﻿CREATE TABLE core_model (
+﻿create table core_model (
     id bigserial not null,
     "name" varchar not null,
     label varchar,
     info text,
     module varchar,
-    PRIMARY KEY(id)
+    primary key(id)
 );
 
-CREATE TABLE core_field (
-    id bigserial NOT NULL,
+create table core_field (
+    id bigserial not null,
     model bigint,
-    "name" varchar NOT NULL,
+    "name" varchar not null,
     relation varchar,
     label varchar,
-    "type" varchar NOT NULL,
+    "type" varchar not null,
     help text,
-    PRIMARY KEY(id),
-    FOREIGN KEY (model) REFERENCES core_model(id) ON DELETE CASCADE
+    primary key(id),
+    foreign key(model) references core_model(id) on delete cascade
 );
 
-CREATE TABLE core_module (
-    id bigserial NOT NULL,  
+create table core_module (
+    id bigserial not null,  
     website varchar(256),
-    "name" varchar(128) NOT NULL,
+    "name" varchar(128) not null,
     author varchar(128),
     url varchar(128),
-    state varchar(16) NOT NULL,
+    state varchar(16) not null,
     latest_version varchar(64),
     shortdesc varchar(256),
     certificate varchar(64),
@@ -35,4 +35,4 @@ CREATE TABLE core_module (
     license varchar(32),
     primary key(id)
 );
-ALTER TABLE core_module add constraint name_uniq unique (name);
+alter table core_module add constraint name_uniq unique (name);

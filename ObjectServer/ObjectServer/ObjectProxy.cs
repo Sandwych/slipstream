@@ -9,7 +9,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public class ObjectProxy : MarshalByRefObject
+    public class ObjectProxy : MarshalByRefObject, IService
     {
 
         public object Execute(string dbName, string objectName, string name, params object[] args)

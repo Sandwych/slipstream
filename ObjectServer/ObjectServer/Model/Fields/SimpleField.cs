@@ -5,15 +5,20 @@ using System.Text;
 
 namespace ObjectServer.Model.Fields
 {
-    public class SimpleField : IFieldInfo
+    public class SimpleField : IField
     {
 
-        #region IFieldInfo 成员
+        public SimpleField(string name)
+        {
+            this.Name = name;
+        }
+
+        #region IField 成员
 
         public string Name
         {
             get;
-            internal set;
+            private set;
         }
 
         public string Label

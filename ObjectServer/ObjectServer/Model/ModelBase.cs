@@ -21,8 +21,8 @@ namespace ObjectServer.Model
         protected static readonly ILog Log = LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<string, IFieldInfo> declaredFields =
-            new Dictionary<string, IFieldInfo>();
+        private Dictionary<string, IField> declaredFields =
+            new Dictionary<string, IField>();
 
         private string tableName = null;
         private string name = null;
@@ -130,7 +130,7 @@ namespace ObjectServer.Model
 
             if (this.Versioned)
             {
-                DefineField("_version", "Version", "BIGINT", -1, true);
+                LongField("_version", "Version", true);
             }
             //DefineField("_creator", "Creation User", "BIGINT", 1);
             //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
@@ -166,16 +166,79 @@ namespace ObjectServer.Model
             }
         }
 
+        #region Field Methods
+
         protected void DefineField(string name, string label, string type, int size, bool required)
         {
-            var field = new Fields.SimpleField();
-            field.Name = name;
+            var field = new Fields.SimpleField(name);
             field.Label = label;
             field.Type = type;
             field.Size = size;
             field.Required = required;
             declaredFields.Add(name, field);
         }
+
+        protected void IntegerField(string name, string label, bool required)
+        {
+            var field = new Fields.SimpleField(name)
+            {
+                Label = label,
+                Type = "integer",
+                Required = required,
+            };
+
+            declaredFields.Add(name, field);
+        }
+
+        protected void LongField(string name, string label, bool required)
+        {
+            var field = new Fields.SimpleField(name)
+            {
+                Label = label,
+                Type = "bigint",
+                Required = required,
+            };
+
+            declaredFields.Add(name, field);
+        }
+
+        protected void BooleanField(string name, string label, bool required)
+        {
+            var field = new Fields.SimpleField(name)
+            {
+                Label = label,
+                Type = "bit",
+                Required = required
+            };
+            declaredFields.Add(name, field);
+        }
+
+        protected void TextField(string name, string label, bool required)
+        {
+            var field = new Fields.SimpleField(name)
+            {
+                Label = label,
+                Type = "text",
+                Required = required
+            };
+            declaredFields.Add(name, field);
+        }
+
+        protected void CharsField(string name, string label, int size, bool required)
+        {
+            var field = new Fields.SimpleField(name)
+            {
+                Label = label,
+                Type = "char",
+                Size = size,
+                Required = required
+            };
+            declaredFields.Add(name, field);
+        }
+
+        #endregion
+
+
 
         private void RegisterAllServiceMethods()
         {
@@ -265,6 +328,8 @@ namespace ObjectServer.Model
                 }
             }
         }
+
+        #region Service Methods
 
         [ServiceMethod]
         public virtual long[] Search(ISession session, string domain, long offset, long limit)
@@ -431,6 +496,8 @@ namespace ObjectServer.Model
                 cmd.ExecuteNonQuery();
             }
         }
+
+        #endregion
 
     }
 }

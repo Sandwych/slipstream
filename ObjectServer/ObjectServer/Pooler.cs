@@ -8,6 +8,7 @@ using System.Transactions;
 
 using ObjectServer.Backend;
 using ObjectServer.Core;
+using ObjectServer.Module;
 
 namespace ObjectServer
 {
@@ -44,7 +45,7 @@ namespace ObjectServer
                         Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
                     }
                     var pool = this.RegisterPool(db.Connection, dbName);
-                    ObjectServer.Core.Module.LoadModules(db.Connection, dbName, pool);
+                    ObjectServer.Module.Module.LoadModules(db.Connection, dbName, pool);
                 }
             }
         }

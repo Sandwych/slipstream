@@ -109,9 +109,10 @@
     <Compile Include="Core\Action.cs" />
     <Compile Include="Core\View.cs" />
     <Compile Include="Core\Menu.cs" />
+    <Compile Include="IService.cs" />
     <Compile Include="IServiceObject.cs" />
     <Compile Include="Model\Fields\SimpleField.cs" />
-    <Compile Include="Model\IFieldInfo.cs" />
+    <Compile Include="Model\IField.cs" />
     <Compile Include="Model\Query\IExpression.cs" />
     <Compile Include="Model\Query\NotExpression.cs" />
     <Compile Include="Model\Query\InExpression.cs" />
@@ -122,9 +123,9 @@
     <Compile Include="Model\Query\TrueExpression.cs" />
     <Compile Include="Model\ServiceObjectAttribute.cs" />
     <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="Core\Module.cs" />
+    <Compile Include="Module\Module.cs" />
     <Compile Include="Model\TestObject.cs" />
-    <Compile Include="Core\ModuleInfo.cs" />
+    <Compile Include="Module\ModuleInfo.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="ObjectProxy.cs" />
     <Compile Include="Pooler.cs" />
