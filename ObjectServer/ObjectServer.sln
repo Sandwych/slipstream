@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer", "ObjectServe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Test", "ObjectServer.Test\ObjectServer.Test.csproj", "{94E3674D-7478-4B48-B1DD-9ACA057E69B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Web", "ObjectServer.Web\ObjectServer.Web.csproj", "{CF15573A-6680-406B-9BA1-15DFF819C6CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{94E3674D-7478-4B48-B1DD-9ACA057E69B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94E3674D-7478-4B48-B1DD-9ACA057E69B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94E3674D-7478-4B48-B1DD-9ACA057E69B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,7 +17,7 @@ namespace ObjectServer
     /// </summary>
     public sealed class Pooler
     {
-        protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly Pooler s_instance = new Pooler();

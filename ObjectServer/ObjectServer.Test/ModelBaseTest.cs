@@ -31,7 +31,7 @@ namespace ObjectServer.Test
             var modelName = "test.test_object";
             var dbName = "objectserver";
 
-            var proxy = new ObjectProxy();
+            var proxy = new LocalService();
             var values = new Dictionary<string, object>
             {
                 { "name", "sweet_name" },
