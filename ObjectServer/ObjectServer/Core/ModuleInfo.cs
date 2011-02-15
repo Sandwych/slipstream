@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
+
+using Newtonsoft.Json;
 
 namespace ObjectServer.Core
 {
@@ -11,23 +11,22 @@ namespace ObjectServer.Core
     /// DTO class for Module
     /// </summary>
     [Serializable]
-    [XmlRoot("module")]
+    [JsonObject("module")]
     public sealed class ModuleInfo
     {
-        [XmlElement("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [XmlElement("label")]
+        [JsonProperty("label")]
         public string Label { get; set; }
 
-        [XmlElement("description")]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
-        [XmlArray("source-files")]
-        [XmlArrayItem("file", typeof(string))]
+        [JsonProperty("source-files")]
         public string[] SourceFiles { get; set; }
 
-        [XmlArray("data-file")]
+        [JsonProperty("data-files")]
         public string[] DataFiles { get; set; }
 
     }

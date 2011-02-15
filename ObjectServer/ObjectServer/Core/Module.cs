@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
+
+using Newtonsoft.Json;
 
 using ObjectServer.Model;
 using ObjectServer.Runtime;
@@ -48,17 +48,14 @@ namespace ObjectServer.Core
         private static void LoadModule(string dbName, IDbConnection conn, string module, ObjectPool pool)
         {
             var moduleDir = Path.Combine(@"c:\objectserver-modules", module);
-            var moduleFilePath = Path.Combine(moduleDir, "module.xml");
-
-            var xs = new XmlSerializer(typeof(ObjectServer.Core.ModuleInfo));
+            var moduleFilePath = Path.Combine(moduleDir, "module.json");
 
             ObjectServer.Core.ModuleInfo moduleInfo;
-            using (var fs = File.OpenRead(moduleFilePath))
-            {
-                moduleInfo = (ObjectServer.Core.ModuleInfo)xs.Deserialize(fs);
-                var assembly = CompileSourceFiles(moduleDir, moduleInfo);
-                pool.RegisterModelsInAssembly(assembly);
-            }
+            var json = File.ReadAllText(moduleFilePath, Encoding.UTF8);
+
+            moduleInfo = JsonConvert.DeserializeObject<ObjectServer.Core.ModuleInfo>(json);
+            var assembly = CompileSourceFiles(moduleDir, moduleInfo);
+            pool.RegisterModelsInAssembly(assembly);
         }
 
         private static System.Reflection.Assembly CompileSourceFiles(
