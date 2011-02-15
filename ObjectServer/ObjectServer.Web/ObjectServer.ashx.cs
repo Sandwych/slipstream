@@ -19,9 +19,10 @@ namespace ObjectServer.Web
         private IService service = new LocalService();
 
         [JsonRpcMethod(Name = "Execute")]
-        public object Execute(string dbName, string objectName, string name, JArray args)
-        {            
-            return this.service.Execute(dbName, objectName, name, args.Values<object>());
+        public object Execute(string dbName, string objectName, string name, JArray parameters)
+        {
+            var paramObjs = parameters.Values<object>().ToArray();
+            return this.service.Execute(dbName, objectName, name, paramObjs);
         }
 
     }

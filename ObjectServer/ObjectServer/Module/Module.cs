@@ -48,7 +48,7 @@ namespace ObjectServer.Module
         private static void LoadModule(string dbName, IDbConnection conn, string module, ObjectPool pool)
         {
             var moduleDir = Path.Combine(@"c:\objectserver-modules", module);
-            var moduleFilePath = Path.Combine(moduleDir, "module.json");
+            var moduleFilePath = Path.Combine(moduleDir, "module.js");
 
             ModuleInfo moduleInfo;
             var json = File.ReadAllText(moduleFilePath, Encoding.UTF8);

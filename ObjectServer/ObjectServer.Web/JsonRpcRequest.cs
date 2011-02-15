@@ -14,7 +14,7 @@ namespace ObjectServer.Web
         [JsonProperty("method", Required = Required.Always)]
         public string Method { get; set; }
 
-        [JsonProperty("params", Required = Required.Always)]
+        [JsonProperty("params", Required = Required.Always)]   
         public object[] Params { get; set; }
 
         [JsonProperty("id", Required = Required.Always)]
