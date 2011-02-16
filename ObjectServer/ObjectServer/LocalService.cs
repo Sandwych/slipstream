@@ -11,7 +11,6 @@ namespace ObjectServer
 {
     public sealed class LocalService : IService
     {
-
         public object Execute(string dbName, string objectName, string name, params object[] args)
         {
             using (var session = new Session(dbName))

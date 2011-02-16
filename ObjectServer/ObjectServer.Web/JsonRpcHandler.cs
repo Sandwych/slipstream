@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ObjectServer.Web
 {
@@ -79,13 +80,17 @@ namespace ObjectServer.Web
             var jreq = DeserializeRequest(ins);
 
             //执行调用
-            var method = this.methods[jreq.Method];
+            var id = jreq["id"].Value<object>();
+            var methodName = jreq["method"].Value<string>();
+            var method = this.methods[methodName];
             string error = null;
             object result = null;
 
+            var args = (object[])JsonConvert.ConvertJsonToken(jreq["params"]);
+
             try
             {
-                result = method.Invoke(this, jreq.Params);
+                result = method.Invoke(this, args);
             }
             catch (Exception ex)
             {
@@ -94,7 +99,7 @@ namespace ObjectServer.Web
 
             var jresponse = new JsonRpcResponse()
             {
-                Id = jreq.Id,
+                Id = id,
                 Error = error,
                 Result = result
             };
@@ -103,16 +108,14 @@ namespace ObjectServer.Web
             js.Serialize(context.Response.Output, jresponse);
         }
 
-        private static JsonRpcRequest DeserializeRequest(Stream ins)
+        private static JObject DeserializeRequest(Stream ins)
         {
-            JsonRpcRequest jreq;
             using (var sr = new StreamReader(ins, Encoding.UTF8))
             using (var jtReader = new JsonTextReader(sr))
             {
                 var js = new JsonSerializer();
-                jreq = js.Deserialize<JsonRpcRequest>(jtReader);
+                return js.Deserialize<JObject>(jtReader);
             }
-            return jreq;
         }
 
         #endregion
