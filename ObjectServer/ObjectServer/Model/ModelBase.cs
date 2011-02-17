@@ -13,6 +13,7 @@ using NpgsqlTypes;
 using ObjectServer.Backend;
 using ObjectServer.Utility;
 using ObjectServer.Model.Query;
+using ObjectServer.Model.Fields;
 
 namespace ObjectServer.Model
 {
@@ -22,6 +23,9 @@ namespace ObjectServer.Model
             MethodBase.GetCurrentMethod().DeclaringType);
 
         private Dictionary<string, IField> declaredFields =
+            new Dictionary<string, IField>();
+
+        private Dictionary<string, IField> modelFields =
             new Dictionary<string, IField>();
 
         private string tableName = null;
@@ -105,133 +109,136 @@ namespace ObjectServer.Model
             this.AddInternalFields();
 
             //检测此模块是否存在于数据库 core_model 表
-            var sql = string.Format(
-                "SELECT DISTINCT COUNT(id) FROM core_model WHERE name='{0}'",
-                this.Name);
-            var count = (long)db.Connection.ExecuteScalar(sql);
+            var sql = "SELECT DISTINCT COUNT(id) FROM core_model WHERE name=@0";
+            var count = (long)db.QueryValue(sql, this.Name);
             if (count <= 0)
             {
-                this.CreateModel(db.Connection);
+                this.CreateModel(db);
             }
 
             //如果需要自动建表就建
             if (this.Automatic)
             {
-                var table = new Table(db.Connection, this.TableName);
+                var table = new Table(db, this.TableName);
                 if (!table.TableExists(this.TableName))
                 {
-                    this.CreateTable(db.Connection);
+                    this.CreateTable(db);
                 }
             }
         }
 
         private void AddInternalFields()
         {
+            LongField("id", "ID", true, null);
 
             if (this.Versioned)
             {
-                LongField("_version", "Version", true);
+                LongField("_version", "Version", true, null);
             }
             //DefineField("_creator", "Creation User", "BIGINT", 1);
             //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
         }
 
-        private void CreateModel(IDbConnection conn)
+        private void CreateModel(Database db)
         {
 
-            var sql = string.Format(
-                "INSERT INTO core_model(name) VALUES('{0}');",
+            var rowCount = db.Execute(
+                "INSERT INTO core_model(name) VALUES(@0);",
                 this.Name);
-            conn.ExecuteNonQuery(sql);
 
-            //TODO 加入字段信息
+            if (rowCount != 1)
+            {
+                throw new DataException("Failed to insert record of table core_model");
+            }
         }
 
-        private void CreateTable(IDbConnection conn)
+        private void CreateTable(Database db)
         {
-            var table = new Table(conn, this.TableName);
+            var table = new Table(db, this.TableName);
             table.CreateTable(this.TableName, this.Label);
 
             //创建字段
             if (this.Hierarchy)
             {
-                conn.ExecuteNonQuery("");
+                //conn.ExecuteNonQuery("");
             }
 
             foreach (var pair in this.declaredFields)
             {
-                var field = pair.Value;
-                table.AddColumn(field.Name, field.SqlType);
-                Console.WriteLine(field.Name);
+                if (!pair.Value.IsFunctionField)
+                {
+                    var field = pair.Value;
+                    table.AddColumn(field.Name, field.SqlType);
+                }
             }
         }
 
         #region Field Methods
 
-        protected void DefineField(string name, string label, string type, int size, bool required)
+        protected void DefineField(string name, string label, FieldType type, int size, bool required)
         {
-            var field = new Fields.SimpleField(name);
+            var field = new Fields.Field(name, "");
             field.Label = label;
-            field.Type = type;
             field.Size = size;
             field.Required = required;
             declaredFields.Add(name, field);
         }
 
-        protected void IntegerField(string name, string label, bool required)
+        protected void IntegerField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.SimpleField(name)
+            var field = new Fields.Field(name, "integer")
             {
                 Label = label,
-                Type = "integer",
                 Required = required,
+                Getter = getter,
             };
 
             declaredFields.Add(name, field);
         }
 
-        protected void LongField(string name, string label, bool required)
+        protected void LongField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.SimpleField(name)
+            var field = new Fields.Field(name, "bigint")
             {
                 Label = label,
-                Type = "bigint",
                 Required = required,
+                Getter = getter,
             };
 
             declaredFields.Add(name, field);
         }
 
-        protected void BooleanField(string name, string label, bool required)
+        protected void BooleanField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.SimpleField(name)
+            var field = new Fields.Field(name, "bit")
             {
                 Label = label,
-                Type = "bit",
-                Required = required
+                Required = required,
+                Getter = getter,
             };
             declaredFields.Add(name, field);
         }
 
-        protected void TextField(string name, string label, bool required)
+        protected void TextField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.SimpleField(name)
+            var field = new Fields.Field(name, "text")
             {
                 Label = label,
-                Type = "text",
-                Required = required
+                Required = required,
+                Getter = getter,
             };
             declaredFields.Add(name, field);
         }
 
-        protected void CharsField(string name, string label, int size, bool required)
+        protected void CharsField(string name, string label, int size, bool required, FieldGetter getter)
         {
-            var field = new Fields.SimpleField(name)
+            var field = new Fields.Field(name, "varchar")
             {
                 Label = label,
-                Type = "char",
                 Size = size,
-                Required = required
+                Required = required,
+                Getter = getter,
+
             };
             declaredFields.Add(name, field);
         }
@@ -314,7 +321,7 @@ namespace ObjectServer.Model
                 "select id from \"{0}\" where ({1}) and ({2});",
                 this.TableName, exp.ToSqlString(), ruleExp.ToSqlString());
 
-            using (var cmd = session.Connection.CreateCommand())
+            using (var cmd = session.Database.Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 using (var reader = cmd.ExecuteReader())
@@ -339,47 +346,7 @@ namespace ObjectServer.Model
             return this.Search(session, new TrueExpression());
         }
 
-        [ServiceMethod]
-        public virtual Dictionary<string, object>[] Read(ISession session, IEnumerable<string> fields, IEnumerable<long> ids)
-        {
-            if (!this.CanRead)
-            {
-                throw new NotSupportedException();
-            }
 
-            var allFields = new List<string>();
-            allFields.Add("id");
-            allFields.AddRange(fields);
-
-            var sql = string.Format("select {0} from \"{1}\" where \"id\" in ({2});",
-                allFields.ToCommaList(), //TODO: SQL 注入问题
-                this.TableName,
-                ids.ToCommaList());
-
-            if (Log.IsDebugEnabled)
-            {
-                Log.Debug(sql);
-            }
-
-            using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
-            {
-                cmd.CommandText = sql;
-                using (IDataReader reader = cmd.ExecuteReader())
-                {
-                    var result = new List<Dictionary<string, object>>();
-                    while (reader.Read())
-                    {
-                        var rec = new Dictionary<string, object>(reader.FieldCount);
-                        foreach (var field in allFields)
-                        {
-                            rec.Add(field, reader.GetValue(reader.GetOrdinal(field)));
-                        }
-                        result.Add(rec);
-                    }
-                    return result.ToArray();
-                }
-            }
-        }
 
         [ServiceMethod]
         public virtual long Create(ISession session, IDictionary<string, object> values)
@@ -389,10 +356,11 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
+            //TODO 这里改成定义的列插入，而不是用户提供的列
             //TODO 检测是否含有 id 列
 
             //获取下一个 SEQ id，这里可能要移到 backend 里，利于跨数据库
-            var table = new Table(session.Connection, this.TableName);
+            var table = new Table(session.Database, this.TableName);
             var serial = table.NextSerial(this.SequenceName);
 
             var sql = string.Format(
@@ -402,12 +370,7 @@ namespace ObjectServer.Model
               serial,
               values.Keys.ToSqlParameters());
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.Debug(sql);
-            }
-
-            using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
+            using (var cmd = session.Database.Connection.CreateCommand() as NpgsqlCommand)
             {
                 cmd.CommandText = sql;
                 foreach (var pair in values)
@@ -427,27 +390,30 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual void Write(ISession session, long id, IDictionary<string, object> values)
+        public virtual void Write(ISession session, long id, IDictionary<string, object> record)
         {
             if (!this.CanWrite)
             {
                 throw new NotSupportedException();
             }
 
-
             //TODO: 并发检查，处理 _version 字段
             //客户端也需要提供 _version 字段
+            var values = new object[record.Count];
 
-            var sbFieldValues = new StringBuilder(15 * values.Count);
+            var sbFieldValues = new StringBuilder(15 * record.Count);
             bool isFirstLine = true;
-            foreach (var pair in values)
+            int i = 0;
+            foreach (var pair in record)
             {
                 if (!isFirstLine)
                 {
                     sbFieldValues.Append(", ");
                     isFirstLine = false;
                 }
-                sbFieldValues.AppendFormat("{0}=:{0}", pair.Key);
+                values[i] = pair.Value;
+                sbFieldValues.AppendFormat("{0}=@{1}", pair.Key, i);
+                i++;
             }
 
             var sql = string.Format(
@@ -456,20 +422,71 @@ namespace ObjectServer.Model
                 sbFieldValues.ToString(),
                 id);
 
-            if (Log.IsDebugEnabled)
+            session.Database.Execute(sql, values);
+        }
+
+        [ServiceMethod]
+        public virtual Dictionary<string, object>[] Read(
+            ISession session, IEnumerable<long> ids, IEnumerable<string> fields)
+        {
+            if (!this.CanRead)
             {
-                Log.Debug(sql);
+                throw new NotSupportedException();
             }
 
-            using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
+
+            var allFields = new List<string>();
+            if (fields == null || fields.Count() == 0)
             {
-                cmd.CommandText = sql;
-                foreach (var pair in values)
-                {
-                    cmd.Parameters.AddWithValue(pair.Key, pair.Value);
-                }
-                cmd.ExecuteNonQuery();
+                allFields.AddRange(this.declaredFields.Keys);
             }
+            else
+            {
+                allFields.Capacity = fields.Count();
+                foreach (var f in fields)
+                {
+                    if (this.declaredFields.ContainsKey(f))
+                    {
+                        allFields.Add(f);
+                    }
+                }
+            }
+
+            if (!allFields.Contains("id"))
+            {
+                allFields.Add("id");
+            }
+
+            //表里的列，也就是可以直接用 SQL 查的列
+            var columnFields = allFields
+                .Where(f => !this.declaredFields[f].IsFunctionField);
+
+            //TODO: SQL 注入问题
+            var sql = string.Format("select {0} from \"{1}\" where \"id\" in ({2});",
+                columnFields.ToCommaList(),
+                this.TableName,
+                ids.ToCommaList());
+
+            //先查找表里的简单字段数据
+            var result = session.Database.QueryAsDictionary(sql);
+
+            //处理函数字段
+            foreach (var fieldName in allFields)
+            {
+                var f = this.declaredFields[fieldName];
+
+                if (f.IsFunctionField)
+                {
+                    var funcFieldValues = f.Getter(session, ids);
+                    foreach (var p in result)
+                    {
+                        var id = (long)p["id"];
+                        p[f.Name] = funcFieldValues[id];
+                    }
+                }
+            }
+
+            return result.ToArray();
         }
 
 
@@ -485,17 +502,13 @@ namespace ObjectServer.Model
                 "delete from \"{0}\" where \"id\" in ({1});",
                 this.TableName, ids.ToCommaList());
 
-            if (Log.IsDebugEnabled)
+            var rowCount = session.Database.Execute(sql);
+            if (rowCount != ids.Count())
             {
-                Log.Debug(sql);
-            }
-
-            using (var cmd = session.Connection.CreateCommand() as NpgsqlCommand)
-            {
-                cmd.CommandText = sql;
-                cmd.ExecuteNonQuery();
+                throw new DataException();
             }
         }
+
 
         #endregion
 

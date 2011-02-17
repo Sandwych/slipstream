@@ -5,12 +5,13 @@ using System.Text;
 using System.Data;
 using System.Data.Common;
 
+using ObjectServer.Backend;
+
 namespace ObjectServer
 {
     public interface ISession : IDisposable
     {
-        string Database { get; }
-        IDbConnection Connection { get; }
         ObjectPool Pool { get; }
+        Database Database { get; }
     }
 }

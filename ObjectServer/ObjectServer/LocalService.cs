@@ -21,7 +21,7 @@ namespace ObjectServer
                 internalArgs[0] = session;
                 args.CopyTo(internalArgs, 1);
 
-                var tx = session.Connection.BeginTransaction();
+                var tx = session.Database.Connection.BeginTransaction();
                 try
                 {
                     var result = method.Invoke(obj, internalArgs);

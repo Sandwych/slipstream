@@ -36,6 +36,8 @@ namespace ObjectServer.Test
             {
                 { "name", "sweet_name" },
                 { "address", "my address" },
+                { "field1", 123 },
+                { "field2", 100 },
             };
             var id = (long)proxy.Execute(
                 dbName, modelName, "Create", values);
@@ -52,10 +54,11 @@ namespace ObjectServer.Test
             proxy.Execute(dbName, modelName, "Write", id, newValues);
 
             var ids = new long[] { id };
-            var fields = new string[] { "name" };
-            var data = (Dictionary<string, object>[])proxy.Execute(dbName, modelName, "Read", fields, ids);
+            var data = (Dictionary<string, object>[])proxy.Execute(dbName, modelName, "Read", ids, null);
+            Console.WriteLine(data);
             Assert.Equal(1, data.Length);
             Assert.Equal("changed_name", data[0]["name"]);
+            Assert.Equal(223, data[0]["field3"]);
 
 
             proxy.Execute(dbName, modelName, "Delete", ids);

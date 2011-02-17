@@ -12,7 +12,8 @@ namespace ObjectServer.Backend
 {
     public class Database : IDisposable
     {
-        private IDbConnection conn = null;
+        private DbConnection conn;
+        private bool opened;
 
         public Database(string dbName)
         {
@@ -34,6 +35,7 @@ namespace ObjectServer.Backend
         public void Open()
         {
             this.conn.Open();
+            this.opened = true;
         }
 
         public void Close()
@@ -72,13 +74,12 @@ namespace ObjectServer.Backend
             var dbUser = "objectserver"; //TODO: 改成可配置的
             var sql = @"
                 select datname from pg_database  
-                    where datdba = (select distinct usesysid from pg_user where usename=:dbUser) 
+                    where datdba = (select distinct usesysid from pg_user where usename=@0) 
                         and datname not in ('template0', 'template1', 'postgres')  
 	                order by datname asc;";
-            using (var cmd = (NpgsqlCommand)this.conn.CreateCommand())
+            using (var cmd = this.PrepareCommand(sql))
             {
-                cmd.CommandText = sql;
-                cmd.Parameters.AddWithValue("dbUser", dbUser);
+                PrepareCommandParameters(cmd, dbUser);
                 var result = new List<string>();
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -91,7 +92,7 @@ namespace ObjectServer.Backend
             }
         }
 
-        public IDbConnection Connection { get { return this.conn; } }
+        public DbConnection Connection { get { return this.conn; } }
 
         public bool Connected
         {
@@ -104,14 +105,156 @@ namespace ObjectServer.Backend
 
         public string DatabaseName { get; private set; }
 
+
+        #region Query methods
+
+        public object QueryValue(string commandText, params object[] args)
+        {
+            EnsureConnectionOpened();
+
+            using (var cmd = PrepareCommand(commandText))
+            {
+                PrepareCommandParameters(cmd, args);
+                var result = cmd.ExecuteScalar();
+                return result;
+            }
+        }
+
+        public int Execute(string commandText, params object[] args)
+        {
+            using (var command = PrepareCommand(commandText))
+            {
+                PrepareCommandParameters(command, args);
+                EnsureConnectionOpened();
+                var result = command.ExecuteNonQuery();
+                return result;
+            }
+        }
+
+        public DataTable QueryAsDataTable(string commandText, params object[] args)
+        {
+            EnsureConnectionOpened();
+
+            using (var command = PrepareCommand(commandText))
+            {
+                PrepareCommandParameters(command, args);
+                using (var reader = command.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < reader.FieldCount; ++i)
+                        {
+                            var columnName = reader.GetName(i);
+                            if (!tb.Columns.Contains(columnName))
+                            {
+                                tb.Columns.Add(columnName);
+                            }
+                        }
+                        var row = tb.NewRow();
+                        for (int i = 0; i < reader.FieldCount; ++i)
+                        {
+                            row[i] = reader[i];
+                        }
+
+                        tb.Rows.Add(row);
+
+                    }
+                    return tb;
+                }
+            }
+        }
+
+        public List<Dictionary<string, object>> QueryAsDictionary(
+            string commandText, params object[] args)
+        {
+            EnsureConnectionOpened();
+
+            using (var command = PrepareCommand(commandText))
+            {
+                if (args != null && args.Length > 0)
+                {
+                    PrepareCommandParameters(command, args);
+                }
+                var rows = new List<Dictionary<string, object>>();
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var fields = new Dictionary<string, object>();
+                        for (int i = 0; i < reader.FieldCount; ++i)
+                        {
+                            var fieldName = reader.GetName(i);
+                            fields[fieldName] = reader.GetValue(i);
+                        }
+                        rows.Add(fields);
+                    }
+                }
+
+                return rows;
+            }
+        }
+
+        #endregion
+
         #region IDisposable 成员
 
         public void Dispose()
         {
-            this.Close();
+            Dispose(true);
+        }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.opened)
+                {
+                    this.conn.Close();
+                }
+                this.conn.Dispose();
+            }
         }
 
         #endregion
+
+
+
+        private DbCommand PrepareCommand(string commandText)
+        {
+            var command = this.conn.CreateCommand();
+            command.CommandText = commandText;
+
+            return command;
+        }
+
+        private static void PrepareCommandParameters(DbCommand command, params object[] args)
+        {
+            if (args == null || args.Length == 0)
+            {
+                return;
+            }
+
+            int index = 0;
+
+            foreach (var arg in args)
+            {
+                var param = command.CreateParameter();
+                param.ParameterName = "@" + index;
+                param.Value = args[index++];
+                command.Parameters.Add(param);
+            }
+        }
+
+        private void EnsureConnectionOpened()
+        {
+            if (this.opened)
+            {
+                return;
+            }
+
+            this.conn.Open();
+        }
     }
 }

@@ -10,33 +10,25 @@ namespace ObjectServer
 {
     internal class Session : ISession
     {
-        private Database db;
-
         public Session(string dbName)
         {
-            this.Database = dbName;
-            this.db = new Database(dbName);
-            this.db.Open();
+            this.Database = new Database(dbName);
+            this.Database.Open();
         }
 
         #region ISession 成员
 
-        public string Database
+        public Database Database
         {
             get;
             private set;
-        }
-
-        public IDbConnection Connection
-        {
-            get { return this.db.Connection; }
         }
 
         public ObjectPool Pool
         {
             get
             {
-                return Pooler.Instance.GetPool(this.Database);
+                return Pooler.Instance.GetPool(this.Database.DatabaseName);
             }
         }
 
@@ -46,8 +38,7 @@ namespace ObjectServer
 
         public void Dispose()
         {
-            this.db.Close();
-            this.db = null;
+            this.Database.Close();
         }
 
         #endregion

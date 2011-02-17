@@ -15,17 +15,34 @@ namespace ObjectServer.Model
         public TestObject()
         {
             this.Name = "test.test_object";
+            this.Automatic = true;
 
-            this.DefineField("name", "姓名", "varchar", 64, true);
-            this.DefineField("address", "地址", "varchar", 200, true);
+            this.CharsField("name", "姓名", 64, true, null);
+            this.CharsField("address", "地址", 200, true, null);
+            this.IntegerField("field1", "数1", true, null);
+            this.IntegerField("field2", "数2", true, null);
+            this.IntegerField("field3", "数3", true, this.GetField3);
         }
 
         [ServiceMethod]
-        public int GetSum(IDbConnection conn)        
+        public int GetSum(IDbConnection conn)
         {
             return 1 + 1;
         }
 
-
+        public Dictionary<long, object> GetField3(ISession session, IEnumerable<long> ids)
+        {
+            var fieldNames = new string[] { "field1", "field2" };
+            var values = base.Read(session, ids, fieldNames);
+            var rows = new Dictionary<long, object>(ids.Count());
+            foreach (var r in values)
+            {
+                var id = (long)r["id"];
+                var field1 = (int)r["field1"];
+                var field2 = (int)r["field2"];
+                rows[id] = field1 + field2;
+            }
+            return rows;
+        }
     }
 }

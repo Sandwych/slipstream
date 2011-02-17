@@ -23,9 +23,9 @@ namespace ObjectServer.Module
             this.Automatic = false;
             this.Versioned = false;
 
-            this.CharsField("name", "Name", 128, true);
-            this.CharsField("state", "State", 16, true);
-            this.TextField("description", "Description", false);
+            this.CharsField("name", "Name", 128, true, null);
+            this.CharsField("state", "State", 16, true, null);
+            this.TextField("description", "Description", false, null);
         }
 
         public static void LoadModules(IDbConnection conn, string dbName, ObjectPool pool)

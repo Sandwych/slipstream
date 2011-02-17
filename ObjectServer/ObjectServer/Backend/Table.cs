@@ -14,11 +14,11 @@ namespace ObjectServer.Backend
         protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IDbConnection conn;
+        private Database db;
 
-        public Table(IDbConnection conn, string tableName)
+        public Table(Database db, string tableName)
         {
-            this.conn = conn;
+            this.db = db;
             this.Name = tableName;
         }
 
@@ -27,14 +27,12 @@ namespace ObjectServer.Backend
         public bool TableExists(string tableName)
         {
             //检查连接
-            var sql = string.Format(
-                "select count(relname) from pg_class " +
-                "   where relkind IN ('r','v') and relname='{0}'",
-                tableName);
+            var sql =
+@"
+select count(relname) from pg_class 
+    where relkind IN ('r','v') and relname=@0";
 
-            var cmd = this.conn.CreateCommand();
-            cmd.CommandText = sql;
-            var n = (long)cmd.ExecuteScalar();
+            var n = (long)this.db.QueryValue(sql, tableName);
             return n > 0;
         }
 
@@ -44,12 +42,11 @@ namespace ObjectServer.Backend
             var sql = string.Format(
                 @"CREATE TABLE ""{0}"" (id BIGSERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS;",
                 tableName);
-            this.conn.ExecuteNonQuery(sql);
+            this.db.Execute(sql);
             sql = string.Format(
                 @"COMMENT ON TABLE ""{0}"" IS '{1}';",
                 tableName, label);
-            this.conn.ExecuteNonQuery(sql);
-
+            this.db.Execute(sql);
         }
 
         public void AddColumn(string colName, string sqlType)
@@ -58,19 +55,13 @@ namespace ObjectServer.Backend
             var sql = string.Format(
                 @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2}",
                 this.Name, colName, sqlType);
-            this.conn.ExecuteNonQuery(sql);
+            this.db.Execute(sql);
         }
 
         public long NextSerial(string sequenceName)
         {
-            var seqSql = string.Format("SELECT nextval('{0}');",
-                sequenceName);
-
-            if (Log.IsDebugEnabled)
-            {
-                Log.Debug(seqSql);
-            }
-            var serial = (long)this.conn.ExecuteScalar(seqSql);
+            var seqSql = "SELECT nextval(@0)";
+            var serial = (long)this.db.QueryValue(seqSql, sequenceName);
             return serial;
         }
     }

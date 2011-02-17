@@ -103,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backend\Database.cs" />
-    <Compile Include="Backend\DataExtensions.cs" />
     <Compile Include="Backend\Table.cs" />
     <Compile Include="Core\Group.cs" />
     <Compile Include="Core\Action.cs" />
@@ -111,8 +110,9 @@
     <Compile Include="Core\Menu.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IServiceObject.cs" />
-    <Compile Include="Model\Fields\SimpleField.cs" />
-    <Compile Include="Model\IField.cs" />
+    <Compile Include="Model\Fields\FieldGetter.cs" />
+    <Compile Include="Model\Fields\Field.cs" />
+    <Compile Include="Model\Fields\IField.cs" />
     <Compile Include="Model\Query\IExpression.cs" />
     <Compile Include="Model\Query\NotExpression.cs" />
     <Compile Include="Model\Query\InExpression.cs" />
