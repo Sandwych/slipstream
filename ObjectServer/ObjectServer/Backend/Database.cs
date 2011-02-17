@@ -8,10 +8,16 @@ using System.Diagnostics;
 
 using Npgsql;
 
+using ObjectServer.Model;
+using ObjectServer.Model.Fields;
+
 namespace ObjectServer.Backend
 {
     public class Database : IDisposable
     {
+        protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
+            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private DbConnection conn;
         private bool opened;
 
@@ -52,6 +58,12 @@ namespace ObjectServer.Backend
             var sql = string.Format(
                 @"CREATE DATABASE ""{0}"" TEMPLATE template0 ENCODING 'unicode'",
                 dbName);
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Info(sql);
+            }
+
             var cmd = this.Connection.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
@@ -63,6 +75,12 @@ namespace ObjectServer.Backend
         {
             var sql = string.Format(
                 "DROP DATABASE \"{0}\"", dbName);
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Info(sql);
+            }
+
             var cmd = this.Connection.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
@@ -77,6 +95,12 @@ namespace ObjectServer.Backend
                     where datdba = (select distinct usesysid from pg_user where usename=@0) 
                         and datname not in ('template0', 'template1', 'postgres')  
 	                order by datname asc;";
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Info(sql);
+            }
+
             using (var cmd = this.PrepareCommand(sql))
             {
                 PrepareCommandParameters(cmd, dbUser);
@@ -110,7 +134,12 @@ namespace ObjectServer.Backend
 
         public object QueryValue(string commandText, params object[] args)
         {
-            EnsureConnectionOpened();
+            this.EnsureConnectionOpened();
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Info(commandText);
+            }
 
             using (var cmd = PrepareCommand(commandText))
             {
@@ -122,6 +151,13 @@ namespace ObjectServer.Backend
 
         public int Execute(string commandText, params object[] args)
         {
+            this.EnsureConnectionOpened();
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Info(commandText);
+            }
+
             using (var command = PrepareCommand(commandText))
             {
                 PrepareCommandParameters(command, args);
@@ -133,7 +169,12 @@ namespace ObjectServer.Backend
 
         public DataTable QueryAsDataTable(string commandText, params object[] args)
         {
-            EnsureConnectionOpened();
+            this.EnsureConnectionOpened();
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Info(commandText);
+            }
 
             using (var command = PrepareCommand(commandText))
             {
@@ -169,6 +210,11 @@ namespace ObjectServer.Backend
             string commandText, params object[] args)
         {
             EnsureConnectionOpened();
+
+            if (Log.IsDebugEnabled)
+            {
+                Log.Info(commandText);
+            }
 
             using (var command = PrepareCommand(commandText))
             {
@@ -255,6 +301,11 @@ namespace ObjectServer.Backend
             }
 
             this.conn.Open();
+        }
+
+        public string GetSqlType(IField field)
+        {
+            throw new NotImplementedException();
         }
     }
 }

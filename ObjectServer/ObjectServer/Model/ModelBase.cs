@@ -210,7 +210,7 @@ namespace ObjectServer.Model
 
         protected void BooleanField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "bit")
+            var field = new Fields.Field(name, "boolean")
             {
                 Label = label,
                 Required = required,
@@ -243,9 +243,55 @@ namespace ObjectServer.Model
             declaredFields.Add(name, field);
         }
 
+        protected void ManyToOneField(
+            string name, string masterModel, string label, bool required, FieldGetter getter)
+        {
+            var field = new Fields.Field(name, "many2one")
+            {
+                Label = label,
+                Required = required,
+                Getter = getter,
+                Relation = masterModel,
+            };
+
+            declaredFields.Add(name, field);
+        }
+
+        protected void OneToManyField(
+            string name, string childModel, string relatedField, string label, bool required, FieldGetter getter)
+        {
+            var field = new Fields.Field(name, "one2many")
+            {
+                Label = label,
+                Required = required,
+                Getter = getter,
+                Relation = childModel,
+                RelatedField = relatedField,
+            };
+
+            declaredFields.Add(name, field);
+        }
+
+        protected void ManyToManyField(
+            string name, string relatedModel,
+            string refTableName, string originField, string targetField,
+            string label, bool required, FieldGetter getter)
+        {
+            var field = new Fields.Field(name, "many2many")
+            {
+                Label = label,
+                Required = required,
+                Getter = getter,
+                Relation = refTableName,
+                OriginField = targetField,
+                RelatedField = originField,
+            };
+
+            declaredFields.Add(name, field);
+        }
+
+
         #endregion
-
-
 
         private void RegisterAllServiceMethods()
         {
@@ -341,6 +387,10 @@ namespace ObjectServer.Model
         [ServiceMethod]
         public virtual long[] Search(ISession session, string domain, long offset, long limit)
         {
+            if (!this.CanRead)
+            {
+                throw new NotSupportedException();
+            }
             //TODO: exp to IExpression
             //example: "and((like name '%test%') (equal address 'street1'))"
             return this.Search(session, new TrueExpression());

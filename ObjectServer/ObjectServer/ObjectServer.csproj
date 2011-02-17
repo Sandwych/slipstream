@@ -103,6 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backend\Database.cs" />
+    <Compile Include="Backend\DatabaseProvider.cs" />
+    <Compile Include="Backend\ISqlTypeConverter.cs" />
+    <Compile Include="Backend\PgSqlTypeConverter.cs" />
     <Compile Include="Backend\Table.cs" />
     <Compile Include="Core\Group.cs" />
     <Compile Include="Core\Action.cs" />
@@ -130,7 +133,7 @@
     <Compile Include="LocalService.cs" />
     <Compile Include="Pooler.cs" />
     <Compile Include="Core\User.cs" />
-    <Compile Include="Model\FieldType.cs" />
+    <Compile Include="Model\Fields\FieldType.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="Core\Field.cs" />
     <Compile Include="Core\Model.cs" />

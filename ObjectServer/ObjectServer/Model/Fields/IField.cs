@@ -15,5 +15,8 @@ namespace ObjectServer.Model.Fields
         string Type { get; }
         int Size { get; }
         bool Required { get; }
+        string Relation { get; }
+        string OriginField { get; }
+        string RelatedField { get; }
     }
 }

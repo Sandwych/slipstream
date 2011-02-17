@@ -58,7 +58,7 @@ namespace ObjectServer.Test
             Console.WriteLine(data);
             Assert.Equal(1, data.Length);
             Assert.Equal("changed_name", data[0]["name"]);
-            Assert.Equal(223, data[0]["field3"]);
+            Assert.Equal(223, data[0]["field3"]); //检测函数字段的计算是否正确
 
 
             proxy.Execute(dbName, modelName, "Delete", ids);

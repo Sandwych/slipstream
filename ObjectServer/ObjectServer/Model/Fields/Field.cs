@@ -76,6 +76,24 @@ namespace ObjectServer.Model.Fields
             internal set;
         }
 
+        public string Relation
+        {
+            get;
+            internal set;
+        }
+
+        public string RelatedField
+        {
+            get;
+            internal set;
+        }
+
+        public string OriginField
+        {
+            get;
+            internal set;
+        }
+
         #endregion
     }
 }

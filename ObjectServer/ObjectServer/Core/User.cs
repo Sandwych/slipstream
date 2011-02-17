@@ -15,6 +15,13 @@ namespace ObjectServer.Core
         public User()
         {
             this.Name = "core.user";
+
+
+            /*
+            ManyToManyField(
+                "groups", "core.group", "core_user_group_rel", "user_id", "group_id",
+                "User Groups", false, null);
+             */
         }
 
     }
