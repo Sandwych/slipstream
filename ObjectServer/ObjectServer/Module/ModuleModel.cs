@@ -36,53 +36,9 @@ namespace ObjectServer.Module
             this.TextField("description", "Description", false, null);
         }
 
-        public static void LoadModules(IDatabase db, string dbName, ObjectPool pool)
+        public List<Module> LoadedModules
         {
-            var sql = "select name from core_module where state = 'installed'";
-            var modules = db.QueryAsDictionary(sql);
-
-            foreach (var m in modules)
-            {
-                LoadModule(dbName, db, (string)m["name"], pool);
-            }
-        }
-
-        /// <summary>
-        /// 注册模块
-        /// TODO 线程安全
-        /// </summary>
-        /// <param name="dbName"></param>
-        /// <param name="conn"></param>
-        /// <param name="module"></param>
-        /// <param name="pool"></param>
-        private static void LoadModule(string dbName, IDatabase db, string module, ObjectPool pool)
-        {
-            var moduleDir = Path.Combine(@"c:\objectserver-modules", module);
-            var moduleFilePath = Path.Combine(moduleDir, "module.js");
-
-            Module moduleInfo;
-            var json = File.ReadAllText(moduleFilePath, Encoding.UTF8);
-
-            moduleInfo = JsonConvert.DeserializeObject<Module>(json);
-
-            var assembly = CompileSourceFiles(moduleDir, moduleInfo);
-            moduleInfo.Assemblies.Add(assembly);
-            pool.RegisterModelsInAssembly(assembly);
-        }
-
-        private static System.Reflection.Assembly CompileSourceFiles(
-            string moduleDir, Module moduleInfo)
-        {
-            var sourceFiles = new List<string>();
-            foreach (var file in moduleInfo.SourceFiles)
-            {
-                sourceFiles.Add(Path.Combine(moduleDir, file));
-            }
-
-            //编译模块程序并注册所有对象
-            var compiler = CompilerProvider.GetCompiler(moduleInfo.ScriptLanguage);
-            var assembly = compiler.CompileFromFile(sourceFiles);
-            return assembly;
+            get { return this.loadedModules; }
         }
 
     }

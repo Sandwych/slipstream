@@ -153,6 +153,7 @@
     <Compile Include="Session.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
+    <Compile Include="Utility\Sha1.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
   </ItemGroup>
   <ItemGroup>

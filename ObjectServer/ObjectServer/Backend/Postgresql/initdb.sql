@@ -1,4 +1,6 @@
-﻿create table core_model (
+﻿-- 注意，此文件中，除了语句结束以外不允许再有分号，而且所有语句结束后必须有分号
+
+create table core_model (
     id bigserial not null,
     "name" varchar not null,
     label varchar,

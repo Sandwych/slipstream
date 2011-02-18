@@ -15,6 +15,11 @@ namespace ObjectServer
             this.Database = DataProvider.OpenDatabase(dbName);
         }
 
+        public Session(IDatabase db)
+        {
+            this.Database = db;
+        }
+
         #region ISession 成员
 
         public IDatabase Database
@@ -27,7 +32,7 @@ namespace ObjectServer
         {
             get
             {
-                return Pooler.GetPool(this.Database.DatabaseName);
+                return ObjectServerStarter.Pooler.GetPool(this.Database.DatabaseName);
             }
         }
 

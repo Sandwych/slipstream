@@ -20,45 +20,43 @@ namespace ObjectServer
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly Pooler s_instance = new Pooler();
-
         private Dictionary<string, ObjectPool> pools =
             new Dictionary<string, ObjectPool>();
 
-        private Pooler()
-        {
-            //
 
-        }
-
-        private void RegisterPool(string dbName)
+        public void RegisterDatabase(string dbName)
         {
             using (var db = DataProvider.OpenDatabase(dbName))
             {
-                if (Log.IsInfoEnabled)
-                {
-                    Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
-                }
-
-                var dbNames = db.List();
-                if (!dbNames.Contains(dbName))
-                {
-                    throw new ArgumentException("dbName");
-                }
-
-                var pool = new ObjectPool(db, dbName);
-                this.pools.Add(dbName.Trim(), pool);
+                RegisterDatabase(db, dbName);
             }
         }
 
-        public static ObjectPool GetPool(string dbName)
+        public void RegisterDatabase(IDatabase db, string dbName)
         {
-            if (!s_instance.pools.ContainsKey(dbName))
+            if (Log.IsInfoEnabled)
             {
-                s_instance.RegisterPool(dbName);
+                Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
             }
 
-            return s_instance.pools[dbName.Trim()];
+            var dbNames = db.List();
+            if (!dbNames.Contains(dbName))
+            {
+                throw new ArgumentException("dbName");
+            }
+
+            var pool = new ObjectPool(db, dbName);
+            this.pools.Add(dbName.Trim(), pool);
+        }
+
+        public ObjectPool GetPool(string dbName)
+        {
+            if (!this.pools.ContainsKey(dbName))
+            {
+                RegisterDatabase(dbName);
+            }
+
+            return this.pools[dbName.Trim()];
         }
 
     }

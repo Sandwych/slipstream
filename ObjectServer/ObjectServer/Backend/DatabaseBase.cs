@@ -59,6 +59,8 @@ namespace ObjectServer.Backend
 
         public abstract void Create(string dbName);
 
+        public abstract void Initialize();
+
         public DbConnection Connection { get { return this.conn; } }
 
         public string DatabaseName { get; protected set; }

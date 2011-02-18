@@ -16,6 +16,7 @@ namespace ObjectServer.Backend
         string[] List();
         void Create(string dbName);
         void Delete(string dbName);
+        void Initialize();
 
         DbConnection Connection { get; }
 

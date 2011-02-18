@@ -19,5 +19,7 @@ namespace ObjectServer
 
         bool DatabaseRequired { get; }
 
+        ObjectPool Pool { get; set; }
+
     }
 }

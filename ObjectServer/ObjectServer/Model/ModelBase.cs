@@ -34,6 +34,8 @@ namespace ObjectServer.Model
         private Dictionary<string, MethodInfo> serviceMethods =
             new Dictionary<string, MethodInfo>();
 
+        public ObjectPool Pool { get; set; }
+
         public bool CanCreate { get; protected set; }
         public bool CanRead { get; protected set; }
         public bool CanWrite { get; protected set; }
@@ -72,7 +74,6 @@ namespace ObjectServer.Model
             }
         }
 
-
         public string TableName
         {
             get
@@ -91,6 +92,7 @@ namespace ObjectServer.Model
                 this.SequenceName = value + "_id_seq";
             }
         }
+
         public string SequenceName { get; protected set; }
 
         protected ModelBase()

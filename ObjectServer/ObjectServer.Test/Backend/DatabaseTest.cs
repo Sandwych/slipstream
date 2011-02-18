@@ -13,7 +13,7 @@ namespace ObjectServer.Test.Backend
     {
 
         [Fact]
-        void TestQueryAsDictionary()
+        void Query_as_dictionary()
         {
             using (var db = DataProvider.OpenDatabase("objectserver"))
             {
@@ -23,6 +23,19 @@ namespace ObjectServer.Test.Backend
                 Assert.NotNull(dict);
                 Assert.True(dict.Count > 0);
             }
+        }
+
+        [Fact]
+        void Create_and_delete_database()
+        {
+            var dbName = "oo_testdb";
+            ObjectServerStarter.Initialize();
+            var sha1 = ObjectServerStarter.Configuration.RootPasswordHash;
+
+            var service = new LocalService();
+            service.CreateDatabase(sha1, dbName, "admin");
+            service.DeleteDatabase(sha1, dbName);
+
         }
     }
 }

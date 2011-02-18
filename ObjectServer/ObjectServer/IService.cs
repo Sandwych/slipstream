@@ -9,5 +9,9 @@ namespace ObjectServer
     {
         object Execute(
             string dbName, string objectName, string name, params object[] args);
+
+
+        void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword);
+        void DeleteDatabase(string rootPasswordHash, string dbName);
     }
 }

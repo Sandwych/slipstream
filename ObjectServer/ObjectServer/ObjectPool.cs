@@ -24,7 +24,7 @@ namespace ObjectServer
 
         public ObjectPool(IDatabase db, string dbName)
         {
-            this.Database = dbName;            
+            this.Database = dbName;
             this.RegisterAllCoreModels();
 
             ObjectServer.Module.Module.LoadModules(db, this);
@@ -70,6 +70,7 @@ namespace ObjectServer
                 Log.InfoFormat("Register model: {0}", name);
             }
 
+            so.Pool = this;
             this.objects[name] = so;
         }
 

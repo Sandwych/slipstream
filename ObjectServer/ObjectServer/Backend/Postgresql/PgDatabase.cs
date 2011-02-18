@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
+using System.IO;
 
 using Npgsql;
 
@@ -9,6 +11,8 @@ namespace ObjectServer.Backend.Postgresql
 {
     public class PgDatabase : DatabaseBase, IDatabase
     {
+        private const string INITDB = "ObjectServer.Backend.Postgresql.initdb.sql";
+
         public PgDatabase(string dbName)
         {
             var cfg = ObjectServerStarter.Configuration;
@@ -80,7 +84,29 @@ namespace ObjectServer.Backend.Postgresql
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
 
-            this.DatabaseName = dbName;
+
+
+        }
+
+        public override void Initialize()
+        {
+            //执行初始化数据库脚本
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var resStream = assembly.GetManifestResourceStream(INITDB))
+            using (var sr = new StreamReader(resStream, Encoding.UTF8))
+            {
+                var text = sr.ReadToEnd();
+                var lines = text.Split(';');
+                foreach (var l in lines)
+                {
+                    if (!string.IsNullOrEmpty(l) && l.Trim().Length > 0)
+                    {
+                        this.Execute(l);
+                    }
+                }
+            }
+
+            //创建数据库只执行到这里，安装核心模块是外部的事情
         }
 
         #endregion

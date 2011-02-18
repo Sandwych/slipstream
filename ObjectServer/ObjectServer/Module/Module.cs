@@ -61,6 +61,9 @@ namespace ObjectServer.Module
             var assembly = CompileSourceFiles(this.Path);
             this.Assemblies.Add(assembly);
             pool.RegisterModelsInAssembly(assembly);
+
+            var moduleModel = (ModuleModel)pool.LookupObject("core.module");
+            moduleModel.LoadedModules.Add(this);
         }
 
         [JsonIgnore]
@@ -89,7 +92,7 @@ namespace ObjectServer.Module
 
         public static void LoadModules(IDatabase db, ObjectPool pool)
         {
-            var sql = "select name from core_module where state = 'installed'";
+            var sql = "select name from core_module where state = 'actived'";
             var modules = db.QueryAsDictionary(sql);
 
             foreach (var m in modules)

@@ -18,6 +18,7 @@ namespace ObjectServer
 
         private Configuration config;
         private bool initialized;
+        private Pooler pooler = new Pooler();
 
         private ObjectServerStarter()
         {
@@ -66,6 +67,7 @@ namespace ObjectServer
                 DbPort = 5432,
                 DbUser = "objectserver",
                 ModulePath = "c:\\objectserver-modules",
+                RootPassword = "root",
                 Debug = true,
             };
             Initialize(cfg);
@@ -81,6 +83,14 @@ namespace ObjectServer
                         "尚未初始化系统，请调用 ObjectServerStarter.Initialize() 初始化");
                 }
                 return s_instance.config;
+            }
+        }
+
+        public static Pooler Pooler
+        {
+            get
+            {
+                return s_instance.pooler;
             }
         }
 

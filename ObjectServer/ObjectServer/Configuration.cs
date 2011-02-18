@@ -6,12 +6,15 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
+using ObjectServer.Utility;
+
 namespace ObjectServer
 {
     [Serializable]
     [JsonObject("objectserver-config")]
     public sealed class Configuration
     {
+        private string rootPassword;
 
         /// <summary>
         /// 配置文件路径
@@ -46,6 +49,20 @@ namespace ObjectServer
 
         [JsonProperty("debug")]
         public bool Debug { get; set; }
+
+        [JsonProperty("root-password")]
+        public string RootPassword
+        {
+            get { return this.rootPassword; }
+            set
+            {
+                this.rootPassword = value;
+                this.RootPasswordHash = value.ToSha1();
+            }
+        }
+
+        [JsonIgnore]
+        public string RootPasswordHash { get; private set; }
 
     }
 }
