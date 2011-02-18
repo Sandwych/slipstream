@@ -27,6 +27,7 @@ namespace ObjectServer.Test
 
             var cfg = JsonConvert.DeserializeObject<Configuration>(cfgText);
             Assert.NotNull(cfg);
+            Assert.Equal(ObjectServer.Backend.DatabaseType.Postgresql, cfg.DbType);
 
         }
     }

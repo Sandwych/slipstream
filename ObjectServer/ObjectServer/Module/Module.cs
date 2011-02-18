@@ -5,9 +5,10 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 
-using ObjectServer.Runtime;
-
 using Newtonsoft.Json;
+
+using ObjectServer.Runtime;
+using ObjectServer.Backend;
 
 namespace ObjectServer.Module
 {
@@ -18,6 +19,8 @@ namespace ObjectServer.Module
     [JsonObject("module")]
     public sealed class Module
     {
+        public const string MODULE_FILENAME = "module.js";
+
         /// <summary>
         /// 整个系统中发现的所有模块
         /// </summary>
@@ -26,7 +29,7 @@ namespace ObjectServer.Module
 
         public Module()
         {
-            this.Assemblies = new HashSet<Assembly>();
+            this.Assemblies = new List<Assembly>();
         }
 
         #region Serializable Fields
@@ -61,13 +64,48 @@ namespace ObjectServer.Module
         }
 
         [JsonIgnore]
-        public HashSet<Assembly> Assemblies { get; set; }
+        public List<Assembly> Assemblies { get; set; }
 
         [JsonIgnore]
         public string Path { get; set; }
 
         [JsonIgnore]
         public ModuleStatus State { get; set; }
+
+        public static void LookupAllModules()
+        {
+            allModules.Clear();
+
+            var path = ObjectServerStarter.Configuration.ModulePath;
+            var moduleDirs = Directory.GetDirectories(path);
+            foreach (var moduleDir in moduleDirs)
+            {
+                var moduleFilePath = System.IO.Path.Combine(path, moduleDir);
+                moduleFilePath = System.IO.Path.Combine(moduleFilePath, MODULE_FILENAME);
+                var module = DeserializeFromFile(moduleFilePath);
+                allModules.Add(module);
+            }
+        }
+
+        public static void LoadModules(IDatabase db, ObjectPool pool)
+        {
+            var sql = "select name from core_module where state = 'installed'";
+            var modules = db.QueryAsDictionary(sql);
+
+            foreach (var m in modules)
+            {
+                var moduleName = (string)m["name"];
+                var module = allModules.Single(i => i.Name == moduleName);
+                module.Load(pool);
+            }
+        }
+
+        private static Module DeserializeFromFile(string moduleFilePath)
+        {
+            var json = File.ReadAllText(moduleFilePath, Encoding.UTF8);
+            var module = JsonConvert.DeserializeObject<Module>(json);
+            return module;
+        }
 
         private Assembly CompileSourceFiles(string moduleDir)
         {

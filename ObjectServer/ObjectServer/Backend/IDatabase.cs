@@ -14,10 +14,10 @@ namespace ObjectServer.Backend
         void Close();
 
         string[] List();
+        void Create(string dbName);
+        void Delete(string dbName);
 
         DbConnection Connection { get; }
-
-        bool Connected { get; }
 
         string DatabaseName { get; }
 

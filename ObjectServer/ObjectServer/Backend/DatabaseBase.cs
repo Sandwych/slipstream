@@ -13,70 +13,34 @@ using ObjectServer.Model.Fields;
 
 namespace ObjectServer.Backend
 {
-    public class DatabaseBase : IDatabase
+    public abstract class DatabaseBase : IDatabase
     {
         protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private DbConnection conn;
-        private bool opened;
+        protected DbConnection conn;
+        private bool opened = false;
 
-        public DatabaseBase(string dbName)
-        {
-            var host = "localhost";
-            var user = "objectserver";
-            var password = "objectserver";
-            string connectionString = string.Format(
-              "Server={0};" +
-              "Database={3};" +
-              "Encoding=UNICODE;" +
-              "User ID={1};" +
-              "Password={2};",
-              host, user, password, dbName);
-            this.conn = new NpgsqlConnection(connectionString);
-            this.DatabaseName = dbName;
-        }
 
-        public DatabaseBase()
-            : this("template1")
-        {
-        }
 
         public void Open()
         {
-            this.conn.Open();
-            this.opened = true;
+            if (!this.opened)
+            {
+                this.conn.Open();
+                this.opened = true;
+            }
         }
 
         public void Close()
         {
-            if (this.Connected)
-            {
-                this.conn.Close();
-            }
-        }
-
-        public void Create(string dbName)
-        {
-            //TODO 检查连接
-            var sql = string.Format(
-                @"CREATE DATABASE ""{0}"" TEMPLATE template0 ENCODING 'unicode'",
-                dbName);
-
-            if (Log.IsDebugEnabled)
-            {
-                Log.Info(sql);
-            }
-
-            var cmd = this.Connection.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
-
-            this.DatabaseName = dbName;
+            this.Dispose();
         }
 
         public void Delete(string dbName)
         {
+            this.EnsureConnectionOpened();
+
             var sql = string.Format(
                 "DROP DATABASE \"{0}\"", dbName);
 
@@ -91,47 +55,13 @@ namespace ObjectServer.Backend
         }
 
 
-        public virtual string[] List()
-        {
-            var dbUser = "objectserver"; //TODO: 改成可配置的
-            var sql = @"
-                select datname from pg_database  
-                    where datdba = (select distinct usesysid from pg_user where usename=@0) 
-                        and datname not in ('template0', 'template1', 'postgres')  
-	                order by datname asc;";
+        public abstract string[] List();
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.Info(sql);
-            }
-
-            using (var cmd = this.PrepareCommand(sql))
-            {
-                PrepareCommandParameters(cmd, dbUser);
-                var result = new List<string>();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        result.Add(reader.GetString(0));
-                    }
-                }
-                return result.ToArray();
-            }
-        }
+        public abstract void Create(string dbName);
 
         public DbConnection Connection { get { return this.conn; } }
 
-        public bool Connected
-        {
-            get
-            {
-                return this.conn.State != ConnectionState.Closed &&
-                    this.conn.State != ConnectionState.Broken;
-            }
-        }
-
-        public string DatabaseName { get; private set; }
+        public string DatabaseName { get; protected set; }
 
 
         #region Query methods
@@ -262,6 +192,7 @@ namespace ObjectServer.Backend
                 if (this.opened)
                 {
                     this.conn.Close();
+                    this.opened = false;
                 }
                 this.conn.Dispose();
             }
@@ -299,12 +230,10 @@ namespace ObjectServer.Backend
 
         protected void EnsureConnectionOpened()
         {
-            if (this.opened)
+            if (!this.opened)
             {
-                return;
+                this.Open();
             }
-
-            this.conn.Open();
         }
 
         public string GetSqlType(IField field)

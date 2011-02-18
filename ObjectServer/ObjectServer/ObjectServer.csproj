@@ -156,9 +156,9 @@
     <Compile Include="Utility\TopologicalSorter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Backend\init_db.sql">
+    <EmbeddedResource Include="Backend\Postgresql\initdb.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

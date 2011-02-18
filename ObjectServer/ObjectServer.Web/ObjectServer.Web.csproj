@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonConvert.cs" />
+    <Compile Include="JsonRpcError.cs" />
     <Compile Include="JsonRpcHandler.cs" />
     <Compile Include="JsonRpcMethodAttribute.cs" />
     <Compile Include="JsonRpcRequest.cs" />

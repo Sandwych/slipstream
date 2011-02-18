@@ -27,48 +27,38 @@ namespace ObjectServer
 
         private Pooler()
         {
-            this.RegisterAllDatabases();
-        }
-
-        private void RegisterAllDatabases()
-        {
             //
-            using (var db = new DatabaseBase())
-            {
-                db.Open();
-                var allDbNames = db.List();
 
-                foreach (var dbName in allDbNames)
-                {
-                    if (Log.IsInfoEnabled)
-                    {
-                        Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
-                    }
-                    var pool = this.RegisterPool(db.Connection, dbName);
-                    ModuleModel.LoadModules(db.Connection, dbName, pool);
-                }
-            }
         }
 
-        private ObjectPool RegisterPool(IDbConnection conn, string dbName)
+        private void RegisterPool(string dbName)
         {
-            using (var tx = new TransactionScope())
+            using (var db = DataProvider.OpenDatabase(dbName))
             {
-                var pool = new ObjectPool(dbName, conn);
+                if (Log.IsInfoEnabled)
+                {
+                    Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
+                }
+
+                var dbNames = db.List();
+                if (!dbNames.Contains(dbName))
+                {
+                    throw new ArgumentException("dbName");
+                }
+
+                var pool = new ObjectPool(db, dbName);
                 this.pools.Add(dbName.Trim(), pool);
-                tx.Complete();
-                return pool;
             }
         }
 
         public static ObjectPool GetPool(string dbName)
         {
-            return s_instance.pools[dbName.Trim()];
-        }
+            if (!s_instance.pools.ContainsKey(dbName))
+            {
+                s_instance.RegisterPool(dbName);
+            }
 
-        public static ICollection<string> ObjectNames
-        {
-            get { return s_instance.pools.Keys; }
+            return s_instance.pools[dbName.Trim()];
         }
 
     }

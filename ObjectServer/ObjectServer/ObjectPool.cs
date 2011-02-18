@@ -8,6 +8,9 @@ using System.Data;
 
 using log4net;
 
+using ObjectServer.Module;
+using ObjectServer.Backend;
+
 namespace ObjectServer
 {
     //TODO: Thread Safty
@@ -19,10 +22,12 @@ namespace ObjectServer
         private Dictionary<string, IServiceObject> objects =
             new Dictionary<string, IServiceObject>();
 
-        public ObjectPool(string db, IDbConnection conn)
+        public ObjectPool(IDatabase db, string dbName)
         {
-            this.Database = db;
+            this.Database = dbName;            
             this.RegisterAllCoreModels();
+
+            ObjectServer.Module.Module.LoadModules(db, this);
         }
 
         public string Database { get; private set; }
@@ -42,7 +47,7 @@ namespace ObjectServer
 
             var types = Model.ModelBase.GetModelsFromAssembly(assembly);
 
-            using (var db = new Backend.DatabaseBase(this.Database))
+            using (var db = Backend.DataProvider.OpenDatabase(this.Database))
             {
                 db.Open();
                 foreach (var t in types)

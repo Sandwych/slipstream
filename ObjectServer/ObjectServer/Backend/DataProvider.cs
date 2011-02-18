@@ -22,9 +22,14 @@ namespace ObjectServer.Backend
         public static IDatabase OpenDatabase(string dbName)
         {
             var dbType = s_instance.dbTypes[ObjectServerStarter.Configuration.DbType];
-            //var db = Activator.CreateInstance(dbType);
-            var db = new DatabaseBase(dbName);
-            db.Open();
+            var db = Activator.CreateInstance(dbType, dbName) as IDatabase;
+            return db;
+        }
+
+        public static IDatabase OpenDatabase()
+        {
+            var dbType = s_instance.dbTypes[ObjectServerStarter.Configuration.DbType];
+            var db = Activator.CreateInstance(dbType) as IDatabase;
             return db;
         }
 

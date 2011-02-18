@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 using ObjectServer.Model;
 using ObjectServer.Runtime;
+using ObjectServer.Backend;
 
 namespace ObjectServer.Module
 {
@@ -35,20 +36,14 @@ namespace ObjectServer.Module
             this.TextField("description", "Description", false, null);
         }
 
-        public static void LoadModules(IDbConnection conn, string dbName, ObjectPool pool)
+        public static void LoadModules(IDatabase db, string dbName, ObjectPool pool)
         {
-            using (var cmd = conn.CreateCommand())
-            {
-                cmd.CommandText = "select name from core_module where state = 'installed';";
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var name = reader.GetString(0);
-                        LoadModule(dbName, conn, name, pool);
-                    }
-                }
+            var sql = "select name from core_module where state = 'installed'";
+            var modules = db.QueryAsDictionary(sql);
 
+            foreach (var m in modules)
+            {
+                LoadModule(dbName, db, (string)m["name"], pool);
             }
         }
 
@@ -60,7 +55,7 @@ namespace ObjectServer.Module
         /// <param name="conn"></param>
         /// <param name="module"></param>
         /// <param name="pool"></param>
-        private static void LoadModule(string dbName, IDbConnection conn, string module, ObjectPool pool)
+        private static void LoadModule(string dbName, IDatabase db, string module, ObjectPool pool)
         {
             var moduleDir = Path.Combine(@"c:\objectserver-modules", module);
             var moduleFilePath = Path.Combine(moduleDir, "module.js");

@@ -17,9 +17,11 @@ namespace ObjectServer
         private static readonly ObjectServerStarter s_instance = new ObjectServerStarter();
 
         private Configuration config;
+        private bool initialized;
 
         private ObjectServerStarter()
         {
+            this.initialized = false;
         }
 
         public static void Initialize(string configPath)
@@ -29,6 +31,7 @@ namespace ObjectServer
             Initialize(cfg);
         }
 
+        //这个做实际的初始化工作
         public static void Initialize(Configuration cfg)
         {
             if (cfg == null)
@@ -36,6 +39,36 @@ namespace ObjectServer
                 throw new ArgumentNullException("cfg");
             }
             s_instance.config = cfg;
+
+
+            Module.Module.LookupAllModules();
+
+            s_instance.initialized = true;
+        }
+
+        /// <summary>
+        /// 为调试及测试而初始化
+        /// </summary>
+        public static void Initialize()
+        {
+            if (s_instance.initialized)
+            {
+                return;
+            }
+
+            var cfg = new Configuration()
+            {
+                ConfigurationPath = null,
+                DbType = ObjectServer.Backend.DatabaseType.Postgresql,
+                DbHost = "localhost",
+                DbName = "objectserver",
+                DbPassword = "objectserver",
+                DbPort = 5432,
+                DbUser = "objectserver",
+                ModulePath = "c:\\objectserver-modules",
+                Debug = true,
+            };
+            Initialize(cfg);
         }
 
         public static Configuration Configuration

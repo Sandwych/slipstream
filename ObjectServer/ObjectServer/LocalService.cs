@@ -14,25 +14,40 @@ namespace ObjectServer
         public object Execute(string dbName, string objectName, string name, params object[] args)
         {
             using (var session = new Session(dbName))
-            {
+            {                
                 var obj = session.Pool.LookupObject(objectName);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[args.Length + 1];
                 internalArgs[0] = session;
                 args.CopyTo(internalArgs, 1);
 
-                var tx = session.Database.Connection.BeginTransaction();
-                try
+                if (obj.DatabaseRequired)
                 {
-                    var result = method.Invoke(obj, internalArgs);
-                    tx.Commit();
-                    return result;
+                    return ExecuteTransactional(session, obj, method, internalArgs);
                 }
-                catch (Exception ex)
+                else
                 {
-                    tx.Rollback();
-                    throw ex;
+                    return method.Invoke(obj, internalArgs);
                 }
+            }
+        }
+
+        private static object ExecuteTransactional(
+            Session session, IServiceObject obj, System.Reflection.MethodInfo method, object[] internalArgs)
+        {
+            session.Database.Open();
+
+            var tx = session.Database.Connection.BeginTransaction();
+            try
+            {
+                var result = method.Invoke(obj, internalArgs);
+                tx.Commit();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+                throw ex;
             }
         }
 

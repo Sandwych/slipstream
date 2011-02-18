@@ -42,8 +42,9 @@ namespace ObjectServer.Model
         public string Label { get; protected set; }
         public bool Hierarchy { get; protected set; }
         public bool Versioned { get; protected set; }
+        public string Module { get; private set; }
 
-        public bool DbRequired { get { return true; } }
+        public bool DatabaseRequired { get { return true; } }
 
         public string Name
         {
@@ -66,6 +67,8 @@ namespace ObjectServer.Model
                 {
                     this.Label = value;
                 }
+
+                this.Module = this.name.Split('.')[0];
             }
         }
 
@@ -106,7 +109,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public void Initialize(DatabaseBase db)
+        public void Initialize(IDatabase db)
         {
             this.AddInternalFields();
 
@@ -141,12 +144,11 @@ namespace ObjectServer.Model
             //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
         }
 
-        private void CreateModel(DatabaseBase db)
+        private void CreateModel(IDatabase db)
         {
-
             var rowCount = db.Execute(
-                "INSERT INTO core_model(name) VALUES(@0);",
-                this.Name);
+                "INSERT INTO core_model(name, module, label) VALUES(@0, @1, @2);",
+                this.Name, this.Module, this.Label);
 
             if (rowCount != 1)
             {
@@ -154,7 +156,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void CreateTable(DatabaseBase db)
+        private void CreateTable(IDatabase db)
         {
             var table = new PgTableHandler(db, this.TableName);
             table.CreateTable(this.TableName, this.Label);
@@ -167,7 +169,7 @@ namespace ObjectServer.Model
 
             foreach (var pair in this.declaredFields)
             {
-                if (!pair.Value.IsFunctionField)
+                if (!pair.Value.IsFunctionField && pair.Value.Name != "id")
                 {
                     var field = pair.Value;
                     table.AddColumn(field.Name, field.SqlType);
@@ -330,7 +332,7 @@ namespace ObjectServer.Model
             return result.ToArray();
         }
 
-        public static IServiceObject CreateModelInstance(DatabaseBase db, Type t)
+        public static IServiceObject CreateModelInstance(IDatabase db, Type t)
         {
             var obj = Activator.CreateInstance(t) as IServiceObject;
             if (obj == null)

@@ -44,5 +44,8 @@ namespace ObjectServer
         [JsonProperty("module-path", Required = Required.Always)]
         public string ModulePath { get; set; }
 
+        [JsonProperty("debug")]
+        public bool Debug { get; set; }
+
     }
 }

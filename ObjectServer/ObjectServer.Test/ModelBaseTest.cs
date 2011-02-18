@@ -20,13 +20,13 @@ namespace ObjectServer.Test
 
     public class ModelBaseTest
     {
-
         public ModelBaseTest()
         {
+            ObjectServerStarter.Initialize();
         }
 
         [Fact]
-        public static void TestCrud()
+        public void TestCrud()
         {
             var modelName = "test.test_object";
             var dbName = "objectserver";
@@ -69,7 +69,7 @@ namespace ObjectServer.Test
         }
 
         /*
-        public static void Main()
+        public void Main()
         {
             TcpChannel chan = new TcpChannel();
             ChannelServices.RegisterChannel(chan, false);
