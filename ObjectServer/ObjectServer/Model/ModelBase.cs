@@ -405,7 +405,7 @@ namespace ObjectServer.Model
 
 
         [ServiceMethod]
-        public virtual long Create(ISession session, IDictionary<string, object> values)
+        public virtual long Create(ISession session, IDictionary<string, object> record)
         {
             if (!this.CanCreate)
             {
@@ -422,14 +422,14 @@ namespace ObjectServer.Model
             var sql = string.Format(
               "INSERT INTO \"{0}\" (id, _version, {1}) VALUES ({2}, 0, {3});",
               this.TableName,
-              values.Keys.ToSqlColumns(),
+              record.Keys.ToSqlColumns(),
               serial,
-              values.Keys.ToSqlParameters());
+              record.Keys.ToSqlParameters());
 
             using (var cmd = session.Database.Connection.CreateCommand() as NpgsqlCommand)
             {
                 cmd.CommandText = sql;
-                foreach (var pair in values)
+                foreach (var pair in record)
                 {
                     cmd.Parameters.AddWithValue(pair.Key, pair.Value);
                 }

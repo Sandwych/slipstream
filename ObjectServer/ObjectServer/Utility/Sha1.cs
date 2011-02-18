@@ -14,8 +14,9 @@ namespace ObjectServer.Utility
                 var encoder = new ASCIIEncoding();
                 var bytes = encoder.GetBytes(value);
                 var hash = sha.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
+                return BitConverter.ToString(hash).Replace("-", "").ToUpperInvariant();
             }
         }
+
     }
 }
