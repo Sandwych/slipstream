@@ -7,7 +7,7 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Core
 {
-    //[ServiceObject] 
+    [ServiceObject] 
     public class FieldModel : ModelBase
     {
 

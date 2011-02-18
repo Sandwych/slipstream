@@ -116,6 +116,7 @@
     <Compile Include="Core\ActionModel.cs" />
     <Compile Include="Core\ViewModel.cs" />
     <Compile Include="Core\MenuModel.cs" />
+    <Compile Include="Core\CronModel.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IServiceObject.cs" />
     <Compile Include="Model\Fields\FieldGetter.cs" />
