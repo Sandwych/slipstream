@@ -23,7 +23,7 @@ namespace ObjectServer.Runtime
 
         #region ICompiler 成员
 
-        public Assembly Compile(IEnumerable<string> sourceFiles)
+        public Assembly CompileFromFile(IEnumerable<string> sourceFiles)
         {
             var compiler = new Boo.Lang.Compiler.BooCompiler();
             var coreAssembly = typeof(Model.ModelBase).Assembly;

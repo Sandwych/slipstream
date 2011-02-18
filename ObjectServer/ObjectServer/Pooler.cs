@@ -13,7 +13,7 @@ using ObjectServer.Module;
 namespace ObjectServer
 {
     /// <summary>
-    /// Singleton
+    /// Singleton，TODO 线程安全
     /// </summary>
     public sealed class Pooler
     {
@@ -33,7 +33,7 @@ namespace ObjectServer
         private void RegisterAllDatabases()
         {
             //
-            using (var db = new Database())
+            using (var db = new DatabaseBase())
             {
                 db.Open();
                 var allDbNames = db.List();
@@ -45,7 +45,7 @@ namespace ObjectServer
                         Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
                     }
                     var pool = this.RegisterPool(db.Connection, dbName);
-                    ObjectServer.Module.Module.LoadModules(db.Connection, dbName, pool);
+                    ModuleModel.LoadModules(db.Connection, dbName, pool);
                 }
             }
         }
@@ -61,22 +61,15 @@ namespace ObjectServer
             }
         }
 
-        public ObjectPool GetPool(string dbName)
+        public static ObjectPool GetPool(string dbName)
         {
-            return this.pools[dbName.Trim()];
+            return s_instance.pools[dbName.Trim()];
         }
 
-        public ICollection<string> ObjectNames
+        public static ICollection<string> ObjectNames
         {
-            get { return this.pools.Keys; }
+            get { return s_instance.pools.Keys; }
         }
 
-        public static Pooler Instance
-        {
-            get
-            {
-                return s_instance;
-            }
-        }
     }
 }

@@ -43,6 +43,8 @@ namespace ObjectServer.Model
         public bool Hierarchy { get; protected set; }
         public bool Versioned { get; protected set; }
 
+        public bool DbRequired { get { return true; } }
+
         public string Name
         {
             get
@@ -104,7 +106,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public void Initialize(Database db)
+        public void Initialize(DatabaseBase db)
         {
             this.AddInternalFields();
 
@@ -119,7 +121,7 @@ namespace ObjectServer.Model
             //如果需要自动建表就建
             if (this.Automatic)
             {
-                var table = new Table(db, this.TableName);
+                var table = new PgTableHandler(db, this.TableName);
                 if (!table.TableExists(this.TableName))
                 {
                     this.CreateTable(db);
@@ -139,7 +141,7 @@ namespace ObjectServer.Model
             //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
         }
 
-        private void CreateModel(Database db)
+        private void CreateModel(DatabaseBase db)
         {
 
             var rowCount = db.Execute(
@@ -152,9 +154,9 @@ namespace ObjectServer.Model
             }
         }
 
-        private void CreateTable(Database db)
+        private void CreateTable(DatabaseBase db)
         {
-            var table = new Table(db, this.TableName);
+            var table = new PgTableHandler(db, this.TableName);
             table.CreateTable(this.TableName, this.Label);
 
             //创建字段
@@ -328,7 +330,7 @@ namespace ObjectServer.Model
             return result.ToArray();
         }
 
-        public static IServiceObject CreateModelInstance(Database db, Type t)
+        public static IServiceObject CreateModelInstance(DatabaseBase db, Type t)
         {
             var obj = Activator.CreateInstance(t) as IServiceObject;
             if (obj == null)
@@ -410,7 +412,7 @@ namespace ObjectServer.Model
             //TODO 检测是否含有 id 列
 
             //获取下一个 SEQ id，这里可能要移到 backend 里，利于跨数据库
-            var table = new Table(session.Database, this.TableName);
+            var table = new PgTableHandler(session.Database, this.TableName);
             var serial = table.NextSerial(this.SequenceName);
 
             var sql = string.Format(

@@ -42,7 +42,7 @@ namespace ObjectServer
 
             var types = Model.ModelBase.GetModelsFromAssembly(assembly);
 
-            using (var db = new Backend.Database(this.Database))
+            using (var db = new Backend.DatabaseBase(this.Database))
             {
                 db.Open();
                 foreach (var t in types)

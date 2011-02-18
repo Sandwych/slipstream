@@ -12,13 +12,12 @@ namespace ObjectServer
     {
         public Session(string dbName)
         {
-            this.Database = new Database(dbName);
-            this.Database.Open();
+            this.Database = DataProvider.OpenDatabase(dbName);
         }
 
         #region ISession 成员
 
-        public Database Database
+        public IDatabase Database
         {
             get;
             private set;
@@ -28,7 +27,7 @@ namespace ObjectServer
         {
             get
             {
-                return Pooler.Instance.GetPool(this.Database.DatabaseName);
+                return Pooler.GetPool(this.Database.DatabaseName);
             }
         }
 

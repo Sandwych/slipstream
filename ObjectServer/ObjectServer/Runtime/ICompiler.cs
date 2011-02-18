@@ -8,6 +8,6 @@ namespace ObjectServer.Runtime
 {
     public interface ICompiler
     {
-        Assembly Compile(IEnumerable<string> sourceFiles);
+        Assembly CompileFromFile(IEnumerable<string> sourceFiles);
     }
 }

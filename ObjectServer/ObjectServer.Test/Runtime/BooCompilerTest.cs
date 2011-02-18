@@ -33,7 +33,7 @@ namespace ObjectServer.Test.Runtime
 
             var booCompiler = new BooCompiler();
 
-            var assembly = booCompiler.Compile(new string[] { booFile });
+            var assembly = booCompiler.CompileFromFile(new string[] { booFile });
             Assert.NotNull(assembly);
         }
     }

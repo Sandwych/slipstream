@@ -15,7 +15,7 @@ namespace ObjectServer.Test.Backend
         [Fact]
         void TestQueryAsDictionary()
         {
-            using (var db = new Database("objectserver"))
+            using (var db = new DatabaseBase("objectserver"))
             {
                 db.Open();
 

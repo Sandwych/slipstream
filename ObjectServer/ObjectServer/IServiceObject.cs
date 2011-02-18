@@ -9,11 +9,13 @@ namespace ObjectServer
 {
     public interface IServiceObject
     {
-        void Initialize(Backend.Database db);
+        void Initialize(Backend.DatabaseBase db);
 
         string Name { get; }
 
         MethodInfo GetServiceMethod(string name);
+
+        bool DbRequired { get; }
 
     }
 }
