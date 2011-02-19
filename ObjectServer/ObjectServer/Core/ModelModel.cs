@@ -15,7 +15,6 @@ namespace ObjectServer.Core
     {
         public ModelModel() : base()
         {
-            this.Automatic = false;
             this.Name = "core.model";
             this.Versioned = false;
         }

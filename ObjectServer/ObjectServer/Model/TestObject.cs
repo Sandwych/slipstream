@@ -15,7 +15,6 @@ namespace ObjectServer.Model
         public TestObject()
         {
             this.Name = "test.test_object";
-            this.Automatic = true;
 
             this.CharsField("name", "姓名", 64, true, null, null);
             this.CharsField("address", "地址", 200, true, null, null);

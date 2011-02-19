@@ -58,6 +58,12 @@
     <Compile Include="ConfigurationTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="ModelBaseTest.cs" />
+    <Content Include="modules\test\module.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="modules\test\test-object.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\BooCompilerTest.cs" />
   </ItemGroup>

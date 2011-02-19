@@ -66,7 +66,7 @@ namespace ObjectServer
                 DbPassword = "objectserver",
                 DbPort = 5432,
                 DbUser = "objectserver",
-                ModulePath = "c:\\objectserver-modules",
+                ModulePath = "modules",
                 RootPassword = "root",
                 Debug = true,
             };

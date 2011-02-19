@@ -14,7 +14,6 @@ namespace ObjectServer.Core
         public FieldModel()
             : base()
         {
-            this.Automatic = false;
             this.Name = "core.field";
             this.Versioned = false;
         }

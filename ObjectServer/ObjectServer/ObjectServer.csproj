@@ -105,10 +105,10 @@
     <Compile Include="Backend\DataProvider.cs" />
     <Compile Include="Backend\IDatabase.cs" />
     <Compile Include="Backend\ISqlTypeConverter.cs" />
-    <Compile Include="Backend\ITableHandler.cs" />
+    <Compile Include="Backend\ITable.cs" />
     <Compile Include="Backend\Postgresql\PgDatabase.cs" />
     <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
-    <Compile Include="Backend\Postgresql\PgTableHandler.cs" />
+    <Compile Include="Backend\Postgresql\PgTable.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\GroupModel.cs" />
     <Compile Include="Core\ActionModel.cs" />

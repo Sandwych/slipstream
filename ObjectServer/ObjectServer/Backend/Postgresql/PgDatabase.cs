@@ -111,9 +111,9 @@ namespace ObjectServer.Backend.Postgresql
 
         #endregion
 
-        public override ITableHandler CreateTableHandler(string tableName)
+        public override ITable CreateTableHandler(string tableName)
         {
-            return new PgTableHandler(this, tableName);
+            return new PgTable(tableName);
         }
 
         public override long NextSerial(string sequenceName)

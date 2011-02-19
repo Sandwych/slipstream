@@ -28,6 +28,8 @@ namespace ObjectServer.Model
 
         private readonly List<IField> requiredFields = new List<IField>();
 
+        private ITable table;
+
         private string tableName = null;
         private string name = null;
 
@@ -40,7 +42,6 @@ namespace ObjectServer.Model
         public bool CanRead { get; protected set; }
         public bool CanWrite { get; protected set; }
         public bool CanDelete { get; protected set; }
-        public bool Automatic { get; protected set; }
         public string Label { get; protected set; }
         public bool Hierarchy { get; protected set; }
         public bool Versioned { get; protected set; }
@@ -101,7 +102,6 @@ namespace ObjectServer.Model
             this.CanRead = true;
             this.CanWrite = true;
             this.CanDelete = true;
-            this.Automatic = true;
             this.Hierarchy = false;
             this.Versioned = true;
 
@@ -115,6 +115,8 @@ namespace ObjectServer.Model
         {
             this.AddInternalFields();
 
+            this.table = db.CreateTableHandler(this.TableName);
+
             //检测此模块是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(id) FROM core_model WHERE name=@0";
             var count = (long)db.QueryValue(sql, this.Name);
@@ -123,20 +125,14 @@ namespace ObjectServer.Model
                 this.CreateModel(db);
             }
 
-            //如果需要自动建表就建
-            if (this.Automatic)
+            //如果表不存在就自动建表
+            if (!this.table.TableExists(db, this.TableName))
             {
-                var table = db.CreateTableHandler(this.TableName);
-                if (!table.TableExists(this.TableName))
-                {
-                    this.CreateTable(db);
-                }
+                this.CreateTable(db);
             }
 
-            foreach (var field in this.declaredFields)
-            {
-
-            }
+            //TODO:
+            //检查字段表里的定义与实际的数据库表有什么变化，自动迁移
         }
 
         private void AddInternalFields()
@@ -165,8 +161,7 @@ namespace ObjectServer.Model
 
         private void CreateTable(IDatabase db)
         {
-            var table = db.CreateTableHandler(this.TableName);
-            table.CreateTable(this.TableName, this.Label);
+            this.table.CreateTable(db, this.TableName, this.Label);
 
             //创建字段
             if (this.Hierarchy)
@@ -178,7 +173,7 @@ namespace ObjectServer.Model
             {
                 if (field.IsStorable() && field.Name != "id")
                 {
-                    table.AddColumn(field);
+                    table.AddColumn(db, field);
                 }
             }
         }

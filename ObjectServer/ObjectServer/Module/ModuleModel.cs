@@ -28,7 +28,6 @@ namespace ObjectServer.Module
         public ModuleModel()
         {
             this.Name = "core.module";
-            this.Automatic = false;
             this.Versioned = false;
 
             this.CharsField("name", "Name", 128, true, null, null);
