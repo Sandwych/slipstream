@@ -17,9 +17,9 @@ namespace ObjectServer.Core
         {
             this.Name = "core.user";
 
-            this.CharsField("login", "User Name", 64, true, null);
-            this.CharsField("password", "Password", 40, true, null);
-            this.BooleanField("admin", "Administrator?", true, null);
+            this.CharsField("login", "User Name", 64, true, null, null);
+            this.CharsField("password", "Password", 40, true, null, null);
+            this.BooleanField("admin", "Administrator?", true, null, null);
 
             //TODO: 加 Salt 列
             /*

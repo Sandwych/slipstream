@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Data;
-using Npgsql;
-using NpgsqlTypes;
 
 using ObjectServer.Utility;
 using ObjectServer.Model;

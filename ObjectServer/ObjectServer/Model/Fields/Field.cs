@@ -7,10 +7,17 @@ namespace ObjectServer.Model
 {
     internal class Field : IField
     {
-        public Field(string name, string type)
+        public Field(string name, FieldType type)
         {
+            if(string.IsNullOrEmpty(name) || name.Trim().Length == 0)
+            {
+                throw new ArgumentNullException("name");
+            }
+
             this.Name = name;
             this.Type = type;
+
+            this.Internal = name == "_version" || name == "id";
         }
 
         #region IField 成员
@@ -27,27 +34,8 @@ namespace ObjectServer.Model
             internal set;
         }
 
-        public virtual string SqlType
-        {
-            get
-            {
-                var sqlType = this.Type;
-                var sqlSize = string.Empty;
-                if (this.Size > 1)
-                {
-                    sqlSize = "(" + this.Size.ToString() + ")";
-                }
-                var notNull = string.Empty;
-                if (this.Required)
-                {
-                    notNull = "NOT NULL";
-                }
 
-                return string.Format("{0}{1} {2}", sqlType, sqlSize, notNull);
-            }
-        }
-
-        public bool IsFunctionField
+        public bool Functional
         {
             get { return this.Getter != null; }
         }
@@ -58,7 +46,13 @@ namespace ObjectServer.Model
             internal set;
         }
 
-        public string Type
+        public FieldDefaultProc DefaultProc
+        {
+            get;
+            internal set;
+        }
+
+        public FieldType Type
         {
             get;
             private set;
@@ -92,6 +86,36 @@ namespace ObjectServer.Model
         {
             get;
             internal set;
+        }
+
+        public bool Internal
+        {
+            get;
+            internal set;
+        }
+
+        public bool IsStorable()
+        {
+            if (this.Functional)
+            {
+                return false;
+            }
+
+            if (this.Type == FieldType.ManyToMany
+                || this.Type == FieldType.OneToMany)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void Validate()
+        {
+            if (this.DefaultProc != null && this.Getter != null)
+            {
+                throw new ArgumentException("Function field cannot have the DefaultProc property");
+            }
         }
 
         #endregion

@@ -53,12 +53,23 @@ select count(relname) from pg_class
 
         public void AddColumn(IField field)
         {
-            var sqlType = field.SqlType;
-            //TODO: 目前只支持空表，如果有数据的话就涉及迁移了
+            var sqlType = PgSqlTypeConverter.GetSqlType(field);
+            var notNull = field.Required ? "not null" : "";
+
             var sql = string.Format(
-                @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2}",
-                this.Name, field.Name, sqlType);
+                @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2} {3}",
+                this.Name, field.Name, sqlType, notNull);
             this.db.Execute(sql);
-        }  
+
+            sql = string.Format(
+                "comment on column \"{0}\".\"{1}\" IS '{2}'",
+                this.Name, field.Name, field.Name);
+            this.db.Execute(sql);
+        }
+
+        public void UpgradeColumn(IField field)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

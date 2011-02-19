@@ -7,8 +7,7 @@ using System.Data;
 using System.Reflection;
 
 using log4net;
-using Npgsql;
-using NpgsqlTypes;
+
 
 using ObjectServer.Backend;
 using ObjectServer.Utility;
@@ -21,16 +20,18 @@ namespace ObjectServer.Model
         protected static readonly ILog Log = LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Dictionary<string, IField> declaredFields =
-            new Dictionary<string, IField>();
+        private readonly List<IField> declaredFields =
+            new List<IField>();
 
-        private Dictionary<string, IField> modelFields =
-            new Dictionary<string, IField>();
+        private readonly List<IField> modelFields =
+            new List<IField>();
+
+        private readonly List<IField> requiredFields = new List<IField>();
 
         private string tableName = null;
         private string name = null;
 
-        private Dictionary<string, MethodInfo> serviceMethods =
+        private readonly Dictionary<string, MethodInfo> serviceMethods =
             new Dictionary<string, MethodInfo>();
 
         public ObjectPool Pool { get; set; }
@@ -110,7 +111,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public void Initialize(IDatabase db)
+        public virtual void Initialize(IDatabase db)
         {
             this.AddInternalFields();
 
@@ -131,15 +132,20 @@ namespace ObjectServer.Model
                     this.CreateTable(db);
                 }
             }
+
+            foreach (var field in this.declaredFields)
+            {
+
+            }
         }
 
         private void AddInternalFields()
         {
-            LongField("id", "ID", true, null);
+            BitIntegerField("id", "ID", true, null, null);
 
             if (this.Versioned)
             {
-                LongField("_version", "Version", true, null);
+                BitIntegerField("_version", "Version", true, null, null);
             }
             //DefineField("_creator", "Creation User", "BIGINT", 1);
             //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
@@ -168,11 +174,10 @@ namespace ObjectServer.Model
                 //conn.ExecuteNonQuery("");
             }
 
-            foreach (var pair in this.declaredFields)
+            foreach (var field in this.declaredFields)
             {
-                if (!pair.Value.IsFunctionField && pair.Value.Name != "id")
+                if (field.IsStorable() && field.Name != "id")
                 {
-                    var field = pair.Value;
                     table.AddColumn(field);
                 }
             }
@@ -180,119 +185,136 @@ namespace ObjectServer.Model
 
         #region Field Methods
 
-        protected void DefineField(string name, string label, FieldType type, int size, bool required)
-        {
-            var field = new Field(name, "");
-            field.Label = label;
-            field.Size = size;
-            field.Required = required;
-            declaredFields.Add(name, field);
-        }
 
-        protected void IntegerField(string name, string label, bool required, FieldGetter getter)
+        protected void IntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, "integer")
+            var field = new Field(name, FieldType.Integer)
             {
                 Label = label,
                 Required = required,
                 Getter = getter,
+                DefaultProc = defaultProc,
             };
 
-            declaredFields.Add(name, field);
+            declaredFields.Add(field);
         }
 
-        protected void LongField(string name, string label, bool required, FieldGetter getter)
+        protected void BitIntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, "bigint")
+            var field = new Field(name, FieldType.BigInteger)
             {
                 Label = label,
                 Required = required,
                 Getter = getter,
+                DefaultProc = defaultProc,
             };
 
-            declaredFields.Add(name, field);
+            field.Validate();
+            declaredFields.Add(field);
         }
 
-        protected void BooleanField(string name, string label, bool required, FieldGetter getter)
+        protected void BooleanField(
+            string name, string label, bool required,
+            FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, "boolean")
+            var field = new Field(name, FieldType.Boolean)
             {
                 Label = label,
                 Required = required,
                 Getter = getter,
+                DefaultProc = defaultProc,
             };
-            declaredFields.Add(name, field);
+
+            field.Validate();
+            declaredFields.Add(field);
         }
 
-        protected void TextField(string name, string label, bool required, FieldGetter getter)
+        protected void TextField(
+            string name, string label, bool required,
+            FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, "text")
+            var field = new Field(name, FieldType.Text)
             {
                 Label = label,
                 Required = required,
                 Getter = getter,
+                DefaultProc = defaultProc,
             };
-            declaredFields.Add(name, field);
+
+            field.Validate();
+            declaredFields.Add(field);
         }
 
-        protected void CharsField(string name, string label, int size, bool required, FieldGetter getter)
+        protected void CharsField(
+            string name, string label, int size, bool required,
+            FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, "varchar")
+            var field = new Field(name, FieldType.Chars)
             {
                 Label = label,
                 Size = size,
                 Required = required,
                 Getter = getter,
-
+                DefaultProc = defaultProc,
             };
-            declaredFields.Add(name, field);
+
+            field.Validate();
+            declaredFields.Add(field);
         }
 
         protected void ManyToOneField(
-            string name, string masterModel, string label, bool required, FieldGetter getter)
+            string name, string masterModel, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, "many2one")
+            var field = new Field(name, FieldType.ManyToOne)
             {
                 Label = label,
                 Required = required,
                 Getter = getter,
+                DefaultProc = defaultProc,
                 Relation = masterModel,
             };
 
-            declaredFields.Add(name, field);
+            field.Validate();
+            declaredFields.Add(field);
         }
 
         protected void OneToManyField(
-            string name, string childModel, string relatedField, string label, bool required, FieldGetter getter)
+            string name, string childModel, string relatedField,
+            string label, bool required,
+            FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, "one2many")
+            var field = new Field(name, FieldType.OneToMany)
             {
                 Label = label,
                 Required = required,
                 Getter = getter,
+                DefaultProc = defaultProc,
                 Relation = childModel,
                 RelatedField = relatedField,
             };
 
-            declaredFields.Add(name, field);
+            field.Validate();
+            declaredFields.Add(field);
         }
 
         protected void ManyToManyField(
             string name, string relatedModel,
             string refTableName, string originField, string targetField,
-            string label, bool required, FieldGetter getter)
+            string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, "many2many")
+            var field = new Field(name, FieldType.ManyToMany)
             {
                 Label = label,
                 Required = required,
                 Getter = getter,
+                DefaultProc = defaultProc,
                 Relation = refTableName,
                 OriginField = targetField,
                 RelatedField = originField,
             };
 
-            declaredFields.Add(name, field);
+            field.Validate();
+            declaredFields.Add(field);
         }
 
 
@@ -401,46 +423,91 @@ namespace ObjectServer.Model
             return this.Search(session, new TrueExpression());
         }
 
-
-
         [ServiceMethod]
-        public virtual long Create(ISession session, IDictionary<string, object> record)
+        public virtual long Create(ISession session, IDictionary<string, object> propertyBag)
         {
             if (!this.CanCreate)
             {
                 throw new NotSupportedException();
             }
 
-            //TODO 这里改成定义的列插入，而不是用户提供的列
-            //TODO 检测是否含有 id 列
+            //TODO 这里改成定义的列插入，而不是用户提供的列            
+            var values = new Dictionary<string, object>(propertyBag);
 
-            //获取下一个 SEQ id，这里可能要移到 backend 里，利于跨数据库            
+            //处理用户没有给的默认值
+            this.AddDefaultValues(session, values);
+
+            return DoCreate(session, values);
+        }
+
+        private long DoCreate(ISession session, Dictionary<string, object> values)
+        {
+            this.VerifyFields(values.Keys);
+
             var serial = session.Database.NextSerial(this.SequenceName);
 
-            var sql = string.Format(
-              "INSERT INTO \"{0}\" (id, _version, {1}) VALUES ({2}, 0, {3});",
-              this.TableName,
-              record.Keys.ToSqlColumns(),
-              serial,
-              record.Keys.ToSqlParameters());
-
-            using (var cmd = session.Database.Connection.CreateCommand() as NpgsqlCommand)
+            var colValues = new object[values.Count];
+            var sbColumns = new StringBuilder();
+            var sbArgs = new StringBuilder();
+            var firstColumn = true;
+            var index = 0;
+            foreach (var f in values.Keys)
             {
-                cmd.CommandText = sql;
-                foreach (var pair in record)
+                if (firstColumn)
                 {
-                    cmd.Parameters.AddWithValue(pair.Key, pair.Value);
+                    firstColumn = false;
+                }
+                else
+                {
+                    sbColumns.Append(", ");
+                    sbArgs.Append(", ");
                 }
 
-                var rows = cmd.ExecuteNonQuery();
-                if (rows != 1)
-                {
-                    Log.ErrorFormat("Failed to insert row, SQL: {0}", sql);
-                    throw new DataException();
-                }
+                colValues[index] = values[f];
+
+                sbArgs.Append("@" + index.ToString());
+                sbColumns.Append('\"');
+                sbColumns.Append(f);
+                sbColumns.Append('\"');
+                index++;
             }
 
+            var columnNames = sbColumns.ToString();
+            var args = sbArgs.ToString();
+
+            var sql = string.Format(
+              "INSERT INTO \"{0}\" (\"id\", \"_version\", {1}) VALUES ({2}, 0, {3});",
+              this.TableName,
+              columnNames,
+              serial,
+              args);
+
+            var rows = session.Database.Execute(sql, colValues);
+            if (rows != 1)
+            {
+                Log.ErrorFormat("Failed to insert row, SQL: {0}", sql);
+                throw new DataException();
+            }
+
+
             return serial;
+        }
+
+        /// <summary>
+        /// 添加没有包含在字典 dict 里但是有默认值函数的字段
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="values"></param>
+        private void AddDefaultValues(ISession session, IDictionary<string, object> propertyBag)
+        {
+            var defaultFields =
+                this.declaredFields.Where(
+                d => (d.DefaultProc != null && !propertyBag.Keys.Contains(d.Name)));
+
+            foreach (var df in defaultFields)
+            {
+                propertyBag[df.Name] = df.DefaultProc(session);
+            }
         }
 
         [ServiceMethod]
@@ -450,6 +517,8 @@ namespace ObjectServer.Model
             {
                 throw new NotSupportedException();
             }
+
+            //检查字段
 
             //TODO: 并发检查，处理 _version 字段
             //客户端也需要提供 _version 字段
@@ -483,27 +552,28 @@ namespace ObjectServer.Model
         public virtual Dictionary<string, object>[] Read(
             ISession session, IEnumerable<long> ids, IEnumerable<string> fields)
         {
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+
             if (!this.CanRead)
             {
                 throw new NotSupportedException();
             }
 
-
             var allFields = new List<string>();
             if (fields == null || fields.Count() == 0)
             {
-                allFields.AddRange(this.declaredFields.Keys);
+                allFields.AddRange(this.declaredFields.Select(f => f.Name));
             }
             else
             {
+                //检查是否有不存在的列
+                this.VerifyFields(fields);
+
                 allFields.Capacity = fields.Count();
-                foreach (var f in fields)
-                {
-                    if (this.declaredFields.ContainsKey(f))
-                    {
-                        allFields.Add(f);
-                    }
-                }
+                allFields.AddRange(fields);
             }
 
             if (!allFields.Contains("id"))
@@ -512,8 +582,13 @@ namespace ObjectServer.Model
             }
 
             //表里的列，也就是可以直接用 SQL 查的列
-            var columnFields = allFields
-                .Where(f => !this.declaredFields[f].IsFunctionField);
+            var columnFields =
+                (from d in this.declaredFields
+                 from f in allFields
+                 where d.Name == f && d.IsStorable()
+                 select d.Name).ToArray();
+
+            //.Where(f => !this.declaredFields[f].IsFunctionField);
 
             //TODO: SQL 注入问题
             var sql = string.Format("select {0} from \"{1}\" where \"id\" in ({2});",
@@ -527,9 +602,9 @@ namespace ObjectServer.Model
             //处理函数字段
             foreach (var fieldName in allFields)
             {
-                var f = this.declaredFields[fieldName];
+                var f = this.declaredFields.Single(i => i.Name == fieldName);
 
-                if (f.IsFunctionField)
+                if (f.Functional)
                 {
                     var funcFieldValues = f.Getter(session, ids);
                     foreach (var p in result)
@@ -542,7 +617,6 @@ namespace ObjectServer.Model
 
             return result.ToArray();
         }
-
 
         [ServiceMethod]
         public virtual void Delete(ISession session, IEnumerable<long> ids)
@@ -565,6 +639,25 @@ namespace ObjectServer.Model
 
 
         #endregion
+
+
+        private void VerifyFields(IEnumerable<string> fields)
+        {
+            Debug.Assert(fields != null);
+            var notExistedFields =
+                fields.Count(fn => !this.declaredFields.Exists(f => f.Name == fn));
+            if (notExistedFields > 0)
+            {
+                throw new ArgumentException("fields");
+            }
+
+            var internalFields =
+                 fields.Count(fn => this.declaredFields.Exists(f => f.Name == fn && f.Internal));
+            if (internalFields > 0)
+            {
+                throw new ArgumentException("fields");
+            }
+        }
 
     }
 }

@@ -13,6 +13,8 @@ namespace ObjectServer.Backend
 
         void AddColumn(IField field);
 
+        void UpgradeColumn(IField field);
+
          bool TableExists(string tableName);
 
          void CreateTable(string tableName, string label);         

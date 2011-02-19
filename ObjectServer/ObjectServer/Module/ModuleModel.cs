@@ -31,9 +31,9 @@ namespace ObjectServer.Module
             this.Automatic = false;
             this.Versioned = false;
 
-            this.CharsField("name", "Name", 128, true, null);
-            this.CharsField("state", "State", 16, true, null);
-            this.TextField("description", "Description", false, null);
+            this.CharsField("name", "Name", 128, true, null, null);
+            this.CharsField("state", "State", 16, true, null, null);
+            this.TextField("description", "Description", false, null, null);
         }
 
         public List<Module> LoadedModules

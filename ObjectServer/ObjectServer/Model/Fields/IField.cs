@@ -9,14 +9,19 @@ namespace ObjectServer.Model
     {
         string Name { get; }
         string Label { get; }
-        bool IsFunctionField { get; }
+        bool Functional { get; }
         FieldGetter Getter { get; }
-        string SqlType { get; }
-        string Type { get; }
+        FieldDefaultProc DefaultProc { get; }
+        FieldType Type { get; }
         int Size { get; }
         bool Required { get; }
         string Relation { get; }
         string OriginField { get; }
         string RelatedField { get; }
+        bool Internal { get; }
+
+        bool IsStorable();
+
+        void Validate();
     }
 }
