@@ -8,7 +8,6 @@ using System.Data;
 
 using log4net;
 
-using ObjectServer.Module;
 using ObjectServer.Backend;
 
 namespace ObjectServer
@@ -27,8 +26,8 @@ namespace ObjectServer
             this.Database = dbName;
             this.RegisterAllCoreModels();
 
-            ObjectServer.Module.Module.UpdateModuleList(db);
-            ObjectServer.Module.Module.LoadModules(db, this);
+            Module.UpdateModuleList(db);
+            Module.LoadModules(db, this);
         }
 
         public string Database { get; private set; }

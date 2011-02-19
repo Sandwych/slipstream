@@ -130,13 +130,13 @@
     <Compile Include="Model\Query\FieldExpression.cs" />
     <Compile Include="Model\Query\TrueExpression.cs" />
     <Compile Include="Model\ReferentialAction.cs" />
-    <Compile Include="Module\ModuleStatus.cs" />
+    <Compile Include="ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="ServiceObjectAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />
-    <Compile Include="Module\ModuleModel.cs" />
+    <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Model\TestObject.cs" />
-    <Compile Include="Module\Module.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="ObjectPool.cs" />
     <Compile Include="LocalService.cs" />
     <Compile Include="ObjectServerStarter.cs" />

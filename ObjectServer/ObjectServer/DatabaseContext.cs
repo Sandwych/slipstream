@@ -8,7 +8,6 @@ using System.Transactions;
 
 using ObjectServer.Backend;
 using ObjectServer.Core;
-using ObjectServer.Module;
 
 namespace ObjectServer
 {

@@ -42,7 +42,7 @@ namespace ObjectServer
 
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
-                Module.Module.LookupAllModules(cfg.ModulePath);
+                Module.LookupAllModules(cfg.ModulePath);
             }
 
             lock (typeof(ObjectServerStarter))
