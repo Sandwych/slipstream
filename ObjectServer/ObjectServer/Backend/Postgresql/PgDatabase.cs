@@ -9,7 +9,7 @@ using Npgsql;
 
 namespace ObjectServer.Backend.Postgresql
 {
-    public class PgDatabase : DatabaseBase, IDatabase
+    internal sealed class PgDatabase : DatabaseBase, IDatabase
     {
         private const string INITDB = "ObjectServer.Backend.Postgresql.initdb.sql";
 
@@ -110,6 +110,18 @@ namespace ObjectServer.Backend.Postgresql
         }
 
         #endregion
+
+        public override ITableHandler CreateTableHandler(string tableName)
+        {
+            return new PgTableHandler(this, tableName);
+        }
+
+        public override long NextSerial(string sequenceName)
+        {
+            var seqSql = "SELECT nextval(@0)";
+            var serial = (long)this.QueryValue(seqSql, sequenceName);
+            return serial;
+        }
 
     }
 }

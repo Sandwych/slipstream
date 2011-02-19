@@ -29,5 +29,9 @@ namespace ObjectServer.Backend
         DataTable QueryAsDataTable(string commandText, params object[] args);
 
         List<Dictionary<string, object>> QueryAsDictionary(string commandText, params object[] args);
+
+        ITableHandler CreateTableHandler(string tableName);
+
+        long NextSerial(string sequenceName);
     }
 }

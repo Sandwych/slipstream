@@ -7,11 +7,13 @@ using System.Reflection;
 
 using Npgsql;
 
+using ObjectServer.Model;
+
 namespace ObjectServer.Backend
 {
-    public class PgTableHandler : ITableHandler
+    internal sealed class PgTableHandler : ITableHandler
     {
-        protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
         private IDatabase db;
@@ -49,20 +51,14 @@ select count(relname) from pg_class
             this.db.Execute(sql);
         }
 
-        public void AddColumn(string colName, string sqlType)
+        public void AddColumn(IField field)
         {
+            var sqlType = field.SqlType;
             //TODO: 目前只支持空表，如果有数据的话就涉及迁移了
             var sql = string.Format(
                 @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2}",
-                this.Name, colName, sqlType);
+                this.Name, field.Name, sqlType);
             this.db.Execute(sql);
-        }
-
-        public long NextSerial(string sequenceName)
-        {
-            var seqSql = "SELECT nextval(@0)";
-            var serial = (long)this.db.QueryValue(seqSql, sequenceName);
-            return serial;
-        }
+        }  
     }
 }

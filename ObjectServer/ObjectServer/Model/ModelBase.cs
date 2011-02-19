@@ -125,7 +125,7 @@ namespace ObjectServer.Model
             //如果需要自动建表就建
             if (this.Automatic)
             {
-                var table = new PgTableHandler(db, this.TableName);
+                var table = db.CreateTableHandler(this.TableName);
                 if (!table.TableExists(this.TableName))
                 {
                     this.CreateTable(db);
@@ -159,7 +159,7 @@ namespace ObjectServer.Model
 
         private void CreateTable(IDatabase db)
         {
-            var table = new PgTableHandler(db, this.TableName);
+            var table = db.CreateTableHandler(this.TableName);
             table.CreateTable(this.TableName, this.Label);
 
             //创建字段
@@ -173,7 +173,7 @@ namespace ObjectServer.Model
                 if (!pair.Value.IsFunctionField && pair.Value.Name != "id")
                 {
                     var field = pair.Value;
-                    table.AddColumn(field.Name, field.SqlType);
+                    table.AddColumn(field);
                 }
             }
         }
@@ -414,9 +414,8 @@ namespace ObjectServer.Model
             //TODO 这里改成定义的列插入，而不是用户提供的列
             //TODO 检测是否含有 id 列
 
-            //获取下一个 SEQ id，这里可能要移到 backend 里，利于跨数据库
-            var table = new PgTableHandler(session.Database, this.TableName);
-            var serial = table.NextSerial(this.SequenceName);
+            //获取下一个 SEQ id，这里可能要移到 backend 里，利于跨数据库            
+            var serial = session.Database.NextSerial(this.SequenceName);
 
             var sql = string.Format(
               "INSERT INTO \"{0}\" (id, _version, {1}) VALUES ({2}, 0, {3});",

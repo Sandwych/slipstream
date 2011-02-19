@@ -26,7 +26,7 @@ namespace ObjectServer.Test
         }
 
         [Test]
-        public void TestCrud()
+        public void CRUD_model()
         {
             var modelName = "test.test_object";
             var dbName = "objectserver";
@@ -67,37 +67,6 @@ namespace ObjectServer.Test
                 dbName, modelName, "Search", "(equal name 'sweet_name')", 0, 100);
             Assert.AreEqual(0, foundIds.Length);
         }
-
-        /*
-        public void Main()
-        {
-            TcpChannel chan = new TcpChannel();
-            ChannelServices.RegisterChannel(chan, false);
-            ObjectProxy proxy = (ObjectProxy)Activator.GetObject(typeof(ObjectProxy)
-                , "tcp://localhost:5000/ObjectProxy");
-
-            var modelName = "Test.TestObject";
-
-            var values = new Dictionary<string, object>()
-            {
-                { "name", "Oh my new record!" },
-            };
-            var id = (long)proxy.Execute("objectserver", modelName, "Create", new object[] { values });
-            Console.WriteLine("id=[{0}]", id);
-
-            var ids = new long[] { 1, 2, 17, 18 };
-            var fields = new string[] { "name" };
-            var args = new object[] { fields, ids };
-            var dt = (Hashtable[])proxy.Execute("objectserver", modelName, "Read", args);
-
-            foreach (Hashtable row in dt)
-            {
-                Console.WriteLine("resule: id=[{0}], name=[{1}]", row["id"], row["name"]);
-            }
-
-            Console.ReadLine();
-        }
-        */
-
+ 
     }
 }

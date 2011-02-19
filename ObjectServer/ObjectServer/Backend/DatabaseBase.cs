@@ -12,7 +12,7 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Backend
 {
-    public abstract class DatabaseBase : IDatabase
+    internal abstract class DatabaseBase : IDatabase
     {
         protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -53,12 +53,6 @@ namespace ObjectServer.Backend
             cmd.ExecuteNonQuery();
         }
 
-
-        public abstract string[] List();
-
-        public abstract void Create(string dbName);
-
-        public abstract void Initialize();
 
         public DbConnection Connection { get { return this.conn; } }
 
@@ -241,5 +235,11 @@ namespace ObjectServer.Backend
         {
             throw new NotImplementedException();
         }
+
+        public abstract string[] List();
+        public abstract void Create(string dbName);
+        public abstract void Initialize();
+        public abstract ITableHandler CreateTableHandler(string dbName);
+        public abstract long NextSerial(string sequenceName);
     }
 }

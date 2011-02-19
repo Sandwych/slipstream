@@ -7,12 +7,14 @@ namespace ObjectServer.Model
 {
     public enum FieldType
     {
-        Characters,
+        Chars,
         Text,
-        Int,
-        Long,
-        SmallInt,
+        Integer,
+        BigInteger,
+        Float,
+        DateTime,
         Boolean,
+        Money,
         Selection,
         OneToMany,
         ManyToOne,
