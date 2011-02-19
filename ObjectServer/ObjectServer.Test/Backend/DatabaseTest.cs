@@ -14,7 +14,7 @@ namespace ObjectServer.Test.Backend
     {
 
         [Test]
-        void Query_as_dictionary()
+        public void Query_as_dictionary()
         {
             using (var db = DataProvider.OpenDatabase("objectserver"))
             {
@@ -27,7 +27,7 @@ namespace ObjectServer.Test.Backend
         }
 
         [Test]
-        void Create_and_delete_database()
+        public void Create_and_delete_database()
         {
             var dbName = "oo_testdb";
             ObjectServerStarter.Initialize();

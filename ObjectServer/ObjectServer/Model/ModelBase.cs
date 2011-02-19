@@ -25,8 +25,10 @@ namespace ObjectServer.Model
         public string Label { get; protected set; }
         public string Module { get; protected set; }
 
-        public virtual void Initialize(IDatabase db)
+        public virtual void Initialize(IDatabase db, ObjectPool pool)
         {
+            this.Pool = pool;
+
             this.AddInternalFields();
 
             //检测此模型是否存在于数据库 core_model 表
@@ -42,7 +44,7 @@ namespace ObjectServer.Model
 
         public abstract bool DatabaseRequired { get; }
 
-        public ObjectPool Pool { get; set; }
+        public ObjectPool Pool { get; private set; }
 
         public MethodInfo GetServiceMethod(string name)
         {
@@ -57,6 +59,11 @@ namespace ObjectServer.Model
             this.serviceMethods.Add(mi.Name, mi);
         }
 
+
+        public bool ContainsField(string fieldName)
+        {
+            return this.declaredFields.Exists(f => f.Name == fieldName);
+        }
 
         #region Field Methods
 

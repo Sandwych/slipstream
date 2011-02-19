@@ -85,5 +85,54 @@ select count(relname) from pg_class
         private void LoadColumns()
         {
         }
+
+
+        public void AddConstraint(IDatabase db, string constraintName, string constraint)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void DeleteConstraint(IDatabase db, string constraintName)
+        {
+            var sql = string.Format(
+                "alter table \"{0}\" drop constraint \"{1}\"",
+                this.Name, constraintName);
+            db.Execute(sql);
+        }
+
+
+        public void AddFk(IDatabase db, string columnName, string refTable, ReferentialAction refAct)
+        {
+            //TODO: 设置其它的 ReferentialAction
+            var onDelete = "set null";
+
+            var fkName = this.GenerateFkName(columnName);
+            var sql = string.Format(
+                "alter table \"{0}\" add constraint \"{1}\" foreign key (\"{2}\") references \"{3}\" on delete {4}",
+                this.Name, fkName, columnName, refTable, onDelete);
+
+            db.Execute(sql);
+        }
+
+
+        public void DeleteFk(IDatabase db, string columnName)
+        {
+            var fkName = this.GenerateFkName(columnName);
+            this.DeleteConstraint(db, fkName);
+        }
+
+        public bool FkExists(IDatabase db, string columnName)
+        {
+            var fkName = this.GenerateFkName(columnName);
+            var sql = "select count(conname) from pg_constraint where conname = @0";
+            var n = (long)db.QueryValue(sql, fkName);
+            return n > 0;
+        }
+
+        private string GenerateFkName(string columnName)
+        {
+            return string.Format("{0}_{1}_fkey", this.Name, columnName);
+        }
     }
 }

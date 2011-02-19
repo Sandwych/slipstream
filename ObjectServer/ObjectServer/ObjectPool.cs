@@ -53,8 +53,8 @@ namespace ObjectServer
                 db.Open();
                 foreach (var t in types)
                 {
-                    var obj = Model.TableModel.CreateModelInstance(db, t);
-                    this.RegisterServiceObject(obj.Name, obj);
+                    var obj = CreateServiceObject(db, this, t);
+                    this.objects[obj.Name] = obj;
                 }
             }
 
@@ -64,20 +64,24 @@ namespace ObjectServer
             }
         }
 
-        public void RegisterServiceObject(string name, IServiceObject so)
-        {
-            if (Log.IsInfoEnabled)
-            {
-                Log.InfoFormat("Register model: {0}", name);
-            }
 
-            so.Pool = this;
-            this.objects[name] = so;
-        }
 
         public IServiceObject LookupObject(string name)
         {
             return this.objects[name];
+        }
+
+
+        private static IServiceObject CreateServiceObject(IDatabase db, ObjectPool pool, Type t)
+        {
+            var obj = Activator.CreateInstance(t) as IServiceObject;
+            if (obj == null)
+            {
+                var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
+                throw new InvalidCastException(msg);
+            }
+            obj.Initialize(db, pool);
+            return obj;
         }
     }
 }

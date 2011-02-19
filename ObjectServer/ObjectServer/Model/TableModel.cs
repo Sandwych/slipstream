@@ -96,9 +96,9 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IDatabase db)
+        public override void Initialize(IDatabase db, ObjectPool pool)
         {
-            base.Initialize(db);
+            base.Initialize(db, pool);
 
             this.table = db.CreateTableHandler(db, this.TableName);
 
@@ -123,15 +123,19 @@ namespace ObjectServer.Model
                 //conn.ExecuteNonQuery("");
             }
 
-            foreach (var field in this.DeclaredFields)
+            var columns = this.DeclaredFields.Where(f => f.IsStorable() && f.Name != "id");
+
+            foreach (var f in columns)
             {
-                if (field.IsStorable() && field.Name != "id")
+                table.AddColumn(db, f);
+
+                if (f.Type == FieldType.ManyToOne)
                 {
-                    table.AddColumn(db, field);
+                    var refModel = (TableModel)this.Pool.LookupObject(f.Relation);
+                    this.table.AddFk(db, f.Name, refModel.TableName, ReferentialAction.SetNull);
                 }
             }
         }
-
 
         private void RegisterAllServiceMethods()
         {
@@ -168,17 +172,6 @@ namespace ObjectServer.Model
             return result.ToArray();
         }
 
-        public static IServiceObject CreateModelInstance(IDatabase db, Type t)
-        {
-            var obj = Activator.CreateInstance(t) as IServiceObject;
-            if (obj == null)
-            {
-                var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
-                throw new InvalidCastException(msg);
-            }
-            obj.Initialize(db);
-            return obj;
-        }
 
         public long[] Search(ISession session, IExpression exp)
         {
@@ -243,6 +236,11 @@ namespace ObjectServer.Model
         {
             this.VerifyFields(values.Keys);
 
+            if (this.Versioned)
+            {
+                values.Add("_version", 0);
+            }
+
             var serial = session.Database.NextSerial(this.SequenceName);
 
             var colValues = new object[values.Count];
@@ -275,7 +273,7 @@ namespace ObjectServer.Model
             var args = sbArgs.ToString();
 
             var sql = string.Format(
-              "INSERT INTO \"{0}\" (\"id\", \"_version\", {1}) VALUES ({2}, 0, {3});",
+              "INSERT INTO \"{0}\" (\"id\", {1}) VALUES ({2}, {3});",
               this.TableName,
               columnNames,
               serial,
@@ -415,22 +413,38 @@ namespace ObjectServer.Model
                 else if (f.Type == FieldType.ManyToOne)
                 {
                     //获取所有 Name
-                    var masterTableIds = result.Select(d => (long)d[f.Name]);
 
                     var masterModel = (TableModel)session.Pool.LookupObject(f.Relation);
-                    //TODO: 处理没有 name 字段的问题
-                    var masters = masterModel.Read(session, masterTableIds, new string[] { "name" });
-                    var masterNames = new Dictionary<long, string>(masters.Length);
-                    foreach (var master in masters)
+                    if (masterModel.ContainsField("name")) //如果有 name 字段
                     {
-                        var masterId = (long)master["id"];
-                        masterNames[masterId] = (string)master["name"];
+                        var masterTableIds = result.Select(d => (long)d[f.Name]);
+                        var masters = masterModel.Read(session, masterTableIds, new string[] { "name" });
+                        var masterNames = new Dictionary<long, string>(masters.Length);
+                        foreach (var master in masters)
+                        {
+                            var masterId = (long)master["id"];
+                            masterNames[masterId] = (string)master["name"];
+                        }
+                        foreach (var p in result)
+                        {
+                            var id = (long)p["id"];
+                            p[f.Name] = new object[] { id, masterNames[id] };
+                        }
                     }
-                    foreach (var p in result)
+                    else
                     {
-                        var id = (long)p["id"];
-                        p[f.Name] = new object[] { id, masterNames[id] };
+                        foreach (var p in result)
+                        {
+                            var id = p["id"];
+                            p[f.Name] = new object[] { id, string.Empty };
+                        }
                     }
+                }
+                else if (f.Type == FieldType.OneToMany)
+                {
+                    //查询字表
+                    var childModel = (TableModel)session.Pool.LookupObject(f.Relation);
+                    throw new NotImplementedException();
                 }
             }
 

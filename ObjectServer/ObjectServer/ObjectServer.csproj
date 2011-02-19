@@ -128,6 +128,7 @@
     <Compile Include="Model\Query\ValueExpression.cs" />
     <Compile Include="Model\Query\FieldExpression.cs" />
     <Compile Include="Model\Query\TrueExpression.cs" />
+    <Compile Include="Model\ReferentialAction.cs" />
     <Compile Include="Module\ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="ServiceObjectAttribute.cs" />
@@ -154,9 +155,9 @@
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha1.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
-    <Compile Include="Model\Fields\Field.cs" />
+    <Compile Include="Model\Fields\MetaField.cs" />
     <Compile Include="Model\Fields\FieldGetter.cs" />
-    <Compile Include="Model\Fields\IField.cs" />
+    <Compile Include="Model\Fields\IMetaField.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />
   </ItemGroup>
   <ItemGroup>

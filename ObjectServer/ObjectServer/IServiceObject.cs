@@ -11,7 +11,7 @@ namespace ObjectServer
 {
     public interface IServiceObject
     {
-        void Initialize(IDatabase db);
+        void Initialize(IDatabase db, ObjectPool pool);
 
         string Name { get; }
 
@@ -19,7 +19,7 @@ namespace ObjectServer
 
         bool DatabaseRequired { get; }
 
-        ObjectPool Pool { get; set; }
+        ObjectPool Pool { get; }
 
     }
 }
