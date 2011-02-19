@@ -13,7 +13,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    //TODO: Thread Safty
+
     public sealed class ObjectPool
     {
         private static readonly ILog Log = LogManager.GetLogger(
@@ -63,8 +63,6 @@ namespace ObjectServer
                 Log.InfoFormat("Done");
             }
         }
-
-
 
         public IServiceObject LookupObject(string name)
         {

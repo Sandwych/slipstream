@@ -140,7 +140,7 @@
     <Compile Include="ObjectPool.cs" />
     <Compile Include="LocalService.cs" />
     <Compile Include="ObjectServerStarter.cs" />
-    <Compile Include="Pooler.cs" />
+    <Compile Include="DatabaseContext.cs" />
     <Compile Include="Core\UserModel.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="Core\FieldModel.cs" />

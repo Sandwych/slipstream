@@ -76,34 +76,57 @@ namespace ObjectServer.Module
         [JsonIgnore]
         public ModuleStatus State { get; set; }
 
-        public static void LookupAllModules()
+        public static void LookupAllModules(string modulePath)
         {
-            allModules.Clear();
-
-            var path = ObjectServerStarter.Configuration.ModulePath;
-            var moduleDirs = Directory.GetDirectories(path);
-            foreach (var moduleDir in moduleDirs)
+            lock (typeof(Module))
             {
-                var moduleFilePath = System.IO.Path.Combine(moduleDir, MODULE_FILENAME);
-                var module = DeserializeFromFile(moduleFilePath);
-                module.Path = moduleDir;
-                allModules.Add(module);
+                allModules.Clear();
+
+                var moduleDirs = Directory.GetDirectories(modulePath);
+                foreach (var moduleDir in moduleDirs)
+                {
+                    var moduleFilePath = System.IO.Path.Combine(moduleDir, MODULE_FILENAME);
+                    var module = DeserializeFromFile(moduleFilePath);
+                    module.Path = moduleDir;
+                    allModules.Add(module);
+                }
             }
         }
 
         public static void UpdateModuleList(IDatabase db)
         {
-            var sql = "select count(*) from core_module where name = @0";
-
-            foreach (var m in allModules)
+            lock (typeof(Module))
             {
-                var count = (long)db.QueryValue(sql, m.Name);
-                if (count == 0)
+                var sql = "select count(*) from core_module where name = @0";
+
+                foreach (var m in allModules)
                 {
-                    AddModuleToDb(db, m);
+                    var count = (long)db.QueryValue(sql, m.Name);
+                    if (count == 0)
+                    {
+                        AddModuleToDb(db, m);
+                    }
                 }
             }
         }
+
+
+        public static void LoadModules(IDatabase db, ObjectPool pool)
+        {
+            lock (typeof(Module))
+            {
+                var sql = "select name from core_module where state = 'actived'";
+                var modules = db.QueryAsDictionary(sql);
+
+                foreach (var m in modules)
+                {
+                    var moduleName = (string)m["name"];
+                    var module = allModules.Single(i => i.Name == moduleName);
+                    module.Load(pool);
+                }
+            }
+        }
+
 
         private static void AddModuleToDb(IDatabase db, Module m)
         {
@@ -128,19 +151,6 @@ license varchar(32),*/
 
             var insertSql = "insert into core_module(name, state, description) values(@0, @1, @2)";
             db.Execute(insertSql, m.Name, state, m.Label);
-        }
-
-        public static void LoadModules(IDatabase db, ObjectPool pool)
-        {
-            var sql = "select name from core_module where state = 'actived'";
-            var modules = db.QueryAsDictionary(sql);
-
-            foreach (var m in modules)
-            {
-                var moduleName = (string)m["name"];
-                var module = allModules.Single(i => i.Name == moduleName);
-                module.Load(pool);
-            }
         }
 
         private static Module DeserializeFromFile(string moduleFilePath)

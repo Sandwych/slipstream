@@ -18,7 +18,7 @@ namespace ObjectServer
 
         private Configuration config;
         private bool initialized;
-        private Pooler pooler = new Pooler();
+        private DatabaseContext pooler = new DatabaseContext();
 
         private ObjectServerStarter()
         {
@@ -39,14 +39,17 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("cfg");
             }
-            s_instance.config = cfg;
 
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
-                Module.Module.LookupAllModules();
+                Module.Module.LookupAllModules(cfg.ModulePath);
             }
 
-            s_instance.initialized = true;
+            lock (typeof(ObjectServerStarter))
+            {
+                s_instance.config = cfg;
+                s_instance.initialized = true;
+            }
         }
 
         /// <summary>
@@ -88,7 +91,7 @@ namespace ObjectServer
             }
         }
 
-        public static Pooler Pooler
+        internal static DatabaseContext Pooler
         {
             get
             {
