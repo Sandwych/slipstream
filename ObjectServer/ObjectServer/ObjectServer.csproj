@@ -113,6 +113,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\GroupModel.cs" />
     <Compile Include="Core\ActionModel.cs" />
+    <Compile Include="Core\RuleModel.cs" />
     <Compile Include="Core\ViewModel.cs" />
     <Compile Include="Core\MenuModel.cs" />
     <Compile Include="Core\CronModel.cs" />
