@@ -9,7 +9,7 @@ namespace ObjectServer.Core
 {
 
     [ServiceObject]
-    public sealed class ViewModel : ModelBase
+    public sealed class ViewModel : TableModel
     {
 
         public ViewModel()

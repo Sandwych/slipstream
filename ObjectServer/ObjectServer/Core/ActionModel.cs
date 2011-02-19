@@ -9,7 +9,7 @@ namespace ObjectServer.Core
 {
 
     [ServiceObject]
-    public sealed class ActionModel : ModelBase
+    public sealed class ActionModel : TableModel
     {
 
         public ActionModel()

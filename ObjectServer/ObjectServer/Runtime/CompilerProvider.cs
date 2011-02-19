@@ -30,7 +30,7 @@ namespace ObjectServer.Runtime
                 return s_instance.compilers["boo"];
             }
 
-            if (s_instance.compilers.ContainsKey(language.Trim().ToLowerInvariant()))
+            if (!s_instance.compilers.ContainsKey(language.Trim().ToLowerInvariant()))
             {
                 throw new NotSupportedException(
                     string.Format("Not supported language: '{0}'", language));

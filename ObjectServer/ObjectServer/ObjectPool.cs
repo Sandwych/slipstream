@@ -27,6 +27,7 @@ namespace ObjectServer
             this.Database = dbName;
             this.RegisterAllCoreModels();
 
+            ObjectServer.Module.Module.UpdateModuleList(db);
             ObjectServer.Module.Module.LoadModules(db, this);
         }
 
@@ -45,14 +46,14 @@ namespace ObjectServer
                 Log.InfoFormat("Start to register all models for assembly [{0}]...", assembly.FullName);
             }
 
-            var types = Model.ModelBase.GetModelsFromAssembly(assembly);
+            var types = Model.TableModel.GetModelsFromAssembly(assembly);
 
             using (var db = Backend.DataProvider.OpenDatabase(this.Database))
             {
                 db.Open();
                 foreach (var t in types)
                 {
-                    var obj = Model.ModelBase.CreateModelInstance(db, t);
+                    var obj = Model.TableModel.CreateModelInstance(db, t);
                     this.RegisterServiceObject(obj.Name, obj);
                 }
             }

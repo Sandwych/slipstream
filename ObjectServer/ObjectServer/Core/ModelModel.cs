@@ -11,12 +11,18 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [ServiceObject]
-    public class ModelModel : ModelBase
+    public class ModelModel : TableModel
     {
-        public ModelModel() : base()
+        public ModelModel()
+            : base()
         {
             this.Name = "core.model";
             this.Versioned = false;
+
+            this.CharsField("name", "Name", 128, true, null, null);
+            this.TextField("info", "Information", false, null, null);
+            this.CharsField("module", "Module", 128, true, null, null);
+            this.OneToManyField("fields", "core.field", "module", "Fields", false, null, null);
         }
     }
 }

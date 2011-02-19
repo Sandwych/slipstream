@@ -10,7 +10,7 @@ namespace ObjectServer.Core
 {
 
     [ServiceObject]
-    public sealed class UserModel : ModelBase
+    public sealed class UserModel : TableModel
     {
 
         public UserModel()

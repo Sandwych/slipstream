@@ -12,7 +12,7 @@ namespace ObjectServer.Core
     /// 用户组信息
     /// </summary>
     [ServiceObject]
-    public sealed class GroupModel : ModelBase
+    public sealed class GroupModel : TableModel
     {
 
         public GroupModel()

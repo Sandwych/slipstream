@@ -9,7 +9,7 @@ using System.Data.Common;
 namespace ObjectServer.Model
 {
     [ServiceObject]
-    public class TestObject : ModelBase
+    public class TestObject : TableModel
     {
 
         public TestObject()

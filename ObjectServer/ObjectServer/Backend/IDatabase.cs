@@ -30,7 +30,7 @@ namespace ObjectServer.Backend
 
         List<Dictionary<string, object>> QueryAsDictionary(string commandText, params object[] args);
 
-        ITable CreateTableHandler(string tableName);
+        ITable CreateTableHandler(IDatabase db, string tableName);
 
         long NextSerial(string sequenceName);
     }

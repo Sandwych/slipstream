@@ -239,7 +239,7 @@ namespace ObjectServer.Backend
         public abstract string[] List();
         public abstract void Create(string dbName);
         public abstract void Initialize();
-        public abstract ITable CreateTableHandler(string dbName);
+        public abstract ITable CreateTableHandler(IDatabase db, string dbName);
         public abstract long NextSerial(string sequenceName);
     }
 }

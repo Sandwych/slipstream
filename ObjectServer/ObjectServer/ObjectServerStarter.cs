@@ -41,8 +41,10 @@ namespace ObjectServer
             }
             s_instance.config = cfg;
 
-
-            Module.Module.LookupAllModules();
+            if (!string.IsNullOrEmpty(cfg.ModulePath))
+            {
+                Module.Module.LookupAllModules();
+            }
 
             s_instance.initialized = true;
         }

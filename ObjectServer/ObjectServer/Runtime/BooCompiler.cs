@@ -26,7 +26,7 @@ namespace ObjectServer.Runtime
         public Assembly CompileFromFile(IEnumerable<string> sourceFiles)
         {
             var compiler = new Boo.Lang.Compiler.BooCompiler();
-            var coreAssembly = typeof(Model.ModelBase).Assembly;
+            var coreAssembly = typeof(Model.TableModel).Assembly;
             compiler.Parameters.Pipeline = new CompileToMemory();
             compiler.Parameters.Ducky = true;
             compiler.Parameters.WarnAsError = false;

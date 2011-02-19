@@ -9,16 +9,20 @@ using Npgsql;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Backend
+namespace ObjectServer.Backend.Postgresql
 {
     internal sealed class PgTable : ITable
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        public PgTable(string tableName)
+        private List<Column> columns = new List<Column>();
+
+        public PgTable(IDatabase db, string tableName)
         {
             this.Name = tableName;
+
+            this.LoadColumns();
         }
 
         public string Name { get; private set; }
@@ -76,6 +80,10 @@ select count(relname) from pg_class
         public void UpgradeColumn(IDatabase db, IField field)
         {
             throw new NotImplementedException();
+        }
+
+        private void LoadColumns()
+        {
         }
     }
 }

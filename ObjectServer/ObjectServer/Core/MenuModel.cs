@@ -9,7 +9,7 @@ namespace ObjectServer.Core
 {
 
     [ServiceObject]
-    public sealed class MenuModel : ModelBase
+    public sealed class MenuModel : TableModel
     {
 
         public MenuModel()

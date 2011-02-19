@@ -17,7 +17,7 @@ namespace ObjectServer.Module
     /// TODO 线程安全
     /// </summary>
     [ServiceObject]
-    public sealed class ModuleModel : ModelBase
+    public sealed class ModuleModel : TableModel
     {
         /// <summary>
         /// 单个数据库中加载的模块

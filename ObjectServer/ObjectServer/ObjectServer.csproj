@@ -106,6 +106,7 @@
     <Compile Include="Backend\IDatabase.cs" />
     <Compile Include="Backend\ISqlTypeConverter.cs" />
     <Compile Include="Backend\ITable.cs" />
+    <Compile Include="Backend\Postgresql\Column.cs" />
     <Compile Include="Backend\Postgresql\PgDatabase.cs" />
     <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Backend\Postgresql\PgTable.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="IService.cs" />
     <Compile Include="IServiceObject.cs" />
     <Compile Include="Model\Fields\FieldDefaultProc.cs" />
+    <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\Query\IExpression.cs" />
     <Compile Include="Model\Query\NotExpression.cs" />
     <Compile Include="Model\Query\InExpression.cs" />
@@ -127,8 +129,9 @@
     <Compile Include="Model\Query\FieldExpression.cs" />
     <Compile Include="Model\Query\TrueExpression.cs" />
     <Compile Include="Module\ModuleStatus.cs" />
+    <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="ServiceObjectAttribute.cs" />
-    <Compile Include="Model\ModelBase.cs" />
+    <Compile Include="Model\TableModel.cs" />
     <Compile Include="Module\ModuleModel.cs" />
     <Compile Include="Model\TestObject.cs" />
     <Compile Include="Module\Module.cs" />

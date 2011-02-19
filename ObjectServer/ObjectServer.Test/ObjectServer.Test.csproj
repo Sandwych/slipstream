@@ -57,7 +57,7 @@
     <Compile Include="Backend\DatabaseTest.cs" />
     <Compile Include="ConfigurationTest.cs" />
     <Compile Include="JsonTest.cs" />
-    <Compile Include="ModelBaseTest.cs" />
+    <Compile Include="Model\ModelBaseTest.cs" />
     <Content Include="modules\test\module.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

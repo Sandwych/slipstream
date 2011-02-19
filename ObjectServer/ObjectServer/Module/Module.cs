@@ -63,6 +63,7 @@ namespace ObjectServer.Module
             pool.RegisterModelsInAssembly(assembly);
 
             var moduleModel = (ModuleModel)pool.LookupObject("core.module");
+            this.State = ModuleStatus.Actived;
             moduleModel.LoadedModules.Add(this);
         }
 
@@ -83,11 +84,50 @@ namespace ObjectServer.Module
             var moduleDirs = Directory.GetDirectories(path);
             foreach (var moduleDir in moduleDirs)
             {
-                var moduleFilePath = System.IO.Path.Combine(path, moduleDir);
-                moduleFilePath = System.IO.Path.Combine(moduleFilePath, MODULE_FILENAME);
+                var moduleFilePath = System.IO.Path.Combine(moduleDir, MODULE_FILENAME);
                 var module = DeserializeFromFile(moduleFilePath);
+                module.Path = moduleDir;
                 allModules.Add(module);
             }
+        }
+
+        public static void UpdateModuleList(IDatabase db)
+        {
+            var sql = "select count(*) from core_module where name = @0";
+
+            foreach (var m in allModules)
+            {
+                var count = (long)db.QueryValue(sql, m.Name);
+                if (count == 0)
+                {
+                    AddModuleToDb(db, m);
+                }
+            }
+        }
+
+        private static void AddModuleToDb(IDatabase db, Module m)
+        {
+            /*
+               website varchar(256),
+"name" varchar(128) not null,
+author varchar(128),
+url varchar(128),
+state varchar(16) not null,
+latest_version varchar(64),
+shortdesc varchar(256),
+certificate varchar(64),
+description text,
+demo boolean default false,
+web boolean default false,
+license varchar(32),*/
+            var state = "deactived";
+            if (m.AutoLoad)
+            {
+                state = "actived";
+            }
+
+            var insertSql = "insert into core_module(name, state, description) values(@0, @1, @2)";
+            db.Execute(insertSql, m.Name, state, m.Label);
         }
 
         public static void LoadModules(IDatabase db, ObjectPool pool)
