@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Xunit;
+using NUnit.Framework;
 
 using ObjectServer.Backend;
 
 namespace ObjectServer.Test.Backend
 {
+    [TestFixture]
     public class DatabaseTest
     {
 
-        [Fact]
+        [Test]
         void Query_as_dictionary()
         {
             using (var db = DataProvider.OpenDatabase("objectserver"))
@@ -25,7 +26,7 @@ namespace ObjectServer.Test.Backend
             }
         }
 
-        [Fact]
+        [Test]
         void Create_and_delete_database()
         {
             var dbName = "oo_testdb";

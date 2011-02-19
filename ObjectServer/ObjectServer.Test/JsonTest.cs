@@ -6,14 +6,15 @@ using System.IO;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Xunit;
+using NUnit.Framework;
 
 namespace ObjectServer.Test
 {
+    [TestFixture]
     public class JsonTest
     {
 
-        [Fact]
+        [Test]
         public void TestJsonSerialize()
         {
             var js =

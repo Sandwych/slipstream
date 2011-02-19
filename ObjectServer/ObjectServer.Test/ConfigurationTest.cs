@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace ObjectServer.Test
 {
+    [TestFixture]
     public class ConfigurationTest
     {
 
-        [Fact]
+        [Test]
         public void Deserialize_configuration()
         {
             var cfgText = @"
@@ -27,7 +28,7 @@ namespace ObjectServer.Test
 
             var cfg = JsonConvert.DeserializeObject<Configuration>(cfgText);
             Assert.NotNull(cfg);
-            Assert.Equal(ObjectServer.Backend.DatabaseType.Postgresql, cfg.DbType);
+            Assert.AreEqual(ObjectServer.Backend.DatabaseType.Postgresql, cfg.DbType);
 
         }
     }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 
-using Xunit;
+using NUnit.Framework;
 
 using ObjectServer.Runtime;
 

@@ -10,14 +10,14 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 
 
-using Xunit;
+using NUnit.Framework;
 
 using ObjectServer.Model;
 
 namespace ObjectServer.Test
 {
 
-
+    [TestFixture]
     public class ModelBaseTest
     {
         public ModelBaseTest()
@@ -25,7 +25,7 @@ namespace ObjectServer.Test
             ObjectServerStarter.Initialize();
         }
 
-        [Fact]
+        [Test]
         public void TestCrud()
         {
             var modelName = "test.test_object";
@@ -45,8 +45,8 @@ namespace ObjectServer.Test
 
             var foundIds = (long[])proxy.Execute(
                 dbName, modelName, "Search", "(equal name 'sweet_name')", 0, 100);
-            Assert.Equal(1, foundIds.Length);
-            Assert.Equal(id, foundIds[0]);
+            Assert.AreEqual(1, foundIds.Length);
+            Assert.AreEqual(id, foundIds[0]);
 
             var newValues = new Dictionary<string, object> {
                 { "name", "changed_name" },
@@ -56,16 +56,16 @@ namespace ObjectServer.Test
             var ids = new long[] { id };
             var data = (Dictionary<string, object>[])proxy.Execute(dbName, modelName, "Read", ids, null);
             Console.WriteLine(data);
-            Assert.Equal(1, data.Length);
-            Assert.Equal("changed_name", data[0]["name"]);
-            Assert.Equal(223, data[0]["field3"]); //检测函数字段的计算是否正确
+            Assert.AreEqual(1, data.Length);
+            Assert.AreEqual("changed_name", data[0]["name"]);
+            Assert.AreEqual(223, data[0]["field3"]); //检测函数字段的计算是否正确
 
 
             proxy.Execute(dbName, modelName, "Delete", ids);
 
             foundIds = (long[])proxy.Execute(
                 dbName, modelName, "Search", "(equal name 'sweet_name')", 0, 100);
-            Assert.Equal(0, foundIds.Length);
+            Assert.AreEqual(0, foundIds.Length);
         }
 
         /*
