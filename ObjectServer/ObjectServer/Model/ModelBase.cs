@@ -13,7 +13,6 @@ using NpgsqlTypes;
 using ObjectServer.Backend;
 using ObjectServer.Utility;
 using ObjectServer.Model.Query;
-using ObjectServer.Model.Fields;
 
 namespace ObjectServer.Model
 {
@@ -183,7 +182,7 @@ namespace ObjectServer.Model
 
         protected void DefineField(string name, string label, FieldType type, int size, bool required)
         {
-            var field = new Fields.Field(name, "");
+            var field = new Field(name, "");
             field.Label = label;
             field.Size = size;
             field.Required = required;
@@ -192,7 +191,7 @@ namespace ObjectServer.Model
 
         protected void IntegerField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "integer")
+            var field = new Field(name, "integer")
             {
                 Label = label,
                 Required = required,
@@ -204,7 +203,7 @@ namespace ObjectServer.Model
 
         protected void LongField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "bigint")
+            var field = new Field(name, "bigint")
             {
                 Label = label,
                 Required = required,
@@ -216,7 +215,7 @@ namespace ObjectServer.Model
 
         protected void BooleanField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "boolean")
+            var field = new Field(name, "boolean")
             {
                 Label = label,
                 Required = required,
@@ -227,7 +226,7 @@ namespace ObjectServer.Model
 
         protected void TextField(string name, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "text")
+            var field = new Field(name, "text")
             {
                 Label = label,
                 Required = required,
@@ -238,7 +237,7 @@ namespace ObjectServer.Model
 
         protected void CharsField(string name, string label, int size, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "varchar")
+            var field = new Field(name, "varchar")
             {
                 Label = label,
                 Size = size,
@@ -252,7 +251,7 @@ namespace ObjectServer.Model
         protected void ManyToOneField(
             string name, string masterModel, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "many2one")
+            var field = new Field(name, "many2one")
             {
                 Label = label,
                 Required = required,
@@ -266,7 +265,7 @@ namespace ObjectServer.Model
         protected void OneToManyField(
             string name, string childModel, string relatedField, string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "one2many")
+            var field = new Field(name, "one2many")
             {
                 Label = label,
                 Required = required,
@@ -283,7 +282,7 @@ namespace ObjectServer.Model
             string refTableName, string originField, string targetField,
             string label, bool required, FieldGetter getter)
         {
-            var field = new Fields.Field(name, "many2many")
+            var field = new Field(name, "many2many")
             {
                 Label = label,
                 Required = required,

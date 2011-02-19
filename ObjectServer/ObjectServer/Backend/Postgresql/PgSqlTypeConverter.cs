@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using ObjectServer.Model.Fields;
+using ObjectServer.Model;
 
 namespace ObjectServer.Backend
 {
@@ -22,7 +22,7 @@ namespace ObjectServer.Backend
 
         #region ISqlTypeConverter 成员
 
-        public string ToSqlType(ObjectServer.Model.Fields.IField field)
+        public string ToSqlType(ObjectServer.Model.IField field)
         {
             throw new NotImplementedException();
         }

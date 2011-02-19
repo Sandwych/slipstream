@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,8 +12,6 @@
     <AssemblyName>ObjectServer</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>
-    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,60 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Boo.Lang, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\boo\Boo.Lang.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.CodeDom, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\boo\Boo.Lang.CodeDom.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Compiler, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\boo\Boo.Lang.Compiler.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Extensions, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\boo\Boo.Lang.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Interpreter, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\boo\Boo.Lang.Interpreter.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Parser, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\boo\Boo.Lang.Parser.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.PatternMatching, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\boo\Boo.Lang.PatternMatching.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Useful, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\boo\Boo.Lang.Useful.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\npgsql\Mono.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Json\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Npgsql, Version=2.0.11.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\npgsql\Npgsql.dll</HintPath>
-    </Reference>
-    <Reference Include="policy.2.0.Npgsql, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\npgsql\policy.2.0.Npgsql.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -100,6 +45,59 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Boo.Lang, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\boo\Boo.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.CodeDom, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\boo\Boo.Lang.CodeDom.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Compiler, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\boo\Boo.Lang.Compiler.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Extensions, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\boo\Boo.Lang.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Interpreter, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\boo\Boo.Lang.Interpreter.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Parser, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\boo\Boo.Lang.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.PatternMatching, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\boo\Boo.Lang.PatternMatching.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang.Useful, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\boo\Boo.Lang.Useful.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\npgsql\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.0.11.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\npgsql\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="policy.2.0.Npgsql, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\npgsql\policy.2.0.Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Backend\DatabaseBase.cs" />
@@ -119,9 +117,6 @@
     <Compile Include="Core\CronModel.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IServiceObject.cs" />
-    <Compile Include="Model\Fields\FieldGetter.cs" />
-    <Compile Include="Model\Fields\Field.cs" />
-    <Compile Include="Model\Fields\IField.cs" />
     <Compile Include="Model\Query\IExpression.cs" />
     <Compile Include="Model\Query\NotExpression.cs" />
     <Compile Include="Model\Query\InExpression.cs" />
@@ -141,7 +136,6 @@
     <Compile Include="ObjectServerStarter.cs" />
     <Compile Include="Pooler.cs" />
     <Compile Include="Core\UserModel.cs" />
-    <Compile Include="Model\Fields\FieldType.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="Core\FieldModel.cs" />
     <Compile Include="Core\ModelModel.cs" />
@@ -156,6 +150,10 @@
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha1.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
+    <Compile Include="Model\Fields\Field.cs" />
+    <Compile Include="Model\Fields\FieldGetter.cs" />
+    <Compile Include="Model\Fields\IField.cs" />
+    <Compile Include="Model\Fields\FieldType.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Backend\Postgresql\initdb.sql">

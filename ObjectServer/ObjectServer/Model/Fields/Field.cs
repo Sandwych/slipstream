@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer.Model.Fields
+namespace ObjectServer.Model
 {
     internal class Field : IField
     {

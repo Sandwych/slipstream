@@ -26,6 +26,9 @@ Global
 		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = ObjectServer.Web\ObjectServer.Web.csproj
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

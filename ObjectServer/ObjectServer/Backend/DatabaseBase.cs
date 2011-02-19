@@ -9,7 +9,6 @@ using System.Diagnostics;
 using Npgsql;
 
 using ObjectServer.Model;
-using ObjectServer.Model.Fields;
 
 namespace ObjectServer.Backend
 {
