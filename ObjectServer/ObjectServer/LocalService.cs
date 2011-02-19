@@ -10,6 +10,16 @@ namespace ObjectServer
 {
     public sealed class LocalService : MarshalByRefObject, IService
     {
+        public Guid Login(string dbName, string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Logout(string dbName, Guid session)
+        {
+            throw new NotImplementedException();
+        }
+
         public object Execute(string dbName, string objectName, string name, params object[] args)
         {
             using (var session = new Session(dbName))
@@ -52,6 +62,14 @@ namespace ObjectServer
 
 
         #region Database handling methods
+
+        public string[] ListDatabases()
+        {
+            using (var db = DataProvider.OpenDatabase())
+            {
+                return db.List();
+            }
+        }
 
         public void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword)
         {
