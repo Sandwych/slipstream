@@ -89,7 +89,13 @@ namespace ObjectServer.Model.Test
 
             var childId = (long)proxy.Execute("objectserver", "test.child", "Create", childPropBag);
 
-
+            var ids = new long[] { childId };
+            var rows = (Dictionary<string, object>[])proxy.Execute("objectserver", "test.child", "Read", ids, null);
+            var masterField = rows[0]["master"];
+            Assert.AreEqual(typeof(object[]), masterField.GetType());
+            var one2ManyField = (object[])masterField;
+            Assert.AreEqual(one2ManyField[0], masterId);
+            Assert.AreEqual(one2ManyField[1], "master-obj");
         }
 
     }

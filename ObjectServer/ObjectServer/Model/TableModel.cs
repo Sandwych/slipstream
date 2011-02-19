@@ -29,7 +29,7 @@ namespace ObjectServer.Model
         public bool CanRead { get; protected set; }
         public bool CanWrite { get; protected set; }
         public bool CanDelete { get; protected set; }
-        
+
         public bool Hierarchy { get; protected set; }
 
         public override bool DatabaseRequired { get { return true; } }
@@ -99,7 +99,7 @@ namespace ObjectServer.Model
         public override void Initialize(IDatabase db)
         {
             base.Initialize(db);
-         
+
             this.table = db.CreateTableHandler(db, this.TableName);
 
             //如果表不存在就自动建表
@@ -132,7 +132,7 @@ namespace ObjectServer.Model
             }
         }
 
-    
+
         private void RegisterAllServiceMethods()
         {
             var t = this.GetType();
@@ -398,7 +398,7 @@ namespace ObjectServer.Model
             //先查找表里的简单字段数据
             var result = session.Database.QueryAsDictionary(sql);
 
-            //处理函数字段
+            //处理特殊字段
             foreach (var fieldName in allFields)
             {
                 var f = this.DeclaredFields.Single(i => i.Name == fieldName);
@@ -410,6 +410,26 @@ namespace ObjectServer.Model
                     {
                         var id = (long)p["id"];
                         p[f.Name] = funcFieldValues[id];
+                    }
+                }
+                else if (f.Type == FieldType.ManyToOne)
+                {
+                    //获取所有 Name
+                    var masterTableIds = result.Select(d => (long)d[f.Name]);
+
+                    var masterModel = (TableModel)session.Pool.LookupObject(f.Relation);
+                    //TODO: 处理没有 name 字段的问题
+                    var masters = masterModel.Read(session, masterTableIds, new string[] { "name" });
+                    var masterNames = new Dictionary<long, string>(masters.Length);
+                    foreach (var master in masters)
+                    {
+                        var masterId = (long)master["id"];
+                        masterNames[masterId] = (string)master["name"];
+                    }
+                    foreach (var p in result)
+                    {
+                        var id = (long)p["id"];
+                        p[f.Name] = new object[] { id, masterNames[id] };
                     }
                 }
             }
