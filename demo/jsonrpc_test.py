@@ -7,6 +7,9 @@ print s.system.listMethods()
 ids = s.Execute('objectserver', 'core.model', 'Search', ['', 0, 100]);
 print "IDs:", ids
 
-fields = ['name']
+fields = ['name', 'label', 'info']
 models = s.Execute('objectserver', 'core.model', 'Read', [ids, fields]);
-print models
+
+print 'Models:'
+for m in models:
+    print m

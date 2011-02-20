@@ -19,7 +19,8 @@ namespace ObjectServer.Core
             this.Name = "core.model";
             this.Versioned = false;
 
-            this.CharsField("name", "Name", 128, true, null, null);
+            this.CharsField("name", "Name", 256, true, null, null);
+            this.CharsField("label", "Label", 256, false, null, null);
             this.TextField("info", "Information", false, null, null);
             this.CharsField("module", "Module", 128, true, null, null);
             this.OneToManyField("fields", "core.field", "module", "Fields", false, null, null);
