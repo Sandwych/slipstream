@@ -13,6 +13,7 @@ namespace ObjectServer
     {
         void Initialize(IDatabase db, ObjectPool pool);
 
+        string Label { get; }
         string Name { get; }
 
         MethodInfo GetServiceMethod(string name);

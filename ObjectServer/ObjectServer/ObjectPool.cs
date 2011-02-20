@@ -9,6 +9,8 @@ using System.Data;
 using log4net;
 
 using ObjectServer.Backend;
+using ObjectServer.Model;
+using ObjectServer.Utility;
 
 namespace ObjectServer
 {
@@ -24,15 +26,44 @@ namespace ObjectServer
         public ObjectPool(IDatabase db, string dbName)
         {
             this.Database = dbName;
-            this.RegisterAllCoreModels();
+            this.LoadAllObjects(db);
+
+            this.InitializeAllObjects(db);
+        }
+
+        private void LoadAllObjects(IDatabase db)
+        {
+            this.RegisterAllCoreObjects();
 
             Module.UpdateModuleList(db);
             Module.LoadModules(db, this);
         }
 
+        private void InitializeAllObjects(IDatabase db)
+        {
+            //一次性初始化所有对象
+            //obj.Initialize(db, pool);
+            //TODO: 初始化非 IModel 对象
+            var models =
+                (from o in this.objects.Values
+                 where o is IModel
+                 select o as IModel).ToArray();
+
+            var sortedModels =
+                DependencySorter<IModel, string>.DependencySort(
+                    models,
+                    m => m.Name,
+                    m => m.GetDependedModels());
+
+            foreach (var m in sortedModels)
+            {
+                m.Initialize(db, this);
+            }
+        }
+
         public string Database { get; private set; }
 
-        private void RegisterAllCoreModels()
+        private void RegisterAllCoreObjects()
         {
             var a = typeof(ObjectPool).Assembly;
             this.RegisterModelsInAssembly(a);
@@ -77,7 +108,6 @@ namespace ObjectServer
                 var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
                 throw new InvalidCastException(msg);
             }
-            obj.Initialize(db, pool);
             return obj;
         }
     }

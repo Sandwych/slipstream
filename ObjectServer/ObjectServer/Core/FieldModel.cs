@@ -15,7 +15,6 @@ namespace ObjectServer.Core
             : base()
         {
             this.Name = "core.field";
-            this.Versioned = false;
 
             this.ManyToOneField("model", "core.model", "Model", true, null, null);
             this.CharsField("name", "Name", 64, true, null, null);

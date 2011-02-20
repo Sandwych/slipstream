@@ -127,6 +127,7 @@
     <Compile Include="Model\ModelExtensions.cs" />
     <Compile Include="Model\ReferentialAction.cs" />
     <Compile Include="Model\RelatedField.cs" />
+    <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="ServiceObject.cs" />

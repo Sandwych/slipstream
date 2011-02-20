@@ -18,20 +18,18 @@ namespace ObjectServer.Model
         private readonly List<IField> declaredFields =
             new List<IField>();
 
-        public bool Versioned { get; protected set; }
-        public string Label { get; protected set; }
+        public override string Label { get; protected set; }
         public string Module { get; protected set; }
 
         protected ModelBase()
             : base()
         {
+            this.AddInternalFields();
         }
 
-        public virtual void Initialize(IDatabase db, ObjectPool pool)
+        public override void Initialize(IDatabase db, ObjectPool pool)
         {
             base.Initialize(db, pool);
-
-            this.AddInternalFields();
 
             //检测此模型是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(id) FROM core_model WHERE name=@0";
@@ -40,6 +38,33 @@ namespace ObjectServer.Model
             {
                 this.CreateModel(db);
             }
+        }
+
+
+        /// <summary>
+        /// 注册内部字段
+        /// TODO: 这里必须修改，改成让用户来添加，系统自动按字段名的约定来识别
+        /// </summary>
+        private void AddInternalFields()
+        {
+            BitIntegerField("id", "ID", true, null, null);
+
+            //DefineField("_creator", "Creation User", "BIGINT", 1);
+            //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
+        }
+
+
+        private void CreateModel(IDatabase db)
+        {
+            var rowCount = db.Execute(
+                "INSERT INTO core_model(name, module, label) VALUES(@0, @1, @2);",
+                this.Name, this.Module, this.Label);
+
+            if (rowCount != 1)
+            {
+                throw new DataException("Failed to insert record of table core_model");
+            }
+
         }
 
         #region Field Methods
@@ -113,6 +138,22 @@ namespace ObjectServer.Model
             {
                 Label = label,
                 Size = size,
+                Required = required,
+                Getter = getter,
+                DefaultProc = defaultProc,
+            };
+
+            field.Validate();
+            declaredFields.Add(field);
+        }
+
+        protected void DateTimeField(
+            string name, string label, bool required,
+            FieldGetter getter, FieldDefaultProc defaultProc)
+        {
+            var field = new Field(name, FieldType.DateTime)
+            {
+                Label = label,
                 Required = required,
                 Getter = getter,
                 DefaultProc = defaultProc,
@@ -197,31 +238,6 @@ namespace ObjectServer.Model
             {
                 throw new ArgumentException("fields");
             }
-        }
-
-        private void AddInternalFields()
-        {
-            BitIntegerField("id", "ID", true, null, null);
-
-            if (this.Versioned)
-            {
-                BitIntegerField("_version", "Version", true, null, null);
-            }
-            //DefineField("_creator", "Creation User", "BIGINT", 1);
-            //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
-        }
-
-        private void CreateModel(IDatabase db)
-        {
-            var rowCount = db.Execute(
-                "INSERT INTO core_model(name, module, label) VALUES(@0, @1, @2);",
-                this.Name, this.Module, this.Label);
-
-            if (rowCount != 1)
-            {
-                throw new DataException("Failed to insert record of table core_model");
-            }
-
         }
 
     }

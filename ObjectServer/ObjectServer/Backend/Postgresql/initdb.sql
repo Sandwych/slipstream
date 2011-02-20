@@ -31,7 +31,7 @@ create table core_module (
     latest_version varchar(64),
     shortdesc varchar(256),
     certificate varchar(64),
-    description text,
+    info text,
     demo boolean default false,
     web boolean default false,
     license varchar(32),

@@ -11,6 +11,7 @@ namespace ObjectServer.Utility
     /// <typeparam name="EleType">每个元素的类型</typeparam>
     /// <typeparam name="IdType">每个元素的唯一标识类型</typeparam>
     public static class DependencySorter<EleType, IdType>
+        where IdType : IEquatable<IdType>
     {
         public static EleType[] DependencySort(
             IList<EleType> fields,
@@ -45,6 +46,7 @@ namespace ObjectServer.Utility
                 sortedList.Add(fields[sortedIndices[i]]);
             }
 
+            sortedList.Reverse();
             return sortedList.ToArray();
         }
 

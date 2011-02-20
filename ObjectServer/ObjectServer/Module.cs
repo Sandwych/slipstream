@@ -147,26 +147,13 @@ namespace ObjectServer
 
         private static void AddModuleToDb(IDatabase db, Module m)
         {
-            /*
-               website varchar(256),
-"name" varchar(128) not null,
-author varchar(128),
-url varchar(128),
-state varchar(16) not null,
-latest_version varchar(64),
-shortdesc varchar(256),
-certificate varchar(64),
-description text,
-demo boolean default false,
-web boolean default false,
-license varchar(32),*/
             var state = "deactived";
             if (m.AutoLoad)
             {
                 state = "actived";
             }
 
-            var insertSql = "insert into core_module(name, state, description) values(@0, @1, @2)";
+            var insertSql = "insert into core_module(name, state, info) values(@0, @1, @2)";
             db.Execute(insertSql, m.Name, state, m.Label);
         }
 

@@ -16,7 +16,7 @@ namespace ObjectServer.Core
         public UserModel()
         {
             this.Name = "core.user";
-
+            this.BitIntegerField("_version", "Version", true, null, null);
             this.CharsField("login", "User Name", 64, true, null, null);
             this.CharsField("password", "Password", 40, true, null, null);
             this.BooleanField("admin", "Administrator?", true, null, null);

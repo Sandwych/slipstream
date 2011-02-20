@@ -53,6 +53,8 @@ namespace ObjectServer
 
         public abstract string Name { get; protected set; }
 
+        public abstract string Label { get; protected set; }
+
         public abstract bool DatabaseRequired { get; }
 
         public ObjectPool Pool { get; private set; }

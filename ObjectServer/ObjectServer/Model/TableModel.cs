@@ -20,8 +20,6 @@ namespace ObjectServer.Model
         private readonly List<IField> modelFields =
             new List<IField>();
 
-        private ITable table;
-
         private string tableName = null;
         private string name = null;
 
@@ -82,14 +80,18 @@ namespace ObjectServer.Model
         public string SequenceName { get; protected set; }
 
         protected TableModel()
+            : base()
         {
             this.CanCreate = true;
             this.CanRead = true;
             this.CanWrite = true;
             this.CanDelete = true;
             this.Hierarchy = false;
-            this.Versioned = true;
 
+            this.DateTimeField("_created_time", "Created", false, null, null);
+            this.DateTimeField("_modified_time", "Last Modified", false, null, null);
+            this.ManyToOneField("_created_user", "core.user", "Creator", false, null, null);
+            this.ManyToOneField("_modified_user", "core.user", "Creator", false, null, null);
         }
 
         /// <summary>
@@ -99,44 +101,10 @@ namespace ObjectServer.Model
         {
             base.Initialize(db, pool);
 
-            this.table = db.CreateTableHandler(db, this.TableName);
-
-            //如果表不存在就自动建表
-            if (!this.table.TableExists(db, this.TableName))
-            {
-                this.CreateTable(db);
-            }
-
-            //TODO:
-            //检查字段表里的定义与实际的数据库表有什么变化，自动迁移
+            var migrator = new TableMigrator(db, pool, this);
+            migrator.Migrate();
         }
 
-
-        private void CreateTable(IDatabase db)
-        {
-            this.table.CreateTable(db, this.TableName, this.Label);
-
-            //创建字段
-            if (this.Hierarchy)
-            {
-                //conn.ExecuteNonQuery("");
-            }
-
-            var storableColumns = this.GetAllStorableFields();
-
-            foreach (var f in storableColumns)
-            {
-                table.AddColumn(db, f);
-
-                if (f.Type == FieldType.ManyToOne)
-                {
-                    var refModel = (TableModel)this.Pool.LookupObject(f.Relation);
-                    this.table.AddFk(db, f.Name, refModel.TableName, ReferentialAction.SetNull);
-                }
-            }
-        }
-
-     
 
         public static Type[] GetAllCoreModels()
         {
@@ -223,12 +191,12 @@ namespace ObjectServer.Model
         {
             this.VerifyFields(values.Keys);
 
-            if (this.Versioned)
+            var serial = session.Database.NextSerial(this.SequenceName);
+
+            if (this.ContainsField("_version"))
             {
                 values.Add("_version", 0);
             }
-
-            var serial = session.Database.NextSerial(this.SequenceName);
 
             var colValues = new object[values.Count];
             var sbColumns = new StringBuilder();

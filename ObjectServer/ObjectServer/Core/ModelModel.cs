@@ -17,7 +17,6 @@ namespace ObjectServer.Core
             : base()
         {
             this.Name = "core.model";
-            this.Versioned = false;
 
             this.CharsField("name", "Name", 256, true, null, null);
             this.CharsField("label", "Label", 256, false, null, null);

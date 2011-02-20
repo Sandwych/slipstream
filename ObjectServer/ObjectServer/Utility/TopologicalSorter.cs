@@ -28,8 +28,12 @@ namespace ObjectServer.Utility
             _matrix = new int[size, size];
             _numVerts = 0;
             for (int i = 0; i < size; i++)
+            {
                 for (int j = 0; j < size; j++)
+                {
                     _matrix[i, j] = 0;
+                }
+            }
             _sortedArray = new int[size]; // sorted vert labels
         }
 
@@ -55,7 +59,9 @@ namespace ObjectServer.Utility
                 // get a vertex with no successors, or -1
                 int currentVertex = noSuccessors();
                 if (currentVertex == -1) // must be a cycle                
+                {
                     throw new Exception("Graph has cycles");
+                }
 
                 // insert vertex label in sorted array (start at end)
                 _sortedArray[_numVerts - 1] = _vertices[currentVertex];
@@ -86,7 +92,9 @@ namespace ObjectServer.Utility
                     }
                 }
                 if (!isEdge) // if no edges, has no successors
+                {
                     return row;
+                }
             }
             return -1; // no
         }
@@ -97,13 +105,19 @@ namespace ObjectServer.Utility
             if (delVert != _numVerts - 1)
             {
                 for (int j = delVert; j < _numVerts - 1; j++)
+                {
                     _vertices[j] = _vertices[j + 1];
+                }
 
                 for (int row = delVert; row < _numVerts - 1; row++)
+                {
                     moveRowUp(row, _numVerts);
+                }
 
                 for (int col = delVert; col < _numVerts - 1; col++)
+                {
                     moveColLeft(col, _numVerts - 1);
+                }
             }
             _numVerts--; // one less vertex
         }
@@ -111,13 +125,17 @@ namespace ObjectServer.Utility
         private void moveRowUp(int row, int length)
         {
             for (int col = 0; col < length; col++)
+            {
                 _matrix[row, col] = _matrix[row + 1, col];
+            }
         }
 
         private void moveColLeft(int col, int length)
         {
             for (int row = 0; row < length; row++)
+            {
                 _matrix[row, col] = _matrix[row, col + 1];
+            }
         }
 
         #endregion
