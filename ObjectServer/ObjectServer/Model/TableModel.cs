@@ -12,7 +12,6 @@ using log4net;
 
 using ObjectServer.Backend;
 using ObjectServer.Utility;
-using ObjectServer.Model.Query;
 
 namespace ObjectServer.Model
 {
