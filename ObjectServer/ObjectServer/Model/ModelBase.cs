@@ -67,7 +67,7 @@ namespace ObjectServer.Model
 
         #region Field Methods
 
-        protected IEnumerable<IField> DeclaredFields { get { return this.declaredFields; } }
+        public IList<IField> DeclaredFields { get { return this.declaredFields; } }
 
         protected void IntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {

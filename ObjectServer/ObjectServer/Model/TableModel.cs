@@ -174,18 +174,18 @@ namespace ObjectServer.Model
         }
 
 
-        public long[] Search(ISession session, IExpression exp)
+        public long[] Search(ISession session, object[][] domain)
         {
-            if (exp == null)
+            if (domain == null)
             {
                 throw new ArgumentNullException("exp");
             }
 
-            var ruleExp = new TrueExpression();
+            var exp = new DomainParser(this, domain);
 
             var sql = string.Format(
-                "select id from \"{0}\" where ({1}) and ({2});",
-                this.TableName, exp.ToSqlString(), ruleExp.ToSqlString());
+                "select id from \"{0}\" where {1}",
+                this.TableName, exp.ToSql());
 
             using (var cmd = session.Database.Connection.CreateCommand())
             {
@@ -205,7 +205,7 @@ namespace ObjectServer.Model
         #region Service Methods
 
         [ServiceMethod]
-        public virtual long[] Search(ISession session, string domain, long offset, long limit)
+        public virtual long[] Search(ISession session, object[][] domain, long offset, long limit)
         {
             if (!this.CanRead)
             {
@@ -213,7 +213,7 @@ namespace ObjectServer.Model
             }
             //TODO: exp to IExpression
             //example: "and((like name '%test%') (equal address 'street1'))"
-            return this.Search(session, new TrueExpression());
+            return this.Search(session, domain);
         }
 
         [ServiceMethod]
@@ -349,7 +349,7 @@ namespace ObjectServer.Model
         [ServiceMethod]
         public virtual Dictionary<string, object>[] Read(
             ISession session, object[] ids, object[] fields)
-        {            
+        {
             if (session == null)
             {
                 throw new ArgumentNullException("session");
@@ -446,7 +446,23 @@ namespace ObjectServer.Model
                 {
                     //查询字表
                     var childModel = (TableModel)session.Pool.LookupObject(f.Relation);
-                    throw new NotImplementedException();
+                    //TODO 权限等处理
+
+                    var children = new Dictionary<long, long[]>();
+                    foreach (long masterId in ids)
+                    {
+                        var domain = new List<object[]>();
+                        domain.Add(new object[] { f.RelatedField, "=", masterId });
+                        var childIds = childModel.Search(session, domain.ToArray(), 0, 0xffff);
+                        children[masterId] = childIds;
+                    }
+
+                    foreach (var p in result)
+                    {
+                        var masterId = (long)p["id"];
+                        p[f.Name] = children[masterId];
+                    }
+
                 }
             }
 

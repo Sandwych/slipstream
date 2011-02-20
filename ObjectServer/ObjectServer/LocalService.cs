@@ -117,7 +117,7 @@ namespace ObjectServer
             return (long)Execute(dbName, objectName, "Create", new object[] { propertyBag });
         }
 
-        public long[] SearchModel(string dbName, string objectName, string domain, long offset, long limit)
+        public long[] SearchModel(string dbName, string objectName, object[][] domain, long offset, long limit)
         {
             return (long[])Execute(dbName, objectName, "Search", new object[] { domain, offset, limit });
         }

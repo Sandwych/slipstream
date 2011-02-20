@@ -44,7 +44,8 @@ namespace ObjectServer.Model.Test
             var id = proxy.CreateModel(dbName, modelName, values);
             Assert.True(id > 0);
 
-            var foundIds = proxy.SearchModel(dbName, modelName, "(equal name 'sweet_name')", 0, 100);
+            var domain1 = new object[][] { new object[] { "name", "=", "sweet_name" } };
+            var foundIds = proxy.SearchModel(dbName, modelName, domain1, 0, 100);
             Assert.AreEqual(1, foundIds.Length);
             Assert.AreEqual(id, foundIds[0]);
 
@@ -63,7 +64,7 @@ namespace ObjectServer.Model.Test
 
             proxy.DeleteModel(dbName, modelName, ids);
 
-            foundIds = proxy.SearchModel(dbName, modelName, "(equal name 'sweet_name')", 0, 100);
+            foundIds = proxy.SearchModel(dbName, modelName, domain1, 0, 100);
             Assert.AreEqual(0, foundIds.Length);
         }
 
@@ -93,6 +94,16 @@ namespace ObjectServer.Model.Test
             var one2ManyField = (RelatedField)masterField;
             Assert.AreEqual(one2ManyField.Id, masterId);
             Assert.AreEqual(one2ManyField.Name, "master-obj");
+
+            var masterFieldNames = new object[] { "name", "children" };
+            var masterRows = proxy.ReadModel(
+                "objectserver", "test.master",
+                new object[] { masterId }, masterFieldNames);
+            var master = masterRows[0];
+            var children = (long[])master["children"];
+
+            Assert.AreEqual(1, children.Length);
+            Assert.AreEqual(childId, children[0]);
         }
 
     }
