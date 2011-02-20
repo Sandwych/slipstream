@@ -9,6 +9,7 @@
 *.pidb 
 *.userprefs
 *.DS_Store
+.*.swp
 [Tt]humbs.db 
 _ReSharper.*
 *.resharper
