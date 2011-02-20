@@ -1,15 +1,15 @@
 {
-    "name": "test",
-    "label": "Module for unit test",
-    "description": "无",
-    "auto-load": 1,
-    "script-language": "csharp",
+    name: "test",
+    label: "Module for unit test",
+    description: "无",
+    auto_load: 1,
+    script_language: "csharp",
 
-    "source-files": [
+    source_files: [
         "test-object.cs"
     ],
 
-    "data-files": [
+    data_files: [
         "demo.xml"
     ],
 }

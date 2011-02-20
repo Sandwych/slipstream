@@ -20,6 +20,9 @@ namespace ObjectServer
     [JsonObject("module")]
     public sealed class Module
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+
         public const string MODULE_FILENAME = "module.js";
 
         /// <summary>
@@ -43,16 +46,16 @@ namespace ObjectServer
         [JsonProperty("description", Required = Required.Default)]
         public string Description { get; set; }
 
-        [JsonProperty("source-files")]
+        [JsonProperty("source_files")]
         public string[] SourceFiles { get; set; }
 
-        [JsonProperty("data-files")]
+        [JsonProperty("data_files")]
         public string[] DataFiles { get; set; }
 
-        [JsonProperty("script-language")]
+        [JsonProperty("script_language")]
         public string ScriptLanguage { get; set; }
 
-        [JsonProperty("auto-load")]
+        [JsonProperty("auto_load")]
         public bool AutoLoad { get; set; }
 
         #endregion
@@ -82,6 +85,11 @@ namespace ObjectServer
             lock (typeof(Module))
             {
                 allModules.Clear();
+
+                if (string.IsNullOrEmpty(modulePath) || !Directory.Exists(modulePath))
+                {
+                    return;
+                }
 
                 var moduleDirs = Directory.GetDirectories(modulePath);
                 foreach (var moduleDir in moduleDirs)
@@ -122,8 +130,16 @@ namespace ObjectServer
                 foreach (var m in modules)
                 {
                     var moduleName = (string)m["name"];
-                    var module = allModules.Single(i => i.Name == moduleName);
-                    module.Load(pool);
+                    var module = allModules.SingleOrDefault(i => i.Name == moduleName);
+                    if (module != null)
+                    {
+                        module.Load(pool);
+                    }
+                    else
+                    {
+                        var msg = string.Format("Cannot found module: '{0}'", moduleName);
+                        throw new FileNotFoundException(msg, moduleName);
+                    }
                 }
             }
         }

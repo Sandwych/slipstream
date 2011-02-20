@@ -108,5 +108,36 @@ namespace ObjectServer
 
         #endregion
 
+
+        #region Model methods
+
+
+        public long CreateModel(string dbName, string objectName, IDictionary<string, object> propertyBag)
+        {
+            return (long)Execute(dbName, objectName, "Create", new object[] { propertyBag });
+        }
+
+        public long[] SearchModel(string dbName, string objectName, string domain, long offset, long limit)
+        {
+            return (long[])Execute(dbName, objectName, "Search", new object[] { domain, offset, limit });
+        }
+
+        public Dictionary<string, object>[] ReadModel(string dbName, string objectName, object[] ids, object[] fields)
+        {
+            return (Dictionary<string, object>[])Execute(
+                dbName, objectName, "Read", new object[] { ids, fields });
+        }
+
+        public void WriteModel(string dbName, string objectName, object id, IDictionary<string, object> record)
+        {
+            Execute(dbName, objectName, "Write", new object[] { id, record });
+        }
+
+        public void DeleteModel(string dbName, string objectName, object[] ids)
+        {
+            Execute(dbName, objectName, "Delete", new object[] { ids });
+        }
+
+        #endregion
     }
 }

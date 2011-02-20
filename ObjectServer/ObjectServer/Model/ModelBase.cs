@@ -208,14 +208,14 @@ namespace ObjectServer.Model
         {
             Debug.Assert(fields != null);
             var notExistedFields =
-                fields.Count(fn => !this.declaredFields.Exists(f => f.Name == fn));
+                fields.Count(fn => !this.declaredFields.Exists(f => f.Name == (string)fn));
             if (notExistedFields > 0)
             {
                 throw new ArgumentException("fields");
             }
 
             var internalFields =
-                 fields.Count(fn => this.declaredFields.Exists(f => f.Name == fn && f.Internal));
+                 fields.Count(fn => this.declaredFields.Exists(f => f.Name == (string)fn && f.Internal));
             if (internalFields > 0)
             {
                 throw new ArgumentException("fields");

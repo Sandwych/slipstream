@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
@@ -232,7 +233,7 @@ namespace ObjectServer.Model
             return DoCreate(session, values);
         }
 
-        private long DoCreate(ISession session, Dictionary<string, object> values)
+        private long DoCreate(ISession session, IDictionary<string, object> values)
         {
             this.VerifyFields(values.Keys);
 
@@ -308,7 +309,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual void Write(ISession session, long id, IDictionary<string, object> record)
+        public virtual void Write(ISession session, object id, IDictionary<string, object> record)
         {
             if (!this.CanWrite)
             {
@@ -347,8 +348,8 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public virtual Dictionary<string, object>[] Read(
-            ISession session, IEnumerable<long> ids, IEnumerable<string> fields)
-        {
+            ISession session, object[] ids, object[] fields)
+        {            
             if (session == null)
             {
                 throw new ArgumentNullException("session");
@@ -360,17 +361,18 @@ namespace ObjectServer.Model
             }
 
             var allFields = new List<string>();
-            if (fields == null || fields.Count() == 0)
+            if (fields == null || fields.Length == 0)
             {
                 allFields.AddRange(this.DeclaredFields.Select(f => f.Name));
             }
             else
             {
                 //检查是否有不存在的列
-                this.VerifyFields(fields);
+                var userFields = fields.Select(o => (string)o);
+                this.VerifyFields(userFields);
 
                 allFields.Capacity = fields.Count();
-                allFields.AddRange(fields);
+                allFields.AddRange(userFields);
             }
 
             if (!allFields.Contains("id"))
@@ -417,8 +419,8 @@ namespace ObjectServer.Model
                     var masterModel = (TableModel)session.Pool.LookupObject(f.Relation);
                     if (masterModel.ContainsField("name")) //如果有 name 字段
                     {
-                        var masterTableIds = result.Select(d => (long)d[f.Name]);
-                        var masters = masterModel.Read(session, masterTableIds, new string[] { "name" });
+                        var masterTableIds = result.Select(d => d[f.Name]).ToArray();
+                        var masters = masterModel.Read(session, masterTableIds, new object[] { "name" });
                         var masterNames = new Dictionary<long, string>(masters.Length);
                         foreach (var master in masters)
                         {
@@ -428,15 +430,15 @@ namespace ObjectServer.Model
                         foreach (var p in result)
                         {
                             var id = (long)p["id"];
-                            p[f.Name] = new object[] { id, masterNames[id] };
+                            p[f.Name] = new RelatedField(id, masterNames[id]);
                         }
                     }
                     else
                     {
                         foreach (var p in result)
                         {
-                            var id = p["id"];
-                            p[f.Name] = new object[] { id, string.Empty };
+                            var id = (long)p["id"];
+                            p[f.Name] = new RelatedField(id, string.Empty);
                         }
                     }
                 }
@@ -452,7 +454,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual void Delete(ISession session, IEnumerable<long> ids)
+        public virtual void Delete(ISession session, object[] ids)
         {
             if (!this.CanDelete)
             {

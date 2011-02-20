@@ -55,7 +55,7 @@ namespace ObjectServer.Core
         }
 
         [ServiceMethod]
-        public override void Write(ISession session, long id, IDictionary<string, object> record)
+        public override void Write(ISession session, object id, IDictionary<string, object> record)
         {
             IDictionary<string, object> values2 = HashPassword(record);
 

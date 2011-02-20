@@ -91,6 +91,11 @@ namespace ObjectServer
             }
         }
 
+        public static bool Initialized
+        {
+            get { return s_instance.initialized; }
+        }
+
         internal static DatabaseContext Pooler
         {
             get

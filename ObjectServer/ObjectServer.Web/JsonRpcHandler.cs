@@ -7,7 +7,8 @@ using System.IO;
 using System.Text;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+
+using ObjectServer.Json;
 
 namespace ObjectServer.Web
 {
@@ -77,16 +78,16 @@ namespace ObjectServer.Web
         private void ProcessNormalRpc(HttpContext context)
         {
             var ins = context.Request.InputStream;
-            var jreq = DeserializeRequest(ins);
+            var jreq = (Dictionary<string, object>)PlainJsonConvert.Deserialize(ins);
 
             //执行调用
-            var id = jreq["id"].Value<object>();
-            var methodName = jreq["method"].Value<string>();
+            var id = jreq["id"];
+            var methodName = (string)jreq["method"];
             var method = this.methods[methodName];
             string error = null;
             object result = null;
 
-            var args = (object[])JsonConvert.ConvertJsonToken(jreq["params"]);
+            var args = (object[])jreq["params"];
 
             try
             {
@@ -106,16 +107,6 @@ namespace ObjectServer.Web
 
             var js = new JsonSerializer();
             js.Serialize(context.Response.Output, jresponse);
-        }
-
-        private static JObject DeserializeRequest(Stream ins)
-        {
-            using (var sr = new StreamReader(ins, Encoding.UTF8))
-            using (var jtReader = new JsonTextReader(sr))
-            {
-                var js = new JsonSerializer();
-                return js.Deserialize<JObject>(jtReader);
-            }
         }
 
         #endregion

@@ -8,5 +8,5 @@ ids = s.Execute('objectserver', 'core.model', 'Search', ['', 0, 100]);
 print "IDs:", ids
 
 fields = ['name']
-models = s.Execute('objectserver', 'core.model', 'Read', [fields, ids]);
+models = s.Execute('objectserver', 'core.model', 'Read', [ids, fields]);
 print models

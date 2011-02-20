@@ -68,6 +68,10 @@
     <Compile Include="Runtime\BooCompilerTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ObjectServer.Web\ObjectServer.Web.csproj">
+      <Project>{CF15573A-6680-406B-9BA1-15DFF819C6CC}</Project>
+      <Name>ObjectServer.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObjectServer\ObjectServer.csproj">
       <Project>{443BAECA-181D-45B8-9EB8-FCA3A35051E1}</Project>
       <Name>ObjectServer</Name>

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Data;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+
+using ObjectServer.Json;
 
 namespace ObjectServer.Test
 {
@@ -14,6 +15,7 @@ namespace ObjectServer.Test
     public class JsonTest
     {
 
+        /*
         [Test]
         public void TestJsonSerialize()
         {
@@ -36,42 +38,67 @@ namespace ObjectServer.Test
                 Console.WriteLine(obj.GetType().Name);
             }
             Console.WriteLine(objs);
+        }*/
+
+        [Test]
+        public void Test_serialization_of_property_bag()
+        {
+            ObjectServerStarter.Initialize();
+
+            var dt = new Dictionary<string, object>();
+            dt.Add("id", 1111);
+            dt.Add("name", "aaaaaaaa");
+
+            var str = PlainJsonConvert.SerializeObject(dt);
+            Console.WriteLine("PropertyBag:" + str);
+
+            var dt2 = (IDictionary<string, object>)PlainJsonConvert.DeserializeObject(str);
+
+            Assert.NotNull(dt2);
+            Assert.AreEqual(2, dt2.Count);
+            Assert.AreEqual(1111, (long)dt2["id"]);
         }
 
-        public static object ConvertJsonToken(JToken tok)
+        [Test]
+        public void Test_serialization_of_array()
         {
-            object result;
-            if (tok is JValue)
-            {
-                var val = tok as JValue;
-                result = val.Value;
-            }
-            else if (tok is JObject)
-            {
-                var jo = tok as JObject;
-                var dict = new Dictionary<string, object>(jo.Count);
-                foreach (var prop in jo.Properties())
-                {
-                    dict[prop.Name] = ConvertJsonToken(jo[prop.Name]);
-                }
-                result = dict;
-            }
-            else if (tok is JArray)
-            {
-                var ja = tok as JArray;
-                var array = new object[ja.Count];
-                for (int i = 0; i < array.Length; i++)
-                {
-                    array[i] = ConvertJsonToken(ja[i]);
-                }
-                result = array;
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
+            ObjectServerStarter.Initialize();
 
-            return result;
+            var a1 = new object[] { 123, "aaaa", 12.5M };
+            var json = PlainJsonConvert.SerializeObject(a1);
+
+            var a2 = (object[])PlainJsonConvert.DeserializeObject(json);
+
+            Assert.NotNull(a2);
+            Assert.AreEqual(123, a2[0]);
+            Assert.AreEqual("aaaa", a2[1]);
+        }
+
+        [Test]
+        public void Test_serialization_complex_json()
+        {
+            ObjectServerStarter.Initialize();
+
+            var json = "[0, 1, 2, [1,2,3], {\"aaa\": [1,2]}, [{b: 5}], {1: 1.1, 2: 2.2} ]";
+            var array = (object[])PlainJsonConvert.DeserializeObject(json);
+
+            Assert.IsInstanceOf<object[]>(array[3]);
+
+            Assert.IsInstanceOf<Dictionary<string, object>>(array[4]);
+            var dict1 = (Dictionary<string, object>)array[4];
+            Assert.AreEqual("aaa", dict1.Keys.ToArray()[0]);
+
+            Assert.IsInstanceOf<object[]>(dict1["aaa"]);
+            var array2 = (object[])dict1["aaa"];
+            Assert.AreEqual(2, array2.Length);
+            Assert.AreEqual(1, array2[0]);
+            Assert.AreEqual(2, array2[1]);
+
+            Assert.IsInstanceOf<Dictionary<string, object>>(array[6]);
+            var dict3 = (Dictionary<string, object>)array[6];
+            Assert.Contains("1", dict3.Keys);
+            Assert.Contains("2", dict3.Keys);
+
         }
     }
 }
