@@ -16,7 +16,7 @@ using ObjectServer.Model.Query;
 
 namespace ObjectServer.Model
 {
-    public abstract class TableModel : ModelBase
+    public abstract class TableModel : ModelBase, IModel
     {
         private readonly List<IField> modelFields =
             new List<IField>();
@@ -91,7 +91,6 @@ namespace ObjectServer.Model
             this.Hierarchy = false;
             this.Versioned = true;
 
-            this.RegisterAllServiceMethods();
         }
 
         /// <summary>
@@ -124,9 +123,9 @@ namespace ObjectServer.Model
                 //conn.ExecuteNonQuery("");
             }
 
-            var columns = this.DeclaredFields.Where(f => f.IsStorable() && f.Name != "id");
+            var storableColumns = this.GetAllStorableFields();
 
-            foreach (var f in columns)
+            foreach (var f in storableColumns)
             {
                 table.AddColumn(db, f);
 
@@ -138,19 +137,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void RegisterAllServiceMethods()
-        {
-            var t = this.GetType();
-            var methods = t.GetMethods();
-            foreach (var m in methods)
-            {
-                var attrs = m.GetCustomAttributes(typeof(ServiceMethodAttribute), false);
-                if (attrs.Length > 0)
-                {
-                    this.RegisterServiceMethod(m);
-                }
-            }
-        }
+     
 
         public static Type[] GetAllCoreModels()
         {
@@ -299,7 +286,7 @@ namespace ObjectServer.Model
         private void AddDefaultValues(ISession session, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
-                this.DeclaredFields.Where(
+                this.DefinedFields.Where(
                 d => (d.DefaultProc != null && !propertyBag.Keys.Contains(d.Name)));
 
             foreach (var df in defaultFields)
@@ -363,7 +350,7 @@ namespace ObjectServer.Model
             var allFields = new List<string>();
             if (fields == null || fields.Length == 0)
             {
-                allFields.AddRange(this.DeclaredFields.Select(f => f.Name));
+                allFields.AddRange(this.DefinedFields.Select(f => f.Name));
             }
             else
             {
@@ -382,7 +369,7 @@ namespace ObjectServer.Model
 
             //表里的列，也就是可以直接用 SQL 查的列
             var columnFields =
-                (from d in this.DeclaredFields
+                (from d in this.DefinedFields
                  from f in allFields
                  where d.Name == f && d.IsStorable()
                  select d.Name).ToArray();
@@ -401,7 +388,7 @@ namespace ObjectServer.Model
             //处理特殊字段
             foreach (var fieldName in allFields)
             {
-                var f = this.DeclaredFields.Single(i => i.Name == fieldName);
+                var f = this.DefinedFields.Single(i => i.Name == fieldName);
 
                 if (f.Functional)
                 {

@@ -122,7 +122,9 @@
     <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="Model\DomainParser.cs" />
     <Compile Include="Model\Fields\FieldDefaultProc.cs" />
+    <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
+    <Compile Include="Model\ModelExtensions.cs" />
     <Compile Include="Model\Query\IExpression.cs" />
     <Compile Include="Model\Query\NotExpression.cs" />
     <Compile Include="Model\Query\InExpression.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="Model\RelatedField.cs" />
     <Compile Include="ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
+    <Compile Include="ServiceObject.cs" />
     <Compile Include="ServiceObjectAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />

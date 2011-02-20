@@ -6,8 +6,6 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 
-using Npgsql;
-
 using ObjectServer.Model;
 
 namespace ObjectServer.Backend

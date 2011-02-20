@@ -10,7 +10,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer.Model
 {
-    public abstract class ModelBase : IServiceObject
+    public abstract class ModelBase : ServiceObject
     {
         protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
@@ -18,16 +18,18 @@ namespace ObjectServer.Model
         private readonly List<IField> declaredFields =
             new List<IField>();
 
-        private readonly Dictionary<string, MethodInfo> serviceMethods =
-            new Dictionary<string, MethodInfo>();
-
         public bool Versioned { get; protected set; }
         public string Label { get; protected set; }
         public string Module { get; protected set; }
 
+        protected ModelBase()
+            : base()
+        {
+        }
+
         public virtual void Initialize(IDatabase db, ObjectPool pool)
         {
-            this.Pool = pool;
+            base.Initialize(db, pool);
 
             this.AddInternalFields();
 
@@ -40,34 +42,9 @@ namespace ObjectServer.Model
             }
         }
 
-        public abstract string Name { get; protected set; }
-
-        public abstract bool DatabaseRequired { get; }
-
-        public ObjectPool Pool { get; private set; }
-
-        public MethodInfo GetServiceMethod(string name)
-        {
-            return this.serviceMethods[name];
-        }
-
-        /// <summary>
-        /// 为动态语言预留的
-        /// </summary>
-        protected void RegisterServiceMethod(MethodInfo mi)
-        {
-            this.serviceMethods.Add(mi.Name, mi);
-        }
-
-
-        public bool ContainsField(string fieldName)
-        {
-            return this.declaredFields.Exists(f => f.Name == fieldName);
-        }
-
         #region Field Methods
 
-        public IList<IField> DeclaredFields { get { return this.declaredFields; } }
+        public IList<IField> DefinedFields { get { return this.declaredFields; } }
 
         protected void IntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
@@ -221,7 +198,6 @@ namespace ObjectServer.Model
                 throw new ArgumentException("fields");
             }
         }
-
 
         private void AddInternalFields()
         {

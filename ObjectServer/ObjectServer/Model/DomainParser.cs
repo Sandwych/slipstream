@@ -80,7 +80,7 @@ namespace ObjectServer.Model
 
         private void AddValue(StringBuilder sb, string field, object value)
         {
-            var fieldType = this.model.DeclaredFields.Single(f => f.Name == field).Type;
+            var fieldType = this.model.DefinedFields.Single(f => f.Name == field).Type;
 
             switch (fieldType)
             {
