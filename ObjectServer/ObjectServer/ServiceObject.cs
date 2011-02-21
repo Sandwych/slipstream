@@ -57,6 +57,8 @@ namespace ObjectServer
 
         public abstract bool DatabaseRequired { get; }
 
+        public abstract string[] ReferencedObjects { get; }
+
         public ObjectPool Pool { get; private set; }
 
     }

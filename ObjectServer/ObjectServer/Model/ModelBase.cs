@@ -68,6 +68,23 @@ namespace ObjectServer.Model
 
         }
 
+        public override string[] ReferencedObjects
+        {
+            get
+            {
+                var query = from f in this.DefinedFields
+                            where f.Type == FieldType.ManyToOne
+                            select f.Relation;
+
+                //自己不能依赖自己
+                query = from m in query
+                        where m != this.Name
+                        select m;
+
+                return query.Distinct().ToArray();
+            }
+        }
+
         #region Field Methods
 
         public IList<IMetaField> DefinedFields { get { return this.declaredFields; } }

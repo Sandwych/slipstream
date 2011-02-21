@@ -50,10 +50,8 @@ namespace ObjectServer
                  select o as IModel).ToArray();
 
             var sortedModels =
-                DependencySorter<IModel, string>.DependencySort(
-                    models,
-                    m => m.Name,
-                    m => m.GetDependedModels());
+                DependencySorter<IModel, string>
+                .DependencySort(models, m => m.Name, m => m.ReferencedObjects);
 
             foreach (var m in sortedModels)
             {
