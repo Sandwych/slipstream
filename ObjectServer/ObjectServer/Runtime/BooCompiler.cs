@@ -49,7 +49,9 @@ namespace ObjectServer.Runtime
             {
                 Console.WriteLine("Failed to compile");
                 LogErrors(context);
-                throw new Exception("Failed to compile module");
+                //TODO 编译错误类型转换
+                //throw new CompileException("Failed to compile module", context.Errors);
+                throw new ArgumentException("Failed to compile module");
             }
 
             return context.GeneratedAssembly;

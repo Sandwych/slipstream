@@ -126,7 +126,7 @@ namespace ObjectServer
             {
                 if (s_instance.config == null)
                 {
-                    throw new InvalidDataException(
+                    throw new Exception(
                         "尚未初始化系统，请调用 ObjectServerStarter.Initialize() 初始化");
                 }
                 return s_instance.config;

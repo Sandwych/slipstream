@@ -16,8 +16,7 @@ namespace ObjectServer.Backend
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         protected DbConnection conn;
-        private bool opened = false;
-
+        private bool opened;
 
 
         public void Open()

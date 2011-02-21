@@ -27,7 +27,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public int GetSum(IDbConnection conn)
+        public int GetSum(ISession session)
         {
             return 1 + 1;
         }

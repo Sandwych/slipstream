@@ -47,7 +47,7 @@ namespace ObjectServer.Utility.Test
                     Depend = new string[] { "user" }
                 },              
             };
-            var sortedModels = DependencySorter<Model, string>.DependencySort(models, m => m.Name, m => m.Depend);
+            var sortedModels = DependencySorter<Model, string>.Sort(models, m => m.Name, m => m.Depend);
 
             Assert.AreEqual("user", sortedModels[0].Name);
             Assert.AreEqual("group", sortedModels[1].Name);

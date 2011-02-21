@@ -25,7 +25,7 @@ namespace ObjectServer
             MethodBase.GetCurrentMethod().DeclaringType);
         private readonly List<Assembly> assembly = new List<Assembly>();
 
-        public const string Module_FileName = "module.js";
+        public const string ModuleFileName = "module.js";
 
         /// <summary>
         /// 整个系统中发现的所有模块
@@ -72,9 +72,9 @@ namespace ObjectServer
                 Log.InfoFormat("Begin to load module: '{0}'", this.Name);
             }
 
-            var assembly = CompileSourceFiles(this.Path);
-            this.Assemblies.Add(assembly);
-            pool.RegisterModelsInAssembly(assembly);
+            var a = CompileSourceFiles(this.Path);
+            this.Assemblies.Add(a);
+            pool.RegisterModelsInAssembly(a);
 
             var moduleModel = (ModuleModel)pool["core.module"];
             this.State = ModuleStatus.Actived;
@@ -109,7 +109,7 @@ namespace ObjectServer
                 var moduleDirs = Directory.GetDirectories(modulePath);
                 foreach (var moduleDir in moduleDirs)
                 {
-                    var moduleFilePath = System.IO.Path.Combine(moduleDir, Module_FileName);
+                    var moduleFilePath = System.IO.Path.Combine(moduleDir, ModuleFileName);
                     var module = DeserializeFromFile(moduleFilePath);
                     module.Path = moduleDir;
                     modules.Add(module);
@@ -121,7 +121,7 @@ namespace ObjectServer
                 }
 
                 //做依赖排序
-                s_allModules = DependencySorter<Module, string>.DependencySort(
+                s_allModules = DependencySorter<Module, string>.Sort(
                     modules, m => m.Name, m => m.Depends);
             }
         }
@@ -200,8 +200,8 @@ namespace ObjectServer
 
             //编译模块程序并注册所有对象
             var compiler = CompilerProvider.GetCompiler(this.ScriptLanguage);
-            var assembly = compiler.CompileFromFile(sourceFiles);
-            return assembly;
+            var a = compiler.CompileFromFile(sourceFiles);
+            return a;
         }
     }
 }

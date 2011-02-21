@@ -10,12 +10,12 @@ namespace ObjectServer
 {
     public sealed class LocalService : MarshalByRefObject, IService
     {
-        public Guid Login(string dbName, string username, string password)
+        public Guid LogOn(string dbName, string username, string password)
         {
             throw new NotImplementedException();
         }
 
-        public void Logout(string dbName, Guid session)
+        public void LogOff(string dbName, Guid session)
         {
             throw new NotImplementedException();
         }

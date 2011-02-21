@@ -51,7 +51,7 @@ namespace ObjectServer
 
             var sortedModels =
                 DependencySorter<IModel, string>
-                .DependencySort(models, m => m.Name, m => m.ReferencedObjects);
+                .Sort(models, m => m.Name, m => m.ReferencedObjects);
 
             foreach (var m in sortedModels)
             {

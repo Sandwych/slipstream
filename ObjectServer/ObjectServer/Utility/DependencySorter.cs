@@ -13,7 +13,7 @@ namespace ObjectServer.Utility
     public static class DependencySorter<TEle, TId>
         where TId : IEquatable<TId>
     {
-        public static TEle[] DependencySort(
+        public static TEle[] Sort(
             IList<TEle> fields,
             Func<TEle, TId> getIdProc,
             Func<TEle, IList<TId>> getDependIdProc)
