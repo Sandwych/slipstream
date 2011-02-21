@@ -76,7 +76,7 @@ namespace ObjectServer
                 Log.InfoFormat("Start to register all models for assembly [{0}]...", assembly.FullName);
             }
 
-            var types = Model.TableModel.GetModelsFromAssembly(assembly);
+            var types = GetModelsFromAssembly(assembly);
 
             using (var db = Backend.DataProvider.OpenDatabase(this.Database))
             {
@@ -110,5 +110,28 @@ namespace ObjectServer
             }
             return obj;
         }
+
+
+        private static Type[] GetAllCoreModels()
+        {
+            var a = Assembly.GetExecutingAssembly();
+            return GetModelsFromAssembly(a);
+        }
+
+        private static Type[] GetModelsFromAssembly(Assembly assembly)
+        {
+            var types = assembly.GetTypes();
+            var result = new List<Type>();
+            foreach (var t in types)
+            {
+                var assemblies = t.GetCustomAttributes(typeof(ServiceObjectAttribute), false);
+                if (assemblies.Length > 0)
+                {
+                    result.Add(t);
+                }
+            }
+            return result.ToArray();
+        }
+
     }
 }

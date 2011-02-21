@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public static class ModelExtensions
+    internal static class ModelExtensions
     {
         public static bool ContainsField(this IModel model, string fieldName)
         {

@@ -106,27 +106,6 @@ namespace ObjectServer.Model
         }
 
 
-        public static Type[] GetAllCoreModels()
-        {
-            var a = Assembly.GetExecutingAssembly();
-            return GetModelsFromAssembly(a);
-        }
-
-        public static Type[] GetModelsFromAssembly(Assembly assembly)
-        {
-            var types = assembly.GetTypes();
-            var result = new List<Type>();
-            foreach (var t in types)
-            {
-                var assemblies = t.GetCustomAttributes(typeof(ServiceObjectAttribute), false);
-                if (assemblies.Length > 0)
-                {
-                    result.Add(t);
-                }
-            }
-            return result.ToArray();
-        }
-
         #region Service Methods
 
         [ServiceMethod]

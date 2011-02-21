@@ -12,8 +12,18 @@ namespace ObjectServer.Core
     {
         public RuleModel()
         {
-            this.Name = "core.action";
+            this.Name = "core.rule";
         }
 
+    }
+
+    [ServiceObject]
+    public sealed class RuleLineModel : TableModel
+    {
+
+        public RuleLineModel()
+        {
+            this.Name = "core.rule.line";
+        }
     }
 }

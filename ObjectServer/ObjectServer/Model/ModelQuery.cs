@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public sealed class ModelQuery
+    internal sealed class ModelQuery
     {
         private IModel model;
         private ISession session;

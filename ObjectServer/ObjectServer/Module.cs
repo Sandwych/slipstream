@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using ObjectServer.Runtime;
 using ObjectServer.Backend;
 using ObjectServer.Core;
+using ObjectServer.Utility;
 
 namespace ObjectServer
 {
@@ -28,12 +29,14 @@ namespace ObjectServer
         /// <summary>
         /// 整个系统中发现的所有模块
         /// </summary>
-        private static readonly List<Module> allModules =
-            new List<Module>();
+        private static Module[] s_allModules = new Module[] { };
 
         public Module()
         {
             this.Assemblies = new List<Assembly>();
+
+            //设置属性默认值
+            this.Depends = new string[] { };
         }
 
         #region Serializable Fields
@@ -57,6 +60,9 @@ namespace ObjectServer
 
         [JsonProperty("auto_load")]
         public bool AutoLoad { get; set; }
+
+        [JsonProperty("depends")]
+        public string[] Depends { get; set; }
 
         #endregion
 
@@ -84,7 +90,7 @@ namespace ObjectServer
         {
             lock (typeof(Module))
             {
-                allModules.Clear();
+                var modules = new List<Module>();
 
                 if (string.IsNullOrEmpty(modulePath) || !Directory.Exists(modulePath))
                 {
@@ -97,10 +103,15 @@ namespace ObjectServer
                     var moduleFilePath = System.IO.Path.Combine(moduleDir, MODULE_FILENAME);
                     var module = DeserializeFromFile(moduleFilePath);
                     module.Path = moduleDir;
-                    allModules.Add(module);
+                    modules.Add(module);
                 }
+
+                //做依赖排序
+                s_allModules = DependencySorter<Module, string>.DependencySort(
+                    modules, m => m.Name, m => m.Depends);
             }
         }
+
 
         public static void UpdateModuleList(IDatabase db)
         {
@@ -108,7 +119,7 @@ namespace ObjectServer
             {
                 var sql = "select count(*) from core_module where name = @0";
 
-                foreach (var m in allModules)
+                foreach (var m in s_allModules)
                 {
                     var count = (long)db.QueryValue(sql, m.Name);
                     if (count == 0)
@@ -130,7 +141,7 @@ namespace ObjectServer
                 foreach (var m in modules)
                 {
                     var moduleName = (string)m["name"];
-                    var module = allModules.SingleOrDefault(i => i.Name == moduleName);
+                    var module = s_allModules.SingleOrDefault(i => i.Name == moduleName);
                     if (module != null)
                     {
                         module.Load(pool);
@@ -143,7 +154,6 @@ namespace ObjectServer
                 }
             }
         }
-
 
         private static void AddModuleToDb(IDatabase db, Module m)
         {
