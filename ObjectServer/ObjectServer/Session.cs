@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using System.Reflection;
 
 using ObjectServer.Backend;
 
@@ -10,8 +11,16 @@ namespace ObjectServer
 {
     internal class Session : ISession
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
+            MethodBase.GetCurrentMethod().DeclaringType);
+
         public Session(string dbName)
         {
+            if (Log.IsInfoEnabled)
+            {
+                Log.InfoFormat("Session is opening for database: [{0}]", dbName);
+            }
+
             this.Database = DataProvider.OpenDatabase(dbName);
         }
 
@@ -43,6 +52,11 @@ namespace ObjectServer
         public void Dispose()
         {
             this.Database.Close();
+
+            if (Log.IsInfoEnabled)
+            {
+                Log.InfoFormat("Session closed");
+            }
         }
 
         #endregion

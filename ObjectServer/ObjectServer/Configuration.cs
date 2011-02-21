@@ -14,6 +14,13 @@ namespace ObjectServer
     [JsonObject("objectserver-config")]
     public sealed class Configuration
     {
+        public Configuration()
+        {
+            this.LogPath = null;
+            this.LogLevel = "info";
+        }
+
+
         private string rootPassword;
 
         /// <summary>
@@ -60,6 +67,12 @@ namespace ObjectServer
                 this.RootPasswordHash = value.ToSha1();
             }
         }
+
+        [JsonProperty("log-path")]
+        public string LogPath { get; set; }
+
+        [JsonProperty("log-level")]
+        public string LogLevel { get; set; }
 
         [JsonIgnore]
         public string RootPasswordHash { get; private set; }

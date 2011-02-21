@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+using log4net;
+
 using Newtonsoft.Json;
 
 namespace ObjectServer
@@ -45,11 +47,51 @@ namespace ObjectServer
                 Module.LookupAllModules(cfg.ModulePath);
             }
 
+
             lock (typeof(ObjectServerStarter))
             {
+                ConfigurateLog4net(cfg);
+
                 s_instance.config = cfg;
                 s_instance.initialized = true;
+
             }
+        }
+
+        private static void ConfigurateLog4net(Configuration cfg)
+        {
+            log4net.Appender.IAppender appender;
+            var layout = new log4net.Layout.SimpleLayout();
+
+            if (string.IsNullOrEmpty(cfg.LogPath))
+            {
+                appender = new log4net.Appender.ConsoleAppender
+                {
+                    Layout = layout,
+                };
+
+                if (!cfg.Debug)
+                {
+                    //TODO: 添加非调试的级别限制
+                    //var filter = new log4net.Filter.LevelRangeFilter 
+                    //{ LevelMax = log4net.Core.Level.Debug,  };
+                }
+            }
+            else
+            {
+                if (System.IO.Directory.Exists(cfg.LogPath))
+                {
+                    throw new DirectoryNotFoundException(cfg.LogPath);
+                }
+
+                appender = new log4net.Appender.RollingFileAppender()
+                {
+                    Layout = layout,
+                    Encoding = Encoding.UTF8,
+                };
+            }
+
+            log4net.Config.BasicConfigurator.Configure(appender);
         }
 
         /// <summary>
@@ -74,6 +116,7 @@ namespace ObjectServer
                 ModulePath = "modules",
                 RootPassword = "root",
                 Debug = true,
+                LogLevel = "debug",
             };
             Initialize(cfg);
         }

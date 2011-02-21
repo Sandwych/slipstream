@@ -68,6 +68,11 @@ namespace ObjectServer
 
         public void Load(ObjectPool pool)
         {
+            if (Log.IsInfoEnabled)
+            {
+                Log.InfoFormat("Begin to load module: '{0}'", this.Name);
+            }
+
             var assembly = CompileSourceFiles(this.Path);
             this.Assemblies.Add(assembly);
             pool.RegisterModelsInAssembly(assembly);
@@ -75,6 +80,11 @@ namespace ObjectServer
             var moduleModel = (ModuleModel)pool.LookupObject("core.module");
             this.State = ModuleStatus.Actived;
             moduleModel.LoadedModules.Add(this);
+
+            if (Log.IsInfoEnabled)
+            {
+                Log.InfoFormat("Module '{0}' has been loaded.", this.Name);
+            }
         }
 
         [JsonIgnore]
@@ -104,6 +114,11 @@ namespace ObjectServer
                     var module = DeserializeFromFile(moduleFilePath);
                     module.Path = moduleDir;
                     modules.Add(module);
+
+                    if (Log.IsInfoEnabled)
+                    {
+                        Log.InfoFormat("Found module: [{0}], Path='{1}'", module.Name, module.Path);
+                    }
                 }
 
                 //做依赖排序
@@ -133,6 +148,8 @@ namespace ObjectServer
 
         public static void LoadModules(IDatabaseContext db, ObjectPool pool)
         {
+            //加载的策略是：
+            //只加载存在于文件系统，且数据库中设置为 state = 'actived' 的
             lock (typeof(Module))
             {
                 var sql = "select name from core_module where state = 'actived'";

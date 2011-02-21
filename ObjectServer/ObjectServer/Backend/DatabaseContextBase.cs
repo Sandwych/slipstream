@@ -43,7 +43,7 @@ namespace ObjectServer.Backend
 
             if (Log.IsDebugEnabled)
             {
-                Log.Info(sql);
+                Log.DebugFormat("SQL: {0}", sql);
             }
 
             var cmd = this.Connection.CreateCommand();
@@ -65,7 +65,7 @@ namespace ObjectServer.Backend
 
             if (Log.IsDebugEnabled)
             {
-                Log.Info(commandText);
+                Log.DebugFormat("SQL: {0}", commandText);
             }
 
             using (var cmd = PrepareCommand(commandText))
@@ -82,7 +82,7 @@ namespace ObjectServer.Backend
 
             if (Log.IsDebugEnabled)
             {
-                Log.Info(commandText);
+                Log.DebugFormat("SQL: {0}", commandText);
             }
 
             using (var command = PrepareCommand(commandText))
@@ -100,7 +100,7 @@ namespace ObjectServer.Backend
 
             if (Log.IsDebugEnabled)
             {
-                Log.Info(commandText);
+                Log.DebugFormat("SQL: {0}", commandText);
             }
 
             using (var command = PrepareCommand(commandText))
@@ -140,7 +140,7 @@ namespace ObjectServer.Backend
 
             if (Log.IsDebugEnabled)
             {
-                Log.Info(commandText);
+                Log.DebugFormat("SQL: {0}", commandText);
             }
 
             using (var command = PrepareCommand(commandText))
