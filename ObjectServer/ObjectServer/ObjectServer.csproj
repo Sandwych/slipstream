@@ -125,6 +125,7 @@
     <Compile Include="Model\Fields\ManyToOneMetaField.cs" />
     <Compile Include="Model\Fields\OneToManyMetaField.cs" />
     <Compile Include="Model\Fields\ScalarMetaField.cs" />
+    <Compile Include="Model\Fields\FunctionMetaField.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\ModelExtensions.cs" />

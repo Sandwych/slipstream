@@ -307,23 +307,11 @@ namespace ObjectServer.Model
             {
                 var f = this.DefinedFields.Single(i => i.Name == fieldName);
 
-                if (f.Functional)
+                var fieldValues = f.GetFieldValues(session, records);
+                foreach (var record in records)
                 {
-                    var funcFieldValues = f.Getter(session, ids);
-                    foreach (var p in records)
-                    {
-                        var id = (long)p["id"];
-                        p[f.Name] = funcFieldValues[id];
-                    }
-                }
-                else
-                {
-                    var fieldValues = f.GetFieldValues(session, records);
-                    foreach (var record in records)
-                    {
-                        var id = (long)record["id"];
-                        record[f.Name] = fieldValues[id];
-                    }
+                    var id = (long)record["id"];
+                    record[f.Name] = fieldValues[id];
                 }
             }
 

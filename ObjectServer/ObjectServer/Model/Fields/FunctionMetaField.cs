@@ -5,23 +5,21 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ScalarMetaField : MetaField
+    internal sealed class FunctionMetaField : MetaField
     {
-        public ScalarMetaField(string name, FieldType ft)
+        public FunctionMetaField(string name, FieldType ft, FieldGetter getter)
             : base(name, ft)
         {
+            this.Getter = getter;
         }
 
-    
+
         public override Dictionary<long, object> GetFieldValues(
             ISession session, List<Dictionary<string, object>> records)
         {
-            var result = new Dictionary<long, object>(records.Count());
+            var ids = records.Select(p => p["id"]).ToArray();
 
-            foreach (var r in records)
-            {
-                result[(long)r["id"]] = r[this.Name];
-            }
+            var result = this.Getter(session, ids);
 
             return result;
         }

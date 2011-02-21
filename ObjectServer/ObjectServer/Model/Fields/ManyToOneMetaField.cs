@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal class ManyToOneMetaField : MetaField
+    internal sealed class ManyToOneMetaField : MetaField
     {
         public ManyToOneMetaField(string name)
             : base(name, FieldType.ManyToOne)

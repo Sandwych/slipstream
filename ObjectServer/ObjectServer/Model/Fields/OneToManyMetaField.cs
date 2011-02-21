@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal class OneToManyMetaField : MetaField
+    internal sealed class OneToManyMetaField : MetaField
     {
         public OneToManyMetaField(string name)
             : base(name, FieldType.OneToMany)

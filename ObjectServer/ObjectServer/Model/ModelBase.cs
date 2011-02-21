@@ -74,26 +74,40 @@ namespace ObjectServer.Model
 
         protected void IntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new ScalarMetaField(name, FieldType.Integer)
+            MetaField field;
+            if (getter == null)
             {
-                Label = label,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-            };
+                field = new ScalarMetaField(name, FieldType.Integer);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.Integer, getter);
+            }
+
+            field.Label = label;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
 
             declaredFields.Add(field);
         }
 
         protected void BitIntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new ScalarMetaField(name, FieldType.BigInteger)
+            MetaField field;
+            if (getter == null)
             {
-                Label = label,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-            };
+                field = new ScalarMetaField(name, FieldType.BigInteger);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.BigInteger, getter);
+            }
+
+            field.Label = label;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
 
             field.Validate();
             declaredFields.Add(field);
@@ -103,13 +117,20 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new ScalarMetaField(name, FieldType.Boolean)
+            MetaField field;
+            if (getter == null)
             {
-                Label = label,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-            };
+                field = new ScalarMetaField(name, FieldType.Boolean);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.Boolean, getter);
+            }
+
+            field.Label = label;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
 
             field.Validate();
             declaredFields.Add(field);
@@ -119,13 +140,21 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new ScalarMetaField(name, FieldType.Text)
+            MetaField field;
+
+            if (getter == null)
             {
-                Label = label,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-            };
+                field = new ScalarMetaField(name, FieldType.Text);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.Text, getter);
+            }
+
+            field.Label = label;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
 
             field.Validate();
             declaredFields.Add(field);
@@ -135,14 +164,22 @@ namespace ObjectServer.Model
             string name, string label, int size, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new ScalarMetaField(name, FieldType.Chars)
+            MetaField field;
+
+            if (getter == null)
             {
-                Label = label,
-                Size = size,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-            };
+                field = new ScalarMetaField(name, FieldType.Chars);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.Chars, getter);
+            }
+
+            field.Label = label;
+            field.Size = size;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
 
             field.Validate();
             declaredFields.Add(field);
@@ -152,13 +189,21 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new ScalarMetaField(name, FieldType.DateTime)
+            MetaField field;
+
+            if (getter == null)
             {
-                Label = label,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-            };
+                field = new ScalarMetaField(name, FieldType.DateTime);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.DateTime, getter);
+            }
+
+            field.Label = label;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
 
             field.Validate();
             declaredFields.Add(field);
@@ -167,14 +212,21 @@ namespace ObjectServer.Model
         protected void ManyToOneField(
             string name, string masterModel, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new ManyToOneMetaField(name)
+            MetaField field;
+
+            if (getter == null)
             {
-                Label = label,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-                Relation = masterModel,
-            };
+                field = new ManyToOneMetaField(name);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.ManyToOne, getter);
+            }
+            field.Label = label;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
+            field.Relation = masterModel;
 
             field.Validate();
             declaredFields.Add(field);
@@ -185,15 +237,23 @@ namespace ObjectServer.Model
             string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new OneToManyMetaField(name)
+            MetaField field;
+
+            if (getter == null)
             {
-                Label = label,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-                Relation = childModel,
-                RelatedField = relatedField,
-            };
+                field = new OneToManyMetaField(name);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.OneToMany, getter);
+            }
+
+            field.Label = label;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
+            field.Relation = childModel;
+            field.RelatedField = relatedField;
 
             field.Validate();
             declaredFields.Add(field);
