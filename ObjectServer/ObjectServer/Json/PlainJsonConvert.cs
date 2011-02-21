@@ -10,7 +10,7 @@ namespace ObjectServer.Json
 {
     public static class PlainJsonConvert
     {
-        public static string SerializeObject(object obj)
+        public static string SerializeObject(object value)
         {
             var debug = ObjectServerStarter.Configuration.Debug;
             var fmt = Formatting.None;
@@ -18,7 +18,7 @@ namespace ObjectServer.Json
             {
                 fmt = Formatting.Indented;
             }
-            var str = Newtonsoft.Json.JsonConvert.SerializeObject(obj, fmt);
+            var str = Newtonsoft.Json.JsonConvert.SerializeObject(value, fmt);
 
             return str;
         }
@@ -39,9 +39,9 @@ namespace ObjectServer.Json
             }
         }
 
-        public static object Deserialize(Stream s)
+        public static object Deserialize(Stream ins)
         {
-            using (var tr = new StreamReader(s, Encoding.UTF8))
+            using (var tr = new StreamReader(ins, Encoding.UTF8))
             {
                 return Deserialize(tr);
             }

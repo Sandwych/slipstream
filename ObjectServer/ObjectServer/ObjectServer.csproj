@@ -110,7 +110,7 @@
     <Compile Include="Backend\Postgresql\PgDatabaseContext.cs" />
     <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Backend\Postgresql\PgTableContext.cs" />
-    <Compile Include="Configuration.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Core\GroupModel.cs" />
     <Compile Include="Core\ActionModel.cs" />
     <Compile Include="Core\RuleModel.cs" />

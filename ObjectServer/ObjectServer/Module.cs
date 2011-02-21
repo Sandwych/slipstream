@@ -23,8 +23,9 @@ namespace ObjectServer
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly List<Assembly> assembly = new List<Assembly>();
 
-        public const string MODULE_FILENAME = "module.js";
+        public const string Module_FileName = "module.js";
 
         /// <summary>
         /// 整个系统中发现的所有模块
@@ -33,8 +34,6 @@ namespace ObjectServer
 
         public Module()
         {
-            this.Assemblies = new List<Assembly>();
-
             //设置属性默认值
             this.Depends = new string[] { };
         }
@@ -77,7 +76,7 @@ namespace ObjectServer
             this.Assemblies.Add(assembly);
             pool.RegisterModelsInAssembly(assembly);
 
-            var moduleModel = (ModuleModel)pool.LookupObject("core.module");
+            var moduleModel = (ModuleModel)pool["core.module"];
             this.State = ModuleStatus.Actived;
             moduleModel.LoadedModules.Add(this);
 
@@ -88,7 +87,7 @@ namespace ObjectServer
         }
 
         [JsonIgnore]
-        public List<Assembly> Assemblies { get; set; }
+        public ICollection<Assembly> Assemblies { get { return this.assembly; } }
 
         [JsonIgnore]
         public string Path { get; set; }
@@ -110,7 +109,7 @@ namespace ObjectServer
                 var moduleDirs = Directory.GetDirectories(modulePath);
                 foreach (var moduleDir in moduleDirs)
                 {
-                    var moduleFilePath = System.IO.Path.Combine(moduleDir, MODULE_FILENAME);
+                    var moduleFilePath = System.IO.Path.Combine(moduleDir, Module_FileName);
                     var module = DeserializeFromFile(moduleFilePath);
                     module.Path = moduleDir;
                     modules.Add(module);

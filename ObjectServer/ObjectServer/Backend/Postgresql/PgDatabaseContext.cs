@@ -22,7 +22,7 @@ namespace ObjectServer.Backend.Postgresql
               "Encoding=UNICODE;" +
               "User ID={1};" +
               "Password={2};",
-              cfg.DbHost, cfg.DbUser, cfg.DbPassword, dbName);
+              cfg.DBHost, cfg.DBUser, cfg.DBPassword, dbName);
             this.conn = new NpgsqlConnection(connectionString);
             this.DatabaseName = dbName;
         }

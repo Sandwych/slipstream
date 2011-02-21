@@ -10,6 +10,9 @@ namespace ObjectServer.Backend
 {
     internal sealed class PgSqlTypeConverter : ISqlTypeConverter
     {
+        private PgSqlTypeConverter()
+        {
+        }
 
         private static readonly Dictionary<FieldType, Func<IMetaField, string>> mapping =
             new Dictionary<FieldType, Func<IMetaField, string>>()

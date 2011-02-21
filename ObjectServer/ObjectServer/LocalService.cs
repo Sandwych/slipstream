@@ -24,7 +24,7 @@ namespace ObjectServer
         {
             using (var session = new Session(dbName))
             {
-                var obj = session.Pool.LookupObject(objectName);
+                var obj = session.Pool[objectName];
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[args.Length + 1];
                 internalArgs[0] = session;
@@ -53,10 +53,10 @@ namespace ObjectServer
                 tx.Commit();
                 return result;
             }
-            catch (Exception ex)
+            catch
             {
                 tx.Rollback();
-                throw ex;
+                throw;
             }
         }
 

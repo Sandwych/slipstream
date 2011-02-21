@@ -12,9 +12,9 @@ namespace ObjectServer
 {
     [Serializable]
     [JsonObject("objectserver-config")]
-    public sealed class Configuration
+    public sealed class Config
     {
-        public Configuration()
+        public Config()
         {
             this.LogPath = null;
             this.LogLevel = "info";
@@ -34,16 +34,16 @@ namespace ObjectServer
         public Backend.DatabaseType DbType { get; set; }
 
         [JsonProperty("db-host")]
-        public string DbHost { get; set; }
+        public string DBHost { get; set; }
 
         [JsonProperty("db-port")]
-        public int DbPort { get; set; }
+        public int DBPort { get; set; }
 
         [JsonProperty("db-user")]
-        public string DbUser { get; set; }
+        public string DBUser { get; set; }
 
         [JsonProperty("db-password")]
-        public string DbPassword { get; set; }
+        public string DBPassword { get; set; }
 
         /// <summary>
         /// 指定连接的数据库名，如果没有指定，则可以连接到用户所属的多个数据库。

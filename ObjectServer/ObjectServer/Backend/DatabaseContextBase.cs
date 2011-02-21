@@ -210,13 +210,11 @@ namespace ObjectServer.Backend
                 return;
             }
 
-            int index = 0;
-
-            foreach (var arg in args)
+            for (int i = 0; i < args.Length; i++)
             {
                 var param = command.CreateParameter();
-                param.ParameterName = "@" + index;
-                param.Value = args[index++];
+                param.ParameterName = "@" + i.ToString();
+                param.Value = args[i];
                 command.Parameters.Add(param);
             }
         }

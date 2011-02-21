@@ -43,7 +43,7 @@ namespace ObjectServer
             var dbNames = db.List();
             if (!dbNames.Contains(dbName))
             {
-                throw new ArgumentException("dbName");
+                throw new ArgumentException("Invalid database name", "dbName");
             }
 
             var pool = new ObjectPool(db, dbName);

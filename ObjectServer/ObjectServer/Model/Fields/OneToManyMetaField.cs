@@ -16,7 +16,7 @@ namespace ObjectServer.Model
            ISession session, List<Dictionary<string, object>> records)
         {
             //查询字表
-            var childModel = (TableModel)session.Pool.LookupObject(this.Relation);
+            var childModel = (TableModel)session.Pool[this.Relation];
             //TODO 权限等处理
 
             var children = new Dictionary<long, long[]>();

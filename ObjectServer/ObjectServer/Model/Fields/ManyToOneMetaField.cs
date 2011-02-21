@@ -16,7 +16,7 @@ namespace ObjectServer.Model
            ISession session, List<Dictionary<string, object>> records)
         {
             var result = new Dictionary<long, object>(records.Count());
-            var masterModel = (TableModel)session.Pool.LookupObject(this.Relation);
+            var masterModel = (TableModel)session.Pool[this.Relation];
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
                 var masterTableIds = records.Select(d => d[this.Name]).ToArray();

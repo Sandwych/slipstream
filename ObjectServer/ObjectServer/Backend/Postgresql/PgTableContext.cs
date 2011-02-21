@@ -120,7 +120,7 @@ select column_name, data_type, is_nullable <> 'NO' as not_null
         }
 
 
-        public void AddFk(IDatabaseContext db, string columnName, string refTable, ReferentialAction refAct)
+        public void AddFK(IDatabaseContext db, string columnName, string refTable, ReferentialAction refAct)
         {
             //TODO: 设置其它的 ReferentialAction
             var onDelete = "set null";
@@ -134,13 +134,13 @@ select column_name, data_type, is_nullable <> 'NO' as not_null
         }
 
 
-        public void DeleteFk(IDatabaseContext db, string columnName)
+        public void DeleteFK(IDatabaseContext db, string columnName)
         {
             var fkName = this.GenerateFkName(columnName);
             this.DeleteConstraint(db, fkName);
         }
 
-        public bool FkExists(IDatabaseContext db, string columnName)
+        public bool FKExists(IDatabaseContext db, string columnName)
         {
             var fkName = this.GenerateFkName(columnName);
             var sql = "select count(conname) from pg_constraint where conname = @0";

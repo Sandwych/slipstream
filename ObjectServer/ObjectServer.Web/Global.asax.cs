@@ -30,15 +30,15 @@ namespace ObjectServer.Web
             //TODO: 初始化为测试配置
             if (!ObjectServerStarter.Initialized)
             {
-                var cfg = new Configuration()
+                var cfg = new Config()
                 {
                     ConfigurationPath = null,
                     DbType = global::ObjectServer.Backend.DatabaseType.Postgresql,
-                    DbHost = "localhost",
+                    DBHost = "localhost",
                     DbName = "objectserver",
-                    DbPassword = "objectserver",
-                    DbPort = 5432,
-                    DbUser = "objectserver",
+                    DBPassword = "objectserver",
+                    DBPort = 5432,
+                    DBUser = "objectserver",
                     ModulePath = null,//Server.MapPath("~/modules"),
                     RootPassword = "root",
                     Debug = true,

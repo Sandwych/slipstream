@@ -60,7 +60,7 @@ namespace ObjectServer.Utility
                 int currentVertex = noSuccessors();
                 if (currentVertex == -1) // must be a cycle                
                 {
-                    throw new Exception("Graph has cycles");
+                    throw new InvalidOperationException("Graph has cycles");
                 }
 
                 // insert vertex label in sorted array (start at end)

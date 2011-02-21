@@ -41,7 +41,7 @@ namespace ObjectServer.Model
         {
             if (exp.Length != 3)
             {
-                throw new ArgumentException("exp");
+                throw new ArgumentException("the parameter 'exp' must have 3 elements",  "exp");
             }
 
             this.expressions.Add(exp);

@@ -18,24 +18,23 @@ namespace ObjectServer
     {
         private static readonly ObjectServerStarter s_instance = new ObjectServerStarter();
 
-        private Configuration config;
+        private Config config;
         private bool initialized;
         private Database pooler = new Database();
 
         private ObjectServerStarter()
         {
-            this.initialized = false;
         }
 
         public static void Initialize(string configPath)
         {
             var json = File.ReadAllText(configPath, Encoding.UTF8);
-            var cfg = JsonConvert.DeserializeObject<Configuration>(json);
+            var cfg = JsonConvert.DeserializeObject<Config>(json);
             Initialize(cfg);
         }
 
         //这个做实际的初始化工作
-        public static void Initialize(Configuration cfg)
+        public static void Initialize(Config cfg)
         {
             if (cfg == null)
             {
@@ -58,7 +57,7 @@ namespace ObjectServer
             }
         }
 
-        private static void ConfigurateLog4net(Configuration cfg)
+        private static void ConfigurateLog4net(Config cfg)
         {
             log4net.Appender.IAppender appender;
             var layout = new log4net.Layout.SimpleLayout();
@@ -104,15 +103,15 @@ namespace ObjectServer
                 return;
             }
 
-            var cfg = new Configuration()
+            var cfg = new Config()
             {
                 ConfigurationPath = null,
                 DbType = ObjectServer.Backend.DatabaseType.Postgresql,
-                DbHost = "localhost",
+                DBHost = "localhost",
                 DbName = "objectserver",
-                DbPassword = "objectserver",
-                DbPort = 5432,
-                DbUser = "objectserver",
+                DBPassword = "objectserver",
+                DBPort = 5432,
+                DBUser = "objectserver",
                 ModulePath = "modules",
                 RootPassword = "root",
                 Debug = true,
@@ -121,13 +120,13 @@ namespace ObjectServer
             Initialize(cfg);
         }
 
-        public static Configuration Configuration
+        public static Config Configuration
         {
             get
             {
                 if (s_instance.config == null)
                 {
-                    throw new ArgumentException(
+                    throw new InvalidDataException(
                         "尚未初始化系统，请调用 ObjectServerStarter.Initialize() 初始化");
                 }
                 return s_instance.config;

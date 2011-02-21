@@ -6,7 +6,7 @@ using System.Text;
 namespace ObjectServer
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class ServiceMethodAttribute : Attribute
+    public sealed class ServiceMethodAttribute : Attribute
     {
     }
 }

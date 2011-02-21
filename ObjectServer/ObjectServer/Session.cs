@@ -55,7 +55,7 @@ namespace ObjectServer
 
             if (Log.IsInfoEnabled)
             {
-                Log.InfoFormat("Session closed");
+                Log.Info("Session closed");
             }
         }
 

@@ -7,7 +7,7 @@ namespace ObjectServer
 {
     public interface IService
     {
-        Guid Login(string dbName, string username, string password);
+        Guid Login(string dbName, string login, string password);
         void Logout(string dbName, Guid session);
 
 

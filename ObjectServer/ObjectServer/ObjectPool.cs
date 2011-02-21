@@ -92,11 +92,20 @@ namespace ObjectServer
             }
         }
 
-        public IServiceObject LookupObject(string name)
+        public IServiceObject this[string objName]
         {
-            return this.objects[name];
+            get { return this.objects[objName]; }
         }
 
+        /// <summary>
+        /// 检查是否包含对象 objName
+        /// </summary>
+        /// <param name="objName"></param>
+        /// <returns></returns>
+        public bool Contains(string objName)
+        {
+            return this.objects.ContainsKey(objName);
+        }
 
         private static IServiceObject CreateServiceObject(IDatabaseContext db, ObjectPool pool, Type t)
         {
@@ -107,13 +116,6 @@ namespace ObjectServer
                 throw new InvalidCastException(msg);
             }
             return obj;
-        }
-
-
-        private static Type[] GetAllCoreModels()
-        {
-            var a = Assembly.GetExecutingAssembly();
-            return GetModelsFromAssembly(a);
         }
 
         private static Type[] GetModelsFromAssembly(Assembly assembly)

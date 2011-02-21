@@ -52,8 +52,8 @@ namespace ObjectServer.Model
 
                 if (f.Type == FieldType.ManyToOne)
                 {
-                    var refModel = (TableModel)this.pool.LookupObject(f.Relation);
-                    table.AddFk(db, f.Name, refModel.TableName, ReferentialAction.SetNull);
+                    var refModel = (TableModel)this.pool[f.Relation];
+                    table.AddFK(db, f.Name, refModel.TableName, ReferentialAction.SetNull);
                 }
             }
         }
