@@ -16,8 +16,9 @@ namespace ObjectServer.Model
         bool CanWrite { get; }
         bool CanDelete { get; }
 
+        NameGetter NameGetter { get; }
 
-        long[] Search(ISession session, object[][] domain, long offset, long limit);
+        object[] Search(ISession session, object[][] domain, long offset, long limit);
         long Create(ISession session, IDictionary<string, object> propertyBag);
         void Write(ISession session, object id, IDictionary<string, object> record);
         Dictionary<string, object>[] Read(ISession session, object[] ids, object[] fields);

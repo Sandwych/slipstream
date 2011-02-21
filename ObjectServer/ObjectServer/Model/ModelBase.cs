@@ -277,8 +277,8 @@ namespace ObjectServer.Model
         }
 
         protected void ManyToManyField(
-            string name, string relatedModel,
-            string refTableName, string originField, string targetField,
+            string name, 
+            string refModel, string originField, string targetField,
             string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
 
@@ -286,7 +286,7 @@ namespace ObjectServer.Model
 
             if (getter == null)
             {
-                field = new ManyToManyMetaField(name);
+                field = new ManyToManyMetaField(name, refModel, originField, targetField);
             }
             else
             {
@@ -297,9 +297,6 @@ namespace ObjectServer.Model
             field.Required = required;
             field.Getter = getter;
             field.DefaultProc = defaultProc;
-            field.Relation = refTableName;
-            field.OriginField = targetField;
-            field.RelatedField = originField;
 
 
             field.Validate();
@@ -320,14 +317,8 @@ namespace ObjectServer.Model
             {
                 throw new ArgumentException("Bad field name", "fields");
             }
-
-            var internalFields =
-                 fields.Count(fn => this.declaredFields[fn].Internal);
-            if (internalFields > 0)
-            {
-                throw new ArgumentException("Bad fileds", "fields");
-            }
         }
+
 
     }
 }

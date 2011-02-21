@@ -27,17 +27,13 @@ namespace ObjectServer.Model
 
                 if (masterTableIds.Length > 0)
                 {
-                    var masters = masterModel.Read(session, masterTableIds, new object[] { "name" });
-                    var masterNames = new Dictionary<long, string>(masters.Length);
-                    foreach (var master in masters)
-                    {
-                        var masterId = (long)master["id"];
-                        masterNames[masterId] = (string)master["name"];
-                    }
+                    var masterNames = masterModel.NameGetter(session, masterTableIds);
+
                     foreach (var r in records)
                     {
                         var id = (long)r["id"];
-                        result.Add(id, new RelatedField(id, masterNames[id]));
+                        var masterId = (long)r[this.Name];
+                        result.Add(id, new RelatedField(masterId, masterNames[masterId]));
                     }
                 }
                 else
@@ -51,12 +47,15 @@ namespace ObjectServer.Model
             }
             else
             {
-                foreach (var p in records)
+                foreach (var r in records)
                 {
-                    var id = (long)p["id"];
-                    result.Add(id, new RelatedField(id, string.Empty));
+                    var id = (long)r["id"];
+                    var masterId = (long)r[this.Name];
+                    result.Add(id, new RelatedField(masterId, string.Empty));
                 }
             }
+
+
 
             return result;
         }

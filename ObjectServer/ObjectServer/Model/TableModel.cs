@@ -32,6 +32,8 @@ namespace ObjectServer.Model
 
         public override bool DatabaseRequired { get { return true; } }
 
+        public NameGetter NameGetter { get; protected set; }
+
         public override string Name
         {
             get
@@ -101,6 +103,18 @@ namespace ObjectServer.Model
         {
             base.Initialize(db, pool);
 
+            if (this.NameGetter == null)
+            {
+                this.NameGetter = this.DefaultNameGetter;
+            }
+
+            if (Log.IsInfoEnabled && !this.DefinedFields.ContainsKey("name"))
+            {
+                Log.InfoFormat(
+                    "I strongly suggest you to add the 'name' field into Model '{0}'",
+                    this.Name);
+            }
+
             var migrator = new TableMigrator(db, pool, this);
             migrator.Migrate();
         }
@@ -109,7 +123,7 @@ namespace ObjectServer.Model
         #region Service Methods
 
         [ServiceMethod]
-        public virtual long[] Search(ISession session, object[][] domain, long offset, long limit)
+        public virtual object[] Search(ISession session, object[][] domain, long offset, long limit)
         {
             if (!this.CanRead)
             {
@@ -151,19 +165,11 @@ namespace ObjectServer.Model
             var colValues = new object[values.Count];
             var sbColumns = new StringBuilder();
             var sbArgs = new StringBuilder();
-            var firstColumn = true;
             var index = 0;
             foreach (var f in values.Keys)
             {
-                if (firstColumn)
-                {
-                    firstColumn = false;
-                }
-                else
-                {
-                    sbColumns.Append(", ");
-                    sbArgs.Append(", ");
-                }
+                sbColumns.Append(", ");
+                sbArgs.Append(", ");
 
                 colValues[index] = values[f];
 
@@ -178,7 +184,7 @@ namespace ObjectServer.Model
             var args = sbArgs.ToString();
 
             var sql = string.Format(
-              "INSERT INTO \"{0}\" (\"id\", {1}) VALUES ({2}, {3});",
+              "INSERT INTO \"{0}\" (\"id\" {1}) VALUES ( {2} {3} );",
               this.TableName,
               columnNames,
               serial,
@@ -346,6 +352,30 @@ namespace ObjectServer.Model
         }
 
         #endregion
+
+
+        private IDictionary<long, string> DefaultNameGetter(ISession session, object[] ids)
+        {
+            var result = new Dictionary<long, string>(ids.Length);
+            if (this.DefinedFields.ContainsKey("name"))
+            {
+                var records = this.Read(session, ids, new object[] { "id", "name" });
+                foreach (var r in records)
+                {
+                    var id = (long)r["id"];
+                    result.Add(id, (string)r["name"]);
+                }
+            }
+            else
+            {
+                foreach (long id in ids)
+                {
+                    result.Add(id, string.Empty);
+                }
+            }
+
+            return result;
+        }
 
     }
 }

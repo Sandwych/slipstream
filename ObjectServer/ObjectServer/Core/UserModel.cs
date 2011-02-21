@@ -22,8 +22,8 @@ namespace ObjectServer.Core
             this.BooleanField("admin", "Administrator?", true, null, null);
             this.CharsField("name", "Name", 64, true, null, null);
 
-            //this.ManyToManyField(
-            //  "groups", "core.group", "core_user_group_rel", "user", "group", "Groups", false, null, null);
+            this.ManyToManyField(
+              "groups", "core.user_group", "uid", "gid", "Groups", false, null, null);
         }
 
 
@@ -64,4 +64,21 @@ namespace ObjectServer.Core
         #endregion
 
     }
+
+
+    [ServiceObject]
+    public sealed class UserGroupModel : TableModel
+    {
+
+        public UserGroupModel()
+        {
+            this.Name = "core.user_group";
+            this.TableName = "core_user_group_rel";
+
+            this.ManyToOneField("uid", "core.user", "User", true, null, null);
+            this.ManyToOneField("gid", "core.group", "Group", true, null, null);
+
+        }
+    }
+
 }

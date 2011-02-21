@@ -27,7 +27,7 @@ namespace ObjectServer.Test
         {
             this.Name = "test.child";
             this.CharsField("name", "Name", 64, true, null, null);
-            this.ManyToOneField("master", "test.master", "Master", true, null, null);
+            this.ManyToOneField("master", "test.master", "Master", false, null, null);
         }
     }
 

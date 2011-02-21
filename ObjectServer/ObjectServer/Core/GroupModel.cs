@@ -19,16 +19,10 @@ namespace ObjectServer.Core
         {
             this.Name = "core.group";
 
-            /*
-            ManyToManyField(
-                "users", "core.user", "core_user_group_rel", "group_id", "user_id",
-                "Users", false, null);
-           */
-
             this.CharsField("name", "Name", 128, true, null, null);
 
-            //this.ManyToManyField(
-            //    "users", "core.group", "core_user_group_rel", "group", "user", "Users", false, null, null);
+            this.ManyToManyField(
+                "users", "core.user_group", "gid", "uid", "Users", true, null, null);
         }
 
     }

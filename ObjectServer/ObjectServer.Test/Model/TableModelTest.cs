@@ -20,7 +20,6 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class ModelBaseTest
     {
-
         IService proxy = new LocalService();
 
         [TestFixtureSetUp]
@@ -30,7 +29,7 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
-        public void CRUD_model()
+        public void Simple_fields_crud()
         {
             var modelName = "test.test_object";
             var dbName = "objectserver";
@@ -100,7 +99,7 @@ namespace ObjectServer.Model.Test
                 "objectserver", "test.master",
                 new object[] { masterId }, masterFieldNames);
             var master = masterRows[0];
-            var children = (long[])master["children"];
+            var children = (object[])master["children"];
 
             Assert.AreEqual(1, children.Length);
             Assert.AreEqual(childId, children[0]);
@@ -109,6 +108,20 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Many_to_many_fields()
         {
+            var userRecord = new Dictionary<string, object>()
+            {
+                { "name", "user1" },
+                { "login", "account" },
+                { "password", "xxxxxx" },
+                { "admin", true },
+            };
+
+            var userId1 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
+            var userId2 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
+            var userId3 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
+            var userId4 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
+            var userId5 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
+
             var groupRecord = new Dictionary<string, object>()
             {
                 { "name", "group" },
@@ -116,32 +129,74 @@ namespace ObjectServer.Model.Test
 
             var groupId1 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
             var groupId2 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
+            var groupId3 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
+            var groupId4 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
             var groupIds = new object[] { groupId1, groupId2 };
 
-            var userRecord = new Dictionary<string, object>()
-            {
-                { "name", "user" },
-            };
+            //设置user1 对应 group2, group3, group4
+            //设置 user2  对应 group3 group4
 
-            var userRecord1 = new Dictionary<string, object>()
-            {
-                { "name", "user1" },
-                { "groups", new object[] { groupId1, groupId2 } },
-            };
+            proxy.CreateModel("objectserver", "core.user_group",
+                new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId2 }, });
+            proxy.CreateModel("objectserver", "core.user_group",
+                new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId3 }, });
+            proxy.CreateModel("objectserver", "core.user_group",
+                new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId4 }, });
 
-            var userId1 = (long)proxy.CreateModel("objectserver", "core.user", userRecord1);
-            var userId2 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
-            var userId3 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
-            var userIds = new object[] { userId1, userId2, userId3 };
 
-            var users = proxy.ReadModel("objectserver", "core.user", 
-                new object[] { userId1 }, new object[] { "name", "groups" });
-            Assert.AreEqual(1, users.Length);
+            proxy.CreateModel("objectserver", "core.user_group",
+                new Dictionary<string, object>() { { "uid", userId2 }, { "gid", groupId3 }, });
+            proxy.CreateModel("objectserver", "core.user_group",
+                new Dictionary<string, object>() { { "uid", userId2 }, { "gid", groupId4 }, });
+
+
+            var users = proxy.ReadModel("objectserver", "core.user",
+                new object[] { userId1, userId2 }, new object[] { "name", "groups" });
+
+            Assert.AreEqual(2, users.Length);
             var user1 = users[0];
+            var user2 = users[1];
+
             Assert.IsInstanceOf<object[]>(user1["groups"]);
-            var groupsField = (object[])user1["groups"];
-            Assert.AreEqual(2, groupsField.Length);
+            var groups1 = (object[])user1["groups"];
+            Assert.AreEqual(3, groups1.Length);
         }
 
+
+        [Test]
+        public void Nullable_one_to_many_field()
+        {
+            var master = new Dictionary<string, object>();
+
+            var id = proxy.CreateModel("objectserver", "test.master", master);
+
+            var masterRecords = proxy.ReadModel("objectserver", "test.master",
+                new object[] { id }, new object[] { "name", "children" });
+            var record = masterRecords[0];
+
+            Assert.IsInstanceOf<object[]>(record["children"]);
+            Assert.IsInstanceOf<DBNull>(record["name"]);
+        }
+
+
+        [Test]
+        public void Nullable_many_to_one_field()
+        {
+            var nameFieldValue = "child_with_empty_master_field";
+            var child = new Dictionary<string, object>()
+            {
+                { "name", nameFieldValue },
+            };
+
+            var id = proxy.CreateModel("objectserver", "test.child", child);
+
+            var children = proxy.ReadModel("objectserver", "test.child",
+                new object[] { id }, new object[] { "name", "master" });
+            var record = children[0];
+
+            Assert.IsInstanceOf<DBNull>(record["master"]);
+            Assert.AreEqual(nameFieldValue, (string)record["name"]);
+
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace ObjectServer.Model
             var childModel = (TableModel)session.Pool[this.Relation];
             //TODO 权限等处理
 
-            var children = new Dictionary<long, long[]>();
+            var children = new Dictionary<long, object[]>();
             foreach (var master in records)
             {
                 var masterId = (long)master["id"];
