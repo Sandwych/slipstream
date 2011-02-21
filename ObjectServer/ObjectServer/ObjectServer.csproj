@@ -106,7 +106,7 @@
     <Compile Include="Backend\IDatabaseContext.cs" />
     <Compile Include="Backend\ISqlTypeConverter.cs" />
     <Compile Include="Backend\ITableContext.cs" />
-    <Compile Include="Backend\Postgresql\Column.cs" />
+    <Compile Include="Backend\Column.cs" />
     <Compile Include="Backend\Postgresql\PgDatabaseContext.cs" />
     <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Backend\Postgresql\PgTableContext.cs" />

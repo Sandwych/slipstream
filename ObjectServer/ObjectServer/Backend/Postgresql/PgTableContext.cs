@@ -22,7 +22,7 @@ namespace ObjectServer.Backend.Postgresql
         {
             this.Name = tableName;
 
-            this.LoadColumns();
+            this.LoadColumns(db, tableName);
         }
 
         public string Name { get; private set; }
@@ -31,9 +31,7 @@ namespace ObjectServer.Backend.Postgresql
         {
             //检查连接
             var sql =
-@"
-select count(relname) from pg_class 
-    where relkind IN ('r','v') and relname=@0";
+                "select count(relname) from pg_class where relkind IN ('r','v') and relname = @0";
 
             var n = (long)db.QueryValue(sql, tableName);
             return n > 0;
@@ -43,11 +41,11 @@ select count(relname) from pg_class
         {
             //TODO SQL 注入风险
             var sql = string.Format(
-                @"CREATE TABLE ""{0}"" (id BIGSERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS;",
+                @"create table ""{0}"" (id bigserial not null, primary key(id)) without oids",
                 tableName);
             db.Execute(sql);
             sql = string.Format(
-                @"COMMENT ON TABLE ""{0}"" IS '{1}';",
+                @"comment on table ""{0}"" is '{1}';",
                 tableName, label);
             db.Execute(sql);
         }
@@ -58,12 +56,12 @@ select count(relname) from pg_class
             var notNull = field.Required ? "not null" : "";
 
             var sql = string.Format(
-                @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2} {3}",
+                @"alter table ""{0}"" add column ""{1}"" {2} {3}",
                 this.Name, field.Name, sqlType, notNull);
             db.Execute(sql);
 
             sql = string.Format(
-                "comment on column \"{0}\".\"{1}\" IS '{2}'",
+                "comment on column \"{0}\".\"{1}\" is '{2}'",
                 this.Name, field.Name, field.Name);
             db.Execute(sql);
         }
@@ -82,8 +80,28 @@ select count(relname) from pg_class
             throw new NotImplementedException();
         }
 
-        private void LoadColumns()
+        private void LoadColumns(IDatabaseContext db, string tableName)
         {
+            var sql = @"
+select column_name, data_type, is_nullable <> 'NO' as not_null
+    from information_schema.columns
+    where table_name = @0
+    order by ordinal_position;
+";
+            var records = db.QueryAsDictionary(sql, tableName);
+            this.columns.Clear();
+            this.columns.Capacity = records.Count;
+            foreach (var r in records)
+            {
+                var column = new Column()
+                {
+                    Name = (string)r["column_name"],
+                    NotNull = (bool)r["not_null"],
+                    SqlType = (string)r["data_type"],
+                };
+                this.columns.Add(column);
+            }
+
         }
 
 

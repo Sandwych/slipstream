@@ -10,5 +10,6 @@ namespace ObjectServer.Backend.Postgresql
         public string Name { get; set; }
         public bool NotNull { get; set; }
         public string SqlType { get; set; }
+        public long Length { get; set; }
     }
 }
