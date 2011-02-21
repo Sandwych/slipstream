@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ObjectServer</RootNamespace>
-    <AssemblyName>ObjectServer</AssemblyName>
+    <AssemblyName>objectserver-core</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -128,6 +128,7 @@
     <Compile Include="Model\ReferentialAction.cs" />
     <Compile Include="Model\RelatedField.cs" />
     <Compile Include="Model\TableMigrator.cs" />
+    <Compile Include="Model\ModelQuery.cs" />
     <Compile Include="ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="ServiceObject.cs" />
@@ -164,6 +165,9 @@
     <EmbeddedResource Include="Backend\Postgresql\initdb.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

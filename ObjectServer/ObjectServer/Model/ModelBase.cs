@@ -18,6 +18,9 @@ namespace ObjectServer.Model
         private readonly List<IField> declaredFields =
             new List<IField>();
 
+        public const string ActiveFieldName = "_field";
+        public const string VersionFieldName = "_version";
+
         public override string Label { get; protected set; }
         public string Module { get; protected set; }
 
@@ -48,9 +51,6 @@ namespace ObjectServer.Model
         private void AddInternalFields()
         {
             BitIntegerField("id", "ID", true, null, null);
-
-            //DefineField("_creator", "Creation User", "BIGINT", 1);
-            //DefineField("_updator", "Last Modifiation User", "BIGINT", 1);
         }
 
 

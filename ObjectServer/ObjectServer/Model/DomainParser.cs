@@ -15,10 +15,10 @@ namespace ObjectServer.Model
 
         private static readonly List<object[]> EmptyDomain = new List<object[]>();
 
-        ModelBase model;
+        IModel model;
         List<object[]> expressions = new List<object[]>();
 
-        public DomainParser(ModelBase model, IList<object[]> domain)
+        public DomainParser(IModel model, IList<object[]> domain)
         {
             if (domain == null)
             {
@@ -32,7 +32,7 @@ namespace ObjectServer.Model
             this.model = model;
         }
 
-        public DomainParser(ModelBase model)
+        public DomainParser(IModel model)
             : this(model, null)
         {
         }
@@ -45,6 +45,11 @@ namespace ObjectServer.Model
             }
 
             this.expressions.Add(exp);
+        }
+
+        public bool ContainsField(string field)
+        {
+            return this.expressions.Exists(exp => (string)exp[0] == field);
         }
 
         public string ToSql()
@@ -98,6 +103,7 @@ namespace ObjectServer.Model
                 case FieldType.Integer:
                 case FieldType.Float:
                 case FieldType.Money:
+                case FieldType.Boolean:
                     var numStr = value.ToString().Replace("'", "");
                     sb.Append(numStr);
                     break;

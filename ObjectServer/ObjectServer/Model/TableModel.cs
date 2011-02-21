@@ -127,35 +127,6 @@ namespace ObjectServer.Model
             return result.ToArray();
         }
 
-
-        public long[] Search(ISession session, object[][] domain)
-        {
-            if (domain == null)
-            {
-                throw new ArgumentNullException("exp");
-            }
-
-            var exp = new DomainParser(this, domain);
-
-            var sql = string.Format(
-                "select id from \"{0}\" where {1}",
-                this.TableName, exp.ToSql());
-
-            using (var cmd = session.Database.Connection.CreateCommand())
-            {
-                cmd.CommandText = sql;
-                using (var reader = cmd.ExecuteReader())
-                {
-                    var result = new List<long>();
-                    while (reader.Read())
-                    {
-                        result.Add(reader.GetInt64(0));
-                    }
-                    return result.ToArray();
-                }
-            }
-        }
-
         #region Service Methods
 
         [ServiceMethod]
@@ -165,9 +136,9 @@ namespace ObjectServer.Model
             {
                 throw new NotSupportedException();
             }
-            //TODO: exp to IExpression
-            //example: "and((like name '%test%') (equal address 'street1'))"
-            return this.Search(session, domain);
+
+            var query = new ModelQuery(session, this);
+            return query.Search(domain, offset, limit);
         }
 
         [ServiceMethod]
