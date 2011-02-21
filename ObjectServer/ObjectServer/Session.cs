@@ -15,14 +15,14 @@ namespace ObjectServer
             this.Database = DataProvider.OpenDatabase(dbName);
         }
 
-        public Session(IDatabase db)
+        public Session(IDatabaseContext db)
         {
             this.Database = db;
         }
 
         #region ISession 成员
 
-        public IDatabase Database
+        public IDatabaseContext Database
         {
             get;
             private set;

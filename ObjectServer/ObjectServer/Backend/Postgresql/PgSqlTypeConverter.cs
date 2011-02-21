@@ -11,8 +11,8 @@ namespace ObjectServer.Backend
     internal sealed class PgSqlTypeConverter : ISqlTypeConverter
     {
 
-        private static readonly Dictionary<FieldType, Func<IField, string>> mapping =
-            new Dictionary<FieldType, Func<IField, string>>()
+        private static readonly Dictionary<FieldType, Func<IMetaField, string>> mapping =
+            new Dictionary<FieldType, Func<IMetaField, string>>()
             {
                 { FieldType.Boolean, f => "boolean" },
                 { FieldType.Integer, f => "int4"  },
@@ -28,7 +28,7 @@ namespace ObjectServer.Backend
 
         #region ISqlTypeConverter 成员
 
-        public string FieldToColumn(IField field)
+        public string FieldToColumn(IMetaField field)
         {
             //mapping[
             throw new NotImplementedException();
@@ -37,7 +37,7 @@ namespace ObjectServer.Backend
         #endregion
 
 
-        public static string GetSqlType(IField field)
+        public static string GetSqlType(IMetaField field)
         {
             Debug.Assert(field != null);
 

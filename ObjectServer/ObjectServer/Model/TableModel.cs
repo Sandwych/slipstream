@@ -17,8 +17,8 @@ namespace ObjectServer.Model
 {
     public abstract class TableModel : ModelBase, IModel
     {
-        private readonly List<IField> modelFields =
-            new List<IField>();
+        private readonly List<IMetaField> modelFields =
+            new List<IMetaField>();
 
         private string tableName = null;
         private string name = null;
@@ -97,7 +97,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IDatabase db, ObjectPool pool)
+        public override void Initialize(IDatabaseContext db, ObjectPool pool)
         {
             base.Initialize(db, pool);
 

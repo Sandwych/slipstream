@@ -46,7 +46,7 @@ namespace ObjectServer
         }
 
 
-        public virtual void Initialize(IDatabase db, ObjectPool pool)
+        public virtual void Initialize(IDatabaseContext db, ObjectPool pool)
         {
             this.Pool = pool;
         }

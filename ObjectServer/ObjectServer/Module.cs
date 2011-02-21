@@ -113,7 +113,7 @@ namespace ObjectServer
         }
 
 
-        public static void UpdateModuleList(IDatabase db)
+        public static void UpdateModuleList(IDatabaseContext db)
         {
             lock (typeof(Module))
             {
@@ -131,7 +131,7 @@ namespace ObjectServer
         }
 
 
-        public static void LoadModules(IDatabase db, ObjectPool pool)
+        public static void LoadModules(IDatabaseContext db, ObjectPool pool)
         {
             lock (typeof(Module))
             {
@@ -155,7 +155,7 @@ namespace ObjectServer
             }
         }
 
-        private static void AddModuleToDb(IDatabase db, Module m)
+        private static void AddModuleToDb(IDatabaseContext db, Module m)
         {
             var state = "deactived";
             if (m.AutoLoad)

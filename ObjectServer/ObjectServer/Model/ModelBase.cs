@@ -15,9 +15,10 @@ namespace ObjectServer.Model
         protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<IField> declaredFields =
-            new List<IField>();
+        private readonly List<IMetaField> declaredFields =
+            new List<IMetaField>();
 
+        public const string IdFieldName = "id";
         public const string ActiveFieldName = "_field";
         public const string VersionFieldName = "_version";
 
@@ -30,7 +31,7 @@ namespace ObjectServer.Model
             this.AddInternalFields();
         }
 
-        public override void Initialize(IDatabase db, ObjectPool pool)
+        public override void Initialize(IDatabaseContext db, ObjectPool pool)
         {
             base.Initialize(db, pool);
 
@@ -54,7 +55,7 @@ namespace ObjectServer.Model
         }
 
 
-        private void CreateModel(IDatabase db)
+        private void CreateModel(IDatabaseContext db)
         {
             var rowCount = db.Execute(
                 "INSERT INTO core_model(name, module, label) VALUES(@0, @1, @2);",
@@ -69,11 +70,11 @@ namespace ObjectServer.Model
 
         #region Field Methods
 
-        public IList<IField> DefinedFields { get { return this.declaredFields; } }
+        public IList<IMetaField> DefinedFields { get { return this.declaredFields; } }
 
         protected void IntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.Integer)
+            var field = new MetaField(name, FieldType.Integer)
             {
                 Label = label,
                 Required = required,
@@ -86,7 +87,7 @@ namespace ObjectServer.Model
 
         protected void BitIntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.BigInteger)
+            var field = new MetaField(name, FieldType.BigInteger)
             {
                 Label = label,
                 Required = required,
@@ -102,7 +103,7 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.Boolean)
+            var field = new MetaField(name, FieldType.Boolean)
             {
                 Label = label,
                 Required = required,
@@ -118,7 +119,7 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.Text)
+            var field = new MetaField(name, FieldType.Text)
             {
                 Label = label,
                 Required = required,
@@ -134,7 +135,7 @@ namespace ObjectServer.Model
             string name, string label, int size, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.Chars)
+            var field = new MetaField(name, FieldType.Chars)
             {
                 Label = label,
                 Size = size,
@@ -151,7 +152,7 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.DateTime)
+            var field = new MetaField(name, FieldType.DateTime)
             {
                 Label = label,
                 Required = required,
@@ -166,7 +167,7 @@ namespace ObjectServer.Model
         protected void ManyToOneField(
             string name, string masterModel, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.ManyToOne)
+            var field = new MetaField(name, FieldType.ManyToOne)
             {
                 Label = label,
                 Required = required,
@@ -184,7 +185,7 @@ namespace ObjectServer.Model
             string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.OneToMany)
+            var field = new MetaField(name, FieldType.OneToMany)
             {
                 Label = label,
                 Required = required,
@@ -203,7 +204,7 @@ namespace ObjectServer.Model
             string refTableName, string originField, string targetField,
             string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new Field(name, FieldType.ManyToMany)
+            var field = new MetaField(name, FieldType.ManyToMany)
             {
                 Label = label,
                 Required = required,

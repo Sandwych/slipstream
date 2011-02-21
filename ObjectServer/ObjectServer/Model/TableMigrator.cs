@@ -9,11 +9,11 @@ namespace ObjectServer.Model
 {
     internal class TableMigrator
     {
-        private IDatabase db;
+        private IDatabaseContext db;
         private IModel model;
         private ObjectPool pool;
 
-        public TableMigrator(IDatabase db, ObjectPool pool, IModel model)
+        public TableMigrator(IDatabaseContext db, ObjectPool pool, IModel model)
         {
             this.db = db;
             this.model = model;
@@ -34,7 +34,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void CreateTable(ITable table)
+        private void CreateTable(ITableContext table)
         {
             table.CreateTable(db, this.model.TableName, this.model.Label);
 
@@ -58,7 +58,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void SyncTable(ITable table)
+        private void SyncTable(ITableContext table)
         {
             throw new NotImplementedException();
         }

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal class Field : IField
+    internal class MetaField : IMetaField
     {
-        public Field(string name, FieldType type)
+        public MetaField(string name, FieldType type)
         {
-            if(string.IsNullOrEmpty(name) || name.Trim().Length == 0)
+            if (string.IsNullOrEmpty(name) || name.Trim().Length == 0)
             {
                 throw new ArgumentNullException("name");
             }
@@ -17,7 +17,9 @@ namespace ObjectServer.Model
             this.Name = name;
             this.Type = type;
 
-            this.Internal = name == "_version" || name == "id";
+            this.Internal = name == ModelBase.VersionFieldName
+                || name == ModelBase.IdFieldName
+                || name == ModelBase.ActiveFieldName;
         }
 
         #region IField 成员

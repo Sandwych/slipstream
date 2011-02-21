@@ -7,7 +7,7 @@ namespace ObjectServer.Model
 {
     public interface IModel : IServiceObject
     {
-        IList<IField> DefinedFields { get; }
+        IList<IMetaField> DefinedFields { get; }
 
         string TableName { get; }
         bool Hierarchy { get; }

@@ -23,7 +23,7 @@ namespace ObjectServer
         private Dictionary<string, IServiceObject> objects =
             new Dictionary<string, IServiceObject>();
 
-        public ObjectPool(IDatabase db, string dbName)
+        public ObjectPool(IDatabaseContext db, string dbName)
         {
             this.Database = dbName;
             this.LoadAllObjects(db);
@@ -31,7 +31,7 @@ namespace ObjectServer
             this.InitializeAllObjects(db);
         }
 
-        private void LoadAllObjects(IDatabase db)
+        private void LoadAllObjects(IDatabaseContext db)
         {
             this.RegisterAllCoreObjects();
 
@@ -39,7 +39,7 @@ namespace ObjectServer
             Module.LoadModules(db, this);
         }
 
-        private void InitializeAllObjects(IDatabase db)
+        private void InitializeAllObjects(IDatabaseContext db)
         {
             //一次性初始化所有对象
             //obj.Initialize(db, pool);
@@ -100,7 +100,7 @@ namespace ObjectServer
         }
 
 
-        private static IServiceObject CreateServiceObject(IDatabase db, ObjectPool pool, Type t)
+        private static IServiceObject CreateServiceObject(IDatabaseContext db, ObjectPool pool, Type t)
         {
             var obj = Activator.CreateInstance(t) as IServiceObject;
             if (obj == null)

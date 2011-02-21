@@ -100,16 +100,16 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backend\DatabaseBase.cs" />
+    <Compile Include="Backend\DatabaseContextBase.cs" />
     <Compile Include="Backend\DatabaseType.cs" />
     <Compile Include="Backend\DataProvider.cs" />
-    <Compile Include="Backend\IDatabase.cs" />
+    <Compile Include="Backend\IDatabaseContext.cs" />
     <Compile Include="Backend\ISqlTypeConverter.cs" />
-    <Compile Include="Backend\ITable.cs" />
+    <Compile Include="Backend\ITableContext.cs" />
     <Compile Include="Backend\Postgresql\Column.cs" />
-    <Compile Include="Backend\Postgresql\PgDatabase.cs" />
+    <Compile Include="Backend\Postgresql\PgDatabaseContext.cs" />
     <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
-    <Compile Include="Backend\Postgresql\PgTable.cs" />
+    <Compile Include="Backend\Postgresql\PgTableContext.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\GroupModel.cs" />
     <Compile Include="Core\ActionModel.cs" />
@@ -140,7 +140,7 @@
     <Compile Include="ObjectPool.cs" />
     <Compile Include="LocalService.cs" />
     <Compile Include="ObjectServerStarter.cs" />
-    <Compile Include="DatabaseContext.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="Core\UserModel.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="Core\FieldModel.cs" />

@@ -14,7 +14,7 @@ namespace ObjectServer
     /// <summary>
     /// Singleton，TODO 线程安全
     /// </summary>
-    internal sealed class DatabaseContext
+    internal sealed class Database
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
@@ -33,7 +33,7 @@ namespace ObjectServer
             }
         }
 
-        internal void RegisterDatabase(IDatabase db, string dbName)
+        internal void RegisterDatabase(IDatabaseContext db, string dbName)
         {
             if (Log.IsInfoEnabled)
             {

@@ -11,14 +11,14 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Backend.Postgresql
 {
-    internal sealed class PgTable : ITable
+    internal sealed class PgTableContext : ITableContext
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<Column> columns = new List<Column>();
 
-        public PgTable(IDatabase db, string tableName)
+        public PgTableContext(IDatabaseContext db, string tableName)
         {
             this.Name = tableName;
 
@@ -27,7 +27,7 @@ namespace ObjectServer.Backend.Postgresql
 
         public string Name { get; private set; }
 
-        public bool TableExists(IDatabase db, string tableName)
+        public bool TableExists(IDatabaseContext db, string tableName)
         {
             //检查连接
             var sql =
@@ -39,7 +39,7 @@ select count(relname) from pg_class
             return n > 0;
         }
 
-        public void CreateTable(IDatabase db, string tableName, string label)
+        public void CreateTable(IDatabaseContext db, string tableName, string label)
         {
             //TODO SQL 注入风险
             var sql = string.Format(
@@ -52,7 +52,7 @@ select count(relname) from pg_class
             db.Execute(sql);
         }
 
-        public void AddColumn(IDatabase db, IField field)
+        public void AddColumn(IDatabaseContext db, IMetaField field)
         {
             var sqlType = PgSqlTypeConverter.GetSqlType(field);
             var notNull = field.Required ? "not null" : "";
@@ -68,7 +68,7 @@ select count(relname) from pg_class
             db.Execute(sql);
         }
 
-        public void DeleteColumn(IDatabase db, string columnName)
+        public void DeleteColumn(IDatabaseContext db, string columnName)
         {
             var sql = string.Format(
                 "alter table \"{0}\" drop column \"{1}\"",
@@ -77,7 +77,7 @@ select count(relname) from pg_class
             db.Execute(columnName);
         }
 
-        public void UpgradeColumn(IDatabase db, IField field)
+        public void UpgradeColumn(IDatabaseContext db, IMetaField field)
         {
             throw new NotImplementedException();
         }
@@ -87,13 +87,13 @@ select count(relname) from pg_class
         }
 
 
-        public void AddConstraint(IDatabase db, string constraintName, string constraint)
+        public void AddConstraint(IDatabaseContext db, string constraintName, string constraint)
         {
             throw new NotImplementedException();
         }
 
 
-        public void DeleteConstraint(IDatabase db, string constraintName)
+        public void DeleteConstraint(IDatabaseContext db, string constraintName)
         {
             var sql = string.Format(
                 "alter table \"{0}\" drop constraint \"{1}\"",
@@ -102,7 +102,7 @@ select count(relname) from pg_class
         }
 
 
-        public void AddFk(IDatabase db, string columnName, string refTable, ReferentialAction refAct)
+        public void AddFk(IDatabaseContext db, string columnName, string refTable, ReferentialAction refAct)
         {
             //TODO: 设置其它的 ReferentialAction
             var onDelete = "set null";
@@ -116,13 +116,13 @@ select count(relname) from pg_class
         }
 
 
-        public void DeleteFk(IDatabase db, string columnName)
+        public void DeleteFk(IDatabaseContext db, string columnName)
         {
             var fkName = this.GenerateFkName(columnName);
             this.DeleteConstraint(db, fkName);
         }
 
-        public bool FkExists(IDatabase db, string columnName)
+        public bool FkExists(IDatabaseContext db, string columnName)
         {
             var fkName = this.GenerateFkName(columnName);
             var sql = "select count(conname) from pg_constraint where conname = @0";

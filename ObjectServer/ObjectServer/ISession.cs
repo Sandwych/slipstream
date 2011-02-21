@@ -12,6 +12,6 @@ namespace ObjectServer
     public interface ISession : IDisposable
     {
         ObjectPool Pool { get; }
-        IDatabase Database { get; }
+        IDatabaseContext Database { get; }
     }
 }

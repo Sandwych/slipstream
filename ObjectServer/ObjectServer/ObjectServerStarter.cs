@@ -18,7 +18,7 @@ namespace ObjectServer
 
         private Configuration config;
         private bool initialized;
-        private DatabaseContext pooler = new DatabaseContext();
+        private Database pooler = new Database();
 
         private ObjectServerStarter()
         {
@@ -96,7 +96,7 @@ namespace ObjectServer
             get { return s_instance.initialized; }
         }
 
-        internal static DatabaseContext Pooler
+        internal static Database Pooler
         {
             get
             {

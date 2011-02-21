@@ -13,6 +13,8 @@ namespace ObjectServer.Core
         public RuleModel()
         {
             this.Name = "core.rule";
+
+            this.OneToManyField("lines", "core.rule.line", "rule", "Rule Details", false, null, null);
         }
 
     }
@@ -24,6 +26,8 @@ namespace ObjectServer.Core
         public RuleLineModel()
         {
             this.Name = "core.rule.line";
+
+            this.ManyToOneField("rule", "core.rule", "Creator", false, null, null);
         }
     }
 }

@@ -10,7 +10,7 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Backend
 {
-    internal abstract class DatabaseBase : IDatabase
+    internal abstract class DatabaseContextBase : IDatabaseContext
     {
         protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -229,7 +229,7 @@ namespace ObjectServer.Backend
             }
         }
 
-        public string GetSqlType(IField field)
+        public string GetSqlType(IMetaField field)
         {
             throw new NotImplementedException();
         }
@@ -237,7 +237,7 @@ namespace ObjectServer.Backend
         public abstract string[] List();
         public abstract void Create(string dbName);
         public abstract void Initialize();
-        public abstract ITable CreateTableHandler(IDatabase db, string dbName);
+        public abstract ITableContext CreateTableHandler(IDatabaseContext db, string dbName);
         public abstract long NextSerial(string sequenceName);
     }
 }

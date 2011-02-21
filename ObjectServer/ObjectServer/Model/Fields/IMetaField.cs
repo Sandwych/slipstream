@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public interface IField
+    public interface IMetaField
     {
         string Name { get; }
         string Label { get; }

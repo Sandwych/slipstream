@@ -12,24 +12,24 @@ namespace ObjectServer.Backend
         private readonly Dictionary<DatabaseType, Type> dbTypes =
             new Dictionary<DatabaseType, Type>()
             {
-                { DatabaseType.Postgresql, typeof(Postgresql.PgDatabase) },
+                { DatabaseType.Postgresql, typeof(Postgresql.PgDatabaseContext) },
             };
 
         private DataProvider()
         {
         }
 
-        public static IDatabase OpenDatabase(string dbName)
+        public static IDatabaseContext OpenDatabase(string dbName)
         {
             var dbType = s_instance.dbTypes[ObjectServerStarter.Configuration.DbType];
-            var db = Activator.CreateInstance(dbType, dbName) as IDatabase;
+            var db = Activator.CreateInstance(dbType, dbName) as IDatabaseContext;
             return db;
         }
 
-        public static IDatabase OpenDatabase()
+        public static IDatabaseContext OpenDatabase()
         {
             var dbType = s_instance.dbTypes[ObjectServerStarter.Configuration.DbType];
-            var db = Activator.CreateInstance(dbType) as IDatabase;
+            var db = Activator.CreateInstance(dbType) as IDatabaseContext;
             return db;
         }
 

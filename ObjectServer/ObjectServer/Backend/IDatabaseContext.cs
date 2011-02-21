@@ -7,7 +7,7 @@ using System.Data.Common;
 
 namespace ObjectServer.Backend
 {
-    public interface IDatabase : IDisposable
+    public interface IDatabaseContext : IDisposable
     {
 
         void Open();
@@ -30,7 +30,7 @@ namespace ObjectServer.Backend
 
         List<Dictionary<string, object>> QueryAsDictionary(string commandText, params object[] args);
 
-        ITable CreateTableHandler(IDatabase db, string tableName);
+        ITableContext CreateTableHandler(IDatabaseContext db, string tableName);
 
         long NextSerial(string sequenceName);
     }
