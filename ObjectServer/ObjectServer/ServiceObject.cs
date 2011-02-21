@@ -61,5 +61,23 @@ namespace ObjectServer
 
         public ObjectPool Pool { get; private set; }
 
+
+        public static IServiceObject CreateInstance(Type t)
+        {
+            var obj = Activator.CreateInstance(t) as IServiceObject;
+            if (obj == null)
+            {
+                var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
+                throw new InvalidCastException(msg);
+            }
+            return obj;
+        }
+
+        public static T CreateInstance<T>()
+            where T : class, IServiceObject
+        {
+            return CreateInstance(typeof(T)) as T;
+        }
+
     }
 }

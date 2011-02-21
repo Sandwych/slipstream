@@ -61,13 +61,7 @@ namespace ObjectServer
 
         public string Database { get; private set; }
 
-        private void RegisterAllCoreObjects()
-        {
-            var a = typeof(ObjectPool).Assembly;
-            this.RegisterModelsInAssembly(a);
-        }
-
-        public void RegisterModelsInAssembly(Assembly assembly)
+        public void AddModelsWithinAssembly(Assembly assembly)
         {
             if (Log.IsInfoEnabled)
             {
@@ -81,7 +75,7 @@ namespace ObjectServer
                 db.Open();
                 foreach (var t in types)
                 {
-                    var obj = CreateServiceObject(db, this, t);
+                    var obj = ServiceObject.CreateInstance(t);
                     this.objects[obj.Name] = obj;
                 }
             }
@@ -90,6 +84,13 @@ namespace ObjectServer
             {
                 Log.InfoFormat("Done");
             }
+        }
+
+        public void AddServiceObject(IServiceObject obj)
+        {
+            //TODO 处理对象已经存在的问题
+
+            this.objects.Add(obj.Name, obj);
         }
 
         public IServiceObject this[string objName]
@@ -107,16 +108,13 @@ namespace ObjectServer
             return this.objects.ContainsKey(objName);
         }
 
-        private static IServiceObject CreateServiceObject(IDatabaseContext db, ObjectPool pool, Type t)
+
+        private void RegisterAllCoreObjects()
         {
-            var obj = Activator.CreateInstance(t) as IServiceObject;
-            if (obj == null)
-            {
-                var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
-                throw new InvalidCastException(msg);
-            }
-            return obj;
+            var a = typeof(ObjectPool).Assembly;
+            this.AddModelsWithinAssembly(a);
         }
+
 
         private static Type[] GetModelsFromAssembly(Assembly assembly)
         {

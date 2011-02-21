@@ -74,7 +74,7 @@ namespace ObjectServer
 
             var a = CompileSourceFiles(this.Path);
             this.Assemblies.Add(a);
-            pool.RegisterModelsInAssembly(a);
+            pool.AddModelsWithinAssembly(a);
 
             var moduleModel = (ModuleModel)pool["core.module"];
             this.State = ModuleStatus.Actived;
