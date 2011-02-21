@@ -122,6 +122,9 @@
     <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="Model\DomainParser.cs" />
     <Compile Include="Model\Fields\FieldDefaultProc.cs" />
+    <Compile Include="Model\Fields\ManyToOneMetaField.cs" />
+    <Compile Include="Model\Fields\OneToManyMetaField.cs" />
+    <Compile Include="Model\Fields\ScalarMetaField.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\ModelExtensions.cs" />

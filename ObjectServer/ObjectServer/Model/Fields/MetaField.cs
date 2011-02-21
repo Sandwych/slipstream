@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal class MetaField : IMetaField
+    internal abstract class MetaField : IMetaField
     {
         public MetaField(string name, FieldType type)
         {
@@ -119,6 +119,9 @@ namespace ObjectServer.Model
                 throw new ArgumentException("Function field cannot have the DefaultProc property");
             }
         }
+
+        public abstract Dictionary<long, object> GetFieldValues(
+            ISession session, List<Dictionary<string, object>> records);
 
         #endregion
     }

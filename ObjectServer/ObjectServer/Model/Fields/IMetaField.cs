@@ -23,5 +23,8 @@ namespace ObjectServer.Model
         bool IsStorable();
 
         void Validate();
+
+        Dictionary<long, object> GetFieldValues(
+            ISession session, List<Dictionary<string, object>> records);
     }
 }

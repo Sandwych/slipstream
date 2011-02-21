@@ -36,7 +36,7 @@ namespace ObjectServer.Model
                     where m != model.Name
                     select m;
 
-            return query.ToArray();
+            return query.Distinct().ToArray();
         }
     }
 }

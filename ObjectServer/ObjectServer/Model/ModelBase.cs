@@ -74,7 +74,7 @@ namespace ObjectServer.Model
 
         protected void IntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new MetaField(name, FieldType.Integer)
+            var field = new ScalarMetaField(name, FieldType.Integer)
             {
                 Label = label,
                 Required = required,
@@ -87,7 +87,7 @@ namespace ObjectServer.Model
 
         protected void BitIntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new MetaField(name, FieldType.BigInteger)
+            var field = new ScalarMetaField(name, FieldType.BigInteger)
             {
                 Label = label,
                 Required = required,
@@ -103,7 +103,7 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new MetaField(name, FieldType.Boolean)
+            var field = new ScalarMetaField(name, FieldType.Boolean)
             {
                 Label = label,
                 Required = required,
@@ -119,7 +119,7 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new MetaField(name, FieldType.Text)
+            var field = new ScalarMetaField(name, FieldType.Text)
             {
                 Label = label,
                 Required = required,
@@ -135,7 +135,7 @@ namespace ObjectServer.Model
             string name, string label, int size, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new MetaField(name, FieldType.Chars)
+            var field = new ScalarMetaField(name, FieldType.Chars)
             {
                 Label = label,
                 Size = size,
@@ -152,7 +152,7 @@ namespace ObjectServer.Model
             string name, string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new MetaField(name, FieldType.DateTime)
+            var field = new ScalarMetaField(name, FieldType.DateTime)
             {
                 Label = label,
                 Required = required,
@@ -167,7 +167,7 @@ namespace ObjectServer.Model
         protected void ManyToOneField(
             string name, string masterModel, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new MetaField(name, FieldType.ManyToOne)
+            var field = new ManyToOneMetaField(name)
             {
                 Label = label,
                 Required = required,
@@ -185,7 +185,7 @@ namespace ObjectServer.Model
             string label, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            var field = new MetaField(name, FieldType.OneToMany)
+            var field = new OneToManyMetaField(name)
             {
                 Label = label,
                 Required = required,
@@ -204,6 +204,8 @@ namespace ObjectServer.Model
             string refTableName, string originField, string targetField,
             string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
+            throw new NotImplementedException();
+            /*
             var field = new MetaField(name, FieldType.ManyToMany)
             {
                 Label = label,
@@ -217,6 +219,7 @@ namespace ObjectServer.Model
 
             field.Validate();
             declaredFields.Add(field);
+             */
         }
 
 

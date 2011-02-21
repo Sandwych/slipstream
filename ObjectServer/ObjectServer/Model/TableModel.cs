@@ -300,7 +300,7 @@ namespace ObjectServer.Model
                 ids.ToCommaList());
 
             //先查找表里的简单字段数据
-            var result = session.Database.QueryAsDictionary(sql);
+            var records = session.Database.QueryAsDictionary(sql);
 
             //处理特殊字段
             foreach (var fieldName in allFields)
@@ -310,67 +310,24 @@ namespace ObjectServer.Model
                 if (f.Functional)
                 {
                     var funcFieldValues = f.Getter(session, ids);
-                    foreach (var p in result)
+                    foreach (var p in records)
                     {
                         var id = (long)p["id"];
                         p[f.Name] = funcFieldValues[id];
                     }
                 }
-                else if (f.Type == FieldType.ManyToOne)
+                else
                 {
-                    //获取所有 Name
-
-                    var masterModel = (TableModel)session.Pool.LookupObject(f.Relation);
-                    if (masterModel.ContainsField("name")) //如果有 name 字段
+                    var fieldValues = f.GetFieldValues(session, records);
+                    foreach (var record in records)
                     {
-                        var masterTableIds = result.Select(d => d[f.Name]).ToArray();
-                        var masters = masterModel.Read(session, masterTableIds, new object[] { "name" });
-                        var masterNames = new Dictionary<long, string>(masters.Length);
-                        foreach (var master in masters)
-                        {
-                            var masterId = (long)master["id"];
-                            masterNames[masterId] = (string)master["name"];
-                        }
-                        foreach (var p in result)
-                        {
-                            var id = (long)p["id"];
-                            p[f.Name] = new RelatedField(id, masterNames[id]);
-                        }
+                        var id = (long)record["id"];
+                        record[f.Name] = fieldValues[id];
                     }
-                    else
-                    {
-                        foreach (var p in result)
-                        {
-                            var id = (long)p["id"];
-                            p[f.Name] = new RelatedField(id, string.Empty);
-                        }
-                    }
-                }
-                else if (f.Type == FieldType.OneToMany)
-                {
-                    //查询字表
-                    var childModel = (TableModel)session.Pool.LookupObject(f.Relation);
-                    //TODO 权限等处理
-
-                    var children = new Dictionary<long, long[]>();
-                    foreach (long masterId in ids)
-                    {
-                        var domain = new List<object[]>();
-                        domain.Add(new object[] { f.RelatedField, "=", masterId });
-                        var childIds = childModel.Search(session, domain.ToArray(), 0, 0xffff);
-                        children[masterId] = childIds;
-                    }
-
-                    foreach (var p in result)
-                    {
-                        var masterId = (long)p["id"];
-                        p[f.Name] = children[masterId];
-                    }
-
                 }
             }
 
-            return result.ToArray();
+            return records.ToArray();
         }
 
         [ServiceMethod]
