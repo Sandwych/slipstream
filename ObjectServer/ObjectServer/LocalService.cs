@@ -53,10 +53,10 @@ namespace ObjectServer
                 tx.Commit();
                 return result;
             }
-            catch
+            catch(Exception ex)
             {
                 tx.Rollback();
-                throw;
+                throw ex;
             }
         }
 

@@ -21,6 +21,8 @@ namespace ObjectServer.Model.Test
     public class ModelBaseTest
     {
 
+        IService proxy = new LocalService();
+
         [TestFixtureSetUp]
         public void Init()
         {
@@ -33,7 +35,6 @@ namespace ObjectServer.Model.Test
             var modelName = "test.test_object";
             var dbName = "objectserver";
 
-            var proxy = new LocalService();
             var values = new Dictionary<string, object>
             {
                 { "name", "sweet_name" },
@@ -71,7 +72,6 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Many_to_one_and_one_to_many_fields()
         {
-            var proxy = new LocalService();
 
             var masterPropBag = new Dictionary<string, object>()
             {
@@ -104,6 +104,43 @@ namespace ObjectServer.Model.Test
 
             Assert.AreEqual(1, children.Length);
             Assert.AreEqual(childId, children[0]);
+        }
+
+        [Test]
+        public void Many_to_many_fields()
+        {
+            var groupRecord = new Dictionary<string, object>()
+            {
+                { "name", "group" },
+            };
+
+            var groupId1 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
+            var groupId2 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
+            var groupIds = new object[] { groupId1, groupId2 };
+
+            var userRecord = new Dictionary<string, object>()
+            {
+                { "name", "user" },
+            };
+
+            var userRecord1 = new Dictionary<string, object>()
+            {
+                { "name", "user1" },
+                { "groups", new object[] { groupId1, groupId2 } },
+            };
+
+            var userId1 = (long)proxy.CreateModel("objectserver", "core.user", userRecord1);
+            var userId2 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
+            var userId3 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
+            var userIds = new object[] { userId1, userId2, userId3 };
+
+            var users = proxy.ReadModel("objectserver", "core.user", 
+                new object[] { userId1 }, new object[] { "name", "groups" });
+            Assert.AreEqual(1, users.Length);
+            var user1 = users[0];
+            Assert.IsInstanceOf<object[]>(user1["groups"]);
+            var groupsField = (object[])user1["groups"];
+            Assert.AreEqual(2, groupsField.Length);
         }
 
     }

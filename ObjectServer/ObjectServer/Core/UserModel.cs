@@ -20,13 +20,10 @@ namespace ObjectServer.Core
             this.CharsField("login", "User Name", 64, true, null, null);
             this.CharsField("password", "Password", 40, true, null, null);
             this.BooleanField("admin", "Administrator?", true, null, null);
+            this.CharsField("name", "Name", 64, true, null, null);
 
-            //TODO: 加 Salt 列
-            /*
-            ManyToManyField(
-                "groups", "core.group", "core_user_group_rel", "user_id", "group_id",
-                "User Groups", false, null);
-             */
+            //this.ManyToManyField(
+            //  "groups", "core.group", "core_user_group_rel", "user", "group", "Groups", false, null, null);
         }
 
 

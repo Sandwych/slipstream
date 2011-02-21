@@ -15,7 +15,7 @@ namespace ObjectServer.Test
         public MasterObject()
         {
             this.Name = "test.master";
-            this.CharsField("name", "Name", 64, true, null, null);
+            this.CharsField("name", "Name", 64, false, null, null);
             this.OneToManyField("children", "test.child", "master", "Children", false, null, null);
         }
     }

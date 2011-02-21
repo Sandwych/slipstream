@@ -15,8 +15,8 @@ namespace ObjectServer.Model
         protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly List<IMetaField> declaredFields =
-            new List<IMetaField>();
+        private readonly Dictionary<string, IMetaField> declaredFields =
+            new Dictionary<string, IMetaField>();
 
         public const string IdFieldName = "id";
         public const string ActiveFieldName = "_field";
@@ -72,7 +72,7 @@ namespace ObjectServer.Model
         {
             get
             {
-                var query = from f in this.DefinedFields
+                var query = from f in this.DefinedFields.Values
                             where f.Type == FieldType.ManyToOne
                             select f.Relation;
 
@@ -87,7 +87,7 @@ namespace ObjectServer.Model
 
         #region Field Methods
 
-        public IList<IMetaField> DefinedFields { get { return this.declaredFields; } }
+        public IDictionary<string, IMetaField> DefinedFields { get { return this.declaredFields; } }
 
         protected void IntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
@@ -106,7 +106,7 @@ namespace ObjectServer.Model
             field.Getter = getter;
             field.DefaultProc = defaultProc;
 
-            declaredFields.Add(field);
+            declaredFields.Add(field.Name, field);
         }
 
         protected void BitIntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
@@ -127,7 +127,7 @@ namespace ObjectServer.Model
             field.DefaultProc = defaultProc;
 
             field.Validate();
-            declaredFields.Add(field);
+            declaredFields.Add(field.Name, field);
         }
 
         protected void BooleanField(
@@ -150,7 +150,7 @@ namespace ObjectServer.Model
             field.DefaultProc = defaultProc;
 
             field.Validate();
-            declaredFields.Add(field);
+            declaredFields.Add(field.Name, field);
         }
 
         protected void TextField(
@@ -174,7 +174,7 @@ namespace ObjectServer.Model
             field.DefaultProc = defaultProc;
 
             field.Validate();
-            declaredFields.Add(field);
+            declaredFields.Add(field.Name, field);
         }
 
         protected void CharsField(
@@ -199,7 +199,7 @@ namespace ObjectServer.Model
             field.DefaultProc = defaultProc;
 
             field.Validate();
-            declaredFields.Add(field);
+            declaredFields.Add(field.Name, field);
         }
 
         protected void DateTimeField(
@@ -223,7 +223,7 @@ namespace ObjectServer.Model
             field.DefaultProc = defaultProc;
 
             field.Validate();
-            declaredFields.Add(field);
+            declaredFields.Add(field.Name, field);
         }
 
         protected void ManyToOneField(
@@ -246,7 +246,7 @@ namespace ObjectServer.Model
             field.Relation = masterModel;
 
             field.Validate();
-            declaredFields.Add(field);
+            declaredFields.Add(field.Name, field);
         }
 
         protected void OneToManyField(
@@ -273,7 +273,7 @@ namespace ObjectServer.Model
             field.RelatedField = relatedField;
 
             field.Validate();
-            declaredFields.Add(field);
+            declaredFields.Add(field.Name, field);
         }
 
         protected void ManyToManyField(
@@ -281,22 +281,30 @@ namespace ObjectServer.Model
             string refTableName, string originField, string targetField,
             string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {
-            throw new NotImplementedException();
-            /*
-            var field = new MetaField(name, FieldType.ManyToMany)
+
+            MetaField field;
+
+            if (getter == null)
             {
-                Label = label,
-                Required = required,
-                Getter = getter,
-                DefaultProc = defaultProc,
-                Relation = refTableName,
-                OriginField = targetField,
-                RelatedField = originField,
-            };
+                field = new ManyToManyMetaField(name);
+            }
+            else
+            {
+                field = new FunctionMetaField(name, FieldType.ManyToMany, getter);
+            }
+
+            field.Label = label;
+            field.Required = required;
+            field.Getter = getter;
+            field.DefaultProc = defaultProc;
+            field.Relation = refTableName;
+            field.OriginField = targetField;
+            field.RelatedField = originField;
+
 
             field.Validate();
-            declaredFields.Add(field);
-             */
+            declaredFields.Add(field.Name, field);
+
         }
 
 
@@ -307,14 +315,14 @@ namespace ObjectServer.Model
         {
             Debug.Assert(fields != null);
             var notExistedFields =
-                fields.Count(fn => !this.declaredFields.Exists(f => f.Name == (string)fn));
+                fields.Count(fn => !this.declaredFields.ContainsKey(fn));
             if (notExistedFields > 0)
             {
                 throw new ArgumentException("Bad field name", "fields");
             }
 
             var internalFields =
-                 fields.Count(fn => this.declaredFields.Exists(f => f.Name == (string)fn && f.Internal));
+                 fields.Count(fn => this.declaredFields[fn].Internal);
             if (internalFields > 0)
             {
                 throw new ArgumentException("Bad fileds", "fields");

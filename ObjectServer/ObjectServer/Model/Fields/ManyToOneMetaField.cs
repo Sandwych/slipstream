@@ -19,18 +19,34 @@ namespace ObjectServer.Model
             var masterModel = (TableModel)session.Pool[this.Relation];
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
-                var masterTableIds = records.Select(d => d[this.Name]).ToArray();
-                var masters = masterModel.Read(session, masterTableIds, new object[] { "name" });
-                var masterNames = new Dictionary<long, string>(masters.Length);
-                foreach (var master in masters)
+                //从原始记录里把所有该字段的值取出
+                var masterTableIds = (
+                    from r in records
+                    where r[this.Name] != null && !(r[this.Name] is DBNull)
+                    select r[this.Name]).ToArray();
+
+                if (masterTableIds.Length > 0)
                 {
-                    var masterId = (long)master["id"];
-                    masterNames[masterId] = (string)master["name"];
+                    var masters = masterModel.Read(session, masterTableIds, new object[] { "name" });
+                    var masterNames = new Dictionary<long, string>(masters.Length);
+                    foreach (var master in masters)
+                    {
+                        var masterId = (long)master["id"];
+                        masterNames[masterId] = (string)master["name"];
+                    }
+                    foreach (var r in records)
+                    {
+                        var id = (long)r["id"];
+                        result.Add(id, new RelatedField(id, masterNames[id]));
+                    }
                 }
-                foreach (var p in records)
+                else
                 {
-                    var id = (long)p["id"];
-                    result.Add(id, new RelatedField(id, masterNames[id]));
+                    foreach (var r in records)
+                    {
+                        var id = (long)r["id"];
+                        result.Add(id, DBNull.Value);
+                    }
                 }
             }
             else

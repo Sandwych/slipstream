@@ -203,7 +203,7 @@ namespace ObjectServer.Model
         private void AddDefaultValues(ISession session, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
-                this.DefinedFields.Where(
+                this.DefinedFields.Values.Where(
                 d => (d.DefaultProc != null && !propertyBag.Keys.Contains(d.Name)));
 
             foreach (var df in defaultFields)
@@ -264,10 +264,15 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
+            if (ids == null || ids.Length == 0)
+            {
+                throw new ArgumentException("'ids' cannot be null", "ids");
+            }
+
             var allFields = new List<string>();
             if (fields == null || fields.Length == 0)
             {
-                allFields.AddRange(this.DefinedFields.Select(f => f.Name));
+                allFields.AddRange(this.DefinedFields.Keys);
             }
             else
             {
@@ -286,15 +291,14 @@ namespace ObjectServer.Model
 
             //表里的列，也就是可以直接用 SQL 查的列
             var columnFields =
-                (from d in this.DefinedFields
-                 from f in allFields
-                 where d.Name == f && d.IsStorable()
-                 select d.Name).ToArray();
+                (from f in allFields
+                 where this.DefinedFields[f].IsStorable()
+                 select f).ToArray();
 
             //.Where(f => !this.declaredFields[f].IsFunctionField);
 
             //TODO: SQL 注入问题
-            var sql = string.Format("select {0} from \"{1}\" where \"id\" in ({2});",
+            var sql = string.Format("select {0} from \"{1}\" where \"id\" in ( {2} )",
                 columnFields.ToCommaList(),
                 this.TableName,
                 ids.ToCommaList());
@@ -305,7 +309,11 @@ namespace ObjectServer.Model
             //处理特殊字段
             foreach (var fieldName in allFields)
             {
-                var f = this.DefinedFields.Single(i => i.Name == fieldName);
+                var f = this.DefinedFields[fieldName];
+                if (f.Name == "id")
+                {
+                    continue;
+                }
 
                 var fieldValues = f.GetFieldValues(session, records);
                 foreach (var record in records)
