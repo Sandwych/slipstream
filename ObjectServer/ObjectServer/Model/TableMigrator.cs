@@ -35,7 +35,7 @@ namespace ObjectServer.Model
             }
             else
             {
-                //this.SyncTable();
+                this.SyncTable(table);
             }
         }
 
@@ -57,17 +57,21 @@ namespace ObjectServer.Model
             }
         }
 
-        private void SyncTable(IDatabaseContext db, ITableContext table)
+        /// <summary>
+        /// 尝试同步表，有可能不成功
+        /// </summary>
+        /// <param name="table"></param>
+        private void SyncTable(ITableContext table)
         {
             //表肯定存在，就看列存不存在
             //最简单的迁移策略：
-            //如果列在表里不存在就建，以用户定义的为主
+            //如果列在表里不存在就建，以用户定义的为准
             foreach (var pair in this.model.DefinedFields)
             {
                 var field = pair.Value;
                 if (field.IsStorable() && !table.ColumnExists(field.Name))
                 {
-                    table.AddColumn(db, field);
+                    table.AddColumn(this.db, field);
                 }
             }
         }

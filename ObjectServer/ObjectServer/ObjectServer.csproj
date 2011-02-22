@@ -119,6 +119,7 @@
     <Compile Include="Core\CronModel.cs" />
     <Compile Include="Exceptions\ServiceObjectNotFoundException.cs" />
     <Compile Include="Exceptions\BadServiceObjectNameException.cs" />
+    <Compile Include="Exceptions\MigrationException.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Model\BadFieldNameException.cs" />
     <Compile Include="IService.cs" />
