@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 using log4net;
 
@@ -21,7 +22,8 @@ namespace ObjectServer
 
         private Config config;
         private bool initialized;
-        private Database pooler = new Database();
+        private Database database = new Database();
+        private ModulePool modulePool = new ModulePool();
 
         private ObjectServerStarter()
         {
@@ -47,7 +49,7 @@ namespace ObjectServer
             //查找所有模块并加载模块元信息
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
-                Module.LookupAllModules(cfg.ModulePath);
+                s_instance.modulePool.LookupAllModules(cfg.ModulePath);
             }
 
             ConfigurateLog4net(cfg);
@@ -96,8 +98,13 @@ namespace ObjectServer
         {
             get
             {
-                return s_instance.pooler;
+                return s_instance.database;
             }
+        }
+
+        internal static ModulePool ModulePool
+        {
+            get { return s_instance.modulePool; }
         }
 
 

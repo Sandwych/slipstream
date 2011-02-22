@@ -26,13 +26,6 @@ namespace ObjectServer
             MethodBase.GetCurrentMethod().DeclaringType);
         private readonly List<Assembly> assembly = new List<Assembly>();
 
-        public const string ModuleFileName = "module.js";
-
-        /// <summary>
-        /// 整个系统中发现的所有模块
-        /// </summary>
-        private static List<Module> s_allModules = new List<Module>();
-
         public Module()
         {
             //设置属性默认值
@@ -97,91 +90,20 @@ namespace ObjectServer
         [JsonIgnore]
         public ModuleStatus State { get; set; }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void LookupAllModules(string modulePath)
-        {
-            lock (typeof(Module))
-            {
-                var modules = new List<Module>();
-
-                if (string.IsNullOrEmpty(modulePath) || !Directory.Exists(modulePath))
-                {
-                    return;
-                }
-
-                var moduleDirs = Directory.GetDirectories(modulePath);
-                foreach (var moduleDir in moduleDirs)
-                {
-                    var moduleFilePath = System.IO.Path.Combine(moduleDir, ModuleFileName);
-                    var module = DeserializeFromFile(moduleFilePath);
-                    module.Path = moduleDir;
-                    modules.Add(module);
-
-                    if (Log.IsInfoEnabled)
-                    {
-                        Log.InfoFormat("Found module: [{0}], Path='{1}'",
-                            module.Name, module.Path);
-                    }
-                }
-
-                DependencySort(modules);
-            }
-        }
-
-        private static void DependencySort(List<Module> modules)
-        {
-            var sortedModules =
-                DependencySorter.Sort(modules, m => m.Name, m => m.Depends);
-            s_allModules.Clear();
-            s_allModules.Capacity = sortedModules.Length;
-            s_allModules.AddRange(sortedModules);
-        }
-
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void UpdateModuleList(IDatabaseContext db)
-        {
-            lock (typeof(Module))
-            {
-                var sql = "select count(*) from core_module where name = @0";
-
-                foreach (var m in s_allModules)
-                {
-                    var count = (long)db.QueryValue(sql, m.Name);
-                    if (count == 0)
-                    {
-                        AddModuleToDb(db, m);
-                    }
-                }
-            }
-        }
-
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void LoadModules(IDatabaseContext db, ObjectPool pool)
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'actived' 的
-            lock (typeof(Module))
-            {
-                var sql = "select name from core_module where state = 'actived'";
-                var modules = db.QueryAsDictionary(sql);
+            var sql = "select name from core_module where state = 'actived'";
+            var modules = db.QueryAsDictionary(sql);
 
-                foreach (var m in modules)
-                {
-                    var moduleName = (string)m["name"];
-                    var module = s_allModules.SingleOrDefault(i => i.Name == moduleName);
-                    if (module != null)
-                    {
-                        module.Load(pool);
-                    }
-                    else
-                    {
-                        var msg =
-                            string.Format("Cannot found module: '{0}'", moduleName);
-                        throw new ModuleNotFoundException(msg, moduleName);
-                    }
-                }
+            foreach (var m in modules)
+            {
+                var moduleName = (string)m["name"];
+                var module = ObjectServerStarter.ModulePool.GetModule(moduleName);
+                module.Load(pool);
             }
         }
 
@@ -197,7 +119,7 @@ namespace ObjectServer
             db.Execute(insertSql, m.Name, state, m.Label);
         }
 
-        private static Module DeserializeFromFile(string moduleFilePath)
+        public static Module DeserializeFromFile(string moduleFilePath)
         {
             var json = File.ReadAllText(moduleFilePath, Encoding.UTF8);
             var module = JsonConvert.DeserializeObject<Module>(json);

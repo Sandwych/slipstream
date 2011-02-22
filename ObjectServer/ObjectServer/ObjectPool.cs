@@ -35,7 +35,6 @@ namespace ObjectServer
         {
             this.RegisterAllCoreObjects();
 
-            Module.UpdateModuleList(db);
             Module.LoadModules(db, this);
         }
 
