@@ -12,13 +12,16 @@ namespace ObjectServer.Core
     [ServiceObject]
     public sealed class UserModel : TableModel
     {
+        public const string ModelName = "core.user";
+        public const string PasswordMask = "************";
 
         public UserModel()
         {
-            this.Name = "core.user";
+            this.Name = ModelName;
             this.BitIntegerField("_version", "Version", true, null, null);
             this.CharsField("login", "User Name", 64, true, null, null);
             this.CharsField("password", "Password", 40, true, null, null);
+            this.CharsField("salt", "Salt", 64, true, null, null);
             this.BooleanField("admin", "Administrator?", true, null, null);
             this.CharsField("name", "Name", 64, true, null, null);
 
@@ -34,12 +37,21 @@ namespace ObjectServer.Core
             if (record.ContainsKey("password"))
             {
                 values2 = new Dictionary<string, object>(record);
+                var salt = GenerateSalt();
+                values2["salt"] = salt;
                 var password = (string)values2["password"];
-                values2["password"] = password.ToSha1(); //数据库里要保存 hash 而不是明文
+                values2["password"] = (password + salt).ToSha1(); //数据库里要保存 hash 而不是明文
             }
             return values2;
         }
 
+        private static string GenerateSalt()
+        {
+            var r = new Random();
+            var bytes = new byte[16];
+            r.NextBytes(bytes);
+            return Convert.ToBase64String(bytes);
+        }
 
         #region Service Methods
 
@@ -58,6 +70,29 @@ namespace ObjectServer.Core
 
 
             base.Write(session, id, values2);
+        }
+
+        [ServiceMethod]
+        public override Dictionary<string, object>[] Read(ISession session, object[] ids, object[] fields)
+        {
+            var records = base.Read(session, ids, fields);
+
+            //"salt" "password" 是敏感字段，不要让客户端获取
+            foreach (var record in records)
+            {
+                if (record.ContainsKey("salt"))
+                {
+                    record["salt"] = null;
+                }
+
+                if (record.ContainsKey("password"))
+                {
+                    record["password"] = PasswordMask;
+                }
+            }
+
+
+            return records;
         }
 
 

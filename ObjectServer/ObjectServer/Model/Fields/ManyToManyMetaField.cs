@@ -31,12 +31,21 @@ namespace ObjectServer.Model
             var result = new Dictionary<long, object>();
             foreach (var rec in records)
             {
-                var id = (long)rec["id"];                
+                var id = (long)rec["id"];
                 domain[0][2] = id;
                 var relIds = relModel.Search(session, domain, 0, 0)
                     .Select(e => (object)e).ToArray(); //中间表 ID
-                var relRecords = relModel.Read(session, relIds, relFields);
-                result[id] = relRecords.Select(d => d[this.RelatedField]).ToArray();
+
+                //中间表没有记录，返回空
+                if (relIds == null || relIds.Length <= 0)
+                {
+                    result[id] = new object[] { };
+                }
+                else
+                {
+                    var relRecords = relModel.Read(session, relIds, relFields);
+                    result[id] = relRecords.Select(d => d[this.RelatedField]).ToArray();
+                }
             }
 
             return result;

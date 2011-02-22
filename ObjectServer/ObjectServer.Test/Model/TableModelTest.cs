@@ -160,10 +160,11 @@ namespace ObjectServer.Model.Test
             var id = proxy.CreateModel("objectserver", "test.master", master);
 
             var masterRecords = proxy.ReadModel("objectserver", "test.master",
-                new object[] { id }, new object[] { "name", "children" });
+                new object[] { id }, null);
             var record = masterRecords[0];
 
             Assert.IsInstanceOf<object[]>(record["children"]);
+            Assert.AreEqual(0, ((object[])record["children"]).Length);
             Assert.IsInstanceOf<DBNull>(record["name"]);
         }
 
@@ -185,7 +186,6 @@ namespace ObjectServer.Model.Test
 
             Assert.IsInstanceOf<DBNull>(record["master"]);
             Assert.AreEqual(nameFieldValue, (string)record["name"]);
-
         }
     }
 }
