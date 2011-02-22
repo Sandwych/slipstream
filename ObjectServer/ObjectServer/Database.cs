@@ -17,9 +17,6 @@ namespace ObjectServer
     /// </summary>
     internal sealed class Database
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-
         private Dictionary<string, ObjectPool> pools =
             new Dictionary<string, ObjectPool>();
 
@@ -37,10 +34,7 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         internal void RegisterDatabase(IDatabaseContext db, string dbName)
         {
-            if (Log.IsInfoEnabled)
-            {
-                Log.InfoFormat("Registering object-pool of database: [{0}]", dbName);
-            }
+            Logger.Info(() => string.Format("Registering object-pool of database: [{0}]", dbName));
 
             var dbNames = db.List();
             if (!dbNames.Contains(dbName))

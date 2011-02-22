@@ -22,9 +22,6 @@ namespace ObjectServer
     [JsonObject("module")]
     public sealed class ModulePool
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-
         public const string ModuleFileName = "module.js";
 
         /// <summary>
@@ -76,11 +73,8 @@ namespace ObjectServer
                 module.Path = moduleDir;
                 modules.Add(module);
 
-                if (Log.IsInfoEnabled)
-                {
-                    Log.InfoFormat("Found module: [{0}], Path='{1}'",
-                        module.Name, module.Path);
-                }
+                Logger.Info(() => string.Format("Found module: [{0}], Path='{1}'",
+                        module.Name, module.Path));
             }
 
             modules.DependencySort(m => m.Name, m => m.Depends);
@@ -91,6 +85,9 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void UpdateModuleList(IDatabaseContext db)
         {
+            var cfg = ObjectServerStarter.Configuration;
+            this.LookupAllModules(cfg.ModulePath);
+
             var sql = "select count(*) from core_module where name = @0";
 
             foreach (var m in allModules)

@@ -12,9 +12,6 @@ namespace ObjectServer.Model
 {
     public abstract class ModelBase : StaticServiceObjectBase
     {
-        protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-
         private readonly Dictionary<string, IMetaField> declaredFields =
             new Dictionary<string, IMetaField>();
 

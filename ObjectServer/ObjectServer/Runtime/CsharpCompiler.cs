@@ -12,9 +12,6 @@ namespace ObjectServer.Runtime
 {
     public class CsharpCompiler : ICompiler
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-
         #region ICompiler 成员
 
         public Assembly CompileFromFile(IEnumerable<string> sourceFiles)
@@ -37,7 +34,7 @@ namespace ObjectServer.Runtime
                 options.ReferencedAssemblies.Add("System.Transactions.dll");
                 options.ReferencedAssemblies.Add(selfAssembly.Location);
                 options.GenerateInMemory = true;
-                options.GenerateExecutable = false;              
+                options.GenerateExecutable = false;
                 //options.OutputAssembly = "MyDemo";
 
                 //开始编译
@@ -60,7 +57,7 @@ namespace ObjectServer.Runtime
         {
             foreach (CompilerError error in errors)
             {
-                Log.ErrorFormat(error.ToString());
+                Logger.Error(() => error.ToString());
             }
         }
     }

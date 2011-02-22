@@ -13,9 +13,6 @@ namespace ObjectServer.Backend.Postgresql
 {
     internal sealed class PgTableContext : ITableContext
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-
         private Dictionary<string, Column> columns = new Dictionary<string, Column>();
 
         public PgTableContext(IDatabaseContext db, string tableName)

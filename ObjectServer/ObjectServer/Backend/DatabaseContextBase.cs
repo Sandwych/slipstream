@@ -12,9 +12,6 @@ namespace ObjectServer.Backend
 {
     internal abstract class DatabaseContextBase : IDatabaseContext
     {
-        protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-            System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         protected DbConnection conn;
         private bool opened;
 
@@ -40,10 +37,7 @@ namespace ObjectServer.Backend
             var sql = string.Format(
                 "DROP DATABASE \"{0}\"", dbName);
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.DebugFormat("SQL: {0}", sql);
-            }
+            Logger.Debug(() => "SQL: " + sql);
 
             var cmd = this.Connection.CreateCommand();
             cmd.CommandText = sql;
@@ -62,10 +56,7 @@ namespace ObjectServer.Backend
         {
             this.EnsureConnectionOpened();
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.DebugFormat("SQL: {0}", commandText);
-            }
+            Logger.Debug(() => "SQL: " + commandText);
 
             using (var cmd = PrepareCommand(commandText))
             {
@@ -79,10 +70,7 @@ namespace ObjectServer.Backend
         {
             this.EnsureConnectionOpened();
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.DebugFormat("SQL: {0}", commandText);
-            }
+            Logger.Debug(() => "SQL: " + commandText);
 
             using (var command = PrepareCommand(commandText))
             {
@@ -97,10 +85,7 @@ namespace ObjectServer.Backend
         {
             this.EnsureConnectionOpened();
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.DebugFormat("SQL: {0}", commandText);
-            }
+            Logger.Debug(() => ("SQL: " + commandText));
 
             using (var command = PrepareCommand(commandText))
             {
@@ -137,10 +122,7 @@ namespace ObjectServer.Backend
         {
             EnsureConnectionOpened();
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.DebugFormat("SQL: {0}", commandText);
-            }
+            Logger.Debug(() => "SQL: " + commandText);
 
             using (var command = PrepareCommand(commandText))
             {

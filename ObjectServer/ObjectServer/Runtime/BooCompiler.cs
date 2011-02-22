@@ -18,9 +18,6 @@ namespace ObjectServer.Runtime
     /// </summary>
     public class BooCompiler : ICompiler
     {
-        protected static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-           MethodBase.GetCurrentMethod().DeclaringType);
-
         #region ICompiler 成员
 
         public Assembly CompileFromFile(IEnumerable<string> sourceFiles)
@@ -59,12 +56,9 @@ namespace ObjectServer.Runtime
         private static void LogWarnings(CompilerContext context)
         {
 
-            if (Log.IsWarnEnabled)
+            foreach (var w in context.Warnings)
             {
-                foreach (var w in context.Warnings)
-                {
-                    Log.WarnFormat("WARNING: {0}", w.Message);
-                }
+                Logger.Warn(() => w.Message);
             }
         }
 
@@ -72,7 +66,7 @@ namespace ObjectServer.Runtime
         {
             foreach (CompilerError error in context.Errors)
             {
-                Log.ErrorFormat(error.ToString());
+                Logger.Error(() => error.Message);
             }
         }
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 using Newtonsoft.Json;
 
@@ -22,9 +23,7 @@ namespace ObjectServer
     [JsonObject("module")]
     public sealed class Module
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly List<Assembly> assembly = new List<Assembly>();
+        private readonly List<Assembly> allAssembly = new List<Assembly>();
         private static readonly Module s_coreModule;
 
         static Module()
@@ -41,6 +40,7 @@ namespace ObjectServer
         {
             //设置属性默认值
             this.Depends = new string[] { };
+            this.Dlls = new string[] { };
         }
 
         #region Serializable Fields
@@ -68,32 +68,42 @@ namespace ObjectServer
         [JsonProperty("depends")]
         public string[] Depends { get; set; }
 
+        [JsonProperty("dlls")]
+        public string[] Dlls { get; set; }
+
         #endregion
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Load(ObjectPool pool)
         {
-            if (Log.IsInfoEnabled)
-            {
-                Log.InfoFormat("Begin to load module: '{0}'", this.Name);
-            }
+            Logger.Info(() => string.Format("Begin to load module: '{0}'", this.Name));
+
+            this.LoadStaticAssembly();
 
             var a = CompileSourceFiles(this.Path);
-            this.Assemblies.Add(a);
+            this.AllAssemblies.Add(a);
             pool.AddModelsWithinAssembly(a);
 
             var moduleModel = (ModuleModel)pool[ModuleModel.ModelName];
             this.State = ModuleStatus.Actived;
             moduleModel.LoadedModules.Add(this);
 
-            if (Log.IsInfoEnabled)
+            Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
+        }
+
+        private void LoadStaticAssembly()
+        {
+            Debug.Assert(this.Dlls != null);
+
+            foreach (var dll in this.Dlls)
             {
-                Log.InfoFormat("Module '{0}' has been loaded.", this.Name);
+                var assem = Assembly.LoadFile(dll);
+                this.allAssembly.Add(assem);
             }
         }
 
         [JsonIgnore]
-        public ICollection<Assembly> Assemblies { get { return this.assembly; } }
+        public ICollection<Assembly> AllAssemblies { get { return this.allAssembly; } }
 
         [JsonIgnore]
         public string Path { get; set; }

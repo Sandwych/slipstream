@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Transactions;
 using System.Data;
 
-using log4net;
-
 using ObjectServer.Backend;
 using ObjectServer.Model;
 using ObjectServer.Utility;
@@ -17,9 +15,6 @@ namespace ObjectServer
 
     public sealed class ObjectPool
     {
-        private static readonly ILog Log = LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-
         private Dictionary<string, IServiceObject> objects =
             new Dictionary<string, IServiceObject>();
 
@@ -56,10 +51,8 @@ namespace ObjectServer
 
         public void AddModelsWithinAssembly(Assembly assembly)
         {
-            if (Log.IsInfoEnabled)
-            {
-                Log.InfoFormat("Start to register all models for assembly [{0}]...", assembly.FullName);
-            }
+            Logger.Info(() => string.Format(
+                "Start to register all models for assembly [{0}]...", assembly.FullName));
 
             var types = GetStaticModelsFromAssembly(assembly);
 
@@ -71,11 +64,6 @@ namespace ObjectServer
                     var obj = ObjectPool.CreateStaticObjectInstance(t);
                     this.objects[obj.Name] = obj;
                 }
-            }
-
-            if (Log.IsInfoEnabled)
-            {
-                Log.InfoFormat("Done");
             }
         }
 

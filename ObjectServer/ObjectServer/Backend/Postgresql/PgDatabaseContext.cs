@@ -45,10 +45,7 @@ namespace ObjectServer.Backend.Postgresql
                         and datname not in ('template0', 'template1', 'postgres')  
 	                order by datname asc;";
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.Info(sql);
-            }
+            Logger.Info(() => (sql));
 
             using (var cmd = this.PrepareCommand(sql))
             {
@@ -75,10 +72,7 @@ namespace ObjectServer.Backend.Postgresql
                 @"CREATE DATABASE ""{0}"" TEMPLATE template0 ENCODING 'unicode'",
                 dbName);
 
-            if (Log.IsDebugEnabled)
-            {
-                Log.Info(sql);
-            }
+            Logger.Debug(() => (sql));
 
             var cmd = this.Connection.CreateCommand();
             cmd.CommandText = sql;

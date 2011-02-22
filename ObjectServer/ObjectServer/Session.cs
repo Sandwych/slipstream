@@ -11,15 +11,9 @@ namespace ObjectServer
 {
     internal class Session : ISession
     {
-        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
-            MethodBase.GetCurrentMethod().DeclaringType);
-
         public Session(string dbName)
         {
-            if (Log.IsInfoEnabled)
-            {
-                Log.InfoFormat("Session is opening for database: [{0}]", dbName);
-            }
+            Logger.Info(() => string.Format("Session is opening for database: [{0}]", dbName));
 
             this.Database = DataProvider.OpenDatabase(dbName);
         }
@@ -53,10 +47,7 @@ namespace ObjectServer
         {
             this.Database.Close();
 
-            if (Log.IsInfoEnabled)
-            {
-                Log.Info("Session closed");
-            }
+            Logger.Info(() => "Session closed");
         }
 
         #endregion

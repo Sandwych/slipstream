@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.Data;
 using System.Reflection;
 
-using log4net;
-
 
 using ObjectServer.Backend;
 using ObjectServer.Utility;
@@ -44,7 +42,7 @@ namespace ObjectServer.Model
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    Log.Error("Model name cannot be empty");
+                    Logger.Error(() => "Model name cannot be empty");
                     throw new ArgumentNullException("value");
                 }
                 this.name = value;
@@ -60,7 +58,7 @@ namespace ObjectServer.Model
             }
         }
 
-            public string TableName
+        public string TableName
         {
             get
             {
@@ -70,7 +68,7 @@ namespace ObjectServer.Model
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    Log.Error("Table name cannot be empty");
+                    Logger.Error(() => "Table name cannot be empty");
                     throw new ArgumentNullException("value");
                 }
 
@@ -108,11 +106,11 @@ namespace ObjectServer.Model
                 this.NameGetter = this.DefaultNameGetter;
             }
 
-            if (Log.IsInfoEnabled && !this.DefinedFields.ContainsKey("name"))
+            if (!this.DefinedFields.ContainsKey("name"))
             {
-                Log.InfoFormat(
+                Logger.Info(() => string.Format(
                     "I strongly suggest you to add the 'name' field into Model '{0}'",
-                    this.Name);
+                    this.Name));
             }
 
             var migrator = new TableMigrator(db, pool, this);
@@ -193,7 +191,7 @@ namespace ObjectServer.Model
             var rows = session.Database.Execute(sql, colValues);
             if (rows != 1)
             {
-                Log.ErrorFormat("Failed to insert row, SQL: {0}", sql);
+                Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
                 throw new DataException();
             }
 
