@@ -47,13 +47,12 @@ namespace ObjectServer.Utility.Test
                     Depend = new string[] { "user" }
                 },              
             };
-            var sortedModels = 
-                DependencySorter.Sort(models, m => m.Name, m => m.Depend);
+            models.DependencySort(m => m.Name, m => m.Depend);
 
-            Assert.AreEqual("user", sortedModels[0].Name);
-            Assert.AreEqual("group", sortedModels[1].Name);
-            Assert.AreEqual("menu", sortedModels[2].Name);
-            Assert.AreEqual("action", sortedModels[3].Name);
+            Assert.AreEqual("user", models[0].Name);
+            Assert.AreEqual("group", models[1].Name);
+            Assert.AreEqual("menu", models[2].Name);
+            Assert.AreEqual("action", models[3].Name);
 
         }
 

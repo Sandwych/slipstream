@@ -12,42 +12,46 @@ namespace ObjectServer.Utility
     /// <typeparam name="IdType">每个元素的唯一标识类型</typeparam>
     public static class DependencySorter
     {
-        public static TEle[] Sort<TEle, TId>(
-            IList<TEle> fields,
+        public static void DependencySort<TEle, TId>(
+            this IList<TEle> items,
             Func<TEle, TId> getIdProc,
             Func<TEle, IList<TId>> getDependIdProc)
             where TId : IEquatable<TId>
         {
-            var g = new TopologicalSorter(fields.Count);
-            var indexes = new Dictionary<TId, int>(fields.Count);
+            var g = new TopologicalSorter(items.Count);
+            var indexes = new Dictionary<TId, int>(items.Count);
 
             //add vertices
-            for (int i = 0; i < fields.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                indexes[getIdProc(fields[i])] = g.AddVertex(i);
+                indexes[getIdProc(items[i])] = g.AddVertex(i);
             }
 
             //add edges
-            for (int i = 0; i < fields.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                if (getDependIdProc(fields[i]) != null)
+                if (getDependIdProc(items[i]) != null)
                 {
-                    for (int j = 0; j < getDependIdProc(fields[i]).Count; j++)
+                    for (int j = 0; j < getDependIdProc(items[i]).Count; j++)
                     {
-                        g.AddEdge(i, indexes[getDependIdProc(fields[i])[j]]);
+                        g.AddEdge(i, indexes[getDependIdProc(items[i])[j]]);
                     }
                 }
             }
 
             int[] sortedIndices = g.Sort();
-            var sortedList = new List<TEle>(fields.Count);
-            for (int i = 0; i < fields.Count; i++)
+            TEle[] sortedItems = new TEle[items.Count];
+            for (int i = 0; i < items.Count; i++)
             {
-                sortedList.Add(fields[sortedIndices[i]]);
+                var sortedIndex = sortedIndices[i];
+                sortedItems[i] = items[sortedIndex];
             }
 
-            sortedList.Reverse();
-            return sortedList.ToArray();
+            //反转
+            for (int i = 0; i < items.Count; i++)
+            {
+                items[items.Count - i - 1] = sortedItems[i];
+            }
         }
 
     }

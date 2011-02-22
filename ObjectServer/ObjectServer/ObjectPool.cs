@@ -43,16 +43,10 @@ namespace ObjectServer
             //一次性初始化所有对象
             //obj.Initialize(db, pool);
             //TODO: 初始化非 IModel 对象
-            var models =
-                (from o in this.objects.Values
-                 where o is IModel
-                 select o as IModel).ToArray();
+            var objList = this.objects.Values.ToList();
+            objList.DependencySort(m => m.Name, m => m.ReferencedObjects);
 
-            var sortedModels =
-                DependencySorter
-                .Sort(models, m => m.Name, m => m.ReferencedObjects);
-
-            foreach (var m in sortedModels)
+            foreach (var m in objList)
             {
                 m.Initialize(db, this);
             }
@@ -67,7 +61,7 @@ namespace ObjectServer
                 Log.InfoFormat("Start to register all models for assembly [{0}]...", assembly.FullName);
             }
 
-            var types = GetModelsFromAssembly(assembly);
+            var types = GetStaticModelsFromAssembly(assembly);
 
             using (var db = Backend.DataProvider.OpenDatabase(this.Database))
             {
@@ -124,7 +118,7 @@ namespace ObjectServer
         }
 
 
-        private static Type[] GetModelsFromAssembly(Assembly assembly)
+        private static Type[] GetStaticModelsFromAssembly(Assembly assembly)
         {
             var types = assembly.GetTypes();
             var result = new List<Type>();

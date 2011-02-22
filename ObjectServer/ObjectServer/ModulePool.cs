@@ -61,7 +61,7 @@ namespace ObjectServer
         public void LookupAllModules(string modulePath)
         {
             var modules = new List<Module>();
-            modules.Add(Module.CoreModule); //先添加核心模块
+            modules.Add(Module.CoreModule);
 
             if (string.IsNullOrEmpty(modulePath) || !Directory.Exists(modulePath))
             {
@@ -83,33 +83,22 @@ namespace ObjectServer
                 }
             }
 
-            DependencySort(modules);
-        }
-
-        private void DependencySort(List<Module> modules)
-        {
-            var sortedModules =
-                DependencySorter.Sort(modules, m => m.Name, m => m.Depends);
-            this.allModules.Clear();
-            this.allModules.Capacity = sortedModules.Length;
-            this.allModules.AddRange(sortedModules);
+            modules.DependencySort(m => m.Name, m => m.Depends);
+            this.allModules = modules;
         }
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void UpdateModuleList(IDatabaseContext db)
         {
-            lock (typeof(Module))
-            {
-                var sql = "select count(*) from core_module where name = @0";
+            var sql = "select count(*) from core_module where name = @0";
 
-                foreach (var m in allModules)
+            foreach (var m in allModules)
+            {
+                var count = (long)db.QueryValue(sql, m.Name);
+                if (count == 0)
                 {
-                    var count = (long)db.QueryValue(sql, m.Name);
-                    if (count == 0)
-                    {
-                        m.AddToDatabase(db);
-                    }
+                    m.AddToDatabase(db);
                 }
             }
         }

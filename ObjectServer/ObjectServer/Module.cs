@@ -33,6 +33,7 @@ namespace ObjectServer
             {
                 Name = StaticSettings.CoreModuleName,
                 State = ModuleStatus.Actived,
+                Depends = new string[] { },
             };
         }
 
