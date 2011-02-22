@@ -13,8 +13,8 @@ namespace ObjectServer
     /// </summary>
     public abstract class StaticServiceObjectBase : IServiceObject
     {
-        private readonly Dictionary<string, MethodInfo> serviceMethods =
-            new Dictionary<string, MethodInfo>();
+        private readonly IDictionary<string, MethodInfo> serviceMethods =
+            new SortedList<string, MethodInfo>();
 
         protected StaticServiceObjectBase()
         {

@@ -12,8 +12,9 @@ namespace ObjectServer.Model
 {
     public abstract class ModelBase : StaticServiceObjectBase
     {
-        private readonly Dictionary<string, IMetaField> declaredFields =
-            new Dictionary<string, IMetaField>();
+        private readonly IDictionary<string, IMetaField> declaredFields =
+            new SortedList<string, IMetaField>();
+
 
         public const string IdFieldName = "id";
         public const string ActiveFieldName = "_field";
@@ -274,7 +275,7 @@ namespace ObjectServer.Model
         }
 
         protected void ManyToManyField(
-            string name, 
+            string name,
             string refModel, string originField, string targetField,
             string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
         {

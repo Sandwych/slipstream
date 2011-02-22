@@ -13,7 +13,7 @@ namespace ObjectServer.Backend.Postgresql
 {
     internal sealed class PgTableContext : ITableContext
     {
-        private Dictionary<string, ColumnMetadata> columns = new Dictionary<string, ColumnMetadata>();
+        private IDictionary<string, IColumnMetadata> columns = new SortedList<string, IColumnMetadata>();
 
         public PgTableContext(IDatabaseContext db, string tableName)
         {
@@ -94,12 +94,7 @@ select column_name, data_type, is_nullable
             this.columns.Clear();
             foreach (var r in records)
             {
-                var column = new ColumnMetadata()
-                {
-                    Name = (string)r["column_name"],
-                    Nullable = (string)r["is_nullable"] == "YES",
-                    SqlType = (string)r["data_type"],
-                };
+                var column = new PgColumnMetadata(r);
                 this.columns.Add(column.Name, column);
             }
 
