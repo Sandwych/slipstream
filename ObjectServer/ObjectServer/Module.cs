@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 using Newtonsoft.Json;
 
@@ -30,7 +31,7 @@ namespace ObjectServer
         /// <summary>
         /// 整个系统中发现的所有模块
         /// </summary>
-        private static Module[] s_allModules = new Module[] { };
+        private static List<Module> s_allModules = new List<Module>();
 
         public Module()
         {
@@ -65,6 +66,7 @@ namespace ObjectServer
 
         #endregion
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Load(ObjectPool pool)
         {
             if (Log.IsInfoEnabled)
@@ -95,6 +97,7 @@ namespace ObjectServer
         [JsonIgnore]
         public ModuleStatus State { get; set; }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void LookupAllModules(string modulePath)
         {
             lock (typeof(Module))
@@ -116,17 +119,26 @@ namespace ObjectServer
 
                     if (Log.IsInfoEnabled)
                     {
-                        Log.InfoFormat("Found module: [{0}], Path='{1}'", module.Name, module.Path);
+                        Log.InfoFormat("Found module: [{0}], Path='{1}'",
+                            module.Name, module.Path);
                     }
                 }
 
-                //做依赖排序
-                s_allModules = DependencySorter<Module, string>.Sort(
-                    modules, m => m.Name, m => m.Depends);
+                DependencySort(modules);
             }
         }
 
+        private static void DependencySort(List<Module> modules)
+        {
+            var sortedModules =
+                DependencySorter.Sort(modules, m => m.Name, m => m.Depends);
+            s_allModules.Clear();
+            s_allModules.Capacity = sortedModules.Length;
+            s_allModules.AddRange(sortedModules);
+        }
 
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void UpdateModuleList(IDatabaseContext db)
         {
             lock (typeof(Module))
@@ -145,6 +157,7 @@ namespace ObjectServer
         }
 
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void LoadModules(IDatabaseContext db, ObjectPool pool)
         {
             //加载的策略是：
@@ -164,8 +177,9 @@ namespace ObjectServer
                     }
                     else
                     {
-                        var msg = string.Format("Cannot found module: '{0}'", moduleName);
-                        throw new FileNotFoundException(msg, moduleName);
+                        var msg =
+                            string.Format("Cannot found module: '{0}'", moduleName);
+                        throw new ModuleNotFoundException(msg, moduleName);
                     }
                 }
             }

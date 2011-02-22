@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 using ObjectServer.Backend;
 
@@ -22,6 +23,10 @@ namespace ObjectServer.Model
 
         public void Migrate()
         {
+            Debug.Assert(this.db != null);
+            Debug.Assert(this.model != null);
+            Debug.Assert(this.pool != null);
+
             var table = this.db.CreateTableHandler(db, this.model.TableName);
 
             if (!table.TableExists(db, this.model.TableName))
@@ -38,12 +43,6 @@ namespace ObjectServer.Model
         {
             table.CreateTable(db, this.model.TableName, this.model.Label);
 
-            //创建字段
-            if (this.model.Hierarchy)
-            {
-                //conn.ExecuteNonQuery("");
-            }
-
             var storableColumns = this.model.GetAllStorableFields();
 
             foreach (var f in storableColumns)
@@ -58,9 +57,19 @@ namespace ObjectServer.Model
             }
         }
 
-        private void SyncTable(ITableContext table)
+        private void SyncTable(IDatabaseContext db, ITableContext table)
         {
-            throw new NotImplementedException();
+            //表肯定存在，就看列存不存在
+            //最简单的迁移策略：
+            //如果列在表里不存在就建，以用户定义的为主
+            foreach (var pair in this.model.DefinedFields)
+            {
+                var field = pair.Value;
+                if (field.IsStorable() && !table.ColumnExists(field.Name))
+                {
+                    table.AddColumn(db, field);
+                }
+            }
         }
 
     }

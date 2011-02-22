@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 using log4net;
 
@@ -26,6 +27,7 @@ namespace ObjectServer
         {
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Initialize(string configPath)
         {
             var json = File.ReadAllText(configPath, Encoding.UTF8);
@@ -34,6 +36,7 @@ namespace ObjectServer
         }
 
         //这个做实际的初始化工作
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Initialize(Config cfg)
         {
             if (cfg == null)
@@ -41,21 +44,62 @@ namespace ObjectServer
                 throw new ArgumentNullException("cfg");
             }
 
+            //查找所有模块并加载模块元信息
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
                 Module.LookupAllModules(cfg.ModulePath);
             }
 
+            ConfigurateLog4net(cfg);
 
-            lock (typeof(ObjectServerStarter))
+            s_instance.config = cfg;
+            s_instance.initialized = true;
+        }
+
+
+        /// <summary>
+        /// 为调试及测试而初始化
+        /// </summary>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void Initialize()
+        {
+            if (s_instance.initialized)
             {
-                ConfigurateLog4net(cfg);
+                return;
+            }
 
-                s_instance.config = cfg;
-                s_instance.initialized = true;
+            var cfg = new Config()
+            {
+                ConfigurationPath = null,
+                DbType = ObjectServer.Backend.DatabaseType.Postgresql,
+                DBHost = "localhost",
+                DbName = "objectserver",
+                DBPassword = "objectserver",
+                DBPort = 5432,
+                DBUser = "objectserver",
+                ModulePath = "modules",
+                RootPassword = "root",
+                Debug = true,
+                LogLevel = "debug",
+            };
+            Initialize(cfg);
+        }
 
+
+        public static bool Initialized
+        {
+            get { return s_instance.initialized; }
+        }
+
+
+        internal static Database Pooler
+        {
+            get
+            {
+                return s_instance.pooler;
             }
         }
+
 
         private static void ConfigurateLog4net(Config cfg)
         {
@@ -93,32 +137,6 @@ namespace ObjectServer
             log4net.Config.BasicConfigurator.Configure(appender);
         }
 
-        /// <summary>
-        /// 为调试及测试而初始化
-        /// </summary>
-        public static void Initialize()
-        {
-            if (s_instance.initialized)
-            {
-                return;
-            }
-
-            var cfg = new Config()
-            {
-                ConfigurationPath = null,
-                DbType = ObjectServer.Backend.DatabaseType.Postgresql,
-                DBHost = "localhost",
-                DbName = "objectserver",
-                DBPassword = "objectserver",
-                DBPort = 5432,
-                DBUser = "objectserver",
-                ModulePath = "modules",
-                RootPassword = "root",
-                Debug = true,
-                LogLevel = "debug",
-            };
-            Initialize(cfg);
-        }
 
         public static Config Configuration
         {
@@ -130,19 +148,6 @@ namespace ObjectServer
                         "尚未初始化系统，请调用 ObjectServerStarter.Initialize() 初始化");
                 }
                 return s_instance.config;
-            }
-        }
-
-        public static bool Initialized
-        {
-            get { return s_instance.initialized; }
-        }
-
-        internal static Database Pooler
-        {
-            get
-            {
-                return s_instance.pooler;
             }
         }
 

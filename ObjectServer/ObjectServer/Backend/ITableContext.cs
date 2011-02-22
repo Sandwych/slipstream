@@ -14,6 +14,7 @@ namespace ObjectServer.Backend
         void AddColumn(IDatabaseContext db, IMetaField field);
         void DeleteColumn(IDatabaseContext db, string columnName);
         void UpgradeColumn(IDatabaseContext db, IMetaField field);
+        bool ColumnExists(string columnName);
 
         bool TableExists(IDatabaseContext db, string tableName);
         void CreateTable(IDatabaseContext db, string tableName, string label);

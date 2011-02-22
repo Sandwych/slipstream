@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.Data;
 using System.Transactions;
+using System.Runtime.CompilerServices;
 
 using ObjectServer.Backend;
 using ObjectServer.Core;
@@ -12,7 +13,7 @@ using ObjectServer.Core;
 namespace ObjectServer
 {
     /// <summary>
-    /// Singleton，TODO 线程安全
+    /// Singleton
     /// </summary>
     internal sealed class Database
     {
@@ -22,9 +23,8 @@ namespace ObjectServer
         private Dictionary<string, ObjectPool> pools =
             new Dictionary<string, ObjectPool>();
 
-        private static readonly object _poolLock = new object();
 
-
+        [MethodImpl(MethodImplOptions.Synchronized)]
         internal void RegisterDatabase(string dbName)
         {
             using (var db = DataProvider.OpenDatabase(dbName))
@@ -33,6 +33,8 @@ namespace ObjectServer
             }
         }
 
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
         internal void RegisterDatabase(IDatabaseContext db, string dbName)
         {
             if (Log.IsInfoEnabled)
@@ -48,23 +50,17 @@ namespace ObjectServer
 
             var pool = new ObjectPool(db, dbName);
 
-            lock (_poolLock)
-            {
-                this.pools.Add(dbName.Trim(), pool);
-            }
+            this.pools.Add(dbName.Trim(), pool);
         }
 
         internal ObjectPool GetPool(string dbName)
         {
-            lock (_poolLock)
+            if (!this.pools.ContainsKey(dbName))
             {
-                if (!this.pools.ContainsKey(dbName))
-                {
-                    RegisterDatabase(dbName);
-                }
-
-                return this.pools[dbName.Trim()];
+                RegisterDatabase(dbName);
             }
+
+            return this.pools[dbName.Trim()];
         }
 
     }

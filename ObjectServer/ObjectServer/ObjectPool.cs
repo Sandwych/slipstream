@@ -50,7 +50,7 @@ namespace ObjectServer
                  select o as IModel).ToArray();
 
             var sortedModels =
-                DependencySorter<IModel, string>
+                DependencySorter
                 .Sort(models, m => m.Name, m => m.ReferencedObjects);
 
             foreach (var m in sortedModels)
@@ -75,7 +75,7 @@ namespace ObjectServer
                 db.Open();
                 foreach (var t in types)
                 {
-                    var obj = ServiceObject.CreateInstance(t);
+                    var obj = ObjectPool.CreateStaticObjectInstance(t);
                     this.objects[obj.Name] = obj;
                 }
             }
@@ -130,6 +130,29 @@ namespace ObjectServer
             }
             return result.ToArray();
         }
+
+        #region ServiceObject(s) factory methods
+
+        public static IServiceObject CreateStaticObjectInstance(Type t)
+        {
+            var obj = Activator.CreateInstance(t) as IServiceObject;
+            if (obj == null)
+            {
+                var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
+                throw new InvalidCastException(msg);
+            }
+            return obj;
+        }
+
+        public static T CreateStaticObjectInstance<T>()
+            where T : class, IServiceObject
+        {
+            return CreateStaticObjectInstance(typeof(T)) as T;
+        }
+
+        //以后要支持 DLR，增加  CreateDynamicObjectInstance
+
+        #endregion
 
     }
 }

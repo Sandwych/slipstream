@@ -8,12 +8,15 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public abstract class ServiceObject : IServiceObject
+    /// <summary>
+    /// 适用于静态语言（非DLR）的服务对象基类
+    /// </summary>
+    public abstract class StaticServiceObjectBase : IServiceObject
     {
         private readonly Dictionary<string, MethodInfo> serviceMethods =
             new Dictionary<string, MethodInfo>();
 
-        protected ServiceObject()
+        protected StaticServiceObjectBase()
         {
             this.RegisterAllServiceMethods();
         }
@@ -60,24 +63,5 @@ namespace ObjectServer
         public abstract string[] ReferencedObjects { get; }
 
         public ObjectPool Pool { get; private set; }
-
-
-        public static IServiceObject CreateInstance(Type t)
-        {
-            var obj = Activator.CreateInstance(t) as IServiceObject;
-            if (obj == null)
-            {
-                var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
-                throw new InvalidCastException(msg);
-            }
-            return obj;
-        }
-
-        public static T CreateInstance<T>()
-            where T : class, IServiceObject
-        {
-            return CreateInstance(typeof(T)) as T;
-        }
-
     }
 }

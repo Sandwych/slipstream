@@ -16,7 +16,7 @@ namespace ObjectServer.Backend.Postgresql
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Column> columns = new List<Column>();
+        private Dictionary<string, Column> columns = new Dictionary<string, Column>();
 
         public PgTableContext(IDatabaseContext db, string tableName)
         {
@@ -80,6 +80,11 @@ namespace ObjectServer.Backend.Postgresql
             throw new NotImplementedException();
         }
 
+        public bool ColumnExists(string columnName)
+        {
+            return this.columns.ContainsKey(columnName);
+        }
+
         private void LoadColumns(IDatabaseContext db, string tableName)
         {
             var sql = @"
@@ -90,7 +95,6 @@ select column_name, data_type, is_nullable <> 'NO' as not_null
 ";
             var records = db.QueryAsDictionary(sql, tableName);
             this.columns.Clear();
-            this.columns.Capacity = records.Count;
             foreach (var r in records)
             {
                 var column = new Column()
@@ -99,7 +103,7 @@ select column_name, data_type, is_nullable <> 'NO' as not_null
                     NotNull = (bool)r["not_null"],
                     SqlType = (string)r["data_type"],
                 };
-                this.columns.Add(column);
+                this.columns.Add(column.Name, column);
             }
 
         }

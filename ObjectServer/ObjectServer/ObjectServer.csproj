@@ -117,6 +117,7 @@
     <Compile Include="Core\ViewModel.cs" />
     <Compile Include="Core\MenuModel.cs" />
     <Compile Include="Core\CronModel.cs" />
+    <Compile Include="Exceptions\ServiceObjectNotFoundException.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IServiceObject.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
@@ -135,9 +136,11 @@
     <Compile Include="Model\RelatedField.cs" />
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Model\ModelQuery.cs" />
+    <Compile Include="Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
-    <Compile Include="ServiceObject.cs" />
+    <Compile Include="ServiceException.cs" />
+    <Compile Include="StaticServiceObjectBase.cs" />
     <Compile Include="ServiceObjectAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />

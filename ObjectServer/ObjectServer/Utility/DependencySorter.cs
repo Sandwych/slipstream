@@ -10,13 +10,13 @@ namespace ObjectServer.Utility
     /// </summary>
     /// <typeparam name="EleType">每个元素的类型</typeparam>
     /// <typeparam name="IdType">每个元素的唯一标识类型</typeparam>
-    public static class DependencySorter<TEle, TId>
-        where TId : IEquatable<TId>
+    public static class DependencySorter
     {
-        public static TEle[] Sort(
+        public static TEle[] Sort<TEle, TId>(
             IList<TEle> fields,
             Func<TEle, TId> getIdProc,
             Func<TEle, IList<TId>> getDependIdProc)
+            where TId : IEquatable<TId>
         {
             var g = new TopologicalSorter(fields.Count);
             var indexes = new Dictionary<TId, int>(fields.Count);
