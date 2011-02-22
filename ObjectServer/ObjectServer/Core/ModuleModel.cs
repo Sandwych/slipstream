@@ -19,6 +19,7 @@ namespace ObjectServer.Core
     [ServiceObject]
     public sealed class ModuleModel : TableModel
     {
+        public const string ModelName = "core.module";
         /// <summary>
         /// 单个数据库中加载的模块
         /// </summary>
@@ -27,7 +28,7 @@ namespace ObjectServer.Core
 
         public ModuleModel()
         {
-            this.Name = "core.module";
+            this.Name = ModelName;
 
             this.CharsField("name", "Name", 128, true, null, null);
             this.CharsField("state", "State", 16, true, null, null);

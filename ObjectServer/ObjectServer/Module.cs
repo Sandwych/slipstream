@@ -25,6 +25,16 @@ namespace ObjectServer
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(
             MethodBase.GetCurrentMethod().DeclaringType);
         private readonly List<Assembly> assembly = new List<Assembly>();
+        private static readonly Module s_coreModule;
+
+        static Module()
+        {
+            s_coreModule = new Module()
+            {
+                Name = StaticSettings.CoreModuleName,
+                State = ModuleStatus.Actived,
+            };
+        }
 
         public Module()
         {
@@ -71,7 +81,7 @@ namespace ObjectServer
             this.Assemblies.Add(a);
             pool.AddModelsWithinAssembly(a);
 
-            var moduleModel = (ModuleModel)pool["core.module"];
+            var moduleModel = (ModuleModel)pool[ModuleModel.ModelName];
             this.State = ModuleStatus.Actived;
             moduleModel.LoadedModules.Add(this);
 
@@ -90,40 +100,28 @@ namespace ObjectServer
         [JsonIgnore]
         public ModuleStatus State { get; set; }
 
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void LoadModules(IDatabaseContext db, ObjectPool pool)
-        {
-            //加载的策略是：
-            //只加载存在于文件系统，且数据库中设置为 state = 'actived' 的
-            var sql = "select name from core_module where state = 'actived'";
-            var modules = db.QueryAsDictionary(sql);
-
-            foreach (var m in modules)
-            {
-                var moduleName = (string)m["name"];
-                var module = ObjectServerStarter.ModulePool.GetModule(moduleName);
-                module.Load(pool);
-            }
-        }
-
-        private static void AddModuleToDb(IDatabaseContext db, Module m)
-        {
-            var state = "deactived";
-            if (m.AutoLoad)
-            {
-                state = "actived";
-            }
-
-            var insertSql = "insert into core_module(name, state, info) values(@0, @1, @2)";
-            db.Execute(insertSql, m.Name, state, m.Label);
-        }
-
         public static Module DeserializeFromFile(string moduleFilePath)
         {
             var json = File.ReadAllText(moduleFilePath, Encoding.UTF8);
             var module = JsonConvert.DeserializeObject<Module>(json);
             return module;
+        }
+
+        public void AddToDatabase(IDatabaseContext db)
+        {
+            var state = "deactived";
+            if (this.AutoLoad)
+            {
+                state = "actived";
+            }
+
+            var insertSql = "insert into core_module(name, state, info) values(@0, @1, @2)";
+            db.Execute(insertSql, this.Name, state, this.Label);
+        }
+
+        public static Module CoreModule
+        {
+            get { return s_coreModule; }
         }
 
         private Assembly CompileSourceFiles(string moduleDir)

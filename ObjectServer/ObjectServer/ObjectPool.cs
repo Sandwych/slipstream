@@ -35,7 +35,7 @@ namespace ObjectServer
         {
             this.RegisterAllCoreObjects();
 
-            Module.LoadModules(db, this);
+            ObjectServerStarter.ModulePool.LoadActivedModules(db, this);
         }
 
         private void InitializeAllObjects(IDatabaseContext db)
@@ -87,14 +87,23 @@ namespace ObjectServer
 
         public void AddServiceObject(IServiceObject obj)
         {
-            //TODO 处理对象已经存在的问题
+            //TODO 处理对象已经存在的问题，继承等
 
             this.objects.Add(obj.Name, obj);
         }
 
         public IServiceObject this[string objName]
         {
-            get { return this.objects[objName]; }
+            get
+            {
+                IServiceObject so;
+                if (!this.objects.TryGetValue(objName, out so))
+                {
+                    var msg = string.Format("Cannot found service object: {0} ", objName);
+                    throw new ServiceObjectNotFoundException(msg, objName);
+                }
+                return this.objects[objName];
+            }
         }
 
         /// <summary>

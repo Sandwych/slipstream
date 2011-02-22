@@ -10,9 +10,8 @@ using ObjectServer.Backend;
 namespace ObjectServer.Test.Backend
 {
     [TestFixture]
-    public class DatabaseTest
+    public class DatabaseTest : TestBase
     {
-
         [Test]
         public void Query_as_dictionary()
         {
@@ -26,7 +25,7 @@ namespace ObjectServer.Test.Backend
             }
         }
 
-        [Test]
+        [Ignore]
         public void Create_and_delete_database()
         {
             var dbName = "oo_testdb";

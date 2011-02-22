@@ -61,6 +61,7 @@ namespace ObjectServer
         public void LookupAllModules(string modulePath)
         {
             var modules = new List<Module>();
+            modules.Add(Module.CoreModule); //先添加核心模块
 
             if (string.IsNullOrEmpty(modulePath) || !Directory.Exists(modulePath))
             {
@@ -107,7 +108,7 @@ namespace ObjectServer
                     var count = (long)db.QueryValue(sql, m.Name);
                     if (count == 0)
                     {
-                        AddModuleToDb(db, m);
+                        m.AddToDatabase(db);
                     }
                 }
             }
@@ -115,43 +116,29 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadModules(IDatabaseContext db, ObjectPool pool)
+        public void LoadActivedModules(IDatabaseContext db, ObjectPool pool)
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'actived' 的
-            lock (typeof(Module))
-            {
-                var sql = "select name from core_module where state = 'actived'";
-                var modules = db.QueryAsDictionary(sql);
+            var sql = "select name from core_module where state = 'actived'";
+            var modules = db.QueryAsDictionary(sql);
 
-                foreach (var m in modules)
+            foreach (var m in modules)
+            {
+                var moduleName = (string)m["name"];
+                var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
+                if (module != null)
                 {
-                    var moduleName = (string)m["name"];
-                    var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
-                    if (module != null)
-                    {
-                        module.Load(pool);
-                    }
-                    else
-                    {
-                        var msg =
-                            string.Format("Cannot found module: '{0}'", moduleName);
-                        throw new ModuleNotFoundException(msg, moduleName);
-                    }
+                    module.Load(pool);
+                }
+                else
+                {
+                    var msg =
+                        string.Format("Cannot found module: '{0}'", moduleName);
+                    throw new ModuleNotFoundException(msg, moduleName);
                 }
             }
         }
 
-        private static void AddModuleToDb(IDatabaseContext db, Module m)
-        {
-            var state = "deactived";
-            if (m.AutoLoad)
-            {
-                state = "actived";
-            }
-
-            var insertSql = "insert into core_module(name, state, info) values(@0, @1, @2)";
-            db.Execute(insertSql, m.Name, state, m.Label);
-        }
     }
 }

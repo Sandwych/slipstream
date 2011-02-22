@@ -118,6 +118,8 @@
     <Compile Include="Core\MenuModel.cs" />
     <Compile Include="Core\CronModel.cs" />
     <Compile Include="Exceptions\ServiceObjectNotFoundException.cs" />
+    <Compile Include="Exceptions\BadServiceObjectNameException.cs" />
+    <Compile Include="Model\BadFieldNameException.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IServiceObject.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="ServiceException.cs" />
+    <Compile Include="ServiceObjectExtensions.cs" />
     <Compile Include="StaticServiceObjectBase.cs" />
     <Compile Include="ServiceObjectAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />
@@ -161,6 +164,7 @@
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="ServiceMethodAttribute.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="StaticSettings.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha1.cs" />

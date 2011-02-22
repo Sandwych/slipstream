@@ -47,8 +47,8 @@ namespace ObjectServer.Model
                     Log.Error("Model name cannot be empty");
                     throw new ArgumentNullException("value");
                 }
-
                 this.name = value;
+                this.VerifyName();
                 this.TableName = value.ToLowerInvariant().Replace('.', '_');
 
                 if (string.IsNullOrEmpty(this.Label))
@@ -60,7 +60,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public string TableName
+            public string TableName
         {
             get
             {

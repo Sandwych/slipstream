@@ -18,15 +18,9 @@ namespace ObjectServer.Model.Test
 {
 
     [TestFixture]
-    public class ModelBaseTest
+    public class ModelBaseTest : TestBase
     {
         IService proxy = new LocalService();
-
-        [TestFixtureSetUp]
-        public void Init()
-        {
-            ObjectServerStarter.Initialize();
-        }
 
         [Test]
         public void Simple_fields_crud()
@@ -56,7 +50,6 @@ namespace ObjectServer.Model.Test
 
             var ids = new object[] { id };
             var data = proxy.ReadModel(dbName, modelName, ids, null);
-            Console.WriteLine(data);
             Assert.AreEqual(1, data.Length);
             Assert.AreEqual("changed_name", data[0]["name"]);
             Assert.AreEqual(223, data[0]["field3"]); //检测函数字段的计算是否正确

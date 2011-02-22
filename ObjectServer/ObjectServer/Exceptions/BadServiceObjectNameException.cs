@@ -6,10 +6,10 @@ using System.Text;
 namespace ObjectServer
 {
     [Serializable]
-    public sealed class ServiceObjectNotFoundException : Exception
+    public sealed class BadServiceObjectNameException : Exception
     {
-        public ServiceObjectNotFoundException(string msg, string objName)
-            : base(msg)
+        public BadServiceObjectNameException(string msg, string objName) :
+            base(msg)
         {
             this.ObjectName = objName;
         }
