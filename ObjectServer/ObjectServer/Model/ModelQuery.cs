@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using ObjectServer.SqlTree;
+
 namespace ObjectServer.Model
 {
     internal sealed class ModelQuery
@@ -23,18 +25,28 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("exp");
             }
 
-            var exp = new DomainParser(this.model, domain);
+            var fields = domain.Select(d => (string)d[0]);
+            var parser = new DomainParser(this.model, domain);
+            var columnExps = new ExpressionList(new string[] { "id" });
+            var whereExp = parser.ToExpressionTree();
+            var select = new SelectStatement(
+                columnExps,
+                new FromClause(new string[] { model.TableName }),
+                new WhereClause(whereExp));
 
-            //这里检查权限等
+            //TODO: 这里检查权限等，处理查询非表中字段等
+
+            /* //自动添加 active 字段
             if (this.model.ContainsField(ModelBase.ActiveFieldName)
-                && !exp.ContainsField(ModelBase.ActiveFieldName))
+                && !fields.Contains(ModelBase.ActiveFieldName))
             {
                 exp.AddExpression(new object[] { ModelBase.ActiveFieldName, "=", true });
             }
+             * */
 
-            var sql = string.Format(
-                "select id from \"{0}\" where {1}",
-                this.model.TableName, exp.ToSql());
+            var sv = new StringifierVisitor();
+            select.Traverse(sv);
+            var sql = sv.ToString();
 
             using (var cmd = this.session.Database.Connection.CreateCommand())
             {

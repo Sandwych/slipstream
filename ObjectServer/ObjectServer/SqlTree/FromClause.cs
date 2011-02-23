@@ -7,21 +7,27 @@ namespace ObjectServer.SqlTree
 {
     public class FromClause : IClause
     {
-        private List<Identifier> columns = new List<Identifier>();
-
-        public IList<Identifier> Columns { get { return this.columns; } }
-
-        public FromClause()
+        public FromClause(IEnumerable<string> tokens)
         {
-        }
-
-        public FromClause(IEnumerable<string> columns)
-        {
-            foreach (var c in columns)
+            var n = tokens.Count();
+            var exps = new IExpression[n];
+            var i = 0;
+            foreach (var tok in tokens)
             {
-                this.columns.Add(new Identifier(c));
+                exps[i] = new IdentifierExpression(tok);
+                i++;
             }
+
+            var expColl = new ExpressionList(exps);
+            this.ExpressionCollection = expColl;
         }
+
+        public FromClause(ExpressionList exp)
+        {
+            this.ExpressionCollection = exp;
+        }
+
+        public ExpressionList ExpressionCollection { get; private set; }
 
         #region INode 成员
 
@@ -29,10 +35,7 @@ namespace ObjectServer.SqlTree
         {
             visitor.VisitBefore(this);
             visitor.VisitOn(this);
-            foreach (var i in this.columns)
-            {
-                i.Traverse(visitor);
-            }
+            this.ExpressionCollection.Traverse(visitor);
             visitor.VisitAfter(this);
         }
 

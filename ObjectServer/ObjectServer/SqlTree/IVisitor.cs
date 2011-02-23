@@ -7,24 +7,51 @@ namespace ObjectServer.SqlTree
 {
     public interface IVisitor
     {
-        void VisitBefore(Identifier select);
-        void VisitOn(Identifier select);
-        void VisitAfter(Identifier select);
+        void VisitBefore(IdentifierExpression node);
+        void VisitOn(IdentifierExpression node);
+        void VisitAfter(IdentifierExpression node);
 
-        void VisitBefore(SelectStatement select);
-        void VisitOn(SelectStatement select);
-        void VisitAfter(SelectStatement select);
+        void VisitBefore(SelectStatement node);
+        void VisitOn(SelectStatement node);
+        void VisitAfter(SelectStatement node);
 
-        void VisitBefore(ColumnList columns);
-        void VisitOn(ColumnList columns);
-        void VisitAfter(ColumnList columns);
+        void VisitBefore(ExpressionList node);
+        void VisitOn(ExpressionList node);
+        void VisitAfter(ExpressionList node);
 
-        void VisitBefore(FromClause from);
-        void VisitOn(FromClause from);
-        void VisitAfter(FromClause from);
+        void VisitBefore(FromClause node);
+        void VisitOn(FromClause node);
+        void VisitAfter(FromClause node);
 
-        void VisitBefore(RawSql select);
-        void VisitOn(RawSql select);
-        void VisitAfter(RawSql select);
+
+        void VisitBefore(WhereClause node);
+        void VisitOn(WhereClause node);
+        void VisitAfter(WhereClause node);
+
+        void VisitBefore(RawSql node);
+        void VisitOn(RawSql node);
+        void VisitAfter(RawSql node);
+
+        void VisitBefore(UnaryExpression node);
+        void VisitOn(UnaryExpression node);
+        void VisitAfter(UnaryExpression node);
+
+        void VisitBefore(BinaryExpression node);
+        void VisitOn(BinaryExpression node);
+        void VisitAfter(BinaryExpression node);
+
+        void VisitBefore(ExpressionOperator node);
+        void VisitOn(ExpressionOperator node);
+        void VisitAfter(ExpressionOperator node);
+
+        void VisitBefore(ValueExpression node);
+        void VisitOn(ValueExpression node);
+        void VisitAfter(ValueExpression node);
+
+
+        void VisitBefore(AliasExpression node);
+        void VisitOn(AliasExpression node);
+        void VisitAfter(AliasExpression node);
+
     }
 }

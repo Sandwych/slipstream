@@ -1,26 +1,26 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ObjectServer.SqlTree
 {
-    public class Identifier : INode
+    public class WhereClause : IClause
     {
-        public Identifier(string id)
+        public WhereClause(IExpression exp)
         {
-            this.Id = id;
+            this.Expression = exp;
         }
 
-        public String Id { get; private set; }
-
+        public IExpression Expression { get; private set; }
 
         #region INode 成员
 
         public void Traverse(IVisitor visitor)
-        {
+        {            
             visitor.VisitBefore(this);
             visitor.VisitOn(this);
+            this.Expression.Traverse(visitor);
             visitor.VisitAfter(this);
         }
 
@@ -30,7 +30,7 @@ namespace ObjectServer.SqlTree
 
         public object Clone()
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
 
         #endregion

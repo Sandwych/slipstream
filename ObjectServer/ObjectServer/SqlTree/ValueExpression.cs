@@ -5,23 +5,19 @@ using System.Text;
 
 namespace ObjectServer.SqlTree
 {
-    public class ColumnList : IColumnList
+    public class ValueExpression : Node, IExpression
     {
-        private string[] _columns;
-
-        public ColumnList(IEnumerable<string> columns)
+        public ValueExpression(object value)
         {
-            this._columns = columns.ToArray();
+            this.Value = value;
         }
 
-        public IList<string> Columns
-        {
-            get { return this._columns; }
-        }
+        public object Value { get; private set; }
+
 
         #region INode 成员
 
-        public void Traverse(IVisitor visitor)
+        public override void Traverse(IVisitor visitor)
         {
             visitor.VisitBefore(this);
             visitor.VisitOn(this);
@@ -32,9 +28,9 @@ namespace ObjectServer.SqlTree
 
         #region ICloneable 成员
 
-        public object Clone()
+        public override object Clone()
         {
-            return new ColumnList(this.Columns);
+            return new ValueExpression(this.Value);
         }
 
         #endregion

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using ObjectServer.SqlTree;
+
 namespace ObjectServer.Model
 {
     internal sealed class DomainParser
@@ -13,20 +15,22 @@ namespace ObjectServer.Model
             "like", "not like", "childof"
         };
 
+        private static readonly IExpression s_trueExp = new ValueExpression(true);
+
         private static readonly List<object[]> EmptyDomain = new List<object[]>();
 
         IModel model;
-        List<object[]> expressions = new List<object[]>();
+        List<object[]> domain = new List<object[]>();
 
         public DomainParser(IModel model, IList<object[]> domain)
         {
             if (domain == null)
             {
-                this.expressions = EmptyDomain;
+                this.domain = EmptyDomain;
             }
             else
             {
-                this.expressions.AddRange(domain);
+                this.domain.AddRange(domain);
             }
 
             this.model = model;
@@ -41,22 +45,22 @@ namespace ObjectServer.Model
         {
             if (exp.Length != 3)
             {
-                throw new ArgumentException("the parameter 'exp' must have 3 elements",  "exp");
+                throw new ArgumentException("the parameter 'exp' must have 3 elements", "exp");
             }
 
-            this.expressions.Add(exp);
+            this.domain.Add(exp);
         }
 
         public bool ContainsField(string field)
         {
-            return this.expressions.Exists(exp => (string)exp[0] == field);
+            return this.domain.Exists(exp => (string)exp[0] == field);
         }
 
         public string ToSql()
         {
             var sqlBuilder = new StringBuilder();
             var first = true;
-            foreach (var exp in this.expressions)
+            foreach (var exp in this.domain)
             {
                 if (first)
                 {
@@ -81,6 +85,33 @@ namespace ObjectServer.Model
             }
 
             return sqlBuilder.ToString();
+        }
+
+
+        public ExpressionList ToExpressionTree()
+        {
+            var expressions = new List<IExpression>(this.domain.Count + 1);
+
+            foreach (var domainItem in this.domain)
+            {
+                var opr = (string)domainItem[1];
+                var field = (string)domainItem[0];
+                var value = domainItem[2];
+
+                //考虑单元运算符
+                var exp = new BinaryExpression(field, opr, value);
+                expressions.Add(exp);
+            }
+            expressions.Add(s_trueExp);
+
+            var whereExps = new List<IExpression>(this.domain.Count);
+            for (int i = 0; i < expressions.Count; i += 2)
+            {
+                var andExp = new BinaryExpression(expressions[i], ExpressionOperator.AndOperator, expressions[i + 1]);
+                whereExps.Add(andExp);
+            }
+
+            return new ExpressionList(whereExps);
         }
 
         private void AddValue(StringBuilder sb, string field, object value)

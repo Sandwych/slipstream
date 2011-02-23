@@ -7,8 +7,28 @@ namespace ObjectServer.SqlTree
 {
     public class SelectStatement : Node, IStatement
     {
+        public IExpression Expression { get; set; }
         public FromClause FromClause { get; set; }
-        public ColumnList ColumnList { get; set; }
+        public WhereClause WhereClause { get; set; }
+        public ExpressionList ColumnList { get; set; }
+
+        public SelectStatement()
+        {
+        }
+
+        public SelectStatement(IExpression exp, FromClause from)
+        {
+            this.Expression = exp;
+            this.FromClause = from;
+        }
+
+        public SelectStatement(IExpression exp, FromClause from, WhereClause where)
+        {
+            this.Expression = exp;
+            this.FromClause = from;
+            this.WhereClause = where;
+        }
+
 
         #region INode 成员
 
@@ -17,14 +37,19 @@ namespace ObjectServer.SqlTree
             visitor.VisitBefore(this);
             visitor.VisitOn(this);
 
-            if (this.ColumnList != null)
+            if (this.Expression != null)
             {
-                this.ColumnList.Traverse(visitor);
+                this.Expression.Traverse(visitor);
             }
 
             if (this.FromClause != null)
             {
                 this.FromClause.Traverse(visitor);
+            }
+
+            if (this.WhereClause != null)
+            {
+                this.WhereClause.Traverse(visitor);
             }
 
             visitor.VisitAfter(this);

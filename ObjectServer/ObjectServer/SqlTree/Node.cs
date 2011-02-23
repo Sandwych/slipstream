@@ -5,6 +5,10 @@ using System.Text;
 
 namespace ObjectServer.SqlTree
 {
+
+    /// <summary>
+    /// SQL AST base class
+    /// </summary>
     public abstract class Node : INode
     {
 

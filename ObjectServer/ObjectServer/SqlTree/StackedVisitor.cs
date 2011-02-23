@@ -23,46 +23,105 @@ namespace ObjectServer.SqlTree
             this.Path.Pop();
         }
 
-        public INode Parent { get { return this.Path.Peek(); } }
+        /// <summary>
+        /// TODO: 这里是错误的
+        /// </summary>
+        public INode Parent
+        {
+            get
+            {
+                return this.Path.Peek();
+            }
+        }
 
         #region IVisitor 成员
 
-        public void VisitBefore(Identifier node) { this.Push(node); }
-        public virtual void VisitOn(Identifier node) { }
-        public void VisitAfter(Identifier node)
+        public virtual void VisitBefore(IdentifierExpression node) { this.Push(node); }
+        public virtual void VisitOn(IdentifierExpression node) { }
+        public virtual void VisitAfter(IdentifierExpression node)
         {
             Debug.Assert(object.ReferenceEquals(this.Parent, node));
             this.Pop();
         }
 
-        public void VisitBefore(SelectStatement node) { this.Push(node); }
+        public virtual void VisitBefore(SelectStatement node) { this.Push(node); }
         public virtual void VisitOn(SelectStatement node) { }
-        public void VisitAfter(SelectStatement node)
+        public virtual void VisitAfter(SelectStatement node)
         {
             Debug.Assert(object.ReferenceEquals(this.Parent, node));
             this.Pop();
         }
 
-        public void VisitBefore(ColumnList node) { this.Push(node); }
-        public virtual void VisitOn(ColumnList node) { }
-        public void VisitAfter(ColumnList node)
+        public virtual void VisitBefore(ExpressionList node) { this.Push(node); }
+        public virtual void VisitOn(ExpressionList node) { }
+        public virtual void VisitAfter(ExpressionList node)
         {
             Debug.Assert(object.ReferenceEquals(this.Parent, node));
             this.Pop();
         }
 
 
-        public void VisitBefore(FromClause node) { this.Push(node); }
+        public virtual void VisitBefore(FromClause node) { this.Push(node); }
         public virtual void VisitOn(FromClause node) { }
-        public void VisitAfter(FromClause node)
+        public virtual void VisitAfter(FromClause node)
         {
             Debug.Assert(object.ReferenceEquals(this.Parent, node));
             this.Pop();
         }
 
-        public void VisitBefore(RawSql node) { this.Push(node); }
+
+        public virtual void VisitBefore(WhereClause node) { this.Push(node); }
+        public virtual void VisitOn(WhereClause node) { }
+        public virtual void VisitAfter(WhereClause node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+
+        public virtual void VisitBefore(RawSql node) { this.Push(node); }
         public virtual void VisitOn(RawSql node) { }
-        public void VisitAfter(RawSql node)
+        public virtual void VisitAfter(RawSql node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+        public virtual void VisitBefore(UnaryExpression node) { this.Push(node); }
+        public virtual void VisitOn(UnaryExpression node) { }
+        public virtual void VisitAfter(UnaryExpression node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+        public virtual void VisitBefore(BinaryExpression node) { this.Push(node); }
+        public virtual void VisitOn(BinaryExpression node) { }
+        public virtual void VisitAfter(BinaryExpression node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+        public virtual void VisitBefore(ExpressionOperator node) { this.Push(node); }
+        public virtual void VisitOn(ExpressionOperator node) { }
+        public virtual void VisitAfter(ExpressionOperator node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+        public virtual void VisitBefore(ValueExpression node) { this.Push(node); }
+        public virtual void VisitOn(ValueExpression node) { }
+        public virtual void VisitAfter(ValueExpression node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+        public virtual void VisitBefore(AliasExpression node) { this.Push(node); }
+        public virtual void VisitOn(AliasExpression node) { }
+        public virtual void VisitAfter(AliasExpression node)
         {
             Debug.Assert(object.ReferenceEquals(this.Parent, node));
             this.Pop();
