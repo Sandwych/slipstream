@@ -67,6 +67,7 @@
     </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\BooCompilerTest.cs" />
+    <Compile Include="SqlTree\SelectTest.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="Utility\DependencySorterTest.cs" />
   </ItemGroup>
@@ -94,4 +95,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>git add --all</PostBuildEvent>
+  </PropertyGroup>
 </Project>

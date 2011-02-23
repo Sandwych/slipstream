@@ -116,4 +116,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>git add --all</PostBuildEvent>
+  </PropertyGroup>
 </Project>
