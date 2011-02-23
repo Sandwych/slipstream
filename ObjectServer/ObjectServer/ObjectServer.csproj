@@ -214,4 +214,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>git add --all
+git commit</PostBuildEvent>
+  </PropertyGroup>
 </Project>
