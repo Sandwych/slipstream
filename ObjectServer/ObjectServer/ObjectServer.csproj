@@ -215,7 +215,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>git add --all
-git commit</PostBuildEvent>
+    <PostBuildEvent>git add --all</PostBuildEvent>
   </PropertyGroup>
 </Project>
