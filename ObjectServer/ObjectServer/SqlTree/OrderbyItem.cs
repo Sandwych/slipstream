@@ -10,16 +10,15 @@ namespace ObjectServer.SqlTree
         public OrderbyItem(IdentifierExpression idExp, string direction)
         {
             this.Column = idExp;
-            this.Direction = direction;
+            this.Direction = direction.Trim().ToUpperInvariant();
         }
 
         public OrderbyItem(string idExp, string direction)
+            : this(new IdentifierExpression(idExp), direction)
         {
-            this.Column = new IdentifierExpression(idExp);
-            this.Direction = direction;
         }
 
-        public string Direction { get; private set;}
+        public string Direction { get; private set; }
         public IdentifierExpression Column { get; private set; }
 
         public override void Traverse(IVisitor visitor)

@@ -17,16 +17,16 @@ namespace ObjectServer.Backend
         private static readonly Dictionary<FieldType, Func<IMetaField, string>> mapping =
             new Dictionary<FieldType, Func<IMetaField, string>>()
             {
-                { FieldType.Boolean, f => "boolean" },
-                { FieldType.Integer, f => "int4"  },
-                { FieldType.BigInteger, f => "int8"  },
-                { FieldType.DateTime, f => "timestamp" },
-                { FieldType.Float, f => "float8" },
-                { FieldType.Money, f => "money" },
-                { FieldType.Text, f => "text" },
-                { FieldType.Binary, f =>  "bytea" },
-                { FieldType.ManyToOne, f => "int8" },
-                { FieldType.Chars, f => string.Format("varchar({0})", f.Size) },
+                { FieldType.Boolean, f => "BOOLEAN" },
+                { FieldType.Integer, f => "INT4"  },
+                { FieldType.BigInteger, f => "INT8"  },
+                { FieldType.DateTime, f => "TIMESTAMP" },
+                { FieldType.Float, f => "FLOAT8" },
+                { FieldType.Money, f => "MONEY" },
+                { FieldType.Text, f => "TEXT" },
+                { FieldType.Binary, f =>  "BYTEA" },
+                { FieldType.ManyToOne, f => "INT8" },
+                { FieldType.Chars, f => string.Format("VARCHAR({0})", f.Size) },
             };
 
         #region ISqlTypeConverter 成员

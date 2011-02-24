@@ -7,7 +7,7 @@ namespace ObjectServer.SqlTree
 {
     public class AliasExpression : Node, IExpression
     {
-        private static readonly RawSql asExpression = new RawSql("as");
+        private static readonly RawSql asExpression = new RawSql("AS");
 
         public AliasExpression(string lhs, string rhs) :
             this(new IdentifierExpression(lhs), new IdentifierExpression(rhs))

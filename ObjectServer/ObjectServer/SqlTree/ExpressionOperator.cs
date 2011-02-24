@@ -7,17 +7,17 @@ namespace ObjectServer.SqlTree
 {
     public class ExpressionOperator : Node
     {
-        private static readonly ExpressionOperator s_orOpr = new ExpressionOperator("or");
-        private static readonly ExpressionOperator s_andOpr = new ExpressionOperator("and");
-        private static readonly ExpressionOperator s_notOpr = new ExpressionOperator("not");
+        private static readonly ExpressionOperator s_orOpr = new ExpressionOperator("OR");
+        private static readonly ExpressionOperator s_andOpr = new ExpressionOperator("AND");
+        private static readonly ExpressionOperator s_notOpr = new ExpressionOperator("NOT");
         private static readonly ExpressionOperator s_equalOpr = new ExpressionOperator("=");
         private static readonly ExpressionOperator s_notEqualOpr = new ExpressionOperator("<>");
         private static readonly ExpressionOperator s_greaterOpr = new ExpressionOperator(">");
         private static readonly ExpressionOperator s_greaterEqualOpr = new ExpressionOperator(">=");
         private static readonly ExpressionOperator s_lessOpr = new ExpressionOperator("<");
         private static readonly ExpressionOperator s_lessEqualOpr = new ExpressionOperator("<=");
-        private static readonly ExpressionOperator s_likeOpr = new ExpressionOperator("like");
-        private static readonly ExpressionOperator s_notLikeOpr = new ExpressionOperator("not like");
+        private static readonly ExpressionOperator s_likeOpr = new ExpressionOperator("LIKE");
+        private static readonly ExpressionOperator s_notLikeOpr = new ExpressionOperator("NOT LIKE");
 
 
         public ExpressionOperator(string opr)
@@ -32,6 +32,8 @@ namespace ObjectServer.SqlTree
         public static ExpressionOperator NotOperator { get { return s_notOpr; } }
         public static ExpressionOperator EqualOperator { get { return s_equalOpr; } }
         public static ExpressionOperator NotEqualOperator { get { return s_notEqualOpr; } }
+        public static ExpressionOperator LikeOperator { get { return s_likeOpr; } }
+        public static ExpressionOperator NotLikeOperator { get { return s_notLikeOpr; } }
 
         public override void Traverse(IVisitor visitor)
         {

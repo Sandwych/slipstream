@@ -40,10 +40,10 @@ namespace ObjectServer.Backend.Postgresql
 
             var dbUser = "objectserver"; //TODO: 改成可配置的
             var sql = @"
-                select datname from pg_database  
-                    where datdba = (select distinct usesysid from pg_user where usename=@0) 
-                        and datname not in ('template0', 'template1', 'postgres')  
-	                order by datname asc;";
+                SELECT datname FROM pg_database  
+                    WHERE datdba = (SELECT DISTINCT usesysid FROM pg_user WHERE usename=@0) 
+                        AND datname NOT IN ('template0', 'template1', 'postgres')  
+	                ORDER BY datname ASC;";
 
             Logger.Info(() => (sql));
 

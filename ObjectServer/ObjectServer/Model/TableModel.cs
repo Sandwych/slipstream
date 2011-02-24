@@ -301,8 +301,7 @@ namespace ObjectServer.Model
 
             //.Where(f => !this.declaredFields[f].IsFunctionField);
 
-            //TODO: SQL 注入问题
-            var sql = string.Format("select {0} from \"{1}\" where \"id\" in ( {2} )",
+            var sql = string.Format("SELECT {0} FROM \"{1}\" WHERE \"id\" IN ({2})",
                 columnFields.ToCommaList(),
                 this.TableName,
                 ids.ToCommaList());
@@ -339,7 +338,7 @@ namespace ObjectServer.Model
             }
 
             var sql = string.Format(
-                "delete from \"{0}\" where \"id\" in ({1});",
+                "DELETE FROM \"{0}\" WHERE \"id\" IN ({1});",
                 this.TableName, ids.ToCommaList());
 
             var rowCount = session.Database.Execute(sql);

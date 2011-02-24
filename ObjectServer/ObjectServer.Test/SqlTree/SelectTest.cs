@@ -15,11 +15,11 @@ namespace ObjectServer.SqlTree.Test
         public void Test_select_statement()
         {
             var sql = @"
-select ""col1"", ""col2"", ""col3"" 
-    from ""table1"" as ""t1""
-    left join ""table2"" as ""t2"" on ""t2"".""table1_id"" = ""t1"".""id""
-    where (""col1"" = 123) and (""col2"" like 'exp3') 
-    order by ""id"" asc
+SELECT ""col1"", ""col2"", ""col3"" 
+    FROM ""table1"" AS ""t1""
+    LEFT JOIN ""table2"" AS ""t2"" ON ""t2"".""table1_id"" = ""t1"".""id""
+    WHERE (""col1"" = 123) AND (""col2"" LIKE 'exp3') 
+    ORDER BY ""id"" ASC
 "
             .Replace(" ", "").Replace("\n", "").Replace("\r", "");
 
@@ -29,11 +29,11 @@ select ""col1"", ""col2"", ""col3""
             var whereExp = new BinaryExpression(
                 new BracketedExpression(
                 new BinaryExpression("col1", "=", 123)),
-                new ExpressionOperator("and"),
+                ExpressionOperator.AndOperator,
                 new BracketedExpression(
                 new BinaryExpression(
                     new IdentifierExpression("col2"),
-                    new ExpressionOperator("like"),
+                    ExpressionOperator.LikeOperator,
                     new ValueExpression("exp3"))));
 
             IExpression joinExp = new BinaryExpression(
@@ -41,14 +41,14 @@ select ""col1"", ""col2"", ""col3""
                     new IdentifierExpression("t2"),
                     new ExpressionOperator("."),
                     new IdentifierExpression("table1_id")),
-                new ExpressionOperator("="),
+                    ExpressionOperator.EqualOperator,
                 new BinaryExpression(
                     new IdentifierExpression("t1"),
                     new ExpressionOperator("."),
                     new IdentifierExpression("id")));
 
             var joinClause = new JoinClause(
-                "left",
+                "LEFT",
                 new AliasExpression("table2", "t2"),
                 joinExp);
 
@@ -68,7 +68,7 @@ select ""col1"", ""col2"", ""col3""
         [Test]
         public void Test_raw_sql_node()
         {
-            var sql = "select \"col\" from \"table1\" where col = true";
+            var sql = "SELECT \"col\" FROM \"table1\" WHERE col = true";
             var sql1 = sql.Replace(" ", "");
             var select = new RawSql(sql);
             var genSql = GenerateSqlString(select);
@@ -78,21 +78,21 @@ select ""col1"", ""col2"", ""col3""
         [Test]
         public void Test_simplest_expression_node()
         {
-            var sql = "\"col\"=1 and \"name\" like '%myname%'";
+            var sql = "\"col\"=1 AND \"name\" LIKE '%myname%'";
             var sql1 = sql.Replace(" ", "");
 
             var exp1 = new BinaryExpression(
                 new IdentifierExpression("col"),
-                new ExpressionOperator("="),
+                ExpressionOperator.EqualOperator,
                 new ValueExpression(1));
 
             var exp2 = new BinaryExpression(
                 new IdentifierExpression("name"),
-                new ExpressionOperator("like"),
+                ExpressionOperator.LikeOperator,
                 new ValueExpression("%myname%"));
 
             var exp3 = new BinaryExpression(
-                exp1, new ExpressionOperator("and"), exp2);
+                exp1, ExpressionOperator.AndOperator, exp2);
 
             var genSql = GenerateSqlString(exp3);
             Assert.AreEqual(sql1, genSql);

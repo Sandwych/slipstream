@@ -47,14 +47,14 @@ foreach (var col in node.Expressions)
         {
             base.VisitOn(node);
 
-            this.sqlBuilder.Append(" from ");
+            this.sqlBuilder.Append(" FROM ");
         }
 
         public override void VisitOn(SelectStatement node)
         {
             base.VisitOn(node);
 
-            this.sqlBuilder.Append(" select ");
+            this.sqlBuilder.Append(" SELECT ");
         }
 
         public override void VisitBefore(JoinClause node)
@@ -63,20 +63,20 @@ foreach (var col in node.Expressions)
 
             this.sqlBuilder.Append(" ");
             this.sqlBuilder.Append(node.JoinType);
-            this.sqlBuilder.Append(" join ");
+            this.sqlBuilder.Append(" JOIN ");
         }
 
         public override void VisitOn(JoinClause node)
         {
             base.VisitOn(node);
 
-            this.sqlBuilder.Append(" on ");
+            this.sqlBuilder.Append(" ON ");
         }
 
         public override void VisitBefore(OrderbyClause node)
         {
             base.VisitBefore(node);
-            this.sqlBuilder.Append(" order by ");
+            this.sqlBuilder.Append(" ORDER BY ");
         }
 
         public override void VisitAfter(OrderbyItem node)
@@ -175,7 +175,7 @@ foreach (var col in node.Expressions)
         {
             base.VisitOn(node);
 
-            this.sqlBuilder.Append(" where ");
+            this.sqlBuilder.Append(" WHERE ");
         }
 
         public override void VisitOn(AliasExpression node)

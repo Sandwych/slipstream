@@ -28,7 +28,7 @@ namespace ObjectServer.Backend.Postgresql
         {
             //检查连接
             var sql =
-                "select count(relname) from pg_class where relkind IN ('r','v') and relname = @0";
+                "SELECT COUNT(relname) FROM pg_class WHERE relkind IN ('r','v') AND relname = @0";
 
             var n = (long)db.QueryValue(sql, tableName);
             return n > 0;
@@ -38,11 +38,11 @@ namespace ObjectServer.Backend.Postgresql
         {
             //TODO SQL 注入风险
             var sql = string.Format(
-                @"create table ""{0}"" (id bigserial not null, primary key(id)) without oids",
+                @"CREATE TABLE ""{0}"" (id BIGSERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS",
                 tableName);
             db.Execute(sql);
             sql = string.Format(
-                @"comment on table ""{0}"" is '{1}';",
+                @"COMMENT ON TABLE ""{0}"" IS '{1}';",
                 tableName, label);
             db.Execute(sql);
         }
@@ -50,15 +50,15 @@ namespace ObjectServer.Backend.Postgresql
         public void AddColumn(IDatabaseContext db, IMetaField field)
         {
             var sqlType = PgSqlTypeConverter.GetSqlType(field);
-            var notNull = field.Required ? "not null" : "";
+            var notNull = field.Required ? "NOT NULL" : "";
 
             var sql = string.Format(
-                @"alter table ""{0}"" add column ""{1}"" {2} {3}",
+                @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2} {3}",
                 this.Name, field.Name, sqlType, notNull);
             db.Execute(sql);
 
             sql = string.Format(
-                "comment on column \"{0}\".\"{1}\" is '{2}'",
+                "COMMENT ON COLUMN \"{0}\".\"{1}\" IS '{2}'",
                 this.Name, field.Name, field.Name);
             db.Execute(sql);
         }
@@ -66,7 +66,7 @@ namespace ObjectServer.Backend.Postgresql
         public void DeleteColumn(IDatabaseContext db, string columnName)
         {
             var sql = string.Format(
-                "alter table \"{0}\" drop column \"{1}\"",
+                "ALTER TABLE \"{0}\" DROP COLUMN \"{1}\"",
                 this.Name, columnName);
 
             db.Execute(columnName);
@@ -85,10 +85,10 @@ namespace ObjectServer.Backend.Postgresql
         private void LoadColumns(IDatabaseContext db, string tableName)
         {
             var sql = @"
-select column_name, data_type, is_nullable
-    from information_schema.columns
-    where table_name = @0
-    order by ordinal_position;
+SELECT column_name, data_type, is_nullable
+    FROM information_schema.columns
+    WHERE table_name = @0
+    ORDER BY ordinal_position;
 ";
             var records = db.QueryAsDictionary(sql, tableName);
             this.columns.Clear();
@@ -119,11 +119,11 @@ select column_name, data_type, is_nullable
         public void AddFK(IDatabaseContext db, string columnName, string refTable, ReferentialAction refAct)
         {
             //TODO: 设置其它的 ReferentialAction
-            var onDelete = "set null";
+            var onDelete = "SET NULL";
 
             var fkName = this.GenerateFkName(columnName);
             var sql = string.Format(
-                "alter table \"{0}\" add constraint \"{1}\" foreign key (\"{2}\") references \"{3}\" on delete {4}",
+                "ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" FOREIGN KEY (\"{2}\") REFERENCES \"{3}\" ON DELETE {4}",
                 this.Name, fkName, columnName, refTable, onDelete);
 
             db.Execute(sql);
@@ -139,7 +139,7 @@ select column_name, data_type, is_nullable
         public bool FKExists(IDatabaseContext db, string columnName)
         {
             var fkName = this.GenerateFkName(columnName);
-            var sql = "select count(conname) from pg_constraint where conname = @0";
+            var sql = "SELECT COUNT(conname) FROM pg_constraint WHERE conname = @0";
             var n = (long)db.QueryValue(sql, fkName);
             return n > 0;
         }
