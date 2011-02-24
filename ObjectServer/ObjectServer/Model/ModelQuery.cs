@@ -27,7 +27,7 @@ namespace ObjectServer.Model
 
             var fields = domain.Select(d => (string)d[0]);
             var parser = new DomainParser(this.model, domain);
-            var columnExps = new ExpressionList(new string[] { "id" });
+            var columnExps = new AliasExpressionList(new string[] { "id" });
             var whereExp = parser.ToExpressionTree();
             var select = new SelectStatement(
                 columnExps,

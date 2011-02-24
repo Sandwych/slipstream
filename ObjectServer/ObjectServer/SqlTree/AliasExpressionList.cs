@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ObjectServer.SqlTree
 {
-    public class ExpressionList : Node, IExpression
+    public class AliasExpressionList : Node, IExpressionCollection
     {
-        private List<IExpression> expressions = new List<IExpression>();
+        private List<AliasExpression> expressions = new List<AliasExpression>();
 
-        public ExpressionList(IEnumerable<string> columns)
+        public AliasExpressionList(IEnumerable<string> columns)
         {
             this.expressions.Capacity = columns.Count();
             foreach (var f in columns)
@@ -19,12 +19,12 @@ namespace ObjectServer.SqlTree
             }
         }
 
-        public ExpressionList(IEnumerable<IExpression> exps)
+        public AliasExpressionList(IEnumerable<AliasExpression> exps)
         {
             this.expressions.AddRange(exps);
         }
 
-        public IList<IExpression> Expressions
+        public IList<AliasExpression> Expressions
         {
             get { return this.expressions; }
         }
@@ -72,7 +72,7 @@ namespace ObjectServer.SqlTree
 
         public override object Clone()
         {
-            return new ExpressionList(this.Expressions);
+            return new AliasExpressionList(this.Expressions);
         }
 
         #endregion

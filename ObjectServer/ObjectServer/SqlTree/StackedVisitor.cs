@@ -23,14 +23,18 @@ namespace ObjectServer.SqlTree
             this.Path.Pop();
         }
 
-        /// <summary>
-        /// TODO: 这里是错误的
-        /// </summary>
         public INode Parent
         {
             get
             {
-                return this.Path.Peek();
+                if (this.Path.Count > 0)
+                {
+                    return this.Path.Peek();
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -52,9 +56,9 @@ namespace ObjectServer.SqlTree
             this.Pop();
         }
 
-        public virtual void VisitBefore(ExpressionList node) { this.Push(node); }
-        public virtual void VisitOn(ExpressionList node) { }
-        public virtual void VisitAfter(ExpressionList node)
+        public virtual void VisitBefore(AliasExpressionList node) { this.Push(node); }
+        public virtual void VisitOn(AliasExpressionList node) { }
+        public virtual void VisitAfter(AliasExpressionList node)
         {
             Debug.Assert(object.ReferenceEquals(this.Parent, node));
             this.Pop();
@@ -136,6 +140,22 @@ namespace ObjectServer.SqlTree
         }
 
 
+        public virtual void VisitBefore(ExpressionGroup node) { this.Push(node); }
+        public virtual void VisitOn(ExpressionGroup node) { }
+        public virtual void VisitAfter(ExpressionGroup node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+
+        public virtual void VisitBefore(BracketedExpression node) { this.Push(node); }
+        public virtual void VisitOn(BracketedExpression node) { }
+        public virtual void VisitAfter(BracketedExpression node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
         #endregion
     }
 }

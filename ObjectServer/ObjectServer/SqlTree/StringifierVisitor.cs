@@ -24,7 +24,7 @@ namespace ObjectServer.SqlTree
         }
 
 
-        public override void VisitOn(ExpressionList node)
+        public override void VisitOn(AliasExpressionList node)
         {
             /*
 bool isFirst = true;
@@ -90,6 +90,20 @@ foreach (var col in node.Expressions)
             this.sqlBuilder.Append(' ');
         }
 
+        public override void VisitAfter(BinaryExpression node)
+        {
+            base.VisitAfter(node);
+
+            if (this.Parent is IExpressionCollection)
+            {
+                var coll = (IExpressionCollection)this.Parent;
+                if (!coll.IsLastExpression(node))
+                {
+                    this.sqlBuilder.Append(", ");
+                }
+            }
+        }
+
         public override void VisitOn(ExpressionOperator node)
         {
             base.VisitOn(node);
@@ -129,6 +143,20 @@ foreach (var col in node.Expressions)
             this.sqlBuilder.Append(' ');
         }
 
+        public override void VisitAfter(ValueExpression node)
+        {
+            base.VisitAfter(node);
+
+            if (this.Parent is IExpressionCollection)
+            {
+                var coll = (IExpressionCollection)this.Parent;
+                if (!coll.IsLastExpression(node))
+                {
+                    this.sqlBuilder.Append(", ");
+                }
+            }
+        }
+
         public override void VisitOn(WhereClause node)
         {
             base.VisitOn(node);
@@ -146,14 +174,43 @@ foreach (var col in node.Expressions)
         {
             base.VisitAfter(node);
 
-            if (this.Parent is ExpressionList)
+            if (this.Parent is IExpressionCollection)
             {
-                var coll = (ExpressionList)this.Parent;
+                var coll = (IExpressionCollection)this.Parent;
                 if (!coll.IsLastExpression(node))
                 {
                     this.sqlBuilder.Append(", ");
                 }
             }
+        }
+
+        public override void VisitBefore(ExpressionGroup node)
+        {
+            base.VisitBefore(node);
+
+            this.sqlBuilder.Append('(');
+        }
+
+        public override void VisitAfter(ExpressionGroup node)
+        {
+            base.VisitAfter(node);
+
+            this.sqlBuilder.Append(')');
+        }
+
+
+        public override void VisitBefore(BracketedExpression node)
+        {
+            base.VisitBefore(node);
+
+            this.sqlBuilder.Append('(');
+        }
+
+        public override void VisitAfter(BracketedExpression node)
+        {
+            base.VisitAfter(node);
+
+            this.sqlBuilder.Append(')');
         }
 
         #endregion

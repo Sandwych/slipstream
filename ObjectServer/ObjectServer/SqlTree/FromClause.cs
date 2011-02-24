@@ -10,19 +10,19 @@ namespace ObjectServer.SqlTree
         public FromClause(IEnumerable<string> tokens)
         {
             var n = tokens.Count();
-            var exps = new IExpression[n];
+            var exps = new AliasExpression[n];
             var i = 0;
             foreach (var tok in tokens)
             {
-                exps[i] = new IdentifierExpression(tok);
+                exps[i] = new AliasExpression(tok);
                 i++;
             }
 
-            var expColl = new ExpressionList(exps);
+            var expColl = new AliasExpressionList(exps);
             this.ExpressionCollection = expColl;
         }
 
-        public FromClause(ExpressionList exp)
+        public FromClause(AliasExpressionList exp)
         {
             this.ExpressionCollection = exp;
         }
@@ -30,10 +30,10 @@ namespace ObjectServer.SqlTree
         public FromClause(AliasExpression aliasExp)
         {
             var aliasExps = new AliasExpression[] { aliasExp };
-            this.ExpressionCollection = new ExpressionList(aliasExps);
+            this.ExpressionCollection = new AliasExpressionList(aliasExps);
         }
 
-        public ExpressionList ExpressionCollection { get; private set; }
+        public AliasExpressionList ExpressionCollection { get; private set; }
 
         #region INode 成员
 

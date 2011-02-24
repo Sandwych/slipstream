@@ -146,7 +146,7 @@
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="ServiceException.cs" />
     <Compile Include="ServiceObjectExtensions.cs" />
-    <Compile Include="SqlTree\ExpressionList.cs" />
+    <Compile Include="SqlTree\AliasExpressionList.cs" />
     <Compile Include="SqlTree\DialectVisitor.cs" />
     <Compile Include="SqlTree\BinaryExpression.cs" />
     <Compile Include="SqlTree\ExpressionOperator.cs" />
@@ -154,6 +154,7 @@
     <Compile Include="SqlTree\IClause.cs" />
     <Compile Include="SqlTree\IdentifierExpression.cs" />
     <Compile Include="SqlTree\IExpression.cs" />
+    <Compile Include="SqlTree\IExpressionCollection.cs" />
     <Compile Include="SqlTree\INode.cs" />
     <Compile Include="SqlTree\IStatement.cs" />
     <Compile Include="SqlTree\IVisitor.cs" />
@@ -169,6 +170,8 @@
     <Compile Include="SqlTree\UnaryExpression.cs" />
     <Compile Include="SqlTree\ValueExpression.cs" />
     <Compile Include="SqlTree\AliasExpression.cs" />
+    <Compile Include="SqlTree\ExpressionGroup.cs" />
+    <Compile Include="SqlTree\BracketedExpression.cs" />
     <Compile Include="StaticServiceObjectBase.cs" />
     <Compile Include="ServiceObjectAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />

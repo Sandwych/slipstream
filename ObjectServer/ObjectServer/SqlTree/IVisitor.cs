@@ -15,9 +15,9 @@ namespace ObjectServer.SqlTree
         void VisitOn(SelectStatement node);
         void VisitAfter(SelectStatement node);
 
-        void VisitBefore(ExpressionList node);
-        void VisitOn(ExpressionList node);
-        void VisitAfter(ExpressionList node);
+        void VisitBefore(AliasExpressionList node);
+        void VisitOn(AliasExpressionList node);
+        void VisitAfter(AliasExpressionList node);
 
         void VisitBefore(FromClause node);
         void VisitOn(FromClause node);
@@ -56,6 +56,15 @@ namespace ObjectServer.SqlTree
         void VisitBefore(AliasExpression node);
         void VisitOn(AliasExpression node);
         void VisitAfter(AliasExpression node);
+
+        void VisitBefore(ExpressionGroup node);
+        void VisitOn(ExpressionGroup node);
+        void VisitAfter(ExpressionGroup node);
+
+
+        void VisitBefore(BracketedExpression node);
+        void VisitOn(BracketedExpression node);
+        void VisitAfter(BracketedExpression node);
 
     }
 }

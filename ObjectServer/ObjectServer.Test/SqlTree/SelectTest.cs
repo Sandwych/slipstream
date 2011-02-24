@@ -18,26 +18,24 @@ namespace ObjectServer.SqlTree.Test
 select ""col1"", ""col2"", ""col3"" 
     from ""table1"" as ""t1""
     left join ""table2"" as ""t2"" on ""t2"".""table1_id"" = ""t1"".""id""
-    where ""col1"" = 123 and ""col2"" like 'exp3' 
+    where (""col1"" = 123) and (""col2"" like 'exp3') 
 "
             .Replace(" ", "").Replace("\n", "").Replace("\r", "");
 
-            var cols = new ExpressionList(
-                new IExpression[] { 
-                    new AliasExpression("col1"), 
-                    new AliasExpression("col2"), 
-                    new AliasExpression("col3"), 
-                });
+            var cols = new AliasExpressionList(new string[] { 
+                    "col1", "col2", "col3", });
 
             var whereExp = new BinaryExpression(
-                new BinaryExpression("col1", "=", 123),
+                new BracketedExpression(
+                new BinaryExpression("col1", "=", 123)),
                 new ExpressionOperator("and"),
+                new BracketedExpression(
                 new BinaryExpression(
                     new IdentifierExpression("col2"),
                     new ExpressionOperator("like"),
-                    new ValueExpression("exp3")));
+                    new ValueExpression("exp3"))));
 
-            var joinExp = new BinaryExpression(
+            IExpression joinExp = new BinaryExpression(
                 new BinaryExpression(
                     new IdentifierExpression("t2"),
                     new ExpressionOperator("."),

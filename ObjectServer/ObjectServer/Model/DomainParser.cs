@@ -88,7 +88,7 @@ namespace ObjectServer.Model
         }
 
 
-        public ExpressionList ToExpressionTree()
+        public IExpression ToExpressionTree()
         {
             var expressions = new List<IExpression>(this.domain.Count + 1);
 
@@ -111,7 +111,7 @@ namespace ObjectServer.Model
                 whereExps.Add(andExp);
             }
 
-            return new ExpressionList(whereExps);
+            return whereExps[0];
         }
 
         private void AddValue(StringBuilder sb, string field, object value)
