@@ -15,10 +15,19 @@ namespace ObjectServer
     /// <summary>
     /// Singleton
     /// </summary>
-    internal sealed class Database
+    internal sealed class DatabasePool : IGlobalObject
     {
         private Dictionary<string, ObjectPool> pools =
             new Dictionary<string, ObjectPool>();
+
+
+        #region IGlobalObject 成员
+
+        public void Initialize(Config cfg)
+        {
+        }
+
+        #endregion
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]

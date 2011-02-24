@@ -20,7 +20,7 @@ namespace ObjectServer
     /// </summary>
     [Serializable]
     [JsonObject("module")]
-    public sealed class ModulePool
+    public sealed class ModulePool : IGlobalObject
     {
         public const string ModuleFileName = "module.js";
 
@@ -32,6 +32,16 @@ namespace ObjectServer
         public ModulePool()
         {
         }
+
+
+        #region IGlobalObject 成员
+
+        public void Initialize(Config cfg)
+        {
+            this.LookupAllModules(cfg.ModulePath);
+        }
+
+        #endregion
 
 
         public bool Contains(string moduleName)

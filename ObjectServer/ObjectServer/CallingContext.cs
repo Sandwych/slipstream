@@ -11,16 +11,50 @@ namespace ObjectServer
 {
     internal class CallingContext : ICallingContext
     {
+        private bool ownDb;
+        /// <summary>
+        /// 安全的创建 CallingContext，会检查 session 等
+        /// </summary>
+        /// <param name="sessionId"></param>
+        public CallingContext(Guid sessionId)
+        {
+            var sessStore = ObjectServerStarter.SessionStore;
+            var session = sessStore.GetSession(sessionId);
+            if (session == null || !session.IsActive)
+            {
+                throw new System.Security.SecurityException("Not logged!");
+            }
+
+            Logger.Info(() =>
+                string.Format("CallingContext is opening for sessionId: [{0}]", sessionId));
+
+            this.ownDb = true;
+            this.Database = DataProvider.OpenDatabase(session.Database);
+
+        }
+
+        /// <summary>
+        /// 直接建立 calling context，忽略 session 、登录等
+        /// </summary>
+        /// <param name="dbName"></param>
         public CallingContext(string dbName)
         {
-            Logger.Info(() => string.Format("CallingContext is opening for database: [{0}]", dbName));
+            Logger.Info(() =>
+                string.Format("CallingContext is opening for database: [{0}]", dbName));
 
+            this.ownDb = true;
             this.Database = DataProvider.OpenDatabase(dbName);
+            this.Session = new Session(dbName, "system", 0);
         }
 
         public CallingContext(IDatabaseContext db)
         {
+            Logger.Info(() =>
+                string.Format("CallingContext is opening for DatabaseContext"));
+
+            this.ownDb = false;
             this.Database = db;
+            this.Session = new Session("", "system", 0);
         }
 
         #region ICallingContext 成员
@@ -30,6 +64,8 @@ namespace ObjectServer
             get;
             private set;
         }
+
+        public Session Session { get; private set; }
 
         public ObjectPool Pool
         {
@@ -45,7 +81,10 @@ namespace ObjectServer
 
         public void Dispose()
         {
-            this.Database.Close();
+            if (this.ownDb)
+            {
+                this.Database.Close();
+            }
 
             Logger.Info(() => "CallingContext closed");
         }

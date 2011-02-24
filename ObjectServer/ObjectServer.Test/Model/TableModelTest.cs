@@ -22,7 +22,7 @@ namespace ObjectServer.Model.Test
         public void Simple_fields_crud()
         {
             var modelName = "test.test_object";
-            var dbName = "objectserver";
+            var dbName = this.SessionId;
 
             var values = new Dictionary<string, object>
             {
@@ -31,29 +31,29 @@ namespace ObjectServer.Model.Test
                 { "field1", 123 },
                 { "field2", 100 },
             };
-            var id = proxy.CreateModel(dbName, modelName, values);
+            var id = proxy.CreateModel(this.SessionId, modelName, values);
             Assert.True(id > 0);
 
             var domain1 = new object[][] { new object[] { "name", "=", "sweet_name" } };
-            var foundIds = proxy.SearchModel(dbName, modelName, domain1, 0, 100);
+            var foundIds = proxy.SearchModel(this.SessionId, modelName, domain1, 0, 100);
             Assert.AreEqual(1, foundIds.Length);
             Assert.AreEqual(id, foundIds[0]);
 
             var newValues = new Dictionary<string, object> {
                 { "name", "changed_name" },
             };
-            proxy.WriteModel(dbName, modelName, id, newValues);
+            proxy.WriteModel(this.SessionId, modelName, id, newValues);
 
             var ids = new object[] { id };
-            var data = proxy.ReadModel(dbName, modelName, ids, null);
+            var data = proxy.ReadModel(this.SessionId, modelName, ids, null);
             Assert.AreEqual(1, data.Length);
             Assert.AreEqual("changed_name", data[0]["name"]);
             Assert.AreEqual(223, data[0]["field3"]); //检测函数字段的计算是否正确
 
 
-            proxy.DeleteModel(dbName, modelName, ids);
+            proxy.DeleteModel(this.SessionId, modelName, ids);
 
-            foundIds = proxy.SearchModel(dbName, modelName, domain1, 0, 100);
+            foundIds = proxy.SearchModel(this.SessionId, modelName, domain1, 0, 100);
             Assert.AreEqual(0, foundIds.Length);
         }
 
@@ -65,7 +65,7 @@ namespace ObjectServer.Model.Test
             {
                 { "name", "master-obj" },
             };
-            var masterId = proxy.CreateModel("objectserver", "test.master", masterPropBag);
+            var masterId = proxy.CreateModel(this.SessionId, "test.master", masterPropBag);
 
             var childPropBag = new Dictionary<string, object>()
             {
@@ -73,10 +73,10 @@ namespace ObjectServer.Model.Test
                 { "master", masterId },
             };
 
-            var childId = (long)proxy.CreateModel("objectserver", "test.child", childPropBag);
+            var childId = (long)proxy.CreateModel(this.SessionId, "test.child", childPropBag);
 
             var ids = new object[] { childId };
-            var rows = proxy.ReadModel("objectserver", "test.child", ids, null);
+            var rows = proxy.ReadModel(this.SessionId, "test.child", ids, null);
             var masterField = rows[0]["master"];
             Assert.AreEqual(typeof(RelatedField), masterField.GetType());
             var one2ManyField = (RelatedField)masterField;
@@ -85,7 +85,7 @@ namespace ObjectServer.Model.Test
 
             var masterFieldNames = new object[] { "name", "children" };
             var masterRows = proxy.ReadModel(
-                "objectserver", "test.master",
+                this.SessionId, "test.master",
                 new object[] { masterId }, masterFieldNames);
             var master = masterRows[0];
             var children = (object[])master["children"];
@@ -105,41 +105,41 @@ namespace ObjectServer.Model.Test
                 { "admin", true },
             };
 
-            var userId1 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
-            var userId2 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
-            var userId3 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
-            var userId4 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
-            var userId5 = (long)proxy.CreateModel("objectserver", "core.user", userRecord);
+            var userId1 = (long)proxy.CreateModel(this.SessionId, "core.user", userRecord);
+            var userId2 = (long)proxy.CreateModel(this.SessionId, "core.user", userRecord);
+            var userId3 = (long)proxy.CreateModel(this.SessionId, "core.user", userRecord);
+            var userId4 = (long)proxy.CreateModel(this.SessionId, "core.user", userRecord);
+            var userId5 = (long)proxy.CreateModel(this.SessionId, "core.user", userRecord);
 
             var groupRecord = new Dictionary<string, object>()
             {
                 { "name", "group" },
             };
 
-            var groupId1 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
-            var groupId2 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
-            var groupId3 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
-            var groupId4 = (long)proxy.CreateModel("objectserver", "core.group", groupRecord);
+            var groupId1 = (long)proxy.CreateModel(this.SessionId, "core.group", groupRecord);
+            var groupId2 = (long)proxy.CreateModel(this.SessionId, "core.group", groupRecord);
+            var groupId3 = (long)proxy.CreateModel(this.SessionId, "core.group", groupRecord);
+            var groupId4 = (long)proxy.CreateModel(this.SessionId, "core.group", groupRecord);
             var groupIds = new object[] { groupId1, groupId2 };
 
             //设置user1 对应 group2, group3, group4
             //设置 user2  对应 group3 group4
 
-            proxy.CreateModel("objectserver", "core.user_group",
+            proxy.CreateModel(this.SessionId, "core.user_group",
                 new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId2 }, });
-            proxy.CreateModel("objectserver", "core.user_group",
+            proxy.CreateModel(this.SessionId, "core.user_group",
                 new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId3 }, });
-            proxy.CreateModel("objectserver", "core.user_group",
+            proxy.CreateModel(this.SessionId, "core.user_group",
                 new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId4 }, });
 
 
-            proxy.CreateModel("objectserver", "core.user_group",
+            proxy.CreateModel(this.SessionId, "core.user_group",
                 new Dictionary<string, object>() { { "uid", userId2 }, { "gid", groupId3 }, });
-            proxy.CreateModel("objectserver", "core.user_group",
+            proxy.CreateModel(this.SessionId, "core.user_group",
                 new Dictionary<string, object>() { { "uid", userId2 }, { "gid", groupId4 }, });
 
 
-            var users = proxy.ReadModel("objectserver", "core.user",
+            var users = proxy.ReadModel(this.SessionId, "core.user",
                 new object[] { userId1, userId2 }, new object[] { "name", "groups" });
 
             Assert.AreEqual(2, users.Length);
@@ -157,9 +157,9 @@ namespace ObjectServer.Model.Test
         {
             var master = new Dictionary<string, object>();
 
-            var id = proxy.CreateModel("objectserver", "test.master", master);
+            var id = proxy.CreateModel(this.SessionId, "test.master", master);
 
-            var masterRecords = proxy.ReadModel("objectserver", "test.master",
+            var masterRecords = proxy.ReadModel(this.SessionId, "test.master",
                 new object[] { id }, null);
             var record = masterRecords[0];
 
@@ -178,9 +178,9 @@ namespace ObjectServer.Model.Test
                 { "name", nameFieldValue },
             };
 
-            var id = proxy.CreateModel("objectserver", "test.child", child);
+            var id = proxy.CreateModel(this.SessionId, "test.child", child);
 
-            var children = proxy.ReadModel("objectserver", "test.child",
+            var children = proxy.ReadModel(this.SessionId, "test.child",
                 new object[] { id }, new object[] { "name", "master" });
             var record = children[0];
 

@@ -18,6 +18,7 @@ namespace ObjectServer
         {
             this.LogPath = null;
             this.LogLevel = "info";
+            this.SessionTimeout = new TimeSpan(0, 20, 0);
         }
 
 
@@ -73,6 +74,9 @@ namespace ObjectServer
 
         [JsonProperty("log-level")]
         public string LogLevel { get; set; }
+
+        [JsonProperty("session_timeout")]
+        public TimeSpan SessionTimeout { get; set; }
 
         [JsonIgnore]
         public string RootPasswordHash { get; private set; }

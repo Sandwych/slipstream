@@ -3,26 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Transactions;
+using System.Reflection;
 
 using ObjectServer.Backend;
+using ObjectServer.Core;
 
 namespace ObjectServer
 {
     public sealed class LocalService : MarshalByRefObject, IService
     {
-        public Guid LogOn(string dbName, string username, string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void LogOff(string dbName, Guid session)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object Execute(string dbName, string objectName, string name, params object[] args)
+        public string LogOn(string dbName, string username, string password)
         {
             using (var callingContext = new CallingContext(dbName))
+            {
+                var userModel = callingContext.Pool[UserModel.ModelName];
+                var method = userModel.GetServiceMethod("LogOn");
+                return (string)ExecuteTransactional(
+                    callingContext, userModel, method, callingContext, dbName, username, password);
+            }
+        }
+
+        public void LogOff(string dbName, string sessionId)
+        {
+            using (var callingContext = new CallingContext(dbName))
+            {
+                callingContext.Database.Open();
+
+                var userModel = (UserModel)callingContext.Pool[UserModel.ModelName];
+                userModel.LogOut(callingContext, sessionId);
+            }
+        }
+
+        public object Execute(string sessionId, string objectName, string name, params object[] args)
+        {
+            var gsid = new Guid(sessionId);
+            using (var callingContext = new CallingContext(gsid))
             {
                 var obj = callingContext.Pool[objectName];
                 var method = obj.GetServiceMethod(name);
@@ -42,7 +57,7 @@ namespace ObjectServer
         }
 
         private static object ExecuteTransactional(
-            CallingContext callingContext, IServiceObject obj, System.Reflection.MethodInfo method, object[] internalArgs)
+            CallingContext callingContext, IServiceObject obj, MethodInfo method, params object[] internalArgs)
         {
             callingContext.Database.Open();
 
@@ -53,7 +68,7 @@ namespace ObjectServer
                 tx.Commit();
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 tx.Rollback();
                 throw ex;

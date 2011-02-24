@@ -16,7 +16,13 @@ namespace ObjectServer
             {
                 ObjectServerStarter.Initialize();
             }
+
+            var proxy = new LocalService();
+
+            this.SessionId = proxy.LogOn("objectserver", "root", "root");
         }
+
+        public string SessionId { get; private set; }
 
     }
 }

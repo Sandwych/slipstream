@@ -24,8 +24,8 @@ namespace ObjectServer.Core.Test
                 { "admin", false },
             };
 
-            var uid = proxy.CreateModel("objectserver", UserModel.ModelName, userRecord);
-            var records = proxy.ReadModel("objectserver", UserModel.ModelName, new object[] { uid }, null);
+            var uid = proxy.CreateModel(this.SessionId, UserModel.ModelName, userRecord);
+            var records = proxy.ReadModel(this.SessionId, UserModel.ModelName, new object[] { uid }, null);
             var user1 = records[0];
 
             var salt = (string)user1["salt"];

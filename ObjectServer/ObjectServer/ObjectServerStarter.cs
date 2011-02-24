@@ -22,8 +22,9 @@ namespace ObjectServer
 
         private Config config;
         private bool initialized;
-        private Database database = new Database();
+        private DatabasePool dbPool = new DatabasePool();
         private ModulePool modulePool = new ModulePool();
+        private SessionStore sessionStore = new SessionStore();
 
         private ObjectServerStarter()
         {
@@ -46,10 +47,13 @@ namespace ObjectServer
                 throw new ArgumentNullException("cfg");
             }
 
+            s_instance.sessionStore.Initialize(cfg);
+            s_instance.dbPool.Initialize(cfg);
+
             //查找所有模块并加载模块元信息
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
-                s_instance.modulePool.LookupAllModules(cfg.ModulePath);
+                s_instance.modulePool.Initialize(cfg);
             }
 
             ConfigurateLog4net(cfg);
@@ -83,6 +87,7 @@ namespace ObjectServer
                 RootPassword = "root",
                 Debug = true,
                 LogLevel = "debug",
+                SessionTimeout = TimeSpan.MaxValue,
             };
             Initialize(cfg);
         }
@@ -94,11 +99,11 @@ namespace ObjectServer
         }
 
 
-        internal static Database Pooler
+        internal static DatabasePool Pooler
         {
             get
             {
-                return s_instance.database;
+                return s_instance.dbPool;
             }
         }
 
@@ -107,6 +112,10 @@ namespace ObjectServer
             get { return s_instance.modulePool; }
         }
 
+        public static SessionStore SessionStore
+        {
+            get { return s_instance.sessionStore; }
+        }
 
         private static void ConfigurateLog4net(Config cfg)
         {

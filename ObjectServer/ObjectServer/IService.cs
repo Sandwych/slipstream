@@ -7,12 +7,20 @@ namespace ObjectServer
 {
     public interface IService
     {
-        Guid LogOn(string dbName, string login, string password);
-        void LogOff(string dbName, Guid session);
+        /// <summary>
+        /// 用户登录系统
+        /// </summary>
+        /// <param name="dbName"></param>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        /// <returns>登录成功返回 session ID, 失败返回 null</returns>
+        string LogOn(string dbName, string login, string password);
+
+        void LogOff(string dbName, string sessionId);
 
 
         object Execute(
-            string dbName, string objectName, string name, params object[] args);
+            string sessionId, string objectName, string name, params object[] args);
 
         string[] ListDatabases();
         void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword);
