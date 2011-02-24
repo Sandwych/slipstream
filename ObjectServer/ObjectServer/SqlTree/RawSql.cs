@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.SqlTree
 {
-    public class RawSql : Node
+    public sealed class RawSql : Node
     {
         public RawSql(string sql)
         {

@@ -151,6 +151,7 @@
     <Compile Include="SqlTree\BinaryExpression.cs" />
     <Compile Include="SqlTree\ExpressionOperator.cs" />
     <Compile Include="SqlTree\FromClause.cs" />
+    <Compile Include="SqlTree\IBinaryExpression.cs" />
     <Compile Include="SqlTree\IClause.cs" />
     <Compile Include="SqlTree\IdentifierExpression.cs" />
     <Compile Include="SqlTree\IExpression.cs" />
@@ -172,6 +173,8 @@
     <Compile Include="SqlTree\AliasExpression.cs" />
     <Compile Include="SqlTree\ExpressionGroup.cs" />
     <Compile Include="SqlTree\BracketedExpression.cs" />
+    <Compile Include="SqlTree\OrderbyClause.cs" />
+    <Compile Include="SqlTree\OrderbyItem.cs" />
     <Compile Include="StaticServiceObjectBase.cs" />
     <Compile Include="ServiceObjectAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />

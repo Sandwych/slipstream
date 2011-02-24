@@ -32,6 +32,14 @@ namespace ObjectServer.SqlTree
         void VisitOn(JoinClause node);
         void VisitAfter(JoinClause node);
 
+        void VisitBefore(OrderbyClause node);
+        void VisitOn(OrderbyClause node);
+        void VisitAfter(OrderbyClause node);
+
+        void VisitBefore(OrderbyItem node);
+        void VisitOn(OrderbyItem node);
+        void VisitAfter(OrderbyItem node);
+
         void VisitBefore(RawSql node);
         void VisitOn(RawSql node);
         void VisitAfter(RawSql node);

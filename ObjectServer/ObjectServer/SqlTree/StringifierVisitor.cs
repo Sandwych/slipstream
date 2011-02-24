@@ -73,6 +73,20 @@ foreach (var col in node.Expressions)
             this.sqlBuilder.Append(" on ");
         }
 
+        public override void VisitBefore(OrderbyClause node)
+        {
+            base.VisitBefore(node);
+            this.sqlBuilder.Append(" order by ");
+        }
+
+        public override void VisitAfter(OrderbyItem node)
+        {
+            base.VisitAfter(node);
+            this.sqlBuilder.Append(" ");
+            this.sqlBuilder.Append(node.Direction);
+            this.sqlBuilder.Append(" ");
+        }
+
         public override void VisitOn(RawSql node)
         {
             base.VisitOn(node);

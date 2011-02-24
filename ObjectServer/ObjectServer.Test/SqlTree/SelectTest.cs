@@ -19,6 +19,7 @@ select ""col1"", ""col2"", ""col3""
     from ""table1"" as ""t1""
     left join ""table2"" as ""t2"" on ""t2"".""table1_id"" = ""t1"".""id""
     where (""col1"" = 123) and (""col2"" like 'exp3') 
+    order by ""id"" asc
 "
             .Replace(" ", "").Replace("\n", "").Replace("\r", "");
 
@@ -56,18 +57,13 @@ select ""col1"", ""col2"", ""col3""
             var select = new SelectStatement(cols, fromClause);
             select.JoinClause = joinClause;
             select.WhereClause = new WhereClause(whereExp);
+            select.OrderByClause = new OrderbyClause("id", "asc");
 
             var genSql = GenerateSqlString(select);
 
             Assert.AreEqual(sql, genSql);
         }
 
-        private static string GenerateSqlString(INode node)
-        {
-            var genSql = node.ToString().Replace(" ", "");
-            genSql = genSql.Replace("\t", "");
-            return genSql;
-        }
 
         [Test]
         public void Test_raw_sql_node()
@@ -100,6 +96,14 @@ select ""col1"", ""col2"", ""col3""
 
             var genSql = GenerateSqlString(exp3);
             Assert.AreEqual(sql1, genSql);
+        }
+
+
+        private static string GenerateSqlString(INode node)
+        {
+            var genSql = node.ToString().Replace(" ", "");
+            genSql = genSql.Replace("\t", "");
+            return genSql;
         }
     }
 }

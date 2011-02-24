@@ -34,7 +34,7 @@ namespace ObjectServer.Model
             base.Initialize(db, pool);
 
             //检测此模型是否存在于数据库 core_model 表
-            var sql = "SELECT DISTINCT COUNT(id) FROM core_model WHERE name=@0";
+            var sql = "SELECT DISTINCT COUNT(\"id\") FROM core_model WHERE name=@0";
             var count = (long)db.QueryValue(sql, this.Name);
             if (count <= 0)
             {
@@ -56,7 +56,7 @@ namespace ObjectServer.Model
         private void CreateModel(IDatabaseContext db)
         {
             var rowCount = db.Execute(
-                "INSERT INTO core_model(name, module, label) VALUES(@0, @1, @2);",
+                "INSERT INTO \"core_model\"(\"name\", \"module\", \"label\") VALUES(@0, @1, @2);",
                 this.Name, this.Module, this.Label);
 
             if (rowCount != 1)

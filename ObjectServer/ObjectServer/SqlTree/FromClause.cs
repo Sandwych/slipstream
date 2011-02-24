@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.SqlTree
 {
-    public class FromClause : Node, IClause
+    public sealed class FromClause : Node, IClause
     {
         public FromClause(IEnumerable<string> tokens)
         {

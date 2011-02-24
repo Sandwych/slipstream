@@ -91,6 +91,23 @@ namespace ObjectServer.SqlTree
             this.Pop();
         }
 
+        public virtual void VisitBefore(OrderbyClause node) { this.Push(node); }
+        public virtual void VisitOn(OrderbyClause node) { }
+        public virtual void VisitAfter(OrderbyClause node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+        public virtual void VisitBefore(OrderbyItem node) { this.Push(node); }
+        public virtual void VisitOn(OrderbyItem node) { }
+        public virtual void VisitAfter(OrderbyItem node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+
         public virtual void VisitBefore(RawSql node) { this.Push(node); }
         public virtual void VisitOn(RawSql node) { }
         public virtual void VisitAfter(RawSql node)
@@ -98,6 +115,7 @@ namespace ObjectServer.SqlTree
             Debug.Assert(object.ReferenceEquals(this.Parent, node));
             this.Pop();
         }
+
 
         public virtual void VisitBefore(UnaryExpression node) { this.Push(node); }
         public virtual void VisitOn(UnaryExpression node) { }
