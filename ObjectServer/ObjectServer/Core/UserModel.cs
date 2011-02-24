@@ -56,26 +56,26 @@ namespace ObjectServer.Core
         #region Service Methods
 
         [ServiceMethod]
-        public override long Create(ISession session, IDictionary<string, object> values)
+        public override long Create(ICallingContext callingContext, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
 
-            return base.Create(session, values2);
+            return base.Create(callingContext, values2);
         }
 
         [ServiceMethod]
-        public override void Write(ISession session, object id, IDictionary<string, object> record)
+        public override void Write(ICallingContext callingContext, object id, IDictionary<string, object> record)
         {
             IDictionary<string, object> values2 = HashPassword(record);
 
 
-            base.Write(session, id, values2);
+            base.Write(callingContext, id, values2);
         }
 
         [ServiceMethod]
-        public override Dictionary<string, object>[] Read(ISession session, object[] ids, object[] fields)
+        public override Dictionary<string, object>[] Read(ICallingContext callingContext, object[] ids, object[] fields)
         {
-            var records = base.Read(session, ids, fields);
+            var records = base.Read(callingContext, ids, fields);
 
             //"salt" "password" 是敏感字段，不要让客户端获取
             foreach (var record in records)

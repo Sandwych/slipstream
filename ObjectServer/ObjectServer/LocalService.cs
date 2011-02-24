@@ -22,17 +22,17 @@ namespace ObjectServer
 
         public object Execute(string dbName, string objectName, string name, params object[] args)
         {
-            using (var session = new Session(dbName))
+            using (var callingContext = new CallingContext(dbName))
             {
-                var obj = session.Pool[objectName];
+                var obj = callingContext.Pool[objectName];
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[args.Length + 1];
-                internalArgs[0] = session;
+                internalArgs[0] = callingContext;
                 args.CopyTo(internalArgs, 1);
 
                 if (obj.DatabaseRequired)
                 {
-                    return ExecuteTransactional(session, obj, method, internalArgs);
+                    return ExecuteTransactional(callingContext, obj, method, internalArgs);
                 }
                 else
                 {
@@ -42,11 +42,11 @@ namespace ObjectServer
         }
 
         private static object ExecuteTransactional(
-            Session session, IServiceObject obj, System.Reflection.MethodInfo method, object[] internalArgs)
+            CallingContext callingContext, IServiceObject obj, System.Reflection.MethodInfo method, object[] internalArgs)
         {
-            session.Database.Open();
+            callingContext.Database.Open();
 
-            var tx = session.Database.Connection.BeginTransaction();
+            var tx = callingContext.Database.Connection.BeginTransaction();
             try
             {
                 var result = method.Invoke(obj, internalArgs);
@@ -80,9 +80,9 @@ namespace ObjectServer
                 db.Create(dbName);
             }
 
-            using (var session = new Session(dbName))
+            using (var callingContext = new CallingContext(dbName))
             {
-                session.Database.Initialize();
+                callingContext.Database.Initialize();
                 ObjectServerStarter.Pooler.RegisterDatabase(dbName);
             }
         }

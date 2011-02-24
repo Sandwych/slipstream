@@ -27,15 +27,15 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public int GetSum(ISession session)
+        public int GetSum(ICallingContext callingContext)
         {
             return 1 + 1;
         }
 
-        public Dictionary<long, object> GetField3(ISession session, object[] ids)
+        public Dictionary<long, object> GetField3(ICallingContext callingContext, object[] ids)
         {
             var fieldNames = new object[] { "field1", "field2" };
-            var values = base.Read(session, ids, fieldNames);
+            var values = base.Read(callingContext, ids, fieldNames);
             var rows = new Dictionary<long, object>(ids.Count());
             foreach (var r in values)
             {

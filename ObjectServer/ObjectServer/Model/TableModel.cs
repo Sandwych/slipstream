@@ -121,7 +121,7 @@ namespace ObjectServer.Model
         #region Service Methods
 
         [ServiceMethod]
-        public virtual object[] Search(ISession session, object[][] domain, long offset, long limit)
+        public virtual object[] Search(ICallingContext session, object[][] domain, long offset, long limit)
         {
             if (!this.CanRead)
             {
@@ -133,7 +133,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual long Create(ISession session, IDictionary<string, object> propertyBag)
+        public virtual long Create(ICallingContext callingContext, IDictionary<string, object> propertyBag)
         {
             if (!this.CanCreate)
             {
@@ -144,16 +144,16 @@ namespace ObjectServer.Model
             var values = new Dictionary<string, object>(propertyBag);
 
             //处理用户没有给的默认值
-            this.AddDefaultValues(session, values);
+            this.AddDefaultValues(callingContext, values);
 
-            return DoCreate(session, values);
+            return DoCreate(callingContext, values);
         }
 
-        private long DoCreate(ISession session, IDictionary<string, object> values)
+        private long DoCreate(ICallingContext callingContext, IDictionary<string, object> values)
         {
             this.VerifyFields(values.Keys);
 
-            var serial = session.Database.NextSerial(this.SequenceName);
+            var serial = callingContext.Database.NextSerial(this.SequenceName);
 
             if (this.ContainsField("_version"))
             {
@@ -188,7 +188,7 @@ namespace ObjectServer.Model
               serial,
               args);
 
-            var rows = session.Database.Execute(sql, colValues);
+            var rows = callingContext.Database.Execute(sql, colValues);
             if (rows != 1)
             {
                 Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
@@ -204,7 +204,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValues(ISession session, IDictionary<string, object> propertyBag)
+        private void AddDefaultValues(ICallingContext callingContext, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
                 this.DefinedFields.Values.Where(
@@ -212,12 +212,12 @@ namespace ObjectServer.Model
 
             foreach (var df in defaultFields)
             {
-                propertyBag[df.Name] = df.DefaultProc(session);
+                propertyBag[df.Name] = df.DefaultProc(callingContext);
             }
         }
 
         [ServiceMethod]
-        public virtual void Write(ISession session, object id, IDictionary<string, object> record)
+        public virtual void Write(ICallingContext callingContext, object id, IDictionary<string, object> record)
         {
             if (!this.CanWrite)
             {
@@ -251,16 +251,16 @@ namespace ObjectServer.Model
                 sbFieldValues.ToString(),
                 id);
 
-            session.Database.Execute(sql, values);
+            callingContext.Database.Execute(sql, values);
         }
 
         [ServiceMethod]
         public virtual Dictionary<string, object>[] Read(
-            ISession session, object[] ids, object[] fields)
+            ICallingContext callingContext, object[] ids, object[] fields)
         {
-            if (session == null)
+            if (callingContext == null)
             {
-                throw new ArgumentNullException("session");
+                throw new ArgumentNullException("callingContext");
             }
 
             if (!this.CanRead)
@@ -307,7 +307,7 @@ namespace ObjectServer.Model
                 ids.ToCommaList());
 
             //先查找表里的简单字段数据
-            var records = session.Database.QueryAsDictionary(sql);
+            var records = callingContext.Database.QueryAsDictionary(sql);
 
             //处理特殊字段
             foreach (var fieldName in allFields)
@@ -318,7 +318,7 @@ namespace ObjectServer.Model
                     continue;
                 }
 
-                var fieldValues = f.GetFieldValues(session, records);
+                var fieldValues = f.GetFieldValues(callingContext, records);
                 foreach (var record in records)
                 {
                     var id = (long)record["id"];
@@ -330,7 +330,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual void Delete(ISession session, object[] ids)
+        public virtual void Delete(ICallingContext callingContext, object[] ids)
         {
             if (!this.CanDelete)
             {
@@ -341,7 +341,7 @@ namespace ObjectServer.Model
                 "DELETE FROM \"{0}\" WHERE \"id\" IN ({1});",
                 this.TableName, ids.ToCommaList());
 
-            var rowCount = session.Database.Execute(sql);
+            var rowCount = callingContext.Database.Execute(sql);
             if (rowCount != ids.Count())
             {
                 throw new DataException();
@@ -351,12 +351,12 @@ namespace ObjectServer.Model
         #endregion
 
 
-        private IDictionary<long, string> DefaultNameGetter(ISession session, object[] ids)
+        private IDictionary<long, string> DefaultNameGetter(ICallingContext callingContext, object[] ids)
         {
             var result = new Dictionary<long, string>(ids.Length);
             if (this.DefinedFields.ContainsKey("name"))
             {
-                var records = this.Read(session, ids, new object[] { "id", "name" });
+                var records = this.Read(callingContext, ids, new object[] { "id", "name" });
                 foreach (var r in records)
                 {
                     var id = (long)r["id"];

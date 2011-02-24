@@ -9,21 +9,21 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    internal class Session : ISession
+    internal class CallingContext : ICallingContext
     {
-        public Session(string dbName)
+        public CallingContext(string dbName)
         {
-            Logger.Info(() => string.Format("Session is opening for database: [{0}]", dbName));
+            Logger.Info(() => string.Format("CallingContext is opening for database: [{0}]", dbName));
 
             this.Database = DataProvider.OpenDatabase(dbName);
         }
 
-        public Session(IDatabaseContext db)
+        public CallingContext(IDatabaseContext db)
         {
             this.Database = db;
         }
 
-        #region ISession 成员
+        #region ICallingContext 成员
 
         public IDatabaseContext Database
         {
@@ -47,7 +47,7 @@ namespace ObjectServer
         {
             this.Database.Close();
 
-            Logger.Info(() => "Session closed");
+            Logger.Info(() => "CallingContext closed");
         }
 
         #endregion

@@ -13,7 +13,7 @@ namespace ObjectServer.Model
         }
 
         public override Dictionary<long, object> GetFieldValues(
-           ISession session, List<Dictionary<string, object>> records)
+           ICallingContext session, List<Dictionary<string, object>> records)
         {
             //查询字表
             var childModel = (TableModel)session.Pool[this.Relation];

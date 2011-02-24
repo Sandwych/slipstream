@@ -19,7 +19,7 @@ namespace ObjectServer.Model
         }
 
         public override Dictionary<long, object> GetFieldValues(
-           ISession session, List<Dictionary<string, object>> records)
+           ICallingContext session, List<Dictionary<string, object>> records)
         {
             //中间表模型
             var relModel = (IModel)session.Pool[this.Relation];

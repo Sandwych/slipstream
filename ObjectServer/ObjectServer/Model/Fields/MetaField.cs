@@ -121,7 +121,7 @@ namespace ObjectServer.Model
         }
 
         public abstract Dictionary<long, object> GetFieldValues(
-            ISession session, List<Dictionary<string, object>> records);
+            ICallingContext session, List<Dictionary<string, object>> records);
 
         #endregion
     }

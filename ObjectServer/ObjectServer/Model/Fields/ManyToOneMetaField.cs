@@ -13,7 +13,7 @@ namespace ObjectServer.Model
         }
 
         public override Dictionary<long, object> GetFieldValues(
-           ISession session, List<Dictionary<string, object>> records)
+           ICallingContext session, List<Dictionary<string, object>> records)
         {
             var result = new Dictionary<long, object>(records.Count());
             var masterModel = (TableModel)session.Pool[this.Relation];

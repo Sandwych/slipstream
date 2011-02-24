@@ -9,7 +9,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface ISession : IDisposable
+    public interface ICallingContext : IDisposable
     {
         ObjectPool Pool { get; } 
         IDatabaseContext Database { get; }

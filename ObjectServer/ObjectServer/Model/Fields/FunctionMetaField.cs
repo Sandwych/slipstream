@@ -15,7 +15,7 @@ namespace ObjectServer.Model
 
 
         public override Dictionary<long, object> GetFieldValues(
-            ISession session, List<Dictionary<string, object>> records)
+            ICallingContext session, List<Dictionary<string, object>> records)
         {
             var ids = records.Select(p => p["id"]).ToArray();
 
