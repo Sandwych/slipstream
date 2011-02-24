@@ -30,6 +30,7 @@ namespace ObjectServer
         {
             this.RegisterAllCoreObjects();
 
+            ObjectServerStarter.ModulePool.UpdateModuleList(db);
             ObjectServerStarter.ModulePool.LoadActivedModules(db, this);
         }
 

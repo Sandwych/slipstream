@@ -36,12 +36,12 @@ namespace ObjectServer
             }
 
             //检测模块名是否存在
-            var moduleName = obj.GetModuleName();
+            /*var moduleName = obj.GetModuleName();
             if (!ObjectServerStarter.ModulePool.Contains(moduleName))
             {
                 var msg = string.Format("Cannot found moudule '{0}'", moduleName);
                 throw new ModuleNotFoundException(msg, moduleName);
-            }
+            }*/
         }
 
 
