@@ -40,8 +40,8 @@ namespace ObjectServer.SqlTree
         public override object Clone()
         {
             return new BinaryExpression(
-                (IExpression)this.Lhs.Clone(), 
-                (ExpressionOperator)this.Operator.Clone(), 
+                (IExpression)this.Lhs.Clone(),
+                (ExpressionOperator)this.Operator.Clone(),
                 (IExpression)this.Rhs.Clone());
         }
 

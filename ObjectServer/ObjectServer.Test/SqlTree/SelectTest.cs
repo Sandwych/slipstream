@@ -16,7 +16,8 @@ namespace ObjectServer.SqlTree.Test
         {
             var sql = @"
 select ""col1"", ""col2"", ""col3"" 
-    from ""table1""
+    from ""table1"" as ""t1""
+    left join ""table2"" as ""t2"" on ""t2"".""table1_id"" = ""t1"".""id""
     where ""col1"" = 123 and ""col2"" like 'exp3' 
 "
             .Replace(" ", "").Replace("\n", "").Replace("\r", "");
@@ -31,10 +32,31 @@ select ""col1"", ""col2"", ""col3""
             var whereExp = new BinaryExpression(
                 new BinaryExpression("col1", "=", 123),
                 new ExpressionOperator("and"),
-                new BinaryExpression("col2", "like", "exp3"));
+                new BinaryExpression(
+                    new IdentifierExpression("col2"),
+                    new ExpressionOperator("like"),
+                    new ValueExpression("exp3")));
 
-            var fromClause = new FromClause(new string[] { "table1" });
+            var joinExp = new BinaryExpression(
+                new BinaryExpression(
+                    new IdentifierExpression("t2"),
+                    new ExpressionOperator("."),
+                    new IdentifierExpression("table1_id")),
+                new ExpressionOperator("="),
+                new BinaryExpression(
+                    new IdentifierExpression("t1"),
+                    new ExpressionOperator("."),
+                    new IdentifierExpression("id")));
+
+            var joinClause = new JoinClause(
+                "left",
+                new AliasExpression("table2", "t2"),
+                joinExp);
+
+
+            var fromClause = new FromClause(new AliasExpression("table1", "t1"));
             var select = new SelectStatement(cols, fromClause);
+            select.JoinClause = joinClause;
             select.WhereClause = new WhereClause(whereExp);
 
             var genSql = GenerateSqlString(select);

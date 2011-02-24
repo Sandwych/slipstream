@@ -79,6 +79,14 @@ namespace ObjectServer.SqlTree
         }
 
 
+        public virtual void VisitBefore(JoinClause node) { this.Push(node); }
+        public virtual void VisitOn(JoinClause node) { }
+        public virtual void VisitAfter(JoinClause node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
         public virtual void VisitBefore(RawSql node) { this.Push(node); }
         public virtual void VisitOn(RawSql node) { }
         public virtual void VisitAfter(RawSql node)

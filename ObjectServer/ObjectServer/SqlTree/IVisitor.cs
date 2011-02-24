@@ -28,6 +28,10 @@ namespace ObjectServer.SqlTree
         void VisitOn(WhereClause node);
         void VisitAfter(WhereClause node);
 
+        void VisitBefore(JoinClause node);
+        void VisitOn(JoinClause node);
+        void VisitAfter(JoinClause node);
+
         void VisitBefore(RawSql node);
         void VisitOn(RawSql node);
         void VisitAfter(RawSql node);

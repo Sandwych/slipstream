@@ -10,6 +10,7 @@ namespace ObjectServer.SqlTree
         public IExpression Expression { get; set; }
         public FromClause FromClause { get; set; }
         public WhereClause WhereClause { get; set; }
+        public JoinClause JoinClause { get; set; }
         public ExpressionList ColumnList { get; set; }
 
         public SelectStatement()
@@ -45,6 +46,11 @@ namespace ObjectServer.SqlTree
             if (this.FromClause != null)
             {
                 this.FromClause.Traverse(visitor);
+            }
+
+            if (this.JoinClause != null)
+            {
+                this.JoinClause.Traverse(visitor);
             }
 
             if (this.WhereClause != null)

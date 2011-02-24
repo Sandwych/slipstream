@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.SqlTree
 {
-    public class FromClause : IClause
+    public class FromClause : Node, IClause
     {
         public FromClause(IEnumerable<string> tokens)
         {
@@ -27,11 +27,17 @@ namespace ObjectServer.SqlTree
             this.ExpressionCollection = exp;
         }
 
+        public FromClause(AliasExpression aliasExp)
+        {
+            var aliasExps = new AliasExpression[] { aliasExp };
+            this.ExpressionCollection = new ExpressionList(aliasExps);
+        }
+
         public ExpressionList ExpressionCollection { get; private set; }
 
         #region INode 成员
 
-        public void Traverse(IVisitor visitor)
+        public override void Traverse(IVisitor visitor)
         {
             visitor.VisitBefore(this);
             visitor.VisitOn(this);
@@ -43,7 +49,7 @@ namespace ObjectServer.SqlTree
 
         #region ICloneable 成员
 
-        public object Clone()
+        public override object Clone()
         {
             throw new System.NotImplementedException();
         }

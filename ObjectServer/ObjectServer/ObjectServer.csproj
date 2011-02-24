@@ -157,6 +157,7 @@
     <Compile Include="SqlTree\INode.cs" />
     <Compile Include="SqlTree\IStatement.cs" />
     <Compile Include="SqlTree\IVisitor.cs" />
+    <Compile Include="SqlTree\JoinClause.cs" />
     <Compile Include="SqlTree\Node.cs" />
     <Compile Include="SqlTree\PgVisitor.cs" />
     <Compile Include="SqlTree\RawSql.cs" />
