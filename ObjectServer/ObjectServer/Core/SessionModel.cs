@@ -30,11 +30,8 @@ namespace ObjectServer.Core
          */
 
         public SessionModel()
-            : base()
+            : base("core.session")
         {
-            this.Name = "core.session";
-
-
             Fields.Chars("session_id").SetLabel("Session Id").SetRequired().SetSize(36);
             Fields.DateTime("start_time").SetLabel("Start Time").SetRequired();
             Fields.DateTime("last_activity_time").SetLabel("Last Activity Time").SetRequired();

@@ -11,9 +11,8 @@ namespace ObjectServer.Core
     public sealed class RuleModel : TableModel
     {
         public RuleModel()
+            : base("core.rule")
         {
-            this.Name = "core.rule";
-
             Fields.OneToMany("lines", "core.rule.line", "rule").SetLabel("Rule Details");
         }
 
@@ -24,8 +23,8 @@ namespace ObjectServer.Core
     {
 
         public RuleLineModel()
+            : base("core.rule.line")
         {
-            this.Name = "core.rule.line";
 
             Fields.ManyToOne("rule", "core.rule").SetLabel("Creator");
         }

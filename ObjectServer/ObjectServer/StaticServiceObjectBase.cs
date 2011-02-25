@@ -16,9 +16,30 @@ namespace ObjectServer
         private readonly IDictionary<string, MethodInfo> serviceMethods =
             new SortedList<string, MethodInfo>();
 
-        protected StaticServiceObjectBase()
+        protected StaticServiceObjectBase(string name)
         {
+            this.SetName(name);
+
             this.RegisterAllServiceMethods();
+        }
+
+        private void SetName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                Logger.Error(() => "Model name cannot be empty");
+                throw new ArgumentNullException("value");
+            }
+
+            this.Name = name;
+            this.VerifyName();
+
+            if (string.IsNullOrEmpty(this.Label))
+            {
+                this.Label = name;
+            }
+
+            this.Module = name.Split('.')[0];
         }
 
         public MethodInfo GetServiceMethod(string name)
@@ -54,9 +75,11 @@ namespace ObjectServer
             this.Pool = pool;
         }
 
-        public abstract string Name { get; protected set; }
+        public string Name { get; private set; }
 
-        public abstract string Label { get; protected set; }
+        public string Label { get; protected set; }
+
+        public string Module { get; private set; }
 
         public abstract bool DatabaseRequired { get; }
 

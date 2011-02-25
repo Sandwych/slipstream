@@ -14,9 +14,8 @@ namespace ObjectServer.Core
     public class ModelModel : TableModel
     {
         public ModelModel()
-            : base()
+            : base("core.model")
         {
-            this.Name = "core.model";
 
             Fields.Chars("name").SetLabel("Name").SetSize(256).SetRequired();
             Fields.Chars("label").SetLabel("Label").SetSize(256);

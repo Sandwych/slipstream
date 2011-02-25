@@ -7,14 +7,13 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Core
 {
-    [ServiceObject] 
+    [ServiceObject]
     public class CronModel : TableModel
     {
 
         public CronModel()
-            : base()
+            : base("core.cron")
         {
-            this.Name = "core.cron";            
         }
 
 

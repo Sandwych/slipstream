@@ -22,8 +22,8 @@ namespace ObjectServer.Core
         public const string ModelName = "core.model_data";
 
         public ModelDataModel()
+            : base(ModelName)
         {
-            this.Name = ModelName;
 
             Fields.Chars("name").SetLabel("Name(Friendly Ref. ID)").SetRequired().SetSize(128);
             Fields.Chars("module").SetLabel("Module").SetRequired().SetSize(64);

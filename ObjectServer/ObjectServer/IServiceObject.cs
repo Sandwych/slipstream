@@ -15,6 +15,7 @@ namespace ObjectServer
 
         string Label { get; }
         string Name { get; }
+        string Module { get; }
 
         MethodInfo GetServiceMethod(string name);
 

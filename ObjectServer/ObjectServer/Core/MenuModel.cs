@@ -13,8 +13,9 @@ namespace ObjectServer.Core
     {
 
         public MenuModel()
+            : base("core.menu")
         {
-            this.Name = "core.menu";
+
         }
 
     }

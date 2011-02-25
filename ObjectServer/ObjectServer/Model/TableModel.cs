@@ -19,7 +19,6 @@ namespace ObjectServer.Model
             new List<IMetaField>();
 
         private string tableName = null;
-        private string name = null;
 
         public bool CanCreate { get; protected set; }
         public bool CanRead { get; protected set; }
@@ -31,32 +30,6 @@ namespace ObjectServer.Model
         public override bool DatabaseRequired { get { return true; } }
 
         public NameGetter NameGetter { get; protected set; }
-
-        public override string Name
-        {
-            get
-            {
-                return this.name;
-            }
-            protected set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    Logger.Error(() => "Model name cannot be empty");
-                    throw new ArgumentNullException("value");
-                }
-                this.name = value;
-                this.VerifyName();
-                this.TableName = value.ToLowerInvariant().Replace('.', '_');
-
-                if (string.IsNullOrEmpty(this.Label))
-                {
-                    this.Label = value;
-                }
-
-                base.Module = this.name.Split('.')[0];
-            }
-        }
 
         public string TableName
         {
@@ -79,19 +52,25 @@ namespace ObjectServer.Model
 
         public string SequenceName { get; protected set; }
 
-        protected TableModel()
-            : base()
+        protected TableModel(string name)
+            : base(name)
         {
             this.CanCreate = true;
             this.CanRead = true;
             this.CanWrite = true;
             this.CanDelete = true;
             this.Hierarchy = false;
+            this.SetName(name);
 
             Fields.DateTime("_created_time").SetLabel("Created");
             Fields.DateTime("_modified_time").SetLabel("Last Modified");
             Fields.ManyToOne("_created_user", "core.user").SetLabel("Creator");
             Fields.ManyToOne("_modified_user", "core.user").SetLabel("Creator");
+        }
+
+        private void SetName(string name)
+        {
+            this.TableName = name.ToLowerInvariant().Replace('.', '_');
         }
 
         /// <summary>

@@ -13,8 +13,8 @@ namespace ObjectServer.Model
     {
 
         public TestObject()
+            : base("test.test_object")
         {
-            this.Name = "test.test_object";
 
             Fields.Chars("name").SetLabel("姓名").SetSize(64).SetRequired();
             Fields.Chars("address").SetLabel("地址").SetSize(200).SetRequired();

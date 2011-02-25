@@ -13,8 +13,9 @@ namespace ObjectServer.Core
     {
 
         public ActionModel()
+            : base("core.action")
         {
-            this.Name = "core.action";
+
         }
 
     }

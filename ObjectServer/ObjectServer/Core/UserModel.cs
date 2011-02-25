@@ -19,8 +19,8 @@ namespace ObjectServer.Core
         public const string RootUserName = "root";
 
         public UserModel()
+            : base(ModelName)
         {
-            this.Name = ModelName;
             Fields.BigInteger("_version").SetLabel("Version").SetRequired();
             Fields.Chars("login").SetLabel("User Name").SetSize(64).SetRequired();
             Fields.Chars("password").SetLabel("Password").SetSize(40).SetRequired();
@@ -198,8 +198,8 @@ namespace ObjectServer.Core
     {
 
         public UserGroupModel()
+            : base("core.user_group")
         {
-            this.Name = "core.user_group";
             this.TableName = "core_user_group_rel";
 
             Fields.ManyToOne("uid", "core.user").SetLabel("User").SetRequired();

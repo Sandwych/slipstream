@@ -17,8 +17,8 @@ namespace ObjectServer.Test
     public sealed class ChildObject : TableModel
     {
         public ChildObject()
+            : base("test.child")
         {
-            this.Name = "test.child";
             Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(64);
             Fields.ManyToOne("master", "test.master").SetLabel("Master");
         }
@@ -30,8 +30,8 @@ namespace ObjectServer.Test
     public sealed class MasterObject : TableModel
     {
         public MasterObject()
+            : base("test.master")
         {
-            this.Name = "test.master";
             Fields.Chars("name").SetLabel("Name").SetSize(64);
             Fields.OneToMany("children", "test.child", "master").SetLabel("Children");
         }

@@ -12,9 +12,8 @@ namespace ObjectServer.Core
     {
 
         public FieldModel()
-            : base()
+            : base("core.field")
         {
-            this.Name = "core.field";
 
             Fields.ManyToOne("model", "core.model").SetLabel("Model").SetRequired();
             Fields.Chars("name").SetLabel("Name").SetSize(64).SetRequired();

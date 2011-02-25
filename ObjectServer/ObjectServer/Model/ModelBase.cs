@@ -20,12 +20,9 @@ namespace ObjectServer.Model
         public const string ActiveFieldName = "_field";
         public const string VersionFieldName = "_version";
 
-        public override string Label { get; protected set; }
-        public string Module { get; protected set; }
-
-        protected ModelBase()
-            : base()
-        {
+        protected ModelBase(string name)
+            : base(name)
+        {           
             this.AddInternalFields();
         }
 

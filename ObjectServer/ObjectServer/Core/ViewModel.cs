@@ -13,8 +13,8 @@ namespace ObjectServer.Core
     {
 
         public ViewModel()
+            : base("core.view")
         {
-            this.Name = "core.view";
         }
 
     }

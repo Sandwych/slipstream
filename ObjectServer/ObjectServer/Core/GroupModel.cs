@@ -16,8 +16,8 @@ namespace ObjectServer.Core
     {
 
         public GroupModel()
+            : base("core.group")
         {
-            this.Name = "core.group";
 
             Fields.Chars("name").SetLabel("Name").SetSize(128).SetRequired();
             Fields.ManyToMany("users", "core.user_group", "gid", "uid").SetLabel("Users").SetRequired();
