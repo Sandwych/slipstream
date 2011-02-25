@@ -12,6 +12,7 @@ namespace ObjectServer.Web
 
         protected void Application_Start(object sender, EventArgs e)
         {
+            this.EnsureFrameworkInitialized();
         }
 
         protected void Session_Start(object sender, EventArgs e)
@@ -20,8 +21,7 @@ namespace ObjectServer.Web
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
-        {
-            this.EnsureFrameworkInitialized();
+        {            
 
         }
 

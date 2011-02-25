@@ -18,14 +18,14 @@ namespace ObjectServer.Model
             this.model = model;
         }
 
-        public object[] Search(object[][] domain, long offset, long limit)
+        public object[] Search(object[] domain, long offset, long limit)
         {
             if (domain == null)
             {
                 throw new ArgumentNullException("exp");
             }
 
-            var fields = domain.Select(d => (string)d[0]);
+            var fields = domain.Select(d => (string)((object[])d)[0]);
             var parser = new DomainParser(this.model, domain);
             var columnExps = new AliasExpressionList(new string[] { "id" });
             var whereExp = parser.ToExpressionTree();

@@ -121,15 +121,21 @@ namespace ObjectServer.Model
         #region Service Methods
 
         [ServiceMethod]
-        public virtual object[] Search(ICallingContext ctx, object[][] domain, long offset, long limit)
+        public virtual object[] Search(ICallingContext ctx, object[] domain, long offset, long limit)
         {
             if (!this.CanRead)
             {
                 throw new NotSupportedException();
             }
 
+            object[] domainInternal = domain;
+            if (domain == null)
+            {
+                domainInternal = new object[][] { };
+            }
+
             var query = new ModelQuery(ctx, this);
-            return query.Search(domain, offset, limit);
+            return query.Search(domainInternal, offset, limit);
         }
 
         [ServiceMethod]

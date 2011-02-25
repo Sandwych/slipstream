@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 
@@ -22,7 +23,7 @@ namespace ObjectServer.Model
         IModel model;
         List<object[]> domain = new List<object[]>();
 
-        public DomainParser(IModel model, IList<object[]> domain)
+        public DomainParser(IModel model, IEnumerable domain)
         {
             if (domain == null)
             {
@@ -30,7 +31,10 @@ namespace ObjectServer.Model
             }
             else
             {
-                this.domain.AddRange(domain);
+                foreach (object[] o in domain)
+                {
+                    this.domain.Add(o);
+                }
             }
 
             this.model = model;
@@ -94,8 +98,8 @@ namespace ObjectServer.Model
 
             foreach (var domainItem in this.domain)
             {
-                var opr = (string)domainItem[1];
                 var field = (string)domainItem[0];
+                var opr = (string)domainItem[1];                
                 var value = domainItem[2];
 
                 //考虑单元运算符

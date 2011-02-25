@@ -31,6 +31,7 @@ namespace ObjectServer
 
         public ModulePool()
         {
+            this.allModules.Add(Module.CoreModule);
         }
 
 

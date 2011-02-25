@@ -33,6 +33,7 @@ namespace ObjectServer
                 Name = StaticSettings.CoreModuleName,
                 State = ModuleStatus.Actived,
                 Depends = new string[] { },
+                AutoLoad = true,
             };
         }
 
@@ -78,11 +79,15 @@ namespace ObjectServer
         {
             Logger.Info(() => string.Format("Begin to load module: '{0}'", this.Name));
 
-            this.LoadStaticAssembly();
+            if (this.Dlls != null)
+            {
+                this.LoadStaticAssembly();
+            }
 
-            var a = CompileSourceFiles(this.Path);
-            this.AllAssemblies.Add(a);
-            pool.AddModelsWithinAssembly(a);
+            if (!string.IsNullOrEmpty(this.Path))
+            {
+                this.LoadDynamicAssembly(pool);
+            }
 
             var moduleModel = (ModuleModel)pool[ModuleModel.ModelName];
             this.State = ModuleStatus.Actived;
@@ -91,14 +96,22 @@ namespace ObjectServer
             Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
         }
 
+        private void LoadDynamicAssembly(ObjectPool pool)
+        {
+            Debug.Assert(pool != null);
+            var a = CompileSourceFiles(this.Path);
+            this.AllAssemblies.Add(a);
+            pool.AddModelsWithinAssembly(a);
+        }
+
         private void LoadStaticAssembly()
         {
             Debug.Assert(this.Dlls != null);
 
             foreach (var dll in this.Dlls)
             {
-                var assem = Assembly.LoadFile(dll);
-                this.allAssembly.Add(assem);
+                var a = Assembly.LoadFile(dll);
+                this.allAssembly.Add(a);
             }
         }
 
