@@ -87,7 +87,8 @@ namespace ObjectServer.Json
                 case JsonToken.Undefined:
                 case JsonToken.None:
                 default:
-                    throw new NotSupportedException();
+                    throw new NotSupportedException(
+                        "Not supported JSON token type: " + reader.TokenType.ToString());
             }
 
             return result;
