@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace ObjectServer
 {
-    public class StaticSessionStoreProvider : ISessionStoreProvider
+    internal class StaticSessionStoreProvider : ISessionStoreProvider
     {
         Dictionary<Guid, Session> sessions = new Dictionary<Guid, Session>();
 
@@ -18,7 +18,7 @@ namespace ObjectServer
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void SetSession(Session session)
+        public void PutSession(Session session)
         {
             this.sessions[session.SessionId] = session;
         }

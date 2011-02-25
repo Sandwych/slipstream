@@ -28,10 +28,10 @@ namespace ObjectServer
             return this.provider.GetSession(sessionId);
         }
 
-        public void SetSession(Session session)
+        public void PutSession(Session session)
         {
             Debug.Assert(this.provider != null);
-            this.provider.SetSession(session);
+            this.provider.PutSession(session);
         }
 
         public void RemoveSessionsByUser(string database, long uid)

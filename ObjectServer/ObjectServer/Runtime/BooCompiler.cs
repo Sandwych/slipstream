@@ -16,7 +16,7 @@ namespace ObjectServer.Runtime
     /// <summary>
     /// Boo 语言代码编译器，用于把模块的代码编译成内存中的 Assembly
     /// </summary>
-    public class BooCompiler : ICompiler
+    internal class BooCompiler : ICompiler
     {
         #region ICompiler 成员
 

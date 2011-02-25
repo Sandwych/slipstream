@@ -198,7 +198,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\BooCompiler.cs" />
     <Compile Include="Runtime\CompilerProvider.cs" />
-    <Compile Include="Runtime\CsharpCompiler.cs" />
+    <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="ServiceMethodAttribute.cs" />
     <Compile Include="CallingContext.cs" />

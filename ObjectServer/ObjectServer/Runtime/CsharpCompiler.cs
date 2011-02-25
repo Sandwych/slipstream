@@ -10,7 +10,7 @@ using Microsoft.CSharp;
 
 namespace ObjectServer.Runtime
 {
-    public class CsharpCompiler : ICompiler
+    internal class CSharpCompiler : ICompiler
     {
         #region ICompiler 成员
 

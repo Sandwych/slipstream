@@ -16,7 +16,7 @@ namespace ObjectServer.Runtime
         Dictionary<string, ICompiler> compilers = new Dictionary<string, ICompiler>()
         {
             { "boo", new BooCompiler() },
-            { "csharp", new CsharpCompiler() },
+            { "csharp", new CSharpCompiler() },
         };
 
         private CompilerProvider()

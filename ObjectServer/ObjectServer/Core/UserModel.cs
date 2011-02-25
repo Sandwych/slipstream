@@ -187,7 +187,7 @@ namespace ObjectServer.Core
 
             var sessStore = ObjectServerStarter.SessionStore;
             sessStore.RemoveSessionsByUser(dbName, uid);
-            sessStore.SetSession(session);
+            sessStore.PutSession(session);
             return session;
         }
     }
