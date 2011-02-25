@@ -31,6 +31,5 @@ namespace ObjectServer.Model
             return f;
         }
 
-        public static IMetaField Set
     }
 }
