@@ -66,21 +66,18 @@ namespace ObjectServer.Model
 
         }
 
-        public override string[] ReferencedObjects
+        public override string[] GetReferencedObjects()
         {
-            get
-            {
-                var query = from f in this.Fields.Values
-                            where f.Type == FieldType.ManyToOne
-                            select f.Relation;
+            var query = from f in this.Fields.Values
+                        where f.Type == FieldType.ManyToOne
+                        select f.Relation;
 
-                //自己不能依赖自己
-                query = from m in query
-                        where m != this.Name
-                        select m;
+            //自己不能依赖自己
+            query = from m in query
+                    where m != this.Name
+                    select m;
 
-                return query.Distinct().ToArray();
-            }
+            return query.Distinct().ToArray();
         }
 
 

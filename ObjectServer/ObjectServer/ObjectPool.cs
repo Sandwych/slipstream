@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.Transactions;
 using System.Data;
+using System.Diagnostics;
 
 using ObjectServer.Backend;
 using ObjectServer.Model;
@@ -40,12 +41,24 @@ namespace ObjectServer
             //obj.Initialize(db, pool);
             //TODO: 初始化非 IModel 对象
             var objList = this.objects.Values.ToList();
-            objList.DependencySort(m => m.Name, m => m.ReferencedObjects);
+            DependencySort(objList);
 
             foreach (var m in objList)
             {
                 m.Initialize(db, this);
             }
+        }
+
+        private static void DependencySort(IList<IServiceObject> objList)
+        {
+            Debug.Assert(objList != null);
+
+            var objDepends = new Dictionary<string, string[]>();
+            foreach (var obj in objList)
+            {
+                objDepends.Add(obj.Name, obj.GetReferencedObjects());
+            }
+            objList.DependencySort(m => m.Name, m => objDepends[m.Name]);
         }
 
         public string Database { get; private set; }

@@ -60,7 +60,7 @@ namespace ObjectServer
 
         public abstract bool DatabaseRequired { get; }
 
-        public abstract string[] ReferencedObjects { get; }
+        public abstract string[] GetReferencedObjects();
 
         public ObjectPool Pool { get; private set; }
     }

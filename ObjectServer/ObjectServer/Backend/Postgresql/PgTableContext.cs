@@ -54,7 +54,7 @@ namespace ObjectServer.Backend.Postgresql
 
             var sql = string.Format(
                 @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2} {3}",
-                this.Name, field.Name, sqlType, notNull);
+                this.Name, field.Label, sqlType, notNull);
             db.Execute(sql);
 
             sql = string.Format(
