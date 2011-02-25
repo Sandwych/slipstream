@@ -22,7 +22,7 @@ namespace ObjectServer
             var session = sessStore.GetSession(sessionId);
             if (session == null || !session.IsActive)
             {
-                throw new System.Security.SecurityException("Not logged!");
+                throw new UnauthorizedAccessException("Not logged!");
             }
 
             Logger.Info(() =>

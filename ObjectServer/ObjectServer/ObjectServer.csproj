@@ -124,7 +124,7 @@
     <Compile Include="Exceptions\MigrationException.cs" />
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
     <Compile Include="IGlobalObject.cs" />
-    <Compile Include="ISessionStoreProvider.cs" />
+    <Compile Include="Sessions\ISessionStoreProvider.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Model\BadFieldNameException.cs" />
     <Compile Include="IService.cs" />
@@ -148,10 +148,10 @@
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
-    <Compile Include="ServiceException.cs" />
+    <Compile Include="Exceptions\ServiceException.cs" />
     <Compile Include="ServiceObjectExtensions.cs" />
-    <Compile Include="Session.cs" />
-    <Compile Include="SessionStore.cs" />
+    <Compile Include="Sessions\Session.cs" />
+    <Compile Include="Sessions\SessionStore.cs" />
     <Compile Include="SqlTree\AliasExpressionList.cs" />
     <Compile Include="SqlTree\DialectVisitor.cs" />
     <Compile Include="SqlTree\BinaryExpression.cs" />
@@ -202,7 +202,7 @@
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="ServiceMethodAttribute.cs" />
     <Compile Include="CallingContext.cs" />
-    <Compile Include="StaticSessionStoreProvider.cs" />
+    <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
     <Compile Include="StaticSettings.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />

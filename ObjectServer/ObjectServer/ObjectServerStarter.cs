@@ -14,7 +14,7 @@ namespace ObjectServer
 {
     /// <summary>
     /// SINGLETON
-    /// TODO 线程安全
+    /// 框架的全局入口点
     /// </summary>
     public sealed class ObjectServerStarter
     {
