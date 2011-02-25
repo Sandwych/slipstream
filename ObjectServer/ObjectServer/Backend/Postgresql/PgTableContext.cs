@@ -54,12 +54,12 @@ namespace ObjectServer.Backend.Postgresql
 
             var sql = string.Format(
                 @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2} {3}",
-                this.Name, field.Label, sqlType, notNull);
+                this.Name, field.Name, sqlType, notNull);
             db.Execute(sql);
 
             sql = string.Format(
                 "COMMENT ON COLUMN \"{0}\".\"{1}\" IS '{2}'",
-                this.Name, field.Name, field.Name);
+                this.Name, field.Label, field.Name);
             db.Execute(sql);
         }
 

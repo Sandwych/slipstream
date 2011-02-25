@@ -27,6 +27,8 @@ namespace ObjectServer.Model
                 .SetRequired()
                 .SetDefaultProc(s => true);
             Fields.Text("text_field").SetLabel("Text Field");
+            //Fields.Float("float_field").SetLabel("Float Field");
+            Fields.Money("money_field").SetLabel("Money Field");
         }
 
         [ServiceMethod]

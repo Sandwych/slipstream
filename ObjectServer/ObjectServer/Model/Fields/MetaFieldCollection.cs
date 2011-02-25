@@ -21,6 +21,20 @@ namespace ObjectServer.Model
             return field;
         }
 
+        public IMetaField Float(string name)
+        {
+            var field = new ScalarMetaField(name, FieldType.Float);
+            this.Add(name, field);
+            return field;
+        }
+
+        public IMetaField Money(string name)
+        {
+            var field = new ScalarMetaField(name, FieldType.Money);
+            this.Add(name, field);
+            return field;
+        }
+
         public IMetaField Boolean(string name)
         {
             var field = new ScalarMetaField(name, FieldType.Boolean);
