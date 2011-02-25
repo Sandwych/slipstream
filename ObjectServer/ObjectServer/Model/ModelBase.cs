@@ -175,7 +175,7 @@ namespace ObjectServer.Model
             declaredFields.Add(field.Name, field);
         }
 
-        protected void CharsField(
+        protected IMetaField CharsField(
             string name, string label, int size, bool required,
             FieldGetter getter, FieldDefaultProc defaultProc)
         {
@@ -198,6 +198,7 @@ namespace ObjectServer.Model
 
             field.Validate();
             declaredFields.Add(field.Name, field);
+            return field;
         }
 
         protected void DateTimeField(

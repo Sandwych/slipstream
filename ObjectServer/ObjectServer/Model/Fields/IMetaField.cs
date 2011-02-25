@@ -8,16 +8,16 @@ namespace ObjectServer.Model
     public interface IMetaField
     {
         string Name { get; }
-        string Label { get; }
+        string Label { get; set; }
         bool Functional { get; }
-        FieldGetter Getter { get; }
-        FieldDefaultProc DefaultProc { get; }
+        FieldGetter Getter { get; set; }
+        FieldDefaultProc DefaultProc { get; set; }
         FieldType Type { get; }
-        int Size { get; }
-        bool Required { get; }
-        string Relation { get; }
-        string OriginField { get; }
-        string RelatedField { get; }
+        int Size { get; set; }
+        bool Required { get; set; }
+        string Relation { get; set; }
+        string OriginField { get; set; }
+        string RelatedField { get; set; }
         bool Internal { get; }
 
         bool IsStorable();

@@ -24,77 +24,32 @@ namespace ObjectServer.Model
 
         #region IField 成员
 
-        public string Name
-        {
-            get;
-            private set;
-        }
+        public string Name { get; set; }
 
-        public string Label
-        {
-            get;
-            internal set;
-        }
-
+        public string Label { get; set; }
 
         public bool Functional
         {
             get { return this.Getter != null; }
         }
 
-        public FieldGetter Getter
-        {
-            get;
-            internal set;
-        }
+        public FieldGetter Getter { get; set; }
 
-        public FieldDefaultProc DefaultProc
-        {
-            get;
-            internal set;
-        }
+        public FieldDefaultProc DefaultProc { get; set; }
 
-        public FieldType Type
-        {
-            get;
-            private set;
-        }
+        public FieldType Type { get; set; }
 
-        public int Size
-        {
-            get;
-            internal set;
-        }
+        public int Size { get; set; }
 
-        public bool Required
-        {
-            get;
-            internal set;
-        }
+        public bool Required { get; set; }
 
-        public string Relation
-        {
-            get;
-            internal set;
-        }
+        public string Relation { get; set; }
 
-        public string RelatedField
-        {
-            get;
-            internal set;
-        }
+        public string RelatedField { get; set; }
 
-        public string OriginField
-        {
-            get;
-            internal set;
-        }
+        public string OriginField { get; set; }
 
-        public bool Internal
-        {
-            get;
-            internal set;
-        }
+        public bool Internal { get; set; }
 
         public bool IsStorable()
         {

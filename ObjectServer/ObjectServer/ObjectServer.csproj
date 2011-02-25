@@ -119,11 +119,13 @@
     <Compile Include="Core\ViewModel.cs" />
     <Compile Include="Core\MenuModel.cs" />
     <Compile Include="Core\CronModel.cs" />
+    <Compile Include="Core\ModelDataModel.cs" />
     <Compile Include="Exceptions\ServiceObjectNotFoundException.cs" />
     <Compile Include="Exceptions\BadServiceObjectNameException.cs" />
     <Compile Include="Exceptions\MigrationException.cs" />
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
     <Compile Include="IGlobalObject.cs" />
+    <Compile Include="Model\MetaFieldExtensions.cs" />
     <Compile Include="Sessions\ISessionStoreProvider.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Model\BadFieldNameException.cs" />
