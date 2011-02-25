@@ -7,12 +7,18 @@ namespace ObjectServer.Model
 {
     internal sealed class ManyToOneMetaField : MetaField
     {
-        public ManyToOneMetaField(string name)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="masterModel">主表对象</param>
+        public ManyToOneMetaField(string name, string masterModel)
             : base(name, FieldType.ManyToOne)
         {
+            this.Relation = masterModel;
         }
 
-        public override Dictionary<long, object> GetFieldValues(
+        protected override Dictionary<long, object> OnGetFieldValues(
            ICallingContext session, List<Dictionary<string, object>> records)
         {
             var result = new Dictionary<long, object>(records.Count());

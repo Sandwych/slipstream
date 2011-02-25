@@ -7,9 +7,21 @@ namespace ObjectServer.Model
 {
     public static class MetaFieldExtensions
     {
-        public static IMetaField SetRequired(this IMetaField f, bool required)
+        public static IMetaField SetLabel(this IMetaField f, string label)
         {
-            f.Required = required;
+            f.Label = label;
+            return f;
+        }
+
+        public static IMetaField SetRequired(this IMetaField f)
+        {
+            f.Required = true;
+            return f;
+        }
+
+        public static IMetaField SetNotRequired(this IMetaField f)
+        {
+            f.Required = false;
             return f;
         }
 

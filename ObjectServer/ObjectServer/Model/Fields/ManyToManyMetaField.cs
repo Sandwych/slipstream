@@ -18,7 +18,7 @@ namespace ObjectServer.Model
 
         }
 
-        public override Dictionary<long, object> GetFieldValues(
+        protected override Dictionary<long, object> OnGetFieldValues(
            ICallingContext session, List<Dictionary<string, object>> records)
         {
             //中间表模型

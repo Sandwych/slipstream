@@ -88,10 +88,10 @@ namespace ObjectServer.Model
             this.CanDelete = true;
             this.Hierarchy = false;
 
-            this.DateTimeField("_created_time", "Created", false, null, null);
-            this.DateTimeField("_modified_time", "Last Modified", false, null, null);
-            this.ManyToOneField("_created_user", "core.user", "Creator", false, null, null);
-            this.ManyToOneField("_modified_user", "core.user", "Creator", false, null, null);
+            Fields.DateTime("_created_time").SetLabel("Created");
+            Fields.DateTime("_modified_time").SetLabel("Last Modified");
+            Fields.ManyToOne("_created_user", "core.user").SetLabel("Creator");
+            Fields.ManyToOne("_modified_user", "core.user").SetLabel("Creator");
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace ObjectServer.Model
                 this.NameGetter = this.DefaultNameGetter;
             }
 
-            if (!this.DefinedFields.ContainsKey("name"))
+            if (!this.Fields.ContainsKey("name"))
             {
                 Logger.Info(() => string.Format(
                     "I strongly suggest you to add the 'name' field into Model '{0}'",
@@ -213,7 +213,7 @@ namespace ObjectServer.Model
         private void AddDefaultValues(ICallingContext callingContext, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
-                this.DefinedFields.Values.Where(
+                this.Fields.Values.Where(
                 d => (d.DefaultProc != null && !propertyBag.Keys.Contains(d.Name)));
 
             foreach (var df in defaultFields)
@@ -282,7 +282,7 @@ namespace ObjectServer.Model
             var allFields = new List<string>();
             if (fields == null || fields.Length == 0)
             {
-                allFields.AddRange(this.DefinedFields.Keys);
+                allFields.AddRange(this.Fields.Keys);
             }
             else
             {
@@ -302,7 +302,7 @@ namespace ObjectServer.Model
             //表里的列，也就是可以直接用 SQL 查的列
             var columnFields =
                 (from f in allFields
-                 where this.DefinedFields[f].IsStorable()
+                 where this.Fields[f].IsStorable()
                  select f).ToArray();
 
             //.Where(f => !this.declaredFields[f].IsFunctionField);
@@ -318,7 +318,7 @@ namespace ObjectServer.Model
             //处理特殊字段
             foreach (var fieldName in allFields)
             {
-                var f = this.DefinedFields[fieldName];
+                var f = this.Fields[fieldName];
                 if (f.Name == "id")
                 {
                     continue;
@@ -360,7 +360,7 @@ namespace ObjectServer.Model
         private IDictionary<long, string> DefaultNameGetter(ICallingContext callingContext, object[] ids)
         {
             var result = new Dictionary<long, string>(ids.Length);
-            if (this.DefinedFields.ContainsKey("name"))
+            if (this.Fields.ContainsKey("name"))
             {
                 var records = this.Read(callingContext, ids, new object[] { "id", "name" });
                 foreach (var r in records)

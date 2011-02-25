@@ -18,11 +18,11 @@ namespace ObjectServer.Core
         {
             this.Name = "core.model";
 
-            this.CharsField("name", "Name", 256, true, null, null);
-            this.CharsField("label", "Label", 256, false, null, null);
-            this.TextField("info", "Information", false, null, null);
-            this.CharsField("module", "Module", 128, true, null, null);
-            this.OneToManyField("fields", "core.field", "module", "Fields", false, null, null);
+            Fields.Chars("name").SetLabel("Name").SetSize(256).SetRequired();
+            Fields.Chars("label").SetLabel("Label").SetSize(256);
+            Fields.Text("info").SetLabel("Information");
+            Fields.Chars("module").SetLabel("Module").SetSize(128).SetRequired();
+            Fields.OneToMany("fields", "core.field", "module").SetLabel("Fields");
         }
     }
 }

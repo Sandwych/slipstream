@@ -7,7 +7,17 @@ namespace ObjectServer.Model
 {
     internal abstract class MetaField : IMetaField
     {
+
+        private FieldGetter getter;
+
+        public MetaField()
+        {
+            this.Label = string.Empty;
+            this.Required = false;
+        }
+
         public MetaField(string name, FieldType type)
+            : this()
         {
             if (string.IsNullOrEmpty(name) || name.Trim().Length == 0)
             {
@@ -33,7 +43,11 @@ namespace ObjectServer.Model
             get { return this.Getter != null; }
         }
 
-        public FieldGetter Getter { get; set; }
+        public FieldGetter Getter
+        {
+            get;
+            set;
+        }
 
         public FieldDefaultProc DefaultProc { get; set; }
 
@@ -75,9 +89,33 @@ namespace ObjectServer.Model
             }
         }
 
-        public abstract Dictionary<long, object> GetFieldValues(
-            ICallingContext session, List<Dictionary<string, object>> records);
+        public Dictionary<long, object> GetFieldValues(
+            ICallingContext callingContext, List<Dictionary<string, object>> records)
+        {
+            if (this.Functional)
+            {
+                return this.GetFieldValuesFunctional(callingContext, records);
+            }
+            else
+            {
+                return this.OnGetFieldValues(callingContext, records);
+            }
+        }
+
+
+        protected abstract Dictionary<long, object> OnGetFieldValues(
+            ICallingContext callingContext, List<Dictionary<string, object>> records);
 
         #endregion
+
+        private Dictionary<long, object> GetFieldValuesFunctional(
+            ICallingContext callingContext, List<Dictionary<string, object>> records)
+        {
+            var ids = records.Select(p => p["id"]).ToArray();
+
+            var result = this.Getter(callingContext, ids);
+
+            return result;
+        }
     }
 }

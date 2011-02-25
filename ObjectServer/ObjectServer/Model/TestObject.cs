@@ -16,14 +16,17 @@ namespace ObjectServer.Model
         {
             this.Name = "test.test_object";
 
-            this.CharsField("name", "姓名", 64, true, null, null);
-            this.CharsField("address", "地址", 200, true, null, null);
-            this.IntegerField("field1", "数1", true, null, null);
-            this.IntegerField("field2", "数2", true, null, null);
-            this.IntegerField("field3", "数3", true, this.GetField3, null);
-            this.BitIntegerField("big_int_field", "Bit Int Field", false, null, null);
-            this.BooleanField("boolean_field", "Boolean Field", true, null, s => true);
-            this.TextField("text_field", "Text Field", false, null, null);
+            Fields.Chars("name").SetLabel("姓名").SetSize(64).SetRequired();
+            Fields.Chars("address").SetLabel("地址").SetSize(200).SetRequired();
+            Fields.Integer("field1").SetLabel("数1");
+            Fields.Integer("field2").SetLabel("数2");
+            Fields.Integer("field3").SetLabel("数3").SetGetter(this.GetField3);
+            Fields.BigInteger("big_int_field").SetLabel("Bit Int Field");
+            Fields.Boolean("boolean_field")
+                .SetLabel("Boolean Field")
+                .SetRequired()
+                .SetDefaultProc(s => true);
+            Fields.Text("text_field").SetLabel("Text Field");
         }
 
         [ServiceMethod]

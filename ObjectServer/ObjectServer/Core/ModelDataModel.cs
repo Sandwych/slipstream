@@ -25,11 +25,11 @@ namespace ObjectServer.Core
         {
             this.Name = ModelName;
 
-            this.CharsField("name", "Name(Friendly Ref. ID)", 128, true, null, null);
-            this.CharsField("module", "Module", 64, true, null, null);
-            this.CharsField("model", "Model", 64, true, null, null);
-            this.BitIntegerField("ref_id", "Referenced ID", true, null, null);
-            this.TextField("value", "Value", false, null, null);
+            Fields.Chars("name").SetLabel("Name(Friendly Ref. ID)").SetRequired().SetSize(128);
+            Fields.Chars("module").SetLabel("Module").SetRequired().SetSize(64);
+            Fields.Chars("model").SetLabel("Model").SetRequired().SetSize(64);
+            Fields.BigInteger("ref_id").SetLabel("Referenced ID").SetRequired();
+            Fields.Text("value").SetLabel("Value");
         }
     }
 }

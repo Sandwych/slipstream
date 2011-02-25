@@ -30,9 +30,9 @@ namespace ObjectServer.Core
         {
             this.Name = ModelName;
 
-            this.CharsField("name", "Name", 128, true, null, null);
-            this.CharsField("state", "State", 16, true, null, null);
-            this.TextField("info", "Information", false, null, null);
+            Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(128);
+            Fields.Chars("state").SetLabel("State").SetRequired().SetSize(16);
+            Fields.Text("info").SetLabel("Information");
         }
 
         public List<Module> LoadedModules

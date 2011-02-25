@@ -14,7 +14,7 @@ namespace ObjectServer.Core
         {
             this.Name = "core.rule";
 
-            this.OneToManyField("lines", "core.rule.line", "rule", "Rule Details", false, null, null);
+            Fields.OneToMany("lines", "core.rule.line", "rule").SetLabel("Rule Details");
         }
 
     }
@@ -27,7 +27,7 @@ namespace ObjectServer.Core
         {
             this.Name = "core.rule.line";
 
-            this.ManyToOneField("rule", "core.rule", "Creator", false, null, null);
+            Fields.ManyToOne("rule", "core.rule").SetLabel("Creator");
         }
     }
 }

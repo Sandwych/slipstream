@@ -125,7 +125,9 @@
     <Compile Include="Exceptions\MigrationException.cs" />
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
     <Compile Include="IGlobalObject.cs" />
-    <Compile Include="Model\MetaFieldExtensions.cs" />
+    <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
+    <Compile Include="Model\Fields\MetaFieldCollection.cs" />
+    <Compile Include="Model\Fields\MetaFieldExtensions.cs" />
     <Compile Include="Sessions\ISessionStoreProvider.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Model\BadFieldNameException.cs" />
@@ -138,7 +140,6 @@
     <Compile Include="Model\Fields\ManyToOneMetaField.cs" />
     <Compile Include="Model\Fields\OneToManyMetaField.cs" />
     <Compile Include="Model\Fields\ScalarMetaField.cs" />
-    <Compile Include="Model\Fields\FunctionMetaField.cs" />
     <Compile Include="Model\Fields\ManyToManyMetaField.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\ModelBase.cs" />

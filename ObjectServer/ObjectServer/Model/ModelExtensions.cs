@@ -9,12 +9,12 @@ namespace ObjectServer.Model
     {
         public static bool ContainsField(this IModel model, string fieldName)
         {
-            return model.DefinedFields.ContainsKey(fieldName);
+            return model.Fields.ContainsKey(fieldName);
         }
 
         public static IEnumerable<IMetaField> GetAllStorableFields(this IModel model)
         {
-            return model.DefinedFields.Values.Where(f => f.IsStorable() && f.Name != "id");
+            return model.Fields.Values.Where(f => f.IsStorable() && f.Name != "id");
         }
 
     }

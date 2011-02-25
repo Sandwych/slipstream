@@ -19,8 +19,8 @@ namespace ObjectServer.Test
         public ChildObject()
         {
             this.Name = "test.child";
-            this.CharsField("name", "Name", 64, true, null, null);
-            this.ManyToOneField("master", "test.master", "Master", false, null, null);
+            Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(64);
+            Fields.ManyToOne("master", "test.master").SetLabel("Master");
         }
     }
 
@@ -32,8 +32,8 @@ namespace ObjectServer.Test
         public MasterObject()
         {
             this.Name = "test.master";
-            this.CharsField("name", "Name", 64, false, null, null);
-            this.OneToManyField("children", "test.child", "master", "Children", false, null, null);
+            Fields.Chars("name").SetLabel("Name").SetSize(64);
+            Fields.OneToMany("children", "test.child", "master").SetLabel("Children");
         }
     }
 

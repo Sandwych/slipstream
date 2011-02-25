@@ -21,15 +21,14 @@ namespace ObjectServer.Core
         public UserModel()
         {
             this.Name = ModelName;
-            this.BitIntegerField("_version", "Version", true, null, null);
-            this.CharsField("login", "User Name", 64, true, null, null);
-            this.CharsField("password", "Password", 40, true, null, null);
-            this.CharsField("salt", "Salt", 64, true, null, null);
-            this.BooleanField("admin", "Administrator?", true, null, null);
-            this.CharsField("name", "Name", 64, true, null, null);
+            Fields.BigInteger("_version").SetLabel("Version").SetRequired();
+            Fields.Chars("login").SetLabel("User Name").SetSize(64).SetRequired();
+            Fields.Chars("password").SetLabel("Password").SetSize(40).SetRequired();
+            Fields.Chars("salt").SetLabel("Salt").SetSize(64).SetRequired();
+            Fields.Boolean("admin").SetLabel("Administrator?").SetRequired();
+            Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(64);
 
-            this.ManyToManyField(
-              "groups", "core.user_group", "uid", "gid", "Groups", false, null, null);
+            Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
         }
 
         public override void Initialize(IDatabaseContext db, ObjectPool pool)
@@ -203,8 +202,8 @@ namespace ObjectServer.Core
             this.Name = "core.user_group";
             this.TableName = "core_user_group_rel";
 
-            this.ManyToOneField("uid", "core.user", "User", true, null, null);
-            this.ManyToOneField("gid", "core.group", "Group", true, null, null);
+            Fields.ManyToOne("uid", "core.user").SetLabel("User").SetRequired();
+            Fields.ManyToOne("gid", "core.group").SetLabel("Group").SetRequired();
 
         }
     }

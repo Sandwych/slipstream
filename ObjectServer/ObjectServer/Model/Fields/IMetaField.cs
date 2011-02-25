@@ -25,6 +25,6 @@ namespace ObjectServer.Model
         void Validate();
 
         Dictionary<long, object> GetFieldValues(
-            ICallingContext session, List<Dictionary<string, object>> records);
+            ICallingContext callingContext, List<Dictionary<string, object>> records);
     }
 }

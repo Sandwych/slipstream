@@ -16,11 +16,11 @@ namespace ObjectServer.Core
         {
             this.Name = "core.field";
 
-            this.ManyToOneField("model", "core.model", "Model", true, null, null);
-            this.CharsField("name", "Name", 64, true, null, null);
-            this.CharsField("label", "Label", 256, false, null, null);
-            this.CharsField("type", "Type", 32, true, null, null);
-            this.CharsField("help", "Help", 256, false, null, null);
+            Fields.ManyToOne("model", "core.model").SetLabel("Model").SetRequired();
+            Fields.Chars("name").SetLabel("Name").SetSize(64).SetRequired();
+            Fields.Chars("label").SetLabel("Label").SetSize(256).SetNotRequired();
+            Fields.Chars("type").SetLabel("Type").SetSize(32).SetRequired();
+            Fields.Chars("help").SetLabel("Help").SetSize(256).SetNotRequired();
         }
 
 

@@ -120,7 +120,7 @@ namespace ObjectServer.Model
 
         private void AddValue(StringBuilder sb, string field, object value)
         {
-            var fieldType = this.model.DefinedFields[field].Type;
+            var fieldType = this.model.Fields[field].Type;
 
             switch (fieldType)
             {

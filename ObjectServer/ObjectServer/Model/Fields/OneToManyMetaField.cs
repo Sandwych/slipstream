@@ -7,12 +7,14 @@ namespace ObjectServer.Model
 {
     internal sealed class OneToManyMetaField : MetaField
     {
-        public OneToManyMetaField(string name)
+        public OneToManyMetaField(string name, string childModel, string relatedField)
             : base(name, FieldType.OneToMany)
         {
+            this.Relation = childModel;
+            this.RelatedField = relatedField;
         }
 
-        public override Dictionary<long, object> GetFieldValues(
+        protected override Dictionary<long, object> OnGetFieldValues(
            ICallingContext session, List<Dictionary<string, object>> records)
         {
             //查询字表

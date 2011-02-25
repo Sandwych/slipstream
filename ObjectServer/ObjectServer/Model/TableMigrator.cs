@@ -66,7 +66,7 @@ namespace ObjectServer.Model
             //表肯定存在，就看列存不存在
             //最简单的迁移策略：
             //如果列在表里不存在就建，以用户定义的为准
-            foreach (var pair in this.model.DefinedFields)
+            foreach (var pair in this.model.Fields)
             {
                 var field = pair.Value;
                 if (field.IsStorable() && !table.ColumnExists(field.Name))

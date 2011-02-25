@@ -13,7 +13,7 @@ namespace ObjectServer.Model
         }
 
     
-        public override Dictionary<long, object> GetFieldValues(
+        protected override Dictionary<long, object> OnGetFieldValues(
             ICallingContext session, List<Dictionary<string, object>> records)
         {
             var result = new Dictionary<long, object>(records.Count());

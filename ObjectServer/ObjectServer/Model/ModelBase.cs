@@ -12,8 +12,8 @@ namespace ObjectServer.Model
 {
     public abstract class ModelBase : StaticServiceObjectBase
     {
-        private readonly IDictionary<string, IMetaField> declaredFields =
-            new SortedList<string, IMetaField>();
+        private readonly IMetaFieldCollection declaredFields =
+            new MetaFieldCollection();
 
 
         public const string IdFieldName = "id";
@@ -49,7 +49,7 @@ namespace ObjectServer.Model
         /// </summary>
         private void AddInternalFields()
         {
-            BitIntegerField("id", "ID", true, null, null);
+            Fields.BigInteger("id").SetLabel("ID").SetRequired();
         }
 
 
@@ -70,7 +70,7 @@ namespace ObjectServer.Model
         {
             get
             {
-                var query = from f in this.DefinedFields.Values
+                var query = from f in this.Fields.Values
                             where f.Type == FieldType.ManyToOne
                             select f.Relation;
 
@@ -83,229 +83,8 @@ namespace ObjectServer.Model
             }
         }
 
-        #region Field Methods
 
-        public IDictionary<string, IMetaField> DefinedFields { get { return this.declaredFields; } }
-
-        protected void IntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-            MetaField field;
-            if (getter == null)
-            {
-                field = new ScalarMetaField(name, FieldType.Integer);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.Integer, getter);
-            }
-
-            field.Label = label;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-
-            declaredFields.Add(field.Name, field);
-        }
-
-        protected void BitIntegerField(string name, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-            MetaField field;
-            if (getter == null)
-            {
-                field = new ScalarMetaField(name, FieldType.BigInteger);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.BigInteger, getter);
-            }
-
-            field.Label = label;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-
-            field.Validate();
-            declaredFields.Add(field.Name, field);
-        }
-
-        protected void BooleanField(
-            string name, string label, bool required,
-            FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-            MetaField field;
-            if (getter == null)
-            {
-                field = new ScalarMetaField(name, FieldType.Boolean);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.Boolean, getter);
-            }
-
-            field.Label = label;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-
-            field.Validate();
-            declaredFields.Add(field.Name, field);
-        }
-
-        protected void TextField(
-            string name, string label, bool required,
-            FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-            MetaField field;
-
-            if (getter == null)
-            {
-                field = new ScalarMetaField(name, FieldType.Text);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.Text, getter);
-            }
-
-            field.Label = label;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-
-            field.Validate();
-            declaredFields.Add(field.Name, field);
-        }
-
-        protected IMetaField CharsField(
-            string name, string label, int size, bool required,
-            FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-            MetaField field;
-
-            if (getter == null)
-            {
-                field = new ScalarMetaField(name, FieldType.Chars);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.Chars, getter);
-            }
-
-            field.Label = label;
-            field.Size = size;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-
-            field.Validate();
-            declaredFields.Add(field.Name, field);
-            return field;
-        }
-
-        protected void DateTimeField(
-            string name, string label, bool required,
-            FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-            MetaField field;
-
-            if (getter == null)
-            {
-                field = new ScalarMetaField(name, FieldType.DateTime);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.DateTime, getter);
-            }
-
-            field.Label = label;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-
-            field.Validate();
-            declaredFields.Add(field.Name, field);
-        }
-
-        protected void ManyToOneField(
-            string name, string masterModel, string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-            MetaField field;
-
-            if (getter == null)
-            {
-                field = new ManyToOneMetaField(name);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.ManyToOne, getter);
-            }
-            field.Label = label;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-            field.Relation = masterModel;
-
-            field.Validate();
-            declaredFields.Add(field.Name, field);
-        }
-
-        protected void OneToManyField(
-            string name, string childModel, string relatedField,
-            string label, bool required,
-            FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-            MetaField field;
-
-            if (getter == null)
-            {
-                field = new OneToManyMetaField(name);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.OneToMany, getter);
-            }
-
-            field.Label = label;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-            field.Relation = childModel;
-            field.RelatedField = relatedField;
-
-            field.Validate();
-            declaredFields.Add(field.Name, field);
-        }
-
-        protected void ManyToManyField(
-            string name,
-            string refModel, string originField, string targetField,
-            string label, bool required, FieldGetter getter, FieldDefaultProc defaultProc)
-        {
-
-            MetaField field;
-
-            if (getter == null)
-            {
-                field = new ManyToManyMetaField(name, refModel, originField, targetField);
-            }
-            else
-            {
-                field = new FunctionMetaField(name, FieldType.ManyToMany, getter);
-            }
-
-            field.Label = label;
-            field.Required = required;
-            field.Getter = getter;
-            field.DefaultProc = defaultProc;
-
-
-            field.Validate();
-            declaredFields.Add(field.Name, field);
-
-        }
-
-
-        #endregion
-
+        public IMetaFieldCollection Fields { get { return this.declaredFields; } }
 
         protected void VerifyFields(IEnumerable<string> fields)
         {

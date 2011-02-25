@@ -35,12 +35,12 @@ namespace ObjectServer.Core
             this.Name = "core.session";
 
 
-            this.CharsField("session_id", "Session Id", 36, true, null, null);
-            this.DateTimeField("start_time", "Start Time", true, null, null);
-            this.DateTimeField("last_activity_time", "Last Activity Time", true, null, null);
-            this.CharsField("database", "Database Name", 64, true, null, null);
-            this.CharsField("login", "User Name", 64, true, null, null);
-            this.BitIntegerField("user_id", "User ID", true, null, null); //这里不关联
+            Fields.Chars("session_id").SetLabel("Session Id").SetRequired().SetSize(36);
+            Fields.DateTime("start_time").SetLabel("Start Time").SetRequired();
+            Fields.DateTime("last_activity_time").SetLabel("Last Activity Time").SetRequired();
+            Fields.Chars("database").SetLabel("Database Name").SetRequired().SetSize(64);
+            Fields.Chars("login").SetLabel("User Name").SetRequired().SetSize(64);
+            Fields.BigInteger("user_id").SetLabel("User ID").SetRequired();
         }
 
 
