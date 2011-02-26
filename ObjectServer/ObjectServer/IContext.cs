@@ -12,5 +12,7 @@ namespace ObjectServer
     public interface IContext : IDisposable
     {
         IDatabase Database { get; }
+
+        Session Session { get; }
     }
 }

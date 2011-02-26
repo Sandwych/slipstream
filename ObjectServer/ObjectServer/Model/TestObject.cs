@@ -32,7 +32,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public int GetSum(IContext callingContext)
+        public virtual int GetSum(IContext callingContext)
         {
             return 1 + 1;
         }

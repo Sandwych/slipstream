@@ -45,5 +45,11 @@ namespace ObjectServer
             Debug.Assert(this.provider != null);
             this.provider.Remove(sessionId);
         }
+
+        public void Pulse(Guid sessionId)
+        {
+            Debug.Assert(this.provider != null);
+            this.provider.Pulse(sessionId);
+        }
     }
 }

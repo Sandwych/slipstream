@@ -118,7 +118,7 @@ namespace ObjectServer
                 RootPassword = "root",
                 Debug = true,
                 LogLevel = "debug",
-                SessionTimeout = TimeSpan.MaxValue,
+                SessionTimeout = TimeSpan.FromDays(1),
             };
             Initialize(cfg);
         }

@@ -14,5 +14,7 @@ namespace ObjectServer
         void RemoveSessionsByUser(string database, long uid);
 
         void Remove(Guid sessionId);
+
+        void Pulse(Guid sessionId);
     }
 }

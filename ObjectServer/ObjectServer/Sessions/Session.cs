@@ -30,17 +30,24 @@ namespace ObjectServer
         public string Login { get; set; }
         public long UserId { get; set; }
 
+        public DateTime Deadline
+        {
+            get
+            {
+                if (!ObjectServerStarter.Initialized)
+                {
+                    throw new InvalidOperationException("Framework uninitialized");
+                }
+                var timeout = ObjectServerStarter.Configuration.SessionTimeout;
+                return this.LastActivityTime + timeout;
+            }
+        }
+
         public bool IsActive
         {
             get
             {
-                if(!ObjectServerStarter.Initialized)
-                {
-                    throw new InvalidOperationException("Framework uninitialized");
-                }
-
-                var timeout = ObjectServerStarter.Configuration.SessionTimeout;
-                return DateTime.Now - this.LastActivityTime <= timeout;
+                return DateTime.Now <= this.Deadline;
             }
         }
     }

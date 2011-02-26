@@ -28,6 +28,7 @@ namespace ObjectServer
             Logger.Info(() =>
                 string.Format("CallingContext is opening for sessionId: [{0}]", sessionId));
 
+            this.Session = session;
             this.ownDb = true;
             this.Database = ObjectServerStarter.Databases.GetDatabase(session.Database);
             this.Database.DataContext.Open();
@@ -41,9 +42,9 @@ namespace ObjectServer
         {
             Logger.Info(() =>
                 string.Format("CallingContext is opening for database: [{0}]", dbName));
-
-            this.ownDb = true;
+            
             this.Session = new Session(dbName, "system", 0);
+            this.ownDb = true;
             this.Database = ObjectServerStarter.Databases.GetDatabase(dbName);
             this.Database.DataContext.Open();
         }
@@ -53,13 +54,13 @@ namespace ObjectServer
             Logger.Info(() =>
                 string.Format("CallingContext is opening for DatabaseContext"));
 
+            this.Session = new Session("", "system", 0);
             this.ownDb = false;
             this.Database = db;
-            this.Database.DataContext.Open();
-            this.Session = new Session("", "system", 0);
+            this.Database.DataContext.Open();            
         }
 
-        #region ICallingContext 成员
+        #region IContext 成员
 
         public IDatabase Database
         {

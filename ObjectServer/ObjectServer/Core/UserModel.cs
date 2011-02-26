@@ -12,7 +12,7 @@ namespace ObjectServer.Core
 {
 
     [ServiceObject]
-    public sealed class UserModel : TableModel
+    public class UserModel : TableModel
     {
         public const string ModelName = "core.user";
         public const string PasswordMask = "************";
@@ -86,7 +86,7 @@ namespace ObjectServer.Core
             return Convert.ToBase64String(bytes);
         }
 
-        private static bool IsValidPassword(string hashedPassword, string salt, string password)
+        private static bool IsPasswordMatched(string hashedPassword, string salt, string password)
         {
             return hashedPassword == (password + salt).ToSha1();
         }
@@ -134,7 +134,7 @@ namespace ObjectServer.Core
         }
 
         [ServiceMethod]
-        public string LogOn(IContext callingContext,
+        public virtual string LogOn(IContext callingContext,
             string database, string login, string password)
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
@@ -153,7 +153,7 @@ namespace ObjectServer.Core
             var salt = (string)user["salt"];
 
             string result = null;
-            if (IsValidPassword(hashedPassword, salt, password))
+            if (IsPasswordMatched(hashedPassword, salt, password))
             {
                 var session = this.CreateSession(database, login, user);
                 result = session.SessionId.ToString();
@@ -169,7 +169,7 @@ namespace ObjectServer.Core
 
 
         [ServiceMethod]
-        public void LogOut(IContext callingContext, string sessionId)
+        public virtual void LogOut(IContext callingContext, string sessionId)
         {
             var sessGuid = new Guid(sessionId);
             ObjectServerStarter.SessionStore.Remove(sessGuid);
@@ -194,7 +194,7 @@ namespace ObjectServer.Core
 
 
     [ServiceObject]
-    public sealed class UserGroupModel : TableModel
+    public class UserGroupModel : TableModel
     {
 
         public UserGroupModel()

@@ -61,10 +61,11 @@ namespace ObjectServer
         {
             var parameters = mi.GetParameters();
             if (parameters.Length < 1
-                || parameters[0].ParameterType != typeof(IContext))
+                || parameters[0].ParameterType != typeof(IContext) 
+                || !mi.IsVirtual)
             {
                 var msg = string.Format(
-                    "The method '{1}' of object {0} must have an IContext parameter at first",
+                    "The method '{1}' of object {0} must have an IContext parameter at first, and it's must be 'virtual'.",
                     this.Name, mi.Name);
                 Logger.Error(() => msg);
                 throw new BadServiceMethodException(msg, this.Name, mi.Name);

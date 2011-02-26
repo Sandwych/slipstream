@@ -48,6 +48,13 @@ namespace ObjectServer
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void Pulse(Guid sessionId)
+        {
+            var sess = this.sessions[sessionId];
+            sess.LastActivityTime = DateTime.Now;
+        }
+
 
         #endregion
     }
