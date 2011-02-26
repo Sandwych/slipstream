@@ -4,6 +4,8 @@ s = ServiceProxy('http://localhost:9287/ObjectServer.ashx')
 print "Methods:"
 print s.system.listMethods()
 
+print "Version: " + s.GetVersion()
+
 session_id = s.LogOn('objectserver', 'root', 'root')
 
 domain = [("name","like","core%"),]

@@ -5,7 +5,11 @@ using System.Text;
 using System.Data;
 using System.Reflection;
 
+#if MONO
+using Mono.Npgsql;
+#else
 using Npgsql;
+#endif //MONO
 
 using ObjectServer.Model;
 
@@ -27,8 +31,11 @@ namespace ObjectServer.Backend.Postgresql
         public bool TableExists(IDataContext db, string tableName)
         {
             //检查连接
-            var sql =
-                "SELECT COUNT(relname) FROM pg_class WHERE relkind IN ('r','v') AND relname = @0";
+            var sql = @"
+    SELECT COALESCE(COUNT(table_name), 0)
+        FROM information_schema.tables 
+        WHERE table_type = 'BASE TABLE' AND table_schema = 'public' AND table_name = @0
+";
 
             var n = (long)db.QueryValue(sql, tableName);
             return n > 0;
@@ -138,9 +145,12 @@ SELECT column_name, data_type, is_nullable
 
         public bool FKExists(IDataContext db, string columnName)
         {
-            var fkName = this.GenerateFkName(columnName);
-            var sql = "SELECT COUNT(conname) FROM pg_constraint WHERE conname = @0";
-            var n = (long)db.QueryValue(sql, fkName);
+            var sql = @"
+SELECT COALESCE(COUNT(constraint_name), 0)
+    FROM information_schema.key_column_usage 
+    WHERE constraint_schema = 'public' AND table_name = @0 AND column_name = @1
+";
+            var n = (long)db.QueryValue(sql, this.Name, columnName);
             return n > 0;
         }
 
