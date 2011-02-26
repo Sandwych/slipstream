@@ -52,7 +52,23 @@ namespace ObjectServer
         /// </summary>
         protected void RegisterServiceMethod(MethodInfo mi)
         {
+            this.VerifyMethod(mi);
+
             this.serviceMethods.Add(mi.Name, mi);
+        }
+
+        private void VerifyMethod(MethodInfo mi)
+        {
+            var parameters = mi.GetParameters();
+            if (parameters.Length < 1
+                || parameters[0].ParameterType != typeof(IContext))
+            {
+                var msg = string.Format(
+                    "The method '{1}' of object {0} must have an IContext parameter at first",
+                    this.Name, mi.Name);
+                Logger.Error(() => msg);
+                throw new BadServiceMethodException(msg, this.Name, mi.Name);
+            }
         }
 
         private void RegisterAllServiceMethods()
