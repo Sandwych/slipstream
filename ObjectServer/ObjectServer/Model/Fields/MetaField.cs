@@ -87,7 +87,7 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<long, object> GetFieldValues(
-            ICallingContext callingContext, List<Dictionary<string, object>> records)
+            IContext callingContext, List<Dictionary<string, object>> records)
         {
             if (this.Functional)
             {
@@ -101,12 +101,12 @@ namespace ObjectServer.Model
 
 
         protected abstract Dictionary<long, object> OnGetFieldValues(
-            ICallingContext callingContext, List<Dictionary<string, object>> records);
+            IContext callingContext, List<Dictionary<string, object>> records);
 
         #endregion
 
         private Dictionary<long, object> GetFieldValuesFunctional(
-            ICallingContext callingContext, List<Dictionary<string, object>> records)
+            IContext callingContext, List<Dictionary<string, object>> records)
         {
             var ids = records.Select(p => p["id"]).ToArray();
 

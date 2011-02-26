@@ -23,8 +23,6 @@ namespace ObjectServer.Core
         /// <summary>
         /// 单个数据库中加载的模块
         /// </summary>
-        private readonly List<Module> loadedModules
-            = new List<Module>();
 
         public ModuleModel()
             : base(ModelName)
@@ -32,11 +30,6 @@ namespace ObjectServer.Core
             Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(128);
             Fields.Chars("state").SetLabel("State").SetRequired().SetSize(16);
             Fields.Text("info").SetLabel("Information");
-        }
-
-        public List<Module> LoadedModules
-        {
-            get { return this.loadedModules; }
         }
 
     }

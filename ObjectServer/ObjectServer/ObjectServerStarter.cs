@@ -23,8 +23,8 @@ namespace ObjectServer
         private bool disposed = false;
         private Config config;
         private bool initialized;
-        private DatabasePool dbPool = new DatabasePool();
-        private ModulePool modulePool = new ModulePool();
+        private DatabaseCollection databases = new DatabaseCollection();
+        private ModuleCollection modules = new ModuleCollection();
         private SessionStore sessionStore = new SessionStore();
 
         private ObjectServerStarter()
@@ -44,7 +44,7 @@ namespace ObjectServer
             {
                 if (disposing)
                 {
-                    this.dbPool.Dispose();
+                    this.databases.Dispose();
                 }
 
             }
@@ -77,16 +77,17 @@ namespace ObjectServer
                 throw new ArgumentNullException("cfg");
             }
 
+            ConfigurateLog4net(cfg);
+
             s_instance.sessionStore.Initialize(cfg);
-            s_instance.dbPool.Initialize(cfg);
 
             //查找所有模块并加载模块元信息
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
-                s_instance.modulePool.Initialize(cfg);
+                s_instance.modules.Initialize(cfg);
             }
 
-            ConfigurateLog4net(cfg);
+            s_instance.databases.Initialize(cfg);            
 
             s_instance.config = cfg;
             s_instance.initialized = true;
@@ -129,17 +130,17 @@ namespace ObjectServer
         }
 
 
-        internal static DatabasePool DatabasePool
+        internal static DatabaseCollection Databases
         {
             get
             {
-                return s_instance.dbPool;
+                return s_instance.databases;
             }
         }
 
-        internal static ModulePool ModulePool
+        internal static ModuleCollection Modules
         {
-            get { return s_instance.modulePool; }
+            get { return s_instance.modules; }
         }
 
         public static SessionStore SessionStore

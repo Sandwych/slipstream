@@ -10,9 +10,9 @@ namespace ObjectServer.Model
     internal sealed class ModelQuery
     {
         private IModel model;
-        private ICallingContext callingContext;
+        private IContext callingContext;
 
-        public ModelQuery(ICallingContext callingContext, IModel model)
+        public ModelQuery(IContext callingContext, IModel model)
         {
             this.callingContext = callingContext;
             this.model = model;
@@ -48,7 +48,7 @@ namespace ObjectServer.Model
             select.Traverse(sv);
             var sql = sv.ToString();
 
-            using (var cmd = this.callingContext.DatabaseContext.Connection.CreateCommand())
+            using (var cmd = this.callingContext.Database.DataContext.Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 using (var reader = cmd.ExecuteReader())

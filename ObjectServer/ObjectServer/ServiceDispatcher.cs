@@ -14,9 +14,9 @@ namespace ObjectServer
     {
         public string LogOn(string dbName, string username, string password)
         {
-            using (var callingContext = new CallingContext(dbName))
+            using (var callingContext = new ContextScope(dbName))
             {
-                var userModel = callingContext.Pool[UserModel.ModelName];
+                var userModel = callingContext.Database.Objects[UserModel.ModelName];
                 var method = userModel.GetServiceMethod("LogOn");
                 return (string)ExecuteTransactional(
                     callingContext, userModel, method, callingContext, dbName, username, password);
@@ -26,11 +26,11 @@ namespace ObjectServer
         public void LogOff(string sessionId)
         {
             var sgid = new Guid(sessionId);
-            using (var callingContext = new CallingContext(sgid))
+            using (var callingContext = new ContextScope(sgid))
             {
-                callingContext.DatabaseContext.Open();
+                callingContext.Database.DataContext.Open();
 
-                var userModel = (UserModel)callingContext.Pool[UserModel.ModelName];
+                var userModel = (UserModel)callingContext.Database.Objects[UserModel.ModelName];
                 userModel.LogOut(callingContext, sessionId);
             }
         }
@@ -43,9 +43,9 @@ namespace ObjectServer
         public object Execute(string sessionId, string objectName, string name, params object[] parameters)
         {
             var gsid = new Guid(sessionId);
-            using (var callingContext = new CallingContext(gsid))
+            using (var callingContext = new ContextScope(gsid))
             {
-                var obj = callingContext.Pool[objectName];
+                var obj = callingContext.Database.Objects[objectName];
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[parameters.Length + 1];
                 internalArgs[0] = callingContext;
@@ -63,11 +63,11 @@ namespace ObjectServer
         }
 
         private static object ExecuteTransactional(
-            CallingContext callingContext, IServiceObject obj, MethodInfo method, params object[] internalArgs)
+            ContextScope ctx, IServiceObject obj, MethodInfo method, params object[] internalArgs)
         {
-            callingContext.DatabaseContext.Open();
+            ctx.Database.DataContext.Open();
 
-            var tx = callingContext.DatabaseContext.Connection.BeginTransaction();
+            var tx = ctx.Database.DataContext.Connection.BeginTransaction();
             try
             {
                 var result = method.Invoke(obj, internalArgs);
@@ -95,17 +95,19 @@ namespace ObjectServer
 
             DataProvider.CreateDatabase(dbName);
 
-            using (var callingContext = new CallingContext(dbName))
+            using (var callingContext = new ContextScope(dbName))
             {
-                callingContext.DatabaseContext.Initialize();
-                ObjectServerStarter.DatabasePool.RegisterDatabase(dbName);
+                callingContext.Database.DataContext.Initialize();
+                ObjectServerStarter.Databases.LoadDatabase(dbName);
             }
         }
 
         public void DeleteDatabase(string rootPasswordHash, string dbName)
         {
             VerifyRootPassword(rootPasswordHash);
-            DataProvider.DeleteDatabase(dbName);
+
+            ObjectServerStarter.Databases.RemoveDatabase(dbName); //删除数据库上下文
+            DataProvider.DeleteDatabase(dbName); //删除实际数据库
         }
 
         private static void VerifyRootPassword(string rootPasswordHash)

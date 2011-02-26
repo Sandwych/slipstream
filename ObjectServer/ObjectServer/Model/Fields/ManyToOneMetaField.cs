@@ -19,10 +19,10 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           ICallingContext session, List<Dictionary<string, object>> records)
+           IContext ctx, List<Dictionary<string, object>> records)
         {
             var result = new Dictionary<long, object>(records.Count());
-            var masterModel = (TableModel)session.Pool[this.Relation];
+            var masterModel = (TableModel)ctx.Database.Objects[this.Relation];
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
                 //从原始记录里把所有该字段的值取出
@@ -33,7 +33,7 @@ namespace ObjectServer.Model
 
                 if (masterTableIds.Length > 0)
                 {
-                    var masterNames = masterModel.NameGetter(session, masterTableIds);
+                    var masterNames = masterModel.NameGetter(ctx, masterTableIds);
 
                     foreach (var r in records)
                     {

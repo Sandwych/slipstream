@@ -9,9 +9,8 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface ICallingContext : IDisposable
+    public interface IContext : IDisposable
     {
-        IObjectPool Pool { get; } 
-        IDataContext DatabaseContext { get; }
+        IDatabase Database { get; }
     }
 }

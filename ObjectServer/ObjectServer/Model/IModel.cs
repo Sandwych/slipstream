@@ -18,10 +18,10 @@ namespace ObjectServer.Model
 
         NameGetter NameGetter { get; }
 
-        object[] Search(ICallingContext callingContext, object[] domain, long offset, long limit);
-        long Create(ICallingContext callingContext, IDictionary<string, object> propertyBag);
-        void Write(ICallingContext callingContext, object id, IDictionary<string, object> record);
-        Dictionary<string, object>[] Read(ICallingContext callingContext, object[] ids, object[] fields);
-        void Delete(ICallingContext callingContext, object[] ids);
+        object[] Search(IContext callingContext, object[] domain, long offset, long limit);
+        long Create(IContext callingContext, IDictionary<string, object> propertyBag);
+        void Write(IContext callingContext, object id, IDictionary<string, object> record);
+        Dictionary<string, object>[] Read(IContext callingContext, object[] ids, object[] fields);
+        void Delete(IContext callingContext, object[] ids);
     }
 }

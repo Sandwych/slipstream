@@ -15,10 +15,10 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           ICallingContext session, List<Dictionary<string, object>> records)
+           IContext ctx, List<Dictionary<string, object>> records)
         {
             //查询字表
-            var childModel = (TableModel)session.Pool[this.Relation];
+            var childModel = (TableModel)ctx.Database.Objects[this.Relation];
             //TODO 权限等处理
 
             var children = new Dictionary<long, object[]>();
@@ -27,7 +27,7 @@ namespace ObjectServer.Model
                 var masterId = (long)master["id"];
                 var domain = new List<object[]>();
                 domain.Add(new object[] { this.RelatedField, "=", masterId });
-                var childIds = childModel.Search(session, domain.ToArray(), 0, 0xffff);
+                var childIds = childModel.Search(ctx, domain.ToArray(), 0, 0xffff);
                 children[masterId] = childIds;
             }
 

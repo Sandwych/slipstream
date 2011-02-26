@@ -6,5 +6,5 @@ using System.Text;
 namespace ObjectServer.Model
 {
     public delegate object
-       FieldDefaultProc(ICallingContext session);
+       FieldDefaultProc(IContext session);
 }

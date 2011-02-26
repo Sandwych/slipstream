@@ -122,12 +122,14 @@
     <Compile Include="Core\MenuModel.cs" />
     <Compile Include="Core\CronModel.cs" />
     <Compile Include="Core\ModelDataModel.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="Exceptions\ServiceObjectNotFoundException.cs" />
     <Compile Include="Exceptions\BadServiceObjectNameException.cs" />
     <Compile Include="Exceptions\MigrationException.cs" />
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
+    <Compile Include="IDatabase.cs" />
     <Compile Include="IGlobalObject.cs" />
-    <Compile Include="IObjectPool.cs" />
+    <Compile Include="IObjectCollection.cs" />
     <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldExtensions.cs" />
@@ -193,12 +195,12 @@
     <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Model\TestObject.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="ObjectPool.cs" />
+    <Compile Include="ObjectCollection.cs" />
     <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="ObjectServerStarter.cs" />
-    <Compile Include="DatabasePool.cs" />
+    <Compile Include="DatabaseCollection.cs" />
     <Compile Include="Core\UserModel.cs" />
-    <Compile Include="ICallingContext.cs" />
+    <Compile Include="IContext.cs" />
     <Compile Include="Core\FieldModel.cs" />
     <Compile Include="Core\ModelModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -207,7 +209,7 @@
     <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="ServiceMethodAttribute.cs" />
-    <Compile Include="CallingContext.cs" />
+    <Compile Include="ContextScope.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
     <Compile Include="StaticSettings.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
@@ -218,7 +220,7 @@
     <Compile Include="Model\Fields\FieldGetter.cs" />
     <Compile Include="Model\Fields\IMetaField.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />
-    <Compile Include="ModulePool.cs" />
+    <Compile Include="ModuleCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Backend\Postgresql\initdb.sql">

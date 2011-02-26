@@ -53,5 +53,15 @@ namespace ObjectServer
                 log.Fatal(dg());
             }
         }
+
+        public static void Error(string msg, Exception ex)
+        {
+            log.Error(msg, ex);
+        }
+
+        public static void Fatal(string msg, Exception ex)
+        {
+            log.Error(msg, ex);
+        }
     }
 }

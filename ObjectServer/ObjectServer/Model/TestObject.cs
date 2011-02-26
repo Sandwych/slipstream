@@ -32,12 +32,12 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public int GetSum(ICallingContext callingContext)
+        public int GetSum(IContext callingContext)
         {
             return 1 + 1;
         }
 
-        public Dictionary<long, object> GetField3(ICallingContext callingContext, object[] ids)
+        public Dictionary<long, object> GetField3(IContext callingContext, object[] ids)
         {
             var fieldNames = new object[] { "field1", "field2" };
             var values = base.Read(callingContext, ids, fieldNames);

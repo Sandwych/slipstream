@@ -42,6 +42,7 @@ namespace ObjectServer
             //设置属性默认值
             this.Depends = new string[] { };
             this.Dlls = new string[] { };
+            this.State = ModuleStatus.Deactived;
         }
 
         #region Serializable Fields
@@ -75,7 +76,7 @@ namespace ObjectServer
         #endregion
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Load(IObjectPool pool)
+        public void Load(IObjectCollection pool)
         {
             Logger.Info(() => string.Format("Begin to load module: '{0}'", this.Name));
 
@@ -89,14 +90,11 @@ namespace ObjectServer
                 this.LoadDynamicAssembly(pool);
             }
 
-            var moduleModel = (ModuleModel)pool[ModuleModel.ModelName];
             this.State = ModuleStatus.Actived;
-            moduleModel.LoadedModules.Add(this);
-
             Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
         }
 
-        private void LoadDynamicAssembly(IObjectPool pool)
+        private void LoadDynamicAssembly(IObjectCollection pool)
         {
             Debug.Assert(pool != null);
 
@@ -105,9 +103,9 @@ namespace ObjectServer
             RegisterServiceObjectWithinAssembly(pool, a);
         }
 
-        private static void RegisterServiceObjectWithinAssembly(IObjectPool pool, Assembly assembly)
+        private static void RegisterServiceObjectWithinAssembly(IObjectCollection objs, Assembly assembly)
         {
-            Debug.Assert(pool != null);
+            Debug.Assert(objs != null);
             Debug.Assert(assembly != null);
 
             Logger.Info(() => string.Format(
@@ -117,8 +115,8 @@ namespace ObjectServer
 
             foreach (var t in types)
             {
-                var obj = ObjectPool.CreateStaticObjectInstance(t);
-                pool.AddServiceObject(obj);
+                var obj = StaticServiceObjectBase.CreateStaticObjectInstance(t);
+                objs.RegisterObject(obj);
             }
         }
 
@@ -197,7 +195,7 @@ namespace ObjectServer
         }
 
 
-        internal static void RegisterAllCoreObjects(IObjectPool pool)
+        internal static void RegisterAllCoreObjects(IObjectCollection pool)
         {
             Debug.Assert(pool != null);
 

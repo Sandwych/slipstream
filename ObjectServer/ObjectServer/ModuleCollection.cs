@@ -20,7 +20,7 @@ namespace ObjectServer
     /// </summary>
     [Serializable]
     [JsonObject("module")]
-    public sealed class ModulePool : IGlobalObject
+    public sealed class ModuleCollection : IGlobalObject
     {
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace ObjectServer
         /// </summary>
         private List<Module> allModules = new List<Module>();
 
-        public ModulePool()
+        public ModuleCollection()
         {
             this.allModules.Add(Module.CoreModule);
         }
@@ -115,7 +115,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadActivedModules(IDataContext db, IObjectPool pool)
+        public void LoadActivedModules(IDataContext db, IObjectCollection pool)
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'actived' 的

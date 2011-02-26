@@ -31,23 +31,23 @@ namespace ObjectServer.Core
             Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
         }
 
-        public override void Initialize(IDataContext db, IObjectPool pool)
+        public override void Initialize(IDatabase db)
         {
-            base.Initialize(db, pool);
+            base.Initialize(db);
 
-            using (var callingCtx = new CallingContext(db))
+            using (var callingContext = new ContextScope(db))
             {
                 //检测是否有 root 用户
                 var domain = new object[][] { new object[] { "login", "=", "root" } };
-                var users = this.Search(callingCtx, domain, 0, 0);
+                var users = this.Search(callingContext, domain, 0, 0);
                 if (users.Length <= 0)
                 {
-                    this.CreateRootUser(callingCtx);
+                    this.CreateRootUser(callingContext);
                 }
             }
         }
 
-        private void CreateRootUser(CallingContext callingCtx)
+        private void CreateRootUser(ContextScope callingCtx)
         {
             //创建 root 用户
             var rootPassword = ObjectServerStarter.Configuration.RootPassword;
@@ -94,7 +94,7 @@ namespace ObjectServer.Core
         #region Service Methods
 
         [ServiceMethod]
-        public override long Create(ICallingContext callingContext, IDictionary<string, object> values)
+        public override long Create(IContext callingContext, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
 
@@ -102,7 +102,7 @@ namespace ObjectServer.Core
         }
 
         [ServiceMethod]
-        public override void Write(ICallingContext callingContext, object id, IDictionary<string, object> record)
+        public override void Write(IContext callingContext, object id, IDictionary<string, object> record)
         {
             IDictionary<string, object> values2 = HashPassword(record);
 
@@ -111,7 +111,7 @@ namespace ObjectServer.Core
         }
 
         [ServiceMethod]
-        public override Dictionary<string, object>[] Read(ICallingContext callingContext, object[] ids, object[] fields)
+        public override Dictionary<string, object>[] Read(IContext callingContext, object[] ids, object[] fields)
         {
             var records = base.Read(callingContext, ids, fields);
 
@@ -134,7 +134,7 @@ namespace ObjectServer.Core
         }
 
         [ServiceMethod]
-        public string LogOn(ICallingContext callingContext,
+        public string LogOn(IContext callingContext,
             string database, string login, string password)
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
@@ -169,7 +169,7 @@ namespace ObjectServer.Core
 
 
         [ServiceMethod]
-        public void LogOut(ICallingContext callingContext, string sessionId)
+        public void LogOut(IContext callingContext, string sessionId)
         {
             var sessGuid = new Guid(sessionId);
             ObjectServerStarter.SessionStore.Remove(sessGuid);

@@ -22,17 +22,17 @@ namespace ObjectServer.Model
 
         protected ModelBase(string name)
             : base(name)
-        {           
+        {
             this.AddInternalFields();
         }
 
-        public override void Initialize(IDataContext db, IObjectPool pool)
+        public override void Initialize(IDatabase db)
         {
-            base.Initialize(db, pool);
+            base.Initialize(db);
 
             //检测此模型是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(\"id\") FROM core_model WHERE name=@0";
-            var count = (long)db.QueryValue(sql, this.Name);
+            var count = (long)db.DataContext.QueryValue(sql, this.Name);
             if (count <= 0)
             {
                 this.CreateModel(db);
@@ -50,9 +50,9 @@ namespace ObjectServer.Model
         }
 
 
-        private void CreateModel(IDataContext db)
+        private void CreateModel(IDatabase db)
         {
-            var rowCount = db.Execute(
+            var rowCount = db.DataContext.Execute(
                 "INSERT INTO \"core_model\"(\"name\", \"module\", \"label\") VALUES(@0, @1, @2);",
                 this.Name, this.Module, this.Label);
 

@@ -10,26 +10,23 @@ namespace ObjectServer.Model
 {
     internal class TableMigrator
     {
-        private IDataContext db;
+        private IDatabase db;
         private IModel model;
-        private IObjectPool pool;
 
-        public TableMigrator(IDataContext db, IObjectPool pool, IModel model)
+        public TableMigrator(IDatabase db, IModel model)
         {
             this.db = db;
             this.model = model;
-            this.pool = pool;
         }
 
         public void Migrate()
         {
             Debug.Assert(this.db != null);
             Debug.Assert(this.model != null);
-            Debug.Assert(this.pool != null);
 
-            var table = this.db.CreateTableContext(this.model.TableName);
+            var table = this.db.DataContext.CreateTableContext(this.model.TableName);
 
-            if (!table.TableExists(db, this.model.TableName))
+            if (!table.TableExists(db.DataContext, this.model.TableName))
             {
                 this.CreateTable(table);
             }
@@ -41,18 +38,18 @@ namespace ObjectServer.Model
 
         private void CreateTable(ITableContext table)
         {
-            table.CreateTable(db, this.model.TableName, this.model.Label);
+            table.CreateTable(db.DataContext, this.model.TableName, this.model.Label);
 
             var storableColumns = this.model.GetAllStorableFields();
 
             foreach (var f in storableColumns)
             {
-                table.AddColumn(db, f);
+                table.AddColumn(db.DataContext, f);
 
                 if (f.Type == FieldType.ManyToOne)
                 {
-                    var refModel = (TableModel)this.pool[f.Relation];
-                    table.AddFK(db, f.Name, refModel.TableName, ReferentialAction.SetNull);
+                    var refModel = (TableModel)this.db.Objects[f.Relation];
+                    table.AddFK(db.DataContext, f.Name, refModel.TableName, ReferentialAction.SetNull);
                 }
             }
         }
@@ -71,7 +68,7 @@ namespace ObjectServer.Model
                 var field = pair.Value;
                 if (field.IsStorable() && !table.ColumnExists(field.Name))
                 {
-                    table.AddColumn(this.db, field);
+                    table.AddColumn(this.db.DataContext, field);
                 }
             }
         }

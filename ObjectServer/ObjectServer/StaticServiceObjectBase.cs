@@ -70,9 +70,9 @@ namespace ObjectServer
         }
 
 
-        public virtual void Initialize(IDataContext db, IObjectPool pool)
+        public virtual void Initialize(IDatabase db)
         {
-            this.Pool = pool;
+            this.Pool = db.Objects;
         }
 
         public string Name { get; private set; }
@@ -85,6 +85,32 @@ namespace ObjectServer
 
         public abstract string[] GetReferencedObjects();
 
-        public IObjectPool Pool { get; private set; }
+        public IObjectCollection Pool { get; private set; }
+
+
+
+
+        #region ServiceObject(s) factory methods
+
+        internal static IServiceObject CreateStaticObjectInstance(Type t)
+        {
+            var obj = Activator.CreateInstance(t) as IServiceObject;
+            if (obj == null)
+            {
+                var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
+                throw new InvalidCastException(msg);
+            }
+            return obj;
+        }
+
+        internal static T CreateStaticObjectInstance<T>()
+            where T : class, IServiceObject
+        {
+            return CreateStaticObjectInstance(typeof(T)) as T;
+        }
+
+        //以后要支持 DLR，增加  CreateDynamicObjectInstance
+
+        #endregion
     }
 }

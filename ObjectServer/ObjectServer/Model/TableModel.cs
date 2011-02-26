@@ -76,9 +76,9 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IDataContext db, IObjectPool pool)
+        public override void Initialize(IDatabase db)
         {
-            base.Initialize(db, pool);
+            base.Initialize(db);
 
             if (this.NameGetter == null)
             {
@@ -92,7 +92,7 @@ namespace ObjectServer.Model
                     this.Name));
             }
 
-            var migrator = new TableMigrator(db, pool, this);
+            var migrator = new TableMigrator(db, this);
             migrator.Migrate();
         }
 
@@ -100,7 +100,7 @@ namespace ObjectServer.Model
         #region Service Methods
 
         [ServiceMethod]
-        public virtual object[] Search(ICallingContext ctx, object[] domain, long offset, long limit)
+        public virtual object[] Search(IContext ctx, object[] domain, long offset, long limit)
         {
             if (!this.CanRead)
             {
@@ -118,7 +118,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual long Create(ICallingContext callingContext, IDictionary<string, object> propertyBag)
+        public virtual long Create(IContext callingContext, IDictionary<string, object> propertyBag)
         {
             if (!this.CanCreate)
             {
@@ -134,11 +134,11 @@ namespace ObjectServer.Model
             return DoCreate(callingContext, values);
         }
 
-        private long DoCreate(ICallingContext callingContext, IDictionary<string, object> values)
+        private long DoCreate(IContext callingContext, IDictionary<string, object> values)
         {
             this.VerifyFields(values.Keys);
 
-            var serial = callingContext.DatabaseContext.NextSerial(this.SequenceName);
+            var serial = callingContext.Database.DataContext.NextSerial(this.SequenceName);
 
             if (this.ContainsField("_version"))
             {
@@ -173,7 +173,7 @@ namespace ObjectServer.Model
               serial,
               args);
 
-            var rows = callingContext.DatabaseContext.Execute(sql, colValues);
+            var rows = callingContext.Database.DataContext.Execute(sql, colValues);
             if (rows != 1)
             {
                 Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
@@ -189,7 +189,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValues(ICallingContext callingContext, IDictionary<string, object> propertyBag)
+        private void AddDefaultValues(IContext callingContext, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
                 this.Fields.Values.Where(
@@ -202,7 +202,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual void Write(ICallingContext callingContext, object id, IDictionary<string, object> record)
+        public virtual void Write(IContext callingContext, object id, IDictionary<string, object> record)
         {
             if (!this.CanWrite)
             {
@@ -236,12 +236,12 @@ namespace ObjectServer.Model
                 sbFieldValues.ToString(),
                 id);
 
-            callingContext.DatabaseContext.Execute(sql, values);
+            callingContext.Database.DataContext.Execute(sql, values);
         }
 
         [ServiceMethod]
         public virtual Dictionary<string, object>[] Read(
-            ICallingContext callingContext, object[] ids, object[] fields)
+            IContext callingContext, object[] ids, object[] fields)
         {
             if (callingContext == null)
             {
@@ -292,7 +292,7 @@ namespace ObjectServer.Model
                 ids.ToCommaList());
 
             //先查找表里的简单字段数据
-            var records = callingContext.DatabaseContext.QueryAsDictionary(sql);
+            var records = callingContext.Database.DataContext.QueryAsDictionary(sql);
 
             //处理特殊字段
             foreach (var fieldName in allFields)
@@ -315,7 +315,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual void Delete(ICallingContext callingContext, object[] ids)
+        public virtual void Delete(IContext callingContext, object[] ids)
         {
             if (!this.CanDelete)
             {
@@ -326,7 +326,7 @@ namespace ObjectServer.Model
                 "DELETE FROM \"{0}\" WHERE \"id\" IN ({1});",
                 this.TableName, ids.ToCommaList());
 
-            var rowCount = callingContext.DatabaseContext.Execute(sql);
+            var rowCount = callingContext.Database.DataContext.Execute(sql);
             if (rowCount != ids.Count())
             {
                 throw new DataException();
@@ -336,7 +336,7 @@ namespace ObjectServer.Model
         #endregion
 
 
-        private IDictionary<long, string> DefaultNameGetter(ICallingContext callingContext, object[] ids)
+        private IDictionary<long, string> DefaultNameGetter(IContext callingContext, object[] ids)
         {
             var result = new Dictionary<long, string>(ids.Length);
             if (this.Fields.ContainsKey("name"))

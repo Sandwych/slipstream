@@ -6,5 +6,5 @@ using System.Text;
 namespace ObjectServer.Model
 {
     public delegate IDictionary<long, string>
-        NameGetter(ICallingContext callingContext, object[] ids);
+        NameGetter(IContext callingContext, object[] ids);
 }
