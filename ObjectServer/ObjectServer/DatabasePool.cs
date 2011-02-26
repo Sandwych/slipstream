@@ -15,7 +15,7 @@ namespace ObjectServer
     /// <summary>
     /// Singleton
     /// </summary>
-    internal sealed class DatabasePool : IGlobalObject
+    internal sealed class DatabasePool : IGlobalObject, IDisposable
     {
         private Dictionary<string, IObjectPool> pools =
             new Dictionary<string, IObjectPool>();
@@ -33,19 +33,17 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         internal void RegisterDatabase(string dbName)
         {
-            using (var db = DataProvider.OpenDatabase(dbName))
-            {
-                RegisterDatabase(db, dbName);
-            }
+            var db = DataProvider.CreateDataContext(dbName);
+            RegisterDatabase(db, dbName);
         }
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        internal void RegisterDatabase(IDatabaseContext db, string dbName)
+        internal void RegisterDatabase(IDataContext db, string dbName)
         {
             Logger.Info(() => string.Format("Registering object-pool of database: [{0}]", dbName));
 
-            var dbNames = db.List();
+            var dbNames = DataProvider.ListDatabases();
             if (!dbNames.Contains(dbName))
             {
                 throw new ArgumentException("Invalid database name", "dbName");
@@ -66,5 +64,17 @@ namespace ObjectServer
             return this.pools[dbName.Trim()];
         }
 
+
+        #region IDisposable 成员
+
+        public void Dispose()
+        {
+            foreach (var p in this.pools)
+            {
+                p.Value.Dispose();
+            }
+        }
+
+        #endregion
     }
 }

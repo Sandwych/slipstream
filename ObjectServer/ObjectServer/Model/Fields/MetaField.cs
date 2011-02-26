@@ -7,9 +7,6 @@ namespace ObjectServer.Model
 {
     internal abstract class MetaField : IMetaField
     {
-
-        private FieldGetter getter;
-
         public MetaField()
         {
             this.Label = string.Empty;

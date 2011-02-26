@@ -166,7 +166,7 @@ namespace ObjectServer
             return module;
         }
 
-        public void AddToDatabase(IDatabaseContext db)
+        public void AddToDatabase(IDataContext db)
         {
             var state = "deactived";
             if (this.AutoLoad)

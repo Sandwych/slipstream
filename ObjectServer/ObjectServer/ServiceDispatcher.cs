@@ -10,7 +10,7 @@ using ObjectServer.Core;
 
 namespace ObjectServer
 {
-    public sealed class LocalService : MarshalByRefObject, IService
+    public sealed class ServiceDispatcher : IService
     {
         public string LogOn(string dbName, string username, string password)
         {
@@ -23,27 +23,33 @@ namespace ObjectServer
             }
         }
 
-        public void LogOff(string dbName, string sessionId)
+        public void LogOff(string sessionId)
         {
-            using (var callingContext = new CallingContext(dbName))
+            var sgid = new Guid(sessionId);
+            using (var callingContext = new CallingContext(sgid))
             {
-                callingContext.Database.Open();
+                callingContext.DatabaseContext.Open();
 
                 var userModel = (UserModel)callingContext.Pool[UserModel.ModelName];
                 userModel.LogOut(callingContext, sessionId);
             }
         }
 
-        public object Execute(string sessionId, string objectName, string name, params object[] args)
+        public string GetVersion()
+        {
+            return StaticSettings.Version.ToString();
+        }
+
+        public object Execute(string sessionId, string objectName, string name, params object[] parameters)
         {
             var gsid = new Guid(sessionId);
             using (var callingContext = new CallingContext(gsid))
             {
                 var obj = callingContext.Pool[objectName];
                 var method = obj.GetServiceMethod(name);
-                var internalArgs = new object[args.Length + 1];
+                var internalArgs = new object[parameters.Length + 1];
                 internalArgs[0] = callingContext;
-                args.CopyTo(internalArgs, 1);
+                parameters.CopyTo(internalArgs, 1);
 
                 if (obj.DatabaseRequired)
                 {
@@ -59,9 +65,9 @@ namespace ObjectServer
         private static object ExecuteTransactional(
             CallingContext callingContext, IServiceObject obj, MethodInfo method, params object[] internalArgs)
         {
-            callingContext.Database.Open();
+            callingContext.DatabaseContext.Open();
 
-            var tx = callingContext.Database.Connection.BeginTransaction();
+            var tx = callingContext.DatabaseContext.Connection.BeginTransaction();
             try
             {
                 var result = method.Invoke(obj, internalArgs);
@@ -80,36 +86,26 @@ namespace ObjectServer
 
         public string[] ListDatabases()
         {
-            using (var db = DataProvider.OpenDatabase())
-            {
-                return db.List();
-            }
+            return DataProvider.ListDatabases();
         }
 
         public void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword)
         {
             VerifyRootPassword(rootPasswordHash);
 
-            using (var db = DataProvider.OpenDatabase())
-            {
-                db.Create(dbName);
-            }
+            DataProvider.CreateDatabase(dbName);
 
             using (var callingContext = new CallingContext(dbName))
             {
-                callingContext.Database.Initialize();
-                ObjectServerStarter.Pooler.RegisterDatabase(dbName);
+                callingContext.DatabaseContext.Initialize();
+                ObjectServerStarter.DatabasePool.RegisterDatabase(dbName);
             }
         }
 
         public void DeleteDatabase(string rootPasswordHash, string dbName)
         {
             VerifyRootPassword(rootPasswordHash);
-
-            using (var db = DataProvider.OpenDatabase())
-            {
-                db.Delete(dbName);
-            }
+            DataProvider.DeleteDatabase(dbName);
         }
 
         private static void VerifyRootPassword(string rootPasswordHash)
@@ -117,7 +113,7 @@ namespace ObjectServer
             if (rootPasswordHash.ToUpperInvariant() !=
                 ObjectServerStarter.Configuration.RootPasswordHash.ToUpperInvariant())
             {
-                throw new UnauthorizedAccessException("Invalid root password");
+                throw new UnauthorizedAccessException("Invalid password of root user");
             }
         }
 
@@ -127,30 +123,30 @@ namespace ObjectServer
         #region Model methods
 
 
-        public long CreateModel(string dbName, string objectName, IDictionary<string, object> propertyBag)
+        public long CreateModel(string sessionId, string objectName, IDictionary<string, object> propertyBag)
         {
-            return (long)Execute(dbName, objectName, "Create", new object[] { propertyBag });
+            return (long)Execute(sessionId, objectName, "Create", new object[] { propertyBag });
         }
 
-        public object[] SearchModel(string dbName, string objectName, object[] domain, long offset, long limit)
+        public object[] SearchModel(string sessionId, string objectName, object[] domain, long offset, long limit)
         {
-            return (object[])Execute(dbName, objectName, "Search", new object[] { domain, offset, limit });
+            return (object[])Execute(sessionId, objectName, "Search", new object[] { domain, offset, limit });
         }
 
-        public Dictionary<string, object>[] ReadModel(string dbName, string objectName, object[] ids, object[] fields)
+        public Dictionary<string, object>[] ReadModel(string sessionId, string objectName, object[] ids, object[] fields)
         {
             return (Dictionary<string, object>[])Execute(
-                dbName, objectName, "Read", new object[] { ids, fields });
+                sessionId, objectName, "Read", new object[] { ids, fields });
         }
 
-        public void WriteModel(string dbName, string objectName, object id, IDictionary<string, object> record)
+        public void WriteModel(string sessionId, string objectName, object id, IDictionary<string, object> record)
         {
-            Execute(dbName, objectName, "Write", new object[] { id, record });
+            Execute(sessionId, objectName, "Write", new object[] { id, record });
         }
 
-        public void DeleteModel(string dbName, string objectName, object[] ids)
+        public void DeleteModel(string sessionId, string objectName, object[] ids)
         {
-            Execute(dbName, objectName, "Delete", new object[] { ids });
+            Execute(sessionId, objectName, "Delete", new object[] { ids });
         }
 
         #endregion

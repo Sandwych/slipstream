@@ -40,6 +40,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -67,8 +68,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlTree\SelectTest.cs" />
-    <Compile Include="TestBase.cs" />
+    <Compile Include="LocalTestBase.cs" />
     <Compile Include="Utility\DependencySorterTest.cs" />
+    <Compile Include="Web\JsonSerializedCallingTests.cs" />
+    <Compile Include="Web\WebTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ObjectServer.Web\ObjectServer.Web.csproj">

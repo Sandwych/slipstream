@@ -10,12 +10,12 @@ using ObjectServer.Backend;
 namespace ObjectServer.Test.Backend
 {
     [TestFixture]
-    public class DatabaseTest : TestBase
+    public class DatabaseTest : LocalTestBase
     {
         [Test]
         public void Query_as_dictionary()
         {
-            using (var db = DataProvider.OpenDatabase("objectserver"))
+            using (var db = DataProvider.CreateDataContext("objectserver"))
             {
                 db.Open();
 
@@ -32,7 +32,7 @@ namespace ObjectServer.Test.Backend
             ObjectServerStarter.Initialize();
             var sha1 = ObjectServerStarter.Configuration.RootPasswordHash;
 
-            var service = new LocalService();
+            var service = new ServiceDispatcher();
             service.CreateDatabase(sha1, dbName, "admin");
             service.DeleteDatabase(sha1, dbName);
 

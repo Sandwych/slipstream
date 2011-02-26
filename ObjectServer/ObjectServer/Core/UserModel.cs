@@ -31,7 +31,7 @@ namespace ObjectServer.Core
             Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
         }
 
-        public override void Initialize(IDatabaseContext db, IObjectPool pool)
+        public override void Initialize(IDataContext db, IObjectPool pool)
         {
             base.Initialize(db, pool);
 

@@ -9,11 +9,11 @@ using Npgsql;
 
 namespace ObjectServer.Backend.Postgresql
 {
-    internal sealed class PgDatabaseContext : DatabaseContextBase, IDatabaseContext
+    internal sealed class PgDataContext : DataContextBase, IDataContext
     {
         private const string INITDB = "ObjectServer.Backend.Postgresql.initdb.sql";
 
-        public PgDatabaseContext(string dbName)
+        public PgDataContext(string dbName)
         {
             var cfg = ObjectServerStarter.Configuration;
             string connectionString = string.Format(
@@ -27,7 +27,7 @@ namespace ObjectServer.Backend.Postgresql
             this.DatabaseName = dbName;
         }
 
-        public PgDatabaseContext()
+        public PgDataContext()
             : this("template1")
         {
         }
@@ -105,9 +105,9 @@ namespace ObjectServer.Backend.Postgresql
 
         #endregion
 
-        public override ITableContext CreateTableHandler(IDatabaseContext db, string tableName)
+        public override ITableContext CreateTableContext(string tableName)
         {
-            return new PgTableContext(db, tableName);
+            return new PgTableContext(this, tableName);
         }
 
         public override long NextSerial(string sequenceName)

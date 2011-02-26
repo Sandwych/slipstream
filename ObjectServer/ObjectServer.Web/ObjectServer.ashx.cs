@@ -16,12 +16,30 @@ namespace ObjectServer.Web
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     public class ObjectServer : JsonRpcHandler
     {
-        private IService service = new LocalService();
+        private IService service = new ServiceDispatcher();
 
-        [JsonRpcMethod(Name = "Execute")]
-        public object Execute(string dbName, string objectName, string name, object[] parameters)
+        [JsonRpcMethod]
+        public string LogOn(string dbName, string userName, string password)
         {
-            return this.service.Execute(dbName, objectName, name, parameters);
+            return this.service.LogOn(dbName, userName, password);
+        }
+
+        [JsonRpcMethod]
+        public void LogOff(string sessionId)
+        {
+            this.service.LogOff(sessionId);
+        }
+
+        [JsonRpcMethod]
+        public string GetVersion()
+        {
+            return this.service.GetVersion();
+        }
+
+        [JsonRpcMethod]
+        public object Execute(string sessionId, string objectName, string method, object[] parameters)
+        {
+            return this.service.Execute(sessionId, objectName, method, parameters);
         }
 
     }

@@ -22,7 +22,6 @@ namespace ObjectServer
     [JsonObject("module")]
     public sealed class ModulePool : IGlobalObject
     {
-        public const string ModuleFileName = "module.js";
 
         /// <summary>
         /// 整个系统中发现的所有模块
@@ -79,8 +78,11 @@ namespace ObjectServer
             var moduleDirs = Directory.GetDirectories(modulePath);
             foreach (var moduleDir in moduleDirs)
             {
-                var moduleFilePath = System.IO.Path.Combine(moduleDir, ModuleFileName);
+                var moduleFilePath = System.IO.Path.Combine(
+                    moduleDir, StaticSettings.ModuleMetaDataFileName);
+
                 var module = Module.DeserializeFromFile(moduleFilePath);
+
                 module.Path = moduleDir;
                 modules.Add(module);
 
@@ -94,7 +96,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void UpdateModuleList(IDatabaseContext db)
+        public void UpdateModuleList(IDataContext db)
         {
             var cfg = ObjectServerStarter.Configuration;
             this.LookupAllModules(cfg.ModulePath);
@@ -113,7 +115,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadActivedModules(IDatabaseContext db, IObjectPool pool)
+        public void LoadActivedModules(IDataContext db, IObjectPool pool)
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'actived' 的

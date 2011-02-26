@@ -100,15 +100,17 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backend\DatabaseContextBase.cs" />
+    <Compile Include="Backend\DataContextBase.cs" />
     <Compile Include="Backend\DatabaseType.cs" />
     <Compile Include="Backend\DataProvider.cs" />
-    <Compile Include="Backend\IDatabaseContext.cs" />
+    <Compile Include="Backend\IDataContext.cs" />
+    <Compile Include="Backend\IDataProvider.cs" />
     <Compile Include="Backend\ISqlTypeConverter.cs" />
     <Compile Include="Backend\ITableContext.cs" />
     <Compile Include="Backend\IColumnMetadata.cs" />
     <Compile Include="Backend\Postgresql\PgColumnMetadata.cs" />
-    <Compile Include="Backend\Postgresql\PgDatabaseContext.cs" />
+    <Compile Include="Backend\Postgresql\PgDataContext.cs" />
+    <Compile Include="Backend\Postgresql\PgDataProvider.cs" />
     <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Backend\Postgresql\PgTableContext.cs" />
     <Compile Include="Config.cs" />
@@ -192,7 +194,7 @@
     <Compile Include="Model\TestObject.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="ObjectPool.cs" />
-    <Compile Include="LocalService.cs" />
+    <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="ObjectServerStarter.cs" />
     <Compile Include="DatabasePool.cs" />
     <Compile Include="Core\UserModel.cs" />
@@ -235,6 +237,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>git add --all</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

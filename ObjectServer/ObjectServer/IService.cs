@@ -7,6 +7,8 @@ namespace ObjectServer
 {
     public interface IService
     {
+        #region common services
+
         /// <summary>
         /// 用户登录系统
         /// </summary>
@@ -16,11 +18,15 @@ namespace ObjectServer
         /// <returns>登录成功返回 session ID, 失败返回 null</returns>
         string LogOn(string dbName, string login, string password);
 
-        void LogOff(string dbName, string sessionId);
+        void LogOff(string sessionId);
+
+        string GetVersion();
+
+        #endregion
 
 
         object Execute(
-            string sessionId, string objectName, string name, params object[] args);
+            string sessionId, string objectName, string name, params object[] parameters);
 
         string[] ListDatabases();
         void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword);

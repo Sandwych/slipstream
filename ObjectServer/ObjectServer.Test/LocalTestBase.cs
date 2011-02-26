@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace ObjectServer
 {
-    public abstract class TestBase
+    public abstract class LocalTestBase
     {
         [TestFixtureSetUp()]
         public virtual void InitFramework()
@@ -17,7 +17,7 @@ namespace ObjectServer
                 ObjectServerStarter.Initialize();
             }
 
-            var proxy = new LocalService();
+            var proxy = new ServiceDispatcher();
 
             this.SessionId = proxy.LogOn("objectserver", "root", "root");
         }

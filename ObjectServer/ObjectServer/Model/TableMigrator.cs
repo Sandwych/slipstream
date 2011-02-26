@@ -10,11 +10,11 @@ namespace ObjectServer.Model
 {
     internal class TableMigrator
     {
-        private IDatabaseContext db;
+        private IDataContext db;
         private IModel model;
         private IObjectPool pool;
 
-        public TableMigrator(IDatabaseContext db, IObjectPool pool, IModel model)
+        public TableMigrator(IDataContext db, IObjectPool pool, IModel model)
         {
             this.db = db;
             this.model = model;
@@ -27,7 +27,7 @@ namespace ObjectServer.Model
             Debug.Assert(this.model != null);
             Debug.Assert(this.pool != null);
 
-            var table = this.db.CreateTableHandler(db, this.model.TableName);
+            var table = this.db.CreateTableContext(this.model.TableName);
 
             if (!table.TableExists(db, this.model.TableName))
             {

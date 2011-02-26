@@ -65,20 +65,29 @@ namespace ObjectServer.Web
 
         public void ProcessRequest(HttpContext context)
         {
-            context.Response.ContentType = "text/json";
             var httpMethod = context.Request.HttpMethod.Trim().ToUpperInvariant();
 
-            //RPC 调用
             if (httpMethod == "POST")
             {
-                this.ProcessNormalRpc(context);
+                this.ProcessJsonRpc(
+                    context.Request.InputStream, context.Response.Output);
+                context.Response.ContentType = "text/json";
             }
         }
 
-        private void ProcessNormalRpc(HttpContext context)
+        public void ProcessJsonRpc(Stream inputStream, TextWriter resultWriter)
         {
-            var ins = context.Request.InputStream;
-            var jreq = (Dictionary<string, object>)PlainJsonConvert.Deserialize(ins);
+            if (inputStream == null)
+            {
+                throw new ArgumentNullException("inputStream");
+            }
+
+            if (resultWriter == null)
+            {
+                throw new ArgumentNullException("resultWriter");
+            }
+
+            var jreq = (Dictionary<string, object>)PlainJsonConvert.Deserialize(inputStream);
 
             //执行调用
             var id = jreq["id"];
@@ -106,7 +115,7 @@ namespace ObjectServer.Web
             };
 
             var js = new JsonSerializer();
-            js.Serialize(context.Response.Output, jresponse);
+            js.Serialize(resultWriter, jresponse);
         }
 
         #endregion

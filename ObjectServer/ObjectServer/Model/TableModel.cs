@@ -76,7 +76,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IDatabaseContext db, IObjectPool pool)
+        public override void Initialize(IDataContext db, IObjectPool pool)
         {
             base.Initialize(db, pool);
 
@@ -138,7 +138,7 @@ namespace ObjectServer.Model
         {
             this.VerifyFields(values.Keys);
 
-            var serial = callingContext.Database.NextSerial(this.SequenceName);
+            var serial = callingContext.DatabaseContext.NextSerial(this.SequenceName);
 
             if (this.ContainsField("_version"))
             {
@@ -173,7 +173,7 @@ namespace ObjectServer.Model
               serial,
               args);
 
-            var rows = callingContext.Database.Execute(sql, colValues);
+            var rows = callingContext.DatabaseContext.Execute(sql, colValues);
             if (rows != 1)
             {
                 Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
@@ -236,7 +236,7 @@ namespace ObjectServer.Model
                 sbFieldValues.ToString(),
                 id);
 
-            callingContext.Database.Execute(sql, values);
+            callingContext.DatabaseContext.Execute(sql, values);
         }
 
         [ServiceMethod]
@@ -292,7 +292,7 @@ namespace ObjectServer.Model
                 ids.ToCommaList());
 
             //先查找表里的简单字段数据
-            var records = callingContext.Database.QueryAsDictionary(sql);
+            var records = callingContext.DatabaseContext.QueryAsDictionary(sql);
 
             //处理特殊字段
             foreach (var fieldName in allFields)
@@ -326,7 +326,7 @@ namespace ObjectServer.Model
                 "DELETE FROM \"{0}\" WHERE \"id\" IN ({1});",
                 this.TableName, ids.ToCommaList());
 
-            var rowCount = callingContext.Database.Execute(sql);
+            var rowCount = callingContext.DatabaseContext.Execute(sql);
             if (rowCount != ids.Count())
             {
                 throw new DataException();

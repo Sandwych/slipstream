@@ -16,10 +16,11 @@ namespace ObjectServer
     /// SINGLETON
     /// 框架的全局入口点
     /// </summary>
-    public sealed class ObjectServerStarter
+    public sealed class ObjectServerStarter : IDisposable
     {
         private static readonly ObjectServerStarter s_instance = new ObjectServerStarter();
 
+        private bool disposed = false;
         private Config config;
         private bool initialized;
         private DatabasePool dbPool = new DatabasePool();
@@ -29,6 +30,35 @@ namespace ObjectServer
         private ObjectServerStarter()
         {
         }
+
+        ~ObjectServerStarter()
+        {
+            Dispose(false);
+        }
+
+        #region IDisposable 成员
+
+        private void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    this.dbPool.Dispose();
+                }
+
+            }
+            disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Initialize(string configPath)
@@ -99,7 +129,7 @@ namespace ObjectServer
         }
 
 
-        internal static DatabasePool Pooler
+        internal static DatabasePool DatabasePool
         {
             get
             {

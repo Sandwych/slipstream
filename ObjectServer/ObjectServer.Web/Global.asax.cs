@@ -21,8 +21,7 @@ namespace ObjectServer.Web
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
-        {            
-
+        {
         }
 
         private void EnsureFrameworkInitialized()

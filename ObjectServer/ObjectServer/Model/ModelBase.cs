@@ -26,7 +26,7 @@ namespace ObjectServer.Model
             this.AddInternalFields();
         }
 
-        public override void Initialize(IDatabaseContext db, IObjectPool pool)
+        public override void Initialize(IDataContext db, IObjectPool pool)
         {
             base.Initialize(db, pool);
 
@@ -50,7 +50,7 @@ namespace ObjectServer.Model
         }
 
 
-        private void CreateModel(IDatabaseContext db)
+        private void CreateModel(IDataContext db)
         {
             var rowCount = db.Execute(
                 "INSERT INTO \"core_model\"(\"name\", \"module\", \"label\") VALUES(@0, @1, @2);",

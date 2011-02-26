@@ -11,19 +11,19 @@ namespace ObjectServer.Backend
     {
         string Name { get; }
 
-        void AddColumn(IDatabaseContext db, IMetaField field);
-        void DeleteColumn(IDatabaseContext db, string columnName);
-        void UpgradeColumn(IDatabaseContext db, IMetaField field);
+        void AddColumn(IDataContext db, IMetaField field);
+        void DeleteColumn(IDataContext db, string columnName);
+        void UpgradeColumn(IDataContext db, IMetaField field);
         bool ColumnExists(string columnName);
 
-        bool TableExists(IDatabaseContext db, string tableName);
-        void CreateTable(IDatabaseContext db, string tableName, string label);
+        bool TableExists(IDataContext db, string tableName);
+        void CreateTable(IDataContext db, string tableName, string label);
 
-        void AddConstraint(IDatabaseContext db, string constraintName, string constraint);
-        void DeleteConstraint(IDatabaseContext db, string constraintName);
+        void AddConstraint(IDataContext db, string constraintName, string constraint);
+        void DeleteConstraint(IDataContext db, string constraintName);
 
-        void AddFK(IDatabaseContext db, string columnName, string refTable, ReferentialAction refAct);
-        void DeleteFK(IDatabaseContext db, string columnName);
-        bool FKExists(IDatabaseContext db, string columnName);
+        void AddFK(IDataContext db, string columnName, string refTable, ReferentialAction refAct);
+        void DeleteFK(IDataContext db, string columnName);
+        bool FKExists(IDataContext db, string columnName);
     }
 }

@@ -10,11 +10,20 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Backend
 {
-    internal abstract class DatabaseContextBase : IDatabaseContext
+    internal abstract class DataContextBase : IDataContext
     {
         protected DbConnection conn;
         private bool opened;
 
+        public DataContextBase()
+        {
+            this.opened = false;
+        }
+
+        ~DataContextBase()
+        {
+            this.Dispose(false);
+        }
 
         public void Open()
         {
@@ -27,7 +36,11 @@ namespace ObjectServer.Backend
 
         public void Close()
         {
-            this.Dispose();
+            if (this.opened)
+            {
+                this.conn.Close();
+                this.opened = false;
+            }
         }
 
         public void Delete(string dbName)
@@ -163,13 +176,10 @@ namespace ObjectServer.Backend
         {
             if (disposing)
             {
-                if (this.opened)
-                {
-                    this.conn.Close();
-                    this.opened = false;
-                }
-                this.conn.Dispose();
+                this.conn.Close();
             }
+
+            this.conn.Dispose();
         }
 
         #endregion
@@ -202,10 +212,7 @@ namespace ObjectServer.Backend
 
         protected void EnsureConnectionOpened()
         {
-            if (!this.opened)
-            {
-                this.Open();
-            }
+            this.Open();
         }
 
         public string GetSqlType(IMetaField field)
@@ -216,7 +223,7 @@ namespace ObjectServer.Backend
         public abstract string[] List();
         public abstract void Create(string dbName);
         public abstract void Initialize();
-        public abstract ITableContext CreateTableHandler(IDatabaseContext db, string dbName);
+        public abstract ITableContext CreateTableContext(string tableName);
         public abstract long NextSerial(string sequenceName);
     }
 }

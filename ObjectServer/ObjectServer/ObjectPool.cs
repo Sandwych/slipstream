@@ -19,15 +19,16 @@ namespace ObjectServer
         private Dictionary<string, IServiceObject> objects =
             new Dictionary<string, IServiceObject>();
 
-        public ObjectPool(IDatabaseContext db, string dbName)
+        public ObjectPool(IDataContext dbCtx, string dbName)
         {
-            this.Database = dbName;
-            this.LoadAllObjects(db);
+            this.DatabaseContext = dbCtx;
+            this.DatabaseName = dbName;
+            this.LoadAllObjects(dbCtx);
 
-            this.InitializeAllObjects(db);
+            this.InitializeAllObjects(dbCtx);
         }
 
-        private void LoadAllObjects(IDatabaseContext db)
+        private void LoadAllObjects(IDataContext db)
         {
             Module.RegisterAllCoreObjects(this);
 
@@ -35,7 +36,7 @@ namespace ObjectServer
             ObjectServerStarter.ModulePool.LoadActivedModules(db, this);
         }
 
-        private void InitializeAllObjects(IDatabaseContext db)
+        private void InitializeAllObjects(IDataContext db)
         {
             //一次性初始化所有对象
             //obj.Initialize(db, pool);
@@ -61,7 +62,7 @@ namespace ObjectServer
             objList.DependencySort(m => m.Name, m => objDepends[m.Name]);
         }
 
-        public string Database { get; private set; }
+        public string DatabaseName { get; private set; }
 
         public void AddServiceObject(IServiceObject obj)
         {
@@ -94,6 +95,8 @@ namespace ObjectServer
             return this.objects.ContainsKey(objName);
         }
 
+        public IDataContext DatabaseContext { get; private set; }
+
 
         #region ServiceObject(s) factory methods
 
@@ -118,5 +121,14 @@ namespace ObjectServer
 
         #endregion
 
+
+        #region IDisposable 成员
+
+        public void Dispose()
+        {
+            this.DatabaseContext.Dispose();
+        }
+
+        #endregion
     }
 }

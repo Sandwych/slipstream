@@ -9,9 +9,9 @@ namespace ObjectServer.Core.Test
 {
 
     [TestFixture]
-    public sealed class UserTest : TestBase
+    public sealed class UserTest : LocalTestBase
     {
-        IService proxy = new LocalService();
+        IService proxy = new ServiceDispatcher();
 
         [Test]
         public void Test_user_password_hashing()

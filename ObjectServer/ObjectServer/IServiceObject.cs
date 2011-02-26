@@ -11,7 +11,7 @@ namespace ObjectServer
 {
     public interface IServiceObject
     {
-        void Initialize(IDatabaseContext db, IObjectPool pool);
+        void Initialize(IDataContext db, IObjectPool pool);
 
         string Label { get; }
         string Name { get; }

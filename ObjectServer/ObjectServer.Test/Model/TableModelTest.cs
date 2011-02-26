@@ -14,9 +14,9 @@ namespace ObjectServer.Model.Test
 {
 
     [TestFixture]
-    public class ModelBaseTest : TestBase
+    public class ModelBaseTest : LocalTestBase
     {
-        IService proxy = new LocalService();
+        IService proxy = new ServiceDispatcher();
 
         [Test]
         public void Simple_fields_crud()

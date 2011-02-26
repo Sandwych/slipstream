@@ -15,7 +15,7 @@ namespace ObjectServer.Backend.Postgresql
     {
         private IDictionary<string, IColumnMetadata> columns = new SortedList<string, IColumnMetadata>();
 
-        public PgTableContext(IDatabaseContext db, string tableName)
+        public PgTableContext(IDataContext db, string tableName)
         {
             this.Name = tableName;
 
@@ -24,7 +24,7 @@ namespace ObjectServer.Backend.Postgresql
 
         public string Name { get; private set; }
 
-        public bool TableExists(IDatabaseContext db, string tableName)
+        public bool TableExists(IDataContext db, string tableName)
         {
             //检查连接
             var sql =
@@ -34,7 +34,7 @@ namespace ObjectServer.Backend.Postgresql
             return n > 0;
         }
 
-        public void CreateTable(IDatabaseContext db, string tableName, string label)
+        public void CreateTable(IDataContext db, string tableName, string label)
         {
             //TODO SQL 注入风险
             var sql = string.Format(
@@ -47,7 +47,7 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(sql);
         }
 
-        public void AddColumn(IDatabaseContext db, IMetaField field)
+        public void AddColumn(IDataContext db, IMetaField field)
         {
             var sqlType = PgSqlTypeConverter.GetSqlType(field);
             var notNull = field.Required ? "NOT NULL" : "";
@@ -63,7 +63,7 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(sql);
         }
 
-        public void DeleteColumn(IDatabaseContext db, string columnName)
+        public void DeleteColumn(IDataContext db, string columnName)
         {
             var sql = string.Format(
                 "ALTER TABLE \"{0}\" DROP COLUMN \"{1}\"",
@@ -72,7 +72,7 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(columnName);
         }
 
-        public void UpgradeColumn(IDatabaseContext db, IMetaField field)
+        public void UpgradeColumn(IDataContext db, IMetaField field)
         {
             throw new NotImplementedException();
         }
@@ -82,7 +82,7 @@ namespace ObjectServer.Backend.Postgresql
             return this.columns.ContainsKey(columnName);
         }
 
-        private void LoadColumns(IDatabaseContext db, string tableName)
+        private void LoadColumns(IDataContext db, string tableName)
         {
             var sql = @"
 SELECT column_name, data_type, is_nullable
@@ -101,13 +101,13 @@ SELECT column_name, data_type, is_nullable
         }
 
 
-        public void AddConstraint(IDatabaseContext db, string constraintName, string constraint)
+        public void AddConstraint(IDataContext db, string constraintName, string constraint)
         {
             throw new NotImplementedException();
         }
 
 
-        public void DeleteConstraint(IDatabaseContext db, string constraintName)
+        public void DeleteConstraint(IDataContext db, string constraintName)
         {
             var sql = string.Format(
                 "alter table \"{0}\" drop constraint \"{1}\"",
@@ -116,7 +116,7 @@ SELECT column_name, data_type, is_nullable
         }
 
 
-        public void AddFK(IDatabaseContext db, string columnName, string refTable, ReferentialAction refAct)
+        public void AddFK(IDataContext db, string columnName, string refTable, ReferentialAction refAct)
         {
             //TODO: 设置其它的 ReferentialAction
             var onDelete = "SET NULL";
@@ -130,13 +130,13 @@ SELECT column_name, data_type, is_nullable
         }
 
 
-        public void DeleteFK(IDatabaseContext db, string columnName)
+        public void DeleteFK(IDataContext db, string columnName)
         {
             var fkName = this.GenerateFkName(columnName);
             this.DeleteConstraint(db, fkName);
         }
 
-        public bool FKExists(IDatabaseContext db, string columnName)
+        public bool FKExists(IDataContext db, string columnName)
         {
             var fkName = this.GenerateFkName(columnName);
             var sql = "SELECT COUNT(conname) FROM pg_constraint WHERE conname = @0";

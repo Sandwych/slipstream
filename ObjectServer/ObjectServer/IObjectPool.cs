@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using ObjectServer.Backend;
+
 namespace ObjectServer
 {
-    public interface IObjectPool
+    public interface IObjectPool : IDisposable
     {
-        string Database { get; }
+        string DatabaseName { get; }
+
+        IDataContext DatabaseContext { get; }
 
         void AddServiceObject(IServiceObject obj);
 

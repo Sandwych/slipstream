@@ -29,8 +29,9 @@ namespace ObjectServer
                 string.Format("CallingContext is opening for sessionId: [{0}]", sessionId));
 
             this.ownDb = true;
-            this.Database = DataProvider.OpenDatabase(session.Database);
-
+            this.DatabaseContext = ObjectServerStarter.DatabasePool
+                .GetPool(session.Database).DatabaseContext;
+            this.DatabaseContext.Open();         
         }
 
         /// <summary>
@@ -43,23 +44,26 @@ namespace ObjectServer
                 string.Format("CallingContext is opening for database: [{0}]", dbName));
 
             this.ownDb = true;
-            this.Database = DataProvider.OpenDatabase(dbName);
             this.Session = new Session(dbName, "system", 0);
+            this.DatabaseContext = ObjectServerStarter.DatabasePool
+                .GetPool(dbName).DatabaseContext;
+            this.DatabaseContext.Open();
         }
 
-        public CallingContext(IDatabaseContext db)
+        public CallingContext(IDataContext db)
         {
             Logger.Info(() =>
                 string.Format("CallingContext is opening for DatabaseContext"));
 
             this.ownDb = false;
-            this.Database = db;
+            this.DatabaseContext = db;
+            this.DatabaseContext.Open();
             this.Session = new Session("", "system", 0);
         }
 
         #region ICallingContext 成员
 
-        public IDatabaseContext Database
+        public IDataContext DatabaseContext
         {
             get;
             private set;
@@ -71,7 +75,7 @@ namespace ObjectServer
         {
             get
             {
-                return ObjectServerStarter.Pooler.GetPool(this.Database.DatabaseName);
+                return ObjectServerStarter.DatabasePool.GetPool(this.DatabaseContext.DatabaseName);
             }
         }
 
@@ -83,7 +87,7 @@ namespace ObjectServer
         {
             if (this.ownDb)
             {
-                this.Database.Close();
+                this.DatabaseContext.Close();
             }
 
             Logger.Info(() => "CallingContext closed");

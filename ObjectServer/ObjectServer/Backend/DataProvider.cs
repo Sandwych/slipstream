@@ -5,32 +5,43 @@ using System.Text;
 
 namespace ObjectServer.Backend
 {
-    public sealed class DataProvider
+    public static class DataProvider
     {
-        private static readonly DataProvider s_instance = new DataProvider();
-
-        private readonly Dictionary<DatabaseType, Type> dbTypes =
-            new Dictionary<DatabaseType, Type>()
-            {
-                { DatabaseType.Postgresql, typeof(Postgresql.PgDatabaseContext) },
-            };
-
-        private DataProvider()
+        private static readonly Dictionary<DatabaseType, IDataProvider> dataProviders
+            = new Dictionary<DatabaseType, IDataProvider>()
         {
+            { DatabaseType.Postgresql, new Postgresql.PgDataProvider() },
+        };
+
+
+        public static IDataContext CreateDataContext(string dbName)
+        {
+            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            return dataProvider.CreateDataContext(dbName);
         }
 
-        public static IDatabaseContext OpenDatabase(string dbName)
+        public static IDataContext CreateDataContext()
         {
-            var dbType = s_instance.dbTypes[ObjectServerStarter.Configuration.DbType];
-            var db = Activator.CreateInstance(dbType, dbName) as IDatabaseContext;
-            return db;
+            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            return dataProvider.CreateDataContext();
         }
 
-        public static IDatabaseContext OpenDatabase()
+        public static string[] ListDatabases()
         {
-            var dbType = s_instance.dbTypes[ObjectServerStarter.Configuration.DbType];
-            var db = Activator.CreateInstance(dbType) as IDatabaseContext;
-            return db;
+            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            return dataProvider.ListDatabases();
+        }
+
+        public static void CreateDatabase(string dbName)
+        {
+            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            dataProvider.CreateDatabase(dbName);
+        }
+
+        public static void DeleteDatabase(string dbName)
+        {
+            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            dataProvider.DeleteDatabase(dbName);
         }
 
     }

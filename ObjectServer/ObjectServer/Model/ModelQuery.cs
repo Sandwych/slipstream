@@ -48,7 +48,7 @@ namespace ObjectServer.Model
             select.Traverse(sv);
             var sql = sv.ToString();
 
-            using (var cmd = this.callingContext.Database.Connection.CreateCommand())
+            using (var cmd = this.callingContext.DatabaseContext.Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 using (var reader = cmd.ExecuteReader())

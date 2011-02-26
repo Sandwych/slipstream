@@ -10,7 +10,7 @@ using Microsoft.CSharp;
 
 namespace ObjectServer.Runtime
 {
-    internal class CSharpCompiler : ICompiler
+    internal sealed class CSharpCompiler : ICompiler
     {
         #region ICompiler 成员
 
@@ -65,7 +65,20 @@ namespace ObjectServer.Runtime
         {
             foreach (CompilerError error in errors)
             {
-                Logger.Error(() => error.ToString());
+                var msg = string.Format("{0}({1},{2}): {3}",
+                 error.FileName,
+                 error.Line,
+                 error.Column,
+                 error.ErrorText);
+
+                if (error.IsWarning)
+                {
+                    Logger.Warn(() => error.ToString());
+                }
+                else
+                {
+                    Logger.Error(() => error.ToString());
+                }
             }
         }
     }
