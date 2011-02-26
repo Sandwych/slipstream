@@ -16,28 +16,9 @@ namespace ObjectServer.Runtime
 
         public Assembly CompileFromFile(IEnumerable<string> sourceFiles)
         {
-            var selfAssembly = Assembly.GetExecutingAssembly();
-            //声明C#或VB的CodeDOM 
-            var additionalOptions = new Dictionary<string, string>() 
+            using (var provider = CreateCodeProvider())
             {
-                { "CompilerVersion", "v3.5" } 
-            };
-
-            using (var provider = new CSharpCodeProvider(additionalOptions))
-            {
-
-                //设置编译参数，加入所需的组件 
-                var options = new CompilerParameters();
-                options.ReferencedAssemblies.Add("System.dll");
-                options.ReferencedAssemblies.Add("System.Core.dll");
-                options.ReferencedAssemblies.Add("System.Data.dll");
-                options.ReferencedAssemblies.Add("System.Transactions.dll");
-                options.ReferencedAssemblies.Add(selfAssembly.Location);
-                options.GenerateInMemory = true;
-                options.GenerateExecutable = false;
-                //options.OutputAssembly = "MyDemo";
-
-                //开始编译
+                var options = CreateCompilerParameters();
                 var result = provider.CompileAssemblyFromFile(options, sourceFiles.ToArray());
 
                 if (result.Errors.Count != 0)
@@ -49,6 +30,33 @@ namespace ObjectServer.Runtime
 
                 return result.CompiledAssembly;
             }
+        }
+
+        private static CSharpCodeProvider CreateCodeProvider()
+        {
+            var additionalOptions = new Dictionary<string, string>() 
+            {
+                { "CompilerVersion", "v3.5" } 
+            };
+            return new CSharpCodeProvider(additionalOptions);
+        }
+
+        private static CompilerParameters CreateCompilerParameters()
+        {
+            var selfAssembly = Assembly.GetExecutingAssembly();
+
+            //设置编译参数，加入所需的组件 
+            var options = new CompilerParameters();
+            options.ReferencedAssemblies.Add("System.dll");
+            options.ReferencedAssemblies.Add("System.Core.dll");
+            options.ReferencedAssemblies.Add("System.Data.dll");
+            options.ReferencedAssemblies.Add("System.Transactions.dll");
+            options.ReferencedAssemblies.Add(selfAssembly.Location);
+            options.GenerateInMemory = true;
+            options.GenerateExecutable = false;
+            options.IncludeDebugInformation = ObjectServerStarter.Configuration.Debug;
+
+            return options;
         }
 
         #endregion
