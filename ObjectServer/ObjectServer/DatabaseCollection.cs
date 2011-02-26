@@ -23,6 +23,11 @@ namespace ObjectServer
             new Dictionary<string, Database>();
 
 
+        ~DatabaseCollection()
+        {
+            this.Dispose(false);
+        }
+
         #region IGlobalObject 成员
 
         public void Initialize(Config cfg)
@@ -78,6 +83,15 @@ namespace ObjectServer
 
         public void Dispose()
         {
+            this.Dispose(true);
+        }
+
+        public void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+            }
+
             foreach (var p in this.databases)
             {
                 p.Value.Dispose();

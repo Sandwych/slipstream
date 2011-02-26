@@ -61,8 +61,9 @@ namespace ObjectServer
         {
             var parameters = mi.GetParameters();
             if (parameters.Length < 1
-                || parameters[0].ParameterType != typeof(IContext) 
-                || !mi.IsVirtual)
+                || parameters[0].ParameterType != typeof(IContext)
+                || !mi.IsVirtual
+                || !mi.IsPublic)
             {
                 var msg = string.Format(
                     "The method '{1}' of object {0} must have an IContext parameter at first, and it's must be 'virtual'.",

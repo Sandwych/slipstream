@@ -15,6 +15,11 @@ namespace ObjectServer
             this.Objects = new ObjectCollection(this);
         }
 
+        ~Database()
+        {
+            this.Dispose(false);
+        }
+
         public IDataContext DataContext { get; private set; }
 
         public IObjectCollection Objects { get; private set; }
@@ -23,7 +28,17 @@ namespace ObjectServer
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            this.Dispose(true);
+        }
+
+        public void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                //这里处理托管对象
+            }
+
+            this.DataContext.Dispose();
         }
 
         #endregion
