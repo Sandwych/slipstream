@@ -12,9 +12,9 @@ namespace ObjectServer.Model
     {
         private IDatabaseContext db;
         private IModel model;
-        private ObjectPool pool;
+        private IObjectPool pool;
 
-        public TableMigrator(IDatabaseContext db, ObjectPool pool, IModel model)
+        public TableMigrator(IDatabaseContext db, IObjectPool pool, IModel model)
         {
             this.db = db;
             this.model = model;

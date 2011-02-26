@@ -76,7 +76,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IDatabaseContext db, ObjectPool pool)
+        public override void Initialize(IDatabaseContext db, IObjectPool pool)
         {
             base.Initialize(db, pool);
 

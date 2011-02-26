@@ -17,8 +17,8 @@ namespace ObjectServer
     /// </summary>
     internal sealed class DatabasePool : IGlobalObject
     {
-        private Dictionary<string, ObjectPool> pools =
-            new Dictionary<string, ObjectPool>();
+        private Dictionary<string, IObjectPool> pools =
+            new Dictionary<string, IObjectPool>();
 
 
         #region IGlobalObject 成员
@@ -56,7 +56,7 @@ namespace ObjectServer
             this.pools.Add(dbName.Trim(), pool);
         }
 
-        internal ObjectPool GetPool(string dbName)
+        internal IObjectPool GetPool(string dbName)
         {
             if (!this.pools.ContainsKey(dbName))
             {

@@ -26,7 +26,7 @@ namespace ObjectServer.Model
             this.AddInternalFields();
         }
 
-        public override void Initialize(IDatabaseContext db, ObjectPool pool)
+        public override void Initialize(IDatabaseContext db, IObjectPool pool)
         {
             base.Initialize(db, pool);
 

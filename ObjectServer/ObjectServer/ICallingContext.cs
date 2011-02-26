@@ -11,7 +11,7 @@ namespace ObjectServer
 {
     public interface ICallingContext : IDisposable
     {
-        ObjectPool Pool { get; } 
+        IObjectPool Pool { get; } 
         IDatabaseContext Database { get; }
     }
 }

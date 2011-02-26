@@ -14,7 +14,7 @@ using ObjectServer.Utility;
 namespace ObjectServer
 {
 
-    public sealed class ObjectPool
+    public sealed class ObjectPool : IObjectPool
     {
         private Dictionary<string, IServiceObject> objects =
             new Dictionary<string, IServiceObject>();
@@ -29,7 +29,7 @@ namespace ObjectServer
 
         private void LoadAllObjects(IDatabaseContext db)
         {
-            this.RegisterAllCoreObjects();
+            Module.RegisterAllCoreObjects(this);
 
             ObjectServerStarter.ModulePool.UpdateModuleList(db);
             ObjectServerStarter.ModulePool.LoadActivedModules(db, this);
@@ -63,24 +63,6 @@ namespace ObjectServer
 
         public string Database { get; private set; }
 
-        public void AddModelsWithinAssembly(Assembly assembly)
-        {
-            Logger.Info(() => string.Format(
-                "Start to register all models for assembly [{0}]...", assembly.FullName));
-
-            var types = GetStaticModelsFromAssembly(assembly);
-
-            using (var db = Backend.DataProvider.OpenDatabase(this.Database))
-            {
-                db.Open();
-                foreach (var t in types)
-                {
-                    var obj = ObjectPool.CreateStaticObjectInstance(t);
-                    this.objects[obj.Name] = obj;
-                }
-            }
-        }
-
         public void AddServiceObject(IServiceObject obj)
         {
             //TODO 处理对象已经存在的问题，继承等
@@ -113,31 +95,9 @@ namespace ObjectServer
         }
 
 
-        private void RegisterAllCoreObjects()
-        {
-            var a = typeof(ObjectPool).Assembly;
-            this.AddModelsWithinAssembly(a);
-        }
-
-
-        private static Type[] GetStaticModelsFromAssembly(Assembly assembly)
-        {
-            var types = assembly.GetTypes();
-            var result = new List<Type>();
-            foreach (var t in types)
-            {
-                var assemblies = t.GetCustomAttributes(typeof(ServiceObjectAttribute), false);
-                if (assemblies.Length > 0)
-                {
-                    result.Add(t);
-                }
-            }
-            return result.ToArray();
-        }
-
         #region ServiceObject(s) factory methods
 
-        public static IServiceObject CreateStaticObjectInstance(Type t)
+        internal static IServiceObject CreateStaticObjectInstance(Type t)
         {
             var obj = Activator.CreateInstance(t) as IServiceObject;
             if (obj == null)
@@ -148,7 +108,7 @@ namespace ObjectServer
             return obj;
         }
 
-        public static T CreateStaticObjectInstance<T>()
+        internal static T CreateStaticObjectInstance<T>()
             where T : class, IServiceObject
         {
             return CreateStaticObjectInstance(typeof(T)) as T;

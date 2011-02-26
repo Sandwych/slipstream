@@ -11,7 +11,7 @@ namespace ObjectServer
 {
     public interface IServiceObject
     {
-        void Initialize(IDatabaseContext db, ObjectPool pool);
+        void Initialize(IDatabaseContext db, IObjectPool pool);
 
         string Label { get; }
         string Name { get; }
@@ -21,7 +21,7 @@ namespace ObjectServer
 
         bool DatabaseRequired { get; }
 
-        ObjectPool Pool { get; }
+        IObjectPool Pool { get; }
 
         /// <summary>
         /// 此对象引用（依赖）的其它对象名称

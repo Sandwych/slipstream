@@ -67,7 +67,7 @@ namespace ObjectServer
 
         public Session Session { get; private set; }
 
-        public ObjectPool Pool
+        public IObjectPool Pool
         {
             get
             {

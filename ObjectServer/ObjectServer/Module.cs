@@ -75,7 +75,7 @@ namespace ObjectServer
         #endregion
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Load(ObjectPool pool)
+        public void Load(IObjectPool pool)
         {
             Logger.Info(() => string.Format("Begin to load module: '{0}'", this.Name));
 
@@ -96,12 +96,47 @@ namespace ObjectServer
             Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
         }
 
-        private void LoadDynamicAssembly(ObjectPool pool)
+        private void LoadDynamicAssembly(IObjectPool pool)
         {
             Debug.Assert(pool != null);
+
             var a = CompileSourceFiles(this.Path);
             this.AllAssemblies.Add(a);
-            pool.AddModelsWithinAssembly(a);
+            RegisterServiceObjectWithinAssembly(pool, a);
+        }
+
+        private static void RegisterServiceObjectWithinAssembly(IObjectPool pool, Assembly assembly)
+        {
+            Debug.Assert(pool != null);
+            Debug.Assert(assembly != null);
+
+            Logger.Info(() => string.Format(
+                "Start to register all models for assembly [{0}]...", assembly.FullName));
+
+            var types = GetStaticModelsFromAssembly(assembly);
+
+            foreach (var t in types)
+            {
+                var obj = ObjectPool.CreateStaticObjectInstance(t);
+                pool.AddServiceObject(obj);
+            }
+        }
+
+        private static Type[] GetStaticModelsFromAssembly(Assembly assembly)
+        {
+            Debug.Assert(assembly != null);
+
+            var types = assembly.GetTypes();
+            var result = new List<Type>();
+            foreach (var t in types)
+            {
+                var assemblies = t.GetCustomAttributes(typeof(ServiceObjectAttribute), false);
+                if (assemblies.Length > 0)
+                {
+                    result.Add(t);
+                }
+            }
+            return result.ToArray();
         }
 
         private void LoadStaticAssembly()
@@ -143,13 +178,12 @@ namespace ObjectServer
             db.Execute(insertSql, this.Name, state, this.Label);
         }
 
-        public static Module CoreModule
-        {
-            get { return s_coreModule; }
-        }
+        public static Module CoreModule { get { return s_coreModule; } }
 
         private Assembly CompileSourceFiles(string moduleDir)
         {
+            Debug.Assert(!string.IsNullOrEmpty(moduleDir));
+
             var sourceFiles = new List<string>();
             foreach (var file in this.SourceFiles)
             {
@@ -160,6 +194,15 @@ namespace ObjectServer
             var compiler = CompilerProvider.GetCompiler(this.ScriptLanguage);
             var a = compiler.CompileFromFile(sourceFiles);
             return a;
+        }
+
+
+        internal static void RegisterAllCoreObjects(IObjectPool pool)
+        {
+            Debug.Assert(pool != null);
+
+            var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
+            RegisterServiceObjectWithinAssembly(pool, a);
         }
     }
 }

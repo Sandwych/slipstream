@@ -70,7 +70,7 @@ namespace ObjectServer
         }
 
 
-        public virtual void Initialize(IDatabaseContext db, ObjectPool pool)
+        public virtual void Initialize(IDatabaseContext db, IObjectPool pool)
         {
             this.Pool = pool;
         }
@@ -85,6 +85,6 @@ namespace ObjectServer
 
         public abstract string[] GetReferencedObjects();
 
-        public ObjectPool Pool { get; private set; }
+        public IObjectPool Pool { get; private set; }
     }
 }
