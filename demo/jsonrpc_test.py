@@ -13,11 +13,12 @@ ids = s.Execute(session_id, 'core.model', 'Search', [domain, 0, 100]);
 print "IDs:", ids
 
 fields = ['name', 'label', 'info']
-models = s.Execute(session_id, 'core.model', 'Read', [ids, fields]);
 
-print 'Models:'
-for m in models:
-    print m
+for i in range(0, 10):
+    models = s.Execute(session_id, 'core.model', 'Read', [ids, fields]);
+    print 'Models:'
+    for m in models:
+        print m
 
 s.LogOff(session_id)
 
