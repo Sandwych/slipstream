@@ -9,7 +9,7 @@ namespace ObjectServer
     internal static class StaticSettings
     {
         public const string CoreModuleName = "core";
-        public const string ModuleMetaDataFileName = "module.js";
+        public const string ModuleMetaDataFileName = "module.xml";
 
         public static Version Version
         {

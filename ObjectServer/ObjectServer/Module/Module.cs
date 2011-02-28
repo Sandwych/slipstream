@@ -6,8 +6,8 @@ using System.Reflection;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
-
-using Newtonsoft.Json;
+using System.Xml;
+using System.Xml.Serialization;
 
 using ObjectServer.Runtime;
 using ObjectServer.Backend;
@@ -20,7 +20,7 @@ namespace ObjectServer
     /// TODO: 线程安全
     /// </summary>
     [Serializable]
-    [JsonObject("module")]
+    [XmlRoot("module-metadata")]
     public sealed class Module
     {
         private readonly List<Assembly> allAssembly = new List<Assembly>();
@@ -46,31 +46,34 @@ namespace ObjectServer
         }
 
         #region Serializable Fields
-        [JsonProperty("name", Required = Required.Always)]
+        [XmlElement("name", IsNullable = false)]
         public string Name { get; set; }
 
-        [JsonProperty("label", Required = Required.Default)]
+        [XmlElement("label")]
         public string Label { get; set; }
 
-        [JsonProperty("description", Required = Required.Default)]
+        [XmlElement("description")]
         public string Description { get; set; }
 
-        [JsonProperty("source_files")]
+        [XmlElement("source-files")]
         public string[] SourceFiles { get; set; }
 
-        [JsonProperty("data_files")]
+        [XmlArray("data-files")]
+        [XmlArrayItem("file")]
         public string[] DataFiles { get; set; }
 
-        [JsonProperty("script_language")]
+        [XmlElement("script-language")]
         public string ScriptLanguage { get; set; }
 
-        [JsonProperty("auto_load")]
+        [XmlElement("auto-load")]
         public bool AutoLoad { get; set; }
 
-        [JsonProperty("depends")]
+        [XmlArray("depends")]
+        [XmlArrayItem("depend")]
         public string[] Depends { get; set; }
 
-        [JsonProperty("dlls")]
+        [XmlArray("dlls")]
+        [XmlArrayItem("file")]
         public string[] Dlls { get; set; }
 
         #endregion
@@ -148,20 +151,25 @@ namespace ObjectServer
             }
         }
 
-        [JsonIgnore]
+        [XmlIgnore]
         public ICollection<Assembly> AllAssemblies { get { return this.allAssembly; } }
 
-        [JsonIgnore]
+        [XmlIgnore]
         public string Path { get; set; }
 
-        [JsonIgnore]
+        [XmlIgnore]
         public ModuleStatus State { get; set; }
 
         public static Module DeserializeFromFile(string moduleFilePath)
         {
-            var json = File.ReadAllText(moduleFilePath, Encoding.UTF8);
-            var module = JsonConvert.DeserializeObject<Module>(json);
-            return module;
+            var xs = new XmlSerializer(typeof(Module));
+
+            using (var fs = File.OpenRead(moduleFilePath))
+            {
+                var module = (Module)xs.Deserialize(fs);
+                fs.Close();
+                return module;
+            }
         }
 
         public void AddToDatabase(IDataContext db)

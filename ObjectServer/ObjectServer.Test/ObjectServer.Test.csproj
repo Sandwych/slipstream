@@ -60,7 +60,7 @@
     <Compile Include="Core\UserTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\TableModelTest.cs" />
-    <Content Include="modules\test\module.js">
+    <Content Include="modules\test\module.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="modules\test\test-object.cs">

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module-metadata>
+  <name>test</name>
+  <label>Module for unit test</label>
+  <description>
+   <![CDATA[
+   ]]> 
+  </description>
+  <auto-load>true</auto-load>
+  <script-language>csharp</script-language>
+  
+  <source-files>
+    <file>test-object.cs</file>
+  </source-files>
+  
+  <data-files>
+    <file>demo.xml</file> 
+  </data-files>
+  
+</module-metadata>
