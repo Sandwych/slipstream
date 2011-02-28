@@ -5,18 +5,25 @@ using System.Text;
 using System.Transactions;
 using System.Reflection;
 
+using Castle.DynamicProxy;
+
 using ObjectServer.Backend;
 using ObjectServer.Core;
 
 namespace ObjectServer
 {
-    public sealed class ServiceDispatcher : IService
+    public sealed class ServiceDispatcher : MarshalByRefObject, IExportedService
     {
+        private ServiceDispatcher()
+        {
+        }
+
+
         public string LogOn(string dbName, string username, string password)
         {
             using (var callingContext = new ContextScope(dbName))
             {
-                var userModel = callingContext.Database.Objects[UserModel.ModelName];
+                var userModel = callingContext.Database.ServiceObjects.Resolve(UserModel.ModelName);
                 var method = userModel.GetServiceMethod("LogOn");
                 return (string)ExecuteTransactional(
                     callingContext, userModel, method, callingContext, dbName, username, password);
@@ -30,7 +37,7 @@ namespace ObjectServer
             {
                 callingContext.Database.DataContext.Open();
 
-                var userModel = (UserModel)callingContext.Database.Objects[UserModel.ModelName];
+                var userModel = (UserModel)callingContext.Database.ServiceObjects.Resolve(UserModel.ModelName);
                 userModel.LogOut(callingContext, sessionId);
             }
         }
@@ -40,12 +47,13 @@ namespace ObjectServer
             return StaticSettings.Version.ToString();
         }
 
+        [CachedMethod(Timeout = 120)]
         public object Execute(string sessionId, string objectName, string name, params object[] parameters)
         {
             var gsid = new Guid(sessionId);
             using (var callingContext = new ContextScope(gsid))
             {
-                var obj = callingContext.Database.Objects[objectName];
+                var obj = callingContext.Database.ServiceObjects.Resolve(objectName);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[parameters.Length + 1];
                 internalArgs[0] = callingContext;
@@ -61,6 +69,7 @@ namespace ObjectServer
                 }
             }
         }
+
 
         private static object ExecuteTransactional(
             IContext ctx, IObjectService obj, MethodInfo method, params object[] internalArgs)
@@ -119,33 +128,50 @@ namespace ObjectServer
 
         #region Model methods
 
-
+        [CachedMethod]
         public long CreateModel(string sessionId, string objectName, IDictionary<string, object> propertyBag)
         {
             return (long)Execute(sessionId, objectName, "Create", new object[] { propertyBag });
         }
 
+        [CachedMethod]
         public object[] SearchModel(string sessionId, string objectName, object[] domain, long offset, long limit)
         {
             return (object[])Execute(sessionId, objectName, "Search", new object[] { domain, offset, limit });
         }
 
+        [CachedMethod]
         public Dictionary<string, object>[] ReadModel(string sessionId, string objectName, object[] ids, object[] fields)
         {
             return (Dictionary<string, object>[])Execute(
                 sessionId, objectName, "Read", new object[] { ids, fields });
         }
 
+        [CachedMethod]
         public void WriteModel(string sessionId, string objectName, object id, IDictionary<string, object> record)
         {
             Execute(sessionId, objectName, "Write", new object[] { id, record });
         }
 
+        [CachedMethod]
         public void DeleteModel(string sessionId, string objectName, object[] ids)
         {
             Execute(sessionId, objectName, "Delete", new object[] { ids });
         }
 
         #endregion
+
+
+        //Factory method
+
+        public static IExportedService CreateDispatcher()
+        {
+            var generator = new ProxyGenerator();
+            var target = new ServiceDispatcher();
+            var proxy = generator.CreateInterfaceProxyWithTarget<IExportedService>(
+                target, new MethodCachingInterceptor(), new ServiceMethodInterceptor());
+
+            return proxy;
+        }
     }
 }

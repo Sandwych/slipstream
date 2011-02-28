@@ -16,5 +16,6 @@ namespace ObjectServer
         void Remove(Guid sessionId);
 
         void Pulse(Guid sessionId);
+
     }
 }

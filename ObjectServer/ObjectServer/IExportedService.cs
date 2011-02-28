@@ -5,7 +5,10 @@ using System.Text;
 
 namespace ObjectServer
 {
-    public interface IService
+    /// <summary>
+    /// 对外服务接口
+    /// </summary>
+    public interface IExportedService
     {
         #region common services
 

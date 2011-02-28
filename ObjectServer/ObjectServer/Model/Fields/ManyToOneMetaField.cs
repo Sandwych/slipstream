@@ -22,7 +22,7 @@ namespace ObjectServer.Model
            IContext ctx, List<Dictionary<string, object>> records)
         {
             var result = new Dictionary<long, object>(records.Count());
-            var masterModel = (TableModel)ctx.Database.Objects[this.Relation];
+            var masterModel = (TableModel)ctx.Database.ServiceObjects.Resolve(this.Relation);
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
                 //从原始记录里把所有该字段的值取出

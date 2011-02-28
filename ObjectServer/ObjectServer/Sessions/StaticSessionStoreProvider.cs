@@ -20,6 +20,7 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void PutSession(Session session)
         {
+            this.Sweep();
             this.sessions[session.SessionId] = session;
         }
 
@@ -54,6 +55,21 @@ namespace ObjectServer
             var sess = this.sessions[sessionId];
             sess.LastActivityTime = DateTime.Now;
         }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        private void Sweep()
+        {
+            var keys = this.sessions.Keys.ToArray();
+            foreach (var k in keys)
+            {
+                var session = this.sessions[k];
+                if (!session.IsActive)
+                {
+                    this.sessions.Remove(k);
+                }
+            }
+        }
+
 
 
         #endregion

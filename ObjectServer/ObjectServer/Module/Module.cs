@@ -79,7 +79,7 @@ namespace ObjectServer
         #endregion
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Load(IObjectCollection pool)
+        public void Load(IServiceContainer pool)
         {
             Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
 
@@ -97,7 +97,7 @@ namespace ObjectServer
             Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
         }
 
-        private void LoadDynamicAssembly(IObjectCollection pool)
+        private void LoadDynamicAssembly(IServiceContainer pool)
         {
             Debug.Assert(pool != null);
 
@@ -106,7 +106,7 @@ namespace ObjectServer
             RegisterServiceObjectWithinAssembly(pool, a);
         }
 
-        private static void RegisterServiceObjectWithinAssembly(IObjectCollection objs, Assembly assembly)
+        private static void RegisterServiceObjectWithinAssembly(IServiceContainer objs, Assembly assembly)
         {
             Debug.Assert(objs != null);
             Debug.Assert(assembly != null);
@@ -203,7 +203,7 @@ namespace ObjectServer
         }
 
 
-        internal static void RegisterAllCoreObjects(IObjectCollection pool)
+        internal static void RegisterAllCoreObjects(IServiceContainer pool)
         {
             Debug.Assert(pool != null);
 

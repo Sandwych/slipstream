@@ -16,7 +16,7 @@ namespace ObjectServer.Web
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     public sealed class ObjectServer : JsonRpcHandler
     {
-        private IService service = new ServiceDispatcher();
+        private IExportedService service = ServiceDispatcher.CreateDispatcher();
 
         public ObjectServer()
         {

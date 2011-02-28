@@ -116,7 +116,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadActivatedModules(IDataContext db, IObjectCollection pool)
+        public void LoadActivatedModules(IDataContext db, IServiceContainer pool)
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的

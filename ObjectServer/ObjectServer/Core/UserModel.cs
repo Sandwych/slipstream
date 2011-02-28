@@ -12,7 +12,7 @@ namespace ObjectServer.Core
 {
 
     [ServiceObject]
-    public class UserModel : TableModel
+    public sealed class UserModel : TableModel
     {
         public const string ModelName = "core.user";
         public const string PasswordMask = "************";
@@ -134,7 +134,7 @@ namespace ObjectServer.Core
         }
 
         [ServiceMethod]
-        public virtual string LogOn(IContext callingContext,
+        public string LogOn(IContext callingContext,
             string database, string login, string password)
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
@@ -169,7 +169,7 @@ namespace ObjectServer.Core
 
 
         [ServiceMethod]
-        public virtual void LogOut(IContext callingContext, string sessionId)
+        public void LogOut(IContext callingContext, string sessionId)
         {
             var sessGuid = new Guid(sessionId);
             ObjectServerStarter.SessionStore.Remove(sessGuid);
@@ -194,7 +194,7 @@ namespace ObjectServer.Core
 
 
     [ServiceObject]
-    public class UserGroupModel : TableModel
+    public sealed class UserGroupModel : TableModel
     {
 
         public UserGroupModel()

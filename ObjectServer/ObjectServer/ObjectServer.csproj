@@ -117,6 +117,8 @@
     <Compile Include="Backend\Postgresql\PgDataProvider.cs" />
     <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Backend\Postgresql\PgTableContext.cs" />
+    <Compile Include="Caching\CachedMethodAttribute.cs" />
+    <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Core\GroupModel.cs" />
     <Compile Include="Core\ActionModel.cs" />
@@ -133,14 +135,15 @@
     <Compile Include="Exceptions\BadServiceMEthodException.cs" />
     <Compile Include="IDatabase.cs" />
     <Compile Include="IGlobalObject.cs" />
-    <Compile Include="IObjectCollection.cs" />
+    <Compile Include="IServiceContainer.cs" />
     <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldExtensions.cs" />
+    <Compile Include="ServiceMethodInterceptor.cs" />
     <Compile Include="Sessions\ISessionStoreProvider.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Model\BadFieldNameException.cs" />
-    <Compile Include="IService.cs" />
+    <Compile Include="IExportedService.cs" />
     <Compile Include="IObjectService.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="Model\DomainParser.cs" />
@@ -199,7 +202,7 @@
     <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Model\TestObject.cs" />
     <Compile Include="Module\Module.cs" />
-    <Compile Include="ObjectCollection.cs" />
+    <Compile Include="ServiceContainer.cs" />
     <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="ObjectServerStarter.cs" />
     <Compile Include="DatabaseCollection.cs" />
@@ -216,6 +219,7 @@
     <Compile Include="ContextScope.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
     <Compile Include="StaticSettings.cs" />
+    <Compile Include="TransactionalAttribute.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha1.cs" />

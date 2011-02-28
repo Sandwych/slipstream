@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [ServiceObject]
-    public class CronModel : TableModel
+    public sealed class CronModel : TableModel
     {
 
         public CronModel()

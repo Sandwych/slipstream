@@ -16,7 +16,7 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class ModelBaseTest : LocalTestBase
     {
-        IService proxy = new ServiceDispatcher();
+        IExportedService proxy = ServiceDispatcher.CreateDispatcher();
 
         [Test]
         public void Simple_fields_crud()

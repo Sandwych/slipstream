@@ -18,7 +18,7 @@ namespace ObjectServer.Model
            IContext ctx, List<Dictionary<string, object>> records)
         {
             //查询字表
-            var childModel = (TableModel)ctx.Database.Objects[this.Relation];
+            var childModel = (TableModel)ctx.Database.ServiceObjects.Resolve(this.Relation);
             //TODO 权限等处理
 
             var children = new Dictionary<long, object[]>();
