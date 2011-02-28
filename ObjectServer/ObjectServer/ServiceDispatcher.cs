@@ -67,17 +67,12 @@ namespace ObjectServer
         {
             ctx.Database.DataContext.Open();
 
-            var tx = ctx.Database.DataContext.Connection.BeginTransaction();
-            try
+            using (var tx = new TransactionScope())
             {
                 var result = method.Invoke(obj, internalArgs);
-                tx.Commit();
+                tx.Complete();
+                ctx.Database.DataContext.Close();
                 return result;
-            }
-            catch (Exception ex)
-            {
-                tx.Rollback();
-                throw ex;
             }
         }
 

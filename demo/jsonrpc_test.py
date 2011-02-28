@@ -1,6 +1,7 @@
 from jsonrpc import ServiceProxy
 s = ServiceProxy('http://localhost:9287/ObjectServer.ashx')
 
+print s.system.echo("echo")
 print "Methods:"
 print s.system.listMethods()
 
@@ -14,11 +15,10 @@ print "IDs:", ids
 
 fields = ['name', 'label', 'info']
 
-for i in range(0, 10):
-    models = s.Execute(session_id, 'core.model', 'Read', [ids, fields]);
-    print 'Models:'
-    for m in models:
-        print m
+models = s.Execute(session_id, 'core.model', 'Read', [ids, fields]);
+print 'Models:'
+for m in models:
+    print m
 
 s.LogOff(session_id)
 

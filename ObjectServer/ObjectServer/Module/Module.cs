@@ -78,7 +78,7 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Load(IObjectCollection pool)
         {
-            Logger.Info(() => string.Format("Begin to load module: '{0}'", this.Name));
+            Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
 
             if (this.Dlls != null)
             {
@@ -166,10 +166,10 @@ namespace ObjectServer
 
         public void AddToDatabase(IDataContext db)
         {
-            var state = "deactived";
+            var state = "deactivated";
             if (this.AutoLoad)
             {
-                state = "actived";
+                state = "activated";
             }
 
             var insertSql = "insert into core_module(name, state, info) values(@0, @1, @2)";

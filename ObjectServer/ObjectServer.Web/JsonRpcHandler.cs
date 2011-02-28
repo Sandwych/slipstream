@@ -23,6 +23,7 @@ namespace ObjectServer.Web
             this.RegisterStaticRpcMethods(typeof(JsonRpcHandler));
             var sublcassType = this.GetType();
             this.RegisterStaticRpcMethods(sublcassType);
+            sublcassType = null;
         }
 
         public void RegisterMethod(string methodName, MethodInfo mi)
@@ -39,13 +40,26 @@ namespace ObjectServer.Web
 
             lock (this)
             {
-                this.methods.Add(methodName, mi);
+                try
+                {
+                    this.methods.Add(methodName, mi);
+                }
+                catch (ArgumentException)
+                {
+                    Logger.Error(() =>
+                        string.Format("Duplicated method: '{0}'", methodName));
+                    throw;
+                }
             }
         }
 
         private void RegisterStaticRpcMethods(Type type)
         {
-            var methods = type.GetMethods();
+            //TODO: 不知为何 GetMethod(BindAttrs) 的总是返回0
+            var methods = from mi in type.GetMethods()
+                          where mi.IsPublic && mi.DeclaringType == type
+                          select mi;
+
             foreach (var mi in methods)
             {
                 var attrs = mi.GetCustomAttributes(typeof(JsonRpcMethodAttribute), false);
@@ -64,9 +78,6 @@ namespace ObjectServer.Web
             }
         }
 
-        private void RegisterDynamicRpcMethod(MethodInfo mi)
-        {
-        }
 
         #region JSON-RPC system methods
 
@@ -75,6 +86,7 @@ namespace ObjectServer.Web
         {
             return this.methods.Keys.ToArray();
         }
+
 
         [JsonRpcMethod(Name = "system.echo")]
         public object Echo(object value)
@@ -127,6 +139,7 @@ namespace ObjectServer.Web
 
             var args = (object[])jreq[JsonRpcProtocol.Params];
 
+            //TODO: 处理安全问题及日志异常等
             try
             {
                 result = method.Invoke(this, args);

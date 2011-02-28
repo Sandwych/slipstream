@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 using Newtonsoft.Json;
 
@@ -115,13 +116,14 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadActivedModules(IDataContext db, IObjectCollection pool)
+        public void LoadActivatedModules(IDataContext db, IObjectCollection pool)
         {
             //加载的策略是：
-            //只加载存在于文件系统，且数据库中设置为 state = 'actived' 的
-            var sql = "select name from core_module where state = 'activated'";
+            //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的
+            var sql = "SELECT id, name FROM core_module WHERE state = 'activated'";
             var modules = db.QueryAsDictionary(sql);
 
+            var unloadModules = new List<long>();
             foreach (var m in modules)
             {
                 var moduleName = (string)m["name"];
@@ -132,11 +134,30 @@ namespace ObjectServer
                 }
                 else
                 {
-                    var msg =
-                        string.Format("Cannot found module: '{0}'", moduleName);
-                    throw new ModuleNotFoundException(msg, moduleName);
+                    unloadModules.Add((long)m["id"]);
+                    Logger.Warn(() => string.Format(
+                        "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
             }
+
+            if (unloadModules.Count > 0)
+            {
+                DeactivateModules(db, unloadModules);
+            }
+        }
+
+
+        private static void DeactivateModules(IDataContext db, IEnumerable<long> unloadedModuleIds)
+        {
+            Debug.Assert(unloadedModuleIds.Count() > 0);
+            Debug.Assert(db != null);
+
+            var ids = unloadedModuleIds.ToCommaList();
+            var sql2 = string.Format(
+                "UPDATE core_module SET state = 'deactivated' WHERE id IN ({0})",
+                ids);
+
+            db.Execute(sql2);
         }
 
     }

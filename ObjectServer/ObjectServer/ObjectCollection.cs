@@ -83,7 +83,7 @@ namespace ObjectServer
             Module.RegisterAllCoreObjects(this);
 
             ObjectServerStarter.Modules.UpdateModuleList(db.DataContext);
-            ObjectServerStarter.Modules.LoadActivedModules(db.DataContext, this);
+            ObjectServerStarter.Modules.LoadActivatedModules(db.DataContext, this);
         }
 
         private void InitializeAllObjects(IDatabase db)

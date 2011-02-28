@@ -158,7 +158,7 @@
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Model\ModelQuery.cs" />
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
-    <Compile Include="ModuleStatus.cs" />
+    <Compile Include="Module\ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="Exceptions\ServiceException.cs" />
     <Compile Include="ServiceObjectExtensions.cs" />
@@ -198,7 +198,7 @@
     <Compile Include="Model\TableModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Model\TestObject.cs" />
-    <Compile Include="Module.cs" />
+    <Compile Include="Module\Module.cs" />
     <Compile Include="ObjectCollection.cs" />
     <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="ObjectServerStarter.cs" />
@@ -224,7 +224,7 @@
     <Compile Include="Model\Fields\FieldGetter.cs" />
     <Compile Include="Model\Fields\IMetaField.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />
-    <Compile Include="ModuleCollection.cs" />
+    <Compile Include="Module\ModuleCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Backend\Postgresql\initdb.sql">
