@@ -16,8 +16,8 @@ namespace ObjectServer
 
     public sealed class ObjectCollection : IObjectCollection
     {
-        private IDictionary<string, IServiceObject> objects =
-            new Dictionary<string, IServiceObject>();
+        private IDictionary<string, IObjectService> objects =
+            new Dictionary<string, IObjectService>();
 
         private IDatabase database;
         private bool initialized;
@@ -43,7 +43,7 @@ namespace ObjectServer
             }
         }
 
-        public void RegisterObject(IServiceObject so)
+        public void RegisterObject(IObjectService so)
         {
             Debug.Assert(!this.initialized);
 
@@ -54,7 +54,7 @@ namespace ObjectServer
         }
 
 
-        public IServiceObject this[string objName]
+        public IObjectService this[string objName]
         {
             get
             {
@@ -103,7 +103,7 @@ namespace ObjectServer
             }
         }
 
-        private static void DependencySort(IList<IServiceObject> objList)
+        private static void DependencySort(IList<IObjectService> objList)
         {
             Debug.Assert(objList != null);
 

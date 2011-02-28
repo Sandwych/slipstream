@@ -11,8 +11,8 @@ namespace ObjectServer
     {
         void Initialize();
 
-        void RegisterObject(IServiceObject so);
+        void RegisterObject(IObjectService so);
 
-        IServiceObject this[string objName] { get; }
+        IObjectService this[string objName] { get; }
     }
 }

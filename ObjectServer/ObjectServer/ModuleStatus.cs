@@ -7,8 +7,8 @@ namespace ObjectServer
 {
     public enum ModuleStatus
     {
-        Deactived,
-        Actived,
+        Deactivated,
+        Activated,
         ToUpgrade,
     }
 }

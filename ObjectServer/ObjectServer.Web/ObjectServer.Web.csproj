@@ -67,6 +67,7 @@
     <Compile Include="JsonRpcError.cs" />
     <Compile Include="JsonRpcHandler.cs" />
     <Compile Include="JsonRpcMethodAttribute.cs" />
+    <Compile Include="JsonRpcProtocol.cs" />
     <Compile Include="JsonRpcResponse.cs" />
     <Compile Include="ObjectServer.ashx.cs">
       <DependentUpon>ObjectServer.ashx</DependentUpon>

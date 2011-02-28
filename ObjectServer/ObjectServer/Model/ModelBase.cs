@@ -10,7 +10,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer.Model
 {
-    public abstract class ModelBase : StaticServiceObjectBase
+    public abstract class ModelBase : ObjectServiceBase
     {
         private readonly IMetaFieldCollection declaredFields =
             new MetaFieldCollection();

@@ -31,7 +31,7 @@ namespace ObjectServer
             s_coreModule = new Module()
             {
                 Name = StaticSettings.CoreModuleName,
-                State = ModuleStatus.Actived,
+                State = ModuleStatus.Activated,
                 Depends = new string[] { },
                 AutoLoad = true,
             };
@@ -42,7 +42,7 @@ namespace ObjectServer
             //设置属性默认值
             this.Depends = new string[] { };
             this.Dlls = new string[] { };
-            this.State = ModuleStatus.Deactived;
+            this.State = ModuleStatus.Deactivated;
         }
 
         #region Serializable Fields
@@ -90,7 +90,7 @@ namespace ObjectServer
                 this.LoadDynamicAssembly(pool);
             }
 
-            this.State = ModuleStatus.Actived;
+            this.State = ModuleStatus.Activated;
             Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
         }
 
@@ -115,7 +115,7 @@ namespace ObjectServer
 
             foreach (var t in types)
             {
-                var obj = StaticServiceObjectBase.CreateStaticObjectInstance(t);
+                var obj = ObjectServiceBase.CreateStaticObjectInstance(t);
                 objs.RegisterObject(obj);
             }
         }

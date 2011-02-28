@@ -14,9 +14,14 @@ namespace ObjectServer.Web
     /// </summary>
     [WebService()]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public class ObjectServer : JsonRpcHandler
+    public sealed class ObjectServer : JsonRpcHandler
     {
         private IService service = new ServiceDispatcher();
+
+        public ObjectServer()
+        {
+            //遍历并注册所有服务对象为 <uri>/objects/*
+        }
 
         [JsonRpcMethod]
         public string LogOn(string dbName, string userName, string password)

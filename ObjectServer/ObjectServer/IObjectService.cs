@@ -9,7 +9,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface IServiceObject
+    public interface IObjectService
     {
         void Initialize(IDatabase db);
 
@@ -27,6 +27,5 @@ namespace ObjectServer
         /// 此对象引用（依赖）的其它对象名称
         /// </summary>
         string[] GetReferencedObjects();
-
     }
 }

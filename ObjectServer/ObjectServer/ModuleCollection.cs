@@ -119,7 +119,7 @@ namespace ObjectServer
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'actived' 的
-            var sql = "select name from core_module where state = 'actived'";
+            var sql = "select name from core_module where state = 'activated'";
             var modules = db.QueryAsDictionary(sql);
 
             foreach (var m in modules)

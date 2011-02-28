@@ -11,12 +11,12 @@ namespace ObjectServer
         private static readonly Regex nameRegex =
             new Regex(@"\w+\.(\w+\.?)+", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        public static bool IsValidName(this IServiceObject obj)
+        public static bool IsValidName(this IObjectService obj)
         {
             return nameRegex.IsMatch(obj.Name);
         }
 
-        public static string GetModuleName(this IServiceObject obj)
+        public static string GetModuleName(this IObjectService obj)
         {
             var nameParts = obj.Name.Split('.');
             return nameParts[0];
@@ -26,7 +26,7 @@ namespace ObjectServer
         /// 验证服务对象名字是否合法
         /// </summary>
         /// <param name="obj"></param>
-        public static void VerifyName(this IServiceObject obj)
+        public static void VerifyName(this IObjectService obj)
         {
             //检测名称是否合适
             if (!obj.IsValidName())

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Diagnostics;
 
 using ObjectServer.Backend;
 
@@ -11,12 +12,12 @@ namespace ObjectServer
     /// <summary>
     /// 适用于静态语言（非DLR）的服务对象基类
     /// </summary>
-    public abstract class StaticServiceObjectBase : IServiceObject
+    public abstract class ObjectServiceBase : IObjectService
     {
         private readonly IDictionary<string, MethodInfo> serviceMethods =
             new SortedList<string, MethodInfo>();
 
-        protected StaticServiceObjectBase(string name)
+        protected ObjectServiceBase(string name)
         {
             this.SetName(name);
 
@@ -106,13 +107,11 @@ namespace ObjectServer
         public IObjectCollection Pool { get; private set; }
 
 
-
-
         #region ServiceObject(s) factory methods
 
-        internal static IServiceObject CreateStaticObjectInstance(Type t)
+        internal static IObjectService CreateStaticObjectInstance(Type t)
         {
-            var obj = Activator.CreateInstance(t) as IServiceObject;
+            var obj = Activator.CreateInstance(t) as IObjectService;
             if (obj == null)
             {
                 var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
@@ -122,7 +121,7 @@ namespace ObjectServer
         }
 
         internal static T CreateStaticObjectInstance<T>()
-            where T : class, IServiceObject
+            where T : class, IObjectService
         {
             return CreateStaticObjectInstance(typeof(T)) as T;
         }

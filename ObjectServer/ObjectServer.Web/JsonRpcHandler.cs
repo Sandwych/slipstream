@@ -5,6 +5,7 @@ using System.Web;
 using System.Reflection;
 using System.IO;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 using Newtonsoft.Json;
 
@@ -19,12 +20,30 @@ namespace ObjectServer.Web
 
         protected JsonRpcHandler()
         {
-            this.RegisterRpcMethods(typeof(JsonRpcHandler));
+            this.RegisterStaticRpcMethods(typeof(JsonRpcHandler));
             var sublcassType = this.GetType();
-            this.RegisterRpcMethods(sublcassType);
+            this.RegisterStaticRpcMethods(sublcassType);
         }
 
-        private void RegisterRpcMethods(Type type)
+        public void RegisterMethod(string methodName, MethodInfo mi)
+        {
+            if (string.IsNullOrEmpty(methodName))
+            {
+                throw new ArgumentNullException("methodName");
+            }
+
+            if (mi == null)
+            {
+                throw new ArgumentNullException("mi");
+            }
+
+            lock (this)
+            {
+                this.methods.Add(methodName, mi);
+            }
+        }
+
+        private void RegisterStaticRpcMethods(Type type)
         {
             var methods = type.GetMethods();
             foreach (var mi in methods)
@@ -40,9 +59,13 @@ namespace ObjectServer.Web
                         name = mi.Name;
                     }
 
-                    this.methods[name] = mi;
+                    this.RegisterMethod(name, mi);
                 }
             }
+        }
+
+        private void RegisterDynamicRpcMethod(MethodInfo mi)
+        {
         }
 
         #region JSON-RPC system methods
@@ -51,6 +74,12 @@ namespace ObjectServer.Web
         public string[] ListMethods()
         {
             return this.methods.Keys.ToArray();
+        }
+
+        [JsonRpcMethod(Name = "system.echo")]
+        public object Echo(object value)
+        {
+            return value;
         }
 
         #endregion
@@ -71,7 +100,7 @@ namespace ObjectServer.Web
             {
                 this.ProcessJsonRpc(
                     context.Request.InputStream, context.Response.Output);
-                context.Response.ContentType = "text/json";
+                context.Response.ContentType = JsonRpcProtocol.JsonContentType;
             }
         }
 
@@ -90,13 +119,13 @@ namespace ObjectServer.Web
             var jreq = (Dictionary<string, object>)PlainJsonConvert.Deserialize(inputStream);
 
             //执行调用
-            var id = jreq["id"];
-            var methodName = (string)jreq["method"];
+            var id = jreq[JsonRpcProtocol.Id];
+            var methodName = (string)jreq[JsonRpcProtocol.Method];
             var method = this.methods[methodName];
             string error = null;
             object result = null;
 
-            var args = (object[])jreq["params"];
+            var args = (object[])jreq[JsonRpcProtocol.Params];
 
             try
             {

@@ -63,7 +63,7 @@ namespace ObjectServer
         }
 
         private static object ExecuteTransactional(
-            ContextScope ctx, IServiceObject obj, MethodInfo method, params object[] internalArgs)
+            IContext ctx, IObjectService obj, MethodInfo method, params object[] internalArgs)
         {
             ctx.Database.DataContext.Open();
 
