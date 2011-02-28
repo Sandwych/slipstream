@@ -15,6 +15,12 @@ namespace ObjectServer.Model
 {
     public abstract class TableModel : ModelBase, IModel
     {
+        public const string CreatedTimeField = "_created_time";
+        public const string ModifiedTimeField = "_modified_time";
+        public const string CreatedUserField = "_created_user";
+        public const string ModifiedUserField = "_modified_user";
+
+
         private readonly List<IMetaField> modelFields =
             new List<IMetaField>();
 
@@ -62,10 +68,10 @@ namespace ObjectServer.Model
             this.Hierarchy = false;
             this.SetName(name);
 
-            Fields.DateTime("_created_time").SetLabel("Created");
-            Fields.DateTime("_modified_time").SetLabel("Last Modified");
-            Fields.ManyToOne("_created_user", "core.user").SetLabel("Creator");
-            Fields.ManyToOne("_modified_user", "core.user").SetLabel("Creator");
+            Fields.DateTime(CreatedTimeField).SetLabel("Created");
+            Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified");
+            Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator");
+            Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator");
         }
 
         private void SetName(string name)
@@ -134,15 +140,33 @@ namespace ObjectServer.Model
             return DoCreate(callingContext, values);
         }
 
-        private long DoCreate(IContext callingContext, IDictionary<string, object> values)
+        private long DoCreate(IContext ctx, IDictionary<string, object> values)
         {
             this.VerifyFields(values.Keys);
 
-            var serial = callingContext.Database.DataContext.NextSerial(this.SequenceName);
+            var serial = ctx.Database.DataContext.NextSerial(this.SequenceName);
 
-            if (this.ContainsField("_version"))
+            if (this.ContainsField(VersionFieldName))
             {
-                values.Add("_version", 0);
+                values.Add(VersionFieldName, 0);
+            }
+
+            var now = DateTime.Now;
+            if(this.ContainsField(CreatedTimeField))
+            {
+                values[CreatedTimeField] = now;
+            }
+            if (this.ContainsField(CreatedUserField))
+            {
+                values[CreatedUserField] = ctx.Session.UserId;
+            }
+            if (this.ContainsField(ModifiedTimeField))
+            {
+                values[ModifiedTimeField] = now;
+            }
+            if (this.ContainsField(ModifiedUserField))
+            {
+                values[ModifiedUserField] = ctx.Session.UserId;
             }
 
             var colValues = new object[values.Count];
@@ -173,7 +197,7 @@ namespace ObjectServer.Model
               serial,
               args);
 
-            var rows = callingContext.Database.DataContext.Execute(sql, colValues);
+            var rows = ctx.Database.DataContext.Execute(sql, colValues);
             if (rows != 1)
             {
                 Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
@@ -202,17 +226,31 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual void Write(IContext callingContext, object id, IDictionary<string, object> record)
+        public virtual void Write(IContext ctx, object id, IDictionary<string, object> userRecord)
         {
             if (!this.CanWrite)
             {
                 throw new NotSupportedException();
             }
 
+            var record = new Dictionary<string, object>(userRecord);
+
+            //处理最近更新用户与最近更新时间字段            
+            if (this.ContainsField(ModifiedTimeField))
+            {
+                record[ModifiedTimeField] = DateTime.Now;                
+            }
+            if (this.ContainsField(ModifiedUserField))
+            {
+                record[ModifiedUserField] = ctx.Session.UserId;
+            }
+
+
             //检查字段
 
             //TODO: 并发检查，处理 _version 字段
             //客户端也需要提供 _version 字段
+            //TODO 处理复杂字段
             var values = new object[record.Count];
 
             var sbFieldValues = new StringBuilder(15 * record.Count);
@@ -231,12 +269,12 @@ namespace ObjectServer.Model
             }
 
             var sql = string.Format(
-                "UPDATE \"{0}\" SET {1} WHERE id = {2};",
+                "UPDATE \"{0}\" SET {1} WHERE id = {2}",
                 this.TableName,
                 sbFieldValues.ToString(),
                 id);
 
-            callingContext.Database.DataContext.Execute(sql, values);
+            ctx.Database.DataContext.Execute(sql, values);
         }
 
         [ServiceMethod]

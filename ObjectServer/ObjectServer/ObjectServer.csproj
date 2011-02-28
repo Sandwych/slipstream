@@ -200,7 +200,6 @@
     <Compile Include="ServiceObjectAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />
-    <Compile Include="Model\TestObject.cs" />
     <Compile Include="Module\Module.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="ServiceDispatcher.cs" />

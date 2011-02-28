@@ -35,10 +35,10 @@ namespace ObjectServer
         void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword);
         void DeleteDatabase(string rootPasswordHash, string dbName);
 
-        long CreateModel(string dbName, string objectName, IDictionary<string, object> propertyBag);
-        object[] SearchModel(string dbName, string objectName, object[] domain, long offset, long limit);
-        Dictionary<string, object>[] ReadModel(string dbName, string objectName, object[] ids, object[] fields);
-        void WriteModel(string dbName, string objectName, object id, IDictionary<string, object> record);
-        void DeleteModel(string dbName, string objectName, object[] ids);
+        long CreateModel(string sessionId, string objectName, IDictionary<string, object> propertyBag);
+        object[] SearchModel(string sessionId, string objectName, object[] domain, long offset, long limit);
+        Dictionary<string, object>[] ReadModel(string sessionId, string objectName, object[] ids, object[] fields);
+        void WriteModel(string sessionId, string objectName, object id, IDictionary<string, object> record);
+        void DeleteModel(string sessionId, string objectName, object[] ids);
     }
 }
