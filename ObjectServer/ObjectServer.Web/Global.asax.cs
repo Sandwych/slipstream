@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
+using System.Configuration;
 
 namespace ObjectServer.Web
 {
@@ -29,20 +30,7 @@ namespace ObjectServer.Web
             //TODO: 初始化为测试配置
             if (!ObjectServerStarter.Initialized)
             {
-                var cfg = new Config()
-                {
-                    ConfigurationPath = null,
-                    DbType = global::ObjectServer.Backend.DatabaseType.Postgresql,
-                    DBHost = "localhost",
-                    DbName = "objectserver",
-                    DBPassword = "objectserver",
-                    DBPort = 5432,
-                    DBUser = "objectserver",
-                    ModulePath = null,//Server.MapPath("~/modules"),
-                    RootPassword = "root",
-                    Debug = true,
-                };
-
+                var cfg = (Config)ConfigurationManager.GetSection("objectserver-config");
                 ObjectServerStarter.Initialize(cfg);
             }
         }

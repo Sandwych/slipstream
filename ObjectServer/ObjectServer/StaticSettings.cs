@@ -9,7 +9,13 @@ namespace ObjectServer
     internal static class StaticSettings
     {
         public const string CoreModuleName = "core";
+
         public const string ModuleMetaDataFileName = "module.xml";
+
+        public const string LogFileName = "objectserver.log";
+
+        public const string LogPattern = 
+            "[%date %-5level]: %message%newline";
 
         public static Version Version
         {

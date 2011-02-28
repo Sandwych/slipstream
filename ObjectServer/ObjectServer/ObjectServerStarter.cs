@@ -87,7 +87,7 @@ namespace ObjectServer
                 s_instance.modules.Initialize(cfg);
             }
 
-            s_instance.databases.Initialize(cfg);            
+            s_instance.databases.Initialize(cfg);
 
             s_instance.config = cfg;
             s_instance.initialized = true;
@@ -151,11 +151,11 @@ namespace ObjectServer
         private static void ConfigurateLog4net(Config cfg)
         {
             log4net.Appender.IAppender appender;
-            var layout = new log4net.Layout.SimpleLayout();
+            var layout = new log4net.Layout.PatternLayout(StaticSettings.LogPattern);
 
             if (string.IsNullOrEmpty(cfg.LogPath))
             {
-                appender = new log4net.Appender.ConsoleAppender
+                appender = new log4net.Appender.ColoredConsoleAppender
                 {
                     Layout = layout,
                 };
@@ -176,8 +176,12 @@ namespace ObjectServer
 
                 appender = new log4net.Appender.RollingFileAppender()
                 {
+                    File = StaticSettings.LogFileName,
+                    AppendToFile = true,
+                    RollingStyle = log4net.Appender.RollingFileAppender.RollingMode.Date,
                     Layout = layout,
                     Encoding = Encoding.UTF8,
+                    StaticLogFileName = true,
                 };
             }
 

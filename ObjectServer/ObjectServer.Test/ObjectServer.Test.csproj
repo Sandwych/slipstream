@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ObjectServer.Test</RootNamespace>
-    <AssemblyName>objectserver-test</AssemblyName>
+    <AssemblyName>ObjectServer.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -101,6 +101,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>git add --all</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

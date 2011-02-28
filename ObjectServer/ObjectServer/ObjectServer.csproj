@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ObjectServer</RootNamespace>
-    <AssemblyName>objectserver-core</AssemblyName>
+    <AssemblyName>ObjectServer.Framework</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -225,6 +225,7 @@
     <Compile Include="Model\Fields\IMetaField.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />
     <Compile Include="Module\ModuleCollection.cs" />
+    <Compile Include="ConfigSectionHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Backend\Postgresql\initdb.sql">
