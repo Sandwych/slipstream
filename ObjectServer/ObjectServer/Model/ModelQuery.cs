@@ -34,6 +34,16 @@ namespace ObjectServer.Model
                 new FromClause(new string[] { model.TableName }),
                 new WhereClause(whereExp));
 
+            if (offset > 0)
+            {
+                select.OffsetClause = new OffsetClause(offset);
+            }
+
+            if (limit > 0)
+            {
+                select.LimitClause = new LimitClause(limit);
+            }
+
             //TODO: 这里检查权限等，处理查询非表中字段等
 
             /* //自动添加 active 字段

@@ -44,6 +44,10 @@ namespace ObjectServer.SqlTree
         void VisitOn(OffsetClause node);
         void VisitAfter(OffsetClause node);
 
+        void VisitBefore(LimitClause node);
+        void VisitOn(LimitClause node);
+        void VisitAfter(LimitClause node);
+
         void VisitBefore(RawSql node);
         void VisitOn(RawSql node);
         void VisitAfter(RawSql node);

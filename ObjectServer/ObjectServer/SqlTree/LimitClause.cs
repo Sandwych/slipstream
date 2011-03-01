@@ -5,14 +5,14 @@ using System.Text;
 
 namespace ObjectServer.SqlTree
 {
-    public sealed class OffsetClause : Node, IClause
+    public sealed class LimitClause : Node, IClause
     {
-        public OffsetClause(long offset)
+        public LimitClause(long offset)
         {
             this.Value = new ValueExpression(offset);
         }
 
-        public OffsetClause(IExpression valueExp)
+        public LimitClause(IExpression valueExp)
         {
             this.Value = valueExp;
         }
@@ -36,7 +36,7 @@ namespace ObjectServer.SqlTree
         public override object Clone()
         {
             var val = (IExpression)this.Value.Clone();
-            return new OffsetClause(val);
+            return new LimitClause(val);
         }
 
         #endregion

@@ -12,7 +12,7 @@ namespace ObjectServer.Test.Web
     [TestFixture]
     public class JsonSerializedCallingTests : WebTestBase
     {
-        [Test]
+        [Ignore]
         public void Test_json_serialized_CRUD()
         {
             var domain = new object[][] 

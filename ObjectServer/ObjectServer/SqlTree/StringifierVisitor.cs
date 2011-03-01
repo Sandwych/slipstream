@@ -94,6 +94,13 @@ foreach (var col in node.Expressions)
             this.sqlBuilder.Append(" OFFSET ");
         }
 
+        public override void VisitOn(LimitClause node)
+        {
+            base.VisitOn(node);
+
+            this.sqlBuilder.Append(" LIMIT ");
+        }
+
         public override void VisitOn(RawSql node)
         {
             base.VisitOn(node);

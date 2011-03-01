@@ -14,6 +14,7 @@ namespace ObjectServer.SqlTree
         public AliasExpressionList ColumnList { get; set; }
         public OrderbyClause OrderByClause { get; set; }
         public OffsetClause OffsetClause { get; set; }
+        public LimitClause LimitClause { get; set; }
 
         public SelectStatement()
         {
@@ -68,6 +69,11 @@ namespace ObjectServer.SqlTree
             if (this.OffsetClause != null)
             {
                 this.OffsetClause.Traverse(visitor);
+            }
+
+            if (this.LimitClause != null)
+            {
+                this.LimitClause.Traverse(visitor);
             }
 
             visitor.VisitAfter(this);
