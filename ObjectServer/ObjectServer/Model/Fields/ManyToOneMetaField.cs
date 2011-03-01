@@ -65,5 +65,10 @@ namespace ObjectServer.Model
 
             return result;
         }
+
+        public override bool IsStorable()
+        {
+            return !this.Functional;
+        }
     }
 }
