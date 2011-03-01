@@ -98,6 +98,23 @@ SELECT ""col1"", ""col2"", ""col3""
             Assert.AreEqual(sql1, genSql);
         }
 
+        [Test]
+        public void Test_offset_clause()
+        {
+            var sql = "SELECT \"id\" FROM \"table1\" OFFSET 10";
+            var sql1 = sql.Replace(" ", "");
+
+            var cols = new AliasExpressionList(
+                new AliasExpression[]{ new AliasExpression("id") } 
+                );
+            var sel = new SelectStatement(
+               cols, new FromClause(new string[] { "table1" }));
+            sel.OffsetClause = new OffsetClause(10);
+
+            var genSql = GenerateSqlString(sel);
+            Assert.AreEqual(sql1, genSql);
+        }
+
 
         private static string GenerateSqlString(INode node)
         {

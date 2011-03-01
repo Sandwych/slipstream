@@ -87,6 +87,13 @@ foreach (var col in node.Expressions)
             this.sqlBuilder.Append(" ");
         }
 
+        public override void VisitOn(OffsetClause node)
+        {
+            base.VisitOn(node);
+
+            this.sqlBuilder.Append(" OFFSET ");
+        }
+
         public override void VisitOn(RawSql node)
         {
             base.VisitOn(node);

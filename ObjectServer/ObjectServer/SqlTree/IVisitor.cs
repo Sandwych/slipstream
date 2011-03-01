@@ -40,6 +40,10 @@ namespace ObjectServer.SqlTree
         void VisitOn(OrderbyItem node);
         void VisitAfter(OrderbyItem node);
 
+        void VisitBefore(OffsetClause node);
+        void VisitOn(OffsetClause node);
+        void VisitAfter(OffsetClause node);
+
         void VisitBefore(RawSql node);
         void VisitOn(RawSql node);
         void VisitAfter(RawSql node);

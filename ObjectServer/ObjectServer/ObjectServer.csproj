@@ -215,6 +215,7 @@
     <Compile Include="ServiceMethodAttribute.cs" />
     <Compile Include="ContextScope.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
+    <Compile Include="SqlTree\OffsetClause.cs" />
     <Compile Include="StaticSettings.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />

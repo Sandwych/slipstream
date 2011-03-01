@@ -13,6 +13,7 @@ namespace ObjectServer.SqlTree
         public JoinClause JoinClause { get; set; }
         public AliasExpressionList ColumnList { get; set; }
         public OrderbyClause OrderByClause { get; set; }
+        public OffsetClause OffsetClause { get; set; }
 
         public SelectStatement()
         {
@@ -62,6 +63,11 @@ namespace ObjectServer.SqlTree
             if (this.OrderByClause != null)
             {
                 this.OrderByClause.Traverse(visitor);
+            }
+
+            if (this.OffsetClause != null)
+            {
+                this.OffsetClause.Traverse(visitor);
             }
 
             visitor.VisitAfter(this);
