@@ -18,6 +18,15 @@ namespace ObjectServer.Backend.Postgresql
     internal sealed class PgTableContext : ITableContext
     {
         private IDictionary<string, IColumnMetadata> columns = new SortedList<string, IColumnMetadata>();
+        private readonly IDictionary<ReferentialAction, string> refActMapping =
+            new Dictionary<ReferentialAction, string>()
+            {
+                { ReferentialAction.SetNull, "SET NULL" },
+                { ReferentialAction.SetDefault, "SET DEFAULT" },
+                { ReferentialAction.Cascade, "CASCADE" },
+                { ReferentialAction.NoAction, "NO ACTION" },
+                { ReferentialAction.Restrict, "RESTRICT" },
+            };
 
         public PgTableContext(IDataContext db, string tableName)
         {
@@ -125,8 +134,7 @@ SELECT column_name, data_type, is_nullable
 
         public void AddFK(IDataContext db, string columnName, string refTable, ReferentialAction refAct)
         {
-            //TODO: 设置其它的 ReferentialAction
-            var onDelete = "SET NULL";
+            var onDelete = refActMapping[refAct];
 
             var fkName = this.GenerateFkName(columnName);
             var sql = string.Format(

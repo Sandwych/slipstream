@@ -52,31 +52,19 @@ namespace ObjectServer.Model
 
         public int Size { get; set; }
 
-        public bool Required { get; set; }
+        public virtual bool Required { get; set; }
 
-        public string Relation { get; set; }
+        public virtual string Relation { get; set; }
 
-        public string RelatedField { get; set; }
+        public virtual string RelatedField { get; set; }
 
-        public string OriginField { get; set; }
+        public virtual string OriginField { get; set; }
 
-        public bool Internal { get; set; }
+        public virtual bool Internal { get; set; }
 
-        public bool IsStorable()
-        {
-            if (this.Functional)
-            {
-                return false;
-            }
+        public abstract bool IsStorable();
 
-            if (this.Type == FieldType.ManyToMany
-                || this.Type == FieldType.OneToMany)
-            {
-                return false;
-            }
-
-            return true;
-        }
+        public abstract ReferentialAction ReferentialAction { get; set; }
 
         public void Validate()
         {

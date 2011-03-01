@@ -26,5 +26,22 @@ namespace ObjectServer.Model
             return result;
         }
 
+        public override bool IsStorable()
+        {
+            return !this.Functional;
+        }
+
+        public override ObjectServer.Model.ReferentialAction ReferentialAction
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
     }
 }
