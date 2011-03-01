@@ -46,5 +46,17 @@ namespace ObjectServer.Model
         {
             return false;
         }
+
+        public override ObjectServer.Model.ReferentialAction ReferentialAction
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

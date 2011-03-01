@@ -7,6 +7,7 @@ namespace ObjectServer.Model
 {
     internal sealed class ManyToOneMetaField : MetaField
     {
+        ReferentialAction refAct;
         /// <summary>
         /// 
         /// </summary>
@@ -61,14 +62,44 @@ namespace ObjectServer.Model
                 }
             }
 
-
-
             return result;
+        }
+
+        public override bool Required
+        {
+            get
+            {
+                if (this.ReferentialAction == ReferentialAction.SetNull)
+                {
+                    this.ReferentialAction = ReferentialAction.Restrict;
+                }
+                return base.Required;
+            }
+            set
+            {
+                base.Required = value;
+            }
         }
 
         public override bool IsStorable()
         {
             return !this.Functional;
+        }
+
+        public override ReferentialAction ReferentialAction
+        {
+            get
+            {
+                return this.refAct;
+            }
+            set
+            {
+                if (this.Required && ReferentialAction == ReferentialAction.SetNull)
+                {
+                    throw new ArgumentException("不能同时设置为必填字段和可空");
+                }
+                this.refAct = value;
+            }
         }
     }
 }

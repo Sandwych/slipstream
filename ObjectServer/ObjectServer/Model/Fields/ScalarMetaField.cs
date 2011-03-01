@@ -31,5 +31,17 @@ namespace ObjectServer.Model
             return !this.Functional;
         }
 
+        public override ObjectServer.Model.ReferentialAction ReferentialAction
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
     }
 }

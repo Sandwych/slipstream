@@ -64,6 +64,8 @@ namespace ObjectServer.Model
 
         public abstract bool IsStorable();
 
+        public abstract ReferentialAction ReferentialAction { get; set; }
+
         public void Validate()
         {
             if (this.DefaultProc != null && this.Getter != null)
