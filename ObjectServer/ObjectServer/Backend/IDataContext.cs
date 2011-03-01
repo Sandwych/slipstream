@@ -27,5 +27,6 @@ namespace ObjectServer.Backend
         ITableContext CreateTableContext(string tableName);
 
         long NextSerial(string sequenceName);
+        bool IsValidDatabase();
     }
 }

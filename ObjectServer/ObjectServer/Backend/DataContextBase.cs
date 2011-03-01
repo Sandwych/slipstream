@@ -225,5 +225,10 @@ namespace ObjectServer.Backend
         public abstract void Initialize();
         public abstract ITableContext CreateTableContext(string tableName);
         public abstract long NextSerial(string sequenceName);
+
+        public virtual bool IsValidDatabase()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
