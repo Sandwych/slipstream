@@ -15,10 +15,13 @@ namespace ObjectServer.Model
         IMetaField DateTime(string name);
         IMetaField Chars(string name);
         IMetaField Text(string name);
+        IMetaField Binary(string name);
 
 
         IMetaField ManyToOne(string name, string masterModel);
         IMetaField OneToMany(string name, string childModel, string relatedField);
         IMetaField ManyToMany(string name, string refModel, string originField, string targetField);
+
+        IMetaField Enumeration(string name, IEnumerable<KeyValuePair<string, string>> options);
     }
 }

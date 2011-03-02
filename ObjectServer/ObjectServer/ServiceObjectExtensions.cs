@@ -8,14 +8,6 @@ namespace ObjectServer
 {
     public static class ServiceObjectExtensions
     {
-        private static readonly Regex nameRegex =
-            new Regex(@"\w+\.(\w+\.?)+", RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
-        public static bool IsValidName(this IObjectService obj)
-        {
-            return nameRegex.IsMatch(obj.Name);
-        }
-
         public static string GetModuleName(this IObjectService obj)
         {
             var nameParts = obj.Name.Split('.');
@@ -29,19 +21,11 @@ namespace ObjectServer
         public static void VerifyName(this IObjectService obj)
         {
             //检测名称是否合适
-            if (!obj.IsValidName())
+            if (!NamingRule.IsValidServiceName(obj.Name))
             {
                 var msg = string.Format("Bad service object name '{0}'", obj.Name);
                 throw new BadServiceObjectNameException(msg, obj.Name);
             }
-
-            //检测模块名是否存在
-            /*var moduleName = obj.GetModuleName();
-            if (!ObjectServerStarter.ModulePool.Contains(moduleName))
-            {
-                var msg = string.Format("Cannot found moudule '{0}'", moduleName);
-                throw new ModuleNotFoundException(msg, moduleName);
-            }*/
         }
 
 

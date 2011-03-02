@@ -20,6 +20,8 @@ namespace ObjectServer.Model
         string RelatedField { get; set; }
         bool Internal { get; }
 
+        IDictionary<string, string> Options { get; }
+
         bool IsStorable();
 
         void Validate();

@@ -27,6 +27,7 @@ namespace ObjectServer.Backend
                 { FieldType.Binary, f =>  "BYTEA" },
                 { FieldType.ManyToOne, f => "INT8" },
                 { FieldType.Chars, f => string.Format("VARCHAR({0})", f.Size) },
+                { FieldType.Enumeration, f => string.Format("VARCHAR({0})", f.Size) },
             };
 
         #region ISqlTypeConverter 成员

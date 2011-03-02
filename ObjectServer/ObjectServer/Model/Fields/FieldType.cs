@@ -17,7 +17,7 @@ namespace ObjectServer.Model
         Text,
         Binary,
 
-        Selection,
+        Enumeration,
         Reference,
         Property,
         OneToMany,

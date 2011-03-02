@@ -141,6 +141,8 @@
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldExtensions.cs" />
     <Compile Include="Model\Fields\ReferenceMetaField.cs" />
+    <Compile Include="Model\Fields\EnumerationMetaField.cs" />
+    <Compile Include="NamingRule.cs" />
     <Compile Include="ServiceMethodInterceptor.cs" />
     <Compile Include="Sessions\ISessionStoreProvider.cs" />
     <Compile Include="Logger.cs" />

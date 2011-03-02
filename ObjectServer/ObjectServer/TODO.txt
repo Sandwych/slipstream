@@ -22,5 +22,6 @@
 	Reference 字段 
 	Property 字段
 	Binary 字段
+	Enumeration 字段
 	
 * Money 类型名称替换成 Decimal

@@ -56,6 +56,13 @@ namespace ObjectServer.Model
             return field;
         }
 
+        public IMetaField Binary(string name)
+        {
+            var field = new ScalarMetaField(name, FieldType.Binary);
+            this.Add(name, field);
+            return field;
+        }
+
         public IMetaField DateTime(string name)
         {
             var field = new ScalarMetaField(name, FieldType.DateTime);
@@ -85,6 +92,12 @@ namespace ObjectServer.Model
             return field;
         }
 
-
+        public IMetaField Enumeration(
+            string name, IEnumerable<KeyValuePair<string, string>> options)
+        {
+            var field = new EnumerationMetaField(name, options);
+            this.Add(name, field);
+            return field;
+        }
     }
 }

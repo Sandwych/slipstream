@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace ObjectServer.Model
 {
     internal abstract class MetaField : IMetaField
@@ -61,6 +62,14 @@ namespace ObjectServer.Model
         public virtual string OriginField { get; set; }
 
         public virtual bool Internal { get; set; }
+
+        public virtual IDictionary<string, string> Options
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+        }
 
         public abstract bool IsStorable();
 
