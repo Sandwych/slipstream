@@ -9,6 +9,8 @@ namespace ObjectServer.Model
     {
         private Dictionary<string, string> options = new Dictionary<string, string>();
 
+        public const int DefaultSize = 16;
+
         public EnumerationMetaField(string name, IEnumerable<KeyValuePair<string, string>> options)
             : base(name, FieldType.Enumeration)
         {
@@ -27,7 +29,8 @@ namespace ObjectServer.Model
                 this.options.Add(p.Key, p.Value);
             }
 
-            this.Size = options.Max(p => p.Key.Length);
+            var maxLength = options.Max(p => p.Key.Length);
+            this.Size = Math.Max(maxLength, DefaultSize);
         }
 
 

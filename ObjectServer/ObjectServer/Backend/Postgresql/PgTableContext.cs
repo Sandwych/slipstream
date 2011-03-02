@@ -75,7 +75,7 @@ namespace ObjectServer.Backend.Postgresql
 
             sql = string.Format(
                 "COMMENT ON COLUMN \"{0}\".\"{1}\" IS '{2}'",
-                this.Name, field.Label, field.Name);
+                this.Name, field.Name, field.Label);
             db.Execute(sql);
         }
 

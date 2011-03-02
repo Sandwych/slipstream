@@ -57,8 +57,12 @@ namespace ObjectServer.Test
                 .SetRequired()
                 .SetDefaultProc(s => true);
             Fields.Text("text_field").SetLabel("Text Field");
-            //Fields.Float("float_field").SetLabel("Float Field");
+            Fields.Float("float_field").SetLabel("Float Field");
             Fields.Money("money_field").SetLabel("Money Field");
+            Fields.Enumeration("enum_field",
+                new Dictionary<string, string>() { { "state1", "State 1" }, { "state2", "State2" } })
+                .SetLabel("Money Field");
+
         }
 
         [ServiceMethod]
