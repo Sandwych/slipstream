@@ -14,7 +14,7 @@ using ObjectServer.Utility;
 namespace ObjectServer
 {
 
-    public sealed class ObjectCollection : IObjectCollection
+    public sealed class ServiceContainer : IServiceContainer
     {
         private IDictionary<string, IObjectService> objects =
             new Dictionary<string, IObjectService>();
@@ -22,13 +22,13 @@ namespace ObjectServer
         private IDatabase database;
         private bool initialized;
 
-        public ObjectCollection(IDatabase db)
+        public ServiceContainer(IDatabase db)
         {
             this.database = db;
             this.initialized = false;
         }
 
-        #region IObjectCollection 成员
+        #region IServiceContainer 成员
 
         public void Initialize()
         {
@@ -54,22 +54,19 @@ namespace ObjectServer
         }
 
 
-        public IObjectService this[string objName]
+        public IObjectService Resolve(string objName)
         {
-            get
+            Debug.Assert(this.initialized);
+
+            if (!this.objects.ContainsKey(objName))
             {
-                Debug.Assert(this.initialized);
+                var msg = string.Format("Cannot found service object: '{0}'", objName);
+                Logger.Error(() => msg);
 
-                if (!this.objects.ContainsKey(objName))
-                {
-                    var msg = string.Format("Cannot found service object: '{0}'", objName);
-                    Logger.Error(() => msg);
-
-                    throw new ServiceObjectNotFoundException(msg, objName);
-                }
-
-                return this.objects[objName];
+                throw new ServiceObjectNotFoundException(msg, objName);
             }
+
+            return this.objects[objName];
         }
 
         #endregion

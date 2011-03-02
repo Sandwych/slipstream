@@ -12,7 +12,7 @@ namespace ObjectServer
         public Database(string dbName)
         {
             this.DataContext = DataProvider.CreateDataContext(dbName);
-            this.Objects = new ObjectCollection(this);
+            this.ServiceObjects = new ServiceContainer(this);
         }
 
         ~Database()
@@ -22,7 +22,7 @@ namespace ObjectServer
 
         public IDataContext DataContext { get; private set; }
 
-        public IObjectCollection Objects { get; private set; }
+        public IServiceContainer ServiceObjects { get; private set; }
 
         #region IDisposable 成员
 
@@ -47,7 +47,7 @@ namespace ObjectServer
 
         public void Initialize(Config cfg)
         {
-            this.Objects.Initialize();
+            this.ServiceObjects.Initialize();
         }
 
         #endregion

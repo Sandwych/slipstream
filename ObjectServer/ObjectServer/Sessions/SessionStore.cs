@@ -15,8 +15,8 @@ namespace ObjectServer
 
         public void Initialize(Config cfg)
         {
-            //TODO: 改成可配置的
-            this.provider = new StaticSessionStoreProvider();
+            var t = Type.GetType(cfg.SessionProvider);
+            this.provider = (ISessionStoreProvider)Activator.CreateInstance(t);
         }
 
         #endregion
@@ -51,5 +51,6 @@ namespace ObjectServer
             Debug.Assert(this.provider != null);
             this.provider.Pulse(sessionId);
         }
+
     }
 }

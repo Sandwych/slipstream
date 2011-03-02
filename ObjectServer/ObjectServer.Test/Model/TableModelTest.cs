@@ -16,7 +16,7 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class ModelBaseTest : LocalTestBase
     {
-        IService proxy = new ServiceDispatcher();
+        IExportedService proxy = ServiceDispatcher.CreateDispatcher();
 
         [Test]
         public void Simple_fields_crud()
@@ -58,7 +58,7 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
-        public void Many_to_one_and_one_to_many_fields()
+        public void Create_and_read_related_fields()
         {
 
             var masterPropBag = new Dictionary<string, object>()
@@ -92,6 +92,16 @@ namespace ObjectServer.Model.Test
 
             Assert.AreEqual(1, children.Length);
             Assert.AreEqual(childId, children[0]);
+
+            //更新
+            var masterId2 = (long)proxy.CreateModel(this.SessionId, "test.master", masterPropBag);
+            childPropBag["master"] = masterId2;
+            proxy.WriteModel(this.SessionId, "test.child", childId, childPropBag);
+
+            var children2 = proxy.ReadModel(this.SessionId, "test.child", new object[] { childId }, new object[] { "master" });
+            var masterField3 = (RelatedField)children2[0]["master"];
+            Assert.AreEqual(masterId2, masterField3.Id);
+
         }
 
         [Test]
@@ -153,7 +163,7 @@ namespace ObjectServer.Model.Test
 
 
         [Test]
-        public void Nullable_one_to_many_field()
+        public void Read_nullable_one_to_many_field()
         {
             var master = new Dictionary<string, object>();
 
@@ -170,7 +180,7 @@ namespace ObjectServer.Model.Test
 
 
         [Test]
-        public void Nullable_many_to_one_field()
+        public void Read_nullable_many_to_one_field()
         {
             var nameFieldValue = "child_with_empty_master_field";
             var child = new Dictionary<string, object>()

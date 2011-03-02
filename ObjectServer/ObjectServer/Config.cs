@@ -18,6 +18,8 @@ namespace ObjectServer
             this.LogPath = null;
             this.LogLevel = "info";
             this.SessionTimeout = new TimeSpan(0, 20, 0);
+            this.SessionProvider = "ObjectServer.StaticSessionStoreProvider, ObjectServer.Framework";
+
         }
 
         private string rootPassword;
@@ -74,6 +76,9 @@ namespace ObjectServer
 
         [XmlElement("session-timeout")]
         public TimeSpan SessionTimeout { get; set; }
+
+        [XmlElement("session-provider", IsNullable = false)]
+        public string SessionProvider { get; set; }
 
         [XmlIgnore]
         public string RootPasswordHash { get; private set; }

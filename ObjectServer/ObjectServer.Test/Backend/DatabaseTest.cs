@@ -32,7 +32,7 @@ namespace ObjectServer.Test.Backend
             ObjectServerStarter.Initialize();
             var sha1 = ObjectServerStarter.Configuration.RootPasswordHash;
 
-            var service = new ServiceDispatcher();
+            var service = ServiceDispatcher.CreateDispatcher();
             service.CreateDatabase(sha1, dbName, "admin");
             service.DeleteDatabase(sha1, dbName);
 

@@ -7,12 +7,12 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface IObjectCollection
+    public interface IServiceContainer
     {
         void Initialize();
 
         void RegisterObject(IObjectService so);
 
-        IObjectService this[string objName] { get; }
+        IObjectService Resolve(string objName);
     }
 }

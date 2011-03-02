@@ -26,6 +26,7 @@ namespace ObjectServer
         private DatabaseCollection databases = new DatabaseCollection();
         private ModuleCollection modules = new ModuleCollection();
         private SessionStore sessionStore = new SessionStore();
+        private IExportedService exportedService = ServiceDispatcher.CreateDispatcher();
 
         private ObjectServerStarter()
         {
@@ -126,7 +127,10 @@ namespace ObjectServer
 
         public static bool Initialized
         {
-            get { return s_instance.initialized; }
+            get
+            {
+                return s_instance.initialized;
+            }
         }
 
 
@@ -134,18 +138,24 @@ namespace ObjectServer
         {
             get
             {
-                return s_instance.databases;
+                return Instance.databases;
             }
         }
 
         internal static ModuleCollection Modules
         {
-            get { return s_instance.modules; }
+            get
+            {
+                return Instance.modules;
+            }
         }
 
         public static SessionStore SessionStore
         {
-            get { return s_instance.sessionStore; }
+            get
+            {
+                return Instance.sessionStore;
+            }
         }
 
         private static void ConfigurateLog4net(Config cfg)
@@ -155,7 +165,7 @@ namespace ObjectServer
 
             if (string.IsNullOrEmpty(cfg.LogPath))
             {
-                appender = new log4net.Appender.ColoredConsoleAppender
+                appender = new log4net.Appender.OutputDebugStringAppender()
                 {
                     Layout = layout,
                 };
@@ -163,22 +173,24 @@ namespace ObjectServer
                 if (!cfg.Debug)
                 {
                     //TODO: 添加非调试的级别限制
-                    //var filter = new log4net.Filter.LevelRangeFilter 
+                    //var filter = new log4net.Filter.LevelRangeFilter();
+                    //filter.Next = null;
+                    //filter.LevelMin = log4net.Core.Level.All
                     //{ LevelMax = log4net.Core.Level.Debug,  };
                 }
             }
             else
             {
-                if (System.IO.Directory.Exists(cfg.LogPath))
+                if (!System.IO.Directory.Exists(cfg.LogPath))
                 {
                     throw new DirectoryNotFoundException(cfg.LogPath);
                 }
 
                 appender = new log4net.Appender.RollingFileAppender()
                 {
-                    File = StaticSettings.LogFileName,
-                    AppendToFile = true,
-                    RollingStyle = log4net.Appender.RollingFileAppender.RollingMode.Date,
+                    File = Path.Combine(cfg.LogPath, StaticSettings.LogFileName),
+                    AppendToFile = false,
+                    RollingStyle = log4net.Appender.RollingFileAppender.RollingMode.Size,
                     Layout = layout,
                     Encoding = Encoding.UTF8,
                     StaticLogFileName = true,
@@ -193,12 +205,30 @@ namespace ObjectServer
         {
             get
             {
-                if (s_instance.config == null)
+                return Instance.config;
+            }
+        }
+
+        public static IExportedService ExportedService
+        {
+            get
+            {
+                return Instance.exportedService;
+
+            }
+        }
+
+        private static ObjectServerStarter Instance
+        {
+            get
+            {
+                if (!s_instance.initialized)
                 {
                     throw new Exception(
                         "尚未初始化系统，请调用 ObjectServerStarter.Initialize() 初始化");
                 }
-                return s_instance.config;
+
+                return s_instance;
             }
         }
 

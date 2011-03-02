@@ -11,7 +11,7 @@ namespace ObjectServer.Core.Test
     [TestFixture]
     public sealed class UserTest : LocalTestBase
     {
-        IService proxy = new ServiceDispatcher();
+        IExportedService proxy = ServiceDispatcher.CreateDispatcher();
 
         [Test]
         public void Test_user_password_hashing()

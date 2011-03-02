@@ -62,12 +62,11 @@ namespace ObjectServer
         {
             var parameters = mi.GetParameters();
             if (parameters.Length < 1
-                || parameters[0].ParameterType != typeof(IContext)
-                || !mi.IsVirtual
+                || parameters[0].ParameterType != typeof(IContext)               
                 || !mi.IsPublic)
             {
                 var msg = string.Format(
-                    "The method '{1}' of object {0} must have an IContext parameter at first, and it's must be 'virtual'.",
+                    "The method '{1}' of object {0} must have an IContext parameter at first.",
                     this.Name, mi.Name);
                 Logger.Error(() => msg);
                 throw new BadServiceMethodException(msg, this.Name, mi.Name);
@@ -91,7 +90,7 @@ namespace ObjectServer
 
         public virtual void Initialize(IDatabase db)
         {
-            this.Pool = db.Objects;
+            this.Pool = db.ServiceObjects;
         }
 
         public string Name { get; private set; }
@@ -104,7 +103,7 @@ namespace ObjectServer
 
         public abstract string[] GetReferencedObjects();
 
-        public IObjectCollection Pool { get; private set; }
+        public IServiceContainer Pool { get; private set; }
 
 
         #region ServiceObject(s) factory methods

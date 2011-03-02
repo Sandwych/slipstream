@@ -17,7 +17,7 @@ namespace ObjectServer
                 ObjectServerStarter.Initialize();
             }
 
-            var proxy = new ServiceDispatcher();
+            var proxy = ServiceDispatcher.CreateDispatcher();
 
             this.SessionId = proxy.LogOn("objectserver", "root", "root");
         }
