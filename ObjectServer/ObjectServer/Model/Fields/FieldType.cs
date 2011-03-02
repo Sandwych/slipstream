@@ -12,6 +12,7 @@ namespace ObjectServer.Model
         Float,
         DateTime,
         Boolean,
+        Decimal,
         Money,
         Chars,
         Text,
