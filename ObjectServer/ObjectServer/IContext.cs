@@ -9,10 +9,11 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface IContext : IDisposable
+    public interface IContext : IDisposable, IEquatable<IContext>
     {
         IDatabase Database { get; }
 
         Session Session { get; }
+
     }
 }

@@ -62,11 +62,17 @@ namespace ObjectServer.Model
 
         }
 
+        /// <summary>
+        /// 获取此对象以来的所有其他对象名称
+        /// 这里处理的很简单，就是直接检测 many-to-one 的对象
+        /// </summary>
+        /// <returns></returns>
         public override string[] GetReferencedObjects()
         {
-            var query = from f in this.Fields.Values
-                        where f.Type == FieldType.ManyToOne
-                        select f.Relation;
+            var query = 
+                from f in this.Fields.Values
+                where f.Type == FieldType.ManyToOne
+                select f.Relation;
 
             //自己不能依赖自己
             query = from m in query

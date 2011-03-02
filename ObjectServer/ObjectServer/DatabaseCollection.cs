@@ -44,7 +44,7 @@ namespace ObjectServer
             var dbNames = DataProvider.ListDatabases();
             if (!dbNames.Contains(dbName))
             {
-                throw new ArgumentException("Invalid database name", "dbName");
+                throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
             }
 
             var db = new Database(dbName);

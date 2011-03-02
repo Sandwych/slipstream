@@ -10,7 +10,7 @@ namespace ObjectServer
     {
         public Session()
         {
-            this.SessionId = Guid.NewGuid();
+            this.Id = Guid.NewGuid();
             this.StartTime = DateTime.Now;
             this.LastActivityTime = this.StartTime;
         }
@@ -23,7 +23,7 @@ namespace ObjectServer
             this.UserId = uid;
         }
 
-        public Guid SessionId { get; set; }
+        public Guid Id { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime LastActivityTime { get; set; }
         public string Database { get; set; }

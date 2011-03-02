@@ -66,32 +66,14 @@ namespace ObjectServer
         {
             var json = File.ReadAllText(configPath, Encoding.UTF8);
             var cfg = JsonConvert.DeserializeObject<Config>(json);
-            Initialize(cfg);
+            s_instance.InitializeInternal(cfg);
         }
 
         //这个做实际的初始化工作
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Initialize(Config cfg)
         {
-            if (cfg == null)
-            {
-                throw new ArgumentNullException("cfg");
-            }
-
-            ConfigurateLog4net(cfg);
-
-            s_instance.sessionStore.Initialize(cfg);
-
-            //查找所有模块并加载模块元信息
-            if (!string.IsNullOrEmpty(cfg.ModulePath))
-            {
-                s_instance.modules.Initialize(cfg);
-            }
-
-            s_instance.databases.Initialize(cfg);
-
-            s_instance.config = cfg;
-            s_instance.initialized = true;
+            s_instance.InitializeInternal(cfg);
         }
 
 
@@ -121,8 +103,39 @@ namespace ObjectServer
                 LogLevel = "debug",
                 SessionTimeout = TimeSpan.FromDays(1),
             };
-            Initialize(cfg);
+            s_instance.InitializeInternal(cfg);
         }
+
+
+        private void InitializeInternal(Config cfg)
+        {
+            if (cfg == null)
+            {
+                throw new ArgumentNullException("cfg");
+            }
+
+            //日志子系统必须最先初始化
+            ConfigurateLog4net(cfg);
+
+            Logger.Info(() => "Initializing Session Storage Subsystem...");
+            s_instance.sessionStore.Initialize(cfg);
+
+            //查找所有模块并加载模块元信息
+            Logger.Info(() => "Initializing Module Management Subsystem...");
+            if (!string.IsNullOrEmpty(cfg.ModulePath))
+            {
+                s_instance.modules.Initialize(cfg);
+            }
+
+            Logger.Info(() => "Initializing Database Instances...");
+            s_instance.databases.Initialize(cfg);
+
+            s_instance.config = cfg;
+            s_instance.initialized = true;
+
+            Logger.Info(() => "System initialized.");
+        }
+
 
 
         public static bool Initialized
@@ -169,15 +182,6 @@ namespace ObjectServer
                 {
                     Layout = layout,
                 };
-
-                if (!cfg.Debug)
-                {
-                    //TODO: 添加非调试的级别限制
-                    //var filter = new log4net.Filter.LevelRangeFilter();
-                    //filter.Next = null;
-                    //filter.LevelMin = log4net.Core.Level.All
-                    //{ LevelMax = log4net.Core.Level.Debug,  };
-                }
             }
             else
             {
@@ -196,6 +200,7 @@ namespace ObjectServer
                     StaticLogFileName = true,
                 };
             }
+
 
             log4net.Config.BasicConfigurator.Configure(appender);
         }

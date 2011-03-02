@@ -9,6 +9,9 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
+    /// <summary>
+    /// 但凡是需要 RPC 的方法都需要用此 scope 包裹
+    /// </summary>
     internal class ContextScope : IContext
     {
         private bool ownDb;
@@ -29,6 +32,8 @@ namespace ObjectServer
                 string.Format("CallingContext is opening for sessionId: [{0}]", sessionId));
 
             this.Session = session;
+            this.SessionStore.Pulse(session.Id);
+
             this.ownDb = true;
             this.Database = ObjectServerStarter.Databases.GetDatabase(session.Database);
             this.Database.DataContext.Open();
@@ -42,8 +47,9 @@ namespace ObjectServer
         {
             Logger.Info(() =>
                 string.Format("CallingContext is opening for database: [{0}]", dbName));
-            
+
             this.Session = new Session(dbName, "system", 0);
+            this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
             this.Database = ObjectServerStarter.Databases.GetDatabase(dbName);
             this.Database.DataContext.Open();
@@ -55,9 +61,10 @@ namespace ObjectServer
                 string.Format("CallingContext is opening for DatabaseContext"));
 
             this.Session = new Session("", "system", 0);
+            this.SessionStore.PutSession(this.Session);
             this.ownDb = false;
             this.Database = db;
-            this.Database.DataContext.Open();            
+            this.Database.DataContext.Open();
         }
 
         #region IContext 成员
@@ -85,5 +92,24 @@ namespace ObjectServer
         }
 
         #endregion
+
+        #region IEquatable<IContext> 成员
+
+        public bool Equals(IContext other)
+        {
+            return this.Session.Id == other.Session.Id;
+        }
+
+        #endregion
+
+        public override int GetHashCode()
+        {
+            return this.Session.Id.GetHashCode();
+        }
+
+        private SessionStore SessionStore
+        {
+            get { return ObjectServerStarter.SessionStore; }
+        }
     }
 }

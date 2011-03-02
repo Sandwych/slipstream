@@ -21,7 +21,7 @@ namespace ObjectServer
         public void PutSession(Session session)
         {
             this.Sweep();
-            this.sessions[session.SessionId] = session;
+            this.sessions[session.Id] = session;
         }
 
 
@@ -31,7 +31,7 @@ namespace ObjectServer
             var sessions =
                 from p in this.sessions
                 where p.Value.Database == database && p.Value.UserId == uid
-                select p.Value.SessionId;
+                select p.Value.Id;
 
             foreach (var s in sessions.ToList())
             {

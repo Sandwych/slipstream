@@ -156,7 +156,7 @@ namespace ObjectServer.Core
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
                 var session = this.CreateSession(database, login, user);
-                result = session.SessionId.ToString();
+                result = session.Id.ToString();
             }
             else
             {

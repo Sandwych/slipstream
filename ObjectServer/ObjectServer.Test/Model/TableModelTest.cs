@@ -78,10 +78,10 @@ namespace ObjectServer.Model.Test
             var ids = new object[] { childId };
             var rows = proxy.ReadModel(this.SessionId, "test.child", ids, null);
             var masterField = rows[0]["master"];
-            Assert.AreEqual(typeof(RelatedField), masterField.GetType());
-            var one2ManyField = (RelatedField)masterField;
-            Assert.AreEqual(one2ManyField.Id, masterId);
-            Assert.AreEqual(one2ManyField.Name, "master-obj");
+            Assert.AreEqual(typeof(object[]), masterField.GetType());
+            var one2ManyField = (object[])masterField;
+            Assert.AreEqual(one2ManyField[0], masterId);
+            Assert.AreEqual(one2ManyField[1], "master-obj");
 
             var masterFieldNames = new object[] { "name", "children" };
             var masterRows = proxy.ReadModel(
@@ -99,8 +99,8 @@ namespace ObjectServer.Model.Test
             proxy.WriteModel(this.SessionId, "test.child", childId, childPropBag);
 
             var children2 = proxy.ReadModel(this.SessionId, "test.child", new object[] { childId }, new object[] { "master" });
-            var masterField3 = (RelatedField)children2[0]["master"];
-            Assert.AreEqual(masterId2, masterField3.Id);
+            var masterField3 = (object[])children2[0]["master"];
+            Assert.AreEqual(masterId2, masterField3[0]);
 
         }
 

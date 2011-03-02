@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ManyToOneMetaField : MetaField
+    internal sealed class ReferenceMetaField : MetaField
     {
         ReferentialAction refAct;
         /// <summary>
@@ -13,7 +13,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="masterModel">主表对象</param>
-        public ManyToOneMetaField(string name, string masterModel)
+        public ReferenceMetaField(string name, string masterModel)
             : base(name, FieldType.ManyToOne)
         {
             this.Relation = masterModel;
