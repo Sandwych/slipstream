@@ -44,7 +44,10 @@ namespace ObjectServer.Model
                 }},
 
                 {"in", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, "IN", value); 
+                    var columnExp = new IdentifierExpression(fieldName);
+                    var userValues = (IEnumerable)value;
+                    var values = new ExpressionGroup(userValues);
+                    return new InExpression(columnExp, values); 
                 }},
                 
                 {"!in", (fieldName, value) => {

@@ -132,6 +132,27 @@ SELECT ""col1"", ""col2"", ""col3""
             Assert.AreEqual(sql1, genSql);
         }
 
+        [Test]
+        public void Test_in_operator()
+        {
+            var sql = "SELECT \"id\" FROM \"table1\" WHERE \"id\" IN (1,2,3,4,5)";
+            var sql1 = sql.Replace(" ", "");
+
+            var inExp = new InExpression(
+                new IdentifierExpression("id"), 
+                new ExpressionGroup(new int[] { 1,2,3,4,5 } ));
+
+            var cols = new AliasExpressionList(
+                new AliasExpression[] { new AliasExpression("id") }
+                );
+            var sel = new SelectStatement(
+               cols, new FromClause(new string[] { "table1" }));
+            sel.WhereClause = new WhereClause(inExp);
+
+            var genSql = GenerateSqlString(sel);
+            Assert.AreEqual(sql1, genSql);
+        }
+
 
         private static string GenerateSqlString(INode node)
         {

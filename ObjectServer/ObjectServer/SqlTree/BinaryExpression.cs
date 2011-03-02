@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.SqlTree
 {
-    public class BinaryExpression : Node, IBinaryExpression
+    public sealed class BinaryExpression : Node, IBinaryExpression
     {
 
         public BinaryExpression(string id, string opr, object value)

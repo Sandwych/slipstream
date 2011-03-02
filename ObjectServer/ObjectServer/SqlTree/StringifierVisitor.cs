@@ -132,6 +132,13 @@ foreach (var col in node.Expressions)
             }
         }
 
+        public override void VisitOn(InExpression node)
+        {
+            base.VisitOn(node);
+
+            this.sqlBuilder.Append(" IN ");
+        }
+
         public override void VisitOn(ExpressionOperator node)
         {
             base.VisitOn(node);

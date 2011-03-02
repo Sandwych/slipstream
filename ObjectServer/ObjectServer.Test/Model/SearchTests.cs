@@ -39,5 +39,19 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(ids1[1], ids2[0]);
 
         }
+
+        [Test]
+        public void Test_domain_in_operator()
+        {
+            var domain = new object[][] { 
+                new object[] { 
+                    "name", "in", 
+                    new object[] { "core.model", "core.field", "core.module" } 
+                } 
+            };
+            var ids = proxy.SearchModel(this.SessionId, "core.model", domain, 0, 0);
+            Assert.AreEqual(3, ids.Length);
+        }
+
     }
 }

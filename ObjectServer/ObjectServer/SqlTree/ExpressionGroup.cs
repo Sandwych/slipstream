@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 
@@ -8,6 +9,23 @@ namespace ObjectServer.SqlTree
     public class ExpressionGroup : Node, IExpressionCollection
     {
         private List<IExpression> expressions = new List<IExpression>();
+
+        public ExpressionGroup(IEnumerable<object> values)
+        {
+            this.expressions.Capacity = values.Count();
+            foreach (var v in values)
+            {
+                this.expressions.Add(new ValueExpression(v));
+            }
+        }
+
+        public ExpressionGroup(IEnumerable values)
+        {
+            foreach (var v in values)
+            {
+                this.expressions.Add(new ValueExpression(v));
+            }
+        }
 
         public ExpressionGroup(IEnumerable<string> columns)
         {

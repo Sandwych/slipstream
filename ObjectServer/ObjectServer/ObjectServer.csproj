@@ -219,6 +219,7 @@
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
     <Compile Include="SqlTree\OffsetClause.cs" />
     <Compile Include="SqlTree\LimitClause.cs" />
+    <Compile Include="SqlTree\InExpression.cs" />
     <Compile Include="StaticSettings.cs" />
     <Compile Include="TransactionalAttribute.cs" />
     <Compile Include="Utility\DependencySorter.cs" />

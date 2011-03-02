@@ -60,6 +60,10 @@ namespace ObjectServer.SqlTree
         void VisitOn(BinaryExpression node);
         void VisitAfter(BinaryExpression node);
 
+        void VisitBefore(InExpression node);
+        void VisitOn(InExpression node);
+        void VisitAfter(InExpression node);
+
         void VisitBefore(ExpressionOperator node);
         void VisitOn(ExpressionOperator node);
         void VisitAfter(ExpressionOperator node);

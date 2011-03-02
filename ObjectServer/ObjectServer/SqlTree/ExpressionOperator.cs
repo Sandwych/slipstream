@@ -18,6 +18,8 @@ namespace ObjectServer.SqlTree
         private static readonly ExpressionOperator s_lessEqualOpr = new ExpressionOperator("<=");
         private static readonly ExpressionOperator s_likeOpr = new ExpressionOperator("LIKE");
         private static readonly ExpressionOperator s_notLikeOpr = new ExpressionOperator("NOT LIKE");
+        private static readonly ExpressionOperator s_inOpr = new ExpressionOperator("IN");
+        private static readonly ExpressionOperator s_notInOpr = new ExpressionOperator("NOT IN");
 
 
         public ExpressionOperator(string opr)
@@ -34,6 +36,8 @@ namespace ObjectServer.SqlTree
         public static ExpressionOperator NotEqualOperator { get { return s_notEqualOpr; } }
         public static ExpressionOperator LikeOperator { get { return s_likeOpr; } }
         public static ExpressionOperator NotLikeOperator { get { return s_notLikeOpr; } }
+        public static ExpressionOperator InOperator { get { return s_inOpr; } }
+        public static ExpressionOperator NotInOperator { get { return s_notInOpr; } }
 
         public override void Traverse(IVisitor visitor)
         {
