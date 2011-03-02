@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 using System.Text;
 
@@ -45,13 +44,18 @@ namespace ObjectServer.Model
 
                 {"in", (fieldName, value) => {
                     var columnExp = new IdentifierExpression(fieldName);
-                    var userValues = (IEnumerable)value;
+                    var userValues = (IEnumerable<object>)value;
                     var values = new ExpressionGroup(userValues);
-                    return new InExpression(columnExp, values); 
+                    return new BinaryExpression(
+                        columnExp, ExpressionOperator.InOperator, values); 
                 }},
                 
                 {"!in", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, "NOT IN", value); 
+                    var columnExp = new IdentifierExpression(fieldName);
+                    var userValues = (IEnumerable<object>)value;
+                    var values = new ExpressionGroup(userValues);
+                    return new BinaryExpression(
+                        columnExp, ExpressionOperator.NotInOperator, values); 
                 }},
 
                 {"like", (fieldName, value) => {
@@ -81,9 +85,9 @@ namespace ObjectServer.Model
         IModel model;
         List<object[]> domain = new List<object[]>();
 
-        public DomainParser(IModel model, IEnumerable domain)
+        public DomainParser(IModel model, IEnumerable<object> domain)
         {
-            if (domain == null)
+            if (domain == null || domain.Count() <= 0)
             {
                 this.domain = EmptyDomain;
             }
@@ -110,6 +114,12 @@ namespace ObjectServer.Model
                 throw new ArgumentException("the parameter 'exp' must have 3 elements", "exp");
             }
 
+            var opr = (string)exp[1];
+            if (!s_oprWhereProcessorMapping.Keys.Contains(opr))
+            {
+                throw new NotSupportedException("Not supported domain operator: " + opr);
+            }
+
             this.domain.Add(exp);
         }
 
@@ -120,6 +130,11 @@ namespace ObjectServer.Model
 
         public IExpression ToExpressionTree()
         {
+            if (this.domain == null || this.domain.Count == 0)
+            {
+                return (IExpression)s_trueExp.Clone();
+            }
+
             var expressions = new List<IExpression>(this.domain.Count + 1);
 
             foreach (var domainItem in this.domain)
@@ -128,18 +143,27 @@ namespace ObjectServer.Model
                 var opr = (string)domainItem[1];
                 var value = domainItem[2];
 
-                //考虑单元运算符
+                //TODO: 考虑单元运算符
                 var expFactory = s_oprWhereProcessorMapping[opr];
                 var exp = expFactory(field, value);
-                expressions.Add(exp);
+                var bracketExp = new BracketedExpression(exp);
+                expressions.Add(bracketExp);
             }
-            expressions.Add(s_trueExp);
 
-            var whereExps = new List<IExpression>(this.domain.Count);
-            for (int i = 0; i < expressions.Count; i += 2)
+            if (expressions.Count % 2 != 0)
             {
-                var andExp = new BinaryExpression(expressions[i], ExpressionOperator.AndOperator, expressions[i + 1]);
-                whereExps.Add(andExp);
+                //为了方便 AND 连接起见，在奇数个表达式最后加上总是 True 的单目表达式
+                expressions.Add(s_trueExp);
+            }
+
+            int andExpCount = expressions.Count / 2;
+
+            var whereExps = new IExpression[andExpCount];
+            for (int i = 0; i < andExpCount; ++i)
+            {
+                var andExp = new BinaryExpression(
+                    expressions[i * 2], ExpressionOperator.AndOperator, expressions[i * 2 + 1]);
+                whereExps[i] = andExp;
             }
 
             return whereExps[0];

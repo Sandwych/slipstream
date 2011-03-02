@@ -17,9 +17,16 @@ namespace ObjectServer
                 ObjectServerStarter.Initialize();
             }
 
-            var proxy = ServiceDispatcher.CreateDispatcher();
+            var service = ObjectServerStarter.ExportedService;
 
-            this.SessionId = proxy.LogOn("objectserver", "root", "root");
+            this.SessionId = service.LogOn("objectserver", "root", "root");
+        }
+
+        [TestFixtureTearDown]
+        public virtual void DisposeFramework()
+        {
+            var service = ObjectServerStarter.ExportedService;
+            service.LogOff(this.SessionId);
         }
 
         public string SessionId { get; private set; }

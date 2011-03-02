@@ -53,5 +53,21 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(3, ids.Length);
         }
 
+        [Test]
+        public void Test_domain_notin_operator()
+        {
+            var allIds = proxy.SearchModel(this.SessionId, "core.model", null, 0, 0);
+
+            var notinDomain = new object[][] { 
+                new object[] { 
+                    "name", "!in", 
+                    new object[] { "core.model", "core.field" } 
+                } 
+            };
+            var ids = proxy.SearchModel(this.SessionId, "core.model", notinDomain, 0, 0);
+
+            Assert.AreEqual(allIds.Length, ids.Length + 2);
+        }
+
     }
 }
