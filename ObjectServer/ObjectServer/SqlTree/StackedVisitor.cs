@@ -192,6 +192,25 @@ namespace ObjectServer.SqlTree
             Debug.Assert(object.ReferenceEquals(this.Parent, node));
             this.Pop();
         }
+
+
+        public virtual void VisitBefore(UpdateStatement node) { this.Push(node); }
+        public virtual void VisitOn(UpdateStatement node) { }
+        public virtual void VisitAfter(UpdateStatement node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
+
+        public virtual void VisitBefore(SetClause node) { this.Push(node); }
+        public virtual void VisitOn(SetClause node) { }
+        public virtual void VisitAfter(SetClause node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
         #endregion
     }
 }

@@ -135,7 +135,6 @@ SELECT ""col1"", ""col2"", ""col3""
         private static string GenerateSqlString(INode node)
         {
             var genSql = node.ToString().Replace(" ", "");
-            genSql = genSql.Replace("\t", "");
             return genSql;
         }
     }

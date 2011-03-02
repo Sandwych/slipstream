@@ -82,5 +82,14 @@ namespace ObjectServer.SqlTree
         void VisitOn(BracketedExpression node);
         void VisitAfter(BracketedExpression node);
 
+
+        void VisitBefore(UpdateStatement node);
+        void VisitOn(UpdateStatement node);
+        void VisitAfter(UpdateStatement node);
+
+
+        void VisitBefore(SetClause node);
+        void VisitOn(SetClause node);
+        void VisitAfter(SetClause node);
     }
 }

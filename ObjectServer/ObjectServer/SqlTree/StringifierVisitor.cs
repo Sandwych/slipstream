@@ -241,6 +241,23 @@ foreach (var col in node.Expressions)
             this.sqlBuilder.Append(')');
         }
 
+
+        public override void VisitOn(UpdateStatement node)
+        {
+            base.VisitOn(node);
+
+            this.sqlBuilder.Append(" UPDATE ");
+
+        }
+
+
+        public override void VisitOn(SetClause node)
+        {
+            base.VisitOn(node);
+            this.sqlBuilder.Append(" SET ");
+        }
+
+
         #endregion
     }
 }

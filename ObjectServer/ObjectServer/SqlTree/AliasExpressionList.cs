@@ -7,7 +7,7 @@ namespace ObjectServer.SqlTree
 {
     public class AliasExpressionList : Node, IExpressionCollection
     {
-        private List<AliasExpression> expressions = new List<AliasExpression>();
+        private List<IExpression> expressions = new List<IExpression>();
 
         public AliasExpressionList(IEnumerable<string> columns)
         {
@@ -24,33 +24,10 @@ namespace ObjectServer.SqlTree
             this.expressions.AddRange(exps);
         }
 
-        public IList<AliasExpression> Expressions
+        public IList<IExpression> Expressions
         {
             get { return this.expressions; }
         }
-
-        public bool IsFirstExpression(IExpression node)
-        {
-            if (this.expressions.Count > 0
-                && object.ReferenceEquals(node, this.expressions[0]))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool IsLastExpression(IExpression node)
-        {
-            if (this.expressions.Count > 0
-                && object.ReferenceEquals(node, this.expressions[this.expressions.Count - 1]))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
 
         #region INode 成员
 
@@ -72,7 +49,7 @@ namespace ObjectServer.SqlTree
 
         public override object Clone()
         {
-            return new AliasExpressionList(this.Expressions);
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -50,5 +50,21 @@ namespace ObjectServer.SqlTree
         {
             throw new NotImplementedException();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (object.ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            var rhs = (ExpressionOperator)obj;
+            return this.Operator == rhs.Operator;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Operator.GetHashCode();
+        }
+
     }
 }

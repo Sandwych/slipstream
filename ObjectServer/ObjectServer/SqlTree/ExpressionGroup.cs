@@ -47,28 +47,6 @@ namespace ObjectServer.SqlTree
             get { return this.expressions; }
         }
 
-        public bool IsFirstExpression(IExpression node)
-        {
-            if (this.expressions.Count > 0
-                && object.ReferenceEquals(node, this.expressions[0]))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool IsLastExpression(IExpression node)
-        {
-            if (this.expressions.Count > 0
-                && object.ReferenceEquals(node, this.expressions[this.expressions.Count - 1]))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
 
         #region INode 成员
 
