@@ -42,7 +42,6 @@ namespace ObjectServer.Model
 
         /// <summary>
         /// 注册内部字段
-        /// TODO: 这里必须修改，改成让用户来添加，系统自动按字段名的约定来识别
         /// </summary>
         private void AddInternalFields()
         {

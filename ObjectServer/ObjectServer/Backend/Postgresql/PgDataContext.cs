@@ -38,7 +38,7 @@ namespace ObjectServer.Backend.Postgresql
         {
             EnsureConnectionOpened();
 
-            var dbUser = "objectserver"; //TODO: 改成可配置的
+            var dbUser = ObjectServerStarter.Configuration.DBUser;
             var sql = @"
                 SELECT datname FROM pg_database  
                     WHERE datdba = (SELECT DISTINCT usesysid FROM pg_user WHERE usename=@0) 

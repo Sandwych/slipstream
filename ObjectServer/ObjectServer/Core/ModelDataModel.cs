@@ -14,7 +14,6 @@ using ObjectServer.Backend;
 namespace ObjectServer.Core
 {
     /// <summary>
-    /// TODO 线程安全
     /// </summary>
     [ServiceObject]
     public sealed class ModelDataModel : TableModel
