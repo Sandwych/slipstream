@@ -143,7 +143,6 @@ namespace ObjectServer.Model
                 var opr = (string)domainItem[1];
                 var value = domainItem[2];
 
-                //TODO: 考虑单元运算符
                 var expFactory = s_oprWhereProcessorMapping[opr];
                 var exp = expFactory(field, value);
                 var bracketExp = new BracketedExpression(exp);
