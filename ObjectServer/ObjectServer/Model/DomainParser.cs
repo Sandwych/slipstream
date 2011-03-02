@@ -12,9 +12,64 @@ namespace ObjectServer.Model
     {
         public static readonly string[] Operators = new string[]
         {
-            "=", "!=", ">", ">=", "<", "<=", "in", "not in", 
-            "like", "not like", "childof"
+            "=", "!=", ">", ">=", "<", "<=", "in", "!in", 
+            "like", "!like", "childof"
         };
+
+        public static readonly Dictionary<string, Func<string, object, IExpression>> s_oprWhereProcessorMapping
+            = new Dictionary<string, Func<string, object, IExpression>>()
+            {
+                {"=", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, "=", value); 
+                }},
+
+                {"!=", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, "<>", value); 
+                }},
+
+                {">", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, ">", value); 
+                }},
+
+                {"<", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, "<", value); 
+                }},
+
+                {">=", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, ">=", value); 
+                }},
+
+                {"<=", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, "<=", value); 
+                }},
+
+                {"in", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, "IN", value); 
+                }},
+                
+                {"!in", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, "NOT IN", value); 
+                }},
+
+                {"like", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, "LIKE", value); 
+                }},
+
+                {"!like", (fieldName, value) => {
+                    return new BinaryExpression(fieldName, "NOT LIKE", value); 
+                }},
+
+                /*
+                {"childof", (fieldName, value) => {
+                    var expLeft = new BinaryExpression("_left", ">", 
+                    return new BinaryExpression(fieldName, "NOT LIKE", value); 
+                }},
+                 */
+
+                //TODO: childof
+                //select * from Nodes where Left > n.Left and Left < n.Right
+
+            };
 
         private static readonly IExpression s_trueExp = new ValueExpression(true);
 
@@ -60,38 +115,6 @@ namespace ObjectServer.Model
             return this.domain.Exists(exp => (string)exp[0] == field);
         }
 
-        public string ToSql()
-        {
-            var sqlBuilder = new StringBuilder();
-            var first = true;
-            foreach (var exp in this.domain)
-            {
-                if (first)
-                {
-                    first = false;
-                }
-                else
-                {
-                    sqlBuilder.Append(" and ");
-                }
-
-                var opr = (string)exp[1];
-                var field = (string)exp[0];
-                var value = exp[2];
-
-                sqlBuilder.Append(" (");
-                sqlBuilder.Append(field);
-                sqlBuilder.Append(' ');
-                sqlBuilder.Append(opr);
-                sqlBuilder.Append(' ');
-                AddValue(sqlBuilder, field, value);
-                sqlBuilder.Append(") ");
-            }
-
-            return sqlBuilder.ToString();
-        }
-
-
         public IExpression ToExpressionTree()
         {
             var expressions = new List<IExpression>(this.domain.Count + 1);
@@ -99,11 +122,12 @@ namespace ObjectServer.Model
             foreach (var domainItem in this.domain)
             {
                 var field = (string)domainItem[0];
-                var opr = (string)domainItem[1];                
+                var opr = (string)domainItem[1];
                 var value = domainItem[2];
 
                 //考虑单元运算符
-                var exp = new BinaryExpression(field, opr, value);
+                var expFactory = s_oprWhereProcessorMapping[opr];
+                var exp = expFactory(field, value);
                 expressions.Add(exp);
             }
             expressions.Add(s_trueExp);
@@ -118,40 +142,6 @@ namespace ObjectServer.Model
             return whereExps[0];
         }
 
-        private void AddValue(StringBuilder sb, string field, object value)
-        {
-            var fieldType = this.model.Fields[field].Type;
 
-            switch (fieldType)
-            {
-                case FieldType.Text:
-                case FieldType.Chars:
-                    var str = (string)value;
-                    str.Replace("'", "");
-                    sb.Append("'");
-                    sb.Append(str);
-                    sb.Append("'");
-                    break;
-
-                case FieldType.ManyToOne:
-                case FieldType.BigInteger:
-                case FieldType.Integer:
-                case FieldType.Float:
-                case FieldType.Money:
-                case FieldType.Boolean:
-                    var numStr = value.ToString().Replace("'", "");
-                    sb.Append(numStr);
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-
-            }
-        }
-
-        private void AddOperator(StringBuilder sb, string field, string opr)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

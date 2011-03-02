@@ -76,19 +76,21 @@ namespace ObjectServer.Json
                 case JsonToken.Boolean:
                 case JsonToken.Bytes:
                 case JsonToken.Date:
-                case JsonToken.Null:
                 case JsonToken.Float:
                 case JsonToken.Integer:
                 case JsonToken.String:
                     result = reader.Value;
                     break;
 
+                case JsonToken.Null:
+                    result = null;
+                    break;
 
                 case JsonToken.Undefined:
                 case JsonToken.None:
                 default:
                     throw new NotSupportedException(
-                        "Not supported JSON token type: " + reader.TokenType.ToString());
+                        "Unsupported JSON token type: " + reader.TokenType.ToString());
             }
 
             return result;
@@ -98,6 +100,7 @@ namespace ObjectServer.Json
         {
             while (reader.Read() && reader.TokenType != JsonToken.Comment)
             {
+                //do nothing
             }
         }
 
