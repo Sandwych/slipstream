@@ -10,6 +10,7 @@ using System.Reflection;
 
 using ObjectServer.Backend;
 using ObjectServer.Utility;
+using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
@@ -152,7 +153,7 @@ namespace ObjectServer.Model
             }
 
             var now = DateTime.Now;
-            if(this.ContainsField(CreatedTimeField))
+            if (this.ContainsField(CreatedTimeField))
             {
                 values[CreatedTimeField] = now;
             }
@@ -238,7 +239,7 @@ namespace ObjectServer.Model
             //处理最近更新用户与最近更新时间字段            
             if (this.ContainsField(ModifiedTimeField))
             {
-                record[ModifiedTimeField] = DateTime.Now;                
+                record[ModifiedTimeField] = DateTime.Now;
             }
             if (this.ContainsField(ModifiedUserField))
             {
@@ -246,35 +247,40 @@ namespace ObjectServer.Model
             }
 
 
+            //TODO 处理复杂字段
             //检查字段
 
             //TODO: 并发检查，处理 _version 字段
             //客户端也需要提供 _version 字段
-            //TODO 处理复杂字段
-            var values = new object[record.Count];
-
-            var sbFieldValues = new StringBuilder(15 * record.Count);
-            bool isFirstLine = true;
+            var columns = new List<IBinaryExpression>(record.Count);
             int i = 0;
-            foreach (var pair in record)
+            var args = new List<object>(record.Count);
+            foreach (var p in record)
             {
-                if (!isFirstLine)
-                {
-                    sbFieldValues.Append(", ");
-                    isFirstLine = false;
-                }
-                values[i] = pair.Value;
-                sbFieldValues.AppendFormat("{0}=@{1}", pair.Key, i);
-                i++;
+                var exp = new BinaryExpression(
+                    new IdentifierExpression(p.Key),
+                    ExpressionOperator.EqualOperator,
+                    new ParameterExpression("@" + i.ToString()));
+                columns.Add(exp);
+                args.Add(p.Value);
+
+                ++i;
             }
 
-            var sql = string.Format(
-                "UPDATE \"{0}\" SET {1} WHERE id = {2}",
-                this.TableName,
-                sbFieldValues.ToString(),
-                id);
+            var whereExp = new BinaryExpression(
+                new AliasExpression("id"),
+                ExpressionOperator.EqualOperator,
+                new ValueExpression(id));
 
-            ctx.Database.DataContext.Execute(sql, values);
+            var updateStatement = new UpdateStatement(
+                new AliasExpression(this.TableName),
+                new SetClause(columns),
+                new WhereClause(whereExp));
+
+            var sql = updateStatement.ToString();
+            Console.WriteLine(sql);
+
+            ctx.Database.DataContext.Execute(sql, args.ToArray());
         }
 
         [ServiceMethod]

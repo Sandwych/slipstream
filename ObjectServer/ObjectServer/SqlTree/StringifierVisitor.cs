@@ -258,6 +258,14 @@ foreach (var col in node.Expressions)
         }
 
 
+        public override void VisitOn(ParameterExpression node)
+        {
+            base.VisitOn(node);
+            this.sqlBuilder.Append(node.Parameter);
+        }
+
+
+
         #endregion
     }
 }

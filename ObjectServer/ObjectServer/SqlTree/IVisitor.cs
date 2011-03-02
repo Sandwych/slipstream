@@ -91,5 +91,10 @@ namespace ObjectServer.SqlTree
         void VisitBefore(SetClause node);
         void VisitOn(SetClause node);
         void VisitAfter(SetClause node);
+
+
+        void VisitBefore(ParameterExpression node);
+        void VisitOn(ParameterExpression node);
+        void VisitAfter(ParameterExpression node);
     }
 }

@@ -211,6 +211,15 @@ namespace ObjectServer.SqlTree
             this.Pop();
         }
 
+
+        public virtual void VisitBefore(ParameterExpression node) { this.Push(node); }
+        public virtual void VisitOn(ParameterExpression node) { }
+        public virtual void VisitAfter(ParameterExpression node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
         #endregion
     }
 }

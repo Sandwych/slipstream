@@ -130,6 +130,7 @@ namespace ObjectServer.Backend
             }
         }
 
+
         public virtual List<Dictionary<string, object>> QueryAsDictionary(
             string commandText, params object[] args)
         {
@@ -162,6 +163,14 @@ namespace ObjectServer.Backend
                 return rows;
             }
         }
+
+        public virtual List<DynamicRecord> QueryAsDynamic(string commandText, params object[] args)
+        {
+            var dicts = QueryAsDictionary(commandText, args);
+
+            return dicts.Select(r => new DynamicRecord(r)).ToList();
+        }
+
 
         #endregion
 

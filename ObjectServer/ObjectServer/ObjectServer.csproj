@@ -129,6 +129,7 @@
     <Compile Include="Backend\DataContextBase.cs" />
     <Compile Include="Backend\DatabaseType.cs" />
     <Compile Include="Backend\DataProvider.cs" />
+    <Compile Include="Backend\DynamicRecord.cs" />
     <Compile Include="Backend\IDataContext.cs" />
     <Compile Include="Backend\IDataProvider.cs" />
     <Compile Include="Backend\ISqlTypeConverter.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="Sessions\Session.cs" />
     <Compile Include="Sessions\SessionStore.cs" />
     <Compile Include="SqlTree\AliasExpressionList.cs" />
+    <Compile Include="SqlTree\ParameterExpression.cs" />
     <Compile Include="SqlTree\NodeExtensions.cs" />
     <Compile Include="SqlTree\SetClause.cs" />
     <Compile Include="SqlTree\UpdateStatement.cs" />
