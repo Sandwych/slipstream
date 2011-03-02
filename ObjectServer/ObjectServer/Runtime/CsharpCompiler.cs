@@ -36,7 +36,7 @@ namespace ObjectServer.Runtime
         {
             var additionalOptions = new Dictionary<string, string>() 
             {
-                { "CompilerVersion", "v3.5" } 
+                { "CompilerVersion", "v4.0" } 
             };
             return new CSharpCodeProvider(additionalOptions);
         }
