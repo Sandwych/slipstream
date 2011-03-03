@@ -12,6 +12,7 @@ namespace ObjectServer.Model
         {
             this.Label = string.Empty;
             this.Required = false;
+            this.Lazy = false;
         }
 
         public MetaField(string name, FieldType type)
@@ -64,6 +65,8 @@ namespace ObjectServer.Model
         public virtual bool Internal { get; set; }
 
         public virtual bool Readonly { get; set; }
+
+        public virtual bool Lazy { get; set; }
 
         public virtual IDictionary<string, string> Options
         {

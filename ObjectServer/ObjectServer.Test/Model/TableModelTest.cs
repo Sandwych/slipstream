@@ -165,12 +165,13 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Read_nullable_one_to_many_field()
         {
+            var masterFields = new object[] { "name", "children" };
             var master = new Dictionary<string, object>();
 
             var id = proxy.CreateModel(this.SessionId, "test.master", master);
 
             var masterRecords = proxy.ReadModel(this.SessionId, "test.master",
-                new object[] { id }, null);
+                new object[] { id }, masterFields);
             var record = masterRecords[0];
 
             Assert.IsInstanceOf<object[]>(record["children"]);

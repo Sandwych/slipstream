@@ -23,7 +23,7 @@ namespace ObjectServer
         {
             using (var callingContext = new ContextScope(dbName))
             {
-                var userModel = callingContext.Database.ServiceObjects.Resolve(UserModel.ModelName);
+                var userModel = callingContext.Database.Resources.Resolve(UserModel.ModelName);
                 var method = userModel.GetServiceMethod("LogOn");
                 return (string)ExecuteTransactional(
                     callingContext, userModel, method, callingContext, dbName, username, password);
@@ -38,7 +38,7 @@ namespace ObjectServer
             {
                 callingContext.Database.DataContext.Open();
 
-                var userModel = (UserModel)callingContext.Database.ServiceObjects.Resolve(UserModel.ModelName);
+                var userModel = (UserModel)callingContext.Database.Resources.Resolve(UserModel.ModelName);
                 userModel.LogOut(callingContext, sessionId);
             }
         }
@@ -68,7 +68,7 @@ namespace ObjectServer
             var gsid = new Guid(sessionId);
             using (var callingContext = new ContextScope(gsid))
             {
-                var obj = callingContext.Database.ServiceObjects.Resolve(resource);
+                var obj = callingContext.Database.Resources.Resolve(resource);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[parameters.Length + 1];
                 internalArgs[0] = callingContext;

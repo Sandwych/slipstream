@@ -6,7 +6,7 @@ using System.Dynamic;
 
 namespace ObjectServer.Model
 {
-    public class BrowsableModel : DynamicObject
+    public sealed class BrowsableModel : DynamicObject
     {
         private Dictionary<string, object> record;
         private IModel metaModel;
@@ -56,7 +56,7 @@ namespace ObjectServer.Model
         private object GetManyToOneField(IMetaField metaField)
         {
             var destModelName = metaField.Relation;
-            var destMetaModel = (IModel)this.context.Database.ServiceObjects.Resolve(destModelName);
+            var destMetaModel = (IModel)this.context.Database.Resources.Resolve(destModelName);
             var fieldValue = (object[])this.record[metaField.Name];
             var destIds = new object[] { fieldValue[0] };
             //查询 ManyToOne 字段
@@ -67,7 +67,7 @@ namespace ObjectServer.Model
         private object GetOneToManyOrManyToManyField(IMetaField metaField)
         {
             var targetModelName = metaField.Relation;
-            var targetModel = (IModel)this.context.Database.ServiceObjects.Resolve(targetModelName);
+            var targetModel = (IModel)this.context.Database.Resources.Resolve(targetModelName);
             var selfId = this.record["id"];
             //TODO: 下面的条件还不够，差 active 等等
             var domain = new object[][] { new object[] { metaField.RelatedField, "=", selfId } };

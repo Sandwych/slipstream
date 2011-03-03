@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace ObjectServer.Test.Web
 {
-    [TestFixture]
+    [Ignore]
     public class JsonSerializedCallingTests : WebTestBase
     {
         [Ignore]

@@ -20,6 +20,7 @@ namespace ObjectServer.Model
         string RelatedField { get; set; }
         bool Internal { get; }
         bool Readonly { get; set; }
+        bool Lazy { get; set; }
 
         IDictionary<string, string> Options { get; }
 

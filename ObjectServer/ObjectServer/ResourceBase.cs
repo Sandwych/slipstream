@@ -91,7 +91,7 @@ namespace ObjectServer
 
         public virtual void Initialize(IDatabase db)
         {
-            this.Pool = db.ServiceObjects;
+            this.Pool = db.Resources;
         }
 
         public string Name { get; private set; }

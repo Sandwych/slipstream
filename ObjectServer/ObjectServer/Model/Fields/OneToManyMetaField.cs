@@ -12,13 +12,14 @@ namespace ObjectServer.Model
         {
             this.Relation = childModel;
             this.RelatedField = relatedField;
+            this.Lazy = true;
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
            IContext ctx, List<Dictionary<string, object>> records)
         {
             //查询字表
-            var childModel = (TableModel)ctx.Database.ServiceObjects.Resolve(this.Relation);
+            var childModel = (TableModel)ctx.Database.Resources.Resolve(this.Relation);
             //TODO 权限等处理
 
             var children = new Dictionary<long, object[]>();

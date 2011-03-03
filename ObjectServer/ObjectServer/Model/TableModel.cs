@@ -290,7 +290,7 @@ namespace ObjectServer.Model
                     verExp);
 
                 //版本号也必须更新
-                record[VersionFieldName] = version + 1; 
+                record[VersionFieldName] = version + 1;
             }
 
             var updateStatement = new UpdateStatement(
@@ -331,10 +331,11 @@ namespace ObjectServer.Model
                 throw new ArgumentException("'ids' cannot be null", "ids");
             }
 
-            var allFields = new List<string>();
+            IList<string> allFields;
             if (fields == null || fields.Length == 0)
             {
-                allFields.AddRange(this.Fields.Keys);
+                allFields = this.Fields.Where(p => !p.Value.Lazy)
+                    .Select(p => p.Value.Name).ToList();
             }
             else
             {
@@ -342,8 +343,7 @@ namespace ObjectServer.Model
                 var userFields = fields.Select(o => (string)o);
                 this.VerifyFields(userFields);
 
-                allFields.Capacity = fields.Count();
-                allFields.AddRange(userFields);
+                allFields = userFields.ToList();
             }
 
             if (!allFields.Contains("id"))
