@@ -18,8 +18,9 @@ namespace ObjectServer
             }
 
             var service = ObjectServerStarter.ExportedService;
+            this.Service = service;
 
-            this.SessionId = service.LogOn("objectserver", "root", "root");
+            this.SessionId = this.Service.LogOn("objectserver", "root", "root");
         }
 
         [TestFixtureTearDown]
@@ -30,6 +31,8 @@ namespace ObjectServer
         }
 
         public string SessionId { get; private set; }
+
+        public IExportedService Service { get; private set; }
 
     }
 }

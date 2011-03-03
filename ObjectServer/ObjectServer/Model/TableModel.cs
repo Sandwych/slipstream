@@ -409,6 +409,12 @@ namespace ObjectServer.Model
         #endregion
 
 
+        public virtual dynamic Browse(IContext callingContext, object id)
+        {
+            var record = this.Read(callingContext, new object[] { id }, null)[0];
+            return new BrowsableModel(callingContext, this, record);
+        }
+
         private IDictionary<long, string> DefaultNameGetter(IContext callingContext, object[] ids)
         {
             var result = new Dictionary<long, string>(ids.Length);

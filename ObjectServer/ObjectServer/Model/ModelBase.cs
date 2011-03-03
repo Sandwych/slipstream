@@ -10,7 +10,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer.Model
 {
-    public abstract class ModelBase : ResourceBase
+    public abstract class ModelBase :  ResourceBase
     {
         private readonly IMetaFieldCollection declaredFields =
             new MetaFieldCollection();
@@ -30,6 +30,7 @@ namespace ObjectServer.Model
         {
             base.Initialize(db);
 
+            //TODO: 移到 ResourceBase 里
             //检测此模型是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(\"id\") FROM core_model WHERE name=@0";
             var count = (long)db.DataContext.QueryValue(sql, this.Name);
@@ -82,7 +83,6 @@ namespace ObjectServer.Model
             return query.Distinct().ToArray();
         }
 
-
         public IMetaFieldCollection Fields { get { return this.declaredFields; } }
 
         protected void VerifyFields(IEnumerable<string> fields)
@@ -95,7 +95,6 @@ namespace ObjectServer.Model
                 throw new ArgumentException("Bad field name", "fields");
             }
         }
-
 
     }
 }

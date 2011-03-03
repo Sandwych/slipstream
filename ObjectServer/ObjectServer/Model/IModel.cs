@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Dynamic;
 
 namespace ObjectServer.Model
 {
@@ -23,5 +24,7 @@ namespace ObjectServer.Model
         void Write(IContext callingContext, object id, IDictionary<string, object> record);
         Dictionary<string, object>[] Read(IContext callingContext, object[] ids, object[] fields);
         void Delete(IContext callingContext, object[] ids);
+
+        dynamic Browse(IContext callingContext, object id);
     }
 }

@@ -57,6 +57,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\castle-core\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -162,6 +163,7 @@
     <Compile Include="IDatabase.cs" />
     <Compile Include="IGlobalObject.cs" />
     <Compile Include="IResourceContainer.cs" />
+    <Compile Include="Model\BrowsableModel.cs" />
     <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldExtensions.cs" />
