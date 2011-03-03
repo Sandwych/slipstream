@@ -14,7 +14,7 @@ namespace ObjectServer.Model
 
         public static IEnumerable<IMetaField> GetAllStorableFields(this IModel model)
         {
-            return model.Fields.Values.Where(f => f.IsStorable() && f.Name != "id");
+            return model.Fields.Values.Where(f => f.IsColumn() && f.Name != "id");
         }
 
     }

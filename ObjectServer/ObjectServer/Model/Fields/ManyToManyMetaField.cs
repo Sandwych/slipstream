@@ -51,9 +51,15 @@ namespace ObjectServer.Model
             return result;
         }
 
-        public override bool IsStorable()
+        public override bool IsColumn()
         {
             return false;
+        }
+
+        public override bool Readonly
+        {
+            get { return false; }
+            set { throw new NotImplementedException(); }
         }
 
         public override ObjectServer.Model.ReferentialAction ReferentialAction

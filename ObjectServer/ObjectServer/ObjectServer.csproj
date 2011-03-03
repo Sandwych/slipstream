@@ -190,7 +190,6 @@
     <Compile Include="Module\ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="Exceptions\ServiceException.cs" />
-    <Compile Include="ServiceObjectExtensions.cs" />
     <Compile Include="Sessions\Session.cs" />
     <Compile Include="Sessions\SessionStore.cs" />
     <Compile Include="SqlTree\AliasExpressionList.cs" />

@@ -81,7 +81,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public override bool IsStorable()
+        public override bool IsColumn()
         {
             return !this.Functional;
         }

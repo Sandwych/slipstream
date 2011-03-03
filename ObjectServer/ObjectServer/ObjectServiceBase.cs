@@ -19,6 +19,7 @@ namespace ObjectServer
 
         protected ObjectServiceBase(string name)
         {
+
             this.SetName(name);
 
             this.RegisterAllServiceMethods();
@@ -26,14 +27,14 @@ namespace ObjectServer
 
         private void SetName(string name)
         {
-            if (string.IsNullOrEmpty(name))
+            if (!NamingRule.IsValidServiceName(name))
             {
-                Logger.Error(() => "Model name cannot be empty");
-                throw new ArgumentNullException("value");
+                var msg = string.Format("Invalid service object name: '{0}'", name);
+                Logger.Error(() => msg);
+                throw new BadServiceObjectNameException(msg, name);
             }
 
             this.Name = name;
-            this.VerifyName();
 
             if (string.IsNullOrEmpty(this.Label))
             {
@@ -62,7 +63,7 @@ namespace ObjectServer
         {
             var parameters = mi.GetParameters();
             if (parameters.Length < 1
-                || parameters[0].ParameterType != typeof(IContext)               
+                || parameters[0].ParameterType != typeof(IContext)
                 || !mi.IsPublic)
             {
                 var msg = string.Format(

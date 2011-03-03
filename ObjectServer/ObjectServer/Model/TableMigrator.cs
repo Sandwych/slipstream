@@ -66,7 +66,7 @@ namespace ObjectServer.Model
             foreach (var pair in this.model.Fields)
             {
                 var field = pair.Value;
-                if (field.IsStorable() && !table.ColumnExists(field.Name))
+                if (field.IsColumn() && !table.ColumnExists(field.Name))
                 {
                     table.AddColumn(this.db.DataContext, field);
                 }

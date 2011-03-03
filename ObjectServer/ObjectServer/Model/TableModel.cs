@@ -325,7 +325,7 @@ namespace ObjectServer.Model
             //表里的列，也就是可以直接用 SQL 查的列
             var columnFields =
                 (from f in allFields
-                 where this.Fields[f].IsStorable()
+                 where this.Fields[f].IsColumn()
                  select f).ToArray();
 
             //.Where(f => !this.declaredFields[f].IsFunctionField);

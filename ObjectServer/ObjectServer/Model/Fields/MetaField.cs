@@ -63,6 +63,8 @@ namespace ObjectServer.Model
 
         public virtual bool Internal { get; set; }
 
+        public virtual bool Readonly { get; set; }
+
         public virtual IDictionary<string, string> Options
         {
             get
@@ -71,7 +73,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public abstract bool IsStorable();
+        public abstract bool IsColumn();
 
         public abstract ReferentialAction ReferentialAction { get; set; }
 

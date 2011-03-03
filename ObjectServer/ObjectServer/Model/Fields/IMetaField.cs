@@ -19,10 +19,15 @@ namespace ObjectServer.Model
         string OriginField { get; set; }
         string RelatedField { get; set; }
         bool Internal { get; }
+        bool Readonly { get; }
 
         IDictionary<string, string> Options { get; }
 
-        bool IsStorable();
+        /// <summary>
+        /// 是否是数据库列
+        /// </summary>
+        /// <returns></returns>
+        bool IsColumn();
 
         void Validate();
 
