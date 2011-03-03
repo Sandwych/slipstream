@@ -12,7 +12,7 @@ namespace ObjectServer.Model.Test
     {
 
         [Test]
-        public void TestBrowseManyToOneField()
+        public void Browse_many2one_and_one2many_fields()
         {
             var masterPropBag = new Dictionary<string, object>()
             {

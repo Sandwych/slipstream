@@ -12,7 +12,7 @@ namespace ObjectServer
     /// <summary>
     /// 但凡是需要 RPC 的方法都需要用此 scope 包裹
     /// </summary>
-    public class ContextScope : IContext
+    public sealed class ContextScope : IContext
     {
         private bool ownDb;
         /// <summary>
