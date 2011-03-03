@@ -1,0 +1,9 @@
+<PartCoverSettings>
+  <Target>D:\lib\NUnit-2.5.2.9222\bin\net-2.0\nunit.exe</Target>
+  <TargetWorkDir>D:\lib\NUnit-2.5.2.9222\bin\net-2.0</TargetWorkDir>
+  <TargetArgs>D:\dev\object-server\ObjectServer\ObjectServer.Test\ObjectServer.Test.nunit</TargetArgs>
+  <Rule>+[*]ObjectServer.*</Rule>
+  <Rule>-[*]*Test*</Rule>
+  <Rule>-[*]*Attribute</Rule>
+  <Rule>-[*]*Exception</Rule>
+</PartCoverSettings>
