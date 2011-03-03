@@ -29,5 +29,6 @@ namespace ObjectServer.Backend
 
         long NextSerial(string sequenceName);
         bool IsValidDatabase();
+        void LockTable(string tableName);
     }
 }

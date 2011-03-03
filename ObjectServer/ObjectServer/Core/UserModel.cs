@@ -21,7 +21,7 @@ namespace ObjectServer.Core
         public UserModel()
             : base(ModelName)
         {
-            Fields.BigInteger("_version").SetLabel("Version").SetRequired();
+            Fields.Version().SetLabel("Version");
             Fields.Chars("login").SetLabel("User Name").SetSize(64).SetRequired();
             Fields.Chars("password").SetLabel("Password").SetSize(40).SetRequired();
             Fields.Chars("salt").SetLabel("Salt").SetSize(64).SetRequired();

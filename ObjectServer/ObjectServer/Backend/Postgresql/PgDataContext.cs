@@ -117,5 +117,18 @@ namespace ObjectServer.Backend.Postgresql
             return serial;
         }
 
+        public override void LockTable(string tableName)
+        {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new ArgumentNullException("tableName");
+            }
+
+            var sql = string.Format(
+                "LOCK \"{0}\"", tableName);
+
+            this.Execute(sql);
+        }
+
     }
 }

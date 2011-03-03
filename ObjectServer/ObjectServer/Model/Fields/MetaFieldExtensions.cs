@@ -43,5 +43,17 @@ namespace ObjectServer.Model
             return f;
         }
 
+        public static IMetaField SetReadonly(this IMetaField f)
+        {
+            f.Readonly = true;
+            return f;
+        }
+
+        public static IMetaField SetNotReadonly(this IMetaField f)
+        {
+            f.Readonly = false;
+            return f;
+        }
+
     }
 }

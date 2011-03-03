@@ -234,6 +234,7 @@ namespace ObjectServer.Backend
         public abstract void Initialize();
         public abstract ITableContext CreateTableContext(string tableName);
         public abstract long NextSerial(string sequenceName);
+        public abstract void LockTable(string tableName);
 
         public virtual bool IsValidDatabase()
         {

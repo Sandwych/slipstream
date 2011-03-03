@@ -99,5 +99,13 @@ namespace ObjectServer.Model
             this.Add(name, field);
             return field;
         }
+
+        public IMetaField Version()
+        {
+            var field = new ScalarMetaField(ModelBase.VersionFieldName, FieldType.BigInteger);
+            field.Required = true;
+            this.Add(field.Name, field);
+            return field;
+        }
     }
 }

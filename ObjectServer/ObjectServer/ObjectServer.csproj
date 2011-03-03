@@ -151,6 +151,7 @@
     <Compile Include="Core\CronModel.cs" />
     <Compile Include="Core\ModelDataModel.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="Exceptions\ConcurrencyException.cs" />
     <Compile Include="Exceptions\ServiceObjectNotFoundException.cs" />
     <Compile Include="Exceptions\BadServiceObjectNameException.cs" />
     <Compile Include="Exceptions\MigrationException.cs" />
