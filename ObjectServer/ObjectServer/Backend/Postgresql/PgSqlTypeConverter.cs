@@ -26,7 +26,7 @@ namespace ObjectServer.Backend
                 { FieldType.Text, f => "TEXT" },
                 { FieldType.Binary, f =>  "BYTEA" },
                 { FieldType.ManyToOne, f => "INT8" },
-                { FieldType.Chars, f => string.Format("VARCHAR({0})", f.Size) },
+                { FieldType.Chars, f => f.Size > 0 ? string.Format("VARCHAR({0})", f.Size) : "VARCHAR" },
                 { FieldType.Enumeration, f => string.Format("VARCHAR({0})", f.Size) },
             };
 
