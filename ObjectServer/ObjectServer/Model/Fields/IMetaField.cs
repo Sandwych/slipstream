@@ -21,6 +21,7 @@ namespace ObjectServer.Model
         bool Internal { get; }
         bool Readonly { get; set; }
         bool Lazy { get; set; }
+        bool IsScalar { get; }
 
         IDictionary<string, string> Options { get; }
 

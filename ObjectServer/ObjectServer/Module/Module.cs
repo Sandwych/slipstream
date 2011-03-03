@@ -119,7 +119,7 @@ namespace ObjectServer
             foreach (var t in types)
             {
                 var obj = ResourceBase.CreateStaticObjectInstance(t);
-                objs.RegisterObject(obj);
+                objs.RegisterResource(obj);
             }
         }
 

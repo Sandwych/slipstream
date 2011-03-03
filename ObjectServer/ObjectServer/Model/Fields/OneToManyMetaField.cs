@@ -60,6 +60,11 @@ namespace ObjectServer.Model
             }
         }
 
+        public override bool IsScalar
+        {
+            get { return false; }
+        }
+
         public override ObjectServer.Model.ReferentialAction ReferentialAction
         {
             get

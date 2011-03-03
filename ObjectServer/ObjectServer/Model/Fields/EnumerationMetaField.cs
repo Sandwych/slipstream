@@ -52,6 +52,11 @@ namespace ObjectServer.Model
             return !this.Functional;
         }
 
+        public override bool IsScalar
+        {
+            get { return true; }
+        }
+
         public override ObjectServer.Model.ReferentialAction ReferentialAction
         {
             get

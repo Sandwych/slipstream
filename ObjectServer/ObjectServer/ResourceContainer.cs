@@ -16,7 +16,7 @@ namespace ObjectServer
 
     public sealed class ResourceContainer : IResourceContainer
     {
-        private IDictionary<string, IResource> objects =
+        private IDictionary<string, IResource> resources =
             new Dictionary<string, IResource>();
 
         private IDatabase database;
@@ -43,30 +43,35 @@ namespace ObjectServer
             }
         }
 
-        public void RegisterObject(IResource so)
+        public void RegisterResource(IResource res)
         {
             Debug.Assert(!this.initialized);
 
             lock (this)
             {
-                this.objects.Add(so.Name, so);
+                this.resources.Add(res.Name, res);
             }
         }
 
 
-        public IResource Resolve(string objName)
+        public IResource Resolve(string resName)
         {
             Debug.Assert(this.initialized);
 
-            if (!this.objects.ContainsKey(objName))
+            if (!this.resources.ContainsKey(resName))
             {
-                var msg = string.Format("Cannot found service object: '{0}'", objName);
+                var msg = string.Format("Cannot found service object: '{0}'", resName);
                 Logger.Error(() => msg);
 
-                throw new ServiceObjectNotFoundException(msg, objName);
+                throw new ServiceObjectNotFoundException(msg, resName);
             }
 
-            return this.objects[objName];
+            return this.resources[resName];
+        }
+
+        public IResource this[string resName]
+        {
+            get { return this.Resolve(resName); }
         }
 
         #endregion
@@ -76,7 +81,7 @@ namespace ObjectServer
             Debug.Assert(db != null);
             Debug.Assert(!this.initialized);
 
-            this.objects.Clear();
+            this.resources.Clear();
             Module.RegisterAllCoreObjects(this);
 
             ObjectServerStarter.Modules.UpdateModuleList(db.DataContext);
@@ -91,7 +96,7 @@ namespace ObjectServer
             //一次性初始化所有对象
             //obj.Initialize(db, pool);
             //TODO: 初始化非 IModel 对象
-            var objList = this.objects.Values.ToList();
+            var objList = this.resources.Values.ToList();
             DependencySort(objList);
 
             foreach (var m in objList)

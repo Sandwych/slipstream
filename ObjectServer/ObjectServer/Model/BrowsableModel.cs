@@ -33,24 +33,42 @@ namespace ObjectServer.Model
             }
 
             var metaField = metaModel.Fields[binder.Name];
-            if (metaField.IsColumn() && metaField.Type != FieldType.ManyToOne)
+
+            switch (metaField.Type)
             {
-                result = record[binder.Name];
-            }
-            else if (metaField.Type == FieldType.ManyToOne)
-            {
-                result = this.GetManyToOneField(metaField);
-            }
-            else if (metaField.Type == FieldType.OneToMany)
-            {
-                result = this.GetOneToManyOrManyToManyField(metaField);
-            }
-            else if (metaField.Type == FieldType.ManyToMany)
-            {
-                result = this.GetOneToManyOrManyToManyField(metaField);
+                case FieldType.Integer:
+                case FieldType.BigInteger:
+                case FieldType.Boolean:
+                case FieldType.Chars:
+                case FieldType.DateTime:
+                case FieldType.Decimal:
+                case FieldType.Money:
+                case FieldType.Text:
+                case FieldType.Binary:
+                case FieldType.Enumeration:
+                case FieldType.Float:
+                    result = this.GetScalarField(metaField);
+                    break;
+
+                case FieldType.OneToMany:
+                case FieldType.ManyToMany:
+                    result = this.GetOneToManyOrManyToManyField(metaField);
+                    break;
+
+                case FieldType.ManyToOne:
+                    result = this.GetManyToOneField(metaField);
+                    break;
+
+                default:
+                    throw new NotSupportedException();                     
             }
 
             return true;
+        }
+
+        private object GetScalarField(IMetaField metaField)
+        {
+            return this.record[metaField.Name];
         }
 
         private object GetManyToOneField(IMetaField metaField)
@@ -68,9 +86,9 @@ namespace ObjectServer.Model
         {
             var targetModelName = metaField.Relation;
             var targetModel = (IModel)this.context.Database.Resources.Resolve(targetModelName);
-            var selfId = this.record["id"];
-            //TODO: 下面的条件还不够，差 active 等等
-            var domain = new object[][] { new object[] { metaField.RelatedField, "=", selfId } };
+            var thisId = this.record["id"];
+            //TODO: 下面的条件可能还不够，差 active 等等
+            var domain = new object[][] { new object[] { metaField.RelatedField, "=", thisId } };
             var destIds = targetModel.Search(this.context, domain, 0, 0);
             var records = targetModel.Read(this.context, destIds, null);
             return records.Select(r => new BrowsableModel(this.context, targetModel, r)).ToArray();

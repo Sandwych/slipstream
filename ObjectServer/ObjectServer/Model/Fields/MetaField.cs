@@ -68,6 +68,8 @@ namespace ObjectServer.Model
 
         public virtual bool Lazy { get; set; }
 
+        public abstract bool IsScalar { get; }
+
         public virtual IDictionary<string, string> Options
         {
             get

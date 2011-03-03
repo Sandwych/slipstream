@@ -11,8 +11,9 @@ namespace ObjectServer
     {
         void Initialize();
 
-        void RegisterObject(IResource so);
+        void RegisterResource(IResource res);
 
         IResource Resolve(string objName);
+        IResource this[string resName] { get; }
     }
 }
