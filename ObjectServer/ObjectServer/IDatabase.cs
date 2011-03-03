@@ -9,7 +9,7 @@ namespace ObjectServer
 {
     public interface IDatabase : IDisposable, IGlobalObject
     {
-        IServiceContainer ServiceObjects { get; }
+        IResourceContainer ServiceObjects { get; }
         IDataContext DataContext { get; }
     }
 }

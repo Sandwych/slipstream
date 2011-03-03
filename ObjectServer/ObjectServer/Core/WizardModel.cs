@@ -7,16 +7,15 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Core
 {
-
     [Resource]
-    public sealed class ActionModel : TableModel
+    public sealed class WizardModel : TableModel
     {
 
-        public ActionModel()
-            : base("core.action")
+        public WizardModel()
+            : base("core.wizard")
         {
-
         }
+
 
     }
 }

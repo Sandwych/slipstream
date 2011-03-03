@@ -79,7 +79,7 @@ namespace ObjectServer
         #endregion
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Load(IServiceContainer pool)
+        public void Load(IResourceContainer pool)
         {
             Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
 
@@ -97,7 +97,7 @@ namespace ObjectServer
             Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
         }
 
-        private void LoadDynamicAssembly(IServiceContainer pool)
+        private void LoadDynamicAssembly(IResourceContainer pool)
         {
             Debug.Assert(pool != null);
 
@@ -106,7 +106,7 @@ namespace ObjectServer
             RegisterServiceObjectWithinAssembly(pool, a);
         }
 
-        private static void RegisterServiceObjectWithinAssembly(IServiceContainer objs, Assembly assembly)
+        private static void RegisterServiceObjectWithinAssembly(IResourceContainer objs, Assembly assembly)
         {
             Debug.Assert(objs != null);
             Debug.Assert(assembly != null);
@@ -118,7 +118,7 @@ namespace ObjectServer
 
             foreach (var t in types)
             {
-                var obj = ObjectServiceBase.CreateStaticObjectInstance(t);
+                var obj = ResourceBase.CreateStaticObjectInstance(t);
                 objs.RegisterObject(obj);
             }
         }
@@ -131,7 +131,7 @@ namespace ObjectServer
             var result = new List<Type>();
             foreach (var t in types)
             {
-                var assemblies = t.GetCustomAttributes(typeof(ServiceObjectAttribute), false);
+                var assemblies = t.GetCustomAttributes(typeof(ResourceAttribute), false);
                 if (assemblies.Length > 0)
                 {
                     result.Add(t);
@@ -203,7 +203,7 @@ namespace ObjectServer
         }
 
 
-        internal static void RegisterAllCoreObjects(IServiceContainer pool)
+        internal static void RegisterAllCoreObjects(IResourceContainer pool)
         {
             Debug.Assert(pool != null);
 

@@ -16,7 +16,7 @@ namespace ObjectServer.Core
     /// <summary>
     /// TODO 线程安全
     /// </summary>
-    [ServiceObject]
+    [Resource]
     public sealed class ModuleModel : TableModel
     {
         public const string ModelName = "core.module";

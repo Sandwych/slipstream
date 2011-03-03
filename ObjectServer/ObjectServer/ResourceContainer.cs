@@ -14,15 +14,15 @@ using ObjectServer.Utility;
 namespace ObjectServer
 {
 
-    public sealed class ServiceContainer : IServiceContainer
+    public sealed class ResourceContainer : IResourceContainer
     {
-        private IDictionary<string, IObjectService> objects =
-            new Dictionary<string, IObjectService>();
+        private IDictionary<string, IResource> objects =
+            new Dictionary<string, IResource>();
 
         private IDatabase database;
         private bool initialized;
 
-        public ServiceContainer(IDatabase db)
+        public ResourceContainer(IDatabase db)
         {
             this.database = db;
             this.initialized = false;
@@ -43,7 +43,7 @@ namespace ObjectServer
             }
         }
 
-        public void RegisterObject(IObjectService so)
+        public void RegisterObject(IResource so)
         {
             Debug.Assert(!this.initialized);
 
@@ -54,7 +54,7 @@ namespace ObjectServer
         }
 
 
-        public IObjectService Resolve(string objName)
+        public IResource Resolve(string objName)
         {
             Debug.Assert(this.initialized);
 
@@ -100,7 +100,7 @@ namespace ObjectServer
             }
         }
 
-        private static void DependencySort(IList<IObjectService> objList)
+        private static void DependencySort(IList<IResource> objList)
         {
             Debug.Assert(objList != null);
 

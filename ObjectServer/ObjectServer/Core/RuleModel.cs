@@ -7,7 +7,7 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Core
 {
-    [ServiceObject]
+    [Resource]
     public sealed class RuleModel : TableModel
     {
         public RuleModel()
@@ -18,7 +18,7 @@ namespace ObjectServer.Core
 
     }
 
-    [ServiceObject]
+    [Resource]
     public sealed class RuleLineModel : TableModel
     {
 

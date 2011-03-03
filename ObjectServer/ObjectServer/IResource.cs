@@ -9,7 +9,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface IObjectService
+    public interface IResource
     {
         void Initialize(IDatabase db);
 
@@ -21,7 +21,7 @@ namespace ObjectServer
 
         bool DatabaseRequired { get; }
 
-        IServiceContainer Pool { get; }
+        IResourceContainer Pool { get; }
 
         /// <summary>
         /// 此对象引用（依赖）的其它对象名称

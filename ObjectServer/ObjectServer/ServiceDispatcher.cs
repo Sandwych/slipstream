@@ -30,6 +30,7 @@ namespace ObjectServer
             }
         }
 
+
         public void LogOff(string sessionId)
         {
             var sgid = new Guid(sessionId);
@@ -42,18 +43,32 @@ namespace ObjectServer
             }
         }
 
+        /*
+        public string[] GetResourceNames(string sessionId)
+        {
+            var sgid = new Guid(sessionId);
+            using (var callingContext = new ContextScope(sgid))
+            {
+                //callingContext.Database.DataContext.Open();
+                callingContext.Database.ServiceObjects. 
+                
+                userModel.LogOut(callingContext, sessionId);
+            }
+        }*/
+
+
         public string GetVersion()
         {
             return StaticSettings.Version.ToString();
         }
 
         [CachedMethod(Timeout = 120)]
-        public object Execute(string sessionId, string objectName, string name, params object[] parameters)
+        public object Execute(string sessionId, string resource, string name, params object[] parameters)
         {
             var gsid = new Guid(sessionId);
             using (var callingContext = new ContextScope(gsid))
             {
-                var obj = callingContext.Database.ServiceObjects.Resolve(objectName);
+                var obj = callingContext.Database.ServiceObjects.Resolve(resource);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[parameters.Length + 1];
                 internalArgs[0] = callingContext;
@@ -72,7 +87,7 @@ namespace ObjectServer
 
 
         private static object ExecuteTransactional(
-            IContext ctx, IObjectService obj, MethodInfo method, params object[] internalArgs)
+            IContext ctx, IResource obj, MethodInfo method, params object[] internalArgs)
         {
             ctx.Database.DataContext.Open();
 
@@ -129,34 +144,34 @@ namespace ObjectServer
         #region Model methods
 
         [CachedMethod]
-        public long CreateModel(string sessionId, string objectName, IDictionary<string, object> propertyBag)
+        public long CreateModel(string sessionId, string modelName, IDictionary<string, object> propertyBag)
         {
-            return (long)Execute(sessionId, objectName, "Create", new object[] { propertyBag });
+            return (long)Execute(sessionId, modelName, "Create", new object[] { propertyBag });
         }
 
         [CachedMethod]
-        public object[] SearchModel(string sessionId, string objectName, object[] domain, long offset, long limit)
+        public object[] SearchModel(string sessionId, string modelName, object[] domain, long offset, long limit)
         {
-            return (object[])Execute(sessionId, objectName, "Search", new object[] { domain, offset, limit });
+            return (object[])Execute(sessionId, modelName, "Search", new object[] { domain, offset, limit });
         }
 
         [CachedMethod]
-        public Dictionary<string, object>[] ReadModel(string sessionId, string objectName, object[] ids, object[] fields)
+        public Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields)
         {
             return (Dictionary<string, object>[])Execute(
-                sessionId, objectName, "Read", new object[] { ids, fields });
+                sessionId, modelName, "Read", new object[] { ids, fields });
         }
 
         [CachedMethod]
-        public void WriteModel(string sessionId, string objectName, object id, IDictionary<string, object> record)
+        public void WriteModel(string sessionId, string modelName, object id, IDictionary<string, object> record)
         {
-            Execute(sessionId, objectName, "Write", new object[] { id, record });
+            Execute(sessionId, modelName, "Write", new object[] { id, record });
         }
 
         [CachedMethod]
-        public void DeleteModel(string sessionId, string objectName, object[] ids)
+        public void DeleteModel(string sessionId, string modelName, object[] ids)
         {
-            Execute(sessionId, objectName, "Delete", new object[] { ids });
+            Execute(sessionId, modelName, "Delete", new object[] { ids });
         }
 
         #endregion

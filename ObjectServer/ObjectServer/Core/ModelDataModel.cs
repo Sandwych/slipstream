@@ -15,7 +15,7 @@ namespace ObjectServer.Core
 {
     /// <summary>
     /// </summary>
-    [ServiceObject]
+    [Resource]
     public sealed class ModelDataModel : TableModel
     {
         public const string ModelName = "core.model_data";

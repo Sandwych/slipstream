@@ -10,7 +10,7 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Core
 {
-    [ServiceObject]
+    [Resource]
     public class ModelModel : TableModel
     {
         public ModelModel()

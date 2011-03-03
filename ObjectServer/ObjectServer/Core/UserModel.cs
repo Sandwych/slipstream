@@ -11,7 +11,7 @@ using ObjectServer.Backend;
 namespace ObjectServer.Core
 {
 
-    [ServiceObject]
+    [Resource]
     public sealed class UserModel : TableModel
     {
         public const string ModelName = "core.user";
@@ -193,7 +193,7 @@ namespace ObjectServer.Core
 
 
 
-    [ServiceObject]
+    [Resource]
     public sealed class UserGroupModel : TableModel
     {
 

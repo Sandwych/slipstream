@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public interface IModel : IObjectService
+    public interface IModel : IResource
     {
         IMetaFieldCollection Fields { get; }
 

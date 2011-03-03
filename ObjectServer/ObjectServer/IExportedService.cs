@@ -23,22 +23,24 @@ namespace ObjectServer
 
         void LogOff(string sessionId);
 
+        //string[] GetResourceNames(string sessionId);
+
         string GetVersion();
 
         #endregion
 
 
         object Execute(
-            string sessionId, string objectName, string name, params object[] parameters);
+            string sessionId, string resourceName, string name, params object[] parameters);
 
         string[] ListDatabases();
         void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword);
         void DeleteDatabase(string rootPasswordHash, string dbName);
 
-        long CreateModel(string sessionId, string objectName, IDictionary<string, object> propertyBag);
-        object[] SearchModel(string sessionId, string objectName, object[] domain, long offset, long limit);
-        Dictionary<string, object>[] ReadModel(string sessionId, string objectName, object[] ids, object[] fields);
-        void WriteModel(string sessionId, string objectName, object id, IDictionary<string, object> record);
-        void DeleteModel(string sessionId, string objectName, object[] ids);
+        long CreateModel(string sessionId, string modelName, IDictionary<string, object> propertyBag);
+        object[] SearchModel(string sessionId, string modelName, object[] domain, long offset, long limit);
+        Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields);
+        void WriteModel(string sessionId, string modelName, object id, IDictionary<string, object> record);
+        void DeleteModel(string sessionId, string modelName, object[] ids);
     }
 }

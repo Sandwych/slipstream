@@ -13,7 +13,7 @@ namespace ObjectServer.Test
     //我们故意反转依赖顺序进行声明，看系统能否处理
 
     //子表
-    [ServiceObject]
+    [Resource]
     public sealed class ChildObject : TableModel
     {
         public ChildObject()
@@ -26,7 +26,7 @@ namespace ObjectServer.Test
 
 
     //主表
-    [ServiceObject]
+    [Resource]
     public sealed class MasterObject : TableModel
     {
         public MasterObject()
@@ -38,7 +38,7 @@ namespace ObjectServer.Test
     }
 
 
-    [ServiceObject]
+    [Resource]
     public class TestObject : TableModel
     {
 

@@ -6,9 +6,9 @@ using System.Text;
 namespace ObjectServer
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class ServiceObjectAttribute : Attribute
+    public sealed class ResourceAttribute : Attribute
     {
-        public ServiceObjectAttribute()
+        public ResourceAttribute()
         {
         }
     }

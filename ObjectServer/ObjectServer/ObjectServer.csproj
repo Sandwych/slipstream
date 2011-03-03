@@ -143,6 +143,7 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Core\WizardModel.cs" />
     <Compile Include="Core\GroupModel.cs" />
     <Compile Include="Core\ActionModel.cs" />
     <Compile Include="Core\RuleModel.cs" />
@@ -160,7 +161,7 @@
     <Compile Include="Exceptions\DatabaseNotFoundException.cs" />
     <Compile Include="IDatabase.cs" />
     <Compile Include="IGlobalObject.cs" />
-    <Compile Include="IServiceContainer.cs" />
+    <Compile Include="IResourceContainer.cs" />
     <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldExtensions.cs" />
@@ -172,7 +173,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Exceptions\BadFieldNameException.cs" />
     <Compile Include="IExportedService.cs" />
-    <Compile Include="IObjectService.cs" />
+    <Compile Include="IResource.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="Model\DomainParser.cs" />
     <Compile Include="Model\NameGetter.cs" />
@@ -226,12 +227,12 @@
     <Compile Include="SqlTree\BracketedExpression.cs" />
     <Compile Include="SqlTree\OrderbyClause.cs" />
     <Compile Include="SqlTree\OrderbyItem.cs" />
-    <Compile Include="ObjectServiceBase.cs" />
-    <Compile Include="ServiceObjectAttribute.cs" />
+    <Compile Include="ResourceBase.cs" />
+    <Compile Include="ResourceAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Module\Module.cs" />
-    <Compile Include="ServiceContainer.cs" />
+    <Compile Include="ResourceContainer.cs" />
     <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="ObjectServerStarter.cs" />
     <Compile Include="DatabaseCollection.cs" />
@@ -286,6 +287,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Workflow\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

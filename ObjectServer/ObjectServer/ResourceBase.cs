@@ -12,12 +12,12 @@ namespace ObjectServer
     /// <summary>
     /// 适用于静态语言（非DLR）的服务对象基类
     /// </summary>
-    public abstract class ObjectServiceBase : IObjectService
+    public abstract class ResourceBase : IResource
     {
         private readonly IDictionary<string, MethodInfo> serviceMethods =
             new SortedList<string, MethodInfo>();
 
-        protected ObjectServiceBase(string name)
+        protected ResourceBase(string name)
         {
 
             this.SetName(name);
@@ -104,14 +104,14 @@ namespace ObjectServer
 
         public abstract string[] GetReferencedObjects();
 
-        public IServiceContainer Pool { get; private set; }
+        public IResourceContainer Pool { get; private set; }
 
 
         #region ServiceObject(s) factory methods
 
-        internal static IObjectService CreateStaticObjectInstance(Type t)
+        internal static IResource CreateStaticObjectInstance(Type t)
         {
-            var obj = Activator.CreateInstance(t) as IObjectService;
+            var obj = Activator.CreateInstance(t) as IResource;
             if (obj == null)
             {
                 var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
@@ -121,7 +121,7 @@ namespace ObjectServer
         }
 
         internal static T CreateStaticObjectInstance<T>()
-            where T : class, IObjectService
+            where T : class, IResource
         {
             return CreateStaticObjectInstance(typeof(T)) as T;
         }

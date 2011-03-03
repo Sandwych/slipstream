@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
 
-    [ServiceObject]
+    [Resource]
     public sealed class MenuModel : TableModel
     {
 

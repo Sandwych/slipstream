@@ -11,7 +11,7 @@ namespace ObjectServer.Core
     /// <summary>
     /// 用户组信息
     /// </summary>
-    [ServiceObject]
+    [Resource]
     public sealed class GroupModel : TableModel
     {
 
