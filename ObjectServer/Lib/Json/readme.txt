@@ -12,7 +12,7 @@ Json.NET makes working with JSON formatted data in .NET simple. Quickly read and
 -LINQ to JSON for reading and writing JSON 
 -Writes indented, easy to read JSON 
 -Convert JSON to and from XML 
--Supports Silverlight and the Compact Framework
+-Supports Silverlight and the Windows Phone
 
 
 
@@ -21,17 +21,24 @@ Versions:
 Json.NET comes in different versions for the various .NET frameworks.
 
 -DotNet:
-  .NET latest (3.5 SP1)
+  .NET latest (4.0)
+
+-DotNet35:
+  .NET 3.5 SP1, Mono
 
 -DotNet20:
   .NET 2.0
 
 -Silverlight:
-  Silverlight 3.0
+  Silverlight 4.0
 
--Compact:
-  Compact Framework 3.5
+-WindowsPhone:
+  Windows Phone 7
 
+Microsoft stopped support for the Compact Framework in Visual Studio 2010.
+For a Compact Framework 3.5 build download Json.NET 3.5.
+
+For a Silverlight 3.0 build down download Json.NET 3.5.
 
 
 Instructions:
