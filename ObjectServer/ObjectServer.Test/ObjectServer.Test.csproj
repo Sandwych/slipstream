@@ -98,6 +98,7 @@
     <Compile Include="Utility\DependencySorterTest.cs" />
     <Compile Include="Web\JsonSerializedCallingTests.cs" />
     <Compile Include="Web\WebTestBase.cs" />
+    <Content Include="ObjectServer.PartCover.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ObjectServer.Web\ObjectServer.Web.csproj">

@@ -17,6 +17,9 @@ namespace ObjectServer.Model
         bool CanWrite { get; }
         bool CanDelete { get; }
 
+        bool LogCreation { get; }
+        bool LogWriting { get; }
+
         NameGetter NameGetter { get; }
 
         object[] Search(IContext callingContext, object[] domain, long offset, long limit);

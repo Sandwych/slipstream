@@ -136,6 +136,13 @@ namespace ObjectServer
             Logger.Info(() => "System initialized.");
         }
 
+        public static void Shutdown()
+        {
+            if (s_instance.initialized)
+            {
+                s_instance.Dispose(true);
+            }
+        }
 
 
         public static bool Initialized

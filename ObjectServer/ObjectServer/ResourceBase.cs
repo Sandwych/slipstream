@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Dynamic;
 using System.Diagnostics;
 
 using ObjectServer.Backend;
@@ -12,7 +13,7 @@ namespace ObjectServer
     /// <summary>
     /// 适用于静态语言（非DLR）的服务对象基类
     /// </summary>
-    public abstract class ResourceBase : IResource
+    public abstract class ResourceBase : DynamicObject, IResource
     {
         private readonly IDictionary<string, MethodInfo> serviceMethods =
             new SortedList<string, MethodInfo>();
@@ -47,6 +48,21 @@ namespace ObjectServer
         public MethodInfo GetServiceMethod(string name)
         {
             return this.serviceMethods[name];
+        }
+
+        public override bool TryInvokeMember(System.Dynamic.InvokeMemberBinder binder, object[] args, out object result)
+        {
+            result = null;
+            MethodInfo methodInfo;
+            if (this.serviceMethods.TryGetValue(binder.Name, out methodInfo))
+            {
+                result = methodInfo.Invoke(this, args);
+                return true;
+            }
+            else
+            {
+                return base.TryInvokeMember(binder, args, out result);
+            }           
         }
 
         /// <summary>

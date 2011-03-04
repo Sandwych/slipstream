@@ -28,7 +28,7 @@ namespace ObjectServer
             this.initialized = false;
         }
 
-        #region IServiceContainer 成员
+        #region IResourceContainer 成员
 
         public void Initialize()
         {
@@ -54,7 +54,7 @@ namespace ObjectServer
         }
 
 
-        public IResource Resolve(string resName)
+        public dynamic Resolve(string resName)
         {
             Debug.Assert(this.initialized);
 
@@ -69,7 +69,7 @@ namespace ObjectServer
             return this.resources[resName];
         }
 
-        public IResource this[string resName]
+        public dynamic this[string resName]
         {
             get { return this.Resolve(resName); }
         }

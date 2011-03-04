@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Dynamic;
 
 using ObjectServer.Backend;
 
@@ -13,7 +14,7 @@ namespace ObjectServer
 
         void RegisterResource(IResource res);
 
-        IResource Resolve(string objName);
-        IResource this[string resName] { get; }
+        dynamic Resolve(string objName);
+        dynamic this[string resName] { get; }
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Data;
 using System.Reflection;
+using System.Dynamic;
 
 
 using ObjectServer.Backend;
@@ -31,6 +32,9 @@ namespace ObjectServer.Model
         public bool CanRead { get; protected set; }
         public bool CanWrite { get; protected set; }
         public bool CanDelete { get; protected set; }
+
+        public bool LogCreation { get; protected set; }
+        public bool LogWriting { get; protected set; }
 
         public bool Hierarchy { get; protected set; }
 
@@ -67,6 +71,8 @@ namespace ObjectServer.Model
             this.CanWrite = true;
             this.CanDelete = true;
             this.Hierarchy = false;
+            this.LogCreation = false;
+            this.LogWriting = false;
             this.SetName(name);
 
             Fields.DateTime(CreatedTimeField).SetLabel("Created");
@@ -138,7 +144,15 @@ namespace ObjectServer.Model
             //处理用户没有给的默认值
             this.AddDefaultValues(callingContext, values);
 
-            return DoCreate(callingContext, values);
+            var id = DoCreate(callingContext, values);
+
+            if (this.LogCreation)
+            {
+                //TODO: 可翻译的
+                this.AuditLog(callingContext, id, this.Label + " created");
+            }
+
+            return id;
         }
 
         private long DoCreate(IContext ctx, IDictionary<string, object> values)
@@ -310,13 +324,18 @@ namespace ObjectServer.Model
                     this.TableName, id);
                 throw new ConcurrencyException(msg);
             }
+
+            if (this.LogWriting)
+            {
+                AuditLog(ctx, (long)id, this.Label + " updated");
+            }
         }
 
         [ServiceMethod]
         public virtual Dictionary<string, object>[] Read(
-            IContext callingContext, object[] ids, object[] fields)
+            IContext ctx, object[] ids, object[] fields)
         {
-            if (callingContext == null)
+            if (ctx == null)
             {
                 throw new ArgumentNullException("callingContext");
             }
@@ -365,7 +384,7 @@ namespace ObjectServer.Model
                 ids.ToCommaList());
 
             //先查找表里的简单字段数据
-            var records = callingContext.Database.DataContext.QueryAsDictionary(sql);
+            var records = ctx.Database.DataContext.QueryAsDictionary(sql);
 
             //处理特殊字段
             foreach (var fieldName in allFields)
@@ -376,7 +395,7 @@ namespace ObjectServer.Model
                     continue;
                 }
 
-                var fieldValues = f.GetFieldValues(callingContext, records);
+                var fieldValues = f.GetFieldValues(ctx, records);
                 foreach (var record in records)
                 {
                     var id = (long)record["id"];
@@ -436,6 +455,21 @@ namespace ObjectServer.Model
             }
 
             return result;
+        }
+
+        private void AuditLog(IContext callingContext, long id, string msg)
+        {
+
+            var logRecord = new Dictionary<string, object>()
+                {
+                    { "user", callingContext.Session.UserId },
+                    { "resource", this.Name },
+                    { "resource_id", id },
+                    { "description", msg }
+                };
+            var res = (IModel)callingContext.Database.Resources[Core.AuditLogModel.ModelName];
+            res.Create(callingContext, logRecord);
+
         }
 
     }
