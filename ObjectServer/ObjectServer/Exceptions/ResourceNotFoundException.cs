@@ -6,9 +6,9 @@ using System.Text;
 namespace ObjectServer
 {
     [Serializable]
-    public sealed class ServiceObjectNotFoundException : Exception
+    public sealed class ResourceNotFoundException : Exception
     {
-        public ServiceObjectNotFoundException(string msg, string objName)
+        public ResourceNotFoundException(string msg, string objName)
             : base(msg)
         {
             this.ObjectName = objName;

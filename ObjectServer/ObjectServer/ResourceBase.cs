@@ -32,7 +32,7 @@ namespace ObjectServer
             {
                 var msg = string.Format("Invalid service object name: '{0}'", name);
                 Logger.Error(() => msg);
-                throw new BadServiceObjectNameException(msg, name);
+                throw new BadResourceNameException(msg, name);
             }
 
             this.Name = name;
@@ -103,7 +103,6 @@ namespace ObjectServer
                 }
             }
         }
-
 
         public virtual void Initialize(IDatabase db)
         {

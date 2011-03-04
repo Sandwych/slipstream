@@ -21,12 +21,12 @@ namespace ObjectServer
 
         public string LogOn(string dbName, string username, string password)
         {
-            using (var callingContext = new ContextScope(dbName))
+            using (var ctx = new ContextScope(dbName))
             {
-                var userModel = callingContext.Database.Resources.Resolve(UserModel.ModelName);
+                var userModel = ctx.Database.Resources.Resolve(UserModel.ModelName);
                 var method = userModel.GetServiceMethod("LogOn");
                 return (string)ExecuteTransactional(
-                    callingContext, userModel, method, callingContext, dbName, username, password);
+                    ctx, userModel, method, ctx, dbName, username, password);
             }
         }
 
@@ -34,12 +34,12 @@ namespace ObjectServer
         public void LogOff(string sessionId)
         {
             var sgid = new Guid(sessionId);
-            using (var callingContext = new ContextScope(sgid))
+            using (var ctx = new ContextScope(sgid))
             {
-                callingContext.Database.DataContext.Open();
+                ctx.Database.DataContext.Open();
 
-                var userModel = (UserModel)callingContext.Database.Resources.Resolve(UserModel.ModelName);
-                userModel.LogOut(callingContext, sessionId);
+                var userModel = (UserModel)ctx.Database.Resources.Resolve(UserModel.ModelName);
+                userModel.LogOut(ctx, sessionId);
             }
         }
 
@@ -47,12 +47,12 @@ namespace ObjectServer
         public string[] GetResourceNames(string sessionId)
         {
             var sgid = new Guid(sessionId);
-            using (var callingContext = new ContextScope(sgid))
+            using (var ctx = new ContextScope(sgid))
             {
-                //callingContext.Database.DataContext.Open();
-                callingContext.Database.ServiceObjects. 
+                //ctx.Database.DataContext.Open();
+                ctx.Database.ServiceObjects. 
                 
-                userModel.LogOut(callingContext, sessionId);
+                userModel.LogOut(ctx, sessionId);
             }
         }*/
 
@@ -66,17 +66,17 @@ namespace ObjectServer
         public object Execute(string sessionId, string resource, string name, params object[] parameters)
         {
             var gsid = new Guid(sessionId);
-            using (var callingContext = new ContextScope(gsid))
+            using (var ctx = new ContextScope(gsid))
             {
-                var obj = callingContext.Database.Resources.Resolve(resource);
+                var obj = ctx.Database.Resources.Resolve(resource);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[parameters.Length + 1];
-                internalArgs[0] = callingContext;
+                internalArgs[0] = ctx;
                 parameters.CopyTo(internalArgs, 1);
 
                 if (obj.DatabaseRequired)
                 {
-                    return ExecuteTransactional(callingContext, obj, method, internalArgs);
+                    return ExecuteTransactional(ctx, obj, method, internalArgs);
                 }
                 else
                 {
@@ -114,9 +114,9 @@ namespace ObjectServer
 
             DataProvider.CreateDatabase(dbName);
 
-            using (var callingContext = new ContextScope(dbName))
+            using (var ctx = new ContextScope(dbName))
             {
-                callingContext.Database.DataContext.Initialize();
+                ctx.Database.DataContext.Initialize();
                 ObjectServerStarter.Databases.LoadDatabase(dbName);
             }
         }

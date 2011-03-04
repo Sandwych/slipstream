@@ -34,6 +34,6 @@ namespace ObjectServer.Model
         void Validate();
 
         Dictionary<long, object> GetFieldValues(
-            IContext callingContext, List<Dictionary<string, object>> records);
+            IContext ctx, List<Dictionary<string, object>> records);
     }
 }

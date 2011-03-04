@@ -22,7 +22,6 @@ namespace ObjectServer.Model
         public const string CreatedUserField = "_created_user";
         public const string ModifiedUserField = "_modified_user";
 
-
         private readonly List<IMetaField> modelFields =
             new List<IMetaField>();
 
@@ -75,11 +74,17 @@ namespace ObjectServer.Model
             this.LogWriting = false;
             this.SetName(name);
 
-            Fields.DateTime(CreatedTimeField).SetLabel("Created");
-            Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified");
+            Fields.DateTime(CreatedTimeField).SetLabel("Created")
+                .SetNotRequired().SetDefaultProc(ctx => DateTime.Now);
+
+            Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
+                .SetNotRequired().SetDefaultProc(ctx => DBNull.Value);
+
             Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
-                .SetNotRequired().SetReadonly();
-            Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator");
+                .SetNotRequired().SetReadonly().SetDefaultProc(ctx => ctx.Session.UserId);
+
+            Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
+                .SetNotRequired().SetDefaultProc(ctx => DBNull.Value);
         }
 
         private void SetName(string name)
@@ -108,8 +113,8 @@ namespace ObjectServer.Model
 
             var migrator = new TableMigrator(db, this);
             migrator.Migrate();
-        }
 
+        }
 
         #region Service Methods
 
@@ -132,7 +137,7 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual long Create(IContext callingContext, IDictionary<string, object> propertyBag)
+        public virtual long Create(IContext ctx, IDictionary<string, object> propertyBag)
         {
             if (!this.CanCreate)
             {
@@ -143,14 +148,14 @@ namespace ObjectServer.Model
             var values = new Dictionary<string, object>(propertyBag);
 
             //处理用户没有给的默认值
-            this.AddDefaultValues(callingContext, values);
+            this.AddDefaultValues(ctx, values);
 
-            var id = DoCreate(callingContext, values);
+            var id = DoCreate(ctx, values);
 
             if (this.LogCreation)
             {
                 //TODO: 可翻译的
-                this.AuditLog(callingContext, id, this.Label + " created");
+                this.AuditLog(ctx, id, this.Label + " created");
             }
 
             return id;
@@ -165,24 +170,6 @@ namespace ObjectServer.Model
             if (this.ContainsField(VersionFieldName))
             {
                 values.Add(VersionFieldName, 0);
-            }
-
-            var now = DateTime.Now;
-            if (this.ContainsField(CreatedTimeField))
-            {
-                values[CreatedTimeField] = now;
-            }
-            if (this.ContainsField(CreatedUserField))
-            {
-                values[CreatedUserField] = ctx.Session.UserId;
-            }
-            if (this.ContainsField(ModifiedTimeField))
-            {
-                values[ModifiedTimeField] = now;
-            }
-            if (this.ContainsField(ModifiedUserField))
-            {
-                values[ModifiedUserField] = ctx.Session.UserId;
             }
 
             var colValues = new object[values.Count];
@@ -229,7 +216,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValues(IContext callingContext, IDictionary<string, object> propertyBag)
+        private void AddDefaultValues(IContext ctx, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
                 this.Fields.Values.Where(
@@ -237,7 +224,7 @@ namespace ObjectServer.Model
 
             foreach (var df in defaultFields)
             {
-                propertyBag[df.Name] = df.DefaultProc(callingContext);
+                propertyBag[df.Name] = df.DefaultProc(ctx);
             }
         }
 
@@ -338,7 +325,7 @@ namespace ObjectServer.Model
         {
             if (ctx == null)
             {
-                throw new ArgumentNullException("callingContext");
+                throw new ArgumentNullException("ctx");
             }
 
             if (!this.CanRead)
@@ -408,18 +395,23 @@ namespace ObjectServer.Model
         }
 
         [ServiceMethod]
-        public virtual void Delete(IContext callingContext, object[] ids)
+        public virtual void Delete(IContext ctx, object[] ids)
         {
             if (!this.CanDelete)
             {
                 throw new NotSupportedException();
             }
 
+            if (ids == null || ids.Length == 0)
+            {
+                throw new ArgumentNullException("ids");
+            }
+
             var sql = string.Format(
                 "DELETE FROM \"{0}\" WHERE \"id\" IN ({1});",
                 this.TableName, ids.ToCommaList());
 
-            var rowCount = callingContext.Database.DataContext.Execute(sql);
+            var rowCount = ctx.Database.DataContext.Execute(sql);
             if (rowCount != ids.Count())
             {
                 throw new DataException();
@@ -429,18 +421,18 @@ namespace ObjectServer.Model
         #endregion
 
 
-        public virtual dynamic Browse(IContext callingContext, object id)
+        public virtual dynamic Browse(IContext ctx, object id)
         {
-            var record = this.Read(callingContext, new object[] { id }, null)[0];
-            return new BrowsableModel(callingContext, this, record);
+            var record = this.Read(ctx, new object[] { id }, null)[0];
+            return new BrowsableModel(ctx, this, record);
         }
 
-        private IDictionary<long, string> DefaultNameGetter(IContext callingContext, object[] ids)
+        private IDictionary<long, string> DefaultNameGetter(IContext ctx, object[] ids)
         {
             var result = new Dictionary<long, string>(ids.Length);
             if (this.Fields.ContainsKey("name"))
             {
-                var records = this.Read(callingContext, ids, new object[] { "id", "name" });
+                var records = this.Read(ctx, ids, new object[] { "id", "name" });
                 foreach (var r in records)
                 {
                     var id = (long)r["id"];
@@ -458,18 +450,18 @@ namespace ObjectServer.Model
             return result;
         }
 
-        private void AuditLog(IContext callingContext, long id, string msg)
+        private void AuditLog(IContext ctx, long id, string msg)
         {
 
             var logRecord = new Dictionary<string, object>()
                 {
-                    { "user", callingContext.Session.UserId },
+                    { "user", ctx.Session.UserId },
                     { "resource", this.Name },
                     { "resource_id", id },
                     { "description", msg }
                 };
-            var res = (IModel)callingContext.Database.Resources[Core.AuditLogModel.ModelName];
-            res.Create(callingContext, logRecord);
+            var res = (IModel)ctx.Database.Resources[Core.AuditLogModel.ModelName];
+            res.Create(ctx, logRecord);
 
         }
 

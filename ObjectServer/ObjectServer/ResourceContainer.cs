@@ -45,8 +45,6 @@ namespace ObjectServer
 
         public void RegisterResource(IResource res)
         {
-            Debug.Assert(!this.initialized);
-
             lock (this)
             {
                 this.resources.Add(res.Name, res);
@@ -56,14 +54,12 @@ namespace ObjectServer
 
         public dynamic Resolve(string resName)
         {
-            Debug.Assert(this.initialized);
-
             if (!this.resources.ContainsKey(resName))
             {
-                var msg = string.Format("Cannot found service object: '{0}'", resName);
+                var msg = string.Format("Cannot found resource: '{0}'", resName);
                 Logger.Error(() => msg);
 
-                throw new ServiceObjectNotFoundException(msg, resName);
+                throw new ResourceNotFoundException(msg, resName);
             }
 
             return this.resources[resName];

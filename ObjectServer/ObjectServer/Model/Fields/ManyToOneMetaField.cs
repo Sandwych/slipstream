@@ -40,7 +40,7 @@ namespace ObjectServer.Model
                     {
                         var id = (long)r["id"];
                         var masterId = (long)r[this.Name];
-                        result.Add(id, new object[] { masterId, masterNames[masterId] });
+                        result.Add(id, new object[2] { masterId, masterNames[masterId] });
                     }
                 }
                 else

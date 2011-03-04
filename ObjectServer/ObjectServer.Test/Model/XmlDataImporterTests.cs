@@ -25,7 +25,10 @@ namespace ObjectServer.Model.Test
                 //删除所有记录
                 dynamic testObjectModel = context.Database.Resources["test.test_object"];
                 var ids = testObjectModel.Search(context, null, 0, 0);
-                testObjectModel.Delete(context, ids);
+                if (ids.Length > 0)
+                {
+                    testObjectModel.Delete(context, ids);
+                }
 
                 var importer = new XmlDataImporter(context, "test");
 
@@ -34,8 +37,7 @@ namespace ObjectServer.Model.Test
                 ids = testObjectModel.Search(context, null, 0, 0);
                 Assert.AreEqual(3, ids.Length);
 
-                var fields = new object[] { "name", "address" };
-                var testObjectRecords = testObjectModel.Read(context, ids, fields);
+                var testObjectRecords = testObjectModel.Read(context, ids, null);
                 Assert.AreEqual("name1", testObjectRecords[0]["name"]);
             }
         }

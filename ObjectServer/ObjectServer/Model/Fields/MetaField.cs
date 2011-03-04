@@ -91,30 +91,30 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<long, object> GetFieldValues(
-            IContext callingContext, List<Dictionary<string, object>> records)
+            IContext ctx, List<Dictionary<string, object>> records)
         {
             if (this.Functional)
             {
-                return this.GetFieldValuesFunctional(callingContext, records);
+                return this.GetFieldValuesFunctional(ctx, records);
             }
             else
             {
-                return this.OnGetFieldValues(callingContext, records);
+                return this.OnGetFieldValues(ctx, records);
             }
         }
 
 
         protected abstract Dictionary<long, object> OnGetFieldValues(
-            IContext callingContext, List<Dictionary<string, object>> records);
+            IContext ctx, List<Dictionary<string, object>> records);
 
         #endregion
 
         private Dictionary<long, object> GetFieldValuesFunctional(
-            IContext callingContext, List<Dictionary<string, object>> records)
+            IContext ctx, List<Dictionary<string, object>> records)
         {
             var ids = records.Select(p => p["id"]).ToArray();
 
-            var result = this.Getter(callingContext, ids);
+            var result = this.Getter(ctx, ids);
 
             return result;
         }

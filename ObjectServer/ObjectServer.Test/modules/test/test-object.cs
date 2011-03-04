@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using System.Data;
-using System.Data.Common;
 
 using ObjectServer.Model;
 
@@ -66,22 +64,30 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod]
-        public virtual int GetSum(IContext callingContext)
+        public virtual int GetSum(IContext ctx)
         {
             return 1 + 1;
         }
 
-        public Dictionary<long, object> GetField3(IContext callingContext, object[] ids)
+        public Dictionary<long, object> GetField3(IContext ctx, object[] ids)
         {
             var fieldNames = new object[] { "field1", "field2" };
-            var values = base.Read(callingContext, ids, fieldNames);
+            var values = base.Read(ctx, ids, fieldNames);
             var rows = new Dictionary<long, object>(ids.Count());
             foreach (var r in values)
             {
                 var id = (long)r["id"];
-                var field1 = (int)r["field1"];
-                var field2 = (int)r["field2"];
-                rows[id] = field1 + field2;
+                var field1 = r["field1"];
+                var field2 = r["field2"];
+
+                if (field1 is DBNull || field2 is DBNull)
+                {
+                    rows[id] = DBNull.Value;
+                }
+                else
+                {
+                    rows[id] = (long)field1 + (long)field2;
+                }
             }
             return rows;
         }

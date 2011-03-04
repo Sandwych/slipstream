@@ -41,6 +41,7 @@ namespace ObjectServer.Model
         }
 
 
+
         /// <summary>
         /// 注册内部字段
         /// </summary>

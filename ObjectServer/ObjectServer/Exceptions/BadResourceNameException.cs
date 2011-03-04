@@ -6,9 +6,9 @@ using System.Text;
 namespace ObjectServer
 {
     [Serializable]
-    public sealed class BadServiceObjectNameException : Exception
+    public sealed class BadResourceNameException : Exception
     {
-        public BadServiceObjectNameException(string msg, string objName) :
+        public BadResourceNameException(string msg, string objName) :
             base(msg)
         {
             this.ObjectName = objName;

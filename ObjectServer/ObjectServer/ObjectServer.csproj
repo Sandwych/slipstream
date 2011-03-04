@@ -155,8 +155,8 @@
     <Compile Include="Core\ModelDataModel.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Exceptions\ConcurrencyException.cs" />
-    <Compile Include="Exceptions\ServiceObjectNotFoundException.cs" />
-    <Compile Include="Exceptions\BadServiceObjectNameException.cs" />
+    <Compile Include="Exceptions\ResourceNotFoundException.cs" />
+    <Compile Include="Exceptions\BadResourceNameException.cs" />
     <Compile Include="Exceptions\MigrationException.cs" />
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
     <Compile Include="Exceptions\BadServiceMethodException.cs" />

@@ -11,10 +11,11 @@
   
   <source-files>
     <file>test-object.cs</file>
+    <file>functional-field-object.cs</file>
   </source-files>
   
   <data-files>
-    <file>demo.xml</file> 
+    <file>demo.xml</file>
   </data-files>
   
 </module-metadata>

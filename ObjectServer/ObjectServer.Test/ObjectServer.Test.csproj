@@ -83,6 +83,7 @@
     <Compile Include="Core\UserTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
+    <Compile Include="Model\FunctionalFieldTests.cs" />
     <Compile Include="Model\SearchTests.cs" />
     <Compile Include="Model\TableModelTest.cs" />
     <EmbeddedResource Include="Model\data.xml">
@@ -92,6 +93,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Model\XmlDataImporterTests.cs" />
+    <Compile Include="modules\test\functional-field-object.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="modules\test\test-object.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

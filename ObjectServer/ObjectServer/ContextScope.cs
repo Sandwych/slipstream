@@ -16,7 +16,7 @@ namespace ObjectServer
     {
         private bool ownDb;
         /// <summary>
-        /// 安全的创建 CallingContext，会检查 session 等
+        /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
         public ContextScope(Guid sessionId)
@@ -29,7 +29,7 @@ namespace ObjectServer
             }
 
             Logger.Info(() =>
-                string.Format("CallingContext is opening for sessionId: [{0}]", sessionId));
+                string.Format("ContextScope is opening for sessionId: [{0}]", sessionId));
 
             this.Session = session;
             this.SessionStore.Pulse(session.Id);
@@ -40,13 +40,13 @@ namespace ObjectServer
         }
 
         /// <summary>
-        /// 直接建立 calling context，忽略 session 、登录等
+        /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
         public ContextScope(string dbName)
         {
             Logger.Info(() =>
-                string.Format("CallingContext is opening for database: [{0}]", dbName));
+                string.Format("ContextScope is opening for database: [{0}]", dbName));
 
             this.Session = new Session(dbName, "system", 0);
             this.SessionStore.PutSession(this.Session);
@@ -58,7 +58,7 @@ namespace ObjectServer
         public ContextScope(IDatabase db)
         {
             Logger.Info(() =>
-                string.Format("CallingContext is opening for DatabaseContext"));
+                string.Format("ContextScope is opening for DatabaseContext"));
 
             this.Session = new Session("", "system", 0);
             this.SessionStore.PutSession(this.Session);
@@ -88,7 +88,7 @@ namespace ObjectServer
                 this.Database.DataContext.Close();
             }
 
-            Logger.Info(() => "CallingContext closed");
+            Logger.Info(() => "ScopeContext closed");
         }
 
         #endregion

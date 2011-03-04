@@ -35,19 +35,19 @@ namespace ObjectServer.Core
         {
             base.Initialize(db);
 
-            using (var callingContext = new ContextScope(db))
+            using (var ctx = new ContextScope(db))
             {
                 //检测是否有 root 用户
                 var domain = new object[][] { new object[] { "login", "=", "root" } };
-                var users = this.Search(callingContext, domain, 0, 0);
+                var users = this.Search(ctx, domain, 0, 0);
                 if (users.Length <= 0)
                 {
-                    this.CreateRootUser(callingContext);
+                    this.CreateRootUser(ctx);
                 }
             }
         }
 
-        private void CreateRootUser(ContextScope callingCtx)
+        private void CreateRootUser(ContextScope ctx)
         {
             //创建 root 用户
             var rootPassword = ObjectServerStarter.Configuration.RootPassword;
@@ -57,10 +57,10 @@ namespace ObjectServer.Core
                         { "login", "root" },
                         { "password", rootPassword } ,
                         { "admin", true },
-                        { CreatedTimeField, DateTime.Now },
+                        { CreatedUserField, DBNull.Value }, //一定要覆盖掉默认设置，因为此时系统里还没有用户，取 Session 里的 UserId 是无意义的
                     };
 
-            this.Create(callingCtx, user);
+            this.Create(ctx, user);
         }
 
 
@@ -95,26 +95,26 @@ namespace ObjectServer.Core
         #region Service Methods
 
         [ServiceMethod]
-        public override long Create(IContext callingContext, IDictionary<string, object> values)
+        public override long Create(IContext ctx, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
 
-            return base.Create(callingContext, values2);
+            return base.Create(ctx, values2);
         }
 
         [ServiceMethod]
-        public override void Write(IContext callingContext, object id, IDictionary<string, object> record)
+        public override void Write(IContext ctx, object id, IDictionary<string, object> record)
         {
             IDictionary<string, object> values2 = HashPassword(record);
 
 
-            base.Write(callingContext, id, values2);
+            base.Write(ctx, id, values2);
         }
 
         [ServiceMethod]
-        public override Dictionary<string, object>[] Read(IContext callingContext, object[] ids, object[] fields)
+        public override Dictionary<string, object>[] Read(IContext ctx, object[] ids, object[] fields)
         {
-            var records = base.Read(callingContext, ids, fields);
+            var records = base.Read(ctx, ids, fields);
 
             //"salt" "password" 是敏感字段，不要让客户端获取
             foreach (var record in records)
@@ -135,18 +135,18 @@ namespace ObjectServer.Core
         }
 
         [ServiceMethod]
-        public string LogOn(IContext callingContext,
+        public string LogOn(IContext ctx,
             string database, string login, string password)
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
 
-            var users = base.Search(callingContext, domain, 0, 0);
+            var users = base.Search(ctx, domain, 0, 0);
             if (users.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);
             }
 
-            var user = base.Read(callingContext,
+            var user = base.Read(ctx,
                 new object[] { users[0] },
                 new object[] { "password", "salt" })[0];
 
@@ -170,7 +170,7 @@ namespace ObjectServer.Core
 
 
         [ServiceMethod]
-        public void LogOut(IContext callingContext, string sessionId)
+        public void LogOut(IContext ctx, string sessionId)
         {
             var sessGuid = new Guid(sessionId);
             ObjectServerStarter.SessionStore.Remove(sessGuid);
