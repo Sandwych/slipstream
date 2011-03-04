@@ -57,6 +57,7 @@ namespace ObjectServer.Core
                         { "login", "root" },
                         { "password", rootPassword } ,
                         { "admin", true },
+                        { CreatedTimeField, DateTime.Now },
                     };
 
             this.Create(callingCtx, user);

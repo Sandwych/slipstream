@@ -77,7 +77,8 @@ namespace ObjectServer.Model
 
             Fields.DateTime(CreatedTimeField).SetLabel("Created");
             Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified");
-            Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator");
+            Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
+                .SetNotRequired().SetReadonly();
             Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator");
         }
 

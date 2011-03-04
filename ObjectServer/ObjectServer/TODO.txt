@@ -27,3 +27,5 @@
 * Money 类型名称替换成 Decimal
 
 * 给字段属性加上 IsScalar IsLazy
+
+IMetaField 缺少 on delete
