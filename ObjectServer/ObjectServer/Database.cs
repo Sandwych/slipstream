@@ -73,7 +73,7 @@ namespace ObjectServer
             }
         }
 
-        public dynamic Resolve(string resName)
+        public dynamic GetResource(string resName)
         {
             if (!this.resources.ContainsKey(resName))
             {
@@ -88,7 +88,7 @@ namespace ObjectServer
 
         public dynamic this[string resName]
         {
-            get { return this.Resolve(resName); }
+            get { return this.GetResource(resName); }
         }
 
         #endregion

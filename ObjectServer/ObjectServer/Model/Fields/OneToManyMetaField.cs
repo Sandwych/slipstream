@@ -19,7 +19,7 @@ namespace ObjectServer.Model
            IContext ctx, List<Dictionary<string, object>> records)
         {
             //查询字表
-            var childModel = (TableModel)ctx.Database.Resolve(this.Relation);
+            var childModel = (TableModel)ctx.Database.GetResource(this.Relation);
             //TODO 权限等处理
 
             var children = new Dictionary<long, object[]>();

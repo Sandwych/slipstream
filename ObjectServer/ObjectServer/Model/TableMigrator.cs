@@ -48,7 +48,7 @@ namespace ObjectServer.Model
 
                 if (f.Type == FieldType.ManyToOne)
                 {
-                    var refModel = (TableModel)this.db.Resolve(f.Relation);
+                    var refModel = (TableModel)this.db.GetResource(f.Relation);
                     table.AddFK(db.DataContext, f.Name, refModel.TableName, ReferentialAction.SetNull);
                 }
             }

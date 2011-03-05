@@ -26,7 +26,7 @@ namespace ObjectServer
             {
                 ctx.Database.DataContext.Open();
 
-                dynamic userModel = ctx.Database.Resolve(UserModel.ModelName);
+                dynamic userModel = ctx.Database.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
                 
                 //用新 session 替换老 session
@@ -47,7 +47,7 @@ namespace ObjectServer
             {
                 ctx.Database.DataContext.Open();
 
-                dynamic userModel = ctx.Database.Resolve(UserModel.ModelName);
+                dynamic userModel = ctx.Database.GetResource(UserModel.ModelName);
                 userModel.LogOut(ctx, sessionId);
             }
         }
@@ -77,7 +77,7 @@ namespace ObjectServer
             var gsid = new Guid(sessionId);
             using (var ctx = new ContextScope(gsid))
             {
-                var obj = ctx.Database.Resolve(resource);
+                var obj = ctx.Database.GetResource(resource);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[parameters.Length + 1];
                 internalArgs[0] = ctx;

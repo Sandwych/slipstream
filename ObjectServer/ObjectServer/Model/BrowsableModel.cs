@@ -74,7 +74,7 @@ namespace ObjectServer.Model
         private object GetManyToOneField(IMetaField metaField)
         {
             var destModelName = metaField.Relation;
-            var destMetaModel = (IModel)this.context.Database.Resolve(destModelName);
+            var destMetaModel = (IModel)this.context.Database.GetResource(destModelName);
             var fieldValue = (object[])this.record[metaField.Name];
             var destIds = new object[] { fieldValue[0] };
             //查询 ManyToOne 字段
@@ -85,7 +85,7 @@ namespace ObjectServer.Model
         private object GetOneToManyOrManyToManyField(IMetaField metaField)
         {
             var targetModelName = metaField.Relation;
-            var targetModel = (IModel)this.context.Database.Resolve(targetModelName);
+            var targetModel = (IModel)this.context.Database.GetResource(targetModelName);
             var thisId = this.record["id"];
             //TODO: 下面的条件可能还不够，差 active 等等
             var domain = new object[][] { new object[] { metaField.RelatedField, "=", thisId } };
