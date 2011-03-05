@@ -26,19 +26,20 @@ namespace ObjectServer.Client
             }
         }
 
-        private Uri uri;
         private SynchronizationContext syncCtx;
 
         public JsonRpcClient(Uri uri)
         {
-            this.uri = uri;
+            this.Uri = uri;
         }
+
+        public Uri Uri { get; private set; }
 
         public IAsyncResult InvokeAsync(string method, object[] args, ResultHandler resultHandler)
         {
             var jreq = new JsonRpcRequest(this.CallCompleteHandler, method, args);
             this.syncCtx = SynchronizationContext.Current;
-            return jreq.Send(this.uri, resultHandler);
+            return jreq.Send(this.Uri, resultHandler);
         }
 
         private void CallCompleteHandler(JsonRpcResponse response, ResultHandler resultHandler)

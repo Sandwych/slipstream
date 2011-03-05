@@ -5,7 +5,6 @@
   xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
   xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm.Toolkit" 
   xmlns:appControls="clr-namespace:ObjectServer.Client.Agos.Controls"
-  xmlns:loginWindow="clr-namespace:ObjectServer.Client.Agos.LoginUI"
   xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input">
 
     <ResourceDictionary.MergedDictionaries>

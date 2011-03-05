@@ -42,6 +42,12 @@ namespace ObjectServer.Web
         }
 
         [JsonRpcMethod]
+        public string[] ListDatabases()
+        {
+            return this.service.ListDatabases();
+        }
+
+        [JsonRpcMethod]
         public object Execute(string sessionId, string objectName, string method, object[] parameters)
         {
             return this.service.Execute(sessionId, objectName, method, parameters);

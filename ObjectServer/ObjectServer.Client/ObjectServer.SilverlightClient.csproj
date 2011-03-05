@@ -63,6 +63,7 @@
     <Compile Include="JsonRpc\JsonRpcRequest.cs" />
     <Compile Include="JsonRpc\JsonRpcResponse.cs" />
     <Compile Include="JsonRpc\RequestState.cs" />
+    <Compile Include="ObjectServerClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

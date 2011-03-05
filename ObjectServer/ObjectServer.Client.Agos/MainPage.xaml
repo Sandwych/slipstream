@@ -15,6 +15,7 @@
                               Source="/Home" Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed">
                 <navigation:Frame.UriMapper>
                   <uriMapper:UriMapper>
+                    <uriMapper:UriMapping Uri="/Login" MappedUri="/Views/Login/LoginPage.xaml"/>
                     <uriMapper:UriMapping Uri="" MappedUri="/Views/Home.xaml"/>
                     <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/Views/{pageName}.xaml"/>
                   </uriMapper:UriMapper>
@@ -37,6 +38,11 @@
 
         <Border x:Name="LinksBorder" Style="{StaticResource LinksBorderStyle}">
           <StackPanel x:Name="LinksStackPanel" Style="{StaticResource LinksStackPanelStyle}">
+
+            <HyperlinkButton x:Name="Link0" Style="{StaticResource LinkStyle}" 
+                                     NavigateUri="/Login" TargetName="ContentFrame" Content="{Binding Path=ApplicationStrings.HomePageTitle, Source={StaticResource ResourceWrapper}}"/>
+
+            <Rectangle x:Name="Divider0" Style="{StaticResource DividerStyle}"/>
 
             <HyperlinkButton x:Name="Link1" Style="{StaticResource LinkStyle}" 
                                      NavigateUri="/Home" TargetName="ContentFrame" Content="{Binding Path=ApplicationStrings.HomePageTitle, Source={StaticResource ResourceWrapper}}"/>

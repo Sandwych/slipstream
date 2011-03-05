@@ -4,7 +4,6 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Navigation;
-    using ObjectServer.Client.Agos.LoginUI;
 
     /// <summary>
     /// <see cref="UserControl"/> class providing the main UI for the application.
@@ -18,14 +17,12 @@
         {
             InitializeComponent();
 
-            var jsonRpcClient = new JsonRpcClient(new System.Uri("http://localhost:9287/ObjectServer.ashx"));
-            jsonRpcClient.InvokeAsync("GetVersion", null, o =>
+            var client = new ObjectServerClient(new System.Uri("http://localhost:9287/ObjectServer.ashx"));
+            client.GetVersion(version =>
             {
-                this.ApplicationNameTextBlock.Text = (string)o;
+                this.ApplicationNameTextBlock.Text = version.ToString();
             });
 
-
-            this.loginContainer.Child = new LoginStatus();
         }
 
         /// <summary>
