@@ -10,10 +10,7 @@ namespace ObjectServer
 {
     public interface IResourceContainer
     {
-        void Initialize();
-
         void RegisterResource(IResource res);
-
         dynamic Resolve(string objName);
         dynamic this[string resName] { get; }
     }

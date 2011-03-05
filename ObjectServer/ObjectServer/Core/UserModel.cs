@@ -134,8 +134,7 @@ namespace ObjectServer.Core
             return records;
         }
 
-        [ServiceMethod]
-        public string LogOn(IContext ctx,
+        public Session LogOn(IContext ctx,
             string database, string login, string password)
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
@@ -153,11 +152,11 @@ namespace ObjectServer.Core
             var hashedPassword = (string)user["password"];
             var salt = (string)user["salt"];
 
-            string result = null;
+            Session result = null;
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
                 var session = this.CreateSession(database, login, user);
-                result = session.Id.ToString();
+                result = session;
             }
             else
             {
@@ -169,7 +168,6 @@ namespace ObjectServer.Core
         }
 
 
-        [ServiceMethod]
         public void LogOut(IContext ctx, string sessionId)
         {
             var sessGuid = new Guid(sessionId);

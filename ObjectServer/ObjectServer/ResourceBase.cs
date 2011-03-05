@@ -106,7 +106,7 @@ namespace ObjectServer
 
         public virtual void Initialize(IDatabase db)
         {
-            this.Pool = db.Resources;
+            this.Pool = db;
         }
 
         public string Name { get; private set; }
@@ -124,7 +124,7 @@ namespace ObjectServer
 
         #region ServiceObject(s) factory methods
 
-        internal static IResource CreateStaticObjectInstance(Type t)
+        internal static IResource CreateStaticResourceInstance(Type t)
         {
             var obj = Activator.CreateInstance(t) as IResource;
             if (obj == null)
@@ -138,7 +138,7 @@ namespace ObjectServer
         internal static T CreateStaticObjectInstance<T>()
             where T : class, IResource
         {
-            return CreateStaticObjectInstance(typeof(T)) as T;
+            return CreateStaticResourceInstance(typeof(T)) as T;
         }
 
         //以后要支持 DLR，增加  CreateDynamicObjectInstance

@@ -22,10 +22,10 @@ namespace ObjectServer.Model
 
         NameGetter NameGetter { get; }
 
-        object[] Search(IContext ctx, object[] domain, long offset, long limit);
+        object[] Search(IContext ctx, object[] domain = null, long offset = 0, long limit = 0);
         long Create(IContext ctx, IDictionary<string, object> propertyBag);
         void Write(IContext ctx, object id, IDictionary<string, object> record);
-        Dictionary<string, object>[] Read(IContext ctx, object[] ids, object[] fields);
+        Dictionary<string, object>[] Read(IContext ctx, object[] ids, object[] fields = null);
         void Delete(IContext ctx, object[] ids);
 
         dynamic Browse(IContext ctx, object id);

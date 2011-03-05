@@ -23,7 +23,7 @@ namespace ObjectServer.Model.Test
             using (var context = new ContextScope(new Guid(this.SessionId)))
             {
                 //删除所有记录
-                dynamic testObjectModel = context.Database.Resources["test.test_object"];
+                dynamic testObjectModel = context.Database["test.test_object"];
                 var ids = testObjectModel.Search(context, null, 0, 0);
                 if (ids.Length > 0)
                 {

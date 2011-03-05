@@ -80,9 +80,10 @@ namespace ObjectServer
         #endregion
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Load(IResourceContainer pool)
+        public void Load(IContext ctx)
         {
             Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
+            Logger.Info(() => "Loading program...");
 
             if (this.Dlls != null)
             {
@@ -91,25 +92,42 @@ namespace ObjectServer
 
             if (!string.IsNullOrEmpty(this.Path))
             {
-                this.LoadDynamicAssembly(pool);
+                this.LoadDynamicAssembly(ctx.Database, ctx.Database);
+            }
+
+            if (this.DataFiles != null)
+            {
+                this.LoadData(ctx);
             }
 
             this.State = ModuleStatus.Activated;
             Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
         }
 
-        private void LoadDynamicAssembly(IResourceContainer pool)
+        private void LoadData(IContext ctx)
         {
-            Debug.Assert(pool != null);
+            Logger.Info(() => "Importing data...");
+
+            var importer = new Model.XmlDataImporter(ctx, this.Name);
+            foreach (var dataFile in this.DataFiles)
+            {
+                var dataFilePath = System.IO.Path.Combine(this.Path, dataFile);
+                importer.Import(dataFilePath);
+            }
+        }
+
+        private void LoadDynamicAssembly(IDatabase db, IResourceContainer resources)
+        {
+            Debug.Assert(resources != null);
 
             var a = CompileSourceFiles(this.Path);
             this.AllAssemblies.Add(a);
-            RegisterServiceObjectWithinAssembly(pool, a);
+            RegisterResourceWithinAssembly(db, a);
         }
 
-        private static void RegisterServiceObjectWithinAssembly(IResourceContainer objs, Assembly assembly)
+        private static void RegisterResourceWithinAssembly(IDatabase db, Assembly assembly)
         {
-            Debug.Assert(objs != null);
+            Debug.Assert(db != null);
             Debug.Assert(assembly != null);
 
             Logger.Info(() => string.Format(
@@ -119,8 +137,9 @@ namespace ObjectServer
 
             foreach (var t in types)
             {
-                var obj = ResourceBase.CreateStaticObjectInstance(t);
-                objs.RegisterResource(obj);
+                var obj = ResourceBase.CreateStaticResourceInstance(t);
+                obj.Initialize(db);
+                db.RegisterResource(obj);
             }
         }
 
@@ -204,12 +223,12 @@ namespace ObjectServer
         }
 
 
-        internal static void RegisterAllCoreObjects(IResourceContainer pool)
+        internal static void RegisterAllCoreObjects(IDatabase db)
         {
-            Debug.Assert(pool != null);
+            Debug.Assert(db != null);
 
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
-            RegisterServiceObjectWithinAssembly(pool, a);
+            RegisterResourceWithinAssembly(db, a);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace ObjectServer.Model
             this.model = model;
         }
 
-        public object[] Search(object[] domain, long offset, long limit)
+        public object[] Search(object[] domain, long offset = 0, long limit = 0)
         {
             if (domain == null)
             {

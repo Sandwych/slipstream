@@ -18,7 +18,7 @@ namespace ObjectServer.Model
         public XmlDataImporter(IContext ctx, string currentModule)
         {
             this.context = ctx;
-            this.modelDataModel = ctx.Database.Resources[ModelDataModel.ModelName];
+            this.modelDataModel = ctx.Database[ModelDataModel.ModelName];
             this.currentModule = currentModule;
         }
 
@@ -75,15 +75,15 @@ namespace ObjectServer.Model
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "record")
                 {
-                    this.ReadRecordElement(reader);
+                    this.ReadRecordElement(reader, noUpdate);
                 }
             }
         }
 
-        private void ReadRecordElement(XmlReader reader)
+        private void ReadRecordElement(XmlReader reader, bool noUpdate)
         {
             var modelName = reader["model"];
-            dynamic model = this.context.Database.Resources[modelName];
+            dynamic model = this.context.Database[modelName];
             var key = reader["key"];
 
             if (model == null)
@@ -94,12 +94,34 @@ namespace ObjectServer.Model
             var record = new Dictionary<string, object>();
             this.ReadRecordFields(reader, model, record);
 
-            //创建记录
-            var id = (long)model.Create(this.context, record);
+            this.CreateOrUpdateRecord(noUpdate, model, record, key);
+        }
 
+        private void CreateOrUpdateRecord(bool noUpdate, dynamic model, Dictionary<string, object> record, string key = null)
+        {
+            //查找 key 指定的记录看是否存在
+            long? existedId = null;
             if (!string.IsNullOrEmpty(key))
             {
-                modelDataModel.Create(this.context, this.currentModule, model.Name, key, id);
+                existedId = this.modelDataModel.TryLookupResourceId(this.context, model, key);
+            }
+
+            if (existedId == null) // Create
+            {
+                existedId = (long)model.Create(this.context, record);
+                if (!string.IsNullOrEmpty(key))
+                {
+                    modelDataModel.Create(this.context, this.currentModule, model.Name, key, existedId.Value);
+                }
+            }
+            else if (existedId != null && !noUpdate) //Update 
+            {
+                model.Write(this.context, existedId.Value, record);
+                modelDataModel.UpdateResourceId(this.context, model.Name, key, existedId.Value);
+            }
+            else
+            {
+                //忽略此记录
             }
         }
 
@@ -159,7 +181,12 @@ namespace ObjectServer.Model
                     {
                         throw new InvalidDataException("Many-to-one field must have a 'ref-key' attribute");
                     }
-                    fieldValue = model.LookupId(this.context, metaField.Name, refKey);
+                    fieldValue = model.TryLookupResourceId(this.context, metaField.Name, refKey);
+                    if (fieldValue == null)
+                    {
+                        //TODO: 改成自定义异常
+                        throw new InvalidDataException("Cannot found model: " + refKey);
+                    }
                     break;
 
                 default:

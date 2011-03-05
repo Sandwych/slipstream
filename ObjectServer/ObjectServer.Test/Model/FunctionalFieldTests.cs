@@ -9,14 +9,14 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Model.Test
 {
-    [Ignore]
     [TestFixture]
     public class FunctionalFieldTests : LocalTestBase
     {
         [Test]
         public void Test_function_many2one()
         {
-            var rootId = (long)1;
+            var rootDomain = new object[][] { new object[] { "login", "=", "root" } };
+            var rootId = this.Service.SearchModel(this.SessionId, "core.user", rootDomain, 0, 0)[0];
             var record = new Dictionary<string, object>()
             {
                 { "name", "test1" },

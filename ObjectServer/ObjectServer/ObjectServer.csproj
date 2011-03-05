@@ -236,7 +236,6 @@
     <Compile Include="Model\TableModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Module\Module.cs" />
-    <Compile Include="ResourceContainer.cs" />
     <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="ObjectServerStarter.cs" />
     <Compile Include="DatabaseCollection.cs" />
@@ -255,6 +254,7 @@
     <Compile Include="SqlTree\OffsetClause.cs" />
     <Compile Include="SqlTree\LimitClause.cs" />
     <Compile Include="StaticSettings.cs" />
+    <Compile Include="SystemContext.cs" />
     <Compile Include="TransactionalAttribute.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />

@@ -116,12 +116,12 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadActivatedModules(IDataContext db, IResourceContainer pool)
+        public void LoadActivatedModules(IContext ctx)
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的
             var sql = "SELECT id, name FROM core_module WHERE state = 'activated'";
-            var modules = db.QueryAsDictionary(sql);
+            var modules = ctx.Database.DataContext.QueryAsDictionary(sql);
 
             var unloadModules = new List<long>();
             foreach (var m in modules)
@@ -130,7 +130,7 @@ namespace ObjectServer
                 var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
                 if (module != null)
                 {
-                    module.Load(pool);
+                        module.Load(ctx);
                 }
                 else
                 {
@@ -142,7 +142,7 @@ namespace ObjectServer
 
             if (unloadModules.Count > 0)
             {
-                DeactivateModules(db, unloadModules);
+                DeactivateModules(ctx.Database.DataContext, unloadModules);
             }
         }
 

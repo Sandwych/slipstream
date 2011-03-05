@@ -81,7 +81,8 @@ namespace ObjectServer.Model
                 .SetNotRequired().SetDefaultProc(ctx => DBNull.Value);
 
             Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
-                .SetNotRequired().SetReadonly().SetDefaultProc(ctx => ctx.Session.UserId);
+                .SetNotRequired().SetReadonly()
+                .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
             Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
                 .SetNotRequired().SetDefaultProc(ctx => DBNull.Value);
@@ -119,7 +120,7 @@ namespace ObjectServer.Model
         #region Service Methods
 
         [ServiceMethod]
-        public virtual object[] Search(IContext ctx, object[] domain, long offset, long limit)
+        public virtual object[] Search(IContext ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {
@@ -460,7 +461,7 @@ namespace ObjectServer.Model
                     { "resource_id", id },
                     { "description", msg }
                 };
-            var res = (IModel)ctx.Database.Resources[Core.AuditLogModel.ModelName];
+            var res = (IModel)ctx.Database[Core.AuditLogModel.ModelName];
             res.Create(ctx, logRecord);
 
         }

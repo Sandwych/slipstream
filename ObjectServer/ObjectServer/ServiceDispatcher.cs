@@ -22,11 +22,19 @@ namespace ObjectServer
         public string LogOn(string dbName, string username, string password)
         {
             using (var ctx = new ContextScope(dbName))
+            using(var tx = new TransactionScope())
             {
-                var userModel = ctx.Database.Resources.Resolve(UserModel.ModelName);
-                var method = userModel.GetServiceMethod("LogOn");
-                return (string)ExecuteTransactional(
-                    ctx, userModel, method, ctx, dbName, username, password);
+                ctx.Database.DataContext.Open();
+
+                dynamic userModel = ctx.Database.Resolve(UserModel.ModelName);
+                Session session = userModel.LogOn(ctx, dbName, username, password);
+                
+                //用新 session 替换老 session
+                ObjectServerStarter.SessionStore.PutSession(session);
+                ObjectServerStarter.SessionStore.Remove(ctx.Session.Id);
+
+                tx.Complete();
+                return session.Id.ToString();
             }
         }
 
@@ -35,10 +43,11 @@ namespace ObjectServer
         {
             var sgid = new Guid(sessionId);
             using (var ctx = new ContextScope(sgid))
+            using(var tx = new TransactionScope())
             {
                 ctx.Database.DataContext.Open();
 
-                var userModel = (UserModel)ctx.Database.Resources.Resolve(UserModel.ModelName);
+                dynamic userModel = ctx.Database.Resolve(UserModel.ModelName);
                 userModel.LogOut(ctx, sessionId);
             }
         }
@@ -68,7 +77,7 @@ namespace ObjectServer
             var gsid = new Guid(sessionId);
             using (var ctx = new ContextScope(gsid))
             {
-                var obj = ctx.Database.Resources.Resolve(resource);
+                var obj = ctx.Database.Resolve(resource);
                 var method = obj.GetServiceMethod(name);
                 var internalArgs = new object[parameters.Length + 1];
                 internalArgs[0] = ctx;
@@ -89,8 +98,6 @@ namespace ObjectServer
         private static object ExecuteTransactional(
             IContext ctx, IResource obj, MethodInfo method, params object[] internalArgs)
         {
-            ctx.Database.DataContext.Open();
-
             using (var tx = new TransactionScope())
             {
                 var result = method.Invoke(obj, internalArgs);
@@ -114,11 +121,6 @@ namespace ObjectServer
 
             DataProvider.CreateDatabase(dbName);
 
-            using (var ctx = new ContextScope(dbName))
-            {
-                ctx.Database.DataContext.Initialize();
-                ObjectServerStarter.Databases.LoadDatabase(dbName);
-            }
         }
 
         public void DeleteDatabase(string rootPasswordHash, string dbName)
@@ -150,7 +152,7 @@ namespace ObjectServer
         }
 
         [CachedMethod]
-        public object[] SearchModel(string sessionId, string modelName, object[] domain, long offset, long limit)
+        public object[] SearchModel(string sessionId, string modelName, object[] domain, long offset = 0, long limit = 0)
         {
             return (object[])Execute(sessionId, modelName, "Search", new object[] { domain, offset, limit });
         }

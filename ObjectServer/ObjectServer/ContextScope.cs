@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Reflection;
+using System.Diagnostics;
 
 using ObjectServer.Backend;
 
@@ -35,7 +36,7 @@ namespace ObjectServer
             this.SessionStore.Pulse(session.Id);
 
             this.ownDb = true;
-            this.Database = ObjectServerStarter.Databases.GetDatabase(session.Database);
+            this.Database = ObjectServerStarter.Databases.GetDatabase(session);
             this.Database.DataContext.Open();
         }
 
@@ -43,7 +44,7 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        public ContextScope(string dbName)
+        internal ContextScope(string dbName)
         {
             Logger.Info(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
@@ -51,16 +52,19 @@ namespace ObjectServer
             this.Session = new Session(dbName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
-            this.Database = ObjectServerStarter.Databases.GetDatabase(dbName);
+            this.Database = ObjectServerStarter.Databases.GetDatabase(this.Session);
             this.Database.DataContext.Open();
         }
 
-        public ContextScope(IDatabase db)
+        internal ContextScope(IDatabase db)
         {
+            Debug.Assert(db != null);
+            Debug.Assert(db.DataContext != null);
+
             Logger.Info(() =>
                 string.Format("ContextScope is opening for DatabaseContext"));
 
-            this.Session = new Session("", "system", 0);
+            this.Session = new Session(db.DataContext.DatabaseName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = false;
             this.Database = db;

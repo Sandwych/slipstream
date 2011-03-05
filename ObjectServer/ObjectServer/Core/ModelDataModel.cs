@@ -24,6 +24,9 @@ namespace ObjectServer.Core
         public ModelDataModel()
             : base(ModelName)
         {
+            //删掉基类自动添加的用户列
+            Fields.Remove(CreatedUserField);
+            Fields.Remove(ModifiedUserField);
 
             Fields.Chars("name").SetLabel("Key").SetRequired().SetSize(128);
             Fields.Chars("module").SetLabel("Module").SetRequired().SetSize(64);
@@ -45,7 +48,7 @@ namespace ObjectServer.Core
             return this.Create(ctx, record);
         }
 
-        public long LookupId(IContext ctx, string model, string key)
+        public long? TryLookupResourceId(IContext ctx, string model, string key)
         {
             var fields = s_RefIdFields;
             var domain = new object[][] 
@@ -58,10 +61,34 @@ namespace ObjectServer.Core
             var records = this.Read(ctx, ids, fields);
             if (records.Length != 1)
             {
-                throw new InvalidDataException("More than one result");
+                return null;
+            }
+            else
+            {
+                return (long)records[0]["ref_id"];
+            }
+        }
+
+        public void UpdateResourceId(IContext ctx, string model, string key, long id)
+        {
+            var domain = new object[][]
+            {
+                new object[] { "model", "=", model },
+                new object[] { "key", "=", key },
+            };
+            var ids = this.Search(ctx, domain);
+
+            if (ids.Length != 0)
+            {
+                throw new InvalidDataException("More than one record");
             }
 
-            return (long)records[0]["ref_id"];
+            var selfId = (long)ids[0];
+            var record = new Dictionary<string, object>()
+            {
+                { "ref_id", "id" },
+            };
+            this.Write(ctx, selfId, record);
         }
     }
 }

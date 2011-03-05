@@ -15,7 +15,7 @@
   </source-files>
   
   <data-files>
-    <file>demo.xml</file>
+    <file>data.xml</file>
   </data-files>
   
 </module-metadata>

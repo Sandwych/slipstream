@@ -37,8 +37,9 @@ namespace ObjectServer
 
         #endregion
 
-        internal void LoadDatabase(string dbName)
+        internal void LoadDatabase(Session session)
         {
+            var dbName = session.Database;
             Logger.Info(() => string.Format("Registering object-pool of database: [{0}]", dbName));
 
             var dbNames = DataProvider.ListDatabases();
@@ -48,22 +49,32 @@ namespace ObjectServer
             }
 
             var db = new Database(dbName);
-            db.Initialize(this.config);
 
             lock (this)
             {
                 this.databases.Add(dbName.Trim(), db);
             }
+
+            this.LoadAdditionalModules(session, db);
         }
 
-        internal Database GetDatabase(string dbName)
+        private void LoadAdditionalModules(Session session, Database db)
         {
-            if (!this.databases.ContainsKey(dbName))
+            //加载其它模块
+            Logger.Info(() => "Loading additional modules...");
+            var ctx = new SystemContext(db, session);
+            ObjectServerStarter.Modules.UpdateModuleList(db.DataContext);
+            ObjectServerStarter.Modules.LoadActivatedModules(ctx);
+        }
+
+        internal Database GetDatabase(Session session)
+        {
+            if (!this.databases.ContainsKey(session.Database))
             {
-                LoadDatabase(dbName);
+                this.LoadDatabase(session);
             }
 
-            return this.databases[dbName];
+            return this.databases[session.Database];
         }
 
         internal void RemoveDatabase(string dbName)
