@@ -55,7 +55,8 @@ namespace ObjectServer
         [XmlElement("description")]
         public string Description { get; set; }
 
-        [XmlElement("source-files")]
+        [XmlArray("source-files")]
+        [XmlArrayItem("file")]
         public string[] SourceFiles { get; set; }
 
         [XmlArray("data-files")]

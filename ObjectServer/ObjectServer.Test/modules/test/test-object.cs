@@ -86,7 +86,7 @@ namespace ObjectServer.Test
                 }
                 else
                 {
-                    rows[id] = (long)field1 + (long)field2;
+                    rows[id] = (int)field1 + (int)field2;
                 }
             }
             return rows;

@@ -49,6 +49,7 @@ namespace ObjectServer.Runtime
             var options = new CompilerParameters();
             options.ReferencedAssemblies.Add("System.dll");
             options.ReferencedAssemblies.Add("System.Core.dll");
+            options.ReferencedAssemblies.Add("Microsoft.CSharp.dll");
             options.ReferencedAssemblies.Add("System.Data.dll");
             options.ReferencedAssemblies.Add("System.Transactions.dll");
             options.ReferencedAssemblies.Add(selfAssembly.Location);

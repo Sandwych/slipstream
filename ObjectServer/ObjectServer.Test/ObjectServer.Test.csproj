@@ -94,10 +94,10 @@
     </Content>
     <Compile Include="Model\XmlDataImporterTests.cs" />
     <Compile Include="modules\test\functional-field-object.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="modules\test\test-object.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlTree\SelectTest.cs" />
