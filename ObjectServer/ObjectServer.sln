@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Test", "Object
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Web", "ObjectServer.Web\ObjectServer.Web.csproj", "{CF15573A-6680-406B-9BA1-15DFF819C6CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Client.Agos", "ObjectServer.Client.Agos\ObjectServer.Client.Agos.csproj", "{DB5364B7-F0EF-4FF0-98DB-FEF369B93933}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CF15573A-6680-406B-9BA1-15DFF819C6CC} = {CF15573A-6680-406B-9BA1-15DFF819C6CC}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.SilverlightClient", "ObjectServer.Client\ObjectServer.SilverlightClient.csproj", "{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +32,14 @@ Global
 		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF15573A-6680-406B-9BA1-15DFF819C6CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB5364B7-F0EF-4FF0-98DB-FEF369B93933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB5364B7-F0EF-4FF0-98DB-FEF369B93933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB5364B7-F0EF-4FF0-98DB-FEF369B93933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB5364B7-F0EF-4FF0-98DB-FEF369B93933}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
