@@ -10,13 +10,14 @@ namespace ObjectServer.Client
 {
 
     [JsonObject]
-    public class JsonRpcRequest 
+    public class JsonRpcRequest : IAsyncResult
     {
-        public JsonRpcRequest(string method, params object[] args)
+        public JsonRpcRequest(JsonRpcCallComplete callCompleteProc, string method, params object[] args)
         {
             this.Method = method;
             this.Params = args;
             this.Id = Guid.NewGuid().ToString();
+            this.JsonRpcCallCompleteHandler = callCompleteProc;
         }
 
         [JsonProperty("method")]
@@ -36,5 +37,75 @@ namespace ObjectServer.Client
                 sw.Close();
             }
         }
+
+
+        private ManualResetEvent asyncWaitHandle = new ManualResetEvent(false);
+        private JsonRpcCallComplete JsonRpcCallCompleteHandler;
+
+        #region IAsyncResult Members
+
+        [JsonIgnore]
+        public object AsyncState { get; private set; }
+
+        [JsonIgnore]
+        public WaitHandle AsyncWaitHandle { get { return this.asyncWaitHandle; } }
+
+        [JsonIgnore]
+        public bool CompletedSynchronously { get { return false; } }
+
+        [JsonIgnore]
+        public bool IsCompleted { get; private set; }
+
+        #endregion
+
+        public IAsyncResult Send(Uri uri, ResultHandler resultHandler)
+        {
+            try
+            {
+                var httpRequest = (HttpWebRequest)WebRequest.Create(uri);
+                httpRequest.Method = "POST";
+                httpRequest.ContentType = "text/json";
+
+                var state = new RequestState(httpRequest, resultHandler);
+                httpRequest.BeginGetRequestStream(new AsyncCallback(RequestStreamResponse), state);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception while processing execute request: " + e.Message);
+                throw e;
+            }
+            return this;
+        }
+
+        void RequestStreamResponse(IAsyncResult result)
+        {
+            RequestState state = (RequestState)result.AsyncState;
+            using (var writeStream = state.HttpRequest.EndGetRequestStream(result))
+            {
+                this.SerializeTo(writeStream);
+                writeStream.Close();
+            }
+            state.HttpRequest.BeginGetResponse(new AsyncCallback(OnReceiveResponse), state);
+        }
+
+        void OnReceiveResponse(IAsyncResult result)
+        {
+            RequestState state = result.AsyncState as RequestState;
+            state.HttpResponse = (HttpWebResponse)state.HttpRequest.EndGetResponse(result);
+
+            using (var readStream = state.HttpResponse.GetResponseStream())
+            {
+                state.JsonResponse = JsonRpcResponse.Deserialize(readStream);
+                readStream.Close();
+            }
+
+            AsyncState = state;
+
+            this.JsonRpcCallCompleteHandler(state.JsonResponse, state.ResultHandler);
+
+            IsCompleted = true;
+            asyncWaitHandle.Set();
+        }
+
     }
 }

@@ -11,7 +11,6 @@
     /// </summary>
     public partial class MainPage : UserControl
     {
-        private string version;
         /// <summary>
         /// Creates a new <see cref="MainPage"/> instance.
         /// </summary>
@@ -20,8 +19,11 @@
             InitializeComponent();
 
             var jsonRpcClient = new JsonRpcClient(new System.Uri("http://localhost:9287/ObjectServer.ashx"));
-            jsonRpcClient.InvokeAsync("GetVersion", null, o => this.version = (string)o);
-                
+            jsonRpcClient.InvokeAsync("GetVersion", null, o =>
+            {
+                this.ApplicationNameTextBlock.Text = (string)o;
+            });
+
 
             this.loginContainer.Child = new LoginStatus();
         }
