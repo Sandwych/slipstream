@@ -6,12 +6,12 @@
     /// <summary>
     /// Home page for the application.
     /// </summary>
-    public partial class Home : Page
+    public partial class ContentPage : Page
     {
         /// <summary>
-        /// Creates a new <see cref="Home"/> instance.
+        /// Creates a new <see cref="MainPage"/> instance.
         /// </summary>
-        public Home()
+        public ContentPage()
         {
             InitializeComponent();
 

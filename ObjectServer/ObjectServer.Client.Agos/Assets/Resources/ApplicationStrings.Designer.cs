@@ -151,6 +151,15 @@ namespace ObjectServer.Client.Agos {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 登录.
+        /// </summary>
+        public static string LoginPageTitle {
+            get {
+                return ResourceManager.GetString("LoginPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string LoginWindowTitle {
@@ -223,7 +232,7 @@ namespace ObjectServer.Client.Agos {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome {0}.
+        ///   Looks up a localized string similar to 欢迎 {0}.
         /// </summary>
         public static string WelcomeMessage {
             get {

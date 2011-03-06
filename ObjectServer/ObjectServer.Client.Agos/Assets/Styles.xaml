@@ -38,7 +38,7 @@
         </Setter>
         <Setter Property="BorderBrush" Value="#FFFFFFFF"/>
         <Setter Property="BorderThickness" Value="0,1,0,0"/>
-        <Setter Property="Margin" Value="0,62,0,0"/>
+        <Setter Property="Margin" Value="0,42,0,0"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
     </Style>
@@ -334,7 +334,7 @@
     <!-- Login Container Style -->
     <Style x:Key="LoginContainerStyle" TargetType="Border">
         <Setter Property="Background" Value="#FF949290"/>
-        <Setter Property="Margin" Value="0,43,0,0"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
         <Setter Property="Height" Value="21"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
         <Setter Property="BorderBrush" Value="#FFFFFFFF"/>

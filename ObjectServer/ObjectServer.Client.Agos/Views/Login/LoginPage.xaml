@@ -23,31 +23,31 @@
         <Grid Height="Auto" HorizontalAlignment="Center" Name="grid1" VerticalAlignment="Center" 
                   Grid.Column="0" Grid.Row="1" Width="333">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30" MinHeight="25" />
-                <RowDefinition Height="30" MinHeight="25" />
-                <RowDefinition Height="30" MinHeight="25"/>
-                <RowDefinition Height="30" MinHeight="25"/>
-                <RowDefinition Height="30" MinHeight="25"/>
-                <RowDefinition Height="Auto" MinHeight="25"/>
+                <RowDefinition Height="25" MinHeight="23" />
+                <RowDefinition Height="25" MinHeight="23" />
+                <RowDefinition Height="25" MinHeight="23"/>
+                <RowDefinition Height="25" MinHeight="23"/>
+                <RowDefinition Height="40" MinHeight="23"/>
+                <RowDefinition Height="Auto" MinHeight="23"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0"  VerticalAlignment="Center" >服务器：</TextBlock>
-            <TextBox x:Name="textServer" Grid.Row="0" Grid.Column="1" Height="25" VerticalAlignment="Center" />
-            <Button x:Name="buttonChangeServer" Grid.Row="0" Grid.Column="2" Content="更改..." Width="75" Height="25" 
-                    Click="buttonChangeServer_Click" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            <TextBox x:Name="textServer" Grid.Row="0" Grid.Column="1" Height="23" VerticalAlignment="Center" />
 
             <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" >账套：</TextBlock>
-            <ComboBox x:Name="listDatabases" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Center" ></ComboBox>
+            <ComboBox x:Name="listDatabases" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Height="23" VerticalAlignment="Center" ></ComboBox>
 
             <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"  >用户名：</TextBlock>
-            <TextBox x:Name="textLogin" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Center" />
+            <TextBox x:Name="textLogin" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Height="23" VerticalAlignment="Center" />
 
             <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" >密码：</TextBlock>
-            <PasswordBox x:Name="textPassword" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Center" />
+            <PasswordBox x:Name="textPassword" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Height="23" VerticalAlignment="Center" />
+
+            <TextBlock x:Name="textMessage" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
+                       VerticalAlignment="Center" Height="23" HorizontalAlignment="Center" Foreground="#FF990000" />
 
             <Button x:Name="buttonSignIn" Content="登录" Click="buttonSignIn_Click"  HorizontalAlignment="Right"
                     Grid.Row="5" Grid.ColumnSpan="3" Width="75"  />

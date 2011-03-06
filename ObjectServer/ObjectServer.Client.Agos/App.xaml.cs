@@ -5,6 +5,7 @@
     using System.ServiceModel.DomainServices.Client.ApplicationServices;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Diagnostics;
     using ObjectServer.Client.Agos.Controls;
 
     /// <summary>
@@ -13,6 +14,7 @@
     public partial class App : Application
     {
         private BusyIndicator busyIndicator;
+        private ObjectServerClient clientService;
 
         /// <summary>
         /// Creates a new <see cref="App"/> instance.
@@ -20,10 +22,6 @@
         public App()
         {
             InitializeComponent();
-
-            // Create a WebContext and add it to the ApplicationLifetimeObjects
-            // collection.  This will then be available as WebContext.Current.
-            //webContext.Authentication = new WindowsAuthentication();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
@@ -36,15 +34,62 @@
 
             // Show some UI to the user while LoadUser is in progress
             this.InitializeRootVisual();
+            this.PrepareToLogin();
+        }
+
+        public bool IsBusy
+        {
+            get { return this.busyIndicator.IsBusy; }
+            set { this.busyIndicator.IsBusy = value; }
+        }
+
+        public MainPage MainPage
+        {
+            get { return (MainPage)this.busyIndicator.Content; }
+        }
+
+        public ObjectServerClient ClientService
+        {
+            get
+            {
+                Debug.Assert(this.clientService != null);
+                return this.clientService;
+            }
+
+            set
+            {
+                Debug.Assert(value != null);
+                this.clientService = value;
+            }
+        }
+
+        public void PrepareToLogin()
+        {
+            this.clientService = null;
+            this.MainPage.NavigateToLoginPage();
         }
 
         /// <summary>
-        /// Invoked when the <see cref="LoadUserOperation"/> completes. Use this
-        /// event handler to switch from the "loading UI" you created in
-        /// <see cref="InitializeRootVisual"/> to the "application UI"
+        /// why it is not work
         /// </summary>
-        private void Application_UserLoaded(LoadUserOperation operation)
+        /// <param name="msg"></param>
+        /// <param name="callback"></param>
+        public void DoBusyWork(string msg, Action callback)
         {
+            try
+            {
+                this.IsBusy = true;
+
+                callback();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                this.IsBusy = false;
+            }
         }
 
         /// <summary>
@@ -62,6 +107,8 @@
             this.busyIndicator.VerticalContentAlignment = VerticalAlignment.Stretch;
 
             this.RootVisual = this.busyIndicator;
+
+            this.busyIndicator.BusyContent = "正在处理，请稍候...";
         }
 
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)

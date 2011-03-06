@@ -16,13 +16,6 @@
         public MainPage()
         {
             InitializeComponent();
-
-            var client = new ObjectServerClient(new System.Uri("http://localhost:9287/ObjectServer.ashx"));
-            client.GetVersion(version =>
-            {
-                this.ApplicationNameTextBlock.Text = version.ToString();
-            });
-
         }
 
         /// <summary>
@@ -47,6 +40,18 @@
             }
         }
 
+        public void NavigateToContentPage()
+        {
+            var uri = new Uri("/Content", UriKind.Relative);
+            this.ContentFrame.Navigate(uri);
+        }
+
+        public void NavigateToLoginPage()
+        {
+            var uri = new Uri("/Login", UriKind.Relative);
+            this.ContentFrame.Navigate(uri);
+        }
+
         /// <summary>
         /// If an error occurs during navigation, show an error window
         /// </summary>
@@ -55,5 +60,16 @@
             e.Handled = true;
             ErrorWindow.CreateNew(e.Exception);
         }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            var app = (App)Application.Current;
+            app.ClientService.LogOff(
+                () =>
+                {
+                    app.PrepareToLogin();
+                });
+        }
+
     }
 }

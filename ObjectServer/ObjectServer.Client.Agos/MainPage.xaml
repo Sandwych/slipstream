@@ -12,11 +12,11 @@
 
     <Border x:Name="ContentBorder" Style="{StaticResource ContentBorderStyle}">
             <navigation:Frame x:Name="ContentFrame" Style="{StaticResource ContentFrameStyle}" 
-                              Source="/Home" Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed">
+                  Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed">
                 <navigation:Frame.UriMapper>
                   <uriMapper:UriMapper>
                     <uriMapper:UriMapping Uri="/Login" MappedUri="/Views/Login/LoginPage.xaml"/>
-                    <uriMapper:UriMapping Uri="" MappedUri="/Views/Home.xaml"/>
+                    <uriMapper:UriMapping Uri="/Content" MappedUri="/Views/ContentPage.xaml"/>
                     <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/Views/{pageName}.xaml"/>
                   </uriMapper:UriMapper>
                 </navigation:Frame.UriMapper>
@@ -39,27 +39,16 @@
         <Border x:Name="LinksBorder" Style="{StaticResource LinksBorderStyle}">
           <StackPanel x:Name="LinksStackPanel" Style="{StaticResource LinksStackPanelStyle}">
 
-            <HyperlinkButton x:Name="Link0" Style="{StaticResource LinkStyle}" 
-                                     NavigateUri="/Login" TargetName="ContentFrame" Content="{Binding Path=ApplicationStrings.HomePageTitle, Source={StaticResource ResourceWrapper}}"/>
-
-            <Rectangle x:Name="Divider0" Style="{StaticResource DividerStyle}"/>
-
-            <HyperlinkButton x:Name="Link1" Style="{StaticResource LinkStyle}" 
-                                     NavigateUri="/Home" TargetName="ContentFrame" Content="{Binding Path=ApplicationStrings.HomePageTitle, Source={StaticResource ResourceWrapper}}"/>
-
             <Rectangle x:Name="Divider1" Style="{StaticResource DividerStyle}"/>
 
-            <HyperlinkButton x:Name="Link2" Style="{StaticResource LinkStyle}" 
-                                     NavigateUri="/About" TargetName="ContentFrame" Content="{Binding Path=ApplicationStrings.AboutPageTitle, Source={StaticResource ResourceWrapper}}"/>
+            <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click" />
 
           </StackPanel>
         </Border>
 
       </Grid>
 
-      <Border x:Name="loginContainer" Style="{StaticResource LoginContainerStyle}">
-          <!-- LoginStatus will be added here in code behind. This is required for the designer view to work -->           
-      </Border>
+
     </Grid>
 
   </Grid>

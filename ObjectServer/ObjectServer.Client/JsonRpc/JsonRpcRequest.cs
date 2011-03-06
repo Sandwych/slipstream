@@ -58,7 +58,7 @@ namespace ObjectServer.Client
 
         #endregion
 
-        public IAsyncResult Send(Uri uri, ResultHandler resultHandler)
+        public IAsyncResult Send(Uri uri, ResultCallbackHandler resultHandler)
         {
             try
             {

@@ -72,24 +72,24 @@ namespace ObjectServer
         }
 
         [CachedMethod(Timeout = 120)]
-        public object Execute(string sessionId, string resource, string name, params object[] parameters)
+        public object Execute(string sessionId, string resource, string method, params object[] parameters)
         {
             var gsid = new Guid(sessionId);
             using (var ctx = new ContextScope(gsid))
             {
                 var obj = ctx.Database.GetResource(resource);
-                var method = obj.GetServiceMethod(name);
+                var methodInfo = obj.GetServiceMethod(method);
                 var internalArgs = new object[parameters.Length + 1];
                 internalArgs[0] = ctx;
                 parameters.CopyTo(internalArgs, 1);
 
                 if (obj.DatabaseRequired)
                 {
-                    return ExecuteTransactional(ctx, obj, method, internalArgs);
+                    return ExecuteTransactional(ctx, obj, methodInfo, internalArgs);
                 }
                 else
                 {
-                    return method.Invoke(obj, internalArgs);
+                    return methodInfo.Invoke(obj, internalArgs);
                 }
             }
         }
