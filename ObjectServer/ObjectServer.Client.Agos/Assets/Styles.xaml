@@ -7,9 +7,11 @@
   xmlns:appControls="clr-namespace:ObjectServer.Client.Agos.Controls"
   xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input">
 
+<!--
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../Controls/BusyIndicator.xaml" />
     </ResourceDictionary.MergedDictionaries>
+    -->
 
     <!-- ******MAIN PAGE STYLES****** -->
     <!-- **************************** -->
@@ -38,7 +40,7 @@
         </Setter>
         <Setter Property="BorderBrush" Value="#FFFFFFFF"/>
         <Setter Property="BorderThickness" Value="0,1,0,0"/>
-        <Setter Property="Margin" Value="0,42,0,0"/>
+        <Setter Property="Margin" Value="0,48,0,0"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
     </Style>
@@ -57,14 +59,14 @@
     <!-- Navigation Grid Style -->
     <Style x:Key="NavigationGridStyle" TargetType="Grid">
         <Setter Property="Background" Value="{StaticResource NavigationBackgroundColorBrush}"/>
-        <Setter Property="Height" Value="42"/>
+        <Setter Property="Height" Value="48"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
     </Style>
 
     <!-- Branding Border Style -->
     <Style x:Key="BrandingBorderStyle" TargetType="Border">
-        <Setter Property="Height" Value="42"/>
+        <Setter Property="Height" Value="48"/>
         <Setter Property="Margin" Value="25,0,25,0"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -108,7 +110,7 @@
 
     <!-- Links Border Style -->
     <Style x:Key="LinksBorderStyle" TargetType="Border">
-        <Setter Property="Height" Value="42"/>
+        <Setter Property="Height" Value="48"/>
         <Setter Property="Margin" Value="15,0,15,0"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
     </Style>
@@ -329,10 +331,21 @@
     </Style>
 
 
+    <Style x:Key="StatusBarStyle" TargetType="Border">
+        <Setter Property="Margin" Value="0,0,0,0"/>
+        <Setter Property="Height" Value="21"/>
+        <Setter Property="BorderThickness" Value="1,1,1,1"/>
+        <Setter Property="BorderBrush" Value="#FF999999"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Padding" Value="5,2,5,2" />
+    </Style>
+
+
     <!-- **********LOGIN STYLES********* -->
     <!-- ******************************* -->
     <!-- Login Container Style -->
-    <Style x:Key="LoginContainerStyle" TargetType="Border">
+    <Style x:Key="ShortcutContainerStyle" TargetType="Border">
         <Setter Property="Background" Value="#FF949290"/>
         <Setter Property="Margin" Value="0,0,0,0"/>
         <Setter Property="Height" Value="21"/>
@@ -1753,15 +1766,4 @@
         </Setter>
     </Style>
 
-    <!-- BusyIndicatorControl Styles -->
-    <Style TargetType="appControls:BusyIndicator" BasedOn="{StaticResource busyIndicatorDefaultStyle}">
-        <Setter Property="DisplayAfter" Value="00:00:00.00"/>
-        <Setter Property="OverlayStyle">
-            <Setter.Value>
-                <Style TargetType="Rectangle">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                </Style>
-            </Setter.Value>
-        </Setter>
-    </Style>
 </ResourceDictionary>

@@ -124,7 +124,7 @@
     <value>Already registered?</value>
   </data>
   <data name="ApplicationName" xml:space="preserve">
-    <value>Agos - ObjectServer Silverlight 客户端</value>
+    <value>Agos</value>
   </data>
   <data name="BackToLoginButton" xml:space="preserve">
     <value>Back to Login</value>

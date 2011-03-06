@@ -14,8 +14,9 @@ using System.Collections;
 using System.Threading;
 
 using ObjectServer.Client.Agos.Controls;
+using ObjectServer.Client.Agos.Models;
 
-namespace ObjectServer.Client.Agos.Views.Login
+namespace ObjectServer.Client.Agos.Views
 {
     public partial class LoginPage : Page
     {
@@ -23,10 +24,26 @@ namespace ObjectServer.Client.Agos.Views.Login
         {
             InitializeComponent();
 
-            this.textServer.Text = @"http://localhost:9287/ObjectServer.ashx";
+            this.textServer.Text = @"http://localhost:9287";
             this.textLogin.Text = "root";
             this.textPassword.Password = "root";
+            this.LoadDatabaseList();
 
+            this.Loaded += new RoutedEventHandler(LoginPage_Loaded);
+        }
+
+
+        void LoginPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = new LoginModel()
+            {
+                Login = "root",
+                Password = "root",
+            };
+        }
+
+        private void LoadDatabaseList()
+        {
             var client = new ObjectServerClient(new System.Uri(this.textServer.Text));
 
             var app = (App)Application.Current;
@@ -34,9 +51,14 @@ namespace ObjectServer.Client.Agos.Views.Login
             client.ListDatabases(dbs =>
             {
                 this.listDatabases.ItemsSource = dbs;
+
+                if (dbs.Length > 1)
+                {
+                    this.listDatabases.SelectedIndex = 0;
+                }
+
                 app.IsBusy = false;
             });
-
         }
 
         // Executes when the user navigates to this page.
@@ -83,6 +105,14 @@ namespace ObjectServer.Client.Agos.Views.Login
                     app.IsBusy = false;
                 });
 
+        }
+
+        private void LayoutRoot_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && this.buttonSignIn.IsEnabled)
+            {
+                this.buttonSignIn_Click(sender, e);
+            }
         }
 
     }

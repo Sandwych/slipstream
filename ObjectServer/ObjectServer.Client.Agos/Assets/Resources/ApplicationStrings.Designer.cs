@@ -79,7 +79,7 @@ namespace ObjectServer.Client.Agos {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Agos - ObjectServer Silverlight 客户端.
+        ///   Looks up a localized string similar to Agos.
         /// </summary>
         public static string ApplicationName {
             get {

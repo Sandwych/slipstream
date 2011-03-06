@@ -9,13 +9,14 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Assets/Styles.xaml"/> 
+                <ResourceDictionary Source="Assets/Styles.xaml" />
                 <ResourceDictionary>
                     <app:ResourceWrapper x:Key="ResourceWrapper" />
                     <app:NotOperatorValueConverter x:Key="NotOperatorValueConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>                
+        </ResourceDictionary>
+
     </Application.Resources>
 
 </Application>

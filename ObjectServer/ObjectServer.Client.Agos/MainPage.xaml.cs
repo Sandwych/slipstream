@@ -4,6 +4,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Navigation;
+    using System.Windows.Controls.Theming;
 
     /// <summary>
     /// <see cref="UserControl"/> class providing the main UI for the application.
@@ -16,6 +17,7 @@
         public MainPage()
         {
             InitializeComponent();
+            Loaded += new RoutedEventHandler(Page_Loaded);
         }
 
         /// <summary>
@@ -71,5 +73,11 @@
                 });
         }
 
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+
+         
+        }
     }
 }

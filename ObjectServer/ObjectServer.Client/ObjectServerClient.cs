@@ -9,16 +9,22 @@ namespace ObjectServer.Client
 {
     public class ObjectServerClient
     {
+        public const string ServicePath = @"/ObjectServer.ashx";
+
         private JsonRpcClient jsonRpcClient;
 
         public ObjectServerClient(Uri uri)
         {
-            this.jsonRpcClient = new JsonRpcClient(uri);
+            this.ServerAddress = uri;
+            this.Uri = new Uri(uri, ServicePath);
+            this.jsonRpcClient = new JsonRpcClient(this.Uri);
         }
 
         public string SessionId { get; private set; }
         public string LoggedUserName { get; private set; }
         public string LoggedDatabase { get; private set; }
+        public Uri Uri { get; private set; }
+        public Uri ServerAddress { get; private set; }
 
         bool Logged { get { return !string.IsNullOrEmpty(this.SessionId); } }
 

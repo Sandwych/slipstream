@@ -6,51 +6,53 @@
   xmlns:uriMapper="clr-namespace:System.Windows.Navigation;assembly=System.Windows.Controls.Navigation"
   xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm.Toolkit" 
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+  xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
   mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
 
-  <Grid x:Name="LayoutRoot" Style="{StaticResource LayoutRootGridStyle}">
+    <toolkit:SystemColorsTheme>
 
-    <Border x:Name="ContentBorder" Style="{StaticResource ContentBorderStyle}">
-            <navigation:Frame x:Name="ContentFrame" Style="{StaticResource ContentFrameStyle}" 
+        <Grid x:Name="LayoutRoot" Style="{StaticResource LayoutRootGridStyle}">
+
+            <Border x:Name="ContentBorder" Style="{StaticResource ContentBorderStyle}">
+                <navigation:Frame x:Name="ContentFrame" Style="{StaticResource ContentFrameStyle}" 
                   Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed">
-                <navigation:Frame.UriMapper>
-                  <uriMapper:UriMapper>
-                    <uriMapper:UriMapping Uri="/Login" MappedUri="/Views/Login/LoginPage.xaml"/>
-                    <uriMapper:UriMapping Uri="/Content" MappedUri="/Views/ContentPage.xaml"/>
-                    <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/Views/{pageName}.xaml"/>
-                  </uriMapper:UriMapper>
-                </navigation:Frame.UriMapper>
-            </navigation:Frame>
-    </Border>
+                    <navigation:Frame.UriMapper>
+                        <uriMapper:UriMapper>
+                            <uriMapper:UriMapping Uri="/Login" MappedUri="/Views/LoginPage.xaml"/>
+                            <uriMapper:UriMapping Uri="/Content" MappedUri="/Views/ContentPage.xaml"/>
+                            <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/Views/{pageName}.xaml"/>
+                        </uriMapper:UriMapper>
+                    </navigation:Frame.UriMapper>
+                </navigation:Frame>
+            </Border>
 
-    <Grid Style="{StaticResource NavigationOuterGridStyle}">
-      <Grid x:Name="NavigationGrid" Style="{StaticResource NavigationGridStyle}">
+            <Grid Style="{StaticResource NavigationOuterGridStyle}">
+                <Grid x:Name="NavigationGrid" Style="{StaticResource NavigationGridStyle}">
 
-        <Border x:Name="BrandingBorder" Style="{StaticResource BrandingBorderStyle}">
-          <StackPanel x:Name="BrandingStackPanel" Style="{StaticResource BrandingStackPanelStyle}">
+                    <Border x:Name="BrandingBorder" Style="{StaticResource BrandingBorderStyle}">
+                        <StackPanel x:Name="BrandingStackPanel" Style="{StaticResource BrandingStackPanelStyle}">
 
-            <ContentControl Style="{StaticResource LogoIcon}"/>
-            <TextBlock x:Name="ApplicationNameTextBlock" Style="{StaticResource ApplicationNameStyle}" 
+                            <ContentControl Style="{StaticResource LogoIcon}"/>
+                            <TextBlock x:Name="ApplicationNameTextBlock" Style="{StaticResource ApplicationNameStyle}" 
                                Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"/>
 
-          </StackPanel>
-        </Border>
+                        </StackPanel>
+                    </Border>
 
-        <Border x:Name="LinksBorder" Style="{StaticResource LinksBorderStyle}">
-          <StackPanel x:Name="LinksStackPanel" Style="{StaticResource LinksStackPanelStyle}">
+                    <Border x:Name="LinksBorder" Style="{StaticResource LinksBorderStyle}">
+                        <StackPanel x:Name="LinksStackPanel" Style="{StaticResource LinksStackPanelStyle}">
 
-            <Rectangle x:Name="Divider1" Style="{StaticResource DividerStyle}"/>
+                            <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click" />
 
-            <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click" />
+                        </StackPanel>
+                    </Border>
 
-          </StackPanel>
-        </Border>
-
-      </Grid>
+                </Grid>
 
 
-    </Grid>
+            </Grid>
 
-  </Grid>
+        </Grid>
+    </toolkit:SystemColorsTheme>
 
 </UserControl>
