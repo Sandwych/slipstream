@@ -103,7 +103,7 @@ namespace ObjectServer.Model
             long? existedId = null;
             if (!string.IsNullOrEmpty(key))
             {
-                existedId = this.modelDataModel.TryLookupResourceId(this.context, model, key);
+                existedId = this.modelDataModel.TryLookupResourceId(this.context, model.Name, key);
             }
 
             if (existedId == null) // Create
@@ -137,7 +137,7 @@ namespace ObjectServer.Model
         }
 
         private void ReadFieldElement(XmlReader reader, dynamic model, Dictionary<string, object> record)
-        {
+        {           
             var refKey = reader["ref-key"];
             var fieldName = reader["name"];
 
@@ -181,7 +181,7 @@ namespace ObjectServer.Model
                     {
                         throw new InvalidDataException("Many-to-one field must have a 'ref-key' attribute");
                     }
-                    fieldValue = model.TryLookupResourceId(this.context, metaField.Name, refKey);
+                    fieldValue = this.modelDataModel.TryLookupResourceId(this.context, metaField.Relation, refKey);
                     if (fieldValue == null)
                     {
                         //TODO: 改成自定义异常
