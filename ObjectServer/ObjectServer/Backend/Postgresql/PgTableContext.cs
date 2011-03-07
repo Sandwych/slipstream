@@ -88,14 +88,31 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(columnName);
         }
 
-        public void UpgradeColumn(IDataContext db, IMetaField field)
+        public void AlterColumnNullable(IDataContext db, string columnName, bool nullable)
         {
-            throw new NotImplementedException();
+            var action = nullable ? "DROP NOT NULL" : "SET NOT NULL";
+            var sql = string.Format(
+                "ALTER TABLE \"{0}\"ALTER COLUMN \"{1}\" {2}",
+                this.Name, columnName, action);
+            db.Execute(sql);
+        }
+
+        public void AlterColumnType(IDataContext db, string columnName, string sqlType)
+        {
+            var sql = string.Format(
+                "ALTER TABLE \"{0}\"ALTER \"{1}\" TYPE {2}",
+                this.Name, columnName, sqlType);
+            db.Execute(sql);
         }
 
         public bool ColumnExists(string columnName)
         {
             return this.columns.ContainsKey(columnName);
+        }
+
+        public IColumnMetadata GetColumn(string columnName)
+        {
+            return this.columns[columnName];
         }
 
         private void LoadColumns(IDataContext db, string tableName)

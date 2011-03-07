@@ -12,11 +12,13 @@ namespace ObjectServer.Model
     {
         private IDatabase db;
         private IModel model;
+        private IContext context;
 
         public TableMigrator(IDatabase db, IModel model)
         {
             this.db = db;
             this.model = model;
+            this.context = new SessionlessContext(db);
         }
 
         public void Migrate()
@@ -63,14 +65,81 @@ namespace ObjectServer.Model
             //表肯定存在，就看列存不存在
             //最简单的迁移策略：
             //如果列在表里不存在就建，以用户定义的为准
+            //列元属性同步策略：
+            //* 类型相同可以更改长度，其实也就是 varchar 可以
+            //* 可空转非空：检测表里是否有行，有的话要求此字段有默认值，更改之前先用默认值填充
+            //  现有行再转换为非空
+            //* 非空转可控：可以直接去掉 NOT NULL
             foreach (var pair in this.model.Fields)
             {
                 var field = pair.Value;
-                if (field.IsColumn() && !table.ColumnExists(field.Name))
+                if (field.IsColumn())
                 {
-                    table.AddColumn(this.db.DataContext, field);
+                    if (!table.ColumnExists(field.Name))
+                    {
+                        table.AddColumn(this.db.DataContext, field);
+                    }
+                    else
+                    {
+                        this.SyncColumn(table, field);
+                    }
                 }
             }
+        }
+
+        private void SyncColumn(ITableContext table, IMetaField field)
+        {
+            //TODO 实现迁移策略
+            var columnInfo = table.GetColumn(field.Name);
+
+            //varchar(n) 类型的 n 变化了
+            if (field.Type == FieldType.Chars && field.Size != columnInfo.Length)
+            {
+                //TODO:转换成可移植数据库类型    
+                var sqlType = string.Format("VARCHAR({0})", field.Size);
+                table.AlterColumnType(this.db.DataContext, field.Name, sqlType);
+            }
+
+
+            if (!columnInfo.Nullable && !field.Required) //"NOT NULL" to nullable
+            {
+                this.SetColumnNullable(table, field);
+            }
+            else if (columnInfo.Nullable && field.Required) //Nullable to 'NOT NULL'
+            {
+                this.SetColumnNotNullable(table, field);
+            }
+        }
+
+        private void SetColumnNullable(ITableContext table, IMetaField field)
+        {
+            table.AlterColumnNullable(this.db.DataContext, field.Name, true);
+        }
+
+        private void SetColumnNotNullable(ITableContext table, IMetaField field)
+        {
+            //先看有没有行，有行要先设置默认值，如果没有默认值就报错了
+            if (this.TableHasRow(table.Name) && field.DefaultProc != null)
+            {
+                var defaultValue = field.DefaultProc(this.context);
+                var sql = string.Format(
+                    "UPDATE \"{0}\" SET \"{1}\"=@0", table.Name, field.Name);
+                this.db.DataContext.Execute(sql, defaultValue);
+                table.AlterColumnNullable(this.db.DataContext, field.Name, false);
+            }
+            else
+            {
+                Logger.Warn(() => string.Format(
+                    "unable alter table '{0}' column '{1}' to not nullable", table.Name, field.Name));
+            }
+        }
+
+        private bool TableHasRow(string tableName)
+        {
+            var sql = string.Format(
+                "SELECT COUNT(\"id\") FROM \"{0}\"", tableName);
+            var rowCount = (long)this.db.DataContext.QueryValue(sql);
+            return rowCount > 0;
         }
 
     }

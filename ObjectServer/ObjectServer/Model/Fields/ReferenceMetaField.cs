@@ -91,6 +91,18 @@ namespace ObjectServer.Model
             get { return false; }
         }
 
+        public override int Size
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
+
         public override ReferentialAction ReferentialAction
         {
             get

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer.Backend.Postgresql
+namespace ObjectServer.Backend
 {
-    internal interface IColumnMetadata
+    public interface IColumnMetadata
     {
         string Name { get; }
 

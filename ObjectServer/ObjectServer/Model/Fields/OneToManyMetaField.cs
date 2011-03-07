@@ -60,6 +60,18 @@ namespace ObjectServer.Model
             }
         }
 
+        public override int Size
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
+
         public override bool IsScalar
         {
             get { return false; }

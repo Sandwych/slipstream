@@ -13,8 +13,10 @@ namespace ObjectServer.Backend
 
         void AddColumn(IDataContext db, IMetaField field);
         void DeleteColumn(IDataContext db, string columnName);
-        void UpgradeColumn(IDataContext db, IMetaField field);
+        void AlterColumnNullable(IDataContext db, string columnName, bool nullable);
+        void AlterColumnType(IDataContext db, string columnName, string sqlType);
         bool ColumnExists(string columnName);
+        IColumnMetadata GetColumn(string columnName);
 
         bool TableExists(IDataContext db, string tableName);
         void CreateTable(IDataContext db, string tableName, string label);

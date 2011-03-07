@@ -52,7 +52,7 @@ namespace ObjectServer.Model
 
         public FieldType Type { get; set; }
 
-        public int Size { get; set; }
+        public virtual int Size { get; set; }
 
         public virtual bool Required { get; set; }
 
