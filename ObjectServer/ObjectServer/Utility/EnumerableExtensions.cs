@@ -29,52 +29,5 @@ namespace ObjectServer.Utility
             return sb.ToString();
         }
 
-        public static string ToSqlParameters(this IEnumerable<string> items)
-        {
-            var sb = new StringBuilder();
-            var flag = true;
-            foreach (var item in items)
-            {
-                if (flag)
-                {
-                    flag = false;
-                }
-                else
-                {
-                    sb.Append(",");
-                }
-
-                sb.Append(':' + item.ToString());
-            }
-
-            return sb.ToString();
-        }
-
-
-
-        public static string ToSqlColumns(this IEnumerable<string> items)
-        {
-            var sb = new StringBuilder();
-            var flag = true;
-            foreach (var item in items)
-            {
-                if (flag)
-                {
-                    flag = false;
-                }
-                else
-                {
-                    sb.Append(",");
-                }
-
-                sb.Append('\"');
-                sb.Append(item.ToString());
-                sb.Append('\"');
-            }
-
-            return sb.ToString();
-        }
-
-
     }
 }

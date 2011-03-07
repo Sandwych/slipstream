@@ -66,43 +66,7 @@ namespace ObjectServer.Model.Test
         }
 
 
-        private void ClearModelDataTable(ContextScope context)
-        {
-            dynamic modelDataModel = context.Database["core.model_data"];
-            var ids = modelDataModel.Search(context, null, 0, 0);
-            if (ids.Length > 0)
-            {
-                modelDataModel.Delete(context, ids);
-            }
-        }
-
-
-        private void ClearTestObjectTable(ContextScope context, dynamic testObjectModel)
-        {
-            testObjectModel = context.Database["test.test_object"];
-            var ids = testObjectModel.Search(context, null, 0, 0);
-            if (ids.Length > 0)
-            {
-                testObjectModel.Delete(context, ids);
-            }
-        }
-
-
-        private void ClearMasterAndChildTable(ContextScope context)
-        {
-            dynamic childModel = context.Database["test.child"];
-            var ids = childModel.Search(context, null, 0, 0);
-            if (ids.Length > 0)
-            {
-                childModel.Delete(context, ids);
-            }
-            dynamic masterModel = context.Database["test.master"];
-            ids = masterModel.Search(context, null, 0, 0);
-            if (ids.Length > 0)
-            {
-                masterModel.Delete(context, ids);
-            }
-        }
+       
 
 
     }

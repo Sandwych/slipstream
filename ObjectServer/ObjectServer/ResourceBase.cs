@@ -105,8 +105,7 @@ namespace ObjectServer
         }
 
         public virtual void Initialize(IDatabase db)
-        {
-            this.Pool = db;
+        {            
         }
 
         public string Name { get; private set; }
@@ -118,8 +117,6 @@ namespace ObjectServer
         public abstract bool DatabaseRequired { get; }
 
         public abstract string[] GetReferencedObjects();
-
-        public IResourceContainer Pool { get; private set; }
 
 
         #region ServiceObject(s) factory methods
