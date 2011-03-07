@@ -112,9 +112,7 @@
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Controls\VisualStates.cs" />
-    <Compile Include="Controls\CustomDataForm.cs" />
     <Compile Include="Helpers\DataBindingExtensions.cs" />
-    <Compile Include="Helpers\DataFieldExtensions.cs" />
     <Compile Include="Helpers\NotOperatorValueConverter.cs" />
     <Compile Include="Helpers\StringFormatValueConverter.cs" />
     <Compile Include="Helpers\TargetNullValueConverter.cs" />

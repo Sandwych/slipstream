@@ -54,19 +54,19 @@ namespace ObjectServer.Core
             var domain = new object[][] 
             { 
                 new object[] { "model", "=", model },
-                new object[] { "key", "=", key },
+                new object[] { "name", "=", key },
             };
 
             var ids = this.Search(ctx, domain, 0, 0);
-            var records = this.Read(ctx, ids, fields);
-            if (records.Length != 1)
+            if (ids == null || ids.Length == 0)
             {
                 return null;
             }
-            else
-            {
-                return (long)records[0]["ref_id"];
-            }
+
+            var records = this.Read(ctx, ids, fields);
+            var refId = (long)records[0]["ref_id"];
+
+            return refId;
         }
 
         public void UpdateResourceId(IContext ctx, string model, string key, long id)
@@ -74,7 +74,7 @@ namespace ObjectServer.Core
             var domain = new object[][]
             {
                 new object[] { "model", "=", model },
-                new object[] { "key", "=", key },
+                new object[] { "name", "=", key },
             };
             var ids = this.Search(ctx, domain);
 

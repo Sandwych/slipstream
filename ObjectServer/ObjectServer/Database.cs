@@ -20,13 +20,6 @@ namespace ObjectServer
         public Database(string dbName)
         {
             this.DataContext = DataProvider.CreateDataContext(dbName);
-
-            lock (this)
-            {
-                this.LoadAllCoreObjects(this);
-                this.InitializeRegisteredObjects(this);
-            }
-
         }
 
         public Database(IDataContext dataCtx, IResourceContainer resources)
@@ -93,18 +86,8 @@ namespace ObjectServer
 
         #endregion
 
-        private void LoadAllCoreObjects(IDatabase db)
-        {
-            Debug.Assert(db != null);
-
-            this.resources.Clear();
-            Module.RegisterAllCoreObjects(db);
-
-        }
-
-        private void InitializeRegisteredObjects(IDatabase db)
-        {
-            Debug.Assert(db != null);
+        public void InitializeRegisteredObjects()
+        {        
 
             //一次性初始化所有对象
             //obj.Initialize(db, pool);
@@ -114,7 +97,7 @@ namespace ObjectServer
 
             foreach (var m in objList)
             {
-                m.Initialize(db);
+                m.Initialize(this);
             }
         }
 
@@ -131,8 +114,6 @@ namespace ObjectServer
         }
 
         public string DatabaseName { get; private set; }
-
-
 
     }
 }

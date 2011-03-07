@@ -10,5 +10,6 @@ namespace ObjectServer
     public interface IDatabase : IDisposable, IResourceContainer
     {
         IDataContext DataContext { get; }
+        
     }
 }

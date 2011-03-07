@@ -21,8 +21,6 @@ namespace ObjectServer
 
         bool DatabaseRequired { get; }
 
-        IResourceContainer Pool { get; }
-
         /// <summary>
         /// 此对象引用（依赖）的其它对象名称
         /// </summary>

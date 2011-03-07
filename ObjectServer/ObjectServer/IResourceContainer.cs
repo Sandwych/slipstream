@@ -13,5 +13,7 @@ namespace ObjectServer
         void RegisterResource(IResource res);
         dynamic GetResource(string objName);
         dynamic this[string resName] { get; }
+
+        void InitializeRegisteredObjects();
     }
 }

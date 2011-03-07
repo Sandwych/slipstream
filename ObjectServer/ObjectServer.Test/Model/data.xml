@@ -17,7 +17,37 @@
     <field name="name">name3</field>
     <field name="address">address3</field>
     <field name="float_field">33.0</field>
-  </record> 
+  </record>
+  
+  
+  <!-- Master & Child data -->
+
+  <record model="test.master" key="m1">
+    <field name="name">master1</field>
+  </record>
+
+  <record model="test.master" key="m2">
+    <field name="name">master2</field>
+  </record>
+
+  <record model="test.master" key="m3">
+    <field name="name">master3</field>
+  </record>
+
+  <record model="test.child" >
+    <field name="name">child1</field>
+    <field name="master" ref-key="m1" />
+  </record>
+
+  <record model="test.child" >
+    <field name="name">child2</field>
+    <field name="master" ref-key="m1" />
+  </record>
+
+  <record model="test.child" >
+    <field name="name">child3</field>
+    <field name="master" ref-key="m2" />
+  </record>
 
 </data>
 

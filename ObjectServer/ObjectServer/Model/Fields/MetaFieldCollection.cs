@@ -16,7 +16,7 @@ namespace ObjectServer.Model
 
         public IMetaField BigInteger(string name)
         {
-            var field = new ScalarMetaField(name, FieldType.Integer);
+            var field = new ScalarMetaField(name, FieldType.BigInteger);
             this.Add(name, field);
             return field;
         }
