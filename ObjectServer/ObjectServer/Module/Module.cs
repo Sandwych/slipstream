@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
@@ -79,8 +78,19 @@ namespace ObjectServer
 
         #endregion
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Load(IContext ctx)
+        {
+            if (this.Name == "core")
+            {
+                this.LoadCoreModule(ctx);
+            }
+            else
+            {
+                this.LoadAdditionalModule(ctx);
+            }
+        }
+
+        private void LoadAdditionalModule(IContext ctx)
         {
             Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
             Logger.Info(() => "Loading program...");
@@ -103,6 +113,14 @@ namespace ObjectServer
             this.State = ModuleStatus.Activated;
             Logger.Info(() => string.Format("Module '{0}' has been loaded.", this.Name));
         }
+
+
+        private void LoadCoreModule(IContext ctx)
+        {
+            var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
+            RegisterResourceWithinAssembly(ctx.Database, a);
+        }
+
 
         private void LoadData(IContext ctx)
         {
@@ -222,13 +240,5 @@ namespace ObjectServer
             return a;
         }
 
-
-        internal static void RegisterAllCoreObjects(IDatabase db)
-        {
-            Debug.Assert(db != null);
-
-            var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
-            RegisterResourceWithinAssembly(db, a);
-        }
     }
 }
