@@ -82,7 +82,7 @@ namespace ObjectServer
                 var moduleFilePath = System.IO.Path.Combine(
                     moduleDir, StaticSettings.ModuleMetaDataFileName);
 
-                var module = Module.DeserializeFromFile(moduleFilePath);
+                var module = Module.Deserialize(moduleFilePath);
 
                 module.Path = moduleDir;
                 modules.Add(module);

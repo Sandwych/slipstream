@@ -11,7 +11,7 @@ namespace ObjectServer
 {
     public interface IResource
     {
-        void Initialize(IDatabase db);
+        void Load(IDatabase db);
 
         string Label { get; }
         string Name { get; }

@@ -62,7 +62,7 @@ namespace ObjectServer
             else
             {
                 return base.TryInvokeMember(binder, args, out result);
-            }           
+            }
         }
 
         /// <summary>
@@ -104,9 +104,7 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Initialize(IDatabase db)
-        {            
-        }
+        public abstract void Load(IDatabase db);
 
         public string Name { get; private set; }
 
@@ -117,7 +115,6 @@ namespace ObjectServer
         public abstract bool DatabaseRequired { get; }
 
         public abstract string[] GetReferencedObjects();
-
 
         #region ServiceObject(s) factory methods
 

@@ -12,6 +12,7 @@ namespace ObjectServer
     public class Database : IDatabase
     {
         private IDictionary<string, IResource> resources = new Dictionary<string, IResource>();
+        private HashSet<string> loadedResources = new HashSet<string>();
 
         /// <summary>
         /// 初始化一个数据库环境
@@ -86,34 +87,35 @@ namespace ObjectServer
 
         #endregion
 
-        public void InitializeRegisteredObjects()
-        {        
-
-            //一次性初始化所有对象
-            //obj.Initialize(db, pool);
-            //TODO: 初始化非 IModel 对象
-            var objList = this.resources.Values.ToList();
-            DependencySort(objList);
-
-            foreach (var m in objList)
-            {
-                m.Initialize(this);
-            }
-        }
-
-        private static void DependencySort(IList<IResource> objList)
+        private static void ResourceDependencySort(IList<IResource> resList)
         {
-            Debug.Assert(objList != null);
+            Debug.Assert(resList != null);
 
             var objDepends = new Dictionary<string, string[]>();
-            foreach (var obj in objList)
+            foreach (var res in resList)
             {
-                objDepends.Add(obj.Name, obj.GetReferencedObjects());
+                objDepends.Add(res.Name, res.GetReferencedObjects());
             }
-            objList.DependencySort(m => m.Name, m => objDepends[m.Name]);
+
+            resList.DependencySort(m => m.Name, m => objDepends[m.Name]);
         }
 
         public string DatabaseName { get; private set; }
+
+        public void InitializeAllResources()
+        {
+            var allRes = new List<IResource>(this.resources.Values);
+            ResourceDependencySort(allRes);
+
+            foreach (var res in allRes)
+            {
+                if (!this.loadedResources.Contains(res.Name))
+                {
+                    res.Load(this);
+                    this.loadedResources.Add(res.Name);
+                }
+            }
+        }
 
     }
 }

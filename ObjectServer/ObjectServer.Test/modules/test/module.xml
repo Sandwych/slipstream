@@ -9,10 +9,10 @@
   <auto-load>true</auto-load>
   <script-language>csharp</script-language>
   
-  <source-files>
+  <sources>
     <file>test-object.cs</file>
     <file>functional-field-object.cs</file>
-  </source-files>
+  </sources>
   
   <data-files>
     <file>data.xml</file>

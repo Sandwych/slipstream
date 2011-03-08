@@ -96,9 +96,9 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IDatabase db)
+        public override void Load(IDatabase db)
         {
-            base.Initialize(db);
+            base.Load(db);
 
             if (this.NameGetter == null)
             {

@@ -24,6 +24,7 @@ namespace ObjectServer
     {
         private readonly List<Assembly> allAssembly = new List<Assembly>();
         private static readonly Module s_coreModule;
+        private readonly List<IResource> resources = new List<IResource>();
 
         static Module()
         {
@@ -54,7 +55,7 @@ namespace ObjectServer
         [XmlElement("description")]
         public string Description { get; set; }
 
-        [XmlArray("source-files")]
+        [XmlArray("sources")]
         [XmlArrayItem("file")]
         public string[] SourceFiles { get; set; }
 
@@ -80,6 +81,8 @@ namespace ObjectServer
 
         public void Load(IContext ctx)
         {
+            this.resources.Clear();
+
             if (this.Name == "core")
             {
                 this.LoadCoreModule(ctx);
@@ -97,13 +100,15 @@ namespace ObjectServer
 
             if (this.Dlls != null)
             {
-                this.LoadStaticAssembly();
+                this.LoadStaticAssemblies(ctx.Database);
             }
 
             if (!string.IsNullOrEmpty(this.Path))
             {
                 this.LoadDynamicAssembly(ctx.Database, ctx.Database);
             }
+
+            ctx.Database.InitializeAllResources();
 
             if (this.DataFiles != null)
             {
@@ -119,6 +124,8 @@ namespace ObjectServer
         {
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(ctx.Database, a);
+
+            ctx.Database.InitializeAllResources();
         }
 
 
@@ -143,7 +150,7 @@ namespace ObjectServer
             RegisterResourceWithinAssembly(db, a);
         }
 
-        private static void RegisterResourceWithinAssembly(IDatabase db, Assembly assembly)
+        private void RegisterResourceWithinAssembly(IDatabase db, Assembly assembly)
         {
             Debug.Assert(db != null);
             Debug.Assert(assembly != null);
@@ -155,9 +162,9 @@ namespace ObjectServer
 
             foreach (var t in types)
             {
-                var obj = ResourceBase.CreateStaticResourceInstance(t);
-                obj.Initialize(db);
-                db.RegisterResource(obj);
+                var res = ResourceBase.CreateStaticResourceInstance(t);
+                this.resources.Add(res);
+                db.RegisterResource(res);
             }
         }
 
@@ -178,7 +185,7 @@ namespace ObjectServer
             return result.ToArray();
         }
 
-        private void LoadStaticAssembly()
+        private void LoadStaticAssemblies(IDatabase db)
         {
             Debug.Assert(this.Dlls != null);
 
@@ -186,6 +193,7 @@ namespace ObjectServer
             {
                 var a = Assembly.LoadFile(dll);
                 this.allAssembly.Add(a);
+                RegisterResourceWithinAssembly(db, a);
             }
         }
 
@@ -198,8 +206,13 @@ namespace ObjectServer
         [XmlIgnore]
         public ModuleStatus State { get; set; }
 
-        public static Module DeserializeFromFile(string moduleFilePath)
+        public static Module Deserialize(string moduleFilePath)
         {
+            if (string.IsNullOrEmpty(moduleFilePath))
+            {
+                throw new ArgumentNullException("moduleFilePath");
+            }
+
             var xs = new XmlSerializer(typeof(Module));
 
             using (var fs = File.OpenRead(moduleFilePath))
@@ -208,6 +221,19 @@ namespace ObjectServer
                 fs.Close();
                 return module;
             }
+        }
+
+        public static Module Deserialize(Stream input)
+        {
+            if (input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
+            var xs = new XmlSerializer(typeof(Module));
+
+            var module = (Module)xs.Deserialize(input);
+            return module;
         }
 
         public void AddToDatabase(IDataContext db)

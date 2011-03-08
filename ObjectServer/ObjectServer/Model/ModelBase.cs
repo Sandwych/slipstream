@@ -26,11 +26,8 @@ namespace ObjectServer.Model
             this.AddInternalFields();
         }
 
-        public override void Initialize(IDatabase db)
+        public override void Load(IDatabase db)
         {
-            base.Initialize(db);
-
-            //TODO: 移到 ResourceBase 里
             //检测此模型是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(\"id\") FROM core_model WHERE name=@0";
             var count = (long)db.DataContext.QueryValue(sql, this.Name);
