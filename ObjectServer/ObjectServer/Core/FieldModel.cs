@@ -10,9 +10,10 @@ namespace ObjectServer.Core
     [Resource]
     public class FieldModel : TableModel
     {
+        public const string ModelName = "core.field";
 
         public FieldModel()
-            : base("core.field")
+            : base(ModelName)
         {
 
             Fields.ManyToOne("model", "core.model").SetLabel("Model").SetRequired();

@@ -13,8 +13,10 @@ namespace ObjectServer.Core
     [Resource]
     public class ModelModel : TableModel
     {
+        public const string ModelName = "core.model";
+
         public ModelModel()
-            : base("core.model")
+            : base(ModelName)
         {
 
             Fields.Chars("name").SetLabel("Name").SetSize(256).SetRequired();

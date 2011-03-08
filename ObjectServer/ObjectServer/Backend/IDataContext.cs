@@ -15,6 +15,8 @@ namespace ObjectServer.Backend
 
         void Initialize();
 
+        bool IsInitialized();
+
         DbConnection Connection { get; }
         string DatabaseName { get; }
                 

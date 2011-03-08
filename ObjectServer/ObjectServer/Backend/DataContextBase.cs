@@ -229,6 +229,7 @@ namespace ObjectServer.Backend
             throw new NotImplementedException();
         }
 
+        public abstract bool IsInitialized();
         public abstract string[] List();
         public abstract void Create(string dbName);
         public abstract void Initialize();

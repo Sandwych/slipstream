@@ -21,12 +21,25 @@ namespace ObjectServer
         public Database(string dbName)
         {
             this.DataContext = DataProvider.CreateDataContext(dbName);
+
+            this.EnsureInitialization();
         }
 
         public Database(IDataContext dataCtx, IResourceContainer resources)
         {
             this.DataContext = dataCtx;
             this.Resources = resources;
+
+            this.EnsureInitialization();
+        }
+
+        private void EnsureInitialization()
+        {
+            //如果数据库是一个新建的空数据库，那么我们就需要先初始化此数据库为一个 ObjectServer 账套数据库
+            if (!this.DataContext.IsInitialized())
+            {
+                this.DataContext.Initialize();
+            }
         }
 
         ~Database()

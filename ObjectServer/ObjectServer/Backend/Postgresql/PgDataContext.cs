@@ -103,6 +103,17 @@ namespace ObjectServer.Backend.Postgresql
             //创建数据库只执行到这里，安装核心模块是外部的事情
         }
 
+        public override bool IsInitialized()
+        {
+            var sql = @"
+SELECT DISTINCT COUNT(""table_name"") 
+    FROM ""information_schema"".""tables"" 
+    WHERE ""table_name"" IN ('core_module', 'core_model', 'core_field')
+";
+            var rowCount = (long)this.QueryValue(sql);
+            return rowCount == 3;
+        }
+
         #endregion
 
         public override ITableContext CreateTableContext(string tableName)
