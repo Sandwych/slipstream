@@ -64,7 +64,7 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod]
-        public virtual int GetSum(IContext ctx)
+        public static int GetSum(dynamic self, IContext ctx)
         {
             return 1 + 1;
         }
@@ -72,7 +72,7 @@ namespace ObjectServer.Test
         public Dictionary<long, object> GetField3(IContext ctx, object[] ids)
         {
             var fieldNames = new object[] { "field1", "field2" };
-            var values = base.Read(ctx, ids, fieldNames);
+            var values = base.ReadInternal(ctx, ids, fieldNames);
             var rows = new Dictionary<long, object>(ids.Count());
             foreach (var r in values)
             {

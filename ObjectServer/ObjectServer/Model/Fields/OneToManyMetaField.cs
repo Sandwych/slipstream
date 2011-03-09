@@ -28,7 +28,7 @@ namespace ObjectServer.Model
                 var masterId = (long)master["id"];
                 var domain = new List<object[]>();
                 domain.Add(new object[] { this.RelatedField, "=", masterId });
-                var childIds = childModel.Search(ctx, domain.ToArray(), 0, 0xffff);
+                var childIds = childModel.SearchInternal(ctx, domain.ToArray(), 0, 0xffff);
                 children[masterId] = childIds;
             }
 

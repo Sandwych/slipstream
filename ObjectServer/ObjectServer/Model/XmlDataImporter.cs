@@ -12,7 +12,7 @@ namespace ObjectServer.Model
     public sealed class XmlDataImporter
     {
         private IContext context;
-        private dynamic modelDataModel;
+        private ModelDataModel modelDataModel;
         private string currentModule;
 
         public XmlDataImporter(IContext ctx, string currentModule)
@@ -108,7 +108,7 @@ namespace ObjectServer.Model
 
             if (existedId == null) // Create
             {
-                existedId = (long)model.Create(this.context, record);
+                existedId = (long)model.CreateInternal(this.context, record);
                 if (!string.IsNullOrEmpty(key))
                 {
                     modelDataModel.Create(this.context, this.currentModule, model.Name, key, existedId.Value);

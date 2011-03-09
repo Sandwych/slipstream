@@ -24,7 +24,7 @@ namespace ObjectServer.Test
         {
             var userModel = ctx.Database["core.user"];
             var domain = new object[][] { new object[] { "login", "=", "root" } };
-            var userIds = userModel.Search(ctx, domain, 0, 0);
+            var userIds = Search(userModel, ctx, domain, 0, 0);
             var rootId = userIds[0];
             var result = new Dictionary<long, object>(ids.Length);
             foreach (var id in ids)

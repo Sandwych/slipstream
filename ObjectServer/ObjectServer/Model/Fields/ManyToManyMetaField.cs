@@ -33,7 +33,7 @@ namespace ObjectServer.Model
             {
                 var id = (long)rec["id"];
                 domain[0][2] = id;
-                var relIds = relModel.Search(ctx, domain, 0, 0)
+                var relIds = relModel.SearchInternal(ctx, domain, 0, 0)
                     .Select(e => (object)e).ToArray(); //中间表 ID
 
                 //中间表没有记录，返回空
@@ -43,7 +43,7 @@ namespace ObjectServer.Model
                 }
                 else
                 {
-                    var relRecords = relModel.Read(ctx, relIds, relFields);
+                    var relRecords = relModel.ReadInternal(ctx, relIds, relFields);
                     result[id] = relRecords.Select(d => d[this.RelatedField]).ToArray();
                 }
             }

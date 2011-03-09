@@ -94,5 +94,15 @@ namespace ObjectServer.Model
             }
         }
 
+        public bool ContainsField(string fieldName)
+        {
+            return this.Fields.ContainsKey(fieldName);
+        }
+
+        public IEnumerable<IMetaField> GetAllStorableFields()
+        {
+            return this.Fields.Values.Where(f => f.IsColumn() && f.Name != "id");
+        }
+
     }
 }

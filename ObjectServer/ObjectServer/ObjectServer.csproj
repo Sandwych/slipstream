@@ -189,7 +189,6 @@
     <Compile Include="Model\Fields\ManyToManyMetaField.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="Model\ModelExtensions.cs" />
     <Compile Include="Model\ReferentialAction.cs" />
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Model\ModelQuery.cs" />

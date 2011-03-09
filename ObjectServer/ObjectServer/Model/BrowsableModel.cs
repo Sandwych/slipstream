@@ -9,10 +9,10 @@ namespace ObjectServer.Model
     public sealed class BrowsableModel : DynamicObject
     {
         private Dictionary<string, object> record;
-        private IModel metaModel;
+        private dynamic metaModel;
         private IContext context;
 
-        public BrowsableModel(IContext ctx, IModel metaModel, Dictionary<string, object> record)
+        public BrowsableModel(IContext ctx, dynamic metaModel, Dictionary<string, object> record)
         {
             this.metaModel = metaModel;
             this.record = record;
@@ -34,7 +34,7 @@ namespace ObjectServer.Model
 
             var metaField = metaModel.Fields[binder.Name];
 
-            switch (metaField.Type)
+            switch ((FieldType)metaField.Type)
             {
                 case FieldType.Integer:
                 case FieldType.BigInteger:
@@ -78,7 +78,7 @@ namespace ObjectServer.Model
             var fieldValue = (object[])this.record[metaField.Name];
             var destIds = new object[] { fieldValue[0] };
             //查询 ManyToOne 字段
-            var destRecord = destMetaModel.Read(this.context, destIds, null)[0];
+            var destRecord = destMetaModel.ReadInternal(this.context, destIds, null)[0];
             return new BrowsableModel(this.context, destMetaModel, destRecord);
         }
 
@@ -89,8 +89,8 @@ namespace ObjectServer.Model
             var thisId = this.record["id"];
             //TODO: 下面的条件可能还不够，差 active 等等
             var domain = new object[][] { new object[] { metaField.RelatedField, "=", thisId } };
-            var destIds = targetModel.Search(this.context, domain, 0, 0);
-            var records = targetModel.Read(this.context, destIds, null);
+            var destIds = targetModel.SearchInternal(this.context, domain, 0, 0);
+            var records = targetModel.ReadInternal(this.context, destIds, null);
             return records.Select(r => new BrowsableModel(this.context, targetModel, r)).ToArray();
         }
     }

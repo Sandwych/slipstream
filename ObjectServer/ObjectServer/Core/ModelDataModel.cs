@@ -45,7 +45,7 @@ namespace ObjectServer.Core
                     { "ref_id", resId },
                 };
 
-            return this.Create(ctx, record);
+            return this.CreateInternal(ctx, record);
         }
 
         public long? TryLookupResourceId(IContext ctx, string model, string key)
@@ -57,13 +57,13 @@ namespace ObjectServer.Core
                 new object[] { "name", "=", key },
             };
 
-            var ids = this.Search(ctx, domain, 0, 0);
+            var ids = this.SearchInternal(ctx, domain, 0, 0);
             if (ids == null || ids.Length == 0)
             {
                 return null;
             }
 
-            var records = this.Read(ctx, ids, fields);
+            var records = this.ReadInternal(ctx, ids, fields);
             var refId = (long)records[0]["ref_id"];
 
             return refId;
@@ -76,7 +76,7 @@ namespace ObjectServer.Core
                 new object[] { "model", "=", model },
                 new object[] { "name", "=", key },
             };
-            var ids = this.Search(ctx, domain);
+            var ids = this.SearchInternal(ctx, domain);
 
             if (ids.Length != 0)
             {
@@ -88,7 +88,7 @@ namespace ObjectServer.Core
             {
                 { "ref_id", "id" },
             };
-            this.Write(ctx, selfId, record);
+            this.WriteInternal(ctx, selfId, record);
         }
     }
 }

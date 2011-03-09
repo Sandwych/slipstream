@@ -11,7 +11,7 @@ namespace ObjectServer.Model
     internal class TableMigrator
     {
         private IDatabase db;
-        private IModel model;
+        private dynamic model;
         private IContext context;
 
         public TableMigrator(IDatabase db, IModel model)
@@ -24,7 +24,6 @@ namespace ObjectServer.Model
         public void Migrate()
         {
             Debug.Assert(this.db != null);
-            Debug.Assert(this.model != null);
 
             var table = this.db.DataContext.CreateTableContext(this.model.TableName);
 

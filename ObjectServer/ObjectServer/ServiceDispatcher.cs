@@ -77,30 +77,31 @@ namespace ObjectServer
             var gsid = new Guid(sessionId);
             using (var ctx = new ContextScope(gsid))
             {
-                var obj = ctx.Database.GetResource(resource);
-                var methodInfo = obj.GetServiceMethod(method);
-                var internalArgs = new object[parameters.Length + 1];
-                internalArgs[0] = ctx;
-                parameters.CopyTo(internalArgs, 1);
+                var res = ctx.Database.GetResource(resource);
+                var methodInfo = res.GetServiceMethod(method);
+                var internalArgs = new object[parameters.Length + 2];
+                internalArgs[0] = res;
+                internalArgs[1] = ctx;
+                parameters.CopyTo(internalArgs, 2);
 
-                if (obj.DatabaseRequired)
+                if (res.DatabaseRequired)
                 {
-                    return ExecuteTransactional(ctx, obj, methodInfo, internalArgs);
+                    return ExecuteTransactional(ctx, methodInfo, internalArgs);
                 }
                 else
                 {
-                    return methodInfo.Invoke(obj, internalArgs);
+                    return methodInfo.Invoke(null, internalArgs);
                 }
             }
         }
 
 
         private static object ExecuteTransactional(
-            IContext ctx, IResource obj, MethodInfo method, params object[] internalArgs)
+            IContext ctx, MethodInfo method, params object[] internalArgs)
         {
             using (var tx = new TransactionScope())
             {
-                var result = method.Invoke(obj, internalArgs);
+                var result = method.Invoke(null, internalArgs);
                 tx.Complete();
                 ctx.Database.DataContext.Close();
                 return result;

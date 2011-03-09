@@ -117,10 +117,8 @@ namespace ObjectServer.Model
 
         }
 
-        #region Service Methods
-
-        [ServiceMethod]
-        public virtual object[] Search(IContext ctx, object[] domain = null, long offset = 0, long limit = 0)
+        public virtual object[] SearchInternal(
+            IContext ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {
@@ -137,8 +135,7 @@ namespace ObjectServer.Model
             return query.Search(domainInternal, offset, limit);
         }
 
-        [ServiceMethod]
-        public virtual long Create(IContext ctx, IDictionary<string, object> propertyBag)
+        public virtual long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag)
         {
             if (!this.CanCreate)
             {
@@ -229,8 +226,8 @@ namespace ObjectServer.Model
             }
         }
 
-        [ServiceMethod]
-        public virtual void Write(IContext ctx, object id, IDictionary<string, object> userRecord)
+        public virtual void WriteInternal(
+            IContext ctx, object id, IDictionary<string, object> userRecord)
         {
             if (!this.CanWrite)
             {
@@ -320,8 +317,8 @@ namespace ObjectServer.Model
             }
         }
 
-        [ServiceMethod]
-        public virtual Dictionary<string, object>[] Read(
+
+        public virtual Dictionary<string, object>[] ReadInternal(
             IContext ctx, object[] ids, object[] fields)
         {
             if (ctx == null)
@@ -395,8 +392,8 @@ namespace ObjectServer.Model
             return records.ToArray();
         }
 
-        [ServiceMethod]
-        public virtual void Delete(IContext ctx, object[] ids)
+
+        public virtual void DeleteInternal(IContext ctx, object[] ids)
         {
             if (!this.CanDelete)
             {
@@ -419,12 +416,51 @@ namespace ObjectServer.Model
             }
         }
 
+
+        #region Service Methods
+
+
+        [ServiceMethod]
+        public static object[] Search(
+            dynamic model, IContext ctx, object[] domain = null, long offset = 0, long limit = 0)
+        {
+            return model.SearchInternal(ctx, domain, offset, limit);
+        }
+
+        [ServiceMethod]
+        public static Dictionary<string, object>[] Read(
+            dynamic model, IContext ctx, object[] ids, object[] fields)
+        {
+            return model.ReadInternal(ctx, ids, fields);
+        }
+
+        [ServiceMethod]
+        public static long Create(
+            dynamic model, IContext ctx, IDictionary<string, object> propertyBag)
+        {
+            return model.CreateInternal(ctx, propertyBag);
+        }
+
+        [ServiceMethod]
+        public static void Write(
+           dynamic model, IContext ctx, object id, IDictionary<string, object> userRecord)
+        {
+            model.WriteInternal(ctx, id, userRecord);
+        }
+
+        [ServiceMethod]
+        public static void Delete(dynamic model, IContext ctx, object[] ids)
+        {
+            model.DeleteInternal(ctx, ids);
+        }
+
+
         #endregion
 
 
         public virtual dynamic Browse(IContext ctx, object id)
         {
-            var record = this.Read(ctx, new object[] { id }, null)[0];
+            var record = this.ReadInternal(ctx, new object[] { id }, null)[0];
             return new BrowsableModel(ctx, this, record);
         }
 
@@ -433,7 +469,7 @@ namespace ObjectServer.Model
             var result = new Dictionary<long, string>(ids.Length);
             if (this.Fields.ContainsKey("name"))
             {
-                var records = this.Read(ctx, ids, new object[] { "id", "name" });
+                var records = this.ReadInternal(ctx, ids, new object[] { "id", "name" });
                 foreach (var r in records)
                 {
                     var id = (long)r["id"];
@@ -462,7 +498,7 @@ namespace ObjectServer.Model
                     { "description", msg }
                 };
             var res = (IModel)ctx.Database[Core.AuditLogModel.ModelName];
-            res.Create(ctx, logRecord);
+            res.CreateInternal(ctx, logRecord);
 
         }
 

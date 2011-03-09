@@ -54,14 +54,18 @@ namespace ObjectServer
         {
             result = null;
             MethodInfo methodInfo;
+            var allArgs = new object[args.Length + 1];
+            allArgs[0] = this;
+            args.CopyTo(allArgs, 1);
+
             if (this.serviceMethods.TryGetValue(binder.Name, out methodInfo))
             {
-                result = methodInfo.Invoke(this, args);
+                result = methodInfo.Invoke(this, allArgs);
                 return true;
             }
             else
             {
-                return base.TryInvokeMember(binder, args, out result);
+                return base.TryInvokeMember(binder, allArgs, out result);
             }
         }
 
@@ -77,13 +81,22 @@ namespace ObjectServer
 
         private void VerifyMethod(MethodInfo mi)
         {
+            if (!mi.IsStatic)
+            {
+                var msg = string.Format(
+                    "Service method '{1}' of resource '{0}' must be a static method",
+                    this.Name, mi.Name);
+                Logger.Error(() => msg);
+                throw new BadServiceMethodException(msg, this.Name, mi.Name);
+            }
+
             var parameters = mi.GetParameters();
-            if (parameters.Length < 1
-                || parameters[0].ParameterType != typeof(IContext)
+            if (parameters.Length < 2
+                || parameters[1].ParameterType != typeof(IContext)
                 || !mi.IsPublic)
             {
                 var msg = string.Format(
-                    "The method '{1}' of object {0} must have an IContext parameter at first.",
+                    "The method '{1}' of resource {0} must have an IContext parameter at second position.",
                     this.Name, mi.Name);
                 Logger.Error(() => msg);
                 throw new BadServiceMethodException(msg, this.Name, mi.Name);
@@ -93,7 +106,8 @@ namespace ObjectServer
         private void RegisterAllServiceMethods()
         {
             var t = this.GetType();
-            var methods = t.GetMethods();
+            var methods = t.GetMethods(
+                BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public);
             foreach (var m in methods)
             {
                 var attrs = m.GetCustomAttributes(typeof(ServiceMethodAttribute), false);
