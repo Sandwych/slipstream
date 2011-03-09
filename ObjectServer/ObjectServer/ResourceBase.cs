@@ -20,10 +20,7 @@ namespace ObjectServer
 
         protected ResourceBase(string name)
         {
-
             this.SetName(name);
-
-            this.RegisterAllServiceMethods();
         }
 
         private void SetName(string name)
@@ -106,8 +103,8 @@ namespace ObjectServer
         private void RegisterAllServiceMethods()
         {
             var t = this.GetType();
-            var methods = t.GetMethods(
-                BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public);
+            var flags = BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public;
+            var methods = t.GetMethods(flags);
             foreach (var m in methods)
             {
                 var attrs = m.GetCustomAttributes(typeof(ServiceMethodAttribute), false);
@@ -118,7 +115,10 @@ namespace ObjectServer
             }
         }
 
-        public abstract void Load(IDatabase db);
+        public virtual void Load(IDatabase db)
+        {
+            this.RegisterAllServiceMethods();
+        }
 
         public string Name { get; private set; }
 
@@ -129,6 +129,11 @@ namespace ObjectServer
         public abstract bool DatabaseRequired { get; }
 
         public abstract string[] GetReferencedObjects();
+
+        public ICollection<MethodInfo> ServiceMethods
+        {
+            get { return this.serviceMethods.Values; }
+        }
 
         #region ServiceObject(s) factory methods
 
@@ -152,5 +157,15 @@ namespace ObjectServer
         //以后要支持 DLR，增加  CreateDynamicObjectInstance
 
         #endregion
+
+
+        public virtual void MergeFrom(IResource res)
+        {
+            //这里只合并业务方法，合并策略是没有就添加，有就直接覆盖，此策略可能有问题，待实践来检验
+            foreach (var method in res.ServiceMethods)
+            {
+                this.serviceMethods[method.Name] = method;
+            }
+        }
     }
 }

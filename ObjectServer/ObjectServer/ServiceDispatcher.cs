@@ -77,7 +77,7 @@ namespace ObjectServer
             var gsid = new Guid(sessionId);
             using (var ctx = new ContextScope(gsid))
             {
-                var res = ctx.Database.GetResource(resource);
+                dynamic res = ctx.Database.GetResource(resource);
                 var methodInfo = res.GetServiceMethod(method);
                 var internalArgs = new object[parameters.Length + 2];
                 internalArgs[0] = res;

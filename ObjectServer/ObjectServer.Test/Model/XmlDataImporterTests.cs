@@ -21,7 +21,7 @@ namespace ObjectServer.Model.Test
             using (var context = new ContextScope(new Guid(this.SessionId)))
             {
                 //删除所有记录
-                dynamic testObjectModel = context.Database["test.test_object"];
+                dynamic testObjectModel = context.Database.GetResource("test.test_model");
                 this.ClearModelDataTable(context);
                 this.ClearTestObjectTable(context, testObjectModel);
 
@@ -48,8 +48,8 @@ namespace ObjectServer.Model.Test
                 //删除所有记录
                 this.ClearModelDataTable(context);
                 this.ClearMasterAndChildTable(context);
-                dynamic childModel = context.Database["test.child"];
-                dynamic masterModel = context.Database["test.master"];
+                dynamic childModel = context.Database.GetResource("test.child");
+                dynamic masterModel = context.Database.GetResource("test.master");
 
                 var importer = new XmlDataImporter(context, "test");
 

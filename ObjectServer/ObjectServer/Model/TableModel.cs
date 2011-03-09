@@ -497,7 +497,7 @@ namespace ObjectServer.Model
                     { "resource_id", id },
                     { "description", msg }
                 };
-            var res = (IModel)ctx.Database[Core.AuditLogModel.ModelName];
+            var res = (IModel)ctx.Database.GetResource(Core.AuditLogModel.ModelName);
             res.CreateInternal(ctx, logRecord);
 
         }

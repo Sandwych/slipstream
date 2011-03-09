@@ -19,7 +19,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Simple_fields_crud()
         {
-            var modelName = "test.test_object";
+            var modelName = "test.test_model";
             var dbName = this.SessionId;
 
             //Delete all records first

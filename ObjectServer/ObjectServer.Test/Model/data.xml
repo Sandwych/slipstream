@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data>
 
-  <record model="test.test_object">
+  <record model="test.test_model">
     <field name="name">name1</field>
     <field name="address">address1</field>
     <field name="float_field">11.0</field>
   </record> 
 
-  <record model="test.test_object">
+  <record model="test.test_model">
     <field name="name">name2</field>
     <field name="address">address2</field>
     <field name="float_field">22.0</field>
   </record> 
 
-  <record model="test.test_object">
+  <record model="test.test_model">
     <field name="name">name3</field>
     <field name="address">address3</field>
     <field name="float_field">33.0</field>

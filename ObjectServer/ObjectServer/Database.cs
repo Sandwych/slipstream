@@ -9,6 +9,11 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
+    /// <summary>
+    /// 数据库
+    /// 用于描述一个帐套数据库的上下文环境
+    /// 一个数据库包含了该数据库中的所有对象
+    /// </summary>
     public class Database : IDatabase
     {
         private IDictionary<string, IResource> resources = new Dictionary<string, IResource>();
@@ -74,28 +79,43 @@ namespace ObjectServer
 
         public void RegisterResource(IResource res)
         {
+            if (res == null)
+            {
+                throw new ArgumentNullException("res");
+            }
+
             lock (this)
             {
-                this.resources.Add(res.Name, res);
+                IResource extendedRes;
+                //先看是否存在               
+                if (this.resources.TryGetValue(res.Name, out extendedRes))
+                {
+                    //处理单表继承（扩展）
+                    //extendedRes.
+                    throw new NotSupportedException();
+
+                }
+                else
+                {
+                    this.resources.Add(res.Name, res);
+                }
             }
         }
 
-        public dynamic GetResource(string resName)
+        public IResource GetResource(string resName)
         {
-            if (!this.resources.ContainsKey(resName))
+            IResource res;
+            if (this.resources.TryGetValue(resName, out res))
+            {
+                return res;
+            }
+            else
             {
                 var msg = string.Format("Cannot found resource: '{0}'", resName);
                 Logger.Error(() => msg);
 
                 throw new ResourceNotFoundException(msg, resName);
             }
-
-            return this.resources[resName];
-        }
-
-        public dynamic this[string resName]
-        {
-            get { return this.GetResource(resName); }
         }
 
         #endregion

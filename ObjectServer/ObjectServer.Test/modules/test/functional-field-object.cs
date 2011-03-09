@@ -22,7 +22,7 @@ namespace ObjectServer.Test
 
         private Dictionary<long, object> GetUser(IContext ctx, object[] ids)
         {
-            var userModel = ctx.Database["core.user"];
+            var userModel = ctx.Database.GetResource("core.user");
             var domain = new object[][] { new object[] { "login", "=", "root" } };
             var userIds = Search(userModel, ctx, domain, 0, 0);
             var rootId = userIds[0];

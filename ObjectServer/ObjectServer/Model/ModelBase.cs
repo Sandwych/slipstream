@@ -10,7 +10,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer.Model
 {
-    public abstract class ModelBase :  ResourceBase
+    public abstract class ModelBase : ResourceBase
     {
         private readonly IMetaFieldCollection declaredFields =
             new MetaFieldCollection();
@@ -28,6 +28,8 @@ namespace ObjectServer.Model
 
         public override void Load(IDatabase db)
         {
+            base.Load(db);
+
             //检测此模型是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(\"id\") FROM core_model WHERE name=@0";
             var count = (long)db.DataContext.QueryValue(sql, this.Name);
@@ -68,7 +70,7 @@ namespace ObjectServer.Model
         /// <returns></returns>
         public override string[] GetReferencedObjects()
         {
-            var query = 
+            var query =
                 from f in this.Fields.Values
                 where f.Type == FieldType.ManyToOne
                 select f.Relation;
@@ -102,6 +104,21 @@ namespace ObjectServer.Model
         public IEnumerable<IMetaField> GetAllStorableFields()
         {
             return this.Fields.Values.Where(f => f.IsColumn() && f.Name != "id");
+        }
+
+        public override void MergeFrom(IResource res)
+        {
+            base.MergeFrom(res);
+
+            var model = res as IModel;
+            if (model != null)
+            {
+                //这里的字段合并策略也是添加，如果存在就直接替换
+                foreach (var field in model.Fields)
+                {
+                    this.Fields[field.Key] = field.Value;
+                }
+            }
         }
 
     }

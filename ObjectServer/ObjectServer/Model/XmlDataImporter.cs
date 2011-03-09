@@ -18,7 +18,7 @@ namespace ObjectServer.Model
         public XmlDataImporter(IContext ctx, string currentModule)
         {
             this.context = ctx;
-            this.modelDataModel = ctx.Database[ModelDataModel.ModelName];
+            this.modelDataModel = (ModelDataModel)ctx.Database.GetResource(ModelDataModel.ModelName);
             this.currentModule = currentModule;
         }
 
@@ -83,7 +83,7 @@ namespace ObjectServer.Model
         private void ReadRecordElement(XmlReader reader, bool noUpdate)
         {
             var modelName = reader["model"];
-            dynamic model = this.context.Database[modelName];
+            dynamic model = this.context.Database.GetResource(modelName);
             var key = reader["key"];
 
             if (model == null)

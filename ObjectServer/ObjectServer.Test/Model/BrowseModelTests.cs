@@ -28,11 +28,11 @@ namespace ObjectServer.Model.Test
 
             using (var ctx = new ContextScope(new Guid(this.SessionId)))
             {
-                dynamic childModel = ctx.Database["test.child"];
+                dynamic childModel = ctx.Database.GetResource("test.child");
                 dynamic dynamicChild = childModel.Browse(ctx, childId);
                 Assert.AreEqual("master-obj", dynamicChild.master.name);
 
-                dynamic masterModel = ctx.Database["test.master"];
+                dynamic masterModel = ctx.Database.GetResource("test.master");
                 dynamic dynamicMaster = masterModel.Browse(ctx, masterId);
                 Assert.AreEqual(1, dynamicMaster.children.Length);
                 Assert.AreEqual("child-obj", dynamicMaster.children[0].name);

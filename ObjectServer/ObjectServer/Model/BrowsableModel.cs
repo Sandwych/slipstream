@@ -60,7 +60,7 @@ namespace ObjectServer.Model
                     break;
 
                 default:
-                    throw new NotSupportedException();                     
+                    throw new NotSupportedException();
             }
 
             return true;
@@ -74,7 +74,7 @@ namespace ObjectServer.Model
         private object GetManyToOneField(IMetaField metaField)
         {
             var destModelName = metaField.Relation;
-            var destMetaModel = (IModel)this.context.Database.GetResource(destModelName);
+            dynamic destMetaModel = this.context.Database.GetResource(destModelName);
             var fieldValue = (object[])this.record[metaField.Name];
             var destIds = new object[] { fieldValue[0] };
             //查询 ManyToOne 字段
@@ -85,12 +85,12 @@ namespace ObjectServer.Model
         private object GetOneToManyOrManyToManyField(IMetaField metaField)
         {
             var targetModelName = metaField.Relation;
-            var targetModel = (IModel)this.context.Database.GetResource(targetModelName);
+            dynamic targetModel = this.context.Database.GetResource(targetModelName);
             var thisId = this.record["id"];
             //TODO: 下面的条件可能还不够，差 active 等等
             var domain = new object[][] { new object[] { metaField.RelatedField, "=", thisId } };
             var destIds = targetModel.SearchInternal(this.context, domain, 0, 0);
-            var records = targetModel.ReadInternal(this.context, destIds, null);
+            var records = (Dictionary<string, object>[])targetModel.ReadInternal(this.context, destIds, null);
             return records.Select(r => new BrowsableModel(this.context, targetModel, r)).ToArray();
         }
     }

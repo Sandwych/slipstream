@@ -11,8 +11,7 @@ namespace ObjectServer
     public interface IResourceContainer
     {
         void RegisterResource(IResource res);
-        dynamic GetResource(string objName);
-        dynamic this[string resName] { get; }
+        IResource GetResource(string resName);
 
         /// <summary>
         /// 初始化容器里的所有资源，此方法允许多次调用，但此方法仅会调用一次资源的 Initialize()

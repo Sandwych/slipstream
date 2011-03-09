@@ -14,7 +14,7 @@ namespace ObjectServer.Model
         private dynamic model;
         private IContext context;
 
-        public TableMigrator(IDatabase db, IModel model)
+        public TableMigrator(IDatabase db, dynamic model)
         {
             this.db = db;
             this.model = model;
@@ -49,7 +49,8 @@ namespace ObjectServer.Model
 
                 if (f.Type == FieldType.ManyToOne)
                 {
-                    var refModel = (TableModel)this.db.GetResource(f.Relation);
+                    var resources = this.db as IResourceContainer; //dyanmic workaround
+                    dynamic refModel = resources.GetResource(f.Relation);
                     table.AddFK(db.DataContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
                 }
             }

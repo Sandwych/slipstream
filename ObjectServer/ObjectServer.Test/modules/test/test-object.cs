@@ -37,11 +37,11 @@ namespace ObjectServer.Test
 
 
     [Resource]
-    public class TestObject : TableModel
+    public class TestModel : TableModel
     {
 
-        public TestObject()
-            : base("test.test_object")
+        public TestModel()
+            : base("test.test_model")
         {
 
             Fields.Chars("name").SetLabel("姓名").SetSize(64).Required();
