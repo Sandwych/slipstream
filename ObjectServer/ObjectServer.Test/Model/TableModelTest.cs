@@ -203,5 +203,32 @@ namespace ObjectServer.Model.Test
             Assert.IsInstanceOf<DBNull>(record["master"]);
             Assert.AreEqual(nameFieldValue, (string)record["name"]);
         }
+
+        [Test]
+        public void test_binary_field()
+        {
+
+            using(var ctx = new ContextScope(new Guid(this.SessionId)))
+            {
+                dynamic testModel = ctx.Database.GetResource("test.test_model");
+                this.ClearTestModelTable(ctx, testModel);
+                var fieldData = new byte[] { 33, 44, 55, 66, 77 };
+                var record = new Dictionary<string, object>()
+                {
+                    { "name", "name1" },
+                    { "address", "address1" },
+                    { "binary_field", fieldData },
+                };
+                var id = (long)testModel.Create(ctx, record);
+
+                record = testModel.Read(ctx, new object[] { id }, null)[0];
+
+                var field = record["binary_field"] as byte[];
+                Assert.NotNull(field);
+                Assert.AreEqual(5, field.Length);
+                Assert.AreEqual(fieldData[0], field[0]);
+                Assert.AreEqual(fieldData[4], field[4]);
+            }
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace ObjectServer
         }
 
 
-        protected void ClearTestObjectTable(ContextScope context, dynamic testObjectModel)
+        protected void ClearTestModelTable(ContextScope context, dynamic testObjectModel)
         {
             testObjectModel = context.Database.GetResource("test.test_model");
             var ids = testObjectModel.Search(context, null, 0, 0);

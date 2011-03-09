@@ -23,7 +23,7 @@ namespace ObjectServer.Model.Test
                 //删除所有记录
                 dynamic testObjectModel = context.Database.GetResource("test.test_model");
                 this.ClearModelDataTable(context);
-                this.ClearTestObjectTable(context, testObjectModel);
+                this.ClearTestModelTable(context, testObjectModel);
 
                 var importer = new XmlDataImporter(context, "test");
 

@@ -60,6 +60,7 @@ namespace ObjectServer.Test
             Fields.Enumeration("enum_field",
                 new Dictionary<string, string>() { { "state1", "State 1" }, { "state2", "State2" } })
                 .SetLabel("Money Field");
+            Fields.Binary("binary_field").SetLabel("Binary Field");
 
         }
 
