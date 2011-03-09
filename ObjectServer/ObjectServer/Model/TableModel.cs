@@ -89,7 +89,7 @@ namespace ObjectServer.Model
         {
             base.Load(db);            
 
-            this.RegisterInternalServiceMethods(db);
+            this.RegisterInternalServiceMethods();
 
             if (this.NameGetter == null)
             {
@@ -108,10 +108,10 @@ namespace ObjectServer.Model
 
         }
 
-        private void RegisterInternalServiceMethods(IDatabase db)
+        private void RegisterInternalServiceMethods()
         {
             //只有非继承的模型才添加内置字段
-            if (!db.ContainsResource(this.Name))
+            if (!this.IsExtension)
             {
                 Fields.DateTime(CreatedTimeField).SetLabel("Created")
                     .NotRequired().SetDefaultProc(ctx => DateTime.Now);
@@ -128,6 +128,10 @@ namespace ObjectServer.Model
 
                 var selfType = typeof(TableModel);
                 this.RegisterServiceMethod(selfType.GetMethod("Search"));
+                this.RegisterServiceMethod(selfType.GetMethod("Create"));
+                this.RegisterServiceMethod(selfType.GetMethod("Read"));
+                this.RegisterServiceMethod(selfType.GetMethod("Write"));
+                this.RegisterServiceMethod(selfType.GetMethod("Delete"));
             }
         }
 

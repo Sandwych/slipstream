@@ -17,17 +17,23 @@ namespace ObjectServer.Model
 
 
         public const string IdFieldName = "id";
-        public const string ActiveFieldName = "_field";
+        public const string ActiveFieldName = "_active";
         public const string VersionFieldName = "_version";
 
         protected ModelBase(string name)
             : base(name)
         {
-            this.AddInternalFields();
         }
 
         public override void Load(IDatabase db)
         {
+            base.Load(db);
+
+            if (!this.IsExtension)
+            {
+                this.AddInternalFields();
+            }
+
             //检测此模型是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(\"id\") FROM core_model WHERE name=@0";
             var count = (long)db.DataContext.QueryValue(sql, this.Name);
@@ -38,7 +44,6 @@ namespace ObjectServer.Model
         }
 
 
-
         /// <summary>
         /// 注册内部字段
         /// </summary>
@@ -46,7 +51,6 @@ namespace ObjectServer.Model
         {
             Fields.BigInteger("id").SetLabel("ID").Required();
         }
-
 
         private void CreateModel(IDatabase db)
         {

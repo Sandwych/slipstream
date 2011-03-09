@@ -113,7 +113,10 @@ namespace ObjectServer.Test
         public SingleTableInheritedModel()
             : base("test.single_table")
         {
+            this.IsExtension = true;
             Fields.Integer("age").SetLabel("Age");
+
+            this.OverrideServiceMethod(this.GetType().GetMethod("Create"));
         }
 
         [ServiceMethod]
@@ -122,7 +125,7 @@ namespace ObjectServer.Test
         {
             var record = new Dictionary<string, object>(propertyBag);
             record["age"] = 33;
-            return model.Create(ctx, record);
+            return model.CreateInternal(ctx, record);
         }
     }
 

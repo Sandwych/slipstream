@@ -21,6 +21,8 @@ namespace ObjectServer
         protected ResourceBase(string name)
         {
             this.SetName(name);
+            this.IsExtension = false;
+            this.RegisterAllServiceMethods(this.GetType());
         }
 
         private void SetName(string name)
@@ -73,7 +75,7 @@ namespace ObjectServer
         {
             //TODO: 再好好地思考一下模型的继承问题
             this.VerifyMethod(mi);
-            this.serviceMethods[mi.Name] = mi;
+            this.serviceMethods.Add(mi.Name, mi);
         }
 
         private void VerifyMethod(MethodInfo mi)
@@ -100,28 +102,32 @@ namespace ObjectServer
             }
         }
 
-        private void RegisterAllServiceMethods()
+        private void RegisterAllServiceMethods(Type t)
         {
-            var t = this.GetType();
-            var flags = BindingFlags.Static | BindingFlags.DeclaredOnly | BindingFlags.Public;
-            var methods = t.GetMethods(flags);
+            Debug.Assert(t != null);
+
+            var methods = t.GetMethods();
             foreach (var m in methods)
             {
                 var attrs = m.GetCustomAttributes(typeof(ServiceMethodAttribute), false);
-                if (attrs.Length > 0)
+                if (attrs.Length > 0 && m.IsStatic && m.ReflectedType == t)
                 {
                     this.RegisterServiceMethod(m);
                 }
             }
         }
 
-        public abstract void Load(IDatabase db);
+        public virtual void Load(IDatabase db)
+        {
+        }
 
         public string Name { get; private set; }
 
         public string Label { get; protected set; }
 
         public string Module { get; private set; }
+
+        public bool IsExtension { get; protected set; }
 
         public abstract bool DatabaseRequired { get; }
 
@@ -155,14 +161,20 @@ namespace ObjectServer
 
         #endregion
 
-
         public virtual void MergeFrom(IResource res)
         {
-            //这里只合并业务方法，合并策略是没有就添加，有就直接覆盖，此策略可能有问题，待实践来检验
-            foreach (var method in res.ServiceMethods)
+        }
+
+        public MethodInfo OverrideServiceMethod(MethodInfo mi)
+        {
+            if (mi == null)
             {
-                this.serviceMethods[method.Name] = method;
+                throw new ArgumentNullException("mi");
             }
+
+            var originMethod = this.serviceMethods[mi.Name];
+            this.serviceMethods[mi.Name] = mi;
+            return originMethod;
         }
     }
 }

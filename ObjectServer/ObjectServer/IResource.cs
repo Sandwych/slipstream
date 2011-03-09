@@ -16,6 +16,7 @@ namespace ObjectServer
         string Label { get; }
         string Name { get; }
         string Module { get; }
+        bool IsExtension { get; }
 
         MethodInfo GetServiceMethod(string name);
         ICollection<MethodInfo> ServiceMethods { get; }
@@ -29,5 +30,7 @@ namespace ObjectServer
 
         //从另一个资源合并字段与业务方法
         void MergeFrom(IResource res);
+
+        MethodInfo OverrideServiceMethod(MethodInfo mi);
     }
 }
