@@ -115,8 +115,6 @@ namespace ObjectServer.Test
         {
             this.IsExtension = true;
             Fields.Integer("age").SetLabel("Age");
-
-            this.OverrideServiceMethod(this.GetType().GetMethod("Create"));
         }
 
         [ServiceMethod]

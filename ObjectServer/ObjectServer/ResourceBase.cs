@@ -165,16 +165,5 @@ namespace ObjectServer
         {
         }
 
-        public MethodInfo OverrideServiceMethod(MethodInfo mi)
-        {
-            if (mi == null)
-            {
-                throw new ArgumentNullException("mi");
-            }
-
-            var originMethod = this.serviceMethods[mi.Name];
-            this.serviceMethods[mi.Name] = mi;
-            return originMethod;
-        }
     }
 }

@@ -31,6 +31,5 @@ namespace ObjectServer
         //从另一个资源合并字段与业务方法
         void MergeFrom(IResource res);
 
-        MethodInfo OverrideServiceMethod(MethodInfo mi);
     }
 }
