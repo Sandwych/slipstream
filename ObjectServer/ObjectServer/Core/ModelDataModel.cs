@@ -28,10 +28,10 @@ namespace ObjectServer.Core
             Fields.Remove(CreatedUserField);
             Fields.Remove(ModifiedUserField);
 
-            Fields.Chars("name").SetLabel("Key").SetRequired().SetSize(128);
-            Fields.Chars("module").SetLabel("Module").SetRequired().SetSize(64);
-            Fields.Chars("model").SetLabel("Model").SetRequired().SetSize(64);
-            Fields.BigInteger("ref_id").SetLabel("Referenced ID").SetRequired();
+            Fields.Chars("name").SetLabel("Key").Required().SetSize(128);
+            Fields.Chars("module").SetLabel("Module").Required().SetSize(64);
+            Fields.Chars("model").SetLabel("Model").Required().SetSize(64);
+            Fields.BigInteger("ref_id").SetLabel("Referenced ID").Required();
             Fields.Text("value").SetLabel("Value");
         }
 

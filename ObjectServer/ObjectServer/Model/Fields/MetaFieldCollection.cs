@@ -103,7 +103,7 @@ namespace ObjectServer.Model
         public IMetaField Version()
         {
             var field = new ScalarMetaField(ModelBase.VersionFieldName, FieldType.BigInteger);
-            field.Required = true;
+            field.Required();
             this.Add(field.Name, field);
             return field;
         }

@@ -19,10 +19,10 @@ namespace ObjectServer.Core
             : base(ModelName)
         {
 
-            Fields.Chars("name").SetLabel("Name").SetSize(256).SetRequired();
+            Fields.Chars("name").SetLabel("Name").SetSize(256).Required();
             Fields.Chars("label").SetLabel("Label").SetSize(256);
             Fields.Text("info").SetLabel("Information");
-            Fields.Chars("module").SetLabel("Module").SetSize(128).SetRequired();
+            Fields.Chars("module").SetLabel("Module").SetSize(128).Required();
             Fields.OneToMany("fields", "core.field", "module").SetLabel("Fields");
         }
     }

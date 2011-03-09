@@ -75,17 +75,17 @@ namespace ObjectServer.Model
             this.SetName(name);
 
             Fields.DateTime(CreatedTimeField).SetLabel("Created")
-                .SetNotRequired().SetDefaultProc(ctx => DateTime.Now);
+                .NotRequired().SetDefaultProc(ctx => DateTime.Now);
 
             Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
-                .SetNotRequired().SetDefaultProc(ctx => DBNull.Value);
+                .NotRequired().SetDefaultProc(ctx => DBNull.Value);
 
             Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
-                .SetNotRequired().SetReadonly()
+                .NotRequired().Readonly()
                 .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
             Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
-                .SetNotRequired().SetDefaultProc(ctx => DBNull.Value);
+                .NotRequired().SetDefaultProc(ctx => DBNull.Value);
         }
 
         private void SetName(string name)
@@ -249,7 +249,7 @@ namespace ObjectServer.Model
             var allFields = record.Keys; //记录中的所有字段
             //所有可更新的字段
             var updatableColumnFields = allFields.Where(
-                f => this.Fields[f].IsColumn() && !this.Fields[f].Readonly);
+                f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly);
 
             //TODO 处理复杂字段
             //检查字段

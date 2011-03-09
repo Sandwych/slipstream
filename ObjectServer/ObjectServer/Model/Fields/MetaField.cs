@@ -8,15 +8,16 @@ namespace ObjectServer.Model
 {
     internal abstract class MetaField : IMetaField
     {
-        public MetaField()
+        public MetaField(string name)
         {
+            this.SetName(name);
+
             this.Label = string.Empty;
-            this.Required = false;
+            this.IsRequired = false;
             this.Lazy = false;
         }
 
-        public MetaField(string name, FieldType type)
-            : this()
+        private void SetName(string name)
         {
             if (string.IsNullOrEmpty(name) || name.Trim().Length == 0)
             {
@@ -24,20 +25,25 @@ namespace ObjectServer.Model
             }
 
             this.Name = name;
-            this.Type = type;
-
             this.Internal = name == ModelBase.VersionFieldName
                 || name == ModelBase.IdFieldName
                 || name == ModelBase.ActiveFieldName;
         }
 
+        public MetaField(string name, FieldType type)
+            : this(name)
+        {
+            this.Type = type;
+
+        }
+
         #region IField 成员
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
-        public string Label { get; set; }
+        public string Label { get; private set; }
 
-        public bool Functional
+        public bool IsFunctional
         {
             get { return this.Getter != null; }
         }
@@ -54,7 +60,7 @@ namespace ObjectServer.Model
 
         public virtual int Size { get; set; }
 
-        public virtual bool Required { get; set; }
+        public virtual bool IsRequired { get; private set; }
 
         public virtual string Relation { get; set; }
 
@@ -64,11 +70,13 @@ namespace ObjectServer.Model
 
         public virtual bool Internal { get; set; }
 
-        public virtual bool Readonly { get; set; }
+        public virtual bool IsReadonly { get; set; }
 
         public virtual bool Lazy { get; set; }
 
         public abstract bool IsScalar { get; }
+
+        public abstract OnDeleteAction OnDeleteAction { get; set; }
 
         public virtual IDictionary<string, string> Options
         {
@@ -79,8 +87,6 @@ namespace ObjectServer.Model
         }
 
         public abstract bool IsColumn();
-
-        public abstract ReferentialAction ReferentialAction { get; set; }
 
         public void Validate()
         {
@@ -93,7 +99,7 @@ namespace ObjectServer.Model
         public Dictionary<long, object> GetFieldValues(
             IContext ctx, List<Dictionary<string, object>> records)
         {
-            if (this.Functional)
+            if (this.IsFunctional)
             {
                 return this.GetFieldValuesFunctional(ctx, records);
             }
@@ -118,5 +124,62 @@ namespace ObjectServer.Model
 
             return result;
         }
+
+
+        #region Fluent interface for options
+        public IMetaField SetLabel(string label)
+        {
+            this.Label = label;
+            return this;
+        }
+
+        public IMetaField Required()
+        {
+            this.IsRequired = true;
+            return this;
+        }
+
+        public IMetaField NotRequired()
+        {
+            this.IsRequired = false;
+            return this;
+        }
+
+        public IMetaField SetGetter(FieldGetter fieldGetter)
+        {
+            this.Getter = fieldGetter;
+            return this;
+        }
+
+        public IMetaField SetDefaultProc(FieldDefaultProc defaultProc)
+        {
+            this.DefaultProc = defaultProc;
+            return this;
+        }
+
+        public IMetaField SetSize(int size)
+        {
+            this.Size = size;
+            return this;
+        }
+
+        public IMetaField Readonly()
+        {
+            this.IsReadonly = true;
+            return this;
+        }
+
+        public IMetaField NotReadonly()
+        {
+            this.IsReadonly = false;
+            return this;
+        }
+
+        public IMetaField OnDelete(OnDeleteAction act)
+        {
+            this.OnDeleteAction = act;
+            return this;
+        }
+        #endregion
     }
 }

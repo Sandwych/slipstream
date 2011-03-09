@@ -50,7 +50,7 @@ namespace ObjectServer.Model
                 if (f.Type == FieldType.ManyToOne)
                 {
                     var refModel = (TableModel)this.db.GetResource(f.Relation);
-                    table.AddFK(db.DataContext, f.Name, refModel.TableName, ReferentialAction.SetNull);
+                    table.AddFK(db.DataContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
                 }
             }
         }
@@ -100,11 +100,11 @@ namespace ObjectServer.Model
             }
 
 
-            if (!columnInfo.Nullable && !field.Required) //"NOT NULL" to nullable
+            if (!columnInfo.Nullable && !field.IsRequired) //"NOT NULL" to nullable
             {
                 this.SetColumnNullable(table, field);
             }
-            else if (columnInfo.Nullable && field.Required) //Nullable to 'NOT NULL'
+            else if (columnInfo.Nullable && field.IsRequired) //Nullable to 'NOT NULL'
             {
                 this.SetColumnNotNullable(table, field);
             }

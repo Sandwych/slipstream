@@ -24,7 +24,7 @@ namespace ObjectServer.Backend
         void AddConstraint(IDataContext db, string constraintName, string constraint);
         void DeleteConstraint(IDataContext db, string constraintName);
 
-        void AddFK(IDataContext db, string columnName, string refTable, ReferentialAction refAct);
+        void AddFK(IDataContext db, string columnName, string refTable, OnDeleteAction refAct);
         void DeleteFK(IDataContext db, string columnName);
         bool FKExists(IDataContext db, string columnName);
     }

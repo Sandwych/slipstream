@@ -4,19 +4,21 @@
 
 * 实体的继承
 
-* 用户登录与注销
+* 用户登录与注销（完成）
 
-* Many2Many 字段
+* Many2Many 字段（完成）
 
 * SQLite 支持
 
-* 自动初始化数据库
+* 自动初始化数据库（完成）
 
 * log4net 配置
 
 * 层次结构的实体类
 
 * 复杂字段类型的 Setter
+
+* 定时任务调度器
 
 * 实现以下字段类型：
 	Reference 字段 
@@ -29,3 +31,5 @@
 * 给字段属性加上 IsScalar IsLazy
 
 IMetaField 缺少 on delete
+
+* 重构 MetaField 的 Fluent 接口

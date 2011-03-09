@@ -17,7 +17,7 @@ namespace ObjectServer.Test
         public ChildObject()
             : base("test.child")
         {
-            Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(64);
+            Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
             Fields.ManyToOne("master", "test.master").SetLabel("Master");
         }
     }
@@ -44,15 +44,15 @@ namespace ObjectServer.Test
             : base("test.test_object")
         {
 
-            Fields.Chars("name").SetLabel("姓名").SetSize(64).SetRequired();
-            Fields.Chars("address").SetLabel("地址").SetSize(200).SetRequired();
+            Fields.Chars("name").SetLabel("姓名").SetSize(64).Required();
+            Fields.Chars("address").SetLabel("地址").SetSize(200).Required();
             Fields.Integer("field1").SetLabel("数1");
             Fields.Integer("field2").SetLabel("数2");
             Fields.Integer("field3").SetLabel("数3").SetGetter(this.GetField3);
             Fields.BigInteger("big_int_field").SetLabel("Bit Int Field");
             Fields.Boolean("boolean_field")
                 .SetLabel("Boolean Field")
-                .SetRequired()
+                .Required()
                 .SetDefaultProc(s => true);
             Fields.Text("text_field").SetLabel("Text Field");
             Fields.Float("float_field").SetLabel("Float Field");

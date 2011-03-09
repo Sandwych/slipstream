@@ -28,7 +28,7 @@ namespace ObjectServer.Model
 
         public override bool IsColumn()
         {
-            return !this.Functional;
+            return !this.IsFunctional;
         }
 
         public override bool IsScalar
@@ -36,7 +36,7 @@ namespace ObjectServer.Model
             get { return false; }
         }
 
-        public override ObjectServer.Model.ReferentialAction ReferentialAction
+        public override ObjectServer.Model.OnDeleteAction OnDeleteAction
         {
             get
             {

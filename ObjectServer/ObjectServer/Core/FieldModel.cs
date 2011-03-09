@@ -16,11 +16,11 @@ namespace ObjectServer.Core
             : base(ModelName)
         {
 
-            Fields.ManyToOne("model", "core.model").SetLabel("Model").SetRequired();
-            Fields.Chars("name").SetLabel("Name").SetSize(64).SetRequired();
-            Fields.Chars("label").SetLabel("Label").SetSize(256).SetNotRequired();
-            Fields.Chars("type").SetLabel("Type").SetSize(32).SetRequired();
-            Fields.Chars("help").SetLabel("Help").SetSize(256).SetNotRequired();
+            Fields.ManyToOne("model", "core.model").SetLabel("Model").Required();
+            Fields.Chars("name").SetLabel("Name").SetSize(64).Required();
+            Fields.Chars("label").SetLabel("Label").SetSize(256).NotRequired();
+            Fields.Chars("type").SetLabel("Type").SetSize(32).Required();
+            Fields.Chars("help").SetLabel("Help").SetSize(256).NotRequired();
         }
 
 

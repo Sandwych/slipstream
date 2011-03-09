@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public enum ReferentialAction
+    public enum OnDeleteAction
     {
         Restrict,
         NoAction,

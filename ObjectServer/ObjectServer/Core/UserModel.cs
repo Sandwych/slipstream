@@ -22,11 +22,11 @@ namespace ObjectServer.Core
             : base(ModelName)
         {
             Fields.Version().SetLabel("Version");
-            Fields.Chars("login").SetLabel("User Name").SetSize(64).SetRequired();
-            Fields.Chars("password").SetLabel("Password").SetSize(40).SetRequired();
-            Fields.Chars("salt").SetLabel("Salt").SetSize(64).SetRequired();
-            Fields.Boolean("admin").SetLabel("Administrator?").SetRequired();
-            Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(64);
+            Fields.Chars("login").SetLabel("User Name").SetSize(64).Required();
+            Fields.Chars("password").SetLabel("Password").SetSize(40).Required();
+            Fields.Chars("salt").SetLabel("Salt").SetSize(64).Required();
+            Fields.Boolean("admin").SetLabel("Administrator?").Required();
+            Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
 
             Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
         }
@@ -201,8 +201,8 @@ namespace ObjectServer.Core
         {
             this.TableName = "core_user_group_rel";
 
-            Fields.ManyToOne("uid", "core.user").SetLabel("User").SetRequired();
-            Fields.ManyToOne("gid", "core.group").SetLabel("Group").SetRequired();
+            Fields.ManyToOne("uid", "core.user").SetLabel("User").Required();
+            Fields.ManyToOne("gid", "core.group").SetLabel("Group").Required();
 
         }
     }

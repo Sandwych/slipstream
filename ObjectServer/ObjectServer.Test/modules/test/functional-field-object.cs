@@ -16,7 +16,7 @@ namespace ObjectServer.Test
         public FunctionalFieldObject()
             : base(ModelName)
         {
-            Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(64);
+            Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
             Fields.ManyToOne("user", "core.user").SetGetter(GetUser);
         }
 

@@ -56,7 +56,7 @@ namespace ObjectServer.Model
             return false;
         }
 
-        public override bool Readonly
+        public override bool IsReadonly
         {
             get { return false; }
             set { throw new NotImplementedException(); }
@@ -79,7 +79,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public override ObjectServer.Model.ReferentialAction ReferentialAction
+        public override ObjectServer.Model.OnDeleteAction OnDeleteAction
         {
             get
             {

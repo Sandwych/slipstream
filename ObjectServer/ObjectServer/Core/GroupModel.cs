@@ -19,8 +19,8 @@ namespace ObjectServer.Core
             : base("core.group")
         {
 
-            Fields.Chars("name").SetLabel("Name").SetSize(128).SetRequired();
-            Fields.ManyToMany("users", "core.user_group", "gid", "uid").SetLabel("Users").SetRequired();
+            Fields.Chars("name").SetLabel("Name").SetSize(128).Required();
+            Fields.ManyToMany("users", "core.user_group", "gid", "uid").SetLabel("Users").Required();
         }
 
     }

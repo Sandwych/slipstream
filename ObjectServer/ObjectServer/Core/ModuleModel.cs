@@ -27,8 +27,8 @@ namespace ObjectServer.Core
         public ModuleModel()
             : base(ModelName)
         {
-            Fields.Chars("name").SetLabel("Name").SetRequired().SetSize(128);
-            Fields.Chars("state").SetLabel("State").SetRequired().SetSize(16);
+            Fields.Chars("name").SetLabel("Name").Required().SetSize(128);
+            Fields.Chars("state").SetLabel("State").Required().SetSize(16);
             Fields.Text("info").SetLabel("Information");
         }
 

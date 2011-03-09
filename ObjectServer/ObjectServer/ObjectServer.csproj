@@ -169,7 +169,6 @@
     <Compile Include="Model\XmlDataImporter.cs" />
     <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
-    <Compile Include="Model\Fields\MetaFieldExtensions.cs" />
     <Compile Include="Model\Fields\ReferenceMetaField.cs" />
     <Compile Include="Model\Fields\EnumerationMetaField.cs" />
     <Compile Include="NamingRule.cs" />
@@ -189,7 +188,7 @@
     <Compile Include="Model\Fields\ManyToManyMetaField.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="Model\ReferentialAction.cs" />
+    <Compile Include="Model\OnDeleteAction.cs" />
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Model\ModelQuery.cs" />
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
@@ -294,9 +293,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Workflow\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

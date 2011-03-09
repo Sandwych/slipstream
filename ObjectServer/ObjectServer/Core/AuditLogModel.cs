@@ -21,11 +21,11 @@ namespace ObjectServer.Core
         {
             Fields.ManyToOne("user", "core.user").SetLabel("User");
             Fields.Boolean("marked").SetLabel("Marked As Read")
-                .SetRequired().SetDefaultProc(ctx => false);
-            Fields.Chars("resource").SetLabel("Resource Name").SetSize(64).SetRequired();
-            Fields.BigInteger("resource_id").SetLabel("Resource ID").SetRequired();
+                .Required().SetDefaultProc(ctx => false);
+            Fields.Chars("resource").SetLabel("Resource Name").SetSize(64).Required();
+            Fields.BigInteger("resource_id").SetLabel("Resource ID").Required();
             Fields.Chars("description").SetLabel("Description")
-                .SetRequired().SetSize(256);
+                .Required().SetSize(256);
         }
 
     }

@@ -18,14 +18,14 @@ namespace ObjectServer.Backend.Postgresql
     internal sealed class PgTableContext : ITableContext
     {
         private IDictionary<string, IColumnMetadata> columns = new SortedList<string, IColumnMetadata>();
-        private readonly IDictionary<ReferentialAction, string> refActMapping =
-            new Dictionary<ReferentialAction, string>()
+        private readonly IDictionary<OnDeleteAction, string> onDeleteMapping =
+            new Dictionary<OnDeleteAction, string>()
             {
-                { ReferentialAction.SetNull, "SET NULL" },
-                { ReferentialAction.SetDefault, "SET DEFAULT" },
-                { ReferentialAction.Cascade, "CASCADE" },
-                { ReferentialAction.NoAction, "NO ACTION" },
-                { ReferentialAction.Restrict, "RESTRICT" },
+                { OnDeleteAction.SetNull, "SET NULL" },
+                { OnDeleteAction.SetDefault, "SET DEFAULT" },
+                { OnDeleteAction.Cascade, "CASCADE" },
+                { OnDeleteAction.NoAction, "NO ACTION" },
+                { OnDeleteAction.Restrict, "RESTRICT" },
             };
 
         public PgTableContext(IDataContext db, string tableName)
@@ -66,7 +66,7 @@ namespace ObjectServer.Backend.Postgresql
         public void AddColumn(IDataContext db, IMetaField field)
         {
             var sqlType = PgSqlTypeConverter.GetSqlType(field);
-            var notNull = field.Required ? "NOT NULL" : "";
+            var notNull = field.IsRequired ? "NOT NULL" : "";
 
             var sql = string.Format(
                 @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2} {3}",
@@ -149,9 +149,9 @@ SELECT column_name, data_type, is_nullable
         }
 
 
-        public void AddFK(IDataContext db, string columnName, string refTable, ReferentialAction refAct)
+        public void AddFK(IDataContext db, string columnName, string refTable, OnDeleteAction act)
         {
-            var onDelete = refActMapping[refAct];
+            var onDelete = onDeleteMapping[act];
 
             var fkName = this.GenerateFkName(columnName);
             var sql = string.Format(

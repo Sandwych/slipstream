@@ -44,7 +44,7 @@ namespace ObjectServer.Model
         /// </summary>
         private void AddInternalFields()
         {
-            Fields.BigInteger("id").SetLabel("ID").SetRequired();
+            Fields.BigInteger("id").SetLabel("ID").Required();
         }
 
 

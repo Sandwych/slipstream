@@ -8,20 +8,21 @@ namespace ObjectServer.Model
     public interface IMetaField
     {
         string Name { get; }
-        string Label { get; set; }
-        bool Functional { get; }
+        string Label { get; }
+        bool IsFunctional { get; }
         FieldGetter Getter { get; set; }
         FieldDefaultProc DefaultProc { get; set; }
         FieldType Type { get; }
         int Size { get; set; }
-        bool Required { get; set; }
+        bool IsRequired { get; }
         string Relation { get; set; }
         string OriginField { get; set; }
         string RelatedField { get; set; }
         bool Internal { get; }
-        bool Readonly { get; set; }
+        bool IsReadonly { get; set; }
         bool Lazy { get; set; }
         bool IsScalar { get; }
+        OnDeleteAction OnDeleteAction { get; set; }
 
         IDictionary<string, string> Options { get; }
 
@@ -35,5 +36,21 @@ namespace ObjectServer.Model
 
         Dictionary<long, object> GetFieldValues(
             IContext ctx, List<Dictionary<string, object>> records);
+
+
+        #region Fluent interface 
+
+        IMetaField SetLabel(string label);
+        IMetaField Required();
+        IMetaField NotRequired();
+        IMetaField SetGetter(FieldGetter fieldGetter);
+        IMetaField SetDefaultProc(FieldDefaultProc defaultProc);
+        IMetaField SetSize(int size);
+        IMetaField Readonly();
+        IMetaField NotReadonly();
+        IMetaField OnDelete(OnDeleteAction act);
+     
+        #endregion
+
     }
 }

@@ -7,7 +7,7 @@ namespace ObjectServer.Model
 {
     internal sealed class ManyToOneMetaField : MetaField
     {
-        ReferentialAction refAct;
+        OnDeleteAction onDelete;
         /// <summary>
         /// 
         /// </summary>
@@ -65,25 +65,21 @@ namespace ObjectServer.Model
             return result;
         }
 
-        public override bool Required
+        public override bool IsRequired
         {
             get
             {
-                if (this.ReferentialAction == ReferentialAction.SetNull)
+                if (this.OnDeleteAction == OnDeleteAction.SetNull)
                 {
-                    this.ReferentialAction = ReferentialAction.Restrict;
+                    this.OnDeleteAction = OnDeleteAction.Restrict;
                 }
-                return base.Required;
-            }
-            set
-            {
-                base.Required = value;
+                return base.IsRequired;
             }
         }
 
         public override bool IsColumn()
         {
-            return !this.Functional;
+            return !this.IsFunctional;
         }
 
         public override bool IsScalar
@@ -103,19 +99,19 @@ namespace ObjectServer.Model
             }
         }
 
-        public override ReferentialAction ReferentialAction
+        public override OnDeleteAction OnDeleteAction
         {
             get
             {
-                return this.refAct;
+                return this.onDelete;
             }
             set
             {
-                if (this.Required && ReferentialAction == ReferentialAction.SetNull)
+                if (this.IsRequired && OnDeleteAction == OnDeleteAction.SetNull)
                 {
                     throw new ArgumentException("不能同时设置为必填字段和可空");
                 }
-                this.refAct = value;
+                this.onDelete = value;
             }
         }
     }

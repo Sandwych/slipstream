@@ -48,7 +48,7 @@ namespace ObjectServer.Model
             return false;
         }
 
-        public override bool Readonly
+        public override bool IsReadonly
         {
             get
             {
@@ -77,7 +77,7 @@ namespace ObjectServer.Model
             get { return false; }
         }
 
-        public override ObjectServer.Model.ReferentialAction ReferentialAction
+        public override ObjectServer.Model.OnDeleteAction OnDeleteAction
         {
             get
             {
