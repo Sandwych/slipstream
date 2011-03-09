@@ -91,8 +91,7 @@ namespace ObjectServer
                 if (this.resources.TryGetValue(res.Name, out extendedRes))
                 {
                     //处理单表继承（扩展）
-                    //extendedRes.
-                    throw new NotSupportedException();
+                    extendedRes.MergeFrom(res);                 
 
                 }
                 else

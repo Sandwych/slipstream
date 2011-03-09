@@ -93,4 +93,27 @@ namespace ObjectServer.Test
         }
     }
 
+    //////////////////// 继承测试的表 ///////////////////
+
+    [Resource]
+    public sealed class SingleTableBaseModel : TableModel
+    {
+        public SingleTableBaseModel()
+            : base("test.single_table")
+        {
+            Fields.Chars("name").SetLabel("Name").Required().SetSize(64);          
+        }
+    }
+
+
+    [Resource]
+    public sealed class SingleTableInheritedModel : TableModel
+    {
+        public SingleTableInheritedModel()
+            : base("test.single_table")
+        {
+            Fields.Integer("age").SetLabel("Age");            
+        }
+    }
+
 }
