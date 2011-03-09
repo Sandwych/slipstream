@@ -71,9 +71,9 @@ namespace ObjectServer
         /// </summary>
         protected void RegisterServiceMethod(MethodInfo mi)
         {
+            //TODO: 再好好地思考一下模型的继承问题
             this.VerifyMethod(mi);
-
-            this.serviceMethods.Add(mi.Name, mi);
+            this.serviceMethods[mi.Name] = mi;
         }
 
         private void VerifyMethod(MethodInfo mi)
@@ -103,7 +103,7 @@ namespace ObjectServer
         private void RegisterAllServiceMethods()
         {
             var t = this.GetType();
-            var flags = BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Public;
+            var flags = BindingFlags.Static | BindingFlags.DeclaredOnly | BindingFlags.Public;
             var methods = t.GetMethods(flags);
             foreach (var m in methods)
             {
@@ -115,10 +115,7 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Load(IDatabase db)
-        {
-            this.RegisterAllServiceMethods();
-        }
+        public abstract void Load(IDatabase db);
 
         public string Name { get; private set; }
 

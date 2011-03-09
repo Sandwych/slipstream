@@ -28,8 +28,6 @@ namespace ObjectServer.Model
 
         public override void Load(IDatabase db)
         {
-            base.Load(db);
-
             //检测此模型是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(\"id\") FROM core_model WHERE name=@0";
             var count = (long)db.DataContext.QueryValue(sql, this.Name);

@@ -117,6 +117,12 @@ namespace ObjectServer
             }
         }
 
+        public bool ContainsResource(string resName)
+        {
+            //TODO 检查参数
+            return this.resources.ContainsKey(resName);
+        }
+
         #endregion
 
         private static void ResourceDependencySort(IList<IResource> resList)

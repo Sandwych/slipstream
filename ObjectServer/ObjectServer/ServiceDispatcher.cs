@@ -184,12 +184,16 @@ namespace ObjectServer
 
         public static IExportedService CreateDispatcher()
         {
-            var generator = new ProxyGenerator();
-            var target = new ServiceDispatcher();
-            var proxy = generator.CreateInterfaceProxyWithTarget<IExportedService>(
-                target, new MethodCachingInterceptor(), new ServiceMethodInterceptor());
+#if DEBUG
+                return new ServiceDispatcher();
+#else
+                var generator = new ProxyGenerator();
+                var target = new ServiceDispatcher();
+                var proxy = generator.CreateInterfaceProxyWithTarget<IExportedService>(
+                    target, new MethodCachingInterceptor(), new ServiceMethodInterceptor());
 
-            return proxy;
+                return proxy;
+#endif //DEBUG
         }
     }
 }

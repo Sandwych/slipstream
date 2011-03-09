@@ -74,18 +74,7 @@ namespace ObjectServer.Model
             this.LogWriting = false;
             this.SetName(name);
 
-            Fields.DateTime(CreatedTimeField).SetLabel("Created")
-                .NotRequired().SetDefaultProc(ctx => DateTime.Now);
 
-            Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
-                .NotRequired().SetDefaultProc(ctx => DBNull.Value);
-
-            Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
-                .NotRequired().Readonly()
-                .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
-
-            Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
-                .NotRequired().SetDefaultProc(ctx => DBNull.Value);
         }
 
         private void SetName(string name)
@@ -98,7 +87,9 @@ namespace ObjectServer.Model
         /// </summary>
         public override void Load(IDatabase db)
         {
-            base.Load(db);
+            base.Load(db);            
+
+            this.RegisterInternalServiceMethods(db);
 
             if (this.NameGetter == null)
             {
@@ -115,6 +106,29 @@ namespace ObjectServer.Model
             var migrator = new TableMigrator(db, this);
             migrator.Migrate();
 
+        }
+
+        private void RegisterInternalServiceMethods(IDatabase db)
+        {
+            //只有非继承的模型才添加内置字段
+            if (!db.ContainsResource(this.Name))
+            {
+                Fields.DateTime(CreatedTimeField).SetLabel("Created")
+                    .NotRequired().SetDefaultProc(ctx => DateTime.Now);
+
+                Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
+                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+
+                Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
+                    .NotRequired().Readonly()
+                    .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+
+                Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
+                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+
+                var selfType = typeof(TableModel);
+                this.RegisterServiceMethod(selfType.GetMethod("Search"));
+            }
         }
 
         public virtual object[] SearchInternal(

@@ -113,7 +113,16 @@ namespace ObjectServer.Test
         public SingleTableInheritedModel()
             : base("test.single_table")
         {
-            Fields.Integer("age").SetLabel("Age");            
+            Fields.Integer("age").SetLabel("Age");
+        }
+
+        [ServiceMethod]
+        public new static long Create(
+            dynamic model, IContext ctx, IDictionary<string, object> propertyBag)
+        {
+            var record = new Dictionary<string, object>(propertyBag);
+            record["age"] = 33;
+            return model.Create(ctx, record);
         }
     }
 
