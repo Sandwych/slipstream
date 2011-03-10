@@ -9,7 +9,7 @@
   xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
   mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
 
-    <toolkit:SystemColorsTheme>
+    <toolkit:TwilightBlueTheme>
 
         <Grid x:Name="LayoutRoot" Style="{StaticResource LayoutRootGridStyle}">
 
@@ -53,6 +53,6 @@
             </Grid>
 
         </Grid>
-    </toolkit:SystemColorsTheme>
+    </toolkit:TwilightBlueTheme>
 
 </UserControl>

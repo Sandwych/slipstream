@@ -62,7 +62,7 @@
                        VerticalAlignment="Center" Height="22" HorizontalAlignment="Center" Foreground="#FF990000" />
 
             <Button x:Name="buttonSignIn" Content="登录" Click="buttonSignIn_Click"  HorizontalAlignment="Right"
-                    Grid.Row="5" Grid.ColumnSpan="3" Width="75"  Height="25" />
+                    Grid.Row="5" Grid.ColumnSpan="2" Width="75"  Height="25" />
         </Grid>
     </StackPanel>
 </navigation:Page>

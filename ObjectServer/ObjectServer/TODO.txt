@@ -23,8 +23,8 @@
 * 实现以下字段类型：
 	Reference 字段 
 	Property 字段
-	Binary 字段
-	Enumeration 字段
+	Binary 字段（完成）
+	Enumeration 字段（进行中，需要检查赋予获取的字符串是否属于 enum 定义的范围）
 	
 * Money 类型名称替换成 Decimal（完成）
 
@@ -38,4 +38,4 @@ IMetaField 缺少 on delete（完成）
 
 * Many2one 可空的字段有问题
 
-* 导入数据检测 key 是否已经存在还存在问题，会重复创建
+* 导入数据检测 key 是否已经存在还存在问题，会重复创建（完成）

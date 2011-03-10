@@ -22,8 +22,6 @@
         public ContentPage()
         {
             InitializeComponent();
-
-            this.treeMenus.SelectedValuePath = "Id";
         }
 
         /// <summary>
@@ -35,12 +33,12 @@
             this.Title = ApplicationStrings.HomePageTitle;
             this.TextUserName.Text = app.ClientService.LoggedUserName;
             this.TextServerUri.Text = app.ClientService.ServerAddress.ToString();
-
-            this.treeMenus.Items.Clear();
+            app.IsBusy = true;
 
             app.ClientService.ReadAllMenus(menus =>
             {
-                this.InsertRootMenus(menus);
+                this.Menu.LoadMenus(menus);
+                app.IsBusy = false;                    
             });
         }
 
@@ -49,58 +47,7 @@
 
         }
 
-        private void InsertRootMenus(IEnumerable<Menu> menus)
-        {
-            var rootMenus =
-                from m in menus
-                where m.ParentId == null
-                orderby m.Ordinal
-                select m;
 
-            foreach (var menu in rootMenus)
-            {
-                var node = InsertMenu(null, menu);
-
-                InsertSubmenus(menus, menu, node);
-            }
-        }
-
-
-        private TreeViewItem InsertMenu(TreeViewItem parent, Menu menu)
-        {
-            var node = new TreeViewItem();
-            node.Header = menu.Name;
-            node.DataContext = menu;
-            node.DisplayMemberPath = "Name";
-
-            if (parent != null)
-            {
-                parent.Items.Add(node);
-            }
-            else
-            {
-                this.treeMenus.Items.Add(node);
-            }
-            return node;
-        }
-
-        private void InsertSubmenus(
-            IEnumerable<Menu> menus, Menu parentMenu, TreeViewItem parentNode)
-        {
-            //子菜单们
-            var submenus =
-                from m in menus
-                where m.ParentId != null && m.ParentId == parentMenu.Id
-                orderby m.Ordinal
-                select m;
-
-            foreach (var menu in submenus)
-            {
-                var node = InsertMenu(parentNode, menu);
-                //再把子子菜单们找出来
-                InsertSubmenus(menus, menu, node);
-            }
-        }
 
 
     }
