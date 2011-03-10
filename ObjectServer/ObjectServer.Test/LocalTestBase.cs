@@ -37,7 +37,7 @@ namespace ObjectServer
 
         protected void ClearModelDataTable(ResourceScope context)
         {
-            dynamic modelDataModel = context.Database.GetResource("core.model_data");
+            dynamic modelDataModel = context.DatabaseProfile.GetResource("core.model_data");
             var ids = modelDataModel.Search(context, null, 0, 0);
             if (ids.Length > 0)
             {
@@ -48,7 +48,7 @@ namespace ObjectServer
 
         protected void ClearTestModelTable(ResourceScope context, dynamic testObjectModel)
         {
-            testObjectModel = context.Database.GetResource("test.test_model");
+            testObjectModel = context.DatabaseProfile.GetResource("test.test_model");
             var ids = testObjectModel.Search(context, null, 0, 0);
             if (ids.Length > 0)
             {
@@ -59,13 +59,13 @@ namespace ObjectServer
 
         protected void ClearMasterAndChildTable(ResourceScope context)
         {
-            dynamic childModel = context.Database.GetResource("test.child");
+            dynamic childModel = context.DatabaseProfile.GetResource("test.child");
             var ids = childModel.Search(context, null, 0, 0);
             if (ids.Length > 0)
             {
                 childModel.Delete(context, ids);
             }
-            dynamic masterModel = context.Database.GetResource("test.master");
+            dynamic masterModel = context.DatabaseProfile.GetResource("test.master");
             ids = masterModel.Search(context, null, 0, 0);
             if (ids.Length > 0)
             {

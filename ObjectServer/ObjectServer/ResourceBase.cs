@@ -116,7 +116,7 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Load(IDatabase db)
+        public virtual void Load(IDatabaseProfile db)
         {            
         }
 

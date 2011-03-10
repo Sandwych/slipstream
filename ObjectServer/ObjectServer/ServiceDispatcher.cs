@@ -24,9 +24,9 @@ namespace ObjectServer
             using (var ctx = new ResourceScope(dbName))
             using(var tx = new TransactionScope())
             {
-                ctx.Database.DataContext.Open();
+                ctx.DatabaseProfile.DataContext.Open();
 
-                dynamic userModel = ctx.Database.GetResource(UserModel.ModelName);
+                dynamic userModel = ctx.DatabaseProfile.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
                 
                 //用新 session 替换老 session
@@ -45,9 +45,9 @@ namespace ObjectServer
             using (var ctx = new ResourceScope(sgid))
             using(var tx = new TransactionScope())
             {
-                ctx.Database.DataContext.Open();
+                ctx.DatabaseProfile.DataContext.Open();
 
-                dynamic userModel = ctx.Database.GetResource(UserModel.ModelName);
+                dynamic userModel = ctx.DatabaseProfile.GetResource(UserModel.ModelName);
                 userModel.LogOut(ctx, sessionId);
             }
         }
@@ -77,7 +77,7 @@ namespace ObjectServer
             var gsid = new Guid(sessionId);
             using (var ctx = new ResourceScope(gsid))
             {
-                dynamic res = ctx.Database.GetResource(resource);
+                dynamic res = ctx.DatabaseProfile.GetResource(resource);
                 var methodInfo = res.GetServiceMethod(method);
                 var internalArgs = new object[parameters.Length + 2];
                 internalArgs[0] = res;
@@ -103,7 +103,7 @@ namespace ObjectServer
             {
                 var result = method.Invoke(null, internalArgs);
                 tx.Complete();
-                ctx.Database.DataContext.Close();
+                ctx.DatabaseProfile.DataContext.Close();
                 return result;
             }
         }
@@ -128,7 +128,7 @@ namespace ObjectServer
         {
             VerifyRootPassword(rootPasswordHash);
 
-            ObjectServerStarter.Databases.RemoveDatabase(dbName); //删除数据库上下文
+            ObjectServerStarter.DatabaseProfiles.RemoveDatabase(dbName); //删除数据库上下文
             DataProvider.DeleteDatabase(dbName); //删除实际数据库
         }
 

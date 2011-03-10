@@ -8,13 +8,13 @@ namespace ObjectServer
 {
     internal class SessionlessContext : IResourceScope
     {
-        public SessionlessContext(IDatabase db)
+        public SessionlessContext(IDatabaseProfile db)
         {
             Debug.Assert(db != null);
-            this.Database = db;
+            this.DatabaseProfile = db;
         }
 
-        public IDatabase Database { get; private set; }
+        public IDatabaseProfile DatabaseProfile { get; private set; }
 
         public Session Session
         {

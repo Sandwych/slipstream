@@ -144,6 +144,8 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Core\ViewActionModel.cs" />
+    <Compile Include="Core\UserGroupModel.cs" />
     <Compile Include="Model\ExtendedModel.cs" />
     <Compile Include="SessionlessContext.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
@@ -155,7 +157,7 @@
     <Compile Include="Core\MenuModel.cs" />
     <Compile Include="Core\CronModel.cs" />
     <Compile Include="Core\ModelDataModel.cs" />
-    <Compile Include="Database.cs" />
+    <Compile Include="DatabaseProfile.cs" />
     <Compile Include="Exceptions\ConcurrencyException.cs" />
     <Compile Include="Exceptions\ResourceNotFoundException.cs" />
     <Compile Include="Exceptions\BadResourceNameException.cs" />
@@ -163,7 +165,7 @@
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
     <Compile Include="Exceptions\BadServiceMethodException.cs" />
     <Compile Include="Exceptions\DatabaseNotFoundException.cs" />
-    <Compile Include="IDatabase.cs" />
+    <Compile Include="IDatabaseProfile.cs" />
     <Compile Include="IGlobalObject.cs" />
     <Compile Include="IResourceContainer.cs" />
     <Compile Include="Model\BrowsableRecord.cs" />
@@ -238,7 +240,7 @@
     <Compile Include="Module\Module.cs" />
     <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="ObjectServerStarter.cs" />
-    <Compile Include="DatabaseCollection.cs" />
+    <Compile Include="DatabaseProfileCollection.cs" />
     <Compile Include="Core\UserModel.cs" />
     <Compile Include="IResourceScope.cs" />
     <Compile Include="Core\FieldModel.cs" />
@@ -273,6 +275,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Core\Data\Menus.xml" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

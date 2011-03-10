@@ -17,7 +17,7 @@ namespace ObjectServer.Model.Test
         {
             using (var ctx = new ResourceScope(new Guid(this.SessionId)))
             {
-                dynamic inheritedModel = ctx.Database.GetResource("test.single_table");
+                dynamic inheritedModel = ctx.DatabaseProfile.GetResource("test.single_table");
                 Assert.True(inheritedModel.Fields.ContainsKey("age"));
 
                 var propBag = new Dictionary<string, object>()

@@ -36,8 +36,8 @@ namespace ObjectServer
             this.SessionStore.Pulse(session.Id);
 
             this.ownDb = true;
-            this.Database = ObjectServerStarter.Databases.GetDatabase(session);
-            this.Database.DataContext.Open();
+            this.DatabaseProfile = ObjectServerStarter.DatabaseProfiles.GetDatabase(session);
+            this.DatabaseProfile.DataContext.Open();
         }
 
         /// <summary>
@@ -52,11 +52,11 @@ namespace ObjectServer
             this.Session = new Session(dbName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
-            this.Database = ObjectServerStarter.Databases.GetDatabase(this.Session);
-            this.Database.DataContext.Open();
+            this.DatabaseProfile = ObjectServerStarter.DatabaseProfiles.GetDatabase(this.Session);
+            this.DatabaseProfile.DataContext.Open();
         }
 
-        internal ResourceScope(IDatabase db)
+        internal ResourceScope(IDatabaseProfile db)
         {
             Debug.Assert(db != null);
             Debug.Assert(db.DataContext != null);
@@ -67,13 +67,13 @@ namespace ObjectServer
             this.Session = new Session(db.DataContext.DatabaseName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = false;
-            this.Database = db;
-            this.Database.DataContext.Open();
+            this.DatabaseProfile = db;
+            this.DatabaseProfile.DataContext.Open();
         }
 
         #region IContext 成员
 
-        public IDatabase Database
+        public IDatabaseProfile DatabaseProfile
         {
             get;
             private set;
@@ -89,7 +89,7 @@ namespace ObjectServer
         {
             if (this.ownDb)
             {
-                this.Database.DataContext.Close();
+                this.DatabaseProfile.DataContext.Close();
             }
 
             Logger.Info(() => "ScopeContext closed");

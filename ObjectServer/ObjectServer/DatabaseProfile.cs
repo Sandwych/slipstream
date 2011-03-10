@@ -14,7 +14,7 @@ namespace ObjectServer
     /// 用于描述一个帐套数据库的上下文环境
     /// 一个数据库包含了该数据库中的所有对象
     /// </summary>
-    public class Database : IDatabase
+    public class DatabaseProfile : IDatabaseProfile
     {
         private IDictionary<string, IResource> resources = new Dictionary<string, IResource>();
         private HashSet<string> loadedResources = new HashSet<string>();
@@ -23,14 +23,14 @@ namespace ObjectServer
         /// 初始化一个数据库环境
         /// </summary>
         /// <param name="dbName"></param>
-        public Database(string dbName)
+        public DatabaseProfile(string dbName)
         {
             this.DataContext = DataProvider.CreateDataContext(dbName);
 
             this.EnsureInitialization();
         }
 
-        public Database(IDataContext dataCtx, IResourceContainer resources)
+        public DatabaseProfile(IDataContext dataCtx, IResourceContainer resources)
         {
             this.DataContext = dataCtx;
             this.Resources = resources;
@@ -47,7 +47,7 @@ namespace ObjectServer
             }
         }
 
-        ~Database()
+        ~DatabaseProfile()
         {
             this.Dispose(false);
         }

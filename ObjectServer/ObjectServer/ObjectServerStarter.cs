@@ -23,7 +23,7 @@ namespace ObjectServer
         private bool disposed = false;
         private Config config;
         private bool initialized;
-        private DatabaseCollection databases = new DatabaseCollection();
+        private DatabaseProfileCollection databaseProfiles = new DatabaseProfileCollection();
         private ModuleCollection modules = new ModuleCollection();
         private SessionStore sessionStore = new SessionStore();
         private IExportedService exportedService = ServiceDispatcher.CreateDispatcher();
@@ -45,7 +45,7 @@ namespace ObjectServer
             {
                 if (disposing)
                 {
-                    this.databases.Dispose();
+                    this.databaseProfiles.Dispose();
                 }
 
             }
@@ -128,7 +128,7 @@ namespace ObjectServer
             }
 
             Logger.Info(() => "Initializing Database Instances...");
-            s_instance.databases.Initialize(cfg);
+            s_instance.databaseProfiles.Initialize(cfg);
 
             s_instance.config = cfg;
             s_instance.initialized = true;
@@ -154,11 +154,11 @@ namespace ObjectServer
         }
 
 
-        internal static DatabaseCollection Databases
+        internal static DatabaseProfileCollection DatabaseProfiles
         {
             get
             {
-                return Instance.databases;
+                return Instance.databaseProfiles;
             }
         }
 

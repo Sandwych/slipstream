@@ -22,7 +22,7 @@ namespace ObjectServer.Model
            IResourceScope ctx, List<Dictionary<string, object>> records)
         {
             //中间表模型
-            dynamic relModel = ctx.Database.GetResource(this.Relation);
+            dynamic relModel = ctx.DatabaseProfile.GetResource(this.Relation);
             //var originField = relModel.DefinedFields[this.OriginField];
             //var relatedField = relModel.DefinedFields[this.RelatedField];
             var relFields = new string[] { this.RelatedField };

@@ -19,7 +19,7 @@ namespace ObjectServer.Model
            IResourceScope ctx, List<Dictionary<string, object>> records)
         {
             //查询字表
-            dynamic childModel = ctx.Database.GetResource(this.Relation);
+            dynamic childModel = ctx.DatabaseProfile.GetResource(this.Relation);
             //TODO 权限等处理
 
             var children = new Dictionary<long, object[]>();

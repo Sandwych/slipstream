@@ -210,7 +210,7 @@ namespace ObjectServer.Model.Test
 
             using(var ctx = new ResourceScope(new Guid(this.SessionId)))
             {
-                dynamic testModel = ctx.Database.GetResource("test.test_model");
+                dynamic testModel = ctx.DatabaseProfile.GetResource("test.test_model");
                 this.ClearTestModelTable(ctx, testModel);
                 var fieldData = new byte[] { 33, 44, 55, 66, 77 };
                 var record = new Dictionary<string, object>()

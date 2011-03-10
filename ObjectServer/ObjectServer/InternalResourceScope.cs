@@ -8,15 +8,15 @@ namespace ObjectServer
 {
     internal class InternalResourceScope : IResourceScope
     {
-        public InternalResourceScope(IDatabase db, Session session)
+        public InternalResourceScope(IDatabaseProfile db, Session session)
         {
             Debug.Assert(db != null);
             Debug.Assert(session != null);
-            this.Database = db;
+            this.DatabaseProfile = db;
             this.Session = session;
         }
 
-        public IDatabase Database { get; private set; }
+        public IDatabaseProfile DatabaseProfile { get; private set; }
 
         public Session Session { get; private set; }
 

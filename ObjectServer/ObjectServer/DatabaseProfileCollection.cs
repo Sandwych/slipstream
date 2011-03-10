@@ -15,15 +15,15 @@ namespace ObjectServer
     /// <summary>
     /// Singleton
     /// </summary>
-    internal sealed class DatabaseCollection : IGlobalObject, IDisposable
+    internal sealed class DatabaseProfileCollection : IGlobalObject, IDisposable
     {
         private Config config;
 
-        private Dictionary<string, Database> databases =
-            new Dictionary<string, Database>();
+        private Dictionary<string, DatabaseProfile> databaseProfiles =
+            new Dictionary<string, DatabaseProfile>();
 
 
-        ~DatabaseCollection()
+        ~DatabaseProfileCollection()
         {
             this.Dispose(false);
         }
@@ -48,17 +48,17 @@ namespace ObjectServer
                 throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
             }
 
-            var db = new Database(dbName);
+            var db = new DatabaseProfile(dbName);
 
             lock (this)
             {
-                this.databases.Add(dbName.Trim(), db);
+                this.databaseProfiles.Add(dbName.Trim(), db);
             }
 
             this.LoadAdditionalModules(session, db);
         }
 
-        private void LoadAdditionalModules(Session session, Database db)
+        private void LoadAdditionalModules(Session session, DatabaseProfile db)
         {
             //加载其它模块
             Logger.Info(() => "Loading additional modules...");
@@ -67,14 +67,14 @@ namespace ObjectServer
             ObjectServerStarter.Modules.LoadActivatedModules(ctx);
         }
 
-        internal Database GetDatabase(Session session)
+        internal DatabaseProfile GetDatabase(Session session)
         {
-            if (!this.databases.ContainsKey(session.Database))
+            if (!this.databaseProfiles.ContainsKey(session.Database))
             {
                 this.LoadDatabase(session);
             }
 
-            return this.databases[session.Database];
+            return this.databaseProfiles[session.Database];
         }
 
         internal void RemoveDatabase(string dbName)
@@ -84,9 +84,9 @@ namespace ObjectServer
 
             lock (this)
             {
-                var db = this.databases[dbName];
+                var db = this.databaseProfiles[dbName];
                 db.DataContext.Close();
-                this.databases.Remove(dbName);
+                this.databaseProfiles.Remove(dbName);
             }
         }
 
@@ -103,7 +103,7 @@ namespace ObjectServer
             {
             }
 
-            foreach (var p in this.databases)
+            foreach (var p in this.databaseProfiles)
             {
                 p.Value.Dispose();
             }

@@ -11,7 +11,7 @@ namespace ObjectServer
 {
     public interface IResourceScope : IDisposable, IEquatable<IResourceScope>
     {
-        IDatabase Database { get; }
+        IDatabaseProfile DatabaseProfile { get; }
 
         Session Session { get; }
 

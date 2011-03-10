@@ -26,6 +26,11 @@ namespace ObjectServer
         private static readonly Module s_coreModule;
         private readonly List<IResource> resources = new List<IResource>();
 
+        private static readonly string[] s_coreDataFiles = new string[] 
+        {
+            "ObjectServer.Core.Data.Menus.xml",
+        };
+
         static Module()
         {
             s_coreModule = new Module()
@@ -100,15 +105,15 @@ namespace ObjectServer
 
             if (this.Dlls != null)
             {
-                this.LoadStaticAssemblies(ctx.Database);
+                this.LoadStaticAssemblies(ctx.DatabaseProfile);
             }
 
             if (!string.IsNullOrEmpty(this.Path))
             {
-                this.LoadDynamicAssembly(ctx.Database, ctx.Database);
+                this.LoadDynamicAssembly(ctx.DatabaseProfile, ctx.DatabaseProfile);
             }
 
-            ctx.Database.InitializeAllResources();
+            ctx.DatabaseProfile.InitializeAllResources();
 
             if (this.DataFiles != null)
             {
@@ -123,9 +128,22 @@ namespace ObjectServer
         private void LoadCoreModule(IResourceScope ctx)
         {
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
-            RegisterResourceWithinAssembly(ctx.Database, a);
+            RegisterResourceWithinAssembly(ctx.DatabaseProfile, a);
 
-            ctx.Database.InitializeAllResources();
+            ctx.DatabaseProfile.InitializeAllResources();
+
+            Logger.Info(() => "Importing core data...");
+            var importer = new Model.XmlDataImporter(ctx, this.Name);
+            foreach (var resPath in s_coreDataFiles)
+            {
+                using (var resStream = a.GetManifestResourceStream(resPath))
+                {
+                    Logger.Info(() => "Importing file: " + resPath);
+                    importer.Import(resStream);
+
+                    resStream.Close();
+                }
+            }
         }
 
 
@@ -141,7 +159,7 @@ namespace ObjectServer
             }
         }
 
-        private void LoadDynamicAssembly(IDatabase db, IResourceContainer resources)
+        private void LoadDynamicAssembly(IDatabaseProfile db, IResourceContainer resources)
         {
             Debug.Assert(resources != null);
 
@@ -150,7 +168,7 @@ namespace ObjectServer
             RegisterResourceWithinAssembly(db, a);
         }
 
-        private void RegisterResourceWithinAssembly(IDatabase db, Assembly assembly)
+        private void RegisterResourceWithinAssembly(IDatabaseProfile db, Assembly assembly)
         {
             Debug.Assert(db != null);
             Debug.Assert(assembly != null);
@@ -185,7 +203,7 @@ namespace ObjectServer
             return result.ToArray();
         }
 
-        private void LoadStaticAssemblies(IDatabase db)
+        private void LoadStaticAssemblies(IDatabaseProfile db)
         {
             Debug.Assert(this.Dlls != null);
 

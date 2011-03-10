@@ -24,7 +24,7 @@ namespace ObjectServer.Model
         {
         }
 
-        public override void Load(IDatabase db)
+        public override void Load(IDatabaseProfile db)
         {
             base.Load(db);
 
@@ -37,7 +37,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void CreateModel(IDatabase db)
+        private void CreateModel(IDatabaseProfile db)
         {
             var rowCount = db.DataContext.Execute(
                 "INSERT INTO \"core_model\"(\"name\", \"module\", \"label\") VALUES(@0, @1, @2);",

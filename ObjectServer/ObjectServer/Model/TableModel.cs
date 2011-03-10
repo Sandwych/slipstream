@@ -83,7 +83,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Load(IDatabase db)
+        public override void Load(IDatabaseProfile db)
         {
             base.Load(db);
 
@@ -178,7 +178,7 @@ namespace ObjectServer.Model
         {
             this.VerifyFields(values.Keys);
 
-            var serial = ctx.Database.DataContext.NextSerial(this.SequenceName);
+            var serial = ctx.DatabaseProfile.DataContext.NextSerial(this.SequenceName);
 
             if (this.ContainsField(VersionFieldName))
             {
@@ -213,7 +213,7 @@ namespace ObjectServer.Model
               serial,
               args);
 
-            var rows = ctx.Database.DataContext.Execute(sql, colValues);
+            var rows = ctx.DatabaseProfile.DataContext.Execute(sql, colValues);
             if (rows != 1)
             {
                 Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
@@ -316,7 +316,7 @@ namespace ObjectServer.Model
             var sql = updateStatement.ToString();
             Console.WriteLine(sql);
 
-            var rowsAffected = ctx.Database.DataContext.Execute(sql, args.ToArray());
+            var rowsAffected = ctx.DatabaseProfile.DataContext.Execute(sql, args.ToArray());
 
             //检查更新结果
             if (rowsAffected != 1)
@@ -385,7 +385,7 @@ namespace ObjectServer.Model
                 ids.ToCommaList());
 
             //先查找表里的简单字段数据
-            var records = ctx.Database.DataContext.QueryAsDictionary(sql);
+            var records = ctx.DatabaseProfile.DataContext.QueryAsDictionary(sql);
 
             //处理特殊字段
             foreach (var fieldName in allFields)
@@ -424,7 +424,7 @@ namespace ObjectServer.Model
                 "DELETE FROM \"{0}\" WHERE \"id\" IN ({1});",
                 this.TableName, ids.ToCommaList());
 
-            var rowCount = ctx.Database.DataContext.Execute(sql);
+            var rowCount = ctx.DatabaseProfile.DataContext.Execute(sql);
             if (rowCount != ids.Count())
             {
                 throw new DataException();
@@ -518,7 +518,7 @@ namespace ObjectServer.Model
                     { "resource_id", id },
                     { "description", msg }
                 };
-            var res = (IMetaModel)ctx.Database.GetResource(Core.AuditLogModel.ModelName);
+            var res = (IMetaModel)ctx.DatabaseProfile.GetResource(Core.AuditLogModel.ModelName);
             res.CreateInternal(ctx, logRecord);
 
         }

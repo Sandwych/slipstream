@@ -31,7 +31,7 @@ namespace ObjectServer.Core
             Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
         }
 
-        public override void Load(IDatabase db)
+        public override void Load(IDatabaseProfile db)
         {
             base.Load(db);
 
@@ -193,19 +193,6 @@ namespace ObjectServer.Core
 
 
 
-    [Resource]
-    public sealed class UserGroupModel : TableModel
-    {
-
-        public UserGroupModel()
-            : base("core.user_group")
-        {
-            this.TableName = "core_user_group_rel";
-
-            Fields.ManyToOne("uid", "core.user").SetLabel("User").Required();
-            Fields.ManyToOne("gid", "core.group").SetLabel("Group").Required();
-
-        }
-    }
+  
 
 }
