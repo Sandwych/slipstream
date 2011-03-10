@@ -21,7 +21,6 @@ namespace ObjectServer
         protected ResourceBase(string name)
         {
             this.SetName(name);
-            this.IsExtension = false;
             this.RegisterAllServiceMethods(this.GetType());
         }
 
@@ -126,8 +125,6 @@ namespace ObjectServer
         public string Label { get; protected set; }
 
         public string Module { get; private set; }
-
-        public bool IsExtension { get; protected set; }
 
         public abstract bool DatabaseRequired { get; }
 

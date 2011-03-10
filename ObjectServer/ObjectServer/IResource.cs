@@ -16,7 +16,6 @@ namespace ObjectServer
         string Label { get; }
         string Name { get; }
         string Module { get; }
-        bool IsExtension { get; }
 
         MethodInfo GetServiceMethod(string name);
         ICollection<MethodInfo> ServiceMethods { get; }

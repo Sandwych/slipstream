@@ -10,10 +10,7 @@ namespace ObjectServer.Model
         public ExtendedModel(string name)
             : base(name)
         {
-            this.IsExtension = true;
         }
-
-
 
         public override string TableName
         {

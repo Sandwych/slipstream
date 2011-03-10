@@ -113,7 +113,6 @@ namespace ObjectServer.Test
         public SingleTableInheritedModel()
             : base("test.single_table")
         {
-            this.IsExtension = true;
             Fields.Integer("age").SetLabel("Age");
         }
 
