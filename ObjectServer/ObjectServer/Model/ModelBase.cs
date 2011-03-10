@@ -10,11 +10,10 @@ using ObjectServer.Backend;
 
 namespace ObjectServer.Model
 {
-    public abstract class ModelBase : ResourceBase
+    public abstract class ModelBase : ResourceBase, IModel
     {
         private readonly IMetaFieldCollection declaredFields =
             new MetaFieldCollection();
-
 
         public const string IdFieldName = "id";
         public const string ActiveFieldName = "_active";
@@ -29,11 +28,6 @@ namespace ObjectServer.Model
         {
             base.Load(db);
 
-            if (!this.IsExtension)
-            {
-                this.AddInternalFields();
-            }
-
             //检测此模型是否存在于数据库 core_model 表
             var sql = "SELECT DISTINCT COUNT(\"id\") FROM core_model WHERE name=@0";
             var count = (long)db.DataContext.QueryValue(sql, this.Name);
@@ -41,15 +35,6 @@ namespace ObjectServer.Model
             {
                 this.CreateModel(db);
             }
-        }
-
-
-        /// <summary>
-        /// 注册内部字段
-        /// </summary>
-        private void AddInternalFields()
-        {
-            Fields.BigInteger("id").SetLabel("ID").Required();
         }
 
         private void CreateModel(IDatabase db)
@@ -123,5 +108,27 @@ namespace ObjectServer.Model
             }
         }
 
+
+        #region IModel Members
+
+        public abstract string TableName { get; protected set; }
+        public abstract bool Hierarchy { get; protected set; }
+        public abstract bool CanCreate { get; protected set; }
+        public abstract bool CanRead { get; protected set; }
+        public abstract bool CanWrite { get; protected set; }
+        public abstract bool CanDelete { get; protected set; }
+        public abstract bool LogCreation { get; protected set; }
+        public abstract bool LogWriting { get; protected set; }
+        public abstract NameGetter NameGetter { get; protected set; }
+        public abstract object[] SearchInternal(
+            IContext ctx, object[] domain = null, long offset = 0, long limit = 0);
+        public abstract long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag);
+        public abstract void WriteInternal(IContext ctx, object id, IDictionary<string, object> record);
+        public abstract Dictionary<string, object>[] ReadInternal(
+            IContext ctx, object[] ids, object[] fields = null);
+        public abstract void DeleteInternal(IContext ctx, object[] ids);
+        public abstract dynamic Browse(IContext ctx, object id);
+
+        #endregion
     }
 }

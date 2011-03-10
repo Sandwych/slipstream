@@ -108,7 +108,7 @@ namespace ObjectServer.Test
 
 
     [Resource]
-    public sealed class SingleTableInheritedModel : TableModel
+    public sealed class SingleTableInheritedModel : ExtendedModel
     {
         public SingleTableInheritedModel()
             : base("test.single_table")
@@ -118,7 +118,7 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod]
-        public new static long Create(
+        public static long Create(
             dynamic model, IContext ctx, IDictionary<string, object> propertyBag)
         {
             var record = new Dictionary<string, object>(propertyBag);

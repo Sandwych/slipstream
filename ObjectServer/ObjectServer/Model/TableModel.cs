@@ -15,33 +15,30 @@ using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
-    public abstract class TableModel : ModelBase, IModel
+    public abstract class TableModel : ModelBase
     {
         public const string CreatedTimeField = "_created_time";
         public const string ModifiedTimeField = "_modified_time";
         public const string CreatedUserField = "_created_user";
         public const string ModifiedUserField = "_modified_user";
 
-        private readonly List<IMetaField> modelFields =
-            new List<IMetaField>();
-
         private string tableName = null;
 
-        public bool CanCreate { get; protected set; }
-        public bool CanRead { get; protected set; }
-        public bool CanWrite { get; protected set; }
-        public bool CanDelete { get; protected set; }
+        public override bool CanCreate { get; protected set; }
+        public override bool CanRead { get; protected set; }
+        public override bool CanWrite { get; protected set; }
+        public override bool CanDelete { get; protected set; }
 
-        public bool LogCreation { get; protected set; }
-        public bool LogWriting { get; protected set; }
+        public override bool LogCreation { get; protected set; }
+        public override bool LogWriting { get; protected set; }
 
-        public bool Hierarchy { get; protected set; }
+        public override bool Hierarchy { get; protected set; }
 
         public override bool DatabaseRequired { get { return true; } }
 
-        public NameGetter NameGetter { get; protected set; }
+        public override NameGetter NameGetter { get; protected set; }
 
-        public string TableName
+        public override string TableName
         {
             get
             {
@@ -75,6 +72,7 @@ namespace ObjectServer.Model
             this.SetName(name);
 
 
+            this.RegisterInternalServiceMethods();
         }
 
         private void SetName(string name)
@@ -87,9 +85,7 @@ namespace ObjectServer.Model
         /// </summary>
         public override void Load(IDatabase db)
         {
-            base.Load(db);            
-
-            this.RegisterInternalServiceMethods();
+            base.Load(db);
 
             if (this.NameGetter == null)
             {
@@ -111,31 +107,32 @@ namespace ObjectServer.Model
         private void RegisterInternalServiceMethods()
         {
             //只有非继承的模型才添加内置字段
-            if (!this.IsExtension)
-            {
-                Fields.DateTime(CreatedTimeField).SetLabel("Created")
-                    .NotRequired().SetDefaultProc(ctx => DateTime.Now);
 
-                Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
-                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+            Fields.BigInteger("id").SetLabel("ID").Required();
 
-                Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
-                    .NotRequired().Readonly()
-                    .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+            Fields.DateTime(CreatedTimeField).SetLabel("Created")
+                .NotRequired().SetDefaultProc(ctx => DateTime.Now);
 
-                Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
-                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+            Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
+                .NotRequired().SetDefaultProc(ctx => DBNull.Value);
 
-                var selfType = typeof(TableModel);
-                this.RegisterServiceMethod(selfType.GetMethod("Search"));
-                this.RegisterServiceMethod(selfType.GetMethod("Create"));
-                this.RegisterServiceMethod(selfType.GetMethod("Read"));
-                this.RegisterServiceMethod(selfType.GetMethod("Write"));
-                this.RegisterServiceMethod(selfType.GetMethod("Delete"));
-            }
+            Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
+                .NotRequired().Readonly()
+                .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+
+            Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
+                .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+
+            var selfType = typeof(TableModel);
+            this.RegisterServiceMethod(selfType.GetMethod("Search"));
+            this.RegisterServiceMethod(selfType.GetMethod("Create"));
+            this.RegisterServiceMethod(selfType.GetMethod("Read"));
+            this.RegisterServiceMethod(selfType.GetMethod("Write"));
+            this.RegisterServiceMethod(selfType.GetMethod("Delete"));
+
         }
 
-        public virtual object[] SearchInternal(
+        public override object[] SearchInternal(
             IContext ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
@@ -153,7 +150,7 @@ namespace ObjectServer.Model
             return query.Search(domainInternal, offset, limit);
         }
 
-        public virtual long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag)
+        public override long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag)
         {
             if (!this.CanCreate)
             {
@@ -244,7 +241,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public virtual void WriteInternal(
+        public override void WriteInternal(
             IContext ctx, object id, IDictionary<string, object> userRecord)
         {
             if (!this.CanWrite)
@@ -336,7 +333,7 @@ namespace ObjectServer.Model
         }
 
 
-        public virtual Dictionary<string, object>[] ReadInternal(
+        public override Dictionary<string, object>[] ReadInternal(
             IContext ctx, object[] ids, object[] fields)
         {
             if (ctx == null)
@@ -411,7 +408,7 @@ namespace ObjectServer.Model
         }
 
 
-        public virtual void DeleteInternal(IContext ctx, object[] ids)
+        public override void DeleteInternal(IContext ctx, object[] ids)
         {
             if (!this.CanDelete)
             {
@@ -476,7 +473,7 @@ namespace ObjectServer.Model
         #endregion
 
 
-        public virtual dynamic Browse(IContext ctx, object id)
+        public override dynamic Browse(IContext ctx, object id)
         {
             var record = this.ReadInternal(ctx, new object[] { id }, null)[0];
             return new BrowsableModel(ctx, this, record);

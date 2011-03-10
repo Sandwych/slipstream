@@ -144,6 +144,7 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Model\ExtendedModel.cs" />
     <Compile Include="SessionlessContext.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardModel.cs" />

@@ -106,11 +106,11 @@ namespace ObjectServer
         {
             Debug.Assert(t != null);
 
-            var methods = t.GetMethods();
+            var methods = t.GetMethods().Where(m => m.IsStatic && m.ReflectedType == t);
             foreach (var m in methods)
             {
                 var attrs = m.GetCustomAttributes(typeof(ServiceMethodAttribute), false);
-                if (attrs.Length > 0 && m.IsStatic && m.ReflectedType == t)
+                if (attrs.Length == 1)
                 {
                     this.RegisterServiceMethod(m);
                 }
@@ -118,7 +118,7 @@ namespace ObjectServer
         }
 
         public virtual void Load(IDatabase db)
-        {
+        {            
         }
 
         public string Name { get; private set; }
@@ -163,6 +163,11 @@ namespace ObjectServer
 
         public virtual void MergeFrom(IResource res)
         {
+
+            foreach (var p in res.ServiceMethods)
+            {
+                this.serviceMethods[p.Name] = p;
+            }
         }
 
     }
