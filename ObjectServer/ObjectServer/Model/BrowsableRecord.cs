@@ -6,13 +6,13 @@ using System.Dynamic;
 
 namespace ObjectServer.Model
 {
-    public sealed class BrowsableModel : DynamicObject
+    public sealed class BrowsableRecord : DynamicObject
     {
         private Dictionary<string, object> record;
         private dynamic metaModel;
         private IContext context;
 
-        public BrowsableModel(IContext ctx, dynamic metaModel, Dictionary<string, object> record)
+        public BrowsableRecord(IContext ctx, dynamic metaModel, Dictionary<string, object> record)
         {
             this.metaModel = metaModel;
             this.record = record;
@@ -79,7 +79,7 @@ namespace ObjectServer.Model
             var destIds = new object[] { fieldValue[0] };
             //查询 ManyToOne 字段
             var destRecord = destMetaModel.ReadInternal(this.context, destIds, null)[0];
-            return new BrowsableModel(this.context, destMetaModel, destRecord);
+            return new BrowsableRecord(this.context, destMetaModel, destRecord);
         }
 
         private object GetOneToManyOrManyToManyField(IMetaField metaField)
@@ -91,7 +91,7 @@ namespace ObjectServer.Model
             var domain = new object[][] { new object[] { metaField.RelatedField, "=", thisId } };
             var destIds = targetModel.SearchInternal(this.context, domain, 0, 0);
             var records = (Dictionary<string, object>[])targetModel.ReadInternal(this.context, destIds, null);
-            return records.Select(r => new BrowsableModel(this.context, targetModel, r)).ToArray();
+            return records.Select(r => new BrowsableRecord(this.context, targetModel, r)).ToArray();
         }
     }
 }

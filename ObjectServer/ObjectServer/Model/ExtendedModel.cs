@@ -80,23 +80,23 @@ namespace ObjectServer.Model
         }
 
         public override void WriteInternal(
-            IContext ctx, object id, IDictionary<string, object> record)
+            IContext ctx, long id, IDictionary<string, object> record)
         {
             throw new NotSupportedException();
         }
 
         public override Dictionary<string, object>[] ReadInternal(
-            IContext ctx, object[] ids, object[] fields = null)
+            IContext ctx, object[] ids, IEnumerable<string> fields = null)
         {
             throw new NotSupportedException();
         }
 
-        public override void DeleteInternal(IContext ctx, object[] ids)
+        public override void DeleteInternal(IContext ctx, IEnumerable<long> ids)
         {
             throw new NotSupportedException();
         }
 
-        public override dynamic Browse(IContext ctx, object id)
+        public override dynamic Browse(IContext ctx, long id)
         {
             throw new NotSupportedException();
         }

@@ -166,7 +166,7 @@
     <Compile Include="IDatabase.cs" />
     <Compile Include="IGlobalObject.cs" />
     <Compile Include="IResourceContainer.cs" />
-    <Compile Include="Model\BrowsableModel.cs" />
+    <Compile Include="Model\BrowsableRecord.cs" />
     <Compile Include="Model\XmlDataImporter.cs" />
     <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
@@ -187,7 +187,7 @@
     <Compile Include="Model\Fields\OneToManyMetaField.cs" />
     <Compile Include="Model\Fields\ScalarMetaField.cs" />
     <Compile Include="Model\Fields\ManyToManyMetaField.cs" />
-    <Compile Include="Model\IModel.cs" />
+    <Compile Include="Model\IMetaModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\OnDeleteAction.cs" />
     <Compile Include="Model\TableMigrator.cs" />

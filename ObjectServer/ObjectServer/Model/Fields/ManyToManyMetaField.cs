@@ -25,7 +25,7 @@ namespace ObjectServer.Model
             dynamic relModel = ctx.Database.GetResource(this.Relation);
             //var originField = relModel.DefinedFields[this.OriginField];
             //var relatedField = relModel.DefinedFields[this.RelatedField];
-            var relFields = new object[] { this.RelatedField };
+            var relFields = new string[] { this.RelatedField };
 
             var domain = new object[][] { new object[] { this.OriginField, "=", (long)0 } };
             var result = new Dictionary<long, object>();

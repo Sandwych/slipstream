@@ -242,7 +242,7 @@ namespace ObjectServer.Model
         }
 
         public override void WriteInternal(
-            IContext ctx, object id, IDictionary<string, object> userRecord)
+            IContext ctx, long id, IDictionary<string, object> userRecord)
         {
             if (!this.CanWrite)
             {
@@ -334,7 +334,7 @@ namespace ObjectServer.Model
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IContext ctx, object[] ids, object[] fields)
+            IContext ctx, object[] ids, IEnumerable<string> fields)
         {
             if (ctx == null)
             {
@@ -352,7 +352,7 @@ namespace ObjectServer.Model
             }
 
             IList<string> allFields;
-            if (fields == null || fields.Length == 0)
+            if (fields == null || fields.Count() == 0)
             {
                 allFields = this.Fields.Where(p => !p.Value.Lazy)
                     .Select(p => p.Value.Name).ToList();
@@ -408,14 +408,14 @@ namespace ObjectServer.Model
         }
 
 
-        public override void DeleteInternal(IContext ctx, object[] ids)
+        public override void DeleteInternal(IContext ctx, IEnumerable<long> ids)
         {
             if (!this.CanDelete)
             {
                 throw new NotSupportedException();
             }
 
-            if (ids == null || ids.Length == 0)
+            if (ids == null || ids.Count() == 0)
             {
                 throw new ArgumentNullException("ids");
             }
@@ -444,9 +444,14 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            dynamic model, IContext ctx, object[] ids, object[] fields)
+            dynamic model, IContext ctx, object[] ids, object[] fields = null)
         {
-            return model.ReadInternal(ctx, ids, fields);
+            string[] strFields = null;
+            if (fields != null)
+            {
+                strFields = fields.Select(f => (string)f).ToArray();
+            }
+            return model.ReadInternal(ctx, ids, strFields);
         }
 
         [ServiceMethod]
@@ -460,23 +465,24 @@ namespace ObjectServer.Model
         public static void Write(
            dynamic model, IContext ctx, object id, IDictionary<string, object> userRecord)
         {
-            model.WriteInternal(ctx, id, userRecord);
+            model.WriteInternal(ctx, (long)id, userRecord);
         }
 
         [ServiceMethod]
         public static void Delete(dynamic model, IContext ctx, object[] ids)
         {
-            model.DeleteInternal(ctx, ids);
+            var longIds = ids.Select(id => (long)id).ToArray();
+            model.DeleteInternal(ctx, longIds);
         }
 
 
         #endregion
 
 
-        public override dynamic Browse(IContext ctx, object id)
+        public override dynamic Browse(IContext ctx, long id)
         {
             var record = this.ReadInternal(ctx, new object[] { id }, null)[0];
-            return new BrowsableModel(ctx, this, record);
+            return new BrowsableRecord(ctx, this, record);
         }
 
         private IDictionary<long, string> DefaultNameGetter(IContext ctx, object[] ids)
@@ -484,7 +490,7 @@ namespace ObjectServer.Model
             var result = new Dictionary<long, string>(ids.Length);
             if (this.Fields.ContainsKey("name"))
             {
-                var records = this.ReadInternal(ctx, ids, new object[] { "id", "name" });
+                var records = this.ReadInternal(ctx, ids, new string[] { "id", "name" });
                 foreach (var r in records)
                 {
                     var id = (long)r["id"];
@@ -512,7 +518,7 @@ namespace ObjectServer.Model
                     { "resource_id", id },
                     { "description", msg }
                 };
-            var res = (IModel)ctx.Database.GetResource(Core.AuditLogModel.ModelName);
+            var res = (IMetaModel)ctx.Database.GetResource(Core.AuditLogModel.ModelName);
             res.CreateInternal(ctx, logRecord);
 
         }

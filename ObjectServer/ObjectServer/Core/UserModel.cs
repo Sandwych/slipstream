@@ -103,7 +103,7 @@ namespace ObjectServer.Core
         }
        
 
-        public override void WriteInternal(IContext ctx, object id, IDictionary<string, object> record)
+        public override void WriteInternal(IContext ctx, long id, IDictionary<string, object> record)
         {
             IDictionary<string, object> values2 = HashPassword(record);
 
@@ -112,7 +112,8 @@ namespace ObjectServer.Core
         }
 
 
-        public override Dictionary<string, object>[] ReadInternal(IContext ctx, object[] ids, object[] fields)
+        public override Dictionary<string, object>[] ReadInternal(
+            IContext ctx, object[] ids, IEnumerable<string> fields)
         {
             var records = base.ReadInternal(ctx, ids, fields);
 
@@ -148,7 +149,7 @@ namespace ObjectServer.Core
 
             var user = base.ReadInternal(ctx,
                 new object[] { users[0] },
-                new object[] { "password", "salt" })[0];
+                new string[] { "password", "salt" })[0];
 
             var hashedPassword = (string)user["password"];
             var salt = (string)user["salt"];

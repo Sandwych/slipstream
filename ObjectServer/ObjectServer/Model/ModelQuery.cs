@@ -9,10 +9,10 @@ namespace ObjectServer.Model
 {
     internal sealed class ModelQuery
     {
-        private IModel model;
+        private IMetaModel model;
         private IContext context;
 
-        public ModelQuery(IContext ctx, IModel model)
+        public ModelQuery(IContext ctx, IMetaModel model)
         {
             this.context = ctx;
             this.model = model;

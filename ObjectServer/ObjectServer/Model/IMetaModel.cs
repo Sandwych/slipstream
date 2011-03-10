@@ -6,7 +6,7 @@ using System.Dynamic;
 
 namespace ObjectServer.Model
 {
-    internal interface IModel : IResource
+    internal interface IMetaModel : IResource
     {
         IMetaFieldCollection Fields { get; }
 
@@ -24,10 +24,11 @@ namespace ObjectServer.Model
 
         object[] SearchInternal(IContext ctx, object[] domain = null, long offset = 0, long limit = 0);
         long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag);
-        void WriteInternal(IContext ctx, object id, IDictionary<string, object> record);
-        Dictionary<string, object>[] ReadInternal(IContext ctx, object[] ids, object[] fields = null);
-        void DeleteInternal(IContext ctx, object[] ids);
+        void WriteInternal(IContext ctx, long id, IDictionary<string, object> record);
+        Dictionary<string, object>[] ReadInternal(
+            IContext ctx, object[] ids, IEnumerable<string> fields = null);
+        void DeleteInternal(IContext ctx, IEnumerable<long> ids);
 
-        dynamic Browse(IContext ctx, object id);
+        dynamic Browse(IContext ctx, long id);
     }
 }

@@ -10,7 +10,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer.Model
 {
-    public abstract class ModelBase : ResourceBase, IModel
+    public abstract class ModelBase : ResourceBase, IMetaModel
     {
         private readonly IMetaFieldCollection declaredFields =
             new MetaFieldCollection();
@@ -97,7 +97,7 @@ namespace ObjectServer.Model
         {
             base.MergeFrom(res);
 
-            var model = res as IModel;
+            var model = res as IMetaModel;
             if (model != null)
             {
                 //这里的字段合并策略也是添加，如果存在就直接替换
@@ -123,11 +123,11 @@ namespace ObjectServer.Model
         public abstract object[] SearchInternal(
             IContext ctx, object[] domain = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag);
-        public abstract void WriteInternal(IContext ctx, object id, IDictionary<string, object> record);
+        public abstract void WriteInternal(IContext ctx, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
-            IContext ctx, object[] ids, object[] fields = null);
-        public abstract void DeleteInternal(IContext ctx, object[] ids);
-        public abstract dynamic Browse(IContext ctx, object id);
+            IContext ctx, object[] ids, IEnumerable<string> fields = null);
+        public abstract void DeleteInternal(IContext ctx, IEnumerable<long> ids);
+        public abstract dynamic Browse(IContext ctx, long id);
 
         #endregion
     }

@@ -19,7 +19,7 @@ namespace ObjectServer.Core
     public sealed class ModelDataModel : TableModel
     {
         public const string ModelName = "core.model_data";
-        private static readonly object[] s_RefIdFields = new object[] { "ref_id" };
+        private static readonly string[] s_RefIdFields = new string[] { "ref_id" };
 
         public ModelDataModel()
             : base(ModelName)
