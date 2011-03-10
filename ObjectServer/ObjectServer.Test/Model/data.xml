@@ -23,6 +23,11 @@
   <!-- Master & Child data -->
 
   <record model="test.master" key="m1">
+    <field name="name">master-tmp</field>
+  </record>
+
+  <!-- 测试重复创建 -->
+  <record model="test.master" key="m1">
     <field name="name">master1</field>
   </record>
 

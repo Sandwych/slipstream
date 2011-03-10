@@ -115,7 +115,7 @@ namespace ObjectServer.Model
                 }
             }
             else if (existedId != null && !noUpdate) //Update 
-            {
+            {               
                 model.Write(this.context, existedId.Value, record);
                 modelDataModel.UpdateResourceId(this.context, model.Name, key, existedId.Value);
             }

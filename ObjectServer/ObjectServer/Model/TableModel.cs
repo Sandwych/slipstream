@@ -157,6 +157,11 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
+            if (propertyBag.ContainsKey("id"))
+            {
+                throw new ArgumentException("Unable to set the 'id' field", "propertyBag");
+            }
+
             //TODO 这里改成定义的列插入，而不是用户提供的列            
             var values = new Dictionary<string, object>(propertyBag);
 

@@ -69,7 +69,7 @@ namespace ObjectServer.Core
             return refId;
         }
 
-        public void UpdateResourceId(IResourceScope ctx, string model, string key, long id)
+        public void UpdateResourceId(IResourceScope ctx, string model, string key, long refId)
         {
             var domain = new object[][]
             {
@@ -78,7 +78,7 @@ namespace ObjectServer.Core
             };
             var ids = this.SearchInternal(ctx, domain);
 
-            if (ids.Length != 0)
+            if (ids.Length != 1)
             {
                 throw new InvalidDataException("More than one record");
             }
@@ -86,7 +86,7 @@ namespace ObjectServer.Core
             var selfId = (long)ids[0];
             var record = new Dictionary<string, object>()
             {
-                { "ref_id", "id" },
+                { "ref_id", refId },
             };
             this.WriteInternal(ctx, selfId, record);
         }
