@@ -79,7 +79,7 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(IContext ctx)
+        public void Load(IResourceScope ctx)
         {
             this.resources.Clear();
 
@@ -93,7 +93,7 @@ namespace ObjectServer
             }
         }
 
-        private void LoadAdditionalModule(IContext ctx)
+        private void LoadAdditionalModule(IResourceScope ctx)
         {
             Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
             Logger.Info(() => "Loading program...");
@@ -120,7 +120,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadCoreModule(IContext ctx)
+        private void LoadCoreModule(IResourceScope ctx)
         {
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(ctx.Database, a);
@@ -129,7 +129,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadData(IContext ctx)
+        private void LoadData(IResourceScope ctx)
         {
             Logger.Info(() => "Importing data...");
 

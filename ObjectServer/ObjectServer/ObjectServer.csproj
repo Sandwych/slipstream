@@ -240,7 +240,7 @@
     <Compile Include="ObjectServerStarter.cs" />
     <Compile Include="DatabaseCollection.cs" />
     <Compile Include="Core\UserModel.cs" />
-    <Compile Include="IContext.cs" />
+    <Compile Include="IResourceScope.cs" />
     <Compile Include="Core\FieldModel.cs" />
     <Compile Include="Core\ModelModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -249,12 +249,12 @@
     <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="ServiceMethodAttribute.cs" />
-    <Compile Include="ContextScope.cs" />
+    <Compile Include="ResourceScope.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
     <Compile Include="SqlTree\OffsetClause.cs" />
     <Compile Include="SqlTree\LimitClause.cs" />
     <Compile Include="StaticSettings.cs" />
-    <Compile Include="SystemContext.cs" />
+    <Compile Include="InternalResourceScope.cs" />
     <Compile Include="TransactionalAttribute.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />

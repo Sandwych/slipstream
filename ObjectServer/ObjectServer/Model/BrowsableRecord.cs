@@ -10,9 +10,9 @@ namespace ObjectServer.Model
     {
         private Dictionary<string, object> record;
         private dynamic metaModel;
-        private IContext context;
+        private IResourceScope context;
 
-        public BrowsableRecord(IContext ctx, dynamic metaModel, Dictionary<string, object> record)
+        public BrowsableRecord(IResourceScope ctx, dynamic metaModel, Dictionary<string, object> record)
         {
             this.metaModel = metaModel;
             this.record = record;
@@ -42,7 +42,6 @@ namespace ObjectServer.Model
                 case FieldType.Chars:
                 case FieldType.DateTime:
                 case FieldType.Decimal:
-                case FieldType.Money:
                 case FieldType.Text:
                 case FieldType.Binary:
                 case FieldType.Enumeration:

@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace ObjectServer
 {
-    internal class SessionlessContext : IContext
+    internal class SessionlessContext : IResourceScope
     {
         public SessionlessContext(IDatabase db)
         {
@@ -28,7 +28,7 @@ namespace ObjectServer
         {
         }
 
-        public bool Equals(IContext other)
+        public bool Equals(IResourceScope other)
         {
             throw new NotSupportedException("Invalid Equals invocation");
         }

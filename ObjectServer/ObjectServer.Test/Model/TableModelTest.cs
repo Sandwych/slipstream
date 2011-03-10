@@ -208,7 +208,7 @@ namespace ObjectServer.Model.Test
         public void test_binary_field()
         {
 
-            using(var ctx = new ContextScope(new Guid(this.SessionId)))
+            using(var ctx = new ResourceScope(new Guid(this.SessionId)))
             {
                 dynamic testModel = ctx.Database.GetResource("test.test_model");
                 this.ClearTestModelTable(ctx, testModel);

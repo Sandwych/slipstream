@@ -22,7 +22,7 @@ namespace ObjectServer.Backend
                 { FieldType.BigInteger, f => "INT8"  },
                 { FieldType.DateTime, f => "TIMESTAMP" },
                 { FieldType.Float, f => "FLOAT8" },
-                { FieldType.Money, f => "MONEY" },
+                { FieldType.Decimal, f => "DECIMAL" },
                 { FieldType.Text, f => "TEXT" },
                 { FieldType.Binary, f =>  "BYTEA" },
                 { FieldType.ManyToOne, f => "INT8" },

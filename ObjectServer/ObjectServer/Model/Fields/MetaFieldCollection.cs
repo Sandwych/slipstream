@@ -30,7 +30,7 @@ namespace ObjectServer.Model
 
         public IMetaField Money(string name)
         {
-            var field = new ScalarMetaField(name, FieldType.Money);
+            var field = new ScalarMetaField(name, FieldType.Decimal);
             this.Add(name, field);
             return field;
         }

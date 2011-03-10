@@ -22,13 +22,13 @@ namespace ObjectServer.Model
 
         NameGetter NameGetter { get; }
 
-        object[] SearchInternal(IContext ctx, object[] domain = null, long offset = 0, long limit = 0);
-        long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag);
-        void WriteInternal(IContext ctx, long id, IDictionary<string, object> record);
+        object[] SearchInternal(IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0);
+        long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag);
+        void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record);
         Dictionary<string, object>[] ReadInternal(
-            IContext ctx, object[] ids, IEnumerable<string> fields = null);
-        void DeleteInternal(IContext ctx, IEnumerable<long> ids);
+            IResourceScope ctx, object[] ids, IEnumerable<string> fields = null);
+        void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids);
 
-        dynamic Browse(IContext ctx, long id);
+        dynamic Browse(IResourceScope ctx, long id);
     }
 }

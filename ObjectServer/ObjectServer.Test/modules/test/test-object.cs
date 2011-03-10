@@ -65,12 +65,12 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod]
-        public static int GetSum(dynamic self, IContext ctx)
+        public static int GetSum(dynamic self, IResourceScope ctx)
         {
             return 1 + 1;
         }
 
-        public Dictionary<long, object> GetField3(IContext ctx, object[] ids)
+        public Dictionary<long, object> GetField3(IResourceScope ctx, object[] ids)
         {
             var fieldNames = new string[] { "field1", "field2" };
             var values = base.ReadInternal(ctx, ids, fieldNames);
@@ -118,7 +118,7 @@ namespace ObjectServer.Test
 
         [ServiceMethod]
         public static long Create(
-            dynamic model, IContext ctx, IDictionary<string, object> propertyBag)
+            dynamic model, IResourceScope ctx, IDictionary<string, object> propertyBag)
         {
             var record = new Dictionary<string, object>(propertyBag);
             record["age"] = 33;

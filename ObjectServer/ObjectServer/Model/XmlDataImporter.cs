@@ -11,11 +11,11 @@ namespace ObjectServer.Model
 {
     public sealed class XmlDataImporter
     {
-        private IContext context;
+        private IResourceScope context;
         private ModelDataModel modelDataModel;
         private string currentModule;
 
-        public XmlDataImporter(IContext ctx, string currentModule)
+        public XmlDataImporter(IResourceScope ctx, string currentModule)
         {
             this.context = ctx;
             this.modelDataModel = (ModelDataModel)ctx.Database.GetResource(ModelDataModel.ModelName);
@@ -166,7 +166,6 @@ namespace ObjectServer.Model
                     fieldValue = reader.ReadElementContentAsDateTime();
                     break;
 
-                case FieldType.Money:
                 case FieldType.Decimal:
                     fieldValue = reader.ReadElementContentAsDecimal();
                     break;

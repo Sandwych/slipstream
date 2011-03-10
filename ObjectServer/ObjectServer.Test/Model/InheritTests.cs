@@ -15,7 +15,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_single_table()
         {
-            using (var ctx = new ContextScope(new Guid(this.SessionId)))
+            using (var ctx = new ResourceScope(new Guid(this.SessionId)))
             {
                 dynamic inheritedModel = ctx.Database.GetResource("test.single_table");
                 Assert.True(inheritedModel.Fields.ContainsKey("age"));

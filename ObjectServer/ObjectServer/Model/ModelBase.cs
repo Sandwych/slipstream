@@ -121,13 +121,13 @@ namespace ObjectServer.Model
         public abstract bool LogWriting { get; protected set; }
         public abstract NameGetter NameGetter { get; protected set; }
         public abstract object[] SearchInternal(
-            IContext ctx, object[] domain = null, long offset = 0, long limit = 0);
-        public abstract long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag);
-        public abstract void WriteInternal(IContext ctx, long id, IDictionary<string, object> record);
+            IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0);
+        public abstract long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag);
+        public abstract void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
-            IContext ctx, object[] ids, IEnumerable<string> fields = null);
-        public abstract void DeleteInternal(IContext ctx, IEnumerable<long> ids);
-        public abstract dynamic Browse(IContext ctx, long id);
+            IResourceScope ctx, object[] ids, IEnumerable<string> fields = null);
+        public abstract void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids);
+        public abstract dynamic Browse(IResourceScope ctx, long id);
 
         #endregion
     }

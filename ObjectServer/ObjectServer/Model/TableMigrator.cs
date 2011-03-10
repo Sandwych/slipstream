@@ -12,7 +12,7 @@ namespace ObjectServer.Model
     {
         private IDatabase db;
         private dynamic model;
-        private IContext context;
+        private IResourceScope context;
 
         public TableMigrator(IDatabase db, dynamic model)
         {

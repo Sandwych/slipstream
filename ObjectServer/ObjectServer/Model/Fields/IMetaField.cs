@@ -35,7 +35,7 @@ namespace ObjectServer.Model
         void Validate();
 
         Dictionary<long, object> GetFieldValues(
-            IContext ctx, List<Dictionary<string, object>> records);
+            IResourceScope ctx, List<Dictionary<string, object>> records);
 
 
         #region Fluent interface 

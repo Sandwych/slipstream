@@ -35,7 +35,7 @@ namespace ObjectServer.Core
         {
             base.Load(db);
 
-            using (var ctx = new ContextScope(db))
+            using (var ctx = new ResourceScope(db))
             {
                 //检测是否有 root 用户
                 var domain = new object[][] { new object[] { "login", "=", "root" } };
@@ -47,7 +47,7 @@ namespace ObjectServer.Core
             }
         }
 
-        private void CreateRootUser(ContextScope ctx)
+        private void CreateRootUser(ResourceScope ctx)
         {
             //创建 root 用户
             var rootPassword = ObjectServerStarter.Configuration.RootPassword;
@@ -95,7 +95,7 @@ namespace ObjectServer.Core
         }
 
 
-        public override long CreateInternal(IContext ctx, IDictionary<string, object> values)
+        public override long CreateInternal(IResourceScope ctx, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
 
@@ -103,7 +103,7 @@ namespace ObjectServer.Core
         }
        
 
-        public override void WriteInternal(IContext ctx, long id, IDictionary<string, object> record)
+        public override void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record)
         {
             IDictionary<string, object> values2 = HashPassword(record);
 
@@ -113,7 +113,7 @@ namespace ObjectServer.Core
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IContext ctx, object[] ids, IEnumerable<string> fields)
+            IResourceScope ctx, object[] ids, IEnumerable<string> fields)
         {
             var records = base.ReadInternal(ctx, ids, fields);
 
@@ -136,7 +136,7 @@ namespace ObjectServer.Core
         }
 
 
-        public Session LogOn(IContext ctx,
+        public Session LogOn(IResourceScope ctx,
             string database, string login, string password)
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
@@ -170,7 +170,7 @@ namespace ObjectServer.Core
         }
 
 
-        public void LogOut(IContext ctx, string sessionId)
+        public void LogOut(IResourceScope ctx, string sessionId)
         {
             var sessGuid = new Guid(sessionId);
             ObjectServerStarter.SessionStore.Remove(sessGuid);

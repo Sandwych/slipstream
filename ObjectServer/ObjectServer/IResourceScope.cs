@@ -9,7 +9,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface IContext : IDisposable, IEquatable<IContext>
+    public interface IResourceScope : IDisposable, IEquatable<IResourceScope>
     {
         IDatabase Database { get; }
 

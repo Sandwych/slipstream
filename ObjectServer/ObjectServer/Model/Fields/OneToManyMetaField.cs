@@ -16,7 +16,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IContext ctx, List<Dictionary<string, object>> records)
+           IResourceScope ctx, List<Dictionary<string, object>> records)
         {
             //查询字表
             dynamic childModel = ctx.Database.GetResource(this.Relation);

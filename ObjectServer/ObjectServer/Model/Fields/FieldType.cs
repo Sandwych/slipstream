@@ -13,7 +13,6 @@ namespace ObjectServer.Model
         DateTime,
         Boolean,
         Decimal,
-        Money,
         Chars,
         Text,
         Binary,

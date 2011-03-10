@@ -6,9 +6,9 @@ using System.Diagnostics;
 
 namespace ObjectServer
 {
-    internal class SystemContext : IContext
+    internal class InternalResourceScope : IResourceScope
     {
-        public SystemContext(IDatabase db, Session session)
+        public InternalResourceScope(IDatabase db, Session session)
         {
             Debug.Assert(db != null);
             Debug.Assert(session != null);
@@ -24,7 +24,7 @@ namespace ObjectServer
         {
         }
 
-        public bool Equals(IContext other)
+        public bool Equals(IResourceScope other)
         {
             throw new NotSupportedException("Invalid Equals invocation");
         }

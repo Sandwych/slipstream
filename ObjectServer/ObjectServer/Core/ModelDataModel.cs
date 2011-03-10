@@ -35,7 +35,7 @@ namespace ObjectServer.Core
             Fields.Text("value").SetLabel("Value");
         }
 
-        public long Create(IContext ctx, string module, string model, string key, long resId)
+        public long Create(IResourceScope ctx, string module, string model, string key, long resId)
         {
             var record = new Dictionary<string, object>()
                 {
@@ -48,7 +48,7 @@ namespace ObjectServer.Core
             return this.CreateInternal(ctx, record);
         }
 
-        public long? TryLookupResourceId(IContext ctx, string model, string key)
+        public long? TryLookupResourceId(IResourceScope ctx, string model, string key)
         {
             var fields = s_RefIdFields;
             var domain = new object[][] 
@@ -69,7 +69,7 @@ namespace ObjectServer.Core
             return refId;
         }
 
-        public void UpdateResourceId(IContext ctx, string model, string key, long id)
+        public void UpdateResourceId(IResourceScope ctx, string model, string key, long id)
         {
             var domain = new object[][]
             {

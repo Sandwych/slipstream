@@ -18,7 +18,7 @@ namespace ObjectServer.Model.Test
         {
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(XmlResourcePath))
-            using (var context = new ContextScope(new Guid(this.SessionId)))
+            using (var context = new ResourceScope(new Guid(this.SessionId)))
             {
                 //删除所有记录
                 dynamic testObjectModel = context.Database.GetResource("test.test_model");
@@ -43,7 +43,7 @@ namespace ObjectServer.Model.Test
         {
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(XmlResourcePath))
-            using (var context = new ContextScope(new Guid(this.SessionId)))
+            using (var context = new ResourceScope(new Guid(this.SessionId)))
             {
                 //删除所有记录
                 this.ClearModelDataTable(context);

@@ -35,7 +35,7 @@ namespace ObjectServer
         public IExportedService Service { get; private set; }
 
 
-        protected void ClearModelDataTable(ContextScope context)
+        protected void ClearModelDataTable(ResourceScope context)
         {
             dynamic modelDataModel = context.Database.GetResource("core.model_data");
             var ids = modelDataModel.Search(context, null, 0, 0);
@@ -46,7 +46,7 @@ namespace ObjectServer
         }
 
 
-        protected void ClearTestModelTable(ContextScope context, dynamic testObjectModel)
+        protected void ClearTestModelTable(ResourceScope context, dynamic testObjectModel)
         {
             testObjectModel = context.Database.GetResource("test.test_model");
             var ids = testObjectModel.Search(context, null, 0, 0);
@@ -57,7 +57,7 @@ namespace ObjectServer
         }
 
 
-        protected void ClearMasterAndChildTable(ContextScope context)
+        protected void ClearMasterAndChildTable(ResourceScope context)
         {
             dynamic childModel = context.Database.GetResource("test.child");
             var ids = childModel.Search(context, null, 0, 0);

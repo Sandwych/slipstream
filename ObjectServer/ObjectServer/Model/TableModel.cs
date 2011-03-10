@@ -133,7 +133,7 @@ namespace ObjectServer.Model
         }
 
         public override object[] SearchInternal(
-            IContext ctx, object[] domain = null, long offset = 0, long limit = 0)
+            IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {
@@ -150,7 +150,7 @@ namespace ObjectServer.Model
             return query.Search(domainInternal, offset, limit);
         }
 
-        public override long CreateInternal(IContext ctx, IDictionary<string, object> propertyBag)
+        public override long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag)
         {
             if (!this.CanCreate)
             {
@@ -174,7 +174,7 @@ namespace ObjectServer.Model
             return id;
         }
 
-        private long DoCreate(IContext ctx, IDictionary<string, object> values)
+        private long DoCreate(IResourceScope ctx, IDictionary<string, object> values)
         {
             this.VerifyFields(values.Keys);
 
@@ -229,7 +229,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValues(IContext ctx, IDictionary<string, object> propertyBag)
+        private void AddDefaultValues(IResourceScope ctx, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
                 this.Fields.Values.Where(
@@ -242,7 +242,7 @@ namespace ObjectServer.Model
         }
 
         public override void WriteInternal(
-            IContext ctx, long id, IDictionary<string, object> userRecord)
+            IResourceScope ctx, long id, IDictionary<string, object> userRecord)
         {
             if (!this.CanWrite)
             {
@@ -334,7 +334,7 @@ namespace ObjectServer.Model
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IContext ctx, object[] ids, IEnumerable<string> fields)
+            IResourceScope ctx, object[] ids, IEnumerable<string> fields)
         {
             if (ctx == null)
             {
@@ -408,7 +408,7 @@ namespace ObjectServer.Model
         }
 
 
-        public override void DeleteInternal(IContext ctx, IEnumerable<long> ids)
+        public override void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids)
         {
             if (!this.CanDelete)
             {
@@ -437,14 +437,14 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public static object[] Search(
-            dynamic model, IContext ctx, object[] domain = null, long offset = 0, long limit = 0)
+            dynamic model, IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             return model.SearchInternal(ctx, domain, offset, limit);
         }
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            dynamic model, IContext ctx, object[] ids, object[] fields = null)
+            dynamic model, IResourceScope ctx, object[] ids, object[] fields = null)
         {
             string[] strFields = null;
             if (fields != null)
@@ -456,20 +456,20 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public static long Create(
-            dynamic model, IContext ctx, IDictionary<string, object> propertyBag)
+            dynamic model, IResourceScope ctx, IDictionary<string, object> propertyBag)
         {
             return model.CreateInternal(ctx, propertyBag);
         }
 
         [ServiceMethod]
         public static void Write(
-           dynamic model, IContext ctx, object id, IDictionary<string, object> userRecord)
+           dynamic model, IResourceScope ctx, object id, IDictionary<string, object> userRecord)
         {
             model.WriteInternal(ctx, (long)id, userRecord);
         }
 
         [ServiceMethod]
-        public static void Delete(dynamic model, IContext ctx, object[] ids)
+        public static void Delete(dynamic model, IResourceScope ctx, object[] ids)
         {
             var longIds = ids.Select(id => (long)id).ToArray();
             model.DeleteInternal(ctx, longIds);
@@ -479,13 +479,13 @@ namespace ObjectServer.Model
         #endregion
 
 
-        public override dynamic Browse(IContext ctx, long id)
+        public override dynamic Browse(IResourceScope ctx, long id)
         {
             var record = this.ReadInternal(ctx, new object[] { id }, null)[0];
             return new BrowsableRecord(ctx, this, record);
         }
 
-        private IDictionary<long, string> DefaultNameGetter(IContext ctx, object[] ids)
+        private IDictionary<long, string> DefaultNameGetter(IResourceScope ctx, object[] ids)
         {
             var result = new Dictionary<long, string>(ids.Length);
             if (this.Fields.ContainsKey("name"))
@@ -508,7 +508,7 @@ namespace ObjectServer.Model
             return result;
         }
 
-        private void AuditLog(IContext ctx, long id, string msg)
+        private void AuditLog(IResourceScope ctx, long id, string msg)
         {
 
             var logRecord = new Dictionary<string, object>()

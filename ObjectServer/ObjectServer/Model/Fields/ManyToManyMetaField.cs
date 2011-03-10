@@ -19,7 +19,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IContext ctx, List<Dictionary<string, object>> records)
+           IResourceScope ctx, List<Dictionary<string, object>> records)
         {
             //中间表模型
             dynamic relModel = ctx.Database.GetResource(this.Relation);

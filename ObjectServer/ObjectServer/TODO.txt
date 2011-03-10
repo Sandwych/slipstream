@@ -1,8 +1,8 @@
-﻿* JOSN-RPC 边界上，考虑二进制浮点数与十进制浮点数的序列化问题
+﻿* JOSN-RPC 边界上，考虑二进制浮点数与十进制浮点数的序列化精度舍入问题
 
 * 搜索功能完善与补强
 
-* 实体的继承
+* 实体的继承（单表继承完成）
 
 * 用户登录与注销（完成）
 
@@ -26,10 +26,12 @@
 	Binary 字段
 	Enumeration 字段
 	
-* Money 类型名称替换成 Decimal
+* Money 类型名称替换成 Decimal（完成）
 
-* 给字段属性加上 IsScalar IsLazy
+* 给字段属性加上 IsScalar IsLazy（完成）
 
-IMetaField 缺少 on delete
+IMetaField 缺少 on delete（完成）
 
-* 重构 MetaField 的 Fluent 接口
+* 重构 MetaField 的 Fluent 接口（进行中）
+
+* 学习一下 OpenERP 是怎么远程获取进度的

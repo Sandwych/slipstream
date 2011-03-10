@@ -13,14 +13,14 @@ namespace ObjectServer
     /// <summary>
     /// 但凡是需要 RPC 的方法都需要用此 scope 包裹
     /// </summary>
-    public sealed class ContextScope : IContext
+    public sealed class ResourceScope : IResourceScope
     {
         private bool ownDb;
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public ContextScope(Guid sessionId)
+        public ResourceScope(Guid sessionId)
         {
             var sessStore = ObjectServerStarter.SessionStore;
             var session = sessStore.GetSession(sessionId);
@@ -44,7 +44,7 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        internal ContextScope(string dbName)
+        internal ResourceScope(string dbName)
         {
             Logger.Info(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
@@ -56,7 +56,7 @@ namespace ObjectServer
             this.Database.DataContext.Open();
         }
 
-        internal ContextScope(IDatabase db)
+        internal ResourceScope(IDatabase db)
         {
             Debug.Assert(db != null);
             Debug.Assert(db.DataContext != null);
@@ -99,7 +99,7 @@ namespace ObjectServer
 
         #region IEquatable<IContext> 成员
 
-        public bool Equals(IContext other)
+        public bool Equals(IResourceScope other)
         {
             return this.Session.Id == other.Session.Id;
         }

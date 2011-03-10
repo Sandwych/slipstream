@@ -20,7 +20,7 @@ namespace ObjectServer.Test
             Fields.ManyToOne("user", "core.user").SetGetter(GetUser);
         }
 
-        private Dictionary<long, object> GetUser(IContext ctx, object[] ids)
+        private Dictionary<long, object> GetUser(IResourceScope ctx, object[] ids)
         {
             var userModel = ctx.Database.GetResource("core.user");
             var domain = new object[][] { new object[] { "login", "=", "root" } };

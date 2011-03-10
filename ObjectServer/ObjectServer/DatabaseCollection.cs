@@ -62,7 +62,7 @@ namespace ObjectServer
         {
             //加载其它模块
             Logger.Info(() => "Loading additional modules...");
-            var ctx = new SystemContext(db, session);
+            var ctx = new InternalResourceScope(db, session);
             ObjectServerStarter.Modules.UpdateModuleList(db.DataContext);
             ObjectServerStarter.Modules.LoadActivatedModules(ctx);
         }

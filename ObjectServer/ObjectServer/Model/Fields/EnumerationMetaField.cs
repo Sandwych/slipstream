@@ -35,7 +35,7 @@ namespace ObjectServer.Model
 
 
         protected override Dictionary<long, object> OnGetFieldValues(
-            IContext session, List<Dictionary<string, object>> records)
+            IResourceScope session, List<Dictionary<string, object>> records)
         {
             var result = new Dictionary<long, object>(records.Count());
 

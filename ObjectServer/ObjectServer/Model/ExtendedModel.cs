@@ -67,36 +67,36 @@ namespace ObjectServer.Model
         }
 
         public override object[] SearchInternal(
-            IContext ctx, object[] domain = null, long offset = 0, long limit = 0)
+            IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             throw new NotSupportedException();
 
         }
 
         public override long CreateInternal(
-            IContext ctx, IDictionary<string, object> propertyBag)
+            IResourceScope ctx, IDictionary<string, object> propertyBag)
         {
             throw new NotSupportedException();
         }
 
         public override void WriteInternal(
-            IContext ctx, long id, IDictionary<string, object> record)
+            IResourceScope ctx, long id, IDictionary<string, object> record)
         {
             throw new NotSupportedException();
         }
 
         public override Dictionary<string, object>[] ReadInternal(
-            IContext ctx, object[] ids, IEnumerable<string> fields = null)
+            IResourceScope ctx, object[] ids, IEnumerable<string> fields = null)
         {
             throw new NotSupportedException();
         }
 
-        public override void DeleteInternal(IContext ctx, IEnumerable<long> ids)
+        public override void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids)
         {
             throw new NotSupportedException();
         }
 
-        public override dynamic Browse(IContext ctx, long id)
+        public override dynamic Browse(IResourceScope ctx, long id)
         {
             throw new NotSupportedException();
         }

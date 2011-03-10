@@ -26,7 +26,7 @@ namespace ObjectServer.Model.Test
             };
             var childId = (long)this.Service.CreateModel(this.SessionId, "test.child", childPropBag);
 
-            using (var ctx = new ContextScope(new Guid(this.SessionId)))
+            using (var ctx = new ResourceScope(new Guid(this.SessionId)))
             {
                 dynamic childModel = ctx.Database.GetResource("test.child");
                 dynamic dynamicChild = childModel.Browse(ctx, childId);
