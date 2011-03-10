@@ -35,3 +35,7 @@ IMetaField 缺少 on delete（完成）
 * 重构 MetaField 的 Fluent 接口（进行中）
 
 * 学习一下 OpenERP 是怎么远程获取进度的
+
+* Many2one 可空的字段有问题
+
+* 导入数据检测 key 是否已经存在还存在问题，会重复创建

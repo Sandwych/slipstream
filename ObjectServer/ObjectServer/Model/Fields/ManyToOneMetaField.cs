@@ -20,32 +20,40 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, List<Dictionary<string, object>> records)
+           IResourceScope ctx, List<Dictionary<string, object>> childRecords)
         {
-            var result = new Dictionary<long, object>(records.Count());
+            var result = new Dictionary<long, object>(childRecords.Count());
             dynamic masterModel = ctx.DatabaseProfile.GetResource(this.Relation);
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
                 //从原始记录里把所有该字段的值取出
                 var masterTableIds = (
-                    from r in records
-                    where r[this.Name] != null && !(r[this.Name] is DBNull)
+                    from r in childRecords
+                    where r[this.Name] != null && r[this.Name] != DBNull.Value
                     select r[this.Name]).ToArray();
 
                 if (masterTableIds.Length > 0)
                 {
                     var masterNames = masterModel.NameGetter(ctx, masterTableIds);
 
-                    foreach (var r in records)
+                    foreach (var r in childRecords)
                     {
                         var id = (long)r["id"];
-                        var masterId = (long)r[this.Name];
-                        result.Add(id, new object[2] { masterId, masterNames[masterId] });
+                        var masterField = r[this.Name];
+                        if (masterField != DBNull.Value && masterField != null)
+                        {
+                            var masterId = (long)masterField;
+                            result.Add(id, new object[2] { masterId, masterNames[masterId] });
+                        }
+                        else
+                        {
+                            result.Add(id, DBNull.Value);
+                        }
                     }
                 }
                 else
                 {
-                    foreach (var r in records)
+                    foreach (var r in childRecords)
                     {
                         var id = (long)r["id"];
                         result.Add(id, DBNull.Value);
@@ -54,7 +62,7 @@ namespace ObjectServer.Model
             }
             else
             {
-                foreach (var r in records)
+                foreach (var r in childRecords)
                 {
                     var id = (long)r["id"];
                     var masterId = (long)r[this.Name];

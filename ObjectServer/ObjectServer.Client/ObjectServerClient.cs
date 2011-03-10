@@ -5,9 +5,11 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 
+using ObjectServer.Client.Model;
+
 namespace ObjectServer.Client
 {
-    public class ObjectServerClient
+    public class ObjectServerClient : IRemotingService
     {
         public const string ServicePath = @"/ObjectServer.ashx";
 
@@ -41,8 +43,8 @@ namespace ObjectServer.Client
         {
             this.jsonRpcClient.InvokeSync("ListDatabases", null, o =>
             {
-                dynamic objs = o;
-                var result = new string[objs.Count];
+                object[] objs = (object[])o;
+                var result = new string[objs.Length];
                 for (int i = 0; i < result.Length; i++)
                 {
                     result[i] = (string)objs[i];
@@ -52,7 +54,8 @@ namespace ObjectServer.Client
             });
         }
 
-        public void LogOn(string dbName, string userName, string password, Action<string> resultCallback)
+        public void LogOn(
+            string dbName, string userName, string password, Action<string> resultCallback)
         {
             Debug.Assert(!this.Logged);
 
@@ -82,7 +85,8 @@ namespace ObjectServer.Client
             });
         }
 
-        public void Execute(string objectName, string method, object[] parameters, Action<object> resultCallback)
+        public void Execute(
+            string objectName, string method, object[] parameters, Action<object> resultCallback)
         {
             Debug.Assert(this.Logged);
 
@@ -93,37 +97,37 @@ namespace ObjectServer.Client
             });
         }
 
-        public void SearchModel(string objectName, object[][] domain, long offset, long limit, Action<long[]> resultCallback)
+        public void SearchModel(
+            string objectName, object[][] domain, long offset, long limit, Action<long[]> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { domain, offset, limit };
             this.Execute(objectName, "Search", args, o =>
             {
-                dynamic objs = o;
-                var result = new long[objs.Count];
-                for (int i = 0; i < objs.Count; i++)
-                {
-                    result[i] = (long)objs[i];
-                }
-                resultCallback(result);
+                object[] objs = (object[])o;
+                var ids = objs.Select(id => (long)id).ToArray();
+                resultCallback(ids);
             });
         }
 
-        public void ReadModel(string objectName, IEnumerable<long> ids, IEnumerable<string> fields,
-            Action<IDictionary<string, object>[]> resultCallback)
+        public void ReadModel(
+            string objectName, IEnumerable<long> ids, IEnumerable<string> fields,
+            Action<Dictionary<string, object>[]> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { ids, fields };
             this.Execute(objectName, "Read", args, o =>
             {
-                var result = (IDictionary<string, object>[])o;
-                resultCallback(result);
+                var objs = (object[])o;
+                var records = objs.Select(r => (Dictionary<string, object>)r);
+                resultCallback(records.ToArray());
             });
         }
 
-        public void WriteModel(string objectName, long id, IDictionary<string, object> fields, Action resultCallback)
+        public void WriteModel(
+            string objectName, long id, IDictionary<string, object> fields, Action resultCallback)
         {
             Debug.Assert(this.Logged);
 
@@ -134,7 +138,8 @@ namespace ObjectServer.Client
             });
         }
 
-        public void CreateModel(string objectName, IDictionary<string, object> fields, Action<long> resultCallback)
+        public void CreateModel(
+            string objectName, IDictionary<string, object> fields, Action<long> resultCallback)
         {
             Debug.Assert(this.Logged);
 
@@ -143,6 +148,23 @@ namespace ObjectServer.Client
             {
                 resultCallback((long)o);
             });
+        }
+
+
+        public void ReadAllMenus(Action<Menu[]> resultCallback)
+        {
+            Debug.Assert(this.Logged);
+
+            this.SearchModel("core.menu", null, 0, 0,
+                ids =>
+                {
+                    this.ReadModel("core.menu", ids, null, records =>
+                        {
+                            var menus = records.Select(r => new Menu(r));
+
+                            resultCallback(menus.ToArray());
+                        });
+                });
         }
 
     }

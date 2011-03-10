@@ -59,10 +59,13 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IRemotingService.cs" />
     <Compile Include="JsonRpc\JsonRpcClient.cs" />
     <Compile Include="JsonRpc\JsonRpcRequest.cs" />
     <Compile Include="JsonRpc\JsonRpcResponse.cs" />
+    <Compile Include="JsonRpc\PlainJsonConvert.cs" />
     <Compile Include="JsonRpc\RequestState.cs" />
+    <Compile Include="Model\Menu.cs" />
     <Compile Include="ObjectServerClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
