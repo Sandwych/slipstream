@@ -6,7 +6,7 @@ using System.Dynamic;
 
 namespace ObjectServer.Model
 {
-    internal interface IMetaModel : IResource
+    public interface IMetaModel : IResource
     {
         IMetaFieldCollection Fields { get; }
 
