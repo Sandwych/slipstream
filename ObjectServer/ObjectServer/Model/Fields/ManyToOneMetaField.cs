@@ -27,10 +27,9 @@ namespace ObjectServer.Model
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
                 //从原始记录里把所有该字段的值取出
-                var masterTableIds = (
-                    from r in childRecords
-                    where r[this.Name] != null && r[this.Name] != DBNull.Value
-                    select (long)r[this.Name]);
+                var masterTableIds = from r in childRecords
+                                     where r[this.Name] != null && r[this.Name] != DBNull.Value
+                                     select (long)r[this.Name];
 
                 if (masterTableIds.Count() > 0)
                 {

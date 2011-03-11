@@ -33,55 +33,24 @@ namespace ObjectServer.Model
             List<Dictionary<string, object>> rawRecords,
             Dictionary<long, object> result)
         {
-            throw new NotImplementedException();
+            var refFieldValues = rawRecords.ToDictionary(_ => (long)_["id"]);
+
             //从原始记录里把所有该字段的值取出
-            var masterTables = new Dictionary<string, List<long>>(rawRecords.Count);
-            var availableRecords = from r in rawRecords
-                                   where r[this.Name] != null && !(r[this.Name] is DBNull)
-                                   select r[this.Name];
+            var availableRecords =
+                from r in rawRecords
+                where r[this.Name] != null && r[this.Name] != DBNull.Value
+                let parts = ((string)r[this.Name]).Split(':')
+                select new
+                {
+                    SelfId = (long)r["id"],
+                    Model = parts[0],
+                    RefId = long.Parse(parts[1])
+                };
 
             foreach (var r in availableRecords)
             {
-                string model;
-                long id;
-                var parts = ((string)r).Split(':');
-                model = parts[0];
-                id = long.Parse(parts[1]);
-
-                if (masterTables.ContainsKey(model))
-                {
-                    var ids = masterTables[model];
-                    ids.Add(id);
-                }
-                else
-                {
-                    var ids = new List<long>() { id };
-                    masterTables.Add(model, ids);
-                }
-            }
-
-            if (masterTables.Count > 0)
-            {
-                foreach (var p in masterTables)
-                {
-                    dynamic masterModel = ctx.DatabaseProfile.GetResource(p.Key);
-                    var masterNames = masterModel.NameGetter(ctx, p.Value);
-
-                    foreach (var r in rawRecords)
-                    {
-                        var id = (long)r["id"];
-                        var masterId = (long)r[this.Name];
-                        result.Add(id, new object[] { masterId, masterNames[masterId] });
-                    }
-                }
-            }
-            else
-            {
-                foreach (var r in rawRecords)
-                {
-                    var id = (long)r["id"];
-                    result.Add(id, DBNull.Value);
-                }
+                //dynamic masterModel = ctx.DatabaseProfile.GetResource(r.Model);
+                refFieldValues[r.SelfId][this.Name] = new object[] { r.Model, r.RefId };
             }
         }
 
