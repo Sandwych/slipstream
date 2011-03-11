@@ -9,7 +9,8 @@
   <auto-load>true</auto-load>
   <source-language>csharp</source-language>
   <sources>
-    <file>test-object.cs</file>
+    <file>simple-models.cs</file>
+    <file>many-to-many-models.cs</file>
     <file>functional-field-object.cs</file>
   </sources>
   

@@ -12,9 +12,9 @@ namespace ObjectServer.Test
 
     //子表
     [Resource]
-    public sealed class ChildObject : TableModel
+    public sealed class ChildModel : TableModel
     {
-        public ChildObject()
+        public ChildModel()
             : base("test.child")
         {
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
@@ -25,9 +25,9 @@ namespace ObjectServer.Test
 
     //主表
     [Resource]
-    public sealed class MasterObject : TableModel
+    public sealed class MasterModel : TableModel
     {
-        public MasterObject()
+        public MasterModel()
             : base("test.master")
         {
             Fields.Chars("name").SetLabel("Name").SetSize(64);
