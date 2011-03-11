@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ReferenceMetaField : MetaField
+    internal sealed class ReferenceMetaField : AbstractMetaField
     {
         OnDeleteAction refAct;
         /// <summary>

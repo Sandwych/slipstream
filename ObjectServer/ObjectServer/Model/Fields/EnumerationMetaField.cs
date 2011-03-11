@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class EnumerationMetaField : MetaField
+    internal sealed class EnumerationMetaField : AbstractMetaField
     {
         private Dictionary<string, string> options = new Dictionary<string, string>();
 

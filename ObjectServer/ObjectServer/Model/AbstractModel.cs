@@ -10,7 +10,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer.Model
 {
-    public abstract class ModelBase : ResourceBase, IMetaModel
+    public abstract class AbstractModel : AbstractResource, IMetaModel
     {
         private readonly IMetaFieldCollection declaredFields =
             new MetaFieldCollection();
@@ -19,7 +19,7 @@ namespace ObjectServer.Model
         public const string ActiveFieldName = "_active";
         public const string VersionFieldName = "_version";
 
-        protected ModelBase(string name)
+        protected AbstractModel(string name)
             : base(name)
         {
         }

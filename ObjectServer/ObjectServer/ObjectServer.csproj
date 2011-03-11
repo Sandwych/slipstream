@@ -127,7 +127,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backend\DataContextBase.cs" />
+    <Compile Include="Backend\AbstractDataContext.cs" />
     <Compile Include="Backend\DatabaseType.cs" />
     <Compile Include="Backend\DataProvider.cs" />
     <Compile Include="Backend\DynamicRecord.cs" />
@@ -190,7 +190,7 @@
     <Compile Include="Model\Fields\ScalarMetaField.cs" />
     <Compile Include="Model\Fields\ManyToManyMetaField.cs" />
     <Compile Include="Model\IMetaModel.cs" />
-    <Compile Include="Model\ModelBase.cs" />
+    <Compile Include="Model\AbstractModel.cs" />
     <Compile Include="Model\OnDeleteAction.cs" />
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Model\ModelQuery.cs" />
@@ -233,7 +233,7 @@
     <Compile Include="SqlTree\BracketedExpression.cs" />
     <Compile Include="SqlTree\OrderbyClause.cs" />
     <Compile Include="SqlTree\OrderbyItem.cs" />
-    <Compile Include="ResourceBase.cs" />
+    <Compile Include="AbstractResource.cs" />
     <Compile Include="ResourceAttribute.cs" />
     <Compile Include="Model\TableModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />
@@ -262,7 +262,7 @@
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha1.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
-    <Compile Include="Model\Fields\MetaField.cs" />
+    <Compile Include="Model\Fields\AbstractMetaField.cs" />
     <Compile Include="Model\Fields\FieldGetter.cs" />
     <Compile Include="Model\Fields\IMetaField.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />

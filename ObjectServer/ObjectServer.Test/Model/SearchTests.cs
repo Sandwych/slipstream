@@ -10,7 +10,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class SearchTests : LocalTestBase
+    public class SearchTests : LocalTestCase
     {
         IExportedService proxy = ObjectServerStarter.ExportedService;
 

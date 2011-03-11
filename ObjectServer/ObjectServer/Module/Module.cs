@@ -68,8 +68,12 @@ namespace ObjectServer
         [XmlArrayItem("file")]
         public string[] DataFiles { get; set; }
 
-        [XmlElement("script-language")]
-        public string ScriptLanguage { get; set; }
+        [XmlElement("source-language")]
+        public string SourceLanguage { get; set; }
+
+        [XmlArray("scripts")]
+        [XmlArrayItem("file")]
+        public string[] Scripts { get; set; }
 
         [XmlElement("auto-load")]
         public bool AutoLoad { get; set; }
@@ -180,7 +184,7 @@ namespace ObjectServer
 
             foreach (var t in types)
             {
-                var res = ResourceBase.CreateStaticResourceInstance(t);
+                var res = AbstractResource.CreateStaticResourceInstance(t);
                 this.resources.Add(res);
                 db.RegisterResource(res);
             }
@@ -279,7 +283,7 @@ namespace ObjectServer
             }
 
             //编译模块程序并注册所有对象
-            var compiler = CompilerProvider.GetCompiler(this.ScriptLanguage);
+            var compiler = CompilerProvider.GetCompiler(this.SourceLanguage);
             var a = compiler.CompileFromFile(sourceFiles);
             return a;
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ManyToOneMetaField : MetaField
+    internal sealed class ManyToOneMetaField : AbstractMetaField
     {
         OnDeleteAction onDelete;
         /// <summary>

@@ -9,7 +9,7 @@ using Npgsql;
 
 namespace ObjectServer.Backend.Postgresql
 {
-    internal sealed class PgDataContext : DataContextBase, IDataContext
+    internal sealed class PgDataContext : AbstractDataContext, IDataContext
     {
         private const string INITDB = "ObjectServer.Backend.Postgresql.initdb.sql";
 

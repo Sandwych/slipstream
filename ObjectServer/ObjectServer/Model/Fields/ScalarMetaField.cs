@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ScalarMetaField : MetaField
+    internal sealed class ScalarMetaField : AbstractMetaField
     {
         public ScalarMetaField(string name, FieldType ft)
             : base(name, ft)

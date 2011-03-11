@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class XmlDataImporterTests : LocalTestBase
+    public class XmlDataImporterTests : LocalTestCase
     {
         const string XmlResourcePath = "ObjectServer.Test.Model.data.xml";
 

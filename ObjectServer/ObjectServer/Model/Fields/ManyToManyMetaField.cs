@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ManyToManyMetaField : MetaField
+    internal sealed class ManyToManyMetaField : AbstractMetaField
     {
         public ManyToManyMetaField(string name,
             string refModel, string originField, string targetField)

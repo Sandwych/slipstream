@@ -6,9 +6,9 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal abstract class MetaField : IMetaField
+    internal abstract class AbstractMetaField : IMetaField
     {
-        public MetaField(string name)
+        public AbstractMetaField(string name)
         {
             this.SetName(name);
 
@@ -25,12 +25,12 @@ namespace ObjectServer.Model
             }
 
             this.Name = name;
-            this.Internal = name == ModelBase.VersionFieldName
-                || name == ModelBase.IdFieldName
-                || name == ModelBase.ActiveFieldName;
+            this.Internal = name == AbstractModel.VersionFieldName
+                || name == AbstractModel.IdFieldName
+                || name == AbstractModel.ActiveFieldName;
         }
 
-        public MetaField(string name, FieldType type)
+        public AbstractMetaField(string name, FieldType type)
             : this(name)
         {
             this.Type = type;

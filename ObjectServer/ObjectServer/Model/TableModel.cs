@@ -15,7 +15,7 @@ using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
-    public abstract class TableModel : ModelBase
+    public abstract class TableModel : AbstractModel
     {
         public const string CreatedTimeField = "_created_time";
         public const string ModifiedTimeField = "_modified_time";
@@ -319,7 +319,6 @@ namespace ObjectServer.Model
                 new WhereClause(whereExp));
 
             var sql = updateStatement.ToString();
-            Console.WriteLine(sql);
 
             var rowsAffected = ctx.DatabaseProfile.DataContext.Execute(sql, args.ToArray());
 

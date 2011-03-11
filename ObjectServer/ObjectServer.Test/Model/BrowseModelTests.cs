@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class BrowseModelTests : LocalTestBase
+    public class BrowseModelTests : LocalTestCase
     {
 
         [Test]

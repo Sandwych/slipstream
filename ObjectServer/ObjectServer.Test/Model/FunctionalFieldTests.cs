@@ -10,7 +10,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class FunctionalFieldTests : LocalTestBase
+    public class FunctionalFieldTests : LocalTestCase
     {
         [Test]
         public void Test_function_many2one()

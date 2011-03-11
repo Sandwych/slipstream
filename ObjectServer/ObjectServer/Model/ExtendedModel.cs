@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public class ExtendedModel : ModelBase
+    public class ExtendedModel : AbstractModel
     {
         public ExtendedModel(string name)
             : base(name)

@@ -13,12 +13,12 @@ namespace ObjectServer
     /// <summary>
     /// 适用于静态语言（非DLR）的服务对象基类
     /// </summary>
-    public abstract class ResourceBase : DynamicObject, IResource
+    public abstract class AbstractResource : DynamicObject, IResource
     {
         private readonly IDictionary<string, MethodInfo> serviceMethods =
             new SortedList<string, MethodInfo>();
 
-        protected ResourceBase(string name)
+        protected AbstractResource(string name)
         {
             this.SetName(name);
             this.RegisterAllServiceMethods(this.GetType());

@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace ObjectServer
 {
-    public abstract class LocalTestBase
+    public abstract class LocalTestCase
     {
         [TestFixtureSetUp()]
         public virtual void InitFramework()

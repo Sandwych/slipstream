@@ -67,7 +67,7 @@ namespace ObjectServer.Runtime
 
         private static void SetCompilerParameters(Boo.Lang.Compiler.BooCompiler compiler)
         {
-            var coreAssembly = typeof(Model.ModelBase).Assembly;
+            var coreAssembly = typeof(Model.AbstractModel).Assembly;
             compiler.Parameters.Pipeline = new CompileToMemory();
             compiler.Parameters.Ducky = true;
             compiler.Parameters.WarnAsError = false;

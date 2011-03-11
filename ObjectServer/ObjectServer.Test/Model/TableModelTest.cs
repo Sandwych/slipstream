@@ -14,7 +14,7 @@ namespace ObjectServer.Model.Test
 {
 
     [TestFixture]
-    public class TableModelTest : LocalTestBase
+    public class TableModelTest : LocalTestCase
     {
         [Test]
         public void Simple_fields_crud()

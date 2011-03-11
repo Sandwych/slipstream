@@ -10,7 +10,7 @@ using ObjectServer.Backend;
 namespace ObjectServer.Test.Backend
 {
     [TestFixture]
-    public class DatabaseTest : LocalTestBase
+    public class DatabaseTest : LocalTestCase
     {
         [Test]
         public void Query_as_dictionary()

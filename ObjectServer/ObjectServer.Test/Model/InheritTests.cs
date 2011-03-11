@@ -10,7 +10,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class InheritTests : LocalTestBase
+    public class InheritTests : LocalTestCase
     {
         [Test]
         public void Test_single_table()

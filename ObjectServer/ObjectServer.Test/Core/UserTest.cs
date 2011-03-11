@@ -9,7 +9,7 @@ namespace ObjectServer.Core.Test
 {
 
     [TestFixture]
-    public sealed class UserTest : LocalTestBase
+    public sealed class UserTest : LocalTestCase
     {
         IExportedService proxy = ServiceDispatcher.CreateDispatcher();
 
