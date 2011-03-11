@@ -132,7 +132,7 @@ namespace ObjectServer.Model
 
         }
 
-        public override object[] SearchInternal(
+        public override long[] SearchInternal(
             IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
@@ -338,7 +338,7 @@ namespace ObjectServer.Model
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, object[] ids, IEnumerable<string> fields)
+            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields)
         {
             if (ctx == null)
             {
@@ -350,7 +350,7 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
-            if (ids == null || ids.Length == 0)
+            if (ids == null || ids.Count() == 0)
             {
                 throw new ArgumentException("'ids' cannot be null", "ids");
             }
@@ -440,7 +440,7 @@ namespace ObjectServer.Model
 
 
         [ServiceMethod]
-        public static object[] Search(
+        public static long[] Search(
             dynamic model, IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             return model.SearchInternal(ctx, domain, offset, limit);
@@ -448,13 +448,14 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            dynamic model, IResourceScope ctx, object[] ids, object[] fields = null)
+            dynamic model, IResourceScope ctx, object[] clientIds, object[] fields = null)
         {
-            string[] strFields = null;
+            IEnumerable<string> strFields = null;
             if (fields != null)
             {
-                strFields = fields.Select(f => (string)f).ToArray();
+                strFields = fields.Select(f => (string)f);
             }
+            var ids = clientIds.Select(id => (long)id);
             return model.ReadInternal(ctx, ids, strFields);
         }
 
@@ -485,13 +486,14 @@ namespace ObjectServer.Model
 
         public override dynamic Browse(IResourceScope ctx, long id)
         {
-            var record = this.ReadInternal(ctx, new object[] { id }, null)[0];
+            var record = this.ReadInternal(ctx, new long[] { id }, null)[0];
             return new BrowsableRecord(ctx, this, record);
         }
 
-        private IDictionary<long, string> DefaultNameGetter(IResourceScope ctx, object[] ids)
+        private IDictionary<long, string> DefaultNameGetter(
+            IResourceScope ctx, IEnumerable<long> ids)
         {
-            var result = new Dictionary<long, string>(ids.Length);
+            var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))
             {
                 var records = this.ReadInternal(ctx, ids, new string[] { "id", "name" });

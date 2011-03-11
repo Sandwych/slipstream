@@ -70,7 +70,7 @@ namespace ObjectServer.Test
             return 1 + 1;
         }
 
-        public Dictionary<long, object> GetField3(IResourceScope ctx, object[] ids)
+        public Dictionary<long, object> GetField3(IResourceScope ctx, IEnumerable<long> ids)
         {
             var fieldNames = new string[] { "field1", "field2" };
             var values = base.ReadInternal(ctx, ids, fieldNames);

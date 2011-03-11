@@ -66,7 +66,7 @@ namespace ObjectServer.Model
             protected set { throw new NotSupportedException(); }
         }
 
-        public override object[] SearchInternal(
+        public override long[] SearchInternal(
             IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
             throw new NotSupportedException();
@@ -86,7 +86,7 @@ namespace ObjectServer.Model
         }
 
         public override Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, object[] ids, IEnumerable<string> fields = null)
+            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields = null)
         {
             throw new NotSupportedException();
         }

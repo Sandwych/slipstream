@@ -29,10 +29,10 @@ namespace ObjectServer.Model.Test
 
                 importer.Import(xmlStream);
 
-                var ids = testObjectModel.Search(context, null, 0, 0);
+                var ids = testObjectModel.SearchInternal(context, null, 0, 0);
                 Assert.AreEqual(3, ids.Length);
 
-                var testObjectRecords = testObjectModel.Read(context, ids, null);
+                var testObjectRecords = testObjectModel.ReadInternal(context, ids, null);
                 Assert.AreEqual("name1", testObjectRecords[0]["name"]);
             }
         }

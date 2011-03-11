@@ -83,6 +83,7 @@
     <Compile Include="Core\UserTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
+    <Compile Include="Model\ReferenceFieldTests.cs" />
     <Compile Include="Model\InheritTests.cs" />
     <Compile Include="Model\FunctionalFieldTests.cs" />
     <Compile Include="Model\SearchTests.cs" />

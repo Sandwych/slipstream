@@ -6,5 +6,5 @@ using System.Text;
 namespace ObjectServer.Model
 {
     public delegate Dictionary<long, object>
-        FieldGetter(IResourceScope session, object[] ids);
+        FieldGetter(IResourceScope session, IEnumerable<long> ids);
 }

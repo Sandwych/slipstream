@@ -113,7 +113,7 @@ namespace ObjectServer.Core
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, object[] ids, IEnumerable<string> fields)
+            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields)
         {
             var records = base.ReadInternal(ctx, ids, fields);
 
@@ -148,7 +148,7 @@ namespace ObjectServer.Core
             }
 
             var user = base.ReadInternal(ctx,
-                new object[] { users[0] },
+                new long[] { users[0] },
                 new string[] { "password", "salt" })[0];
 
             var hashedPassword = (string)user["password"];

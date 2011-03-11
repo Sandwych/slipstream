@@ -22,7 +22,7 @@ namespace ObjectServer.Model
             dynamic childModel = ctx.DatabaseProfile.GetResource(this.Relation);
             //TODO 权限等处理
 
-            var children = new Dictionary<long, object[]>();
+            var children = new Dictionary<long, long[]>();
             foreach (var master in records)
             {
                 var masterId = (long)master["id"];

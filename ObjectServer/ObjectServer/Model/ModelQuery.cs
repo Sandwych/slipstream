@@ -18,7 +18,7 @@ namespace ObjectServer.Model
             this.model = model;
         }
 
-        public object[] Search(object[] domain, long offset = 0, long limit = 0)
+        public long[] Search(object[] domain, long offset = 0, long limit = 0)
         {
             if (domain == null)
             {
@@ -63,7 +63,7 @@ namespace ObjectServer.Model
                 cmd.CommandText = sql;
                 using (var reader = cmd.ExecuteReader())
                 {
-                    var result = new List<object>();
+                    var result = new List<long>();
                     while (reader.Read())
                     {
                         result.Add(reader.GetInt64(0));

@@ -23,7 +23,8 @@ namespace ObjectServer.Model.Test
             var dbName = this.SessionId;
 
             //Delete all records first
-            var allIds = this.Service.SearchModel(this.SessionId, modelName, null, 0, 0);
+            var allIds = this.Service.SearchModel(
+                this.SessionId, modelName, null, 0, 0).Select(_ => (object)_).ToArray();
             if (allIds.Length > 0)
             {
                 this.Service.DeleteModel(this.SessionId, modelName, allIds);
@@ -88,12 +89,12 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(one2ManyField[0], masterId);
             Assert.AreEqual(one2ManyField[1], "master-obj");
 
-            var masterFieldNames = new object[] { "name", "children" };
+            var masterFieldNames = new string[] { "name", "children" };
             var masterRows = this.Service.ReadModel(
                 this.SessionId, "test.master",
                 new object[] { masterId }, masterFieldNames);
             var master = masterRows[0];
-            var children = (object[])master["children"];
+            var children = (long[])master["children"];
 
             Assert.AreEqual(1, children.Length);
             Assert.AreEqual(childId, children[0]);
@@ -179,8 +180,8 @@ namespace ObjectServer.Model.Test
                 new object[] { id }, masterFields);
             var record = masterRecords[0];
 
-            Assert.IsInstanceOf<object[]>(record["children"]);
-            Assert.AreEqual(0, ((object[])record["children"]).Length);
+            Assert.IsInstanceOf<long[]>(record["children"]);
+            Assert.AreEqual(0, ((long[])record["children"]).Length);
             Assert.IsInstanceOf<DBNull>(record["name"]);
         }
 

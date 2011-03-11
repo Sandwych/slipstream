@@ -19,50 +19,70 @@ namespace ObjectServer.Model
             this.Relation = masterModel;
         }
 
+
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, List<Dictionary<string, object>> records)
+           IResourceScope ctx, List<Dictionary<string, object>> rawRecords)
         {
-            var result = new Dictionary<long, object>(records.Count());
-            dynamic masterModel = ctx.DatabaseProfile.GetResource(this.Relation);
-            if (masterModel.ContainsField("name")) //如果有 name 字段
+            var result = new Dictionary<long, object>(rawRecords.Count());
+            this.LoadAllNames(ctx, rawRecords, result);
+
+            return result;
+        }
+
+        private void LoadAllNames(IResourceScope ctx,
+            List<Dictionary<string, object>> rawRecords,
+            Dictionary<long, object> result)
+        {
+            throw new NotImplementedException();
+            //从原始记录里把所有该字段的值取出
+            var masterTables = new Dictionary<string, List<long>>(rawRecords.Count);
+            var availableRecords = from r in rawRecords
+                                   where r[this.Name] != null && !(r[this.Name] is DBNull)
+                                   select r[this.Name];
+
+            foreach (var r in availableRecords)
             {
-                //从原始记录里把所有该字段的值取出
-                var masterTableIds = (
-                    from r in records
-                    where r[this.Name] != null && !(r[this.Name] is DBNull)
-                    select r[this.Name]).ToArray();
+                string model;
+                long id;
+                var parts = ((string)r).Split(':');
+                model = parts[0];
+                id = long.Parse(parts[1]);
 
-                if (masterTableIds.Length > 0)
+                if (masterTables.ContainsKey(model))
                 {
-                    var masterNames = masterModel.NameGetter(ctx, masterTableIds);
+                    var ids = masterTables[model];
+                    ids.Add(id);
+                }
+                else
+                {
+                    var ids = new List<long>() { id };
+                    masterTables.Add(model, ids);
+                }
+            }
 
-                    foreach (var r in records)
+            if (masterTables.Count > 0)
+            {
+                foreach (var p in masterTables)
+                {
+                    dynamic masterModel = ctx.DatabaseProfile.GetResource(p.Key);
+                    var masterNames = masterModel.NameGetter(ctx, p.Value);
+
+                    foreach (var r in rawRecords)
                     {
                         var id = (long)r["id"];
                         var masterId = (long)r[this.Name];
                         result.Add(id, new object[] { masterId, masterNames[masterId] });
                     }
                 }
-                else
-                {
-                    foreach (var r in records)
-                    {
-                        var id = (long)r["id"];
-                        result.Add(id, DBNull.Value);
-                    }
-                }
             }
             else
             {
-                foreach (var r in records)
+                foreach (var r in rawRecords)
                 {
                     var id = (long)r["id"];
-                    var masterId = (long)r[this.Name];
-                    result.Add(id, new object[] { masterId, string.Empty });
+                    result.Add(id, DBNull.Value);
                 }
             }
-
-            return result;
         }
 
         public override bool IsRequired

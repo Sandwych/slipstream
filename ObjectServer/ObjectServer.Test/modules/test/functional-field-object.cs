@@ -20,13 +20,13 @@ namespace ObjectServer.Test
             Fields.ManyToOne("user", "core.user").SetGetter(GetUser);
         }
 
-        private Dictionary<long, object> GetUser(IResourceScope ctx, object[] ids)
+        private Dictionary<long, object> GetUser(IResourceScope ctx, IEnumerable<long> ids)
         {
             var userModel = ctx.DatabaseProfile.GetResource("core.user");
             var domain = new object[][] { new object[] { "login", "=", "root" } };
             var userIds = Search(userModel, ctx, domain, 0, 0);
             var rootId = userIds[0];
-            var result = new Dictionary<long, object>(ids.Length);
+            var result = new Dictionary<long, object>();
             foreach (var id in ids)
             {
                 result[(long)id] = new object[2] { rootId, "root" };

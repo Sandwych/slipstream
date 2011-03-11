@@ -120,12 +120,12 @@ namespace ObjectServer.Model
         public abstract bool LogCreation { get; protected set; }
         public abstract bool LogWriting { get; protected set; }
         public abstract NameGetter NameGetter { get; protected set; }
-        public abstract object[] SearchInternal(
+        public abstract long[] SearchInternal(
             IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag);
         public abstract void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, object[] ids, IEnumerable<string> fields = null);
+            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields = null);
         public abstract void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids);
         public abstract dynamic Browse(IResourceScope ctx, long id);
 

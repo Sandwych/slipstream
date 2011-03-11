@@ -11,3 +11,5 @@ SingletonModel（单体模型）：Model 的子类，支持 Read 与 Write 两种操作原语
 TableModel（表模型）：Model 的子类，特指能够映射到关系数据库表的模型
 
 ViewModel（视图模型）：TableModel 的子类，特制能够映射到关系数据库视图的表模型
+
+NonsqlModel：Model 的子类，能够映射到文档或键值对数据库的模型子类

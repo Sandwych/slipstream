@@ -75,7 +75,7 @@ namespace ObjectServer.Model
             var destModelName = metaField.Relation;
             dynamic destMetaModel = this.context.DatabaseProfile.GetResource(destModelName);
             var fieldValue = (object[])this.record[metaField.Name];
-            var destIds = new object[] { fieldValue[0] };
+            var destIds = new long[] { (long)fieldValue[0] };
             //查询 ManyToOne 字段
             var destRecord = destMetaModel.ReadInternal(this.context, destIds, null)[0];
             return new BrowsableRecord(this.context, destMetaModel, destRecord);

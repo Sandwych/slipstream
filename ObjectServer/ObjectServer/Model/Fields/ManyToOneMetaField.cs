@@ -30,9 +30,9 @@ namespace ObjectServer.Model
                 var masterTableIds = (
                     from r in childRecords
                     where r[this.Name] != null && r[this.Name] != DBNull.Value
-                    select r[this.Name]).ToArray();
+                    select (long)r[this.Name]);
 
-                if (masterTableIds.Length > 0)
+                if (masterTableIds.Count() > 0)
                 {
                     var masterNames = masterModel.NameGetter(ctx, masterTableIds);
 

@@ -154,9 +154,9 @@ namespace ObjectServer
         }
 
         [CachedMethod]
-        public object[] SearchModel(string sessionId, string modelName, object[] domain, long offset = 0, long limit = 0)
+        public long[] SearchModel(string sessionId, string modelName, object[] domain, long offset = 0, long limit = 0)
         {
-            return (object[])Execute(sessionId, modelName, "Search", new object[] { domain, offset, limit });
+            return (long[])Execute(sessionId, modelName, "Search", new object[] { domain, offset, limit });
         }
 
         [CachedMethod]

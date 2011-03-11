@@ -144,6 +144,9 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Core\AttachmentModel.cs" />
+    <Compile Include="Core\PropertyModel.cs" />
+    <Compile Include="Core\OrganizationModel.cs" />
     <Compile Include="Core\ViewActionModel.cs" />
     <Compile Include="Core\UserGroupModel.cs" />
     <Compile Include="Model\ExtendedModel.cs" />
