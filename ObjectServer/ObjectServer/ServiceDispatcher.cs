@@ -92,6 +92,8 @@ namespace ObjectServer
                 {
                     return methodInfo.Invoke(null, internalArgs);
                 }
+
+                ctx.DatabaseProfile.DataContext.Close();
             }
         }
 
@@ -103,7 +105,6 @@ namespace ObjectServer
             {
                 var result = method.Invoke(null, internalArgs);
                 tx.Complete();
-                ctx.DatabaseProfile.DataContext.Close();
                 return result;
             }
         }

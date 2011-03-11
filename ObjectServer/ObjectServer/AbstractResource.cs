@@ -108,8 +108,8 @@ namespace ObjectServer
             var methods = t.GetMethods().Where(m => m.IsStatic && m.ReflectedType == t);
             foreach (var m in methods)
             {
-                var attrs = m.GetCustomAttributes(typeof(ServiceMethodAttribute), false);
-                if (attrs.Length == 1)
+                var attr = Attribute.GetCustomAttribute(m, typeof(ServiceMethodAttribute));
+                if (attr != null)
                 {
                     this.RegisterServiceMethod(m);
                 }

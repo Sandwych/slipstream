@@ -62,11 +62,10 @@ namespace ObjectServer.Web
 
             foreach (var mi in methods)
             {
-                var attrs = mi.GetCustomAttributes(typeof(JsonRpcMethodAttribute), false);
-                if (attrs.Length == 1)
+                var attr = Attribute.GetCustomAttribute(
+                    mi, typeof(JsonRpcMethodAttribute)) as JsonRpcMethodAttribute;
+                if (attr != null)
                 {
-                    var attr = (JsonRpcMethodAttribute)attrs[0];
-
                     var name = attr.Name;
                     if (string.IsNullOrEmpty(name))
                     {

@@ -198,8 +198,8 @@ namespace ObjectServer
             var result = new List<Type>();
             foreach (var t in types)
             {
-                var assemblies = t.GetCustomAttributes(typeof(ResourceAttribute), false);
-                if (assemblies.Length > 0)
+                var attr = Attribute.GetCustomAttribute(t, typeof(ResourceAttribute), false);
+                if (attr != null)
                 {
                     result.Add(t);
                 }

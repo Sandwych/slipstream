@@ -1,0 +1,13 @@
+几个基础概念及术语：
+
+Service Method（服务方法）：可通过 RPC 远程调用的方法，如果是 CLR 类的话使用 ServiceMethodAttribute 标记，且必须为静态方法，对参数也有要求。
+
+Resource（资源）：一个能够对外提供 RPC 服务的对象，可以包含多个 Service Methods，并实现 IResource 接口
+
+Model（模型）：Resource 的子类，能够拥有字段，并可以支持 Search、Read、Write、Create、Delete 5种操作原语
+
+SingletonModel（单体模型）：Model 的子类，支持 Read 与 Write 两种操作原语
+
+TableModel（表模型）：Model 的子类，特指能够映射到关系数据库表的模型
+
+ViewModel（视图模型）：TableModel 的子类，特制能够映射到关系数据库视图的表模型
