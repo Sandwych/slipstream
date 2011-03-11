@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public class ExtendedModel : AbstractModel
+    public abstract class AbstractExtendedModel : AbstractModel
     {
-        public ExtendedModel(string name)
+        public AbstractExtendedModel(string name)
             : base(name)
         {
         }

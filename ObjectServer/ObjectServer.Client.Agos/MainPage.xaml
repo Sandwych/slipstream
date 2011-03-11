@@ -4,7 +4,6 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation" 
   xmlns:uriMapper="clr-namespace:System.Windows.Navigation;assembly=System.Windows.Controls.Navigation"
-  xmlns:dataControls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.DataForm.Toolkit" 
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
   xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
   mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
@@ -42,7 +41,7 @@
                     <Border x:Name="LinksBorder" Style="{StaticResource LinksBorderStyle}">
                         <StackPanel x:Name="LinksStackPanel" Style="{StaticResource LinksStackPanelStyle}">
 
-                            <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click" />
+                            <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click" Style="{StaticResource LoginRegisterLinkStyle}" />
 
                         </StackPanel>
                     </Border>

@@ -149,7 +149,7 @@
     <Compile Include="Core\OrganizationModel.cs" />
     <Compile Include="Core\ViewActionModel.cs" />
     <Compile Include="Core\UserGroupModel.cs" />
-    <Compile Include="Model\ExtendedModel.cs" />
+    <Compile Include="Model\AbstractExtendedModel.cs" />
     <Compile Include="SessionlessContext.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardModel.cs" />

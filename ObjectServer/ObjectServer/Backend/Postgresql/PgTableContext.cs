@@ -17,7 +17,7 @@ namespace ObjectServer.Backend.Postgresql
 {
     internal sealed class PgTableContext : ITableContext
     {
-        private IDictionary<string, IColumnMetadata> columns = new SortedList<string, IColumnMetadata>();
+        private IDictionary<string, IColumnMetadata> columns = new Dictionary<string, IColumnMetadata>();
         private readonly IDictionary<OnDeleteAction, string> onDeleteMapping =
             new Dictionary<OnDeleteAction, string>()
             {

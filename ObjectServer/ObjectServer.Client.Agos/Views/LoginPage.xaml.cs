@@ -107,7 +107,7 @@ namespace ObjectServer.Client.Agos.Views
 
         }
 
-        private void LayoutRoot_KeyDown(object sender, KeyEventArgs e)
+        private void Page_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && this.buttonSignIn.IsEnabled)
             {

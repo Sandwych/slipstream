@@ -16,7 +16,7 @@ namespace ObjectServer
     public abstract class AbstractResource : DynamicObject, IResource
     {
         private readonly IDictionary<string, MethodInfo> serviceMethods =
-            new SortedList<string, MethodInfo>();
+            new Dictionary<string, MethodInfo>();
 
         protected AbstractResource(string name)
         {

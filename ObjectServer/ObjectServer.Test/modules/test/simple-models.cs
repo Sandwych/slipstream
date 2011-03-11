@@ -61,7 +61,6 @@ namespace ObjectServer.Test
                 new Dictionary<string, string>() { { "state1", "State 1" }, { "state2", "State2" } })
                 .SetLabel("Money Field");
             Fields.Binary("binary_field").SetLabel("Binary Field");
-
         }
 
         [ServiceMethod]
@@ -108,7 +107,7 @@ namespace ObjectServer.Test
 
 
     [Resource]
-    public sealed class SingleTableInheritedModel : ExtendedModel
+    public sealed class SingleTableInheritedModel : AbstractExtendedModel
     {
         public SingleTableInheritedModel()
             : base("test.single_table")

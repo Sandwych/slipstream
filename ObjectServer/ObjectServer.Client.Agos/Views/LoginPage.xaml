@@ -8,7 +8,7 @@
            xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
            xmlns:local="clr-namespace:ObjectServer.Client.Agos.Models"
            d:DesignWidth="640" d:DesignHeight="480"
-           Title="登录">
+           Title="登录" KeyDown="Page_KeyDown">
     <UserControl.Resources>
         <local:LoginModel x:Key="LoginModelDataContext"/>
     </UserControl.Resources>
@@ -21,7 +21,7 @@
         </TextBlock>
 
         <Grid Height="Auto" HorizontalAlignment="Center" Name="grid1" VerticalAlignment="Center" 
-                  Grid.Column="0" Grid.Row="1" Width="420">
+                  Grid.Column="0" Grid.Row="1" Width="420" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="28" MinHeight="21" />
                 <RowDefinition Height="28" MinHeight="21" />
@@ -61,8 +61,14 @@
             <TextBlock x:Name="textMessage" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
                        VerticalAlignment="Center" Height="22" HorizontalAlignment="Center" Foreground="#FF990000" />
 
-            <Button x:Name="buttonSignIn" Content="登录" Click="buttonSignIn_Click"  HorizontalAlignment="Right"
-                    Grid.Row="5" Grid.ColumnSpan="2" Width="75"  Height="25" />
+            <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
+                        HorizontalAlignment="Right" Grid.ColumnSpan="1">
+                <Button x:Name="buttonSignIn" Content="登录" Click="buttonSignIn_Click"  
+                      Width="75"  Height="25" Margin="5,0,5,0"  FontWeight="Bold"/>
+                <Button x:Name="ButtonDatabaseManagement" Content="数据库管理..." 
+                        Margin="5,0,0,0" MinWidth="75" Width="Auto" Height="25" />
+
+            </StackPanel>
         </Grid>
     </StackPanel>
 </navigation:Page>

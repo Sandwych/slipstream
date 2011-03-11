@@ -105,9 +105,7 @@ namespace ObjectServer.Client
             var args = new object[] { domain, offset, limit };
             this.Execute(objectName, "Search", args, o =>
             {
-                object[] objs = (object[])o;
-                var ids = objs.Select(id => (long)id).ToArray();
-                resultCallback(ids);
+                resultCallback(((object[])o).Select(id => (long)id).ToArray());
             });
         }
 

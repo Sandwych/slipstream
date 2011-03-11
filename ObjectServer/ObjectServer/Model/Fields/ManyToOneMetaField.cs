@@ -33,11 +33,20 @@ namespace ObjectServer.Model
                                        let mid = r[this.Name]
                                        where mid != null && mid != DBNull.Value
                                        select new { MasterId = (long)mid, SelfId = (long)r["id"] };
-                foreach (var mid in availableRecords)
+                if (availableRecords.Count() > 0)
                 {
-                    var masterRecord = masterModel.ReadInternal(
-                        ctx, new long[] { mid.MasterId }, fields)[0];
-                    result[mid.SelfId] = new object[] { mid.MasterId, masterRecord["name"] };
+                    var masterRecords = masterModel.ReadInternal(
+                        ctx, availableRecords.Select(ar => ar.MasterId), fields);
+                    var masterNames = new Dictionary<long, string>(masterRecords.Length);
+                    foreach (var mr in masterRecords)
+                    {
+                        masterNames.Add((long)mr["id"], (string)mr["name"]);
+                    }
+
+                    foreach (var mid in availableRecords)
+                    {
+                        result[mid.SelfId] = new object[] { mid.MasterId, masterNames[mid.MasterId] };
+                    }
                 }
 
                 var nullRecords = from r in rawRecords
