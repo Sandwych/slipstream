@@ -352,7 +352,7 @@ namespace ObjectServer.Model
 
             if (ids == null || ids.Count() == 0)
             {
-                throw new ArgumentException("'ids' cannot be null", "ids");
+                return new Dictionary<string, object>[] { };
             }
 
             IList<string> allFields;
@@ -486,8 +486,7 @@ namespace ObjectServer.Model
 
         public override dynamic Browse(IResourceScope ctx, long id)
         {
-            var record = this.ReadInternal(ctx, new long[] { id }, null)[0];
-            return new BrowsableRecord(ctx, this, record);
+            return new BrowsableRecord(ctx, this, id);
         }
 
         private IDictionary<long, string> DefaultNameGetter(

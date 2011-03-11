@@ -38,7 +38,7 @@ namespace ObjectServer.Test
     {
 
         public DepartmentEmployeeModel()
-            : base("core.department_employee")
+            : base("test.department_employee")
         {
             this.TableName = "test_department_employee_rel";
 

@@ -22,18 +22,16 @@ namespace ObjectServer.Model
            IResourceScope ctx, List<Dictionary<string, object>> records)
         {
             //中间表模型
-            dynamic relModel = ctx.DatabaseProfile.GetResource(this.Relation);
-            //var originField = relModel.DefinedFields[this.OriginField];
-            //var relatedField = relModel.DefinedFields[this.RelatedField];
-            var relFields = new string[] { this.RelatedField };
+            dynamic relationModel = ctx.DatabaseProfile.GetResource(this.Relation);
+            var relationFields = new string[] { this.RelatedField };
 
-            var domain = new object[][] { new object[] { this.OriginField, "=", (long)0 } };
+            var domain = new object[][] { new object[] { this.OriginField, "=", (long)-1 } };
             var result = new Dictionary<long, object>();
             foreach (var rec in records)
             {
                 var id = (long)rec["id"];
                 domain[0][2] = id;
-                var relIds = relModel.SearchInternal(ctx, domain, 0, 0);
+                var relIds = relationModel.SearchInternal(ctx, domain, 0, 0);
 
                 //中间表没有记录，返回空
                 if (relIds == null || relIds.Length <= 0)
@@ -42,9 +40,10 @@ namespace ObjectServer.Model
                 }
                 else
                 {
-                    var relRecords = (Dictionary<string, object>[])
-                        relModel.ReadInternal(ctx, relIds, relFields);
-                    result[id] = relRecords.Select(d => d[this.RelatedField]).ToArray();
+                    //TODO 优化此处，或许应该用 SQL
+                    var relationRecords = (Dictionary<string, object>[])
+                        relationModel.ReadInternal(ctx, relIds, relationFields);
+                    result[id] = relationRecords.Select(d => d[this.RelatedField]).ToArray();
                 }
             }
 

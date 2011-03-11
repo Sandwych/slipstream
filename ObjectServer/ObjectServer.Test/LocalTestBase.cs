@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
+using System.Dynamic;
 
 using NUnit.Framework;
 
@@ -21,6 +23,22 @@ namespace ObjectServer
             this.Service = service;
 
             this.SessionId = this.Service.LogOn("objectserver", "root", "root");
+
+            this.ActiveTestModule();
+        }
+
+        private void ActiveTestModule()
+        {
+            //激活 test 模块
+            using (var scope = new ResourceScope(new Guid(this.SessionId)))
+            {
+                var domain = new object[][] { new object[] { "name", "=", "test" } };
+                dynamic moduleModel = scope.DatabaseProfile.GetResource("core.module");
+                var ids = moduleModel.Search(scope, domain, 0, 0);
+                dynamic fields = new ExpandoObject();
+                fields.state = "activated";
+                moduleModel.Write(scope, ids[0], fields);
+            }
         }
 
         [TestFixtureTearDown]
@@ -34,43 +52,63 @@ namespace ObjectServer
 
         public IExportedService Service { get; private set; }
 
+        public IResourceScope ResourceScope { get; private set; }
 
-        protected void ClearModelDataTable(ResourceScope context)
+        [SetUp]
+        public void BeforeTest()
         {
-            dynamic modelDataModel = context.DatabaseProfile.GetResource("core.model_data");
-            var ids = modelDataModel.SearchInternal(context, null, 0, 0);
-            if (ids.Length > 0)
-            {
-                modelDataModel.DeleteInternal(context, ids);
-            }
+            Debug.Assert(this.ResourceScope == null);
+            Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
+
+            this.ResourceScope = new ResourceScope(new Guid(this.SessionId));
+        }
+
+        [TearDown]
+        public void AfterTest()
+        {
+            Debug.Assert(this.ResourceScope != null);
+            this.ResourceScope.Dispose();
+            this.ResourceScope = null;
+        }
+
+        protected void ClearModelDataTable()
+        {
+            Debug.Assert(this.ResourceScope != null);
+            this.ClearModel(this.ResourceScope, "core.model_data");
         }
 
 
-        protected void ClearTestModelTable(ResourceScope context, dynamic testObjectModel)
+        protected void ClearTestModelTable()
         {
-            testObjectModel = context.DatabaseProfile.GetResource("test.test_model");
-            var ids = testObjectModel.SearchInternal(context, null, 0, 0);
-            if (ids.Length > 0)
-            {
-                testObjectModel.DeleteInternal(context, ids);
-            }
+            Debug.Assert(this.ResourceScope != null);
+            this.ClearModel(this.ResourceScope, "test.test_model");
         }
 
 
-        protected void ClearMasterAndChildTable(ResourceScope context)
+        protected void ClearMasterAndChildTable()
         {
-            dynamic childModel = context.DatabaseProfile.GetResource("test.child");
-            var ids = childModel.SearchInternal(context, null, 0, 0);
+            Debug.Assert(this.ResourceScope != null);
+            this.ClearModel(this.ResourceScope, "test.child");
+            this.ClearModel(this.ResourceScope, "test.master");
+        }
+
+        protected void ClearManyToManyModels()
+        {
+            Debug.Assert(this.ResourceScope != null);
+            this.ClearModel(this.ResourceScope, "test.department_employee");
+            this.ClearModel(this.ResourceScope, "test.department");
+            this.ClearModel(this.ResourceScope, "test.employee");
+        }
+
+        protected void ClearModel(IResourceScope scope, string model)
+        {
+            dynamic res = scope.DatabaseProfile.GetResource(model);
+            var ids = res.SearchInternal(scope, null, 0, 0);
             if (ids.Length > 0)
             {
-                childModel.DeleteInternal(context, ids);
+                res.DeleteInternal(scope, ids);
             }
-            dynamic masterModel = context.DatabaseProfile.GetResource("test.master");
-            ids = masterModel.SearchInternal(context, null, 0, 0);
-            if (ids.Length > 0)
-            {
-                masterModel.DeleteInternal(context, ids);
-            }
+
         }
 
     }

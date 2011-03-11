@@ -15,7 +15,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_reference_field()
         {
-           
+            //this.ClearTestModelTable(null)
         }
     }
 }

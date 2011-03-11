@@ -26,17 +26,14 @@ namespace ObjectServer.Model.Test
             };
             var childId = (long)this.Service.CreateModel(this.SessionId, "test.child", childPropBag);
 
-            using (var ctx = new ResourceScope(new Guid(this.SessionId)))
-            {
-                dynamic childModel = ctx.DatabaseProfile.GetResource("test.child");
-                dynamic dynamicChild = childModel.Browse(ctx, childId);
-                Assert.AreEqual("master-obj", dynamicChild.master.name);
+            dynamic childModel = this.ResourceScope.DatabaseProfile.GetResource("test.child");
+            dynamic dynamicChild = childModel.Browse(this.ResourceScope, childId);
+            Assert.AreEqual("master-obj", dynamicChild.master.name);
 
-                dynamic masterModel = ctx.DatabaseProfile.GetResource("test.master");
-                dynamic dynamicMaster = masterModel.Browse(ctx, masterId);
-                Assert.AreEqual(1, dynamicMaster.children.Length);
-                Assert.AreEqual("child-obj", dynamicMaster.children[0].name);
-            }
+            dynamic masterModel = this.ResourceScope.DatabaseProfile.GetResource("test.master");
+            dynamic dynamicMaster = masterModel.Browse(this.ResourceScope, masterId);
+            Assert.AreEqual(1, dynamicMaster.children.Length);
+            Assert.AreEqual("child-obj", dynamicMaster.children[0].name);
         }
     }
 }

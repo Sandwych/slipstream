@@ -109,64 +109,7 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(masterId2, masterField3[0]);
 
         }
-
-        [Test]
-        public void Many_to_many_fields()
-        {
-            var userRecord = new Dictionary<string, object>()
-            {
-                { "name", "user1" },
-                { "login", "account" },
-                { "password", "xxxxxx" },
-                { "admin", true },
-            };
-
-            var userId1 = (long)this.Service.CreateModel(this.SessionId, "core.user", userRecord);
-            var userId2 = (long)this.Service.CreateModel(this.SessionId, "core.user", userRecord);
-            var userId3 = (long)this.Service.CreateModel(this.SessionId, "core.user", userRecord);
-            var userId4 = (long)this.Service.CreateModel(this.SessionId, "core.user", userRecord);
-            var userId5 = (long)this.Service.CreateModel(this.SessionId, "core.user", userRecord);
-
-            var groupRecord = new Dictionary<string, object>()
-            {
-                { "name", "group" },
-            };
-
-            var groupId1 = (long)this.Service.CreateModel(this.SessionId, "core.group", groupRecord);
-            var groupId2 = (long)this.Service.CreateModel(this.SessionId, "core.group", groupRecord);
-            var groupId3 = (long)this.Service.CreateModel(this.SessionId, "core.group", groupRecord);
-            var groupId4 = (long)this.Service.CreateModel(this.SessionId, "core.group", groupRecord);
-            var groupIds = new object[] { groupId1, groupId2 };
-
-            //设置user1 对应 group2, group3, group4
-            //设置 user2  对应 group3 group4
-
-            this.Service.CreateModel(this.SessionId, "core.user_group",
-                new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId2 }, });
-            this.Service.CreateModel(this.SessionId, "core.user_group",
-                new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId3 }, });
-            this.Service.CreateModel(this.SessionId, "core.user_group",
-                new Dictionary<string, object>() { { "uid", userId1 }, { "gid", groupId4 }, });
-
-
-            this.Service.CreateModel(this.SessionId, "core.user_group",
-                new Dictionary<string, object>() { { "uid", userId2 }, { "gid", groupId3 }, });
-            this.Service.CreateModel(this.SessionId, "core.user_group",
-                new Dictionary<string, object>() { { "uid", userId2 }, { "gid", groupId4 }, });
-
-
-            var users = this.Service.ReadModel(this.SessionId, "core.user",
-                new object[] { userId1, userId2 }, new object[] { "name", "groups" });
-
-            Assert.AreEqual(2, users.Length);
-            var user1 = users[0];
-            var user2 = users[1];
-
-            Assert.IsInstanceOf<object[]>(user1["groups"]);
-            var groups1 = (object[])user1["groups"];
-            Assert.AreEqual(3, groups1.Length);
-        }
-
+     
 
         [Test]
         public void Read_nullable_one_to_many_field()
@@ -208,28 +151,24 @@ namespace ObjectServer.Model.Test
         [Test]
         public void test_binary_field()
         {
-
-            using(var ctx = new ResourceScope(new Guid(this.SessionId)))
-            {
-                dynamic testModel = ctx.DatabaseProfile.GetResource("test.test_model");
-                this.ClearTestModelTable(ctx, testModel);
-                var fieldData = new byte[] { 33, 44, 55, 66, 77 };
-                var record = new Dictionary<string, object>()
+            this.ClearTestModelTable();
+            dynamic testModel = this.ResourceScope.DatabaseProfile.GetResource("test.test_model");
+            var fieldData = new byte[] { 33, 44, 55, 66, 77 };
+            var record = new Dictionary<string, object>()
                 {
                     { "name", "name1" },
                     { "address", "address1" },
                     { "binary_field", fieldData },
                 };
-                var id = (long)testModel.Create(ctx, record);
+            var id = (long)testModel.Create(this.ResourceScope, record);
 
-                record = testModel.Read(ctx, new object[] { id }, null)[0];
+            record = testModel.Read(this.ResourceScope, new object[] { id }, null)[0];
 
-                var field = record["binary_field"] as byte[];
-                Assert.NotNull(field);
-                Assert.AreEqual(5, field.Length);
-                Assert.AreEqual(fieldData[0], field[0]);
-                Assert.AreEqual(fieldData[4], field[4]);
-            }
+            var field = record["binary_field"] as byte[];
+            Assert.NotNull(field);
+            Assert.AreEqual(5, field.Length);
+            Assert.AreEqual(fieldData[0], field[0]);
+            Assert.AreEqual(fieldData[4], field[4]);
         }
     }
 }
