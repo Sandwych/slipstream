@@ -20,48 +20,38 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, List<Dictionary<string, object>> childRecords)
+           IResourceScope ctx, List<Dictionary<string, object>> rawRecords)
         {
-            var result = new Dictionary<long, object>(childRecords.Count());
+            var fields = new string[] { "name" }; //TODO 改成静态变量
+            var result = new Dictionary<long, object>(rawRecords.Count());
             dynamic masterModel = ctx.DatabaseProfile.GetResource(this.Relation);
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
-                //从原始记录里把所有该字段的值取出
-                var masterTableIds = from r in childRecords
-                                     where r[this.Name] != null && r[this.Name] != DBNull.Value
-                                     select (long)r[this.Name];
+                var manyToOneFieldValues = rawRecords.ToDictionary(_ => (long)_["id"]);
 
-                if (masterTableIds.Count() > 0)
+                var availableRecords = from r in rawRecords
+                                       let mid = r[this.Name]
+                                       where mid != null && mid != DBNull.Value
+                                       select new { MasterId = (long)mid, SelfId = (long)r["id"] };
+                foreach (var mid in availableRecords)
                 {
-                    var masterNames = masterModel.NameGetter(ctx, masterTableIds);
-
-                    foreach (var r in childRecords)
-                    {
-                        var id = (long)r["id"];
-                        var masterField = r[this.Name];
-                        if (masterField != DBNull.Value && masterField != null)
-                        {
-                            var masterId = (long)masterField;
-                            result.Add(id, new object[2] { masterId, masterNames[masterId] });
-                        }
-                        else
-                        {
-                            result.Add(id, DBNull.Value);
-                        }
-                    }
+                    var masterRecord = masterModel.ReadInternal(
+                        ctx, new long[] { mid.MasterId }, fields)[0];
+                    result[mid.SelfId] = new object[] { mid.MasterId, masterRecord["name"] };
                 }
-                else
+
+                var nullRecords = from r in rawRecords
+                                  let mid = r[this.Name]
+                                  where mid == null || mid == DBNull.Value
+                                  select (long)r["id"];
+                foreach (var mid in nullRecords)
                 {
-                    foreach (var r in childRecords)
-                    {
-                        var id = (long)r["id"];
-                        result.Add(id, DBNull.Value);
-                    }
+                    result[mid] = DBNull.Value;
                 }
             }
             else
             {
-                foreach (var r in childRecords)
+                foreach (var r in rawRecords)
                 {
                     var id = (long)r["id"];
                     var masterId = (long)r[this.Name];
