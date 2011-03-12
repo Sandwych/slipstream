@@ -37,14 +37,15 @@ namespace ObjectServer.Model
         protected override Dictionary<long, object> OnGetFieldValues(
             IResourceScope session, List<Dictionary<string, object>> records)
         {
-            var result = new Dictionary<long, object>(records.Count());
+            return records.ExtractFieldValues(this.Name);
+        }
 
-            foreach (var r in records)
-            {
-                result[(long)r["id"]] = r[this.Name];
-            }
+        protected override Dictionary<long, object> OnSetFieldValues(
+            IResourceScope scope, IList<Dictionary<string, object>> records)
+        {
+            //TODO 检查是否在范围内
 
-            return result;
+            return records.ExtractFieldValues(this.Name);
         }
 
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)

@@ -12,17 +12,28 @@ namespace ObjectServer.Model
         {
         }
 
-    
+
         protected override Dictionary<long, object> OnGetFieldValues(
             IResourceScope session, List<Dictionary<string, object>> records)
         {
-            var result = new Dictionary<long, object>(records.Count());
+            return records.ExtractFieldValues(this.Name);
+        }
 
+
+        protected override Dictionary<long, object> OnSetFieldValues(
+            IResourceScope scope, IList<Dictionary<string, object>> records)
+        {
+            return records.ExtractFieldValues(this.Name);
+        }
+
+
+        private Dictionary<long, object> ExtractFieldValues(List<Dictionary<string, object>> records)
+        {
+            var result = new Dictionary<long, object>(records.Count);
             foreach (var r in records)
             {
                 result[(long)r["id"]] = r[this.Name];
             }
-
             return result;
         }
 

@@ -28,7 +28,7 @@ namespace ObjectServer.Model
         IDictionary<string, string> Options { get; }
 
         /// <summary>
-        /// 是否是数据库列
+        /// 是否映射到实际的数据库列
         /// </summary>
         /// <returns></returns>
         bool IsColumn();
@@ -36,7 +36,11 @@ namespace ObjectServer.Model
         void Validate();
 
         Dictionary<long, object> GetFieldValues(
-            IResourceScope ctx, List<Dictionary<string, object>> records);
+            IResourceScope scope, List<Dictionary<string, object>> records);
+
+        Dictionary<long, object> SetFieldValues(
+            IResourceScope scope, IList<Dictionary<string, object>> records);
+
         object BrowseField(IResourceScope scope, IDictionary<string, object> record);
 
         #region Fluent interface 

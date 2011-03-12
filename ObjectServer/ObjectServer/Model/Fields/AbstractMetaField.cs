@@ -126,9 +126,24 @@ namespace ObjectServer.Model
             }
         }
 
+        public Dictionary<long, object> SetFieldValues(
+            IResourceScope scope, IList<Dictionary<string, object>> records)
+        {
+            if (this.IsFunctional)
+            {
+                throw new NotSupportedException();
+            }
+            else
+            {
+                return this.OnSetFieldValues(scope, records);
+            }
+        }
 
         protected abstract Dictionary<long, object> OnGetFieldValues(
-            IResourceScope ctx, List<Dictionary<string, object>> records);
+            IResourceScope scope, List<Dictionary<string, object>> records);
+
+        protected abstract Dictionary<long, object> OnSetFieldValues(
+            IResourceScope scope, IList<Dictionary<string, object>> records);
 
         public abstract object BrowseField(IResourceScope scope, IDictionary<string, object> record);
 

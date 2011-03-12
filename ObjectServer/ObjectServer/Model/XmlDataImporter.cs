@@ -83,7 +83,7 @@ namespace ObjectServer.Model
         private void ReadRecordElement(XmlReader reader, bool noUpdate)
         {
             var modelName = reader["model"];
-            dynamic model = this.context.DatabaseProfile.GetResource(modelName);
+            var model = (IMetaModel)this.context.DatabaseProfile.GetResource(modelName);
             var key = reader["key"];
 
             if (model == null)
@@ -97,7 +97,7 @@ namespace ObjectServer.Model
             this.ImportRecord(noUpdate, model, record, key);
         }
 
-        private void ImportRecord(bool noUpdate, dynamic model, Dictionary<string, object> record, string key = null)
+        private void ImportRecord(bool noUpdate, IMetaModel model, Dictionary<string, object> record, string key = null)
         {
             //查找 key 指定的记录看是否存在
             long? existedId = null;
@@ -115,8 +115,16 @@ namespace ObjectServer.Model
                 }
             }
             else if (existedId != null && !noUpdate) //Update 
-            {               
-                model.Write(this.context, existedId.Value, record);
+            {
+                if (model.Fields.ContainsKey(AbstractModel.VersionFieldName)) //处理版本
+                {
+                    var fields = new string[] { AbstractModel.VersionFieldName };
+                    var read = model.ReadInternal(this.context, new long[] { existedId.Value }, fields)[0];
+                    var version = (long)read[AbstractModel.VersionFieldName];
+                    record[AbstractModel.VersionFieldName] = version + 1;
+                }
+
+                model.WriteInternal(this.context, existedId.Value, record);
                 modelDataModel.UpdateResourceId(this.context, model.Name, key, existedId.Value);
             }
             else
@@ -138,7 +146,7 @@ namespace ObjectServer.Model
 
         private void ReadFieldElement(
             XmlReader reader, dynamic model, Dictionary<string, object> record)
-        {           
+        {
             var refKey = reader["ref-key"];
             var fieldName = reader["name"];
 

@@ -50,6 +50,12 @@ namespace ObjectServer.Model
             return result;
         }
 
+        protected override Dictionary<long, object> OnSetFieldValues(
+            IResourceScope scope, IList<Dictionary<string, object>> records)
+        {
+            throw new NotSupportedException();
+        }
+
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
         {
             IEnumerable<long> targetIds = null;

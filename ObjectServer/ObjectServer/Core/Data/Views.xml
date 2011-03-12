@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<data noupdate="false">
+<data noupdate="true">
 
   <record model="core.view" key="user_list">
     <field name="name">Users</field>

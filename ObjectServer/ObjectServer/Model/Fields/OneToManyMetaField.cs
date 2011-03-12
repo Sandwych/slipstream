@@ -43,6 +43,12 @@ namespace ObjectServer.Model
             return result;
         }
 
+        protected override Dictionary<long, object> OnSetFieldValues(
+            IResourceScope scope, IList<Dictionary<string, object>> records)
+        {
+            throw new NotSupportedException();
+        }
+
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
         {
             //TODO 重构成跟Many-to-many 一样的

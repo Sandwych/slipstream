@@ -71,6 +71,13 @@ namespace ObjectServer.Model
             return result;
         }
 
+
+        protected override Dictionary<long, object> OnSetFieldValues(
+            IResourceScope scope, IList<Dictionary<string, object>> records)
+        {
+            return records.ExtractFieldValues(this.Name);
+        }
+
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
         {
             var destModelName = this.Relation;

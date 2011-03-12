@@ -168,6 +168,11 @@ namespace ObjectServer.Model
             //处理用户没有给的默认值
             this.AddDefaultValues(ctx, values);
 
+            //转换用户给的字段值到数据库原始类型
+            values["id"] = (long)0;
+            this.ConvertFieldToColumn(ctx, values, values.Keys.ToArray());
+            values.Remove("id");
+
             var id = DoCreate(ctx, values);
 
             if (this.LogCreation)
@@ -255,6 +260,7 @@ namespace ObjectServer.Model
             }
 
             var record = new Dictionary<string, object>(userRecord);
+            record["id"] = id;
 
             //处理最近更新用户与最近更新时间字段            
             if (this.ContainsField(ModifiedTimeField))
@@ -269,9 +275,13 @@ namespace ObjectServer.Model
             var allFields = record.Keys; //记录中的所有字段
             //所有可更新的字段
             var updatableColumnFields = allFields.Where(
-                f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly);
+                f => this.Fields[f].IsColumn() && 
+                    !this.Fields[f].IsReadonly &&
+                    this.Fields[f].Name != "id"
+                ).ToArray();
+            this.ConvertFieldToColumn(ctx, record, updatableColumnFields);
 
-            //TODO 处理复杂字段
+
             //检查字段
 
             var columns = new List<IBinaryExpression>(record.Count);
@@ -333,6 +343,24 @@ namespace ObjectServer.Model
             if (this.LogWriting)
             {
                 AuditLog(ctx, (long)id, this.Label + " updated");
+            }
+        }
+
+        private void ConvertFieldToColumn(
+            IResourceScope ctx, Dictionary<string, object> record, string[] updatableColumnFields)
+        {
+
+            foreach (var f in updatableColumnFields)
+            {
+                var fieldInfo = this.Fields[f];
+                var records = new Dictionary<string, object>[] { record };
+                var fieldValues = fieldInfo.SetFieldValues(ctx, records);
+
+                foreach (var r in records)
+                {
+                    var id_ = (long)r["id"];
+                    r[fieldInfo.Name] = fieldValues[id_];
+                }
             }
         }
 

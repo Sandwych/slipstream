@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace ObjectServer.Model
 {
@@ -34,17 +35,23 @@ namespace ObjectServer.Model
             return result;
         }
 
-        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        protected override Dictionary<long, object> OnSetFieldValues(IResourceScope scope, IList<Dictionary<string, object>> records)
         {
-            throw new NotImplementedException();
+            var result = new Dictionary<long, object>(records.Count);
+            foreach (var r in records)
+            {
+                var id = (long)r["id"];
+                var fieldValue = (object[])r[this.Name];
+                var strFieldValue = fieldValue[0].ToString() + ':' + fieldValue[1].ToString();
+                result.Add(id, strFieldValue);
+            }
+            return result;
         }
 
         private void LoadAllNames(IResourceScope ctx,
             List<Dictionary<string, object>> rawRecords,
             Dictionary<long, object> result)
         {
-            var refFieldValues = rawRecords.ToDictionary(_ => (long)_["id"]);
-
             //从原始记录里把所有该字段的值取出
             var availableRecords =
                 from r in rawRecords
@@ -57,11 +64,41 @@ namespace ObjectServer.Model
                     RefId = long.Parse(parts[1])
                 };
 
+            var ids = new long[1];
+            var fields = new string[] { "name" };
             foreach (var r in availableRecords)
             {
-                //dynamic masterModel = ctx.DatabaseProfile.GetResource(r.Model);
-                refFieldValues[r.SelfId][this.Name] = new object[] { r.Model, r.RefId };
+                var masterModel = (IMetaModel)ctx.DatabaseProfile.GetResource(r.Model);
+                ids[0] = r.RefId;
+                string name = null;
+                if (masterModel.Fields.ContainsKey("name"))
+                {
+                    var record = masterModel.ReadInternal(ctx, ids, fields)[0];
+                    name = (string)record["name"];
+                }                
+
+                result[r.SelfId] = new object[] { r.Model, r.RefId, name };
             }
+
+
+            var nullRecords = from r in rawRecords
+                              let mid = r[this.Name]
+                              where mid == null || mid == DBNull.Value
+                              select (long)r["id"];
+            foreach (var mid in nullRecords)
+            {
+                result[mid] = DBNull.Value;
+            }
+        }
+
+        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        {
+            var fieldValue = (object[])record[this.Name];
+            var destModelName = (string)fieldValue[0];
+            dynamic destMetaModel = scope.DatabaseProfile.GetResource(destModelName);
+            var destIds = new long[] { (long)fieldValue[1] };
+            var destRecord = destMetaModel.ReadInternal(scope, destIds, null)[0];
+            return new BrowsableRecord(scope, destMetaModel, destRecord);
         }
 
         public override bool IsRequired
