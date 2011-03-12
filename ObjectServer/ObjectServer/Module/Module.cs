@@ -29,6 +29,7 @@ namespace ObjectServer
         private static readonly string[] s_coreDataFiles = new string[] 
         {
             "ObjectServer.Core.Data.Menus.xml",
+            "ObjectServer.Core.Data.Views.xml",
         };
 
         static Module()
