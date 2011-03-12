@@ -7,6 +7,7 @@ namespace ObjectServer.Model
 {
     public interface IMetaField
     {
+        IMetaModel Model { get; }
         string Name { get; }
         string Label { get; }
         bool IsFunctional { get; }
@@ -36,7 +37,7 @@ namespace ObjectServer.Model
 
         Dictionary<long, object> GetFieldValues(
             IResourceScope ctx, List<Dictionary<string, object>> records);
-
+        object BrowseField(IResourceScope scope, IDictionary<string, object> record);
 
         #region Fluent interface 
 

@@ -71,13 +71,6 @@ namespace ObjectServer
             this.ResourceScope = null;
         }
 
-        protected void ClearModelDataTable()
-        {
-            Debug.Assert(this.ResourceScope != null);
-            this.ClearModel(this.ResourceScope, "core.model_data");
-        }
-
-
         protected void ClearTestModelTable()
         {
             Debug.Assert(this.ResourceScope != null);

@@ -8,13 +8,20 @@ namespace ObjectServer.Model
 {
     internal abstract class AbstractMetaField : IMetaField
     {
-        public AbstractMetaField(string name)
+        public AbstractMetaField(IMetaModel model, string name)
         {
             this.SetName(name);
+            this.Model = model;
 
             this.Label = string.Empty;
             this.IsRequired = false;
             this.Lazy = false;
+        }
+        public AbstractMetaField(IMetaModel model, string name, FieldType type)
+            : this(model, name)
+        {
+            this.Type = type;
+
         }
 
         private void SetName(string name)
@@ -30,14 +37,10 @@ namespace ObjectServer.Model
                 || name == AbstractModel.ActiveFieldName;
         }
 
-        public AbstractMetaField(string name, FieldType type)
-            : this(name)
-        {
-            this.Type = type;
 
-        }
+        #region IMetaField
 
-        #region IField 成员
+        public IMetaModel Model { get; private set; }
 
         public string Name { get; private set; }
 
@@ -112,6 +115,8 @@ namespace ObjectServer.Model
 
         protected abstract Dictionary<long, object> OnGetFieldValues(
             IResourceScope ctx, List<Dictionary<string, object>> records);
+
+        public abstract object BrowseField(IResourceScope scope, IDictionary<string, object> record);
 
         #endregion
 

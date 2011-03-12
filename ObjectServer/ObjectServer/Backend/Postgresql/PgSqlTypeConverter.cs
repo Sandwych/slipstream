@@ -28,6 +28,7 @@ namespace ObjectServer.Backend
                 { FieldType.ManyToOne, f => "INT8" },
                 { FieldType.Chars, f => f.Size > 0 ? string.Format("VARCHAR({0})", f.Size) : "VARCHAR" },
                 { FieldType.Enumeration, f => string.Format("VARCHAR({0})", f.Size) },
+                { FieldType.Reference, f => "VARCHAR(128)" },
             };
 
         #region ISqlTypeConverter 成员

@@ -12,8 +12,7 @@ namespace ObjectServer.Model
 {
     public abstract class AbstractModel : AbstractResource, IMetaModel
     {
-        private readonly IMetaFieldCollection declaredFields =
-            new MetaFieldCollection();
+        private readonly IMetaFieldCollection declaredFields;
 
         public const string IdFieldName = "id";
         public const string ActiveFieldName = "_active";
@@ -22,6 +21,7 @@ namespace ObjectServer.Model
         protected AbstractModel(string name)
             : base(name)
         {
+            this.declaredFields = new MetaFieldCollection(this);
         }
 
         public override void Load(IDatabaseProfile db)

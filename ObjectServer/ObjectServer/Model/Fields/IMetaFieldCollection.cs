@@ -22,7 +22,8 @@ namespace ObjectServer.Model
         IMetaField OneToMany(string name, string childModel, string relatedField);
         IMetaField ManyToMany(string name, string refModel, string originField, string targetField);
 
-        IMetaField Enumeration(string name, IEnumerable<KeyValuePair<string, string>> options);
+        IMetaField Enumeration(string name, IDictionary<string, string> options);
+        IMetaField Reference(string name, IDictionary<string, string> options);
 
         IMetaField Version();
     }

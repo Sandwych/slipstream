@@ -7,9 +7,9 @@ namespace ObjectServer.Model
 {
     internal sealed class ManyToManyMetaField : AbstractMetaField
     {
-        public ManyToManyMetaField(string name,
+        public ManyToManyMetaField(IMetaModel model, string name,
             string refModel, string originField, string targetField)
-            : base(name, FieldType.ManyToMany)
+            : base(model, name, FieldType.ManyToMany)
         {
 
             this.Relation = refModel;
@@ -48,6 +48,29 @@ namespace ObjectServer.Model
             }
 
             return result;
+        }
+
+        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        {
+            IEnumerable<long> targetIds = null;
+            if (record.ContainsKey(this.Name))
+            {
+                var targetFields = (object[][])record[this.Name];
+            }
+            else //Lazy 的字段，我们重新读取
+            {
+                var id = (long)record["id"];
+                var fields = new string[] { this.Name };
+                var newRecord = ((Dictionary<string, object>[])this.Model.ReadInternal(scope, new long[] { id }, fields))[0];
+                var m2mFields = (object[])newRecord[this.Name];
+                targetIds = m2mFields.Select(tf => (long)((object[])tf)[0]);
+            }
+
+            var relationModel = (IMetaModel)scope.DatabaseProfile.GetResource(this.Relation);
+            var targetModelName = relationModel.Fields[this.RelatedField].Relation;
+            var targetModel = (IMetaModel)scope.DatabaseProfile.GetResource(targetModelName);
+            var targetRecords = targetModel.ReadInternal(scope, targetIds);
+            return targetRecords.Select(tr => new BrowsableRecord(scope, targetModel, tr)).ToArray();
         }
 
         public override bool IsColumn()

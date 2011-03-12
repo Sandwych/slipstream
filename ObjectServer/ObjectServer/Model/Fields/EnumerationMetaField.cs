@@ -11,8 +11,8 @@ namespace ObjectServer.Model
 
         public const int DefaultSize = 16;
 
-        public EnumerationMetaField(string name, IEnumerable<KeyValuePair<string, string>> options)
-            : base(name, FieldType.Enumeration)
+        public EnumerationMetaField(IMetaModel model, string name, IDictionary<string, string> options)
+            : base(model, name, FieldType.Enumeration)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -45,6 +45,11 @@ namespace ObjectServer.Model
             }
 
             return result;
+        }
+
+        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        {
+            return record[this.Name];
         }
 
         public override bool IsColumn()

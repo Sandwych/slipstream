@@ -13,8 +13,8 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="masterModel">主表对象</param>
-        public ManyToOneMetaField(string name, string masterModel)
-            : base(name, FieldType.ManyToOne)
+        public ManyToOneMetaField(IMetaModel model, string name, string masterModel)
+            : base(model, name, FieldType.ManyToOne)
         {
             this.Relation = masterModel;
         }
@@ -69,6 +69,17 @@ namespace ObjectServer.Model
             }
 
             return result;
+        }
+
+        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        {
+            var destModelName = this.Relation;
+            dynamic destMetaModel = scope.DatabaseProfile.GetResource(destModelName);
+            var fieldValue = (object[])record[this.Name];
+            var destIds = new long[] { (long)fieldValue[0] };
+            //查询 ManyToOne 字段
+            var destRecord = destMetaModel.ReadInternal(scope, destIds, null)[0];
+            return new BrowsableRecord(scope, destMetaModel, destRecord);
         }
 
         public override bool IsRequired

@@ -50,17 +50,22 @@ namespace ObjectServer.Test
             Fields.Integer("field2").SetLabel("数2");
             Fields.Integer("field3").SetLabel("数3").SetGetter(this.GetField3);
             Fields.BigInteger("big_int_field").SetLabel("Bit Int Field");
-            Fields.Boolean("boolean_field")
-                .SetLabel("Boolean Field")
-                .Required()
-                .SetDefaultProc(s => true);
+            Fields.Boolean("boolean_field").SetLabel("Boolean Field").Required().SetDefaultProc(s => true);
             Fields.Text("text_field").SetLabel("Text Field");
             Fields.Float("float_field").SetLabel("Float Field");
             Fields.Money("money_field").SetLabel("Money Field");
+
             Fields.Enumeration("enum_field",
                 new Dictionary<string, string>() { { "state1", "State 1" }, { "state2", "State2" } })
                 .SetLabel("Money Field");
+
             Fields.Binary("binary_field").SetLabel("Binary Field");
+
+            Fields.Reference("reference_field",
+                    new Dictionary<string, string>() { 
+                        { "test.master", "Master Model" }, { "test.child", "Child Model" } 
+                    })
+                    .SetLabel("Reference Field");
         }
 
         [ServiceMethod]
@@ -101,7 +106,7 @@ namespace ObjectServer.Test
         public SingleTableBaseModel()
             : base("test.single_table")
         {
-            Fields.Chars("name").SetLabel("Name").Required().SetSize(64);          
+            Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
         }
     }
 

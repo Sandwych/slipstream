@@ -7,8 +7,8 @@ namespace ObjectServer.Model
 {
     internal sealed class OneToManyMetaField : AbstractMetaField
     {
-        public OneToManyMetaField(string name, string childModel, string relatedField)
-            : base(name, FieldType.OneToMany)
+        public OneToManyMetaField(IMetaModel model, string name, string childModel, string relatedField)
+            : base(model, name, FieldType.OneToMany)
         {
             this.Relation = childModel;
             this.RelatedField = relatedField;
@@ -41,6 +41,19 @@ namespace ObjectServer.Model
             }
 
             return result;
+        }
+
+        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        {
+            //TODO 重构成跟Many-to-many 一样的
+            var targetModelName = this.Relation;
+            dynamic targetModel = scope.DatabaseProfile.GetResource(targetModelName);
+            var thisId = record["id"];
+            //TODO: 下面的条件可能还不够，差 active 等等
+            var domain = new object[][] { new object[] { this.RelatedField, "=", thisId } };
+            var destIds = targetModel.SearchInternal(scope, domain, 0, 0);
+            var records = (Dictionary<string, object>[])targetModel.ReadInternal(scope, destIds, null);
+            return records.Select(r => new BrowsableRecord(scope, targetModel, r)).ToArray();
         }
 
         public override bool IsColumn()

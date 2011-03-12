@@ -8,17 +8,22 @@ namespace ObjectServer.Model
     internal sealed class ReferenceMetaField : AbstractMetaField
     {
         OnDeleteAction refAct;
+        private Dictionary<string, string> options;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="name"></param>
         /// <param name="masterModel">主表对象</param>
-        public ReferenceMetaField(string name, string masterModel)
-            : base(name, FieldType.ManyToOne)
+        public ReferenceMetaField(IMetaModel model, string name, IDictionary<string, string> options)
+            : base(model, name, FieldType.Reference)
         {
-            this.Relation = masterModel;
-        }
+            if (options == null || options.Count() == 0)
+            {
+                throw new ArgumentNullException("options");
+            }
 
+            this.options = new Dictionary<string, string>(options);
+        }
 
         protected override Dictionary<long, object> OnGetFieldValues(
            IResourceScope ctx, List<Dictionary<string, object>> rawRecords)
@@ -27,6 +32,11 @@ namespace ObjectServer.Model
             this.LoadAllNames(ctx, rawRecords, result);
 
             return result;
+        }
+
+        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        {
+            throw new NotImplementedException();
         }
 
         private void LoadAllNames(IResourceScope ctx,
@@ -101,6 +111,13 @@ namespace ObjectServer.Model
                     throw new ArgumentException("不能同时设置为必填字段和可空");
                 }
                 this.refAct = value;
+            }
+        }
+        public override IDictionary<string, string> Options
+        {
+            get
+            {
+                return this.options;
             }
         }
     }

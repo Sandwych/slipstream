@@ -7,8 +7,8 @@ namespace ObjectServer.Model
 {
     internal sealed class ScalarMetaField : AbstractMetaField
     {
-        public ScalarMetaField(string name, FieldType ft)
-            : base(name, ft)
+        public ScalarMetaField(IMetaModel model, string name, FieldType ft)
+            : base(model, name, ft)
         {
         }
 
@@ -24,6 +24,11 @@ namespace ObjectServer.Model
             }
 
             return result;
+        }
+
+        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        {
+            return record[this.Name];
         }
 
         public override bool IsColumn()

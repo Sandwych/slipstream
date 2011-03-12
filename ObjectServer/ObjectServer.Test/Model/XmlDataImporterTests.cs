@@ -21,7 +21,6 @@ namespace ObjectServer.Model.Test
             {
                 //删除所有记录
                 dynamic testObjectModel = this.ResourceScope.DatabaseProfile.GetResource("test.test_model");
-                this.ClearModelDataTable();
                 this.ClearTestModelTable();
 
                 var importer = new XmlDataImporter(this.ResourceScope, "test");
@@ -44,7 +43,6 @@ namespace ObjectServer.Model.Test
                 .GetManifestResourceStream(XmlResourcePath))
             {
                 //删除所有记录
-                this.ClearModelDataTable();
                 this.ClearMasterAndChildTable();
                 dynamic childModel = this.ResourceScope.DatabaseProfile.GetResource("test.child");
                 dynamic masterModel = this.ResourceScope.DatabaseProfile.GetResource("test.master");
