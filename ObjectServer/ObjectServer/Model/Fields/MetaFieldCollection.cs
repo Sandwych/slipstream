@@ -117,6 +117,11 @@ namespace ObjectServer.Model
 
         public IMetaField Version()
         {
+            if (this.model.Fields.ContainsKey(AbstractModel.VersionFieldName))
+            {
+                throw new InvalidOperationException("You cannot to define more than one 'version' field");
+            }
+
             var field = new ScalarMetaField(this.model, AbstractModel.VersionFieldName, FieldType.BigInteger);
             field.Required();
             this.Add(field.Name, field);

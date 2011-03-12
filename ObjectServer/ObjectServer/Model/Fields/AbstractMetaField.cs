@@ -10,6 +10,19 @@ namespace ObjectServer.Model
     {
         public AbstractMetaField(IMetaModel model, string name)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            //TODO 验证 name 的命名规范
+
+            if (model.Fields.ContainsKey(name))
+            {
+                var msg = string.Format("Duplicate field name '{0}'", name);
+                throw new ArgumentOutOfRangeException("name", msg);
+            }
+
             this.SetName(name);
             this.Model = model;
 
@@ -17,7 +30,8 @@ namespace ObjectServer.Model
             this.IsRequired = false;
             this.Lazy = false;
         }
-        public AbstractMetaField(IMetaModel model, string name, FieldType type)
+
+        public AbstractMetaField(IMetaModel model, string name, FieldType type)
             : this(model, name)
         {
             this.Type = type;
