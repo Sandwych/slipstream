@@ -85,8 +85,8 @@
     <Reference Include="System.Windows.Controls.Theming.Toolkit">
       <HintPath>..\Lib\silverlight-toolkit\Bin\System.Windows.Controls.Theming.Toolkit.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Controls.Theming.TwilightBlue">
-      <HintPath>..\Lib\silverlight-toolkit\Themes\System.Windows.Controls.Theming.TwilightBlue.dll</HintPath>
+    <Reference Include="System.Windows.Controls.Theming.WhistlerBlue">
+      <HintPath>..\Lib\silverlight-toolkit\Themes\System.Windows.Controls.Theming.WhistlerBlue.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Toolkit">
       <HintPath>..\Lib\silverlight-toolkit\Bin\System.Windows.Controls.Toolkit.dll</HintPath>

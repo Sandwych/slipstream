@@ -8,50 +8,44 @@
   xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
   mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
 
-    <toolkit:TwilightBlueTheme>
 
-        <Grid x:Name="LayoutRoot" Style="{StaticResource LayoutRootGridStyle}">
+    <Grid x:Name="LayoutRoot" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="42" ></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-            <Border x:Name="ContentBorder" Style="{StaticResource ContentBorderStyle}">
-                <navigation:Frame x:Name="ContentFrame" Style="{StaticResource ContentFrameStyle}" 
+        <Border x:Name="ContentBorder" Grid.Row="1">
+            <navigation:Frame x:Name="ContentFrame" 
                   Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed">
-                    <navigation:Frame.UriMapper>
-                        <uriMapper:UriMapper>
-                            <uriMapper:UriMapping Uri="/Login" MappedUri="/Views/LoginPage.xaml"/>
-                            <uriMapper:UriMapping Uri="/Content" MappedUri="/Views/ContentPage.xaml"/>
-                            <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/Views/{pageName}.xaml"/>
-                        </uriMapper:UriMapper>
-                    </navigation:Frame.UriMapper>
-                </navigation:Frame>
-            </Border>
+                <navigation:Frame.UriMapper>
+                    <uriMapper:UriMapper>
+                        <uriMapper:UriMapping Uri="/Login" MappedUri="/Views/LoginPage.xaml"/>
+                        <uriMapper:UriMapping Uri="/Content" MappedUri="/Views/ContentPage.xaml"/>
+                        <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/Views/{pageName}.xaml"/>
+                    </uriMapper:UriMapper>
+                </navigation:Frame.UriMapper>
+            </navigation:Frame>
+        </Border>
 
-            <Grid Style="{StaticResource NavigationOuterGridStyle}">
-                <Grid x:Name="NavigationGrid" Style="{StaticResource NavigationGridStyle}">
+        <Border Grid.Row="0" Style="{StaticResource HeaderStyle}">
+            <Grid x:Name="NavigationGrid" >
 
-                    <Border x:Name="BrandingBorder" Style="{StaticResource BrandingBorderStyle}">
-                        <StackPanel x:Name="BrandingStackPanel" Style="{StaticResource BrandingStackPanelStyle}">
-
-                            <ContentControl Style="{StaticResource LogoIcon}"/>
-                            <TextBlock x:Name="ApplicationNameTextBlock" Style="{StaticResource ApplicationNameStyle}" 
+                <Border x:Name="BrandingBorder">
+                    <StackPanel x:Name="BrandingStackPanel">
+                        <ContentControl/>
+                        <TextBlock x:Name="ApplicationNameTextBlock"
                                Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"/>
 
-                        </StackPanel>
-                    </Border>
-
-                    <Border x:Name="LinksBorder" Style="{StaticResource LinksBorderStyle}">
-                        <StackPanel x:Name="LinksStackPanel" Style="{StaticResource LinksStackPanelStyle}">
-
-                            <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click" Style="{StaticResource LoginRegisterLinkStyle}" />
-
-                        </StackPanel>
-                    </Border>
-
-                </Grid>
-
+                        <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
+                    </StackPanel>
+                </Border>
 
             </Grid>
 
-        </Grid>
-    </toolkit:TwilightBlueTheme>
+
+        </Border>
+
+    </Grid>
 
 </UserControl>

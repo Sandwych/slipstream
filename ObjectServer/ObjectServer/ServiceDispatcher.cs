@@ -92,8 +92,6 @@ namespace ObjectServer
                 {
                     return methodInfo.Invoke(null, internalArgs);
                 }
-
-                ctx.DatabaseProfile.DataContext.Close();
             }
         }
 

@@ -62,6 +62,11 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual("test.child", referenceField1[0]); //三元组第一个元素是 model 名称
             Assert.AreEqual(childId1, referenceField1[1]); //第二个元素是关联的 id
             Assert.AreEqual("child1", referenceField1[2]); //第三个元素是关联的 record 的 name 字段值
+
+            //测试浏览 Reference 字段
+            var testModel = (IMetaModel) this.ResourceScope.DatabaseProfile.GetResource("test.test_model");
+            dynamic test1 = testModel.Browse(this.ResourceScope, testId1);
+            Assert.AreEqual("test.master", test1.reference_field.name);
         }
     }
 }
