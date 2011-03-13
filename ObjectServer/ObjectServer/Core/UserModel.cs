@@ -27,7 +27,6 @@ namespace ObjectServer.Core
             Fields.Chars("salt").SetLabel("Salt").SetSize(64).Required();
             Fields.Boolean("admin").SetLabel("Administrator?").Required();
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
-
             Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
         }
 

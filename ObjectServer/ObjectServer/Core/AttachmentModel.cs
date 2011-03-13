@@ -31,6 +31,8 @@ namespace ObjectServer.Core
             Fields.Chars("link").SetLabel("Link");
 
             Fields.Binary("content").SetLabel("Content");
+
+            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
         }
 
 
