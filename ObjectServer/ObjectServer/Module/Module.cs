@@ -186,6 +186,7 @@ namespace ObjectServer
             foreach (var t in types)
             {
                 var res = AbstractResource.CreateStaticResourceInstance(t);
+                res.Module = this.Name;
                 this.resources.Add(res);
                 db.RegisterResource(res);
             }

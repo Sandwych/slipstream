@@ -150,6 +150,7 @@
     <Compile Include="Core\ViewActionModel.cs" />
     <Compile Include="Core\UserGroupModel.cs" />
     <Compile Include="Model\AbstractExtendedModel.cs" />
+    <Compile Include="Model\Fields\PropertyMetaField.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="SessionlessContext.cs" />
     <Compile Include="Core\AuditLogModel.cs" />

@@ -60,6 +60,8 @@ namespace ObjectServer.Model
 
         public string Label { get; private set; }
 
+        public string Help { get; private set; }
+
         public bool IsFunctional
         {
             get { return this.Getter != null; }
@@ -114,7 +116,7 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<long, object> GetFieldValues(
-            IResourceScope ctx, List<Dictionary<string, object>> records)
+            IResourceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             if (this.IsFunctional)
             {
@@ -127,7 +129,7 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<long, object> SetFieldValues(
-            IResourceScope scope, IList<Dictionary<string, object>> records)
+            IResourceScope scope, ICollection<Dictionary<string, object>> records)
         {
             if (this.IsFunctional)
             {
@@ -140,17 +142,17 @@ namespace ObjectServer.Model
         }
 
         protected abstract Dictionary<long, object> OnGetFieldValues(
-            IResourceScope scope, List<Dictionary<string, object>> records);
+            IResourceScope scope, ICollection<Dictionary<string, object>> records);
 
         protected abstract Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, IList<Dictionary<string, object>> records);
+            IResourceScope scope, ICollection<Dictionary<string, object>> records);
 
         public abstract object BrowseField(IResourceScope scope, IDictionary<string, object> record);
 
         #endregion
 
         private Dictionary<long, object> GetFieldValuesFunctional(
-            IResourceScope ctx, List<Dictionary<string, object>> records)
+            IResourceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             var ids = records.Select(p => (long)p["id"]);
 
@@ -194,6 +196,12 @@ namespace ObjectServer.Model
         public IMetaField SetSize(int size)
         {
             this.Size = size;
+            return this;
+        }
+
+        public IMetaField SetHelp(string help)
+        {
+            this.Help = help;
             return this;
         }
 

@@ -23,6 +23,7 @@ namespace ObjectServer.Model
         bool IsReadonly { get; set; }
         bool Lazy { get; set; }
         bool IsScalar { get; }
+        string Help { get; }
         OnDeleteAction OnDeleteAction { get; set; }
 
         IDictionary<string, string> Options { get; }
@@ -36,10 +37,10 @@ namespace ObjectServer.Model
         void Validate();
 
         Dictionary<long, object> GetFieldValues(
-            IResourceScope scope, List<Dictionary<string, object>> records);
+            IResourceScope scope, ICollection<Dictionary<string, object>> records);
 
         Dictionary<long, object> SetFieldValues(
-            IResourceScope scope, IList<Dictionary<string, object>> records);
+            IResourceScope scope, ICollection<Dictionary<string, object>> records);
 
         object BrowseField(IResourceScope scope, IDictionary<string, object> record);
 
@@ -51,6 +52,7 @@ namespace ObjectServer.Model
         IMetaField SetGetter(FieldGetter fieldGetter);
         IMetaField SetDefaultProc(FieldDefaultProc defaultProc);
         IMetaField SetSize(int size);
+        IMetaField SetHelp(string help);
         IMetaField Readonly();
         IMetaField NotReadonly();
         IMetaField OnDelete(OnDeleteAction act);

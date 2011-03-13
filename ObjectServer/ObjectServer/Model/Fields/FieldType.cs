@@ -23,5 +23,6 @@ namespace ObjectServer.Model
         OneToMany,
         ManyToOne,
         ManyToMany,
+
     }
 }

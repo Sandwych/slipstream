@@ -35,13 +35,13 @@ namespace ObjectServer.Model
 
 
         protected override Dictionary<long, object> OnGetFieldValues(
-            IResourceScope session, List<Dictionary<string, object>> records)
+            IResourceScope session, ICollection<Dictionary<string, object>> records)
         {
             return records.ExtractFieldValues(this.Name);
         }
 
         protected override Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, IList<Dictionary<string, object>> records)
+            IResourceScope scope, ICollection<Dictionary<string, object>> records)
         {
             //TODO 检查是否在范围内
 

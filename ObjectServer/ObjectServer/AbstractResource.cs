@@ -39,8 +39,6 @@ namespace ObjectServer
             {
                 this.Label = name;
             }
-
-            this.Module = name.Split('.')[0];
         }
 
         public MethodInfo GetServiceMethod(string name)
@@ -117,14 +115,20 @@ namespace ObjectServer
         }
 
         public virtual void Load(IDatabaseProfile db)
-        {            
+        {
+            //确保加载资源之前设置了合适的属性
+            Debug.Assert(!string.IsNullOrEmpty(this.Name));
+            Debug.Assert(!string.IsNullOrEmpty(this.Module));
         }
 
         public string Name { get; private set; }
 
         public string Label { get; protected set; }
 
-        public string Module { get; private set; }
+        /// <summary>
+        /// 属性由载入器负责设置
+        /// </summary>
+        public string Module { get; internal set; }
 
         public abstract bool DatabaseRequired { get; }
 
@@ -137,9 +141,9 @@ namespace ObjectServer
 
         #region ServiceObject(s) factory methods
 
-        internal static IResource CreateStaticResourceInstance(Type t)
+        internal static AbstractResource CreateStaticResourceInstance(Type t)
         {
-            var obj = Activator.CreateInstance(t) as IResource;
+            var obj = Activator.CreateInstance(t) as AbstractResource;
             if (obj == null)
             {
                 var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);

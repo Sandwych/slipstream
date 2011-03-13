@@ -8,7 +8,7 @@ namespace ObjectServer.Model
     internal static class RecordExtensions
     {
         public static Dictionary<long, object> ExtractFieldValues(
-            this IList<Dictionary<string, object>> records, string field)
+            this ICollection<Dictionary<string, object>> records, string field)
         {
             var result = new Dictionary<long, object>(records.Count);
             foreach (var r in records)

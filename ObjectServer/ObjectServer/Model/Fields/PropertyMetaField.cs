@@ -5,25 +5,37 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ScalarMetaField : AbstractMetaField
+    /*
+    internal sealed class PropertyMetaField : AbstractMetaField
     {
-        public ScalarMetaField(IMetaModel model, string name, FieldType ft)
+        public PropertyMetaField(IMetaModel model, string name, FieldType ft)
             : base(model, name, ft)
         {
         }
 
 
         protected override Dictionary<long, object> OnGetFieldValues(
-            IResourceScope session, ICollection<Dictionary<string, object>> records)
+            IResourceScope session, ICollection<Dictionary<string, object>>  records)
         {
             return records.ExtractFieldValues(this.Name);
         }
 
 
         protected override Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records)
+            IResourceScope scope, ICollection<Dictionary<string, object>>  records)
         {
             return records.ExtractFieldValues(this.Name);
+        }
+
+
+        private Dictionary<long, object> ExtractFieldValues(IList<IDictionary<string, object>> records)
+        {
+            var result = new Dictionary<long, object>(records.Count);
+            foreach (var r in records)
+            {
+                result[(long)r["id"]] = r[this.Name];
+            }
+            return result;
         }
 
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
@@ -54,4 +66,5 @@ namespace ObjectServer.Model
         }
 
     }
+    */
 }

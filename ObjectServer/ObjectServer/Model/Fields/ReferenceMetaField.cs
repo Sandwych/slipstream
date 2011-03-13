@@ -27,7 +27,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, List<Dictionary<string, object>> rawRecords)
+           IResourceScope ctx, ICollection<Dictionary<string, object>> rawRecords)
         {
             var result = new Dictionary<long, object>(rawRecords.Count());
             this.LoadAllNames(ctx, rawRecords, result);
@@ -35,7 +35,8 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override Dictionary<long, object> OnSetFieldValues(IResourceScope scope, IList<Dictionary<string, object>> records)
+        protected override Dictionary<long, object> OnSetFieldValues(
+            IResourceScope scope, ICollection<Dictionary<string, object>> records)
         {
             var result = new Dictionary<long, object>(records.Count);
             foreach (var r in records)
@@ -49,8 +50,8 @@ namespace ObjectServer.Model
         }
 
         private void LoadAllNames(IResourceScope ctx,
-            List<Dictionary<string, object>> rawRecords,
-            Dictionary<long, object> result)
+            ICollection<Dictionary<string, object>> rawRecords,
+            IDictionary<long, object> result)
         {
             //从原始记录里把所有该字段的值取出
             var availableRecords =

@@ -16,7 +16,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, List<Dictionary<string, object>> records)
+           IResourceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             //查询字表
             dynamic childModel = ctx.DatabaseProfile.GetResource(this.Relation);
@@ -44,7 +44,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, IList<Dictionary<string, object>> records)
+            IResourceScope scope, ICollection<Dictionary<string, object>> records)
         {
             throw new NotSupportedException();
         }

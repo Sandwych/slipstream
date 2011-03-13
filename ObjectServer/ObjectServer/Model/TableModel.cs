@@ -409,8 +409,6 @@ namespace ObjectServer.Model
                  where this.Fields[f].IsColumn()
                  select f).ToArray();
 
-            //.Where(f => !this.declaredFields[f].IsFunctionField);
-
             var sql = string.Format("SELECT {0} FROM \"{1}\" WHERE \"id\" IN ({2})",
                 columnFields.ToCommaList(),
                 this.TableName,

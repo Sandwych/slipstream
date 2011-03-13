@@ -20,7 +20,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, List<Dictionary<string, object>> rawRecords)
+           IResourceScope ctx, ICollection<Dictionary<string, object>> rawRecords)
         {
             var fields = new string[] { "name" }; //TODO 改成静态变量
             var result = new Dictionary<long, object>(rawRecords.Count());
@@ -73,7 +73,7 @@ namespace ObjectServer.Model
 
 
         protected override Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, IList<Dictionary<string, object>> records)
+            IResourceScope scope, ICollection<Dictionary<string, object>> records)
         {
             return records.ExtractFieldValues(this.Name);
         }
