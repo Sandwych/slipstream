@@ -171,9 +171,7 @@ namespace ObjectServer.Model
             this.AddDefaultValues(ctx, values);
 
             //转换用户给的字段值到数据库原始类型
-            values["id"] = (long)0;
             this.ConvertFieldToColumn(ctx, values, values.Keys.ToArray());
-            values.Remove("id");
 
             var id = DoCreate(ctx, values);
 
@@ -355,14 +353,8 @@ namespace ObjectServer.Model
             foreach (var f in updatableColumnFields)
             {
                 var fieldInfo = this.Fields[f];
-                var records = new Dictionary<string, object>[] { record };
-                var fieldValues = fieldInfo.SetFieldValues(ctx, records);
-
-                foreach (var r in records)
-                {
-                    var id_ = (long)r["id"];
-                    r[fieldInfo.Name] = fieldValues[id_];
-                }
+                var columnValue = fieldInfo.SetFieldValue(ctx, record[f]);
+                record[f] = columnValue;
             }
         }
 

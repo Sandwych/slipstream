@@ -35,18 +35,15 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records)
+        protected override object OnSetFieldValue(IResourceScope scope, object value)
         {
-            var result = new Dictionary<long, object>(records.Count);
-            foreach (var r in records)
+            var fieldValue = (object[])value;
+            if (fieldValue.Length != 2)
             {
-                var id = (long)r["id"];
-                var fieldValue = (object[])r[this.Name];
-                var strFieldValue = fieldValue[0].ToString() + ':' + fieldValue[1].ToString();
-                result.Add(id, strFieldValue);
+                throw new ArgumentException("value");
             }
-            return result;
+            var columnValue = fieldValue[0].ToString() + ':' + fieldValue[1].ToString();
+            return columnValue;
         }
 
         private void LoadAllNames(IResourceScope ctx,
@@ -76,7 +73,7 @@ namespace ObjectServer.Model
                 {
                     var record = masterModel.ReadInternal(ctx, ids, fields)[0];
                     name = (string)record["name"];
-                }                
+                }
 
                 result[r.SelfId] = new object[] { r.Model, r.RefId, name };
             }

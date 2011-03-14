@@ -19,7 +19,6 @@ namespace ObjectServer.Model
 
         Enumeration,
         Reference,
-        Property,
         OneToMany,
         ManyToOne,
         ManyToMany,

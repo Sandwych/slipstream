@@ -40,12 +40,11 @@ namespace ObjectServer.Model
             return records.ExtractFieldValues(this.Name);
         }
 
-        protected override Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records)
+        protected override object OnSetFieldValue(IResourceScope scope, object value)
         {
             //TODO 检查是否在范围内
 
-            return records.ExtractFieldValues(this.Name);
+            return value;
         }
 
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)

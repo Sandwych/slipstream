@@ -43,8 +43,7 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records)
+        protected override object OnSetFieldValue(IResourceScope scope, object value)
         {
             throw new NotSupportedException();
         }

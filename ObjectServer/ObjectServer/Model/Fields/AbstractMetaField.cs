@@ -8,6 +8,8 @@ namespace ObjectServer.Model
 {
     internal abstract class AbstractMetaField : IMetaField
     {
+        private bool isProperty = false;
+
         public AbstractMetaField(IMetaModel model, string name)
         {
             if (model == null)
@@ -116,20 +118,19 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<long, object> GetFieldValues(
-            IResourceScope ctx, ICollection<Dictionary<string, object>> records)
+            IResourceScope scope, ICollection<Dictionary<string, object>> records)
         {
             if (this.IsFunctional)
             {
-                return this.GetFieldValuesFunctional(ctx, records);
+                return this.GetFieldValuesFunctional(scope, records);
             }
             else
             {
-                return this.OnGetFieldValues(ctx, records);
+                return this.OnGetFieldValues(scope, records);
             }
         }
 
-        public Dictionary<long, object> SetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records)
+        public object SetFieldValue(IResourceScope scope, object value)
         {
             if (this.IsFunctional)
             {
@@ -137,17 +138,42 @@ namespace ObjectServer.Model
             }
             else
             {
-                return this.OnSetFieldValues(scope, records);
+                return this.OnSetFieldValue(scope, value);
             }
         }
 
         protected abstract Dictionary<long, object> OnGetFieldValues(
             IResourceScope scope, ICollection<Dictionary<string, object>> records);
 
-        protected abstract Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records);
+        protected abstract object OnSetFieldValue(IResourceScope scope, object value);
 
         public abstract object BrowseField(IResourceScope scope, IDictionary<string, object> record);
+
+        public bool IsProperty
+        {
+            get
+            {
+                return this.isProperty;
+            }
+            set
+            {
+                if (value && this.IsFunctional)
+                {
+                    throw new NotSupportedException("A functional field cannot be a property field");
+                }
+
+                if (value)
+                {
+                    this.isProperty = true;
+                }
+            }
+        }
+
+        private static Dictionary<long, object>
+            GetPropertyValues(IResourceScope session, IEnumerable<long> ids)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
 
@@ -163,6 +189,7 @@ namespace ObjectServer.Model
 
 
         #region Fluent interface for options
+
         public IMetaField SetLabel(string label)
         {
             this.Label = label;
@@ -220,6 +247,12 @@ namespace ObjectServer.Model
         public IMetaField OnDelete(OnDeleteAction act)
         {
             this.OnDeleteAction = act;
+            return this;
+        }
+
+        public IMetaField BeProperty()
+        {
+            this.IsProperty = true;
             return this;
         }
         #endregion

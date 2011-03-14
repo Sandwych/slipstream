@@ -20,10 +20,9 @@ namespace ObjectServer.Model
         }
 
 
-        protected override Dictionary<long, object> OnSetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records)
+        protected override object OnSetFieldValue(IResourceScope scope, object value)
         {
-            return records.ExtractFieldValues(this.Name);
+            return value;
         }
 
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)

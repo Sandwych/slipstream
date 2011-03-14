@@ -130,4 +130,16 @@ namespace ObjectServer.Test
         }
     }
 
+
+    [Resource]
+    public sealed class ProductModel : AbstractTableModel
+    {
+        public ProductModel()
+            : base("test.product")
+        {
+            Fields.Chars("name").SetLabel("Name");
+            Fields.Float("quantity").BeProperty().SetLabel("Quantity");
+        }
+    }
+
 }

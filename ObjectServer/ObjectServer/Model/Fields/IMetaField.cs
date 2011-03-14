@@ -21,6 +21,7 @@ namespace ObjectServer.Model
         string RelatedField { get; set; }
         bool Internal { get; }
         bool IsReadonly { get; set; }
+        bool IsProperty { get; set; }
         bool Lazy { get; set; }
         bool IsScalar { get; }
         string Help { get; }
@@ -39,12 +40,11 @@ namespace ObjectServer.Model
         Dictionary<long, object> GetFieldValues(
             IResourceScope scope, ICollection<Dictionary<string, object>> records);
 
-        Dictionary<long, object> SetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records);
+        object SetFieldValue(IResourceScope scope, object value);
 
         object BrowseField(IResourceScope scope, IDictionary<string, object> record);
 
-        #region Fluent interface 
+        #region Fluent interface
 
         IMetaField SetLabel(string label);
         IMetaField Required();
@@ -56,7 +56,8 @@ namespace ObjectServer.Model
         IMetaField Readonly();
         IMetaField NotReadonly();
         IMetaField OnDelete(OnDeleteAction act);
-     
+        IMetaField BeProperty();
+
         #endregion
 
     }
