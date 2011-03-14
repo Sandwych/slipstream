@@ -99,13 +99,7 @@ namespace ObjectServer.Model
 
         public abstract OnDeleteAction OnDeleteAction { get; set; }
 
-        public virtual IDictionary<string, string> Options
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
+        public abstract IDictionary<string, string> Options { get; set; }
 
         public abstract bool IsColumn();
 
@@ -255,6 +249,17 @@ namespace ObjectServer.Model
             this.IsProperty = true;
             return this;
         }
+
+        public IMetaField SetOptions(IDictionary<string, string> options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException("options");
+            }
+            this.Options = options;
+            return this;
+        }
+
         #endregion
     }
 }

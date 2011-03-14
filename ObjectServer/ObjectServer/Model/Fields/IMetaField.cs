@@ -57,6 +57,7 @@ namespace ObjectServer.Model
         IMetaField NotReadonly();
         IMetaField OnDelete(OnDeleteAction act);
         IMetaField BeProperty();
+        IMetaField SetOptions(IDictionary<string, string> options);
 
         #endregion
 

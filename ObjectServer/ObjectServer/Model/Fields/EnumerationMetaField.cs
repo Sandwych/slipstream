@@ -80,6 +80,10 @@ namespace ObjectServer.Model
             {
                 return this.options;
             }
+            set
+            {
+                throw new NotSupportedException();
+            }
         }
     }
 }

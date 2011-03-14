@@ -108,9 +108,9 @@ namespace ObjectServer.Model
         }
 
         public IMetaField Reference(
-            string name, IDictionary<string, string> options)
+            string name)
         {
-            var field = new ReferenceMetaField(this.model, name, options);
+            var field = new ReferenceMetaField(this.model, name);
             this.Add(name, field);
             return field;
         }

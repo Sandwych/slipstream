@@ -61,11 +61,12 @@ namespace ObjectServer.Test
 
             Fields.Binary("binary_field").SetLabel("Binary Field");
 
-            Fields.Reference("reference_field",
-                    new Dictionary<string, string>() { 
-                        { "test.master", "Master Model" }, { "test.child", "Child Model" } 
-                    })
-                    .SetLabel("Reference Field");
+            Fields.Reference("reference_field").SetLabel("Reference Field").SetOptions(
+                new Dictionary<string, string>()
+                {
+                    { "test.master", "Master Model" },
+                    { "test.child", "Child Model" },
+                });
         }
 
         [ServiceMethod]

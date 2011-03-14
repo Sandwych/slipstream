@@ -137,5 +137,17 @@ namespace ObjectServer.Model
                 this.onDelete = value;
             }
         }
+
+        public override IDictionary<string, string> Options
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
     }
 }

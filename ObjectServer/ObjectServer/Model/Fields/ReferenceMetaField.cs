@@ -9,21 +9,16 @@ namespace ObjectServer.Model
     internal sealed class ReferenceMetaField : AbstractMetaField
     {
         OnDeleteAction refAct;
-        private Dictionary<string, string> options;
+        IDictionary<string, string> options;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="name"></param>
         /// <param name="masterModel">主表对象</param>
-        public ReferenceMetaField(IMetaModel model, string name, IDictionary<string, string> options)
+        public ReferenceMetaField(IMetaModel model, string name)
             : base(model, name, FieldType.Reference)
         {
-            if (options == null || options.Count() == 0)
-            {
-                throw new ArgumentNullException("options");
-            }
-
-            this.options = new Dictionary<string, string>(options);
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
@@ -42,8 +37,20 @@ namespace ObjectServer.Model
             {
                 throw new ArgumentException("value");
             }
+
+            var modelName = (string)fieldValue[0];
+            this.VerifyModelName(modelName);
+
             var columnValue = fieldValue[0].ToString() + ':' + fieldValue[1].ToString();
             return columnValue;
+        }
+
+        private void VerifyModelName(string modelName)
+        {
+            if (this.options != null && !this.options.ContainsKey(modelName))
+            {
+                throw new ArgumentOutOfRangeException("value", "Bad model name");
+            }
         }
 
         private void LoadAllNames(IResourceScope ctx,
@@ -66,6 +73,8 @@ namespace ObjectServer.Model
             var fields = new string[] { "name" };
             foreach (var r in availableRecords)
             {
+                this.VerifyModelName(r.Model);
+
                 var masterModel = (IMetaModel)ctx.DatabaseProfile.GetResource(r.Model);
                 ids[0] = r.RefId;
                 string name = null;
@@ -148,12 +157,23 @@ namespace ObjectServer.Model
                 this.refAct = value;
             }
         }
+
         public override IDictionary<string, string> Options
         {
             get
             {
+                Debug.Assert(this.options != null);
                 return this.options;
             }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+                this.options = new Dictionary<string, string>(value);
+            }
         }
+
     }
 }

@@ -23,7 +23,7 @@ namespace ObjectServer.Model
         IMetaField ManyToMany(string name, string refModel, string originField, string targetField);
 
         IMetaField Enumeration(string name, IDictionary<string, string> options);
-        IMetaField Reference(string name, IDictionary<string, string> options);
+        IMetaField Reference(string name);
 
         IMetaField Version();
     }

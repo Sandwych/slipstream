@@ -106,5 +106,17 @@ namespace ObjectServer.Model
                 throw new NotImplementedException();
             }
         }
+
+        public override IDictionary<string, string> Options
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
     }
 }
