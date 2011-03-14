@@ -12,7 +12,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class UserModel : TableModel
+    public sealed class UserModel : AbstractTableModel
     {
         public const string ModelName = "core.user";
         public const string PasswordMask = "************";

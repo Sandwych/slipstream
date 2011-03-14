@@ -16,7 +16,7 @@ namespace ObjectServer.Core
     /// <summary>
     /// </summary>
     [Resource]
-    public sealed class ModelDataModel : TableModel
+    public sealed class ModelDataModel : AbstractTableModel
     {
         public const string ModelName = "core.model_data";
         private static readonly string[] s_RefIdFields = new string[] { "ref_id" };

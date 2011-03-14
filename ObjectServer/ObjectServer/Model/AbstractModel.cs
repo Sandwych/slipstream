@@ -16,9 +16,11 @@ namespace ObjectServer.Model
         public const string ActiveFieldName = "_active";
         public const string VersionFieldName = "_version";
 
+
         protected AbstractModel(string name)
             : base(name)
         {
+            this.AutoMigration = true;
             this.fields = new MetaFieldCollection(this);
         }
 
@@ -26,7 +28,6 @@ namespace ObjectServer.Model
         {
             base.Load(db);
             this.SyncModel(db);
-
         }
 
         /// <summary>
@@ -220,8 +221,13 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         public abstract bool CanRead { get; protected set; }
         public abstract bool CanWrite { get; protected set; }
         public abstract bool CanDelete { get; protected set; }
+
+        public bool AutoMigration { get; protected set; }
+
         public abstract bool LogCreation { get; protected set; }
         public abstract bool LogWriting { get; protected set; }
+
+
         public abstract NameGetter NameGetter { get; protected set; }
         public abstract long[] SearchInternal(
             IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0);

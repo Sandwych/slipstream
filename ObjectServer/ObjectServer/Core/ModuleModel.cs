@@ -17,7 +17,7 @@ namespace ObjectServer.Core
     /// TODO 线程安全
     /// </summary>
     [Resource]
-    public sealed class ModuleModel : TableModel
+    public sealed class ModuleModel : AbstractTableModel
     {
         public const string ModelName = "core.module";
         /// <summary>
@@ -27,6 +27,8 @@ namespace ObjectServer.Core
         public ModuleModel()
             : base(ModelName)
         {
+            this.AutoMigration = false;
+
             Fields.Chars("name").SetLabel("Name").Required().SetSize(128);
             Fields.Chars("state").SetLabel("State").Required().SetSize(16);
             Fields.Text("info").SetLabel("Information");

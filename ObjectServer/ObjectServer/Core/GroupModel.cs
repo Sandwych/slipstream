@@ -12,7 +12,7 @@ namespace ObjectServer.Core
     /// 用户组信息
     /// </summary>
     [Resource]
-    public sealed class GroupModel : TableModel
+    public sealed class GroupModel : AbstractTableModel
     {
 
         public GroupModel()

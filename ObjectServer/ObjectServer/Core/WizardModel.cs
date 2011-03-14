@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class WizardModel : TableModel
+    public sealed class WizardModel : AbstractTableModel
     {
 
         public WizardModel()

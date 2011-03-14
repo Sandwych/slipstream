@@ -11,13 +11,14 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public class ModelModel : TableModel
+    public class ModelModel : AbstractTableModel
     {
         public const string ModelName = "core.model";
 
         public ModelModel()
             : base(ModelName)
         {
+            this.AutoMigration = false;
 
             Fields.Chars("name").SetLabel("Name").SetSize(256).Required();
             Fields.Chars("label").SetLabel("Label").SetSize(256);

@@ -66,6 +66,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Create_and_read_related_fields()
         {
+            this.ClearMasterAndChildTable();
 
             var masterPropBag = new Dictionary<string, object>()
             {
@@ -129,24 +130,6 @@ namespace ObjectServer.Model.Test
         }
 
 
-        [Test]
-        public void Read_nullable_many_to_one_field()
-        {
-            var nameFieldValue = "child_with_empty_master_field";
-            var child = new Dictionary<string, object>()
-            {
-                { "name", nameFieldValue },
-            };
-
-            var id = this.Service.CreateModel(this.SessionId, "test.child", child);
-
-            var children = this.Service.ReadModel(this.SessionId, "test.child",
-                new object[] { id }, new object[] { "name", "master" });
-            var record = children[0];
-
-            Assert.IsInstanceOf<DBNull>(record["master"]);
-            Assert.AreEqual(nameFieldValue, (string)record["name"]);
-        }
 
         [Test]
         public void test_binary_field()

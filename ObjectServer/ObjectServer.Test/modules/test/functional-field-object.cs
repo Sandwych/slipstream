@@ -9,7 +9,7 @@ namespace ObjectServer.Test
 {
 
     [Resource]
-    public sealed class FunctionalFieldObject : TableModel
+    public sealed class FunctionalFieldObject : AbstractTableModel
     {
         public const string ModelName = "test.functional_field_object";
 

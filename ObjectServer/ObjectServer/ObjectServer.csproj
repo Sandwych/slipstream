@@ -240,7 +240,7 @@
     <Compile Include="SqlTree\OrderbyItem.cs" />
     <Compile Include="AbstractResource.cs" />
     <Compile Include="ResourceAttribute.cs" />
-    <Compile Include="Model\TableModel.cs" />
+    <Compile Include="Model\AbstractTableModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Module\Module.cs" />
     <Compile Include="ServiceDispatcher.cs" />

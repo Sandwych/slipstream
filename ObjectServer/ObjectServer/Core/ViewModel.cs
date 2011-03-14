@@ -9,7 +9,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class ViewModel : TableModel
+    public sealed class ViewModel : AbstractTableModel
     {
 
         public ViewModel()

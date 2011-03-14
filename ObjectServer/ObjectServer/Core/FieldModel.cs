@@ -8,13 +8,14 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public class FieldModel : TableModel
+    public class FieldModel : AbstractTableModel
     {
         public const string ModelName = "core.field";
 
         public FieldModel()
             : base(ModelName)
         {
+            this.AutoMigration = false;
 
             Fields.ManyToOne("model", "core.model").SetLabel("Model").Required();
             Fields.Chars("name").SetLabel("Name").SetSize(64).Required();

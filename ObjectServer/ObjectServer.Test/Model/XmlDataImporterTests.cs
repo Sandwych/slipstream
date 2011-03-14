@@ -11,8 +11,8 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class XmlDataImporterTests : LocalTestCase
     {
-        const string TestModelXmlResourcePath = "ObjectServer.Test.Model.test-model-data.xml";
-        const string MasterChildXmlResourcePath = "ObjectServer.Test.Model.master-child-data.xml";
+        const string TestModelXmlResourcePath = "ObjectServer.Test.XmlFiles.test-model-data.xml";
+        const string MasterChildXmlResourcePath = "ObjectServer.Test.XmlFiles.master-child-data.xml";
 
         [Test]
         public void Test_simple_importing()

@@ -9,7 +9,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class ViewActionModel : TableModel
+    public sealed class ViewActionModel : AbstractTableModel
     {
 
         public ViewActionModel()

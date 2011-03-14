@@ -11,7 +11,7 @@ using ObjectServer.Backend;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class UserGroupModel : TableModel
+    public sealed class UserGroupModel : AbstractTableModel
     {
 
         public UserGroupModel()

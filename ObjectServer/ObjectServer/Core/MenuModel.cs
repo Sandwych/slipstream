@@ -9,7 +9,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class MenuModel : TableModel
+    public sealed class MenuModel : AbstractTableModel
     {
 
         public MenuModel()

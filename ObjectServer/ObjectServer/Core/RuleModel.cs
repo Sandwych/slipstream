@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class RuleModel : TableModel
+    public sealed class RuleModel : AbstractTableModel
     {
         public RuleModel()
             : base("core.rule")
@@ -19,7 +19,7 @@ namespace ObjectServer.Core
     }
 
     [Resource]
-    public sealed class RuleLineModel : TableModel
+    public sealed class RuleLineModel : AbstractTableModel
     {
 
         public RuleLineModel()

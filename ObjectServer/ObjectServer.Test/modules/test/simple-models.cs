@@ -12,7 +12,7 @@ namespace ObjectServer.Test
 
     //子表
     [Resource]
-    public sealed class ChildModel : TableModel
+    public sealed class ChildModel : AbstractTableModel
     {
         public ChildModel()
             : base("test.child")
@@ -25,7 +25,7 @@ namespace ObjectServer.Test
 
     //主表
     [Resource]
-    public sealed class MasterModel : TableModel
+    public sealed class MasterModel : AbstractTableModel
     {
         public MasterModel()
             : base("test.master")
@@ -37,7 +37,7 @@ namespace ObjectServer.Test
 
 
     [Resource]
-    public class TestModel : TableModel
+    public class TestModel : AbstractTableModel
     {
 
         public TestModel()
@@ -101,7 +101,7 @@ namespace ObjectServer.Test
     //////////////////// 继承测试的表 ///////////////////
 
     [Resource]
-    public sealed class SingleTableBaseModel : TableModel
+    public sealed class SingleTableBaseModel : AbstractTableModel
     {
         public SingleTableBaseModel()
             : base("test.single_table")

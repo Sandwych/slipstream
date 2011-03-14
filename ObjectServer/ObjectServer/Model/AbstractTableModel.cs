@@ -15,7 +15,7 @@ using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
-    public abstract class TableModel : AbstractModel
+    public abstract class AbstractTableModel : AbstractModel
     {
         public const string CreatedTimeField = "_created_time";
         public const string ModifiedTimeField = "_modified_time";
@@ -59,7 +59,7 @@ namespace ObjectServer.Model
 
         public string SequenceName { get; protected set; }
 
-        protected TableModel(string name)
+        protected AbstractTableModel(string name)
             : base(name)
         {
             this.CanCreate = true;
@@ -99,9 +99,11 @@ namespace ObjectServer.Model
                     this.Name));
             }
 
-            var migrator = new TableMigrator(db, this);
-            migrator.Migrate();
-
+            if (this.AutoMigration)
+            {
+                var migrator = new TableMigrator(db, this);
+                migrator.Migrate();
+            }
         }
 
         private void RegisterInternalServiceMethods()
@@ -123,7 +125,7 @@ namespace ObjectServer.Model
             Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
                 .NotRequired().SetDefaultProc(ctx => DBNull.Value);
 
-            var selfType = typeof(TableModel);
+            var selfType = typeof(AbstractTableModel);
             this.RegisterServiceMethod(selfType.GetMethod("Search"));
             this.RegisterServiceMethod(selfType.GetMethod("Create"));
             this.RegisterServiceMethod(selfType.GetMethod("Read"));

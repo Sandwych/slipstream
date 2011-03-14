@@ -12,7 +12,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class AuditLogModel : TableModel
+    public sealed class AuditLogModel : AbstractTableModel
     {
         public const string ModelName = "core.audit_log";
 
