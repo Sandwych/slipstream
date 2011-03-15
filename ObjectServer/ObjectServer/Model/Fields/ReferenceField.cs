@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ReferenceMetaField : AbstractMetaField
+    internal sealed class ReferenceField : AbstractField
     {
         OnDeleteAction refAct;
         IDictionary<string, string> options;
@@ -16,7 +16,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="masterModel">主表对象</param>
-        public ReferenceMetaField(IMetaModel model, string name)
+        public ReferenceField(IMetaModel model, string name)
             : base(model, name, FieldType.Reference)
         {
         }

@@ -59,11 +59,12 @@ namespace ObjectServer.Model
 
                 //把“基类”模型的字段引用复制过来
                 var baseModel = (IMetaModel)db.GetResource(ii.BaseModel);
-                foreach (var f in baseModel.Fields)
+                foreach (var baseField in baseModel.Fields)
                 {
-                    if (!this.Fields.ContainsKey(f.Key))
+                    if (!this.Fields.ContainsKey(baseField.Key))
                     {
-                        this.Fields.Add(f.Key, f.Value);
+                        var imf = new InheritedMetaField(this, baseField.Value);
+                        this.Fields.Add(baseField.Key, imf);
                     }
                 }
 

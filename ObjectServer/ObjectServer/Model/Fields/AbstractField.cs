@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal abstract class AbstractMetaField : IMetaField
+    internal abstract class AbstractField : IMetaField
     {
         private bool isProperty = false;
 
-        public AbstractMetaField(IMetaModel model, string name)
+        public AbstractField(IMetaModel model, string name)
         {
             if (model == null)
             {
@@ -33,7 +33,7 @@ namespace ObjectServer.Model
             this.Lazy = false;
         }
 
-        public AbstractMetaField(IMetaModel model, string name, FieldType type)
+        public AbstractField(IMetaModel model, string name, FieldType type)
             : this(model, name)
         {
             this.Type = type;

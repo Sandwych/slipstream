@@ -5,32 +5,11 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class EnumerationMetaField : AbstractMetaField
+    internal sealed class ScalarField : AbstractField
     {
-        private Dictionary<string, string> options = new Dictionary<string, string>();
-
-        public const int DefaultSize = 16;
-
-        public EnumerationMetaField(IMetaModel model, string name, IDictionary<string, string> options)
-            : base(model, name, FieldType.Enumeration)
+        public ScalarField(IMetaModel model, string name, FieldType ft)
+            : base(model, name, ft)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            if (options == null || options.Count() <= 0)
-            {
-                throw new ArgumentNullException("options");
-            }
-
-            foreach (var p in options)
-            {
-                this.options.Add(p.Key, p.Value);
-            }
-
-            var maxLength = options.Max(p => p.Key.Length);
-            this.Size = Math.Max(maxLength, DefaultSize);
         }
 
 
@@ -40,10 +19,9 @@ namespace ObjectServer.Model
             return records.ExtractFieldValues(this.Name);
         }
 
+
         protected override object OnSetFieldValue(IResourceScope scope, object value)
         {
-            //TODO 检查是否在范围内
-
             return value;
         }
 
@@ -59,7 +37,7 @@ namespace ObjectServer.Model
 
         public override bool IsScalar
         {
-            get { return true; }
+            get { return false; }
         }
 
         public override ObjectServer.Model.OnDeleteAction OnDeleteAction
@@ -78,12 +56,13 @@ namespace ObjectServer.Model
         {
             get
             {
-                return this.options;
+                throw new NotSupportedException();
             }
             set
             {
                 throw new NotSupportedException();
             }
         }
+
     }
 }

@@ -16,77 +16,77 @@ namespace ObjectServer.Model
 
         public IMetaField Integer(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.Integer);
+            var field = new ScalarField(this.model, name, FieldType.Integer);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField BigInteger(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.BigInteger);
+            var field = new ScalarField(this.model, name, FieldType.BigInteger);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField Float(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.Float);
+            var field = new ScalarField(this.model, name, FieldType.Float);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField Money(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.Decimal);
+            var field = new ScalarField(this.model, name, FieldType.Decimal);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField Boolean(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.Boolean);
+            var field = new ScalarField(this.model, name, FieldType.Boolean);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField Chars(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.Chars);
+            var field = new ScalarField(this.model, name, FieldType.Chars);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField Text(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.Text);
+            var field = new ScalarField(this.model, name, FieldType.Text);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField Binary(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.Binary);
+            var field = new ScalarField(this.model, name, FieldType.Binary);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField DateTime(string name)
         {
-            var field = new ScalarMetaField(this.model, name, FieldType.DateTime);
+            var field = new ScalarField(this.model, name, FieldType.DateTime);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField ManyToOne(string name, string masterModel)
         {
-            var field = new ManyToOneMetaField(this.model, name, masterModel);
+            var field = new ManyToOneField(this.model, name, masterModel);
             this.Add(name, field);
             return field;
         }
 
         public IMetaField OneToMany(string name, string childModel, string relatedField)
         {
-            var field = new OneToManyMetaField(this.model, name, childModel, relatedField);
+            var field = new OneToManyField(this.model, name, childModel, relatedField);
             this.Add(name, field);
             return field;
         }
@@ -94,7 +94,7 @@ namespace ObjectServer.Model
 
         public IMetaField ManyToMany(string name, string refModel, string originField, string targetField)
         {
-            var field = new ManyToManyMetaField(this.model, name, refModel, originField, targetField);
+            var field = new ManyToManyField(this.model, name, refModel, originField, targetField);
             this.Add(name, field);
             return field;
         }
@@ -102,7 +102,7 @@ namespace ObjectServer.Model
         public IMetaField Enumeration(
             string name, IDictionary<string, string> options)
         {
-            var field = new EnumerationMetaField(this.model, name, options);
+            var field = new EnumerationField(this.model, name, options);
             this.Add(name, field);
             return field;
         }
@@ -110,7 +110,7 @@ namespace ObjectServer.Model
         public IMetaField Reference(
             string name)
         {
-            var field = new ReferenceMetaField(this.model, name);
+            var field = new ReferenceField(this.model, name);
             this.Add(name, field);
             return field;
         }
@@ -122,7 +122,7 @@ namespace ObjectServer.Model
                 throw new InvalidOperationException("You cannot to define more than one 'version' field");
             }
 
-            var field = new ScalarMetaField(this.model, AbstractModel.VersionFieldName, FieldType.BigInteger);
+            var field = new ScalarField(this.model, AbstractModel.VersionFieldName, FieldType.BigInteger);
             field.Required();
             this.Add(field.Name, field);
             return field;

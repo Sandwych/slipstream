@@ -37,5 +37,13 @@ namespace ObjectServer.Model.Test
             
         }
 
+        private void AddMultiTableTestData()
+        {
+        }
+
+        private void ClearMultiTable()
+        {
+        }
+
     }
 }

@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class OneToManyMetaField : AbstractMetaField
+    internal sealed class OneToManyField : AbstractField
     {
-        public OneToManyMetaField(IMetaModel model, string name, string childModel, string relatedField)
+        public OneToManyField(IMetaModel model, string name, string childModel, string relatedField)
             : base(model, name, FieldType.OneToMany)
         {
             this.Relation = childModel;

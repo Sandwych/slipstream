@@ -152,6 +152,7 @@
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
     <Compile Include="Model\AbstractExtendedModel.cs" />
+    <Compile Include="Model\Fields\InheritedMetaField.cs" />
     <Compile Include="Model\InheritanceCollection.cs" />
     <Compile Include="Model\InheritanceInfo.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
@@ -180,8 +181,8 @@
     <Compile Include="Model\XmlDataImporter.cs" />
     <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
-    <Compile Include="Model\Fields\ReferenceMetaField.cs" />
-    <Compile Include="Model\Fields\EnumerationMetaField.cs" />
+    <Compile Include="Model\Fields\ReferenceField.cs" />
+    <Compile Include="Model\Fields\EnumerationField.cs" />
     <Compile Include="NamingRule.cs" />
     <Compile Include="ServiceMethodInterceptor.cs" />
     <Compile Include="Sessions\ISessionStoreProvider.cs" />
@@ -193,10 +194,10 @@
     <Compile Include="Model\DomainParser.cs" />
     <Compile Include="Model\NameGetter.cs" />
     <Compile Include="Model\Fields\FieldDefaultProc.cs" />
-    <Compile Include="Model\Fields\ManyToOneMetaField.cs" />
-    <Compile Include="Model\Fields\OneToManyMetaField.cs" />
-    <Compile Include="Model\Fields\ScalarMetaField.cs" />
-    <Compile Include="Model\Fields\ManyToManyMetaField.cs" />
+    <Compile Include="Model\Fields\ManyToOneField.cs" />
+    <Compile Include="Model\Fields\OneToManyField.cs" />
+    <Compile Include="Model\Fields\ScalarField.cs" />
+    <Compile Include="Model\Fields\ManyToManyField.cs" />
     <Compile Include="Model\IMetaModel.cs" />
     <Compile Include="Model\AbstractModel.cs" />
     <Compile Include="Model\OnDeleteAction.cs" />
@@ -270,7 +271,7 @@
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha1.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
-    <Compile Include="Model\Fields\AbstractMetaField.cs" />
+    <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldGetter.cs" />
     <Compile Include="Model\Fields\IMetaField.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />

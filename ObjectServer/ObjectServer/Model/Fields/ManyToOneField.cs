@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ManyToOneMetaField : AbstractMetaField
+    internal sealed class ManyToOneField : AbstractField
     {
         OnDeleteAction onDelete;
         /// <summary>
@@ -13,7 +13,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="masterModel">主表对象</param>
-        public ManyToOneMetaField(IMetaModel model, string name, string masterModel)
+        public ManyToOneField(IMetaModel model, string name, string masterModel)
             : base(model, name, FieldType.ManyToOne)
         {
             this.Relation = masterModel;
