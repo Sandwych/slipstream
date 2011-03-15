@@ -41,6 +41,39 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
+        public void Test_domain_equal_operator()
+        {
+            var domain = new object[][] { 
+                new object[] {  "name", "=", "core.model" } 
+            };
+
+            var ids = proxy.SearchModel(this.SessionId, "core.model", domain);
+            Assert.AreEqual(1, ids.Length);
+
+            domain = new object[][] {
+                new object[] { "name", "=", "a dummy model" }
+            };
+            ids = proxy.SearchModel(this.SessionId, "core.model", domain);
+            Assert.AreEqual(0, ids.Length);
+        }
+
+        [Test]
+        public void Test_domain_like_operator()
+        {
+            var domain = new object[][] { new object[] { "name", "like", "core.modu%" } };
+            var ids = proxy.SearchModel(this.SessionId, "core.model", domain);
+            Assert.AreEqual(1, ids.Length);
+
+            domain = new object[][] { new object[] { "name", "like", "%like dummy%" } };
+            ids = proxy.SearchModel(this.SessionId, "core.model", domain);
+            Assert.AreEqual(0, ids.Length);
+
+            domain = new object[][] { new object[] { "name", "like", "core.modul_" } };
+            ids = proxy.SearchModel(this.SessionId, "core.model", domain);
+            Assert.AreEqual(1, ids.Length);
+        }
+
+        [Test]
         public void Test_domain_in_operator()
         {
             var domain = new object[][] { 

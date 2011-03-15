@@ -17,6 +17,7 @@ namespace ObjectServer.Backend
         void AlterColumnType(IDataContext db, string columnName, string sqlType);
         bool ColumnExists(string columnName);
         IColumnMetadata GetColumn(string columnName);
+        IColumnMetadata[] GetAllColumns();
 
         bool TableExists(IDataContext db, string tableName);
         void CreateTable(IDataContext db, string tableName, string label);

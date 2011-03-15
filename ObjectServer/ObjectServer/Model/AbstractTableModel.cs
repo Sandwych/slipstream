@@ -85,6 +85,8 @@ namespace ObjectServer.Model
         /// </summary>
         public override void Load(IDatabaseProfile db)
         {
+            this.AddInternalFields();
+
             base.Load(db);
 
             if (this.NameGetter == null)
@@ -101,29 +103,12 @@ namespace ObjectServer.Model
 
             if (this.AutoMigration)
             {
-                var migrator = new TableMigrator(db, this);
-                migrator.Migrate();
+                new TableMigrator(db, this).Migrate();
             }
         }
 
         private void RegisterInternalServiceMethods()
         {
-            //只有非继承的模型才添加内置字段
-
-            Fields.BigInteger("id").SetLabel("ID").Required();
-
-            Fields.DateTime(CreatedTimeField).SetLabel("Created")
-                .NotRequired().SetDefaultProc(ctx => DateTime.Now);
-
-            Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
-                .NotRequired().SetDefaultProc(ctx => DBNull.Value);
-
-            Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
-                .NotRequired().Readonly()
-                .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
-
-            Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
-                .NotRequired().SetDefaultProc(ctx => DBNull.Value);
 
             var selfType = typeof(AbstractTableModel);
             this.RegisterServiceMethod(selfType.GetMethod("Search"));
@@ -132,6 +117,29 @@ namespace ObjectServer.Model
             this.RegisterServiceMethod(selfType.GetMethod("Write"));
             this.RegisterServiceMethod(selfType.GetMethod("Delete"));
 
+        }
+
+        private void AddInternalFields()
+        {
+            Fields.BigInteger("id").SetLabel("ID").Required();
+
+            //只有非继承的模型才添加内置字段
+            if (this.AutoMigration)
+            {
+
+                Fields.DateTime(CreatedTimeField).SetLabel("Created")
+                    .NotRequired().SetDefaultProc(ctx => DateTime.Now);
+
+                Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
+                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+
+                Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
+                    .NotRequired().Readonly()
+                    .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+
+                Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
+                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+            }
         }
 
         public override long[] SearchInternal(
@@ -275,7 +283,7 @@ namespace ObjectServer.Model
             var allFields = record.Keys; //记录中的所有字段
             //所有可更新的字段
             var updatableColumnFields = allFields.Where(
-                f => this.Fields[f].IsColumn() && 
+                f => this.Fields[f].IsColumn() &&
                     !this.Fields[f].IsReadonly &&
                     this.Fields[f].Name != "id"
                 ).ToArray();

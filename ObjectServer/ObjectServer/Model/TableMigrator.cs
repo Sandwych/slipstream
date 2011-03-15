@@ -11,11 +11,21 @@ namespace ObjectServer.Model
     internal class TableMigrator
     {
         private IDatabaseProfile db;
-        private dynamic model;
+        private IMetaModel model;
         private IResourceScope context;
 
-        public TableMigrator(IDatabaseProfile db, dynamic model)
+        public TableMigrator(IDatabaseProfile db, IMetaModel model)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
             this.db = db;
             this.model = model;
             this.context = new SessionlessContext(db);
@@ -62,6 +72,8 @@ namespace ObjectServer.Model
         /// <param name="table"></param>
         private void SyncTable(ITableContext table)
         {
+            bool hasRow = this.TableHasRow(table.Name);
+
             //表肯定存在，就看列存不存在
             //最简单的迁移策略：
             //如果列在表里不存在就建，以用户定义的为准
@@ -70,6 +82,7 @@ namespace ObjectServer.Model
             //* 可空转非空：检测表里是否有行，有的话要求此字段有默认值，更改之前先用默认值填充
             //  现有行再转换为非空
             //* 非空转可控：可以直接去掉 NOT NULL
+            //先处理代码里定义的列
             foreach (var pair in this.model.Fields)
             {
                 var field = pair.Value;
@@ -81,13 +94,39 @@ namespace ObjectServer.Model
                     }
                     else
                     {
-                        this.SyncColumn(table, field);
+                        this.SyncColumn(table, field, hasRow);
                     }
                 }
             }
+
+            //然后处理数据库里存在，但代码里未定义的列
+            //处理策略很简单，我们的原则是不能删除用户的数据，如果是空表直接删除该列，如果有数据就把该列设成可空
+            var columns = table.GetAllColumns();
+            var columnsToDelete = columns.Select(c => c.Name)
+                .Except(this.model.Fields.Select(f => f.Value.Name));
+            //删除数据库存在，但代码未定义的
+
+            if (hasRow)
+            {
+                foreach (var c in columns)
+                {
+                    if (!c.Nullable && columnsToDelete.Contains(c.Name))
+                    {
+                        table.AlterColumnNullable(this.db.DataContext, c.Name, true);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var c in columnsToDelete)
+                {
+                    table.DeleteColumn(this.db.DataContext, c);
+                }
+            }
+
         }
 
-        private void SyncColumn(ITableContext table, IMetaField field)
+        private void SyncColumn(ITableContext table, IMetaField field, bool hasRow)
         {
             //TODO 实现迁移策略
             var columnInfo = table.GetColumn(field.Name);
@@ -107,7 +146,7 @@ namespace ObjectServer.Model
             }
             else if (columnInfo.Nullable && field.IsRequired) //Nullable to 'NOT NULL'
             {
-                this.SetColumnNotNullable(table, field);
+                this.SetColumnNotNullable(table, field, hasRow);
             }
         }
 
@@ -116,10 +155,10 @@ namespace ObjectServer.Model
             table.AlterColumnNullable(this.db.DataContext, field.Name, true);
         }
 
-        private void SetColumnNotNullable(ITableContext table, IMetaField field)
+        private void SetColumnNotNullable(ITableContext table, IMetaField field, bool hasRow)
         {
             //先看有没有行，有行要先设置默认值，如果没有默认值就报错了
-            if (this.TableHasRow(table.Name) && field.DefaultProc != null)
+            if (hasRow && field.DefaultProc != null)
             {
                 var defaultValue = field.DefaultProc(this.context);
                 var sql = string.Format(
@@ -137,7 +176,7 @@ namespace ObjectServer.Model
         private bool TableHasRow(string tableName)
         {
             var sql = string.Format(
-                "SELECT COUNT(\"id\") FROM \"{0}\"", tableName);
+                "SELECT COUNT(*) FROM \"{0}\"", tableName);
             var rowCount = (long)this.db.DataContext.QueryValue(sql);
             return rowCount > 0;
         }

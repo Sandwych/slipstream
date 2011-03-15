@@ -28,6 +28,7 @@ namespace ObjectServer.Core
             Fields.Boolean("admin").SetLabel("Administrator?").Required();
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
             Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
+            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
         }
 
         public override void Load(IDatabaseProfile db)
@@ -100,7 +101,7 @@ namespace ObjectServer.Core
 
             return base.CreateInternal(ctx, values2);
         }
-       
+
 
         public override void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record)
         {
@@ -188,10 +189,15 @@ namespace ObjectServer.Core
             sessStore.PutSession(session);
             return session;
         }
+
+        public override string[] GetReferencedObjects()
+        {
+            return new string[] { };
+        }
     }
 
 
 
-  
+
 
 }

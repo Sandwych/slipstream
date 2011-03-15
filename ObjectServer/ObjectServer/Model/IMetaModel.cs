@@ -24,6 +24,8 @@ namespace ObjectServer.Model
 
         bool AutoMigration { get; }
 
+        IMetaField[] GetAllStorableFields();
+
         long[] SearchInternal(IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0);
         long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag);
         void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record);

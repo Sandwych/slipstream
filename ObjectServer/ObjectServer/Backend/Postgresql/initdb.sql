@@ -39,3 +39,15 @@ CREATE TABLE core_module (
     PRIMARY KEY(id)
 );
 ALTER TABLE core_module ADD CONSTRAINT name_uniq UNIQUE (name);
+
+
+CREATE TABLE core_user (
+    id BIGSERIAL NOT NULL,
+    PRIMARY KEY(id)
+);
+
+
+CREATE TABLE core_organization (
+    id BIGSERIAL NOT NULL,
+    PRIMARY KEY(id)
+);

@@ -149,7 +149,11 @@
     <Compile Include="Core\PropertyModel.cs" />
     <Compile Include="Core\ViewActionModel.cs" />
     <Compile Include="Core\UserGroupModel.cs" />
+    <Compile Include="Exceptions\FatalException.cs" />
+    <Compile Include="Exceptions\InitializationException.cs" />
     <Compile Include="Model\AbstractExtendedModel.cs" />
+    <Compile Include="Model\InheritanceCollection.cs" />
+    <Compile Include="Model\InheritanceInfo.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="SessionlessContext.cs" />
     <Compile Include="Core\AuditLogModel.cs" />

@@ -192,9 +192,9 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             return this.Fields.ContainsKey(fieldName);
         }
 
-        public IEnumerable<IMetaField> GetAllStorableFields()
+        public IMetaField[] GetAllStorableFields()
         {
-            return this.Fields.Values.Where(f => f.IsColumn() && f.Name != "id");
+            return this.Fields.Values.Where(f => f.IsColumn() && f.Name != "id").ToArray();
         }
 
         public override void MergeFrom(IResource res)

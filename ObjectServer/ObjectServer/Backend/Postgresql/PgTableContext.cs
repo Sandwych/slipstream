@@ -115,6 +115,11 @@ namespace ObjectServer.Backend.Postgresql
             return this.columns[columnName];
         }
 
+        public IColumnMetadata[] GetAllColumns()
+        {
+            return this.columns.Values.ToArray();
+        }
+
         private void LoadColumns(IDataContext db, string tableName)
         {
             var sql = @"

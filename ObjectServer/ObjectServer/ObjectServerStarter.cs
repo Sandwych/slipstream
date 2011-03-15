@@ -109,6 +109,20 @@ namespace ObjectServer
 
         private void InitializeInternal(Config cfg)
         {
+            try
+            {
+                TryInitialize(cfg);
+            }
+            catch (Exception ex)
+            {
+                var msg = "Failed to initialize framework!";
+                Logger.Fatal(msg, ex);
+                throw new InitializationException(msg, ex);
+            }
+        }
+
+        private static void TryInitialize(Config cfg)
+        {
             if (cfg == null)
             {
                 throw new ArgumentNullException("cfg");
