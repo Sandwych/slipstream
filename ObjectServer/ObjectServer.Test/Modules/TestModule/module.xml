@@ -12,6 +12,7 @@
     <file>simple-models.cs</file>
     <file>many-to-many-models.cs</file>
     <file>functional-field-object.cs</file>
+    <file>inheritance-models.cs</file>
   </sources>
   
   <data-files>

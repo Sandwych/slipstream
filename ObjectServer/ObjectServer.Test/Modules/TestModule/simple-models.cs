@@ -99,38 +99,7 @@ namespace ObjectServer.Test
         }
     }
 
-    //////////////////// 继承测试的表 ///////////////////
-
-    [Resource]
-    public sealed class SingleTableBaseModel : AbstractTableModel
-    {
-        public SingleTableBaseModel()
-            : base("test.single_table")
-        {
-            Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
-        }
-    }
-
-
-    [Resource]
-    public sealed class SingleTableInheritedModel : AbstractExtendedModel
-    {
-        public SingleTableInheritedModel()
-            : base("test.single_table")
-        {
-            Fields.Integer("age").SetLabel("Age");
-        }
-
-        [ServiceMethod]
-        public static long Create(
-            dynamic model, IResourceScope ctx, IDictionary<string, object> propertyBag)
-        {
-            var record = new Dictionary<string, object>(propertyBag);
-            record["age"] = 33;
-            return model.CreateInternal(ctx, record);
-        }
-    }
-
+   
 
     [Resource]
     public sealed class ProductModel : AbstractTableModel

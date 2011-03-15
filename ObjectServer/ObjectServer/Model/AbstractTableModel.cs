@@ -62,6 +62,7 @@ namespace ObjectServer.Model
         protected AbstractTableModel(string name)
             : base(name)
         {
+
             this.CanCreate = true;
             this.CanRead = true;
             this.CanWrite = true;
@@ -74,6 +75,7 @@ namespace ObjectServer.Model
 
             this.RegisterInternalServiceMethods();
         }
+
 
         private void SetName(string name)
         {
@@ -101,6 +103,7 @@ namespace ObjectServer.Model
                     this.Name));
             }
 
+       
             if (this.AutoMigration)
             {
                 new TableMigrator(db, this).Migrate();

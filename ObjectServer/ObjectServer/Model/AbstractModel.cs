@@ -10,11 +10,11 @@ namespace ObjectServer.Model
 {
     public abstract class AbstractModel : AbstractResource, IMetaModel
     {
-        private readonly IMetaFieldCollection fields;
-
         public const string IdFieldName = "id";
         public const string ActiveFieldName = "_active";
         public const string VersionFieldName = "_version";
+
+        private readonly IMetaFieldCollection fields;
 
 
         protected AbstractModel(string name)
@@ -22,13 +22,73 @@ namespace ObjectServer.Model
         {
             this.AutoMigration = true;
             this.fields = new MetaFieldCollection(this);
+            this.Inheritances = new InheritanceCollection();
         }
 
         public override void Load(IDatabaseProfile db)
         {
             base.Load(db);
+
+            this.InitializeInheritances(db);
+
             this.SyncModel(db);
         }
+
+        /// <summary>
+        /// 初始化继承设置
+        /// </summary>
+        /// <param name="db"></param>
+        private void InitializeInheritances(IDatabaseProfile db)
+        {
+            //验证继承声明
+            //这里可以安全地访问 many-to-one 指向的 ResourceContainer 里的对象，因为依赖排序的原因
+            //被指向的对象肯定已经更早注册了
+            foreach (var ii in this.Inheritances)
+            {
+                if (!db.ContainsResource(ii.BaseModel))
+                {
+                    var msg = string.Format(
+                        "Cannot found the base model '{0}' in inheritances", ii.BaseModel);
+                    throw new ResourceNotFoundException(msg, ii.BaseModel);
+                }
+
+                if (!this.Fields.ContainsKey(ii.RelatedField))
+                {
+                    throw new FieldAccessException();
+                }
+
+                //把“基类”模型的字段引用复制过来
+                var baseModel = (IMetaModel)db.GetResource(ii.BaseModel);
+                foreach (var f in baseModel.Fields)
+                {
+                    if (!this.Fields.ContainsKey(f.Key))
+                    {
+                        this.Fields.Add(f.Key, f.Value);
+                    }
+                }
+
+            }
+        }
+
+        #region Inheritance staff
+
+        public ICollection<InheritanceInfo> Inheritances { get; private set; }
+
+        protected AbstractModel Inherit(string modelName, string relatedField)
+        {
+            var ii = new InheritanceInfo(modelName, relatedField);
+            if (this.Inheritances.Select(i => i.BaseModel).Contains(modelName))
+            {
+                var msg = string.Format("Duplicated inheritance: '{0}'", modelName);
+                throw new ArgumentException(msg, modelName);
+            }
+
+            this.Inheritances.Add(ii);
+
+            return this;
+        }
+
+        #endregion
 
         /// <summary>
         /// 同步代码定义的模型到数据库

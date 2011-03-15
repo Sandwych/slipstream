@@ -86,7 +86,7 @@
     <Compile Include="Model\ManyToOneFieldTests.cs" />
     <Compile Include="Model\ManyToManyFieldTests.cs" />
     <Compile Include="Model\ReferenceFieldTests.cs" />
-    <Compile Include="Model\InheritTests.cs" />
+    <Compile Include="Model\InheritanceTests.cs" />
     <Compile Include="Model\FunctionalFieldTests.cs" />
     <Compile Include="Model\SearchTests.cs" />
     <Compile Include="Model\TableModelTest.cs" />
@@ -96,20 +96,23 @@
     <EmbeddedResource Include="XmlFiles\master-child-data.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="modules\test\data.xml">
+    <Content Include="Modules\TestModule\data.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="modules\test\module.xml">
+    <Content Include="Modules\TestModule\module.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Model\XmlDataImporterTests.cs" />
-    <Compile Include="modules\test\many-to-many-models.cs">
+    <Compile Include="Modules\TestModule\inheritance-models.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="modules\test\functional-field-object.cs">
+    <Compile Include="Modules\TestModule\many-to-many-models.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="modules\test\simple-models.cs">
+    <Compile Include="Modules\TestModule\functional-field-object.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Modules\TestModule\simple-models.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -10,7 +10,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class InheritTests : LocalTestCase
+    public class InheritanceTests : LocalTestCase
     {
         [Test]
         public void Test_single_table()
@@ -29,6 +29,12 @@ namespace ObjectServer.Model.Test
             var record = inheritedModel.Read(this.ResourceScope, new object[] { id }, null)[0];
 
             Assert.AreEqual(33, record["age"]);
+        }
+
+        [Test]
+        public void Test_multitable_search()
+        {
+            
         }
 
     }

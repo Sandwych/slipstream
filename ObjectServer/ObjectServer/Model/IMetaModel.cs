@@ -8,6 +8,7 @@ namespace ObjectServer.Model
 {
     public interface IMetaModel : IResource
     {
+        ICollection<InheritanceInfo> Inheritances { get; }
         IMetaFieldCollection Fields { get; }
 
         string TableName { get; }

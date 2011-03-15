@@ -97,7 +97,7 @@ namespace ObjectServer
                 DBPassword = "objectserver",
                 DBPort = 5432,
                 DBUser = "objectserver",
-                ModulePath = "modules",
+                ModulePath = "Modules",
                 RootPassword = "root",
                 Debug = true,
                 LogLevel = "debug",

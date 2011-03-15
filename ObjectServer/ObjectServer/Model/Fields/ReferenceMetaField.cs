@@ -22,10 +22,10 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, ICollection<Dictionary<string, object>> rawRecords)
+           IResourceScope scope, ICollection<Dictionary<string, object>> rawRecords)
         {
             var result = new Dictionary<long, object>(rawRecords.Count());
-            this.LoadAllNames(ctx, rawRecords, result);
+            this.LoadAllNames(scope, rawRecords, result);
 
             return result;
         }
