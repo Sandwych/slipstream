@@ -54,7 +54,7 @@ namespace ObjectServer.Model
 
         public override bool IsColumn()
         {
-            return this.inheritedField.IsColumn();
+            return false;
         }
 
         public override bool IsScalar

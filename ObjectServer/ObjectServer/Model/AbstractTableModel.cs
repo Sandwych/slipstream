@@ -103,7 +103,7 @@ namespace ObjectServer.Model
                     this.Name));
             }
 
-       
+
             if (this.AutoMigration)
             {
                 new TableMigrator(db, this).Migrate();
@@ -163,7 +163,7 @@ namespace ObjectServer.Model
             return query.Search(domainInternal, offset, limit);
         }
 
-        public override long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag)
+        public override long CreateInternal(IResourceScope scope, IDictionary<string, object> propertyBag)
         {
             if (!this.CanCreate)
             {
@@ -179,17 +179,37 @@ namespace ObjectServer.Model
             var values = new Dictionary<string, object>(propertyBag);
 
             //处理用户没有给的默认值
-            this.AddDefaultValues(ctx, values);
+            this.AddDefaultValues(scope, values);
+
+            //插入被继承的表记录
+            foreach (var i in this.Inheritances)
+            {
+                var baseModel = (IMetaModel)scope.DatabaseProfile.GetResource(i.BaseModel);
+                var baseRecord = new Dictionary<string, object>();
+
+                foreach (var f in baseModel.Fields)
+                {
+                    if (values.ContainsKey(f.Key))
+                    {
+                        baseRecord.Add(f.Key, values[f.Key]);
+                        values.Remove(f.Key);
+                    }
+                }
+
+                var baseId = baseModel.CreateInternal(scope, baseRecord);
+                values[i.RelatedField] = baseId;
+            }
+
 
             //转换用户给的字段值到数据库原始类型
-            this.ConvertFieldToColumn(ctx, values, values.Keys.ToArray());
+            this.ConvertFieldToColumn(scope, values, values.Keys.ToArray());
 
-            var id = DoCreate(ctx, values);
+            var id = DoCreate(scope, values);
 
             if (this.LogCreation)
             {
                 //TODO: 可翻译的
-                this.AuditLog(ctx, id, this.Label + " created");
+                this.AuditLog(scope, id, this.Label + " created");
             }
 
             return id;
@@ -206,11 +226,13 @@ namespace ObjectServer.Model
                 values.Add(VersionFieldName, 0);
             }
 
-            var colValues = new object[values.Count];
+            var allColumnNames = values.Keys.Where(f => this.Fields[f].IsColumn());
+
+            var colValues = new object[allColumnNames.Count()];
             var sbColumns = new StringBuilder();
             var sbArgs = new StringBuilder();
             var index = 0;
-            foreach (var f in values.Keys)
+            foreach (var f in allColumnNames)
             {
                 sbColumns.Append(", ");
                 sbArgs.Append(", ");
