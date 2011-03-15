@@ -25,8 +25,8 @@ namespace ObjectServer.Core
             : base(ModelName)
         {
             //删掉基类自动添加的用户列
-            Fields.Remove(CreatedUserField);
-            Fields.Remove(ModifiedUserField);
+            Fields.Remove(CreatedUserFieldName);
+            Fields.Remove(ModifiedUserFieldName);
 
             Fields.Chars("name").SetLabel("Key").Required().SetSize(128);
             Fields.Chars("module").SetLabel("Module").Required().SetSize(64);

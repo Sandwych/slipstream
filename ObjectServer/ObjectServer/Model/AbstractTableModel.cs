@@ -17,10 +17,6 @@ namespace ObjectServer.Model
 {
     public abstract class AbstractTableModel : AbstractModel
     {
-        public const string CreatedTimeField = "_created_time";
-        public const string ModifiedTimeField = "_modified_time";
-        public const string CreatedUserField = "_created_user";
-        public const string ModifiedUserField = "_modified_user";
 
         private string tableName = null;
 
@@ -130,17 +126,17 @@ namespace ObjectServer.Model
             if (this.AutoMigration)
             {
 
-                Fields.DateTime(CreatedTimeField).SetLabel("Created")
+                Fields.DateTime(CreatedTimeFieldName).SetLabel("Created")
                     .NotRequired().SetDefaultProc(ctx => DateTime.Now);
 
-                Fields.DateTime(ModifiedTimeField).SetLabel("Last Modified")
+                Fields.DateTime(ModifiedTimeFieldName).SetLabel("Last Modified")
                     .NotRequired().SetDefaultProc(ctx => DBNull.Value);
 
-                Fields.ManyToOne(CreatedUserField, "core.user").SetLabel("Creator")
+                Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
                     .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
-                Fields.ManyToOne(ModifiedUserField, "core.user").SetLabel("Creator")
+                Fields.ManyToOne(ModifiedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().SetDefaultProc(ctx => DBNull.Value);
             }
         }
@@ -296,13 +292,13 @@ namespace ObjectServer.Model
             record["id"] = id;
 
             //处理最近更新用户与最近更新时间字段            
-            if (this.ContainsField(ModifiedTimeField))
+            if (this.ContainsField(ModifiedTimeFieldName))
             {
-                record[ModifiedTimeField] = DateTime.Now;
+                record[ModifiedTimeFieldName] = DateTime.Now;
             }
-            if (this.ContainsField(ModifiedUserField))
+            if (this.ContainsField(ModifiedUserFieldName))
             {
-                record[ModifiedUserField] = ctx.Session.UserId;
+                record[ModifiedUserFieldName] = ctx.Session.UserId;
             }
 
             var allFields = record.Keys; //记录中的所有字段
@@ -429,10 +425,14 @@ namespace ObjectServer.Model
             }
 
             //表里的列，也就是可以直接用 SQL 查的列
-            var columnFields =
-                (from f in allFields
-                 where this.Fields[f].IsColumn()
-                 select f).ToArray();
+            var columnFields = from f in allFields
+                               where this.Fields[f].IsColumn()
+                               select f;
+
+            //添加关联到基类模型的 many-to-one 列
+            var relatedBaseColumns = new List<string>();
+
+            columnFields = columnFields.Union(this.Inheritances.Select(i => i.RelatedField));
 
             var sql = string.Format("SELECT {0} FROM \"{1}\" WHERE \"id\" IN ({2})",
                 ToColumnList(columnFields),
@@ -441,6 +441,27 @@ namespace ObjectServer.Model
 
             //先查找表里的简单字段数据
             var records = ctx.DatabaseProfile.DataContext.QueryAsDictionary(sql);
+
+            //本尊及各个关联到基类模型的字段已经读出来了，现在读各个基类模型
+            foreach (var bm in this.Inheritances)
+            {
+                var baseModel = (IMetaModel)ctx.DatabaseProfile.GetResource(bm.BaseModel);
+                var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys);
+                var baseIds = records.Select(r => (long)r[bm.RelatedField]);
+                var baseRecords = baseModel.ReadInternal(ctx, baseIds, baseFieldsToRead);
+                //合并到结果中
+                for (int i = 0; i < baseRecords.Length; i++)
+                {
+                    foreach (var baseField in baseRecords[i])
+                    {
+                        if (!records[i].ContainsKey(baseField.Key))
+                        {
+                            records[i].Add(baseField.Key, baseField.Value);
+                        }
+                    }
+                }
+            }
+
 
             //处理特殊字段
             foreach (var fieldName in allFields)

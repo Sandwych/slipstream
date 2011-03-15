@@ -11,8 +11,14 @@ namespace ObjectServer.Model
     public abstract class AbstractModel : AbstractResource, IMetaModel
     {
         public const string IdFieldName = "id";
-        public const string ActiveFieldName = "_active";
         public const string VersionFieldName = "_version";
+        public const string CreatedTimeFieldName = "_created_time";
+        public const string ModifiedTimeFieldName = "_modified_time";
+        public const string CreatedUserFieldName = "_created_user";
+        public const string ModifiedUserFieldName = "_modified_user";
+        public const string ActiveFieldName = "_active";
+        public const string LeftFieldName = "_left";
+        public const string RightFieldName = "_right";
 
         private readonly IMetaFieldCollection fields;
 

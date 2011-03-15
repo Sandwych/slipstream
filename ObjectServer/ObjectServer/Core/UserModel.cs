@@ -57,7 +57,7 @@ namespace ObjectServer.Core
                         { "login", "root" },
                         { "password", rootPassword } ,
                         { "admin", true },
-                        { CreatedUserField, DBNull.Value }, //一定要覆盖掉默认设置，因为此时系统里还没有用户，取 Session 里的 UserId 是无意义的
+                        { CreatedUserFieldName, DBNull.Value }, //一定要覆盖掉默认设置，因为此时系统里还没有用户，取 Session 里的 UserId 是无意义的
                     };
 
             this.CreateInternal(ctx, user);

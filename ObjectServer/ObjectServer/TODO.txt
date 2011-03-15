@@ -43,3 +43,5 @@
 * 考虑一下要不要引入一个类似 Monogo 之类的文档（key/value）数据库来保存系统中的低价值非业务数据，比如操作日志、内部邮件等
 
 * 检查如果用户错误地从 AbstractExtendedModel 继承的时候，需要检查被继承的 Model 是否存在 
+
+* AbstractTableModel 的 ReadInternal 里的 SELECT 需要重构成 SqlTree 形式
