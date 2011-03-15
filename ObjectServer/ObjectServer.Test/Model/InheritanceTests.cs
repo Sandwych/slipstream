@@ -74,6 +74,31 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual("admin_user_info", (string)adminUser["admin_info"]);
         }
 
+        [Test]
+        public void Test_multitable_creation_and_browsing()
+        {
+            this.ClearMultiTable();
+            dynamic adminUserRecord = new ExpandoObject();
+            adminUserRecord.name = "admin_user_name";
+            adminUserRecord.admin_info = "admin_user_info";
+
+            var adminUserModel = (IMetaModel)this.ResourceScope
+                .DatabaseProfile.GetResource("test.admin_user");
+
+            long id = -1;
+            Assert.DoesNotThrow(() =>
+            {
+                id = adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
+            });
+
+            Assert.IsTrue(id > 0);
+
+            var adminUser = adminUserModel.Browse(this.ResourceScope, id);
+
+            Assert.AreEqual("admin_user_name", adminUser.name);
+            Assert.AreEqual("admin_user_info", adminUser.admin_info);
+        }
+
         private void AddMultiTableTestData()
         {
         }

@@ -29,7 +29,7 @@ namespace ObjectServer.Model
 
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
         {
-            throw new NotImplementedException();
+            return this.inheritedField.BrowseField(scope, record);
         }
 
         public override bool IsRequired
