@@ -21,7 +21,7 @@
 * 定时任务调度器
 
 * 实现以下字段类型：
-	Reference 字段 
+	Reference 字段（完成）
 	Property 字段
 	Binary 字段（完成）
 	Enumeration 字段（进行中，需要检查赋予获取的字符串是否属于 enum 定义的范围）
