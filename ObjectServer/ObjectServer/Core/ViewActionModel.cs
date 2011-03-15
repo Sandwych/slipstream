@@ -15,7 +15,10 @@ namespace ObjectServer.Core
         public ViewActionModel()
             : base("core.action_view")
         {
+            Inherit("core.action", "action");
+            Fields.ManyToOne("action", "core.action").SetLabel("Base Action").Required();
             Fields.ManyToOne("primary_view", "core.view").SetLabel("Primary View").Required();           
+
         }
 
     }

@@ -420,8 +420,6 @@ namespace ObjectServer.Model
             {
                 //检查是否有不存在的列
                 var userFields = fields.Select(o => (string)o);
-                this.VerifyFields(userFields);
-
                 allFields = userFields.ToList();
             }
 
@@ -437,7 +435,7 @@ namespace ObjectServer.Model
                  select f).ToArray();
 
             var sql = string.Format("SELECT {0} FROM \"{1}\" WHERE \"id\" IN ({2})",
-                columnFields.ToCommaList(),
+                ToColumnList(columnFields),
                 this.TableName,
                 ids.ToCommaList());
 
@@ -579,6 +577,28 @@ namespace ObjectServer.Model
             var res = (IMetaModel)ctx.DatabaseProfile.GetResource(Core.AuditLogModel.ModelName);
             res.CreateInternal(ctx, logRecord);
 
+        }
+
+
+        public static string ToColumnList<T>(IEnumerable<T> items)
+        {
+            var sb = new StringBuilder();
+            var flag = true;
+            foreach (var item in items)
+            {
+                if (flag)
+                {
+                    flag = false;
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+
+                sb.Append('"' + item.ToString() + '"');
+            }
+
+            return sb.ToString();
         }
 
     }
