@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Data;
 using System.Transactions;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 using ObjectServer.Backend;
 using ObjectServer.Core;
@@ -18,7 +19,6 @@ namespace ObjectServer
     internal sealed class DatabaseProfileCollection : IGlobalObject, IDisposable
     {
         private Config config;
-
         private Dictionary<string, DatabaseProfile> databaseProfiles =
             new Dictionary<string, DatabaseProfile>();
 
@@ -32,13 +32,18 @@ namespace ObjectServer
 
         public void Initialize(Config cfg)
         {
+            Debug.Assert(cfg != null);
+
             this.config = cfg;
         }
 
         #endregion
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         internal void LoadDatabase(Session session)
         {
+            Debug.Assert(session != null);
+
             var dbName = session.Database;
             Logger.Info(() => string.Format("Registering object-pool of database: [{0}]", dbName));
 
@@ -60,6 +65,9 @@ namespace ObjectServer
 
         private void LoadAdditionalModules(Session session, DatabaseProfile db)
         {
+            Debug.Assert(session != null);
+            Debug.Assert(db != null);
+
             //加载其它模块
             Logger.Info(() => "Loading additional modules...");
             var ctx = new InternalResourceScope(db, session);
@@ -67,8 +75,10 @@ namespace ObjectServer
             ObjectServerStarter.Modules.LoadActivatedModules(ctx);
         }
 
-        internal DatabaseProfile GetDatabase(Session session)
+        internal DatabaseProfile GetDatabaseProfile(Session session)
         {
+            Debug.Assert(session != null);
+
             if (!this.databaseProfiles.ContainsKey(session.Database))
             {
                 this.LoadDatabase(session);
@@ -77,17 +87,16 @@ namespace ObjectServer
             return this.databaseProfiles[session.Database];
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         internal void RemoveDatabase(string dbName)
         {
-            //TODO: 这里要处理并发
+            Debug.Assert(!string.IsNullOrEmpty(dbName));
+
             //比如两个客户端，一个正在操作数据库，另一个要删除数据库
 
-            lock (this)
-            {
-                var db = this.databaseProfiles[dbName];
-                db.DataContext.Close();
-                this.databaseProfiles.Remove(dbName);
-            }
+            var db = this.databaseProfiles[dbName];
+            db.DataContext.Close();
+            this.databaseProfiles.Remove(dbName);
         }
 
         #region IDisposable 成员

@@ -36,7 +36,7 @@ namespace ObjectServer
             this.SessionStore.Pulse(session.Id);
 
             this.ownDb = true;
-            this.DatabaseProfile = ObjectServerStarter.DatabaseProfiles.GetDatabase(session);
+            this.DatabaseProfile = ObjectServerStarter.DatabaseProfiles.GetDatabaseProfile(session);
             this.DatabaseProfile.DataContext.Open();
         }
 
@@ -52,7 +52,7 @@ namespace ObjectServer
             this.Session = new Session(dbName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
-            this.DatabaseProfile = ObjectServerStarter.DatabaseProfiles.GetDatabase(this.Session);
+            this.DatabaseProfile = ObjectServerStarter.DatabaseProfiles.GetDatabaseProfile(this.Session);
             this.DatabaseProfile.DataContext.Open();
         }
 

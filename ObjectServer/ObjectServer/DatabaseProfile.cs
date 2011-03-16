@@ -119,7 +119,11 @@ namespace ObjectServer
 
         public bool ContainsResource(string resName)
         {
-            //TODO 检查参数
+            if (string.IsNullOrEmpty(resName))
+            {
+                throw new ArgumentNullException("resName");
+            }
+
             return this.resources.ContainsKey(resName);
         }
 
