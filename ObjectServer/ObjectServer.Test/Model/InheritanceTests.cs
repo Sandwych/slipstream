@@ -52,24 +52,13 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_creation_and_reading()
         {
-            this.ClearMultiTable();
-            dynamic adminUserRecord = new ExpandoObject();
-            adminUserRecord.name = "admin_user_name";
-            adminUserRecord.admin_info = "admin_user_info";
-
             var adminUserModel = (IMetaModel)this.ResourceScope
                 .DatabaseProfile.GetResource("test.admin_user");
-
-            long id = -1;
-            Assert.DoesNotThrow(() =>
-                {
-                    id = adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
-                });
-
+            this.ClearMultiTable();
+            var id = this.AddMultiTableTestData();
             Assert.IsTrue(id > 0);
 
             var adminUser = adminUserModel.ReadInternal(this.ResourceScope, new long[] { id })[0];
-
             Assert.AreEqual("admin_user_name", (string)adminUser["name"]);
             Assert.AreEqual("admin_user_info", (string)adminUser["admin_info"]);
         }
@@ -77,7 +66,43 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_creation_and_browsing()
         {
+            var adminUserModel = (IMetaModel)this.ResourceScope
+                .DatabaseProfile.GetResource("test.admin_user");
             this.ClearMultiTable();
+            var id = this.AddMultiTableTestData();
+            Assert.IsTrue(id > 0);
+
+            var adminUser = adminUserModel.Browse(this.ResourceScope, id);
+            Assert.AreEqual("admin_user_name", adminUser.name);
+            Assert.AreEqual("admin_user_info", adminUser.admin_info);
+        }
+
+        [Test]
+        public void Test_multitable_writing()
+        {
+            var adminUserModel = (IMetaModel)this.ResourceScope
+                .DatabaseProfile.GetResource("test.admin_user");
+            this.ClearMultiTable();
+            var id = this.AddMultiTableTestData();
+            Assert.IsTrue(id > 0);
+
+            dynamic fieldValues = new ExpandoObject();
+            fieldValues.name = "changed_base_name";
+            fieldValues.admin_info = "changed_admin_info";
+
+            Assert.DoesNotThrow(() =>
+                {
+                    adminUserModel.WriteInternal(this.ResourceScope, id, fieldValues);
+                });
+
+            var adminUserRecord = adminUserModel.ReadInternal(this.ResourceScope, new long[] { id })[0];
+
+            Assert.AreEqual("changed_base_name", (string)adminUserRecord["name"]);
+            Assert.AreEqual("changed_admin_info", (string)adminUserRecord["admin_info"]);
+        }
+
+        private long AddMultiTableTestData()
+        {
             dynamic adminUserRecord = new ExpandoObject();
             adminUserRecord.name = "admin_user_name";
             adminUserRecord.admin_info = "admin_user_info";
@@ -85,22 +110,7 @@ namespace ObjectServer.Model.Test
             var adminUserModel = (IMetaModel)this.ResourceScope
                 .DatabaseProfile.GetResource("test.admin_user");
 
-            long id = -1;
-            Assert.DoesNotThrow(() =>
-            {
-                id = adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
-            });
-
-            Assert.IsTrue(id > 0);
-
-            var adminUser = adminUserModel.Browse(this.ResourceScope, id);
-
-            Assert.AreEqual("admin_user_name", adminUser.name);
-            Assert.AreEqual("admin_user_info", adminUser.admin_info);
-        }
-
-        private void AddMultiTableTestData()
-        {
+            return adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
         }
 
         private void ClearMultiTable()

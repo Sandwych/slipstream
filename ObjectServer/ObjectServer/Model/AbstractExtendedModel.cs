@@ -10,6 +10,18 @@ namespace ObjectServer.Model
         public AbstractExtendedModel(string name)
             : base(name)
         {
+
+        }
+
+        public override void Load(IDatabaseProfile db)
+        {
+            if (!db.ContainsResource(this.Name))
+            {
+                var msg = string.Format("Cannot found model '{0}'", this.Name);
+                throw new ResourceNotFoundException(msg, this.Name);
+            }
+
+            base.Load(db);
         }
 
         public override string TableName

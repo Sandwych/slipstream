@@ -15,7 +15,7 @@ using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
-    public abstract class AbstractTableModel : AbstractModel
+    public abstract partial class AbstractTableModel : AbstractModel
     {
 
         private string tableName = null;
@@ -159,126 +159,9 @@ namespace ObjectServer.Model
             return query.Search(domainInternal, offset, limit);
         }
 
-        public override long CreateInternal(IResourceScope scope, IDictionary<string, object> propertyBag)
-        {
-            if (!this.CanCreate)
-            {
-                throw new NotSupportedException();
-            }
+     
 
-            if (propertyBag.ContainsKey("id"))
-            {
-                throw new ArgumentException("Unable to set the 'id' field", "propertyBag");
-            }
-
-            //TODO 这里改成定义的列插入，而不是用户提供的列            
-            var values = new Dictionary<string, object>(propertyBag);
-
-            //处理用户没有给的默认值
-            this.AddDefaultValues(scope, values);
-
-            //插入被继承的表记录
-            foreach (var i in this.Inheritances)
-            {
-                var baseModel = (IMetaModel)scope.DatabaseProfile.GetResource(i.BaseModel);
-                var baseRecord = new Dictionary<string, object>();
-
-                foreach (var f in baseModel.Fields)
-                {
-                    if (values.ContainsKey(f.Key))
-                    {
-                        baseRecord.Add(f.Key, values[f.Key]);
-                        values.Remove(f.Key);
-                    }
-                }
-
-                var baseId = baseModel.CreateInternal(scope, baseRecord);
-                values[i.RelatedField] = baseId;
-            }
-
-
-            //转换用户给的字段值到数据库原始类型
-            this.ConvertFieldToColumn(scope, values, values.Keys.ToArray());
-
-            var id = DoCreate(scope, values);
-
-            if (this.LogCreation)
-            {
-                //TODO: 可翻译的
-                this.AuditLog(scope, id, this.Label + " created");
-            }
-
-            return id;
-        }
-
-        private long DoCreate(IResourceScope ctx, IDictionary<string, object> values)
-        {
-            this.VerifyFields(values.Keys);
-
-            var serial = ctx.DatabaseProfile.DataContext.NextSerial(this.SequenceName);
-
-            if (this.ContainsField(VersionFieldName))
-            {
-                values.Add(VersionFieldName, 0);
-            }
-
-            var allColumnNames = values.Keys.Where(f => this.Fields[f].IsColumn());
-
-            var colValues = new object[allColumnNames.Count()];
-            var sbColumns = new StringBuilder();
-            var sbArgs = new StringBuilder();
-            var index = 0;
-            foreach (var f in allColumnNames)
-            {
-                sbColumns.Append(", ");
-                sbArgs.Append(", ");
-
-                colValues[index] = values[f];
-
-                sbArgs.Append("@" + index.ToString());
-                sbColumns.Append('\"');
-                sbColumns.Append(f);
-                sbColumns.Append('\"');
-                index++;
-            }
-
-            var columnNames = sbColumns.ToString();
-            var args = sbArgs.ToString();
-
-            var sql = string.Format(
-              "INSERT INTO \"{0}\" (\"id\" {1}) VALUES ( {2} {3} );",
-              this.TableName,
-              columnNames,
-              serial,
-              args);
-
-            var rows = ctx.DatabaseProfile.DataContext.Execute(sql, colValues);
-            if (rows != 1)
-            {
-                Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
-                throw new DataException();
-            }
-
-
-            return serial;
-        }
-
-        /// <summary>
-        /// 添加没有包含在字典 dict 里但是有默认值函数的字段
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="values"></param>
-        private void AddDefaultValues(IResourceScope ctx, IDictionary<string, object> propertyBag)
-        {
-            var defaultFields =
-                this.Fields.Values.Where(
-                d => (d.DefaultProc != null && !propertyBag.Keys.Contains(d.Name)));
-
-            foreach (var df in defaultFields)
-            {
-                propertyBag[df.Name] = df.DefaultProc(ctx);
-            }
-        }
+      
 
         public override void WriteInternal(
             IResourceScope ctx, long id, IDictionary<string, object> userRecord)
@@ -310,6 +193,7 @@ namespace ObjectServer.Model
                 ).ToArray();
             this.ConvertFieldToColumn(ctx, record, updatableColumnFields);
 
+            //处理继承表的策略
 
             //检查字段
 
@@ -385,102 +269,6 @@ namespace ObjectServer.Model
                 var columnValue = fieldInfo.SetFieldValue(ctx, record[f]);
                 record[f] = columnValue;
             }
-        }
-
-
-        public override Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields)
-        {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
-            if (!this.CanRead)
-            {
-                throw new NotSupportedException();
-            }
-
-            if (ids == null || ids.Count() == 0)
-            {
-                return new Dictionary<string, object>[] { };
-            }
-
-            IList<string> allFields;
-            if (fields == null || fields.Count() == 0)
-            {
-                allFields = this.Fields.Where(p => !p.Value.Lazy)
-                    .Select(p => p.Value.Name).ToList();
-            }
-            else
-            {
-                //检查是否有不存在的列
-                var userFields = fields.Select(o => (string)o);
-                allFields = userFields.ToList();
-            }
-
-            if (!allFields.Contains("id"))
-            {
-                allFields.Add("id");
-            }
-
-            //表里的列，也就是可以直接用 SQL 查的列
-            var columnFields = from f in allFields
-                               where this.Fields[f].IsColumn()
-                               select f;
-
-            //添加关联到基类模型的 many-to-one 列
-            var relatedBaseColumns = new List<string>();
-
-            columnFields = columnFields.Union(this.Inheritances.Select(i => i.RelatedField));
-
-            var sql = string.Format("SELECT {0} FROM \"{1}\" WHERE \"id\" IN ({2})",
-                ToColumnList(columnFields),
-                this.TableName,
-                ids.ToCommaList());
-
-            //先查找表里的简单字段数据
-            var records = ctx.DatabaseProfile.DataContext.QueryAsDictionary(sql);
-
-            //本尊及各个关联到基类模型的字段已经读出来了，现在读各个基类模型
-            foreach (var bm in this.Inheritances)
-            {
-                var baseModel = (IMetaModel)ctx.DatabaseProfile.GetResource(bm.BaseModel);
-                var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys);
-                var baseIds = records.Select(r => (long)r[bm.RelatedField]);
-                var baseRecords = baseModel.ReadInternal(ctx, baseIds, baseFieldsToRead);
-                //合并到结果中
-                for (int i = 0; i < baseRecords.Length; i++)
-                {
-                    foreach (var baseField in baseRecords[i])
-                    {
-                        if (!records[i].ContainsKey(baseField.Key))
-                        {
-                            records[i].Add(baseField.Key, baseField.Value);
-                        }
-                    }
-                }
-            }
-
-
-            //处理特殊字段
-            foreach (var fieldName in allFields)
-            {
-                var f = this.Fields[fieldName];
-                if (f.Name == "id")
-                {
-                    continue;
-                }
-
-                var fieldValues = f.GetFieldValues(ctx, records);
-                foreach (var record in records)
-                {
-                    var id = (long)record["id"];
-                    record[f.Name] = fieldValues[id];
-                }
-            }
-
-            return records.ToArray();
         }
 
 

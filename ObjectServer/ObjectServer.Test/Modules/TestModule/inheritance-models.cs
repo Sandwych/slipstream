@@ -60,7 +60,8 @@ namespace ObjectServer.Test
         {
             Inherit("test.user", "user");
 
-            Fields.ManyToOne("user", "test.user").SetLabel("Base User Model");
+            Fields.ManyToOne("user", "test.user").Required().OnDelete(OnDeleteAction.Cascade)
+                .SetLabel("Base User Model");
             Fields.Chars("admin_info").SetLabel("Administration Info");
         }
     }

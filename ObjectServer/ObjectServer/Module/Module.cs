@@ -92,11 +92,22 @@ namespace ObjectServer
 
         public void Load(IResourceScope ctx)
         {
+            Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
+
             this.resources.Clear();
 
             if (this.Name == "core")
             {
-                this.LoadCoreModule(ctx);
+                try
+                {
+                    this.LoadCoreModule(ctx);
+                }
+                catch (Exception ex)
+                {
+                    var msg = "Failed to load core module";
+                    Logger.Fatal(msg, ex);
+                    throw new InitializationException(msg, ex);
+                }
             }
             else
             {
@@ -106,8 +117,7 @@ namespace ObjectServer
 
         private void LoadAdditionalModule(IResourceScope ctx)
         {
-            Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
-            Logger.Info(() => "Loading program...");
+            Logger.Info(() => "Loading precompiled assemblies...");
 
             if (this.Dlls != null)
             {
@@ -278,6 +288,9 @@ namespace ObjectServer
         private Assembly CompileSourceFiles(string moduleDir)
         {
             Debug.Assert(!string.IsNullOrEmpty(moduleDir));
+
+            Logger.Info(() => string.Format(
+                "Compiling source files of module '{0}'", this.Name));
 
             var sourceFiles = new List<string>();
             foreach (var file in this.SourceFiles)

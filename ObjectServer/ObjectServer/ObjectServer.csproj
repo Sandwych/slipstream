@@ -152,6 +152,8 @@
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
     <Compile Include="Model\AbstractExtendedModel.cs" />
+    <Compile Include="Model\AbstractTableModelCreateImpl.cs" />
+    <Compile Include="Model\AbstractTableModelReadImpl.cs" />
     <Compile Include="Model\Fields\InheritedMetaField.cs" />
     <Compile Include="Model\InheritanceCollection.cs" />
     <Compile Include="Model\InheritanceInfo.cs" />
