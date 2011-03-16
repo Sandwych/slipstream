@@ -301,7 +301,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         public abstract long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag);
         public abstract void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields = null);
+            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> requiredFields = null);
         public abstract void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids);
         public abstract dynamic Browse(IResourceScope ctx, long id);
 

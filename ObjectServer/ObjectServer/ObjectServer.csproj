@@ -154,6 +154,8 @@
     <Compile Include="Model\AbstractExtendedModel.cs" />
     <Compile Include="Model\AbstractTableModelCreateImpl.cs" />
     <Compile Include="Model\AbstractTableModelReadImpl.cs" />
+    <Compile Include="Model\AbstractTableModelWriteImpl.cs" />
+    <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
     <Compile Include="Model\Fields\InheritedMetaField.cs" />
     <Compile Include="Model\InheritanceCollection.cs" />
     <Compile Include="Model\InheritanceInfo.cs" />
@@ -204,7 +206,6 @@
     <Compile Include="Model\AbstractModel.cs" />
     <Compile Include="Model\OnDeleteAction.cs" />
     <Compile Include="Model\TableMigrator.cs" />
-    <Compile Include="Model\ModelQuery.cs" />
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Module\ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />

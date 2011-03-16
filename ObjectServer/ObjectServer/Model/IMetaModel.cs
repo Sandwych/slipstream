@@ -31,7 +31,7 @@ namespace ObjectServer.Model
         long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag);
         void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record);
         Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields = null);
+            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> requiredFields = null);
         void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids);
 
         dynamic Browse(IResourceScope ctx, long id);

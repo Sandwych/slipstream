@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override Dictionary<string, object>[] ReadInternal(
-                 IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields)
+                 IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> requiredFields)
         {
             if (ctx == null)
             {
@@ -35,7 +35,7 @@ namespace ObjectServer.Model
             }
 
             IList<string> allFields;
-            if (fields == null || fields.Count() == 0)
+            if (requiredFields == null || requiredFields.Count() == 0)
             {
                 allFields = this.Fields.Where(p => !p.Value.Lazy)
                     .Select(p => p.Value.Name).ToList();
@@ -43,7 +43,7 @@ namespace ObjectServer.Model
             else
             {
                 //检查是否有不存在的列
-                var userFields = fields.Select(o => (string)o);
+                var userFields = requiredFields.Select(o => (string)o);
                 allFields = userFields.ToList();
             }
 
