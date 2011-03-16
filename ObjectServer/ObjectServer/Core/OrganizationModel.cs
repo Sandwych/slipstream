@@ -14,6 +14,8 @@ namespace ObjectServer.Core
         public OrganizationModel()
             : base("core.organization")
         {
+            Hierarchy = true;
+
             Fields.Chars("code").SetLabel("Code").SetSize(64).Required();
             Fields.Chars("name").SetLabel("Name").Required();
         }

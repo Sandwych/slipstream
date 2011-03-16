@@ -17,8 +17,6 @@ namespace ObjectServer.Model
         public const string CreatedUserFieldName = "_created_user";
         public const string ModifiedUserFieldName = "_modified_user";
         public const string ActiveFieldName = "_active";
-        public const string LeftFieldName = "_left";
-        public const string RightFieldName = "_right";
 
         private readonly IMetaFieldCollection fields;
 

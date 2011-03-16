@@ -23,6 +23,7 @@ namespace ObjectServer.Model.Test
             var child = new Dictionary<string, object>()
             {
                 { "name", nameFieldValue },
+                { "master", null },
             };
 
             var childModel = (IMetaModel)this.ResourceScope.DatabaseProfile.GetResource("test.child");
@@ -34,6 +35,7 @@ namespace ObjectServer.Model.Test
             var record = children[0];
 
             Assert.IsInstanceOf<DBNull>(record["master"]);
+            Assert.AreEqual(DBNull.Value, record["master"]);
             Assert.AreEqual(nameFieldValue, (string)record["name"]);
         }
     }

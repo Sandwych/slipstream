@@ -17,6 +17,8 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
+        public const string LeftFieldName = "_left";
+        public const string RightFieldName = "_right";
 
         private string tableName = null;
 
@@ -99,7 +101,6 @@ namespace ObjectServer.Model
                     this.Name));
             }
 
-
             if (this.AutoMigration)
             {
                 new TableMigrator(db, this).Migrate();
@@ -127,17 +128,28 @@ namespace ObjectServer.Model
             {
 
                 Fields.DateTime(CreatedTimeFieldName).SetLabel("Created")
-                    .NotRequired().SetDefaultProc(ctx => DateTime.Now);
+                    .NotRequired().DefaultValueGetter(ctx => DateTime.Now);
 
                 Fields.DateTime(ModifiedTimeFieldName).SetLabel("Last Modified")
-                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+                    .NotRequired().DefaultValueGetter(ctx => DBNull.Value);
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
-                    .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+                    .DefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
                 Fields.ManyToOne(ModifiedUserFieldName, "core.user").SetLabel("Creator")
-                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
+                    .NotRequired().DefaultValueGetter(ctx => DBNull.Value);
+
+                if (this.Hierarchy)
+                {
+                    /*
+                    Fields.BigInteger(LeftFieldName).SetLabel("Left Value")
+                        .Required().DefaultValueGetter(ctx => -1);
+
+                    Fields.BigInteger(RightFieldName).SetLabel("Right Value")
+                        .Required().DefaultValueGetter(ctx => -1);
+                    */
+                }
             }
         }
 

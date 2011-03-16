@@ -12,7 +12,7 @@ namespace ObjectServer.Model
         string Label { get; }
         bool IsFunctional { get; }
         FieldValueGetter Getter { get; set; }
-        FieldDefaultProc DefaultProc { get; set; }
+        FieldDefaultValueGetter DefaultProc { get; set; }
         FieldType Type { get; }
         int Size { get; set; }
         bool IsRequired { get; }
@@ -50,7 +50,7 @@ namespace ObjectServer.Model
         IMetaField Required();
         IMetaField NotRequired();
         IMetaField ValueGetter(FieldValueGetter fieldGetter);
-        IMetaField SetDefaultProc(FieldDefaultProc defaultProc);
+        IMetaField DefaultValueGetter(FieldDefaultValueGetter defaultProc);
         IMetaField SetSize(int size);
         IMetaField SetHelp(string help);
         IMetaField Readonly();
