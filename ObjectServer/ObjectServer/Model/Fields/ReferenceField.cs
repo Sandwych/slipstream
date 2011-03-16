@@ -102,7 +102,7 @@ namespace ObjectServer.Model
         {
             var fieldValue = (object[])record[this.Name];
             var destModelName = (string)fieldValue[0];
-            dynamic destMetaModel = scope.DatabaseProfile.GetResource(destModelName);
+            var destMetaModel = (IMetaModel)scope.DatabaseProfile.GetResource(destModelName);
             var destIds = new long[] { (long)fieldValue[1] };
             var destRecord = destMetaModel.ReadInternal(scope, destIds, null)[0];
             return new BrowsableRecord(scope, destMetaModel, destRecord);

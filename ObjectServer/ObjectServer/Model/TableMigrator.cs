@@ -60,7 +60,7 @@ namespace ObjectServer.Model
                 if (f.Type == FieldType.ManyToOne)
                 {
                     var resources = this.db as IResourceContainer; //dyanmic workaround
-                    dynamic refModel = resources.GetResource(f.Relation);
+                    var refModel = (IMetaModel)resources.GetResource(f.Relation);
                     table.AddFK(db.DataContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
                 }
             }
