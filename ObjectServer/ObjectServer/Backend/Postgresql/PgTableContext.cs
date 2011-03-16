@@ -79,6 +79,7 @@ namespace ObjectServer.Backend.Postgresql
             {
                 throw new ArgumentNullException("tableName");
             }
+            
 
             //TODO SQL 注入风险
             var sql = string.Format(

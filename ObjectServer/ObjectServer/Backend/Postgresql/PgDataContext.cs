@@ -72,7 +72,6 @@ namespace ObjectServer.Backend.Postgresql
 
             EnsureConnectionOpened();
 
-            //TODO 检查连接
             var sql = string.Format(
                 @"CREATE DATABASE ""{0}"" TEMPLATE template0 ENCODING 'unicode'",
                 dbName);

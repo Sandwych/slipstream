@@ -17,7 +17,10 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("model");
             }
 
-            //TODO 验证 name 的命名规范
+            if (!NamingRule.IsValidFieldName(name))
+            {
+                throw new ArgumentException("name", "Invalid field name");
+            }
 
             if (model.Fields.ContainsKey(name))
             {

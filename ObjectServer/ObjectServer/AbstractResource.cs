@@ -26,7 +26,7 @@ namespace ObjectServer
 
         private void SetName(string name)
         {
-            if (!NamingRule.IsValidServiceName(name))
+            if (!NamingRule.IsValidResourceName(name))
             {
                 var msg = string.Format("Invalid service object name: '{0}'", name);
                 Logger.Error(() => msg);

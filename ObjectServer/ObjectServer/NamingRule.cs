@@ -9,18 +9,19 @@ namespace ObjectServer
     //TODO: 完善这里的 Regex
     public static class NamingRule
     {
-        private static readonly Regex s_serviceNameRegex = 
-            new Regex(@"^\w+\.(\w+\.?)+", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly Regex s_resourceNameRegex =
+            new Regex(@"([a-z_][a-z_0-9]*)\.([a-z_][a-z_0-9]*)", 
+                RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private static readonly Regex s_methodNameRegex = 
-            new Regex(@"^\w+", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            new Regex(@"([A-Za-z_][A-Za-z_0-9]*)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private static readonly Regex s_fieldNameRegex = 
-            new Regex(@"^\w+", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            new Regex(@"([a-z_][a-z_0-9]*)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        public static bool IsValidServiceName(string name)
+        public static bool IsValidResourceName(string name)
         {
-            return s_serviceNameRegex.IsMatch(name);
+            return s_resourceNameRegex.IsMatch(name);
         }
 
         public static bool IsValidMethodName(string name)

@@ -15,7 +15,6 @@ using ObjectServer.Utility;
 namespace ObjectServer
 {
     /// <summary>
-    /// TODO: 线程安全
     /// </summary>
     [Serializable]
     public sealed class ModuleCollection : IGlobalObject
