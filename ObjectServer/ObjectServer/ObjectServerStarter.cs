@@ -199,10 +199,12 @@ namespace ObjectServer
 
             if (string.IsNullOrEmpty(cfg.LogPath))
             {
-                appender = new log4net.Appender.OutputDebugStringAppender()
+                var consoleAppender = new log4net.Appender.ConsoleAppender()
                 {
                     Layout = layout,
                 };
+                consoleAppender.ActivateOptions();
+                appender = consoleAppender;
             }
             else
             {
@@ -211,19 +213,36 @@ namespace ObjectServer
                     throw new DirectoryNotFoundException(cfg.LogPath);
                 }
 
-                appender = new log4net.Appender.RollingFileAppender()
+                var fileAppender = new log4net.Appender.RollingFileAppender()
                 {
                     File = Path.Combine(cfg.LogPath, StaticSettings.LogFileName),
-                    AppendToFile = false,
+                    AppendToFile = true,
                     RollingStyle = log4net.Appender.RollingFileAppender.RollingMode.Size,
                     Layout = layout,
                     Encoding = Encoding.UTF8,
                     StaticLogFileName = true,
                 };
+                fileAppender.ActivateOptions();
+                appender = fileAppender;
+            }
+            layout.ActivateOptions();
+
+            var hierarchy = 
+                (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
+            var rootLogger = hierarchy.Root;
+
+            rootLogger.RemoveAllAppenders();
+            rootLogger.AddAppender(appender);
+
+            if (cfg.Debug)
+            {
+                rootLogger.Level = log4net.Core.Level.All;
+            }
+            else
+            {
+                rootLogger.Level = log4net.Core.Level.Info;
             }
 
-
-            log4net.Config.BasicConfigurator.Configure(appender);
         }
 
 

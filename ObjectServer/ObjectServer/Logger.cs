@@ -40,7 +40,7 @@ namespace ObjectServer
         {
             if (isDebugEnabled)
             {
-                log.Info(dg());
+                log.Debug(dg());
             }
         }
 
