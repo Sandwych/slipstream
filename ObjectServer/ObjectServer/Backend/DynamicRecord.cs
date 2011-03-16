@@ -32,6 +32,11 @@ namespace ObjectServer.Backend
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
+            if (binder == null)
+            {
+                throw new ArgumentNullException("binder");
+            }
+
             return this.columns.TryGetValue(binder.Name, out result);
         }
 

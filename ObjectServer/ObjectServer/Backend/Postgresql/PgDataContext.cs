@@ -65,6 +65,11 @@ namespace ObjectServer.Backend.Postgresql
 
         public override void Create(string dbName)
         {
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
             EnsureConnectionOpened();
 
             //TODO 检查连接
@@ -118,11 +123,21 @@ SELECT DISTINCT COUNT(""table_name"")
 
         public override ITableContext CreateTableContext(string tableName)
         {
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new ArgumentNullException("tableName");
+            }
+
             return new PgTableContext(this, tableName);
         }
 
         public override long NextSerial(string sequenceName)
         {
+            if (string.IsNullOrEmpty(sequenceName))
+            {
+                throw new ArgumentNullException("sequenceName");
+            }
+
             var seqSql = "SELECT nextval(@0)";
             var serial = (long)this.QueryValue(seqSql, sequenceName);
             return serial;

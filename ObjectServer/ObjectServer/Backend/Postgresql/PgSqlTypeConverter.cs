@@ -44,7 +44,10 @@ namespace ObjectServer.Backend
 
         public static string GetSqlType(IMetaField field)
         {
-            Debug.Assert(field != null);
+            if (field == null)
+            {
+                throw new ArgumentNullException("field");
+            }
 
             return mapping[field.Type](field);
         }

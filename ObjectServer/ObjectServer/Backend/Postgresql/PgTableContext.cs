@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Reflection;
+using System.Diagnostics;
 
 #if MONO
 using Mono.Npgsql;
@@ -30,8 +31,16 @@ namespace ObjectServer.Backend.Postgresql
 
         public PgTableContext(IDataContext db, string tableName)
         {
-            this.Name = tableName;
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new ArgumentNullException("tableName");
+            }
 
+            this.Name = tableName;
             this.LoadColumns(db, tableName);
         }
 
@@ -39,6 +48,16 @@ namespace ObjectServer.Backend.Postgresql
 
         public bool TableExists(IDataContext db, string tableName)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+
+            if (tableName == null)
+            {
+                throw new ArgumentNullException("tableName");
+            }
+
             //检查连接
             var sql = @"
     SELECT COALESCE(COUNT(table_name), 0)
@@ -52,6 +71,15 @@ namespace ObjectServer.Backend.Postgresql
 
         public void CreateTable(IDataContext db, string tableName, string label)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new ArgumentNullException("tableName");
+            }
+
             //TODO SQL 注入风险
             var sql = string.Format(
                 @"CREATE TABLE ""{0}"" (id BIGSERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS",
@@ -65,6 +93,15 @@ namespace ObjectServer.Backend.Postgresql
 
         public void AddColumn(IDataContext db, IMetaField field)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (field == null)
+            {
+                throw new ArgumentNullException("field");
+            }
+
             var sqlType = PgSqlTypeConverter.GetSqlType(field);
             var notNull = field.IsRequired ? "NOT NULL" : "";
 
@@ -81,15 +118,32 @@ namespace ObjectServer.Backend.Postgresql
 
         public void DeleteColumn(IDataContext db, string columnName)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+
             var sql = string.Format(
                 "ALTER TABLE \"{0}\" DROP COLUMN \"{1}\"",
                 this.Name, columnName);
-
             db.Execute(columnName);
         }
 
         public void AlterColumnNullable(IDataContext db, string columnName, bool nullable)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+
             var action = nullable ? "DROP NOT NULL" : "SET NOT NULL";
             var sql = string.Format(
                 "ALTER TABLE \"{0}\"ALTER COLUMN \"{1}\" {2}",
@@ -99,6 +153,15 @@ namespace ObjectServer.Backend.Postgresql
 
         public void AlterColumnType(IDataContext db, string columnName, string sqlType)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+
             var sql = string.Format(
                 "ALTER TABLE \"{0}\"ALTER \"{1}\" TYPE {2}",
                 this.Name, columnName, sqlType);
@@ -107,21 +170,42 @@ namespace ObjectServer.Backend.Postgresql
 
         public bool ColumnExists(string columnName)
         {
+            if(string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+
             return this.columns.ContainsKey(columnName);
         }
 
         public IColumnMetadata GetColumn(string columnName)
         {
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+
             return this.columns[columnName];
         }
 
         public IColumnMetadata[] GetAllColumns()
         {
+            Debug.Assert(this.columns != null);
+
             return this.columns.Values.ToArray();
         }
 
         private void LoadColumns(IDataContext db, string tableName)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(tableName))
+            {
+                throw new ArgumentNullException("tableName");
+            }
+
             var sql = @"
 SELECT column_name, data_type, is_nullable
     FROM information_schema.columns
@@ -147,6 +231,15 @@ SELECT column_name, data_type, is_nullable
 
         public void DeleteConstraint(IDataContext db, string constraintName)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(constraintName))
+            {
+                throw new ArgumentNullException("constraintName");
+            }
+
             var sql = string.Format(
                 "alter table \"{0}\" drop constraint \"{1}\"",
                 this.Name, constraintName);
@@ -156,8 +249,20 @@ SELECT column_name, data_type, is_nullable
 
         public void AddFK(IDataContext db, string columnName, string refTable, OnDeleteAction act)
         {
-            var onDelete = onDeleteMapping[act];
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+            if (string.IsNullOrEmpty(refTable))
+            {
+                throw new ArgumentNullException("refTable");
+            }
 
+            var onDelete = onDeleteMapping[act];
             var fkName = this.GenerateFkName(columnName);
             var sql = string.Format(
                 "ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" FOREIGN KEY (\"{2}\") REFERENCES \"{3}\" ON DELETE {4}",
@@ -169,12 +274,30 @@ SELECT column_name, data_type, is_nullable
 
         public void DeleteFK(IDataContext db, string columnName)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+
             var fkName = this.GenerateFkName(columnName);
             this.DeleteConstraint(db, fkName);
         }
 
         public bool FKExists(IDataContext db, string columnName)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+
             var sql = @"
 SELECT COALESCE(COUNT(constraint_name), 0)
     FROM information_schema.key_column_usage 
@@ -186,6 +309,11 @@ SELECT COALESCE(COUNT(constraint_name), 0)
 
         private string GenerateFkName(string columnName)
         {
+            if (string.IsNullOrEmpty(columnName))
+            {
+                throw new ArgumentNullException("columnName");
+            }
+
             return string.Format("{0}_{1}_fkey", this.Name, columnName);
         }
     }

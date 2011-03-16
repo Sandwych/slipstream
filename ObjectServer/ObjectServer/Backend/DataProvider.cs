@@ -16,6 +16,11 @@ namespace ObjectServer.Backend
 
         public static IDataContext CreateDataContext(string dbName)
         {
+            if (dbName == null)
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
             var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
             return dataProvider.CreateDataContext(dbName);
         }
@@ -34,12 +39,22 @@ namespace ObjectServer.Backend
 
         public static void CreateDatabase(string dbName)
         {
+            if (dbName == null)
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
             var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
             dataProvider.CreateDatabase(dbName);
         }
 
         public static void DeleteDatabase(string dbName)
         {
+            if (dbName == null)
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
             var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
             dataProvider.DeleteDatabase(dbName);
         }

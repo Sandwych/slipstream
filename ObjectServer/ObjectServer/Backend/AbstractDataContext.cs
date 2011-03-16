@@ -45,6 +45,11 @@ namespace ObjectServer.Backend
 
         public void Delete(string dbName)
         {
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
             this.EnsureConnectionOpened();
 
             var sql = string.Format(
@@ -67,6 +72,11 @@ namespace ObjectServer.Backend
 
         public virtual object QueryValue(string commandText, params object[] args)
         {
+            if (string.IsNullOrEmpty(commandText))
+            {
+                throw new ArgumentNullException("commandText");
+            }
+
             this.EnsureConnectionOpened();
 
             Logger.Debug(() => "SQL: " + commandText);
@@ -81,6 +91,11 @@ namespace ObjectServer.Backend
 
         public virtual int Execute(string commandText, params object[] args)
         {
+            if (string.IsNullOrEmpty(commandText))
+            {
+                throw new ArgumentNullException("commandText");
+            }
+
             this.EnsureConnectionOpened();
 
             Logger.Debug(() => "SQL: " + commandText);
@@ -96,6 +111,11 @@ namespace ObjectServer.Backend
 
         public virtual DataTable QueryAsDataTable(string commandText, params object[] args)
         {
+            if (string.IsNullOrEmpty(commandText))
+            {
+                throw new ArgumentNullException("commandText");
+            }
+
             this.EnsureConnectionOpened();
 
             Logger.Debug(() => ("SQL: " + commandText));
@@ -134,6 +154,11 @@ namespace ObjectServer.Backend
         public virtual List<Dictionary<string, object>> QueryAsDictionary(
             string commandText, params object[] args)
         {
+            if (string.IsNullOrEmpty(commandText))
+            {
+                throw new ArgumentNullException("commandText");
+            }
+
             EnsureConnectionOpened();
 
             Logger.Debug(() => "SQL: " + commandText);
@@ -166,6 +191,11 @@ namespace ObjectServer.Backend
 
         public virtual List<DynamicRecord> QueryAsDynamic(string commandText, params object[] args)
         {
+            if (string.IsNullOrEmpty(commandText))
+            {
+                throw new ArgumentNullException("commandText");
+            }
+
             var dicts = QueryAsDictionary(commandText, args);
 
             return dicts.Select(r => new DynamicRecord(r)).ToList();
@@ -197,6 +227,8 @@ namespace ObjectServer.Backend
 
         protected DbCommand PrepareCommand(string commandText)
         {
+            Debug.Assert(!string.IsNullOrEmpty(commandText));
+
             var command = this.conn.CreateCommand();
             command.CommandText = commandText;
 
@@ -205,6 +237,8 @@ namespace ObjectServer.Backend
 
         protected static void PrepareCommandParameters(DbCommand command, params object[] args)
         {
+            Debug.Assert(command != null);
+
             if (args == null || args.Length == 0)
             {
                 return;
