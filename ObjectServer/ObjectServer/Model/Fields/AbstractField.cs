@@ -69,13 +69,13 @@ namespace ObjectServer.Model
             get { return this.Getter != null; }
         }
 
-        public FieldGetter Getter
+        public FieldValueGetter Getter
         {
             get;
             set;
         }
 
-        public FieldDefaultProc DefaultProc { get; set; }
+        public FieldDefaultValueGetter DefaultProc { get; set; }
 
         public FieldType Type { get; set; }
 
@@ -202,13 +202,13 @@ namespace ObjectServer.Model
             return this;
         }
 
-        public IMetaField SetGetter(FieldGetter fieldGetter)
+        public IMetaField ValueGetter(FieldValueGetter fieldGetter)
         {
             this.Getter = fieldGetter;
             return this;
         }
 
-        public IMetaField SetDefaultProc(FieldDefaultProc defaultProc)
+        public IMetaField SetDefaultValueGetter(FieldDefaultValueGetter defaultProc)
         {
             this.DefaultProc = defaultProc;
             return this;
@@ -244,7 +244,7 @@ namespace ObjectServer.Model
             return this;
         }
 
-        public IMetaField BeProperty()
+        public IMetaField AsProperty()
         {
             this.IsProperty = true;
             return this;

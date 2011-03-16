@@ -11,8 +11,8 @@ namespace ObjectServer.Model
         string Name { get; }
         string Label { get; }
         bool IsFunctional { get; }
-        FieldGetter Getter { get; set; }
-        FieldDefaultProc DefaultProc { get; set; }
+        FieldValueGetter Getter { get; set; }
+        FieldDefaultValueGetter DefaultProc { get; set; }
         FieldType Type { get; }
         int Size { get; set; }
         bool IsRequired { get; }
@@ -49,14 +49,14 @@ namespace ObjectServer.Model
         IMetaField SetLabel(string label);
         IMetaField Required();
         IMetaField NotRequired();
-        IMetaField SetGetter(FieldGetter fieldGetter);
-        IMetaField SetDefaultProc(FieldDefaultProc defaultProc);
+        IMetaField ValueGetter(FieldValueGetter fieldGetter);
+        IMetaField SetDefaultValueGetter(FieldDefaultValueGetter defaultGetter);
         IMetaField SetSize(int size);
         IMetaField SetHelp(string help);
         IMetaField Readonly();
         IMetaField NotReadonly();
         IMetaField OnDelete(OnDeleteAction act);
-        IMetaField BeProperty();
+        IMetaField AsProperty();
         IMetaField SetOptions(IDictionary<string, string> options);
 
         #endregion

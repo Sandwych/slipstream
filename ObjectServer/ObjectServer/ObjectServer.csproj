@@ -197,7 +197,7 @@
     <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="Model\DomainParser.cs" />
     <Compile Include="Model\NameGetter.cs" />
-    <Compile Include="Model\Fields\FieldDefaultProc.cs" />
+    <Compile Include="Model\Fields\FieldDefaultValueGetter.cs" />
     <Compile Include="Model\Fields\ManyToOneField.cs" />
     <Compile Include="Model\Fields\OneToManyField.cs" />
     <Compile Include="Model\Fields\ScalarField.cs" />
@@ -275,7 +275,7 @@
     <Compile Include="Utility\Sha1.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
-    <Compile Include="Model\Fields\FieldGetter.cs" />
+    <Compile Include="Model\Fields\FieldValueGetter.cs" />
     <Compile Include="Model\Fields\IMetaField.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />
     <Compile Include="Module\ModuleCollection.cs" />

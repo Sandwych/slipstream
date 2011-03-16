@@ -20,8 +20,8 @@ namespace ObjectServer.Core
             Fields.ManyToOne("parent", "core.menu").SetLabel("Parent Menu").NotRequired();
             Fields.Chars("name").SetLabel("Name").Required();
             Fields.Integer("ordinal").SetLabel("Ordinal Number")
-                .Required().SetDefaultProc(arg => 0);
-            Fields.Boolean("active").SetLabel("Active").Required().SetDefaultProc(arg => true);
+                .Required().SetDefaultValueGetter(arg => 0);
+            Fields.Boolean("active").SetLabel("Active").Required().SetDefaultValueGetter(arg => true);
         }
 
     }

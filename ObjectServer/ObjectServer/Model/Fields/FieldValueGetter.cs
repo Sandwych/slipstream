@@ -12,5 +12,5 @@ namespace ObjectServer.Model
     /// <param name="ids">数据库记录 IDs</param>
     /// <returns>返回一个字典，对应 ids 参数给予的各个记录的字段值下。</returns>
     public delegate Dictionary<long, object>
-        FieldGetter(IResourceScope session, IEnumerable<long> ids);
+        FieldValueGetter(IResourceScope session, IEnumerable<long> ids);
 }
