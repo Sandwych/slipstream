@@ -17,9 +17,9 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override Dictionary<string, object>[] ReadInternal(
-                 IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> requiredFields)
+                 IResourceScope scope, IEnumerable<long> ids, IEnumerable<string> requiredFields)
         {
-            if (ctx == null)
+            if (scope == null)
             {
                 throw new ArgumentNullException("ctx");
             }
@@ -65,17 +65,22 @@ namespace ObjectServer.Model
                 ids.ToCommaList());
 
             //先查找表里的简单字段数据
-            var records = ctx.DatabaseProfile.DataContext.QueryAsDictionary(sql);
+            var records = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql);
 
-            this.ReadBaseModels(ctx, allFields, records);
+            this.ReadBaseModels(scope, allFields, records);
 
-            this.PostProcessFieldValues(ctx, allFields, records);
+            this.PostProcessFieldValues(scope, allFields, records);
 
             return records.ToArray();
         }
 
-        private void PostProcessFieldValues(IResourceScope ctx, IList<string> allFields, List<Dictionary<string, object>> records)
+        private void PostProcessFieldValues(
+            IResourceScope scope, IList<string> allFields, List<Dictionary<string, object>> records)
         {
+            Debug.Assert(scope != null);
+            Debug.Assert(allFields != null);
+            Debug.Assert(records != null);
+
             foreach (var fieldName in allFields)
             {
                 var f = this.Fields[fieldName];
@@ -84,7 +89,7 @@ namespace ObjectServer.Model
                     continue;
                 }
 
-                var fieldValues = f.GetFieldValues(ctx, records);
+                var fieldValues = f.GetFieldValues(scope, records);
                 foreach (var record in records)
                 {
                     var id = (long)record["id"];
@@ -93,15 +98,20 @@ namespace ObjectServer.Model
             }
         }
 
-        private void ReadBaseModels(IResourceScope ctx, IList<string> allFields, List<Dictionary<string, object>> records)
+        private void ReadBaseModels(
+            IResourceScope scope, IList<string> allFields, List<Dictionary<string, object>> records)
         {
+            Debug.Assert(scope != null);
+            Debug.Assert(allFields != null);
+            Debug.Assert(records != null);
+
             //本尊及各个关联到基类模型的字段已经读出来了，现在读各个基类模型
             foreach (var bm in this.Inheritances)
             {
-                var baseModel = (IMetaModel)ctx.DatabaseProfile.GetResource(bm.BaseModel);
+                var baseModel = (IMetaModel)scope.DatabaseProfile.GetResource(bm.BaseModel);
                 var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys);
                 var baseIds = records.Select(r => (long)r[bm.RelatedField]);
-                var baseRecords = baseModel.ReadInternal(ctx, baseIds, baseFieldsToRead);
+                var baseRecords = baseModel.ReadInternal(scope, baseIds, baseFieldsToRead);
                 //合并到结果中
                 for (int i = 0; i < baseRecords.Length; i++)
                 {
@@ -116,5 +126,6 @@ namespace ObjectServer.Model
             }
         }
 
-    }
+
+    } //class
 }

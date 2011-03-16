@@ -128,7 +128,7 @@ namespace ObjectServer.Model
             {
 
                 Fields.DateTime(CreatedTimeFieldName).SetLabel("Created")
-                    .NotRequired().DefaultValueGetter(ctx => DateTime.Now);
+                    .NotRequired().DefaultValueGetter(ctx => DateTime.Now).Readonly();
 
                 Fields.DateTime(ModifiedTimeFieldName).SetLabel("Last Modified")
                     .NotRequired().DefaultValueGetter(ctx => DBNull.Value);
