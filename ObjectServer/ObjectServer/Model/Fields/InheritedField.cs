@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal sealed class InheritedMetaField : AbstractField
+    internal sealed class InheritedField : AbstractField
     {
         private IMetaField inheritedField;
 
-        public InheritedMetaField(
+        public InheritedField(
             IMetaModel model, IMetaField inheritedField)
             : base(model, inheritedField.Name, inheritedField.Type)
         {

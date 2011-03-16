@@ -6,25 +6,10 @@ using System.Dynamic;
 
 namespace ObjectServer.Model
 {
-    public interface IMetaModel : IResource
+    public interface IMetaModel : IResource, IModelDescriptor
     {
-        ICollection<InheritanceInfo> Inheritances { get; }
-        IMetaFieldCollection Fields { get; }
-
         string TableName { get; }
-        bool Hierarchy { get; }
-        bool CanCreate { get; }
-        bool CanRead { get; }
-        bool CanWrite { get; }
-        bool CanDelete { get; }
-
-        bool LogCreation { get; }
-        bool LogWriting { get; }
-
         NameGetter NameGetter { get; }
-
-        bool AutoMigration { get; }
-
         IMetaField[] GetAllStorableFields();
 
         long[] SearchInternal(IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0);

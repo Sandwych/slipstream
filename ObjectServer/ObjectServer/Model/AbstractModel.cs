@@ -69,7 +69,7 @@ namespace ObjectServer.Model
                 {
                     if (!this.Fields.ContainsKey(baseField.Key))
                     {
-                        var imf = new InheritedMetaField(this, baseField.Value);
+                        var imf = new InheritedField(this, baseField.Value);
                         this.Fields.Add(baseField.Key, imf);
                     }
                 }
