@@ -50,7 +50,7 @@ namespace ObjectServer.Test
             Fields.Integer("field2").SetLabel("数2");
             Fields.Integer("field3").SetLabel("数3").ValueGetter(this.GetField3);
             Fields.BigInteger("big_int_field").SetLabel("Bit Int Field");
-            Fields.Boolean("boolean_field").SetLabel("Boolean Field").Required().SetDefaultValueGetter(s => true);
+            Fields.Boolean("boolean_field").SetLabel("Boolean Field").Required().SetDefaultProc(s => true);
             Fields.Text("text_field").SetLabel("Text Field");
             Fields.Float("float_field").SetLabel("Float Field");
             Fields.Money("money_field").SetLabel("Money Field");
@@ -108,7 +108,7 @@ namespace ObjectServer.Test
             : base("test.product")
         {
             Fields.Chars("name").SetLabel("Name");
-            Fields.Float("quantity").AsProperty().SetLabel("Quantity");
+            Fields.Float("quantity").BeProperty().SetLabel("Quantity");
         }
     }
 

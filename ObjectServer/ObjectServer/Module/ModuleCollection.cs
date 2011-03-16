@@ -7,8 +7,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-using Newtonsoft.Json;
-
 using ObjectServer.Runtime;
 using ObjectServer.Backend;
 using ObjectServer.Core;
@@ -20,7 +18,6 @@ namespace ObjectServer
     /// TODO: 线程安全
     /// </summary>
     [Serializable]
-    [JsonObject("module")]
     public sealed class ModuleCollection : IGlobalObject
     {
 

@@ -127,17 +127,17 @@ namespace ObjectServer.Model
             {
 
                 Fields.DateTime(CreatedTimeFieldName).SetLabel("Created")
-                    .NotRequired().SetDefaultValueGetter(ctx => DateTime.Now);
+                    .NotRequired().SetDefaultProc(ctx => DateTime.Now);
 
                 Fields.DateTime(ModifiedTimeFieldName).SetLabel("Last Modified")
-                    .NotRequired().SetDefaultValueGetter(ctx => DBNull.Value);
+                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+                    .SetDefaultProc(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
                 Fields.ManyToOne(ModifiedUserFieldName, "core.user").SetLabel("Creator")
-                    .NotRequired().SetDefaultValueGetter(ctx => DBNull.Value);
+                    .NotRequired().SetDefaultProc(ctx => DBNull.Value);
             }
         }
 

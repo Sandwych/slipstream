@@ -75,7 +75,7 @@ namespace ObjectServer.Model
             set;
         }
 
-        public FieldDefaultValueGetter DefaultProc { get; set; }
+        public FieldDefaultProc DefaultProc { get; set; }
 
         public FieldType Type { get; set; }
 
@@ -208,7 +208,7 @@ namespace ObjectServer.Model
             return this;
         }
 
-        public IMetaField SetDefaultValueGetter(FieldDefaultValueGetter defaultProc)
+        public IMetaField SetDefaultProc(FieldDefaultProc defaultProc)
         {
             this.DefaultProc = defaultProc;
             return this;
@@ -244,7 +244,7 @@ namespace ObjectServer.Model
             return this;
         }
 
-        public IMetaField AsProperty()
+        public IMetaField BeProperty()
         {
             this.IsProperty = true;
             return this;

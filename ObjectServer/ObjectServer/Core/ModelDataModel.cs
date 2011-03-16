@@ -5,8 +5,6 @@ using System.Text;
 using System.Data;
 using System.IO;
 
-using Newtonsoft.Json;
-
 using ObjectServer.Model;
 using ObjectServer.Runtime;
 using ObjectServer.Backend;
