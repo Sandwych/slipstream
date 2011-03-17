@@ -156,6 +156,7 @@
     <Compile Include="Model\AbstractTableModelReadImpl.cs" />
     <Compile Include="Model\AbstractTableModelWriteImpl.cs" />
     <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
+    <Compile Include="Model\AbstractTableModelDeleteImpl.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
     <Compile Include="Model\Fields\InheritedField.cs" />
     <Compile Include="Model\IModelDescriptor.cs" />

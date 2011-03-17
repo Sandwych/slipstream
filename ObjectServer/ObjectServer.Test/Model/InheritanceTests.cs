@@ -77,6 +77,22 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual("admin_user_info", adminUser.admin_info);
         }
 
+
+        [Test]
+        public void Test_multitable_deletion()
+        {
+            var adminUserModel = (IMetaModel)this.ResourceScope
+                .DatabaseProfile.GetResource("test.admin_user");
+            this.ClearMultiTable();
+            var id = this.AddMultiTableTestData();
+            Assert.IsTrue(id > 0);
+            Assert.DoesNotThrow(() =>
+            {
+                adminUserModel.DeleteInternal(this.ResourceScope, new long[] { id });
+            });
+
+        }
+
         [Test]
         public void Test_multitable_writing()
         {

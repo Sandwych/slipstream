@@ -178,30 +178,6 @@ namespace ObjectServer.Model
             }
         }
 
-        public override void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids)
-        {
-            if (!this.CanDelete)
-            {
-                throw new NotSupportedException();
-            }
-
-            if (ids == null || ids.Count() == 0)
-            {
-                throw new ArgumentNullException("ids");
-            }
-
-            var sql = string.Format(
-                "DELETE FROM \"{0}\" WHERE \"id\" IN ({1});",
-                this.TableName, ids.ToCommaList());
-
-            var rowCount = ctx.DatabaseProfile.DataContext.Execute(sql);
-            if (rowCount != ids.Count())
-            {
-                throw new DataException();
-            }
-        }
-
-
         #region Service Methods
 
         [ServiceMethod]
