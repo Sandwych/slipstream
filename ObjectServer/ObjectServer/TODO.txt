@@ -32,11 +32,11 @@
 
 * IMetaField 缺少 on delete（完成）
 
-* 重构 MetaField 的 Fluent 接口（进行中）
+* 重构 MetaField 的 Fluent 接口（完成）
 
 * 客户端远程获取进度的
 
-* Many2one 可空的字段有问题
+* Many2one 可空的字段有问题（完成）
 
 * 导入数据检测 key 是否已经存在还有问题，会重复创建 ModelData（完成）
 

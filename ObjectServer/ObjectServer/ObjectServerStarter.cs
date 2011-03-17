@@ -132,7 +132,7 @@ namespace ObjectServer
             ConfigurateLog4net(cfg);
 
             Logger.Info(() => "Initializing Session Storage Subsystem...");
-            s_instance.sessionStore.Initialize(cfg);
+            s_instance.sessionStore.Initialize(cfg.SessionProvider);
 
             //查找所有模块并加载模块元信息
             Logger.Info(() => "Initializing Module Management Subsystem...");

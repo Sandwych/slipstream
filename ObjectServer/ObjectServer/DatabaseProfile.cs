@@ -92,7 +92,6 @@ namespace ObjectServer
                 {
                     //处理单表继承（扩展）
                     extendedRes.MergeFrom(res);                 
-
                 }
                 else
                 {

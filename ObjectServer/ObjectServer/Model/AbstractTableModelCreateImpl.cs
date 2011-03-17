@@ -16,23 +16,22 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        public override long CreateInternal(IResourceScope scope, IDictionary<string, object> propertyBag)
+        public override long CreateInternal(IResourceScope scope, IDictionary<string, object> userRecord)
         {
             if (!this.CanCreate)
             {
                 throw new NotSupportedException();
             }
 
-            if (propertyBag.ContainsKey("id"))
+            if (userRecord.ContainsKey("id"))
             {
                 throw new ArgumentException("Unable to set the 'id' field", "propertyBag");
             }
 
-            //TODO 这里改成定义的列插入，而不是用户提供的列            
-            var values = new Dictionary<string, object>(propertyBag);
+            var record = ClearUserRecord(userRecord);
 
             //处理用户没有给的默认值
-            this.AddDefaultValues(scope, values);
+            this.AddDefaultValues(scope, record);
 
             //插入被继承的表记录
             foreach (var i in this.Inheritances)
@@ -42,22 +41,22 @@ namespace ObjectServer.Model
 
                 foreach (var f in baseModel.Fields)
                 {
-                    if (values.ContainsKey(f.Key))
+                    if (record.ContainsKey(f.Key))
                     {
-                        baseRecord.Add(f.Key, values[f.Key]);
-                        values.Remove(f.Key);
+                        baseRecord.Add(f.Key, record[f.Key]);
+                        record.Remove(f.Key);
                     }
                 }
 
                 var baseId = baseModel.CreateInternal(scope, baseRecord);
-                values[i.RelatedField] = baseId;
+                record[i.RelatedField] = baseId;
             }
 
 
             //转换用户给的字段值到数据库原始类型
-            this.ConvertFieldToColumn(scope, values, values.Keys.ToArray());
+            this.ConvertFieldToColumn(scope, record, record.Keys.ToArray());
 
-            var id = DoCreate(scope, values);
+            var id = DoCreate(scope, record);
 
             if (this.LogCreation)
             {

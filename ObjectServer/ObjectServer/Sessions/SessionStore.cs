@@ -6,21 +6,20 @@ using System.Diagnostics;
 
 namespace ObjectServer
 {
-    public sealed class SessionStore : IGlobalObject
+    public sealed class SessionStore
     {
         private ISessionStoreProvider provider;
 
-
-        #region IGlobalObject 成员
-
-        public void Initialize(Config cfg)
+        public void Initialize(string sessionProviderType)
         {
-            var t = Type.GetType(cfg.SessionProvider);
+            if (string.IsNullOrEmpty(sessionProviderType))
+            {
+                throw new ArgumentNullException("sessionProviderType");
+            }
+
+            var t = Type.GetType(sessionProviderType);
             this.provider = (ISessionStoreProvider)Activator.CreateInstance(t);
         }
-
-        #endregion
-
 
         public Session GetSession(Guid sessionId)
         {

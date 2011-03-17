@@ -122,14 +122,12 @@ namespace ObjectServer.Model
 
         private void RegisterInternalServiceMethods()
         {
-
             var selfType = typeof(AbstractTableModel);
             this.RegisterServiceMethod(selfType.GetMethod("Search"));
             this.RegisterServiceMethod(selfType.GetMethod("Create"));
             this.RegisterServiceMethod(selfType.GetMethod("Read"));
             this.RegisterServiceMethod(selfType.GetMethod("Write"));
             this.RegisterServiceMethod(selfType.GetMethod("Delete"));
-
         }
 
         private void AddInternalFields()
