@@ -30,7 +30,6 @@ namespace ObjectServer.Model
             }
 
             //继承的删除策略很简单：先删除本尊，再删除各个基类表
-
             List<Dictionary<string, object>> existedRecords = null;
             if (this.Inheritances.Count > 0)
             {
@@ -42,6 +41,11 @@ namespace ObjectServer.Model
             }
 
             DoDelete(scope, ids, this);
+            this.ProcessBaseModelsDeletion(scope, existedRecords);
+        }
+
+        private void ProcessBaseModelsDeletion(IResourceScope scope, List<Dictionary<string, object>> existedRecords)
+        {
 
             if (this.Inheritances.Count > 0)
             {

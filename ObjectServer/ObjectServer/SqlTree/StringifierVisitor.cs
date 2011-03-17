@@ -18,9 +18,24 @@ namespace ObjectServer.SqlTree
 
         public override void VisitOn(IdentifierExpression node)
         {
-            this.sqlBuilder.Append(" \"");
-            this.sqlBuilder.Append(node.Id);
-            this.sqlBuilder.Append("\" ");
+            var parts = node.Id.Split('.');
+
+            var flag = true;
+            foreach (var p in parts)
+            {
+                if (flag)
+                {
+                    flag = false;
+                }
+                else
+                {
+                    this.sqlBuilder.Append(".");
+                }
+
+                this.sqlBuilder.Append('\"');
+                this.sqlBuilder.Append(p);
+                this.sqlBuilder.Append('\"');
+            }
         }
 
 

@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override void WriteInternal(
-            IResourceScope ctx, long id, IDictionary<string, object> userRecord)
+            IResourceScope scope, long id, IDictionary<string, object> userRecord)
         {
             if (!this.CanWrite)
             {
@@ -29,11 +29,14 @@ namespace ObjectServer.Model
             //处理版本字段与基类继承
             if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0)
             {
-                var existedRecord = this.ReadInternal(ctx, new long[] { id })[0];
+                var sql1 = string.Format(
+                    "SELECT * FROM \"{0}\" WHERE \"id\" = {1}",
+                    this.TableName, id);
+                var existedRecord = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql1)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
-                this.PrewriteBaseModels(ctx, record, existedRecord);
+                this.PrewriteBaseModels(scope, record, existedRecord);
             }
 
             //处理最近更新用户与最近更新时间字段            
@@ -43,14 +46,14 @@ namespace ObjectServer.Model
             }
             if (this.ContainsField(ModifiedUserFieldName))
             {
-                record[ModifiedUserFieldName] = ctx.Session.UserId;
+                record[ModifiedUserFieldName] = scope.Session.UserId;
             }
 
             var allFields = record.Keys; //记录中的所有字段
             //所有可更新的字段
             var updatableColumnFields = allFields.Where(
                 f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly).ToArray();
-            this.ConvertFieldToColumn(ctx, record, updatableColumnFields);
+            this.ConvertFieldToColumn(scope, record, updatableColumnFields);
 
 
             //检查字段
@@ -83,7 +86,7 @@ namespace ObjectServer.Model
 
             var sql = updateStatement.ToString();
 
-            var rowsAffected = ctx.DatabaseProfile.DataContext.Execute(sql, args.ToArray());
+            var rowsAffected = scope.DatabaseProfile.DataContext.Execute(sql, args.ToArray());
 
             //检查更新结果
             if (rowsAffected != 1)
@@ -95,7 +98,7 @@ namespace ObjectServer.Model
 
             if (this.LogWriting)
             {
-                AuditLog(ctx, (long)id, this.Label + " updated");
+                AuditLog(scope, (long)id, this.Label + " updated");
             }
         }
 
@@ -110,7 +113,7 @@ namespace ObjectServer.Model
             foreach (var inheritInfo in this.Inheritances)
             {
                 var baseModel = (IMetaModel)ctx.DatabaseProfile.GetResource(inheritInfo.BaseModel);
-                var baseId = (long)((object[])existedRecord[inheritInfo.RelatedField])[0];
+                var baseId = (long)existedRecord[inheritInfo.RelatedField];
 
                 //看用户提供的记录的字段是否涉及到基类
                 var baseFields = baseModel.Fields.Keys.Intersect(record.Keys);

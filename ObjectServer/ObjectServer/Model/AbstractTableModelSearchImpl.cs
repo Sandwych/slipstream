@@ -31,14 +31,13 @@ namespace ObjectServer.Model
                 domainInternal = new object[][] { };
             }
 
+            var selfFromExp = new AliasExpression(this.TableName);
+
             var fields = domainInternal.Select(d => (string)((object[])d)[0]);
-            var parser = new DomainParser(this, domain);
-            var columnExps = new AliasExpressionList(new string[] { "id" });
-            var whereExp = parser.ToExpressionTree();
-            var select = new SelectStatement(
-                columnExps,
-                new FromClause(new string[] { this.TableName }),
-                new WhereClause(whereExp));
+
+
+            var columnExps = new AliasExpressionList(new string[] { this.TableName + ".id" });
+            var select = new SelectStatement(columnExps, new FromClause(selfFromExp));
 
             if (offset > 0)
             {
@@ -50,10 +49,54 @@ namespace ObjectServer.Model
                 select.LimitClause = new LimitClause(limit);
             }
 
-            //TODO: 这里检查权限等，处理查询非表中字段等
+            var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
 
+
+            //TODO: 这里检查权限等，处理查询非表中字段等
             //TODO: 自动添加 active 字段
-         
+            //继承查询的策略很简单，直接把基类表连接到查询里
+            //如果有重复的字段，就以子类的字段为准
+            if (this.Inheritances.Count > 0)
+            {
+                foreach (var d in domainInternal)
+                {
+                    string tableName = null;
+                    var e = (object[])d;
+                    var fieldName = (string)e[0];
+                    var metaField = this.Fields[fieldName];
+
+                    if (SystemReadonlyFields.Contains(fieldName))
+                    {
+                        tableName = this.TableName;
+                    }
+                    else
+                    {
+                        var tableNames =
+                            from i in this.Inheritances
+                            let bm = (AbstractTableModel)ctx.DatabaseProfile
+                                .GetResource(i.BaseModel)
+                            where bm.Fields.ContainsKey(fieldName)
+                            select bm.TableName;
+                        tableName = tableNames.Single();
+                    }
+
+                    e[0] = tableName + '.' + fieldName;
+                }
+
+                foreach (var inheritInfo in this.Inheritances)
+                {
+                    var baseModel = (AbstractTableModel)ctx.DatabaseProfile
+                        .GetResource(inheritInfo.BaseModel);
+                    var baseTableExp = new AliasExpression(baseModel.TableName);
+                    select.FromClause.ExpressionCollection.Expressions.Add(baseTableExp);
+                }
+            }
+
+            var parser = new DomainParser(this, domainInternal);
+            var whereExp = parser.ToExpressionTree();
+
+            select.WhereClause = new WhereClause(whereExp);
+
             var sv = new StringifierVisitor();
             select.Traverse(sv);
             var sql = sv.ToString();

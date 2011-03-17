@@ -117,6 +117,25 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual("changed_admin_info", (string)adminUserRecord["admin_info"]);
         }
 
+        [Test]
+        public void Test_multitable_searching()
+        {
+            var adminUserModel = (IMetaModel)this.ResourceScope
+                .DatabaseProfile.GetResource("test.admin_user");
+            this.ClearMultiTable();
+            var id = this.AddMultiTableTestData();
+            Assert.IsTrue(id > 0);
+
+            var domain = new object[][]
+            { 
+                new object[] { "name", "=", "admin_user_name" } 
+            };
+
+            var ids = adminUserModel.SearchInternal(this.ResourceScope, domain);
+
+            Assert.AreEqual(1, ids.Length);
+        }
+
         private long AddMultiTableTestData()
         {
             dynamic adminUserRecord = new ExpandoObject();
