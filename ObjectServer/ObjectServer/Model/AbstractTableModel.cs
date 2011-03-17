@@ -20,6 +20,19 @@ namespace ObjectServer.Model
         public const string LeftFieldName = "_left";
         public const string RightFieldName = "_right";
 
+        /// <summary>
+        /// 这些字段是由 ORM 子系统处理的，客户端不能操作
+        /// </summary>
+        public static readonly string[] SystemReadonlyFields = new string[]
+        {
+            IdFieldName,
+            CreatedTimeFieldName,
+            CreatedUserFieldName,
+            ModifiedTimeFieldName,
+            ModifiedUserFieldName,
+            VersionFieldName,
+        };
+
         private string tableName = null;
 
         public override bool CanCreate { get; protected set; }
@@ -298,6 +311,15 @@ namespace ObjectServer.Model
             }
 
             return sb.ToString();
+        }
+
+
+        private static Dictionary<string, object> ClearUserRecord(IDictionary<string, object> record)
+        {
+            Debug.Assert(record!= null);
+
+            return record.Where(p => !SystemReadonlyFields.Contains(p.Key))
+                .ToDictionary(p => p.Key, p => p.Value);
         }
 
     }

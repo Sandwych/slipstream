@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override Dictionary<string, object>[] ReadInternal(
-                 IResourceScope scope, IEnumerable<long> ids, IEnumerable<string> requiredFields)
+                 IResourceScope scope, IEnumerable<long> ids, IEnumerable<string> requiredFields = null)
         {
             if (scope == null)
             {
