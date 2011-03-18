@@ -18,7 +18,7 @@ namespace ObjectServer.Model
     {
 
         public override long[] SearchInternal(
-            IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
+            IResourceScope ctx, object[][] domain = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {

@@ -182,7 +182,7 @@ namespace ObjectServer.Model
         public static long[] Search(
             dynamic model, IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
         {
-            return model.SearchInternal(ctx, domain, offset, limit);
+            return model.SearchInternal(ctx, (object[][])domain, offset, limit);
         }
 
         [ServiceMethod]
