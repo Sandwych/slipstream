@@ -59,10 +59,17 @@ namespace ObjectServer.Model
 
             columnFields = columnFields.Union(this.Inheritances.Select(i => i.RelatedField));
 
-            var sql = string.Format("SELECT {0} FROM \"{1}\" WHERE \"id\" IN ({2})",
-                ToColumnList(columnFields),
-                this.TableName,
-                ids.ToCommaList());
+            var whereExp = new BinaryExpression(
+                new IdentifierExpression("id"),
+                ExpressionOperator.InOperator,
+                new ExpressionGroup(ids));
+
+            var select = new SqlTree.SelectStatement();
+            select.Expression = new AliasExpressionList(columnFields);
+            select.FromClause = new FromClause(new string[] { this.TableName });
+            select.WhereClause = new WhereClause(whereExp);
+
+            var sql = select.ToString();
 
             //先查找表里的简单字段数据
             var records = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql);

@@ -11,7 +11,6 @@ namespace ObjectServer.SqlTree
         public FromClause FromClause { get; set; }
         public WhereClause WhereClause { get; set; }
         public JoinClause JoinClause { get; set; }
-        public AliasExpressionList ColumnList { get; set; }
         public OrderbyClause OrderByClause { get; set; }
         public OffsetClause OffsetClause { get; set; }
         public LimitClause LimitClause { get; set; }

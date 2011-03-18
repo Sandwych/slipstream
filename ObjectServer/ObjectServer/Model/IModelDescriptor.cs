@@ -7,8 +7,10 @@ namespace ObjectServer.Model
 {
     public interface IModelDescriptor
     {
+        NameGetter NameGetter { get; }
         ICollection<InheritanceInfo> Inheritances { get; }
         IMetaFieldCollection Fields { get; }
+        string TableName { get; }
 
         bool AutoMigration { get; }
 

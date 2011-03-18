@@ -18,7 +18,7 @@ namespace ObjectServer
             this.LogPath = null;
             this.LogLevel = "info";
             this.SessionTimeout = new TimeSpan(0, 20, 0);
-            this.SessionProvider = "ObjectServer.StaticSessionStoreProvider, ObjectServer.Framework";
+            this.SessionProvider = "ObjectServer.StaticSessionStoreProvider, ObjectServer.Core";
 
         }
 

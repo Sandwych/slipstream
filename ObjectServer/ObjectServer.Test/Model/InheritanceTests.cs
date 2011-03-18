@@ -43,10 +43,14 @@ namespace ObjectServer.Model.Test
 
             var adminUserModel = (IMetaModel)this.ResourceScope
                 .DatabaseProfile.GetResource("test.admin_user");
+            long id = -1;
             Assert.DoesNotThrow(() =>
-                {
-                    adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
-                });
+            {
+                id = adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
+            });
+            var ids = adminUserModel.SearchInternal(this.ResourceScope);
+            Assert.AreEqual(1, ids.Length);
+            Assert.AreEqual(id, ids[0]);
         }
 
         [Test]
@@ -56,7 +60,7 @@ namespace ObjectServer.Model.Test
                 .DatabaseProfile.GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
-            Assert.IsTrue(id > 0);
+            Assert.That(id > 0);
 
             var adminUser = adminUserModel.ReadInternal(this.ResourceScope, new long[] { id })[0];
             Assert.AreEqual("admin_user_name", (string)adminUser["name"]);
@@ -70,7 +74,7 @@ namespace ObjectServer.Model.Test
                 .DatabaseProfile.GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
-            Assert.IsTrue(id > 0);
+            Assert.That(id > 0);
 
             var adminUser = adminUserModel.Browse(this.ResourceScope, id);
             Assert.AreEqual("admin_user_name", adminUser.name);
@@ -85,7 +89,7 @@ namespace ObjectServer.Model.Test
                 .DatabaseProfile.GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
-            Assert.IsTrue(id > 0);
+            Assert.That(id > 0);
             Assert.DoesNotThrow(() =>
             {
                 adminUserModel.DeleteInternal(this.ResourceScope, new long[] { id });
@@ -100,7 +104,7 @@ namespace ObjectServer.Model.Test
                 .DatabaseProfile.GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
-            Assert.IsTrue(id > 0);
+            Assert.That(id > 0);
 
             dynamic fieldValues = new ExpandoObject();
             fieldValues.name = "changed_base_name";
@@ -124,7 +128,7 @@ namespace ObjectServer.Model.Test
                 .DatabaseProfile.GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
-            Assert.IsTrue(id > 0);
+            Assert.That(id > 0);
 
             var domain = new object[][]
             { 

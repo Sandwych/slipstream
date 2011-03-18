@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ObjectServer</RootNamespace>
-    <AssemblyName>ObjectServer.Framework</AssemblyName>
+    <AssemblyName>ObjectServer.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -158,6 +158,8 @@
     <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
     <Compile Include="Model\AbstractTableModelDeleteImpl.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
+    <Compile Include="Model\Fields\IMetaField.cs" />
+    <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\InheritedField.cs" />
     <Compile Include="Model\IModelDescriptor.cs" />
     <Compile Include="Model\InheritanceCollection.cs" />
@@ -186,7 +188,6 @@
     <Compile Include="IResourceContainer.cs" />
     <Compile Include="Model\BrowsableRecord.cs" />
     <Compile Include="Model\XmlDataImporter.cs" />
-    <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
     <Compile Include="Model\Fields\MetaFieldCollection.cs" />
     <Compile Include="Model\Fields\ReferenceField.cs" />
     <Compile Include="Model\Fields\EnumerationField.cs" />
@@ -279,7 +280,6 @@
     <Compile Include="Utility\TopologicalSorter.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />
-    <Compile Include="Model\Fields\IMetaField.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />
     <Compile Include="Module\ModuleCollection.cs" />
     <Compile Include="ConfigSectionHandler.cs" />
