@@ -8,6 +8,7 @@ CREATE TABLE core_model (
     module VARCHAR NOT NULL,
     PRIMARY KEY(id)
 );
+CREATE UNIQUE INDEX index_core_model_name ON core_model ("name");
 
 CREATE TABLE core_field (
     id BIGSERIAL NOT NULL,
@@ -21,6 +22,7 @@ CREATE TABLE core_field (
     PRIMARY KEY(id),
     FOREIGN KEY(model) REFERENCES core_model(id) ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX index_core_field_name ON core_field ("name");
 
 CREATE TABLE core_module (
     id BIGSERIAL NOT NULL,  
@@ -39,6 +41,7 @@ CREATE TABLE core_module (
     PRIMARY KEY(id)
 );
 ALTER TABLE core_module ADD CONSTRAINT name_uniq UNIQUE (name);
+CREATE UNIQUE INDEX index_core_module_name ON core_module ("name");
 
 
 CREATE TABLE core_user (

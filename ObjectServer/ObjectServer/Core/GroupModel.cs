@@ -21,6 +21,8 @@ namespace ObjectServer.Core
 
             Fields.Chars("name").SetLabel("Name").SetSize(128).Required();
             Fields.ManyToMany("users", "core.user_group", "gid", "uid").SetLabel("Users").Required();
+            Fields.OneToMany("model_access_entries", "core.model_access", "group")
+                .SetLabel("Model Access Control");
         }
 
     }

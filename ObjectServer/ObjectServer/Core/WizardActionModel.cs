@@ -7,20 +7,18 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Core
 {
-
     [Resource]
-    public sealed class ViewActionModel : AbstractTableModel
+    public sealed class WizardActionModel : AbstractTableModel
     {
 
-        public ViewActionModel()
-            : base("core.action_view")
+        public WizardActionModel()
+            : base("core.action_wizard")
         {
             Inherit("core.action", "action");
             Fields.ManyToOne("action", "core.action")
                 .SetLabel("Base Action").Required().OnDelete(OnDeleteAction.Cascade);
-            Fields.ManyToOne("primary_view", "core.view").SetLabel("Primary View").Required();           
-
         }
+
 
     }
 }
