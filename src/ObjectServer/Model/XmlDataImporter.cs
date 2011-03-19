@@ -12,13 +12,11 @@ namespace ObjectServer.Model
     public sealed class XmlDataImporter
     {
         private IResourceScope context;
-        private ModelDataModel modelDataModel;
         private string currentModule;
 
         public XmlDataImporter(IResourceScope ctx, string currentModule)
         {
             this.context = ctx;
-            this.modelDataModel = (ModelDataModel)ctx.GetResource(ModelDataModel.ModelName);
             this.currentModule = currentModule;
         }
 
@@ -97,13 +95,15 @@ namespace ObjectServer.Model
             this.ImportRecord(noUpdate, model, record, key);
         }
 
-        private void ImportRecord(bool noUpdate, IMetaModel model, Dictionary<string, object> record, string key = null)
+        private void ImportRecord(
+            bool noUpdate, IMetaModel model, Dictionary<string, object> record, string key = null)
         {
             //查找 key 指定的记录看是否存在
             long? existedId = null;
             if (!string.IsNullOrEmpty(key))
             {
-                existedId = this.modelDataModel.TryLookupResourceId(this.context, model.Name, key);
+                existedId = ModelDataModel.TryLookupResourceId(
+                    this.context.DatabaseProfile.DataContext, model.Name, key);
             }
 
             if (existedId == null) // Create
@@ -111,7 +111,8 @@ namespace ObjectServer.Model
                 existedId = (long)model.CreateInternal(this.context, record);
                 if (!string.IsNullOrEmpty(key))
                 {
-                    modelDataModel.Create(this.context, this.currentModule, model.Name, key, existedId.Value);
+                    ModelDataModel.Create(
+                        this.context.DatabaseProfile.DataContext, this.currentModule, model.Name, key, existedId.Value);
                 }
             }
             else if (existedId != null && !noUpdate) //Update 
@@ -125,7 +126,8 @@ namespace ObjectServer.Model
                 }
 
                 model.WriteInternal(this.context, existedId.Value, record);
-                modelDataModel.UpdateResourceId(this.context, model.Name, key, existedId.Value);
+                ModelDataModel.UpdateResourceId(
+                    this.context.DatabaseProfile.DataContext, model.Name, key, existedId.Value);
             }
             else
             {
@@ -147,7 +149,7 @@ namespace ObjectServer.Model
         private void ReadFieldElement(
             XmlReader reader, dynamic model, Dictionary<string, object> record)
         {
-            var refKey = reader["ref-key"];
+            var refKey = reader["ref-key"] as string;
             var fieldName = reader["name"];
 
             IMetaField metaField = model.Fields[fieldName];
@@ -185,15 +187,15 @@ namespace ObjectServer.Model
                     break;
 
                 case FieldType.ManyToOne:
-                    if (refKey == null)
+                    if (string.IsNullOrEmpty(refKey))
                     {
                         throw new InvalidDataException("Many-to-one field must have a 'ref-key' attribute");
                     }
-                    fieldValue = this.modelDataModel.TryLookupResourceId(this.context, metaField.Relation, refKey);
+                    fieldValue = ModelDataModel.TryLookupResourceId(
+                        this.context.DatabaseProfile.DataContext, metaField.Relation, refKey);
                     if (fieldValue == null)
                     {
-                        //TODO: 改成自定义异常
-                        throw new InvalidDataException("Cannot found model: " + refKey);
+                        throw new InvalidDataException("Cannot found model for ref-key: " + refKey);
                     }
                     break;
 

@@ -7,16 +7,5 @@
   </record>
 
 
-
-  <!-- 安全设定 -->
-  <record model="core.group" key="group_everyone">
-    <field name="name">Everyone</field>
-  </record>
-
-  <record model="core.group" key="group_admin">
-    <field name="name">Administrators</field>
-  </record>
-
-
 </data>
 

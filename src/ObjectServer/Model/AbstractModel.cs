@@ -145,7 +145,6 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             sql = @"DELETE FROM ""core_field"" WHERE ""name""=@0 AND ""module""=@1 AND ""model""=@2";
             foreach (var f in fieldsToDelete)
             {
-                var metaField = this.Fields[f];
                 db.DataContext.Execute(sql, f, this.Module, modelId.Value);
             }
 
@@ -205,7 +204,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 return (long)o;
             }
         }
-
+        
         private void CreateModel(IDatabaseProfile db)
         {
             var rowCount = db.DataContext.Execute(
@@ -217,6 +216,12 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 throw new DataException("Failed to insert record of table core_model");
             }
 
+            var modelId = (long)db.DataContext.QueryValue(
+                "SELECT MAX(id) FROM core_model WHERE name = @0 AND module = @1", this.Name, this.Module);
+
+            //插入一笔到 core_model_data 方便以后导入时引用
+            var key = "model_" + this.Name.Replace('.', '_');
+            Core.ModelDataModel.Create(db.DataContext, this.Module, Core.ModelModel.ModelName, key, modelId);
         }
 
         /// <summary>

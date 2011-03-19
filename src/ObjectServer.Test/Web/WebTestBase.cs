@@ -38,7 +38,7 @@ namespace ObjectServer
 
             // Prepare web request...
             HttpWebRequest httpRequest =
-                   (HttpWebRequest)WebRequest.Create("http://localhost:9287/ObjectServer.ashx");
+                   (HttpWebRequest)WebRequest.Create("http://localhost:9287/JsonService.ashx");
 
             httpRequest.Method = "POST";
             httpRequest.ContentType = "text/json";

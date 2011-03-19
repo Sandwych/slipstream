@@ -17,14 +17,11 @@ namespace ObjectServer.Core
     public sealed class ModelDataModel : AbstractTableModel
     {
         public const string ModelName = "core.model_data";
-        private static readonly string[] s_RefIdFields = new string[] { "ref_id" };
 
         public ModelDataModel()
             : base(ModelName)
         {
-            //删掉基类自动添加的用户列
-            Fields.Remove(CreatedUserFieldName);
-            Fields.Remove(ModifiedUserFieldName);
+            this.AutoMigration = false;
 
             Fields.Chars("name").SetLabel("Key").Required().SetSize(128);
             Fields.Chars("module").SetLabel("Module").Required().SetSize(64);
@@ -33,60 +30,58 @@ namespace ObjectServer.Core
             Fields.Text("value").SetLabel("Value");
         }
 
-        public long Create(IResourceScope ctx, string module, string model, string key, long resId)
+        internal static void Create(IDataContext dbctx, string module, string model, string key, long resId)
         {
-            var record = new Dictionary<string, object>()
-                {
-                    { "name", key },
-                    { "module", module },
-                    { "model", model },
-                    { "ref_id", resId },
-                };
-
-            return this.CreateInternal(ctx, record);
+            var sql =
+                "INSERT INTO core_model_data(name, module, model, ref_id) VALUES(@0, @1, @2, @3)";
+            var rows = dbctx.Execute(sql, key, module, model, resId);
+            if (rows != 1)
+            {
+                throw new DataException("Failed to insert row of table 'core_model_data'");
+            }
         }
 
-        public long? TryLookupResourceId(IResourceScope ctx, string model, string key)
+        internal static long? TryLookupResourceId(IDataContext dbctx, string model, string key)
         {
-            var fields = s_RefIdFields;
-            var domain = new object[][] 
-            { 
-                new object[] { "model", "=", model },
-                new object[] { "name", "=", key },
-            };
+            if (dbctx == null)
+            {
+                throw new ArgumentNullException("dbctx");
+            }
 
-            var ids = this.SearchInternal(ctx, domain, 0, 0);
-            if (ids == null || ids.Length == 0)
+            if (string.IsNullOrEmpty(model))
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            var sql = "SELECT ref_id FROM core_model_data WHERE model = @0 AND name = @1";
+            var rows = dbctx.QueryAsArray(sql, model, key);
+            if (rows.Length == 0)
             {
                 return null;
             }
 
-            var records = this.ReadInternal(ctx, ids, fields);
-            var refId = (long)records[0]["ref_id"];
-
-            return refId;
+            return (long)rows[0];
         }
 
-        public void UpdateResourceId(IResourceScope ctx, string model, string key, long refId)
+        internal static void UpdateResourceId(IDataContext dbctx, string model, string key, long refId)
         {
-            var domain = new object[][]
+            if (dbctx == null)
             {
-                new object[] { "model", "=", model },
-                new object[] { "name", "=", key },
-            };
-            var ids = this.SearchInternal(ctx, domain);
+                throw new ArgumentNullException("dbctx");
+            }
 
-            if (ids.Length != 1)
+            var sql = "UPDATE core_model_data SET ref_id = @0 WHERE model = @1 AND name = @2";
+            var rowCount = dbctx.Execute(sql, refId, model, key);
+
+            if (rowCount != 1)
             {
                 throw new InvalidDataException("More than one record");
             }
-
-            var selfId = (long)ids[0];
-            var record = new Dictionary<string, object>()
-            {
-                { "ref_id", refId },
-            };
-            this.WriteInternal(ctx, selfId, record);
         }
     }
 }

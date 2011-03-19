@@ -20,7 +20,7 @@ namespace ObjectServer.Core
         {
             Fields.ManyToOne("group", "core.group").Required().SetLabel("User Group");
             Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
-            Fields.Chars("description").SetLabel("Description");
+            Fields.Chars("name").SetLabel("Name");
             Fields.Boolean("allow_create").SetLabel("Allow Creation")
                 .Required().DefaultValueGetter(s => true);
             Fields.Boolean("allow_read").SetLabel("Allow Reading")

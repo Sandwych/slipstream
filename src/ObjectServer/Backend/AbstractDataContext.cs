@@ -202,6 +202,33 @@ namespace ObjectServer.Backend
         }
 
 
+        public virtual object[] QueryAsArray(string commandText, params object[] args)
+        {
+            if (string.IsNullOrEmpty(commandText))
+            {
+                throw new ArgumentNullException("commandText");
+            }
+
+            this.EnsureConnectionOpened();
+
+            Logger.Debug(() => ("SQL: " + commandText));
+
+            using (var command = PrepareCommand(commandText))
+            {
+                PrepareCommandParameters(command, args);
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = new List<object>();
+                    while (reader.Read())
+                    {
+                        result.Add(reader[0]);
+                    }
+                    return result.ToArray();
+                }
+            }
+        }
+
+
         #endregion
 
         #region IDisposable 成员

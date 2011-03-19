@@ -35,20 +35,29 @@ namespace ObjectServer.Core
         {
             base.Load(db);
 
-            using (var ctx = new ResourceScope(db))
+            //检测是否有 root 用户
+            var isRootUserExisted = UserExists(db, "root");
+            if (isRootUserExisted)
             {
-                //检测是否有 root 用户
-                var domain = new object[][] { new object[] { "login", "=", "root" } };
-                var users = this.SearchInternal(ctx, domain, 0, 0);
-                if (users.Length <= 0)
-                {
-                    this.CreateRootUser(ctx);
-                }
+                this.CreateRootUser(db.DataContext);
             }
         }
 
-        private void CreateRootUser(ResourceScope ctx)
+        private static bool UserExists(IDatabaseProfile db, string login)
         {
+            var sql = "SELECT COUNT(*) FROM core_user WHERE \"login\" = @0";
+            var rowCount = db.DataContext.QueryValue(sql, login);
+            var isRootUserExisted = rowCount == DBNull.Value || (long)rowCount <= 0;
+            return isRootUserExisted;
+        }
+
+        private void CreateRootUser(IDataContext datactx)
+        {
+            var sql = @"
+INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
+    VALUES(@0, @1, @2, @3, @4, @5, @6)
+";
+
             //创建 root 用户
             var rootPassword = ObjectServerStarter.Configuration.RootPassword;
             var user = new Dictionary<string, object>()
@@ -58,9 +67,14 @@ namespace ObjectServer.Core
                         { "password", rootPassword } ,
                         { "admin", true },
                         { CreatedUserFieldName, DBNull.Value }, //一定要覆盖掉默认设置，因为此时系统里还没有用户，取 Session 里的 UserId 是无意义的
+                        { CreatedTimeFieldName, DateTime.Now },
+                        { VersionFieldName, 1 },
                     };
+            var row = HashPassword(user);
 
-            this.CreateInternal(ctx, user);
+            datactx.Execute(
+                sql, row[VersionFieldName], row["name"], row["login"], row["password"],
+                row["admin"], row["_created_time"], row["salt"]);
         }
 
 

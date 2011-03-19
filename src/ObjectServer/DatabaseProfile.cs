@@ -91,7 +91,7 @@ namespace ObjectServer
                 if (this.resources.TryGetValue(res.Name, out extendedRes))
                 {
                     //处理单表继承（扩展）
-                    extendedRes.MergeFrom(res);                 
+                    extendedRes.MergeFrom(res);
                 }
                 else
                 {
@@ -150,11 +150,18 @@ namespace ObjectServer
 
             foreach (var res in allRes)
             {
-                if (!this.loadedResources.Contains(res.Name))
-                {
-                    res.Load(this);
-                    this.loadedResources.Add(res.Name);
-                }
+                LoadResource(res);
+            }
+        }
+
+        private void LoadResource(IResource res)
+        {
+            Debug.Assert(res != null);
+
+            if (!this.loadedResources.Contains(res.Name))
+            {
+                res.Load(this);
+                this.loadedResources.Add(res.Name);
             }
         }
 

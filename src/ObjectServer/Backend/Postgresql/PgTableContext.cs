@@ -131,7 +131,7 @@ namespace ObjectServer.Backend.Postgresql
             var sql = string.Format(
                 "ALTER TABLE \"{0}\" DROP COLUMN \"{1}\"",
                 this.Name, columnName);
-            db.Execute(columnName);
+            db.Execute(sql);
         }
 
         public void AlterColumnNullable(IDataContext db, string columnName, bool nullable)

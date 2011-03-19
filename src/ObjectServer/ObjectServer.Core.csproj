@@ -290,6 +290,7 @@
     <EmbeddedResource Include="Core\Data\Menus.xml" />
     <EmbeddedResource Include="Core\Data\Views.xml" />
     <EmbeddedResource Include="Core\Data\InitData.xml" />
+    <EmbeddedResource Include="Core\Data\Security.xml" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

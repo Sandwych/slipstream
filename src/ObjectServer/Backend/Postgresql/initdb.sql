@@ -22,7 +22,7 @@ CREATE TABLE core_field (
     PRIMARY KEY(id),
     FOREIGN KEY(model) REFERENCES core_model(id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX index_core_field_name ON core_field ("name");
+CREATE INDEX index_core_field_name ON core_field ("name");
 
 CREATE TABLE core_module (
     id BIGSERIAL NOT NULL,  
@@ -54,3 +54,15 @@ CREATE TABLE core_organization (
     id BIGSERIAL NOT NULL,
     PRIMARY KEY(id)
 );
+
+
+CREATE TABLE core_model_data (
+	id BIGSERIAL NOT NULL,
+	name VARCHAR(128) NOT NULL,
+	module VARCHAR(64) NOT NULL,
+	model VARCHAR(64) NOT NULL,
+	ref_id BIGINT NOT NULL,
+	value TEXT,
+	PRIMARY KEY(id)
+);
+CREATE UNIQUE INDEX index_core_model_data_name ON core_model_data ("name");
