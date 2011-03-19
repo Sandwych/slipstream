@@ -135,7 +135,7 @@ namespace ObjectServer.Model.Test
         public void test_binary_field()
         {
             this.ClearTestModelTable();
-            dynamic testModel = this.ResourceScope.DatabaseProfile.GetResource("test.test_model");
+            dynamic testModel = this.ResourceScope.GetResource("test.test_model");
             var fieldData = new byte[] { 33, 44, 55, 66, 77 };
             var record = new Dictionary<string, object>()
                 {

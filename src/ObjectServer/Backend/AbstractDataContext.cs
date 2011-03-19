@@ -151,7 +151,7 @@ namespace ObjectServer.Backend
         }
 
 
-        public virtual List<Dictionary<string, object>> QueryAsDictionary(
+        public virtual Dictionary<string, object>[] QueryAsDictionary(
             string commandText, params object[] args)
         {
             if (string.IsNullOrEmpty(commandText))
@@ -185,11 +185,11 @@ namespace ObjectServer.Backend
                     }
                 }
 
-                return rows;
+                return rows.ToArray();
             }
         }
 
-        public virtual List<DynamicRecord> QueryAsDynamic(string commandText, params object[] args)
+        public virtual dynamic[] QueryAsDynamic(string commandText, params object[] args)
         {
             if (string.IsNullOrEmpty(commandText))
             {
@@ -198,7 +198,7 @@ namespace ObjectServer.Backend
 
             var dicts = QueryAsDictionary(commandText, args);
 
-            return dicts.Select(r => new DynamicRecord(r)).ToList();
+            return dicts.Select(r => new DynamicRecord(r)).ToArray();
         }
 
 

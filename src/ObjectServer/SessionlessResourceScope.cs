@@ -6,9 +6,9 @@ using System.Diagnostics;
 
 namespace ObjectServer
 {
-    internal class SessionlessContext : IResourceScope
+    internal class SessionlessResourceScope : IResourceScope
     {
-        public SessionlessContext(IDatabaseProfile db)
+        public SessionlessResourceScope(IDatabaseProfile db)
         {
             Debug.Assert(db != null);
             this.DatabaseProfile = db;
@@ -31,6 +31,16 @@ namespace ObjectServer
         public bool Equals(IResourceScope other)
         {
             throw new NotSupportedException("Invalid Equals invocation");
+        }
+
+        public IResource GetResource(string resName)
+        {
+            if (string.IsNullOrEmpty(resName))
+            {
+                throw new ArgumentNullException("resName");
+            }
+
+            return this.DatabaseProfile.GetResource(resName);
         }
     }
 }

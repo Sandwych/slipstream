@@ -15,5 +15,7 @@ namespace ObjectServer
 
         Session Session { get; }
 
+        IResource GetResource(string resName);
+
     }
 }

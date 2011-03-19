@@ -21,7 +21,7 @@ namespace ObjectServer.Model.Test
             this.ClearTestModelTable();
 
             //删除所有记录
-            dynamic testObjectModel = this.ResourceScope.DatabaseProfile.GetResource("test.test_model");
+            dynamic testObjectModel = this.ResourceScope.GetResource("test.test_model");
 
             var domain = new object[][] { new object[] { "model", "=", "test.test_model" } };
 
@@ -61,8 +61,8 @@ namespace ObjectServer.Model.Test
             this.ClearAllModelData();
             //删除所有导入记录
 
-            dynamic childModel = this.ResourceScope.DatabaseProfile.GetResource("test.child");
-            dynamic masterModel = this.ResourceScope.DatabaseProfile.GetResource("test.master");
+            dynamic childModel = this.ResourceScope.GetResource("test.child");
+            dynamic masterModel = this.ResourceScope.GetResource("test.master");
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(MasterChildXmlResourcePath))
@@ -83,7 +83,7 @@ namespace ObjectServer.Model.Test
 
         private void ClearAllModelData()
         {
-            var model = (IMetaModel)this.ResourceScope.DatabaseProfile.GetResource("core.model_data");
+            var model = (IMetaModel)this.ResourceScope.GetResource("core.model_data");
 
             ClearAllModelData(model, "test.master");
             ClearAllModelData(model, "test.child");

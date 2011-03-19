@@ -112,7 +112,7 @@ namespace ObjectServer.Model
             //3. 最后更新子类表
             foreach (var inheritInfo in this.Inheritances)
             {
-                var baseModel = (IMetaModel)ctx.DatabaseProfile.GetResource(inheritInfo.BaseModel);
+                var baseModel = (IMetaModel)ctx.GetResource(inheritInfo.BaseModel);
                 var baseId = (long)existedRecord[inheritInfo.RelatedField];
 
                 //看用户提供的记录的字段是否涉及到基类

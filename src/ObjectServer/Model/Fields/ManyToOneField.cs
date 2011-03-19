@@ -24,7 +24,7 @@ namespace ObjectServer.Model
         {
             var fields = new string[] { "name" }; //TODO 改成静态变量
             var result = new Dictionary<long, object>(rawRecords.Count());
-            dynamic masterModel = ctx.DatabaseProfile.GetResource(this.Relation);
+            dynamic masterModel = ctx.GetResource(this.Relation);
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
                 var manyToOneFieldValues = rawRecords.ToDictionary(_ => (long)_["id"]);
@@ -80,7 +80,7 @@ namespace ObjectServer.Model
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
         {
             var destModelName = this.Relation;
-            dynamic destMetaModel = scope.DatabaseProfile.GetResource(destModelName);
+            dynamic destMetaModel = scope.GetResource(destModelName);
             var fieldValue = (object[])record[this.Name];
             var destIds = new long[] { (long)fieldValue[0] };
             //查询 ManyToOne 字段

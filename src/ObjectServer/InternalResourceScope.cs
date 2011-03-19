@@ -28,5 +28,15 @@ namespace ObjectServer
         {
             throw new NotSupportedException("Invalid Equals invocation");
         }
+
+        public IResource GetResource(string resName)
+        {
+            if (string.IsNullOrEmpty(resName))
+            {
+                throw new ArgumentNullException("resName");
+            }
+
+            return this.DatabaseProfile.GetResource(resName);
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual("child1", referenceField2[2]); //第三个元素是关联的 record 的 name 字段值
 
             //测试浏览 Reference 字段
-            var testModel = (IMetaModel) this.ResourceScope.DatabaseProfile.GetResource("test.test_model");
+            var testModel = (IMetaModel) this.ResourceScope.GetResource("test.test_model");
             dynamic test1 = testModel.Browse(this.ResourceScope, testId1);
             Assert.AreEqual("master1", test1.reference_field.name);
         }

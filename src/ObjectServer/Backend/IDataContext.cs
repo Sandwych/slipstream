@@ -22,8 +22,8 @@ namespace ObjectServer.Backend
                 
         object QueryValue(string commandText, params object[] args);
         DataTable QueryAsDataTable(string commandText, params object[] args);
-        List<Dictionary<string, object>> QueryAsDictionary(string commandText, params object[] args);
-        List<DynamicRecord> QueryAsDynamic(string commandText, params object[] args);
+        Dictionary<string, object>[] QueryAsDictionary(string commandText, params object[] args);
+        dynamic[] QueryAsDynamic(string commandText, params object[] args);
 
         int Execute(string commandText, params object[] args);
 

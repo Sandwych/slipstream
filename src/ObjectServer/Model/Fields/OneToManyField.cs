@@ -19,7 +19,7 @@ namespace ObjectServer.Model
            IResourceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             //查询字表
-            IMetaModel childModel = (IMetaModel)ctx.DatabaseProfile.GetResource(this.Relation);
+            IMetaModel childModel = (IMetaModel)ctx.GetResource(this.Relation);
             //TODO 权限等处理
 
             var children = new Dictionary<long, long[]>();
@@ -52,7 +52,7 @@ namespace ObjectServer.Model
         {
             //TODO 重构成跟Many-to-many 一样的
             var targetModelName = this.Relation;
-            IMetaModel targetModel = (IMetaModel)scope.DatabaseProfile.GetResource(targetModelName);
+            IMetaModel targetModel = (IMetaModel)scope.GetResource(targetModelName);
             var thisId = record["id"];
             //TODO: 下面的条件可能还不够，差 active 等等
             var domain = new object[][] { new object[] { this.RelatedField, "=", thisId } };

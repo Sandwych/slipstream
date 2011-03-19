@@ -71,6 +71,16 @@ namespace ObjectServer
             this.DatabaseProfile.DataContext.Open();
         }
 
+        public IResource GetResource(string resName)
+        {
+            if (string.IsNullOrEmpty(resName))
+            {
+                throw new ArgumentNullException("resName");
+            }
+
+            return this.DatabaseProfile.GetResource(resName);
+        }
+
         #region IContext 成员
 
         public IDatabaseProfile DatabaseProfile

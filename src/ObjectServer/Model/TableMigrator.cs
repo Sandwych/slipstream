@@ -28,7 +28,7 @@ namespace ObjectServer.Model
 
             this.db = db;
             this.model = model;
-            this.context = new SessionlessContext(db);
+            this.context = new SessionlessResourceScope(db);
         }
 
         public void Migrate()

@@ -26,11 +26,11 @@ namespace ObjectServer.Model.Test
             };
             var childId = (long)this.Service.CreateModel(this.SessionId, "test.child", childPropBag);
 
-            dynamic childModel = this.ResourceScope.DatabaseProfile.GetResource("test.child");
+            dynamic childModel = this.ResourceScope.GetResource("test.child");
             dynamic dynamicChild = childModel.Browse(this.ResourceScope, childId);
             Assert.AreEqual("master-obj", dynamicChild.master.name);
 
-            dynamic masterModel = this.ResourceScope.DatabaseProfile.GetResource("test.master");
+            dynamic masterModel = this.ResourceScope.GetResource("test.master");
             dynamic dynamicMaster = masterModel.Browse(this.ResourceScope, masterId);
             Assert.AreEqual(1, dynamicMaster.children.Length);
             Assert.AreEqual("child-obj", dynamicMaster.children[0].name);

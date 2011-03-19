@@ -22,7 +22,7 @@ namespace ObjectServer.Model
            IResourceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             //中间表模型
-            dynamic relationModel = ctx.DatabaseProfile.GetResource(this.Relation);
+            dynamic relationModel = ctx.GetResource(this.Relation);
             var relationFields = new string[] { this.RelatedField };
 
             var domain = new object[][] { new object[] { this.OriginField, "=", (long)-1 } };
@@ -71,9 +71,9 @@ namespace ObjectServer.Model
                 targetIds = m2mFields.Select(tf => (long)((object[])tf)[0]);
             }
 
-            var relationModel = (IMetaModel)scope.DatabaseProfile.GetResource(this.Relation);
+            var relationModel = (IMetaModel)scope.GetResource(this.Relation);
             var targetModelName = relationModel.Fields[this.RelatedField].Relation;
-            var targetModel = (IMetaModel)scope.DatabaseProfile.GetResource(targetModelName);
+            var targetModel = (IMetaModel)scope.GetResource(targetModelName);
             var targetRecords = targetModel.ReadInternal(scope, targetIds);
             return targetRecords.Select(tr => new BrowsableRecord(scope, targetModel, tr)).ToArray();
         }

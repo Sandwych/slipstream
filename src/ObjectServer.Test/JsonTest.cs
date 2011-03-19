@@ -75,13 +75,5 @@ namespace ObjectServer.Test
 
         }
 
-        [Test]
-        public void Serialize_dynamic()
-        {
-            var json = "{aaa:123, bbb:456, ccc:[1,2,3]}";
-            dynamic jobject = JsonConvert.DeserializeObject(json);
-            Assert.AreEqual(123, (int)jobject.aaa);
-            Assert.AreEqual(3, jobject.ccc.Count);
-        }
     }
 }

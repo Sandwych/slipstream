@@ -82,7 +82,7 @@ namespace ObjectServer.Model
         }
 
         private void PostProcessFieldValues(
-            IResourceScope scope, IList<string> allFields, List<Dictionary<string, object>> records)
+            IResourceScope scope, IList<string> allFields, IList<Dictionary<string, object>> records)
         {
             Debug.Assert(scope != null);
             Debug.Assert(allFields != null);
@@ -106,7 +106,7 @@ namespace ObjectServer.Model
         }
 
         private void ReadBaseModels(
-            IResourceScope scope, IList<string> allFields, List<Dictionary<string, object>> records)
+            IResourceScope scope, IList<string> allFields, Dictionary<string, object>[] records)
         {
             Debug.Assert(scope != null);
             Debug.Assert(allFields != null);
@@ -115,7 +115,7 @@ namespace ObjectServer.Model
             //本尊及各个关联到基类模型的字段已经读出来了，现在读各个基类模型
             foreach (var bm in this.Inheritances)
             {
-                var baseModel = (IMetaModel)scope.DatabaseProfile.GetResource(bm.BaseModel);
+                var baseModel = (IMetaModel)scope.GetResource(bm.BaseModel);
                 var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys);
                 var baseIds = records.Select(r => (long)r[bm.RelatedField]);
                 var baseRecords = baseModel.ReadInternal(scope, baseIds, baseFieldsToRead);

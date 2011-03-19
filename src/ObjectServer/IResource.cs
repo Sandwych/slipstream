@@ -18,7 +18,8 @@ namespace ObjectServer
         ICollection<MethodInfo> ServiceMethods { get; }
 
         void Load(IDatabaseProfile db);
-        /// <summary>
+
+        /// <summary>
         /// 此对象引用（依赖）的其它对象名称
         /// </summary>
         string[] GetReferencedObjects();

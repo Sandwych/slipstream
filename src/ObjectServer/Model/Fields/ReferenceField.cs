@@ -75,7 +75,7 @@ namespace ObjectServer.Model
             {
                 this.VerifyModelName(r.Model);
 
-                var masterModel = (IMetaModel)ctx.DatabaseProfile.GetResource(r.Model);
+                var masterModel = (IMetaModel)ctx.GetResource(r.Model);
                 ids[0] = r.RefId;
                 string name = null;
                 if (masterModel.Fields.ContainsKey("name"))
@@ -102,7 +102,7 @@ namespace ObjectServer.Model
         {
             var fieldValue = (object[])record[this.Name];
             var destModelName = (string)fieldValue[0];
-            var destMetaModel = (IMetaModel)scope.DatabaseProfile.GetResource(destModelName);
+            var destMetaModel = (IMetaModel)scope.GetResource(destModelName);
             var destIds = new long[] { (long)fieldValue[1] };
             var destRecord = destMetaModel.ReadInternal(scope, destIds, null)[0];
             return new BrowsableRecord(scope, destMetaModel, destRecord);

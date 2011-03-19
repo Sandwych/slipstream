@@ -36,7 +36,7 @@ namespace ObjectServer.Model.Test
             this.ClearManyToManyModels();
             var ids = this.GenerateTestData();
 
-            dynamic employeeModel = this.ResourceScope.DatabaseProfile.GetResource("test.employee");
+            dynamic employeeModel = this.ResourceScope.GetResource("test.employee");
             dynamic e1 = employeeModel.Browse(this.ResourceScope, ids.eid1);
 
             Assert.AreEqual(3, e1.departments.Length);

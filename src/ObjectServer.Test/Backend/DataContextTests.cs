@@ -21,7 +21,7 @@ namespace ObjectServer.Backend.Test
 
                 var rows = db.QueryAsDictionary("SELECT id, name FROM core_model WHERE name = @0", "core.model");
                 Assert.NotNull(rows);
-                Assert.AreEqual(1, rows.Count);
+                Assert.AreEqual(1, rows.Length);
                 Assert.AreEqual("core.model", rows[0]["name"]);
             }
         }
@@ -42,6 +42,21 @@ namespace ObjectServer.Backend.Test
 
                 Assert.AreEqual(1, dt.Rows.Count);
                 Assert.AreEqual("core.model", dt.Rows[0]["name"]);
+            }
+        }
+
+        [Test]
+        public void Query_as_dynamic()
+        {
+            using (var db = DataProvider.CreateDataContext("objectserver"))
+            {
+                db.Open();
+
+                var records = db.QueryAsDynamic("SELECT id, name FROM core_model WHERE name = @0", "core.model");
+                Assert.NotNull(records);
+
+                Assert.AreEqual(1, records.Length);
+                Assert.AreEqual("core.model", records[0].name);
             }
         }
 

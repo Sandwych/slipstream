@@ -30,7 +30,7 @@ namespace ObjectServer.Core
                 .Required().DefaultValueGetter(s => true);
         }
 
-        public List<Dictionary<string, object>>
+        public Dictionary<string, object>[]
             FindAllByUserId(IResourceScope scope, long userId)
         {
             var sql = @"

@@ -16,7 +16,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_single_table()
         {
-            dynamic inheritedModel = this.ResourceScope.DatabaseProfile.GetResource("test.single_table");
+            dynamic inheritedModel = this.ResourceScope.GetResource("test.single_table");
             Assert.True(inheritedModel.Fields.ContainsKey("age"));
 
             var propBag = new Dictionary<string, object>()
@@ -42,7 +42,7 @@ namespace ObjectServer.Model.Test
             adminUserRecord.admin_info = "admin_user_info";
 
             var adminUserModel = (IMetaModel)this.ResourceScope
-                .DatabaseProfile.GetResource("test.admin_user");
+                .GetResource("test.admin_user");
             long id = -1;
             Assert.DoesNotThrow(() =>
             {
@@ -57,7 +57,7 @@ namespace ObjectServer.Model.Test
         public void Test_multitable_creation_and_reading()
         {
             var adminUserModel = (IMetaModel)this.ResourceScope
-                .DatabaseProfile.GetResource("test.admin_user");
+                .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
@@ -71,7 +71,7 @@ namespace ObjectServer.Model.Test
         public void Test_multitable_creation_and_browsing()
         {
             var adminUserModel = (IMetaModel)this.ResourceScope
-                .DatabaseProfile.GetResource("test.admin_user");
+                .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
@@ -86,7 +86,7 @@ namespace ObjectServer.Model.Test
         public void Test_multitable_deletion()
         {
             var adminUserModel = (IMetaModel)this.ResourceScope
-                .DatabaseProfile.GetResource("test.admin_user");
+                .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
@@ -101,7 +101,7 @@ namespace ObjectServer.Model.Test
         public void Test_multitable_writing()
         {
             var adminUserModel = (IMetaModel)this.ResourceScope
-                .DatabaseProfile.GetResource("test.admin_user");
+                .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
@@ -125,7 +125,7 @@ namespace ObjectServer.Model.Test
         public void Test_multitable_searching()
         {
             var adminUserModel = (IMetaModel)this.ResourceScope
-                .DatabaseProfile.GetResource("test.admin_user");
+                .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
@@ -147,7 +147,7 @@ namespace ObjectServer.Model.Test
             adminUserRecord.admin_info = "admin_user_info";
 
             var adminUserModel = (IMetaModel)this.ResourceScope
-                .DatabaseProfile.GetResource("test.admin_user");
+                .GetResource("test.admin_user");
 
             return adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
         }

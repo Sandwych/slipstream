@@ -36,7 +36,7 @@ namespace ObjectServer.Model
             //插入被继承的表记录
             foreach (var i in this.Inheritances)
             {
-                var baseModel = (IMetaModel)scope.DatabaseProfile.GetResource(i.BaseModel);
+                var baseModel = (IMetaModel)scope.GetResource(i.BaseModel);
                 var baseRecord = new Dictionary<string, object>();
 
                 foreach (var f in baseModel.Fields)

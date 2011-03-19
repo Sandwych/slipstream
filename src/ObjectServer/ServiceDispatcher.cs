@@ -26,7 +26,7 @@ namespace ObjectServer
             {
                 ctx.DatabaseProfile.DataContext.Open();
 
-                dynamic userModel = ctx.DatabaseProfile.GetResource(UserModel.ModelName);
+                dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
                 
                 //用新 session 替换老 session
@@ -47,7 +47,7 @@ namespace ObjectServer
             {
                 ctx.DatabaseProfile.DataContext.Open();
 
-                dynamic userModel = ctx.DatabaseProfile.GetResource(UserModel.ModelName);
+                dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 userModel.LogOut(ctx, sessionId);
             }
         }
@@ -77,7 +77,7 @@ namespace ObjectServer
             var gsid = new Guid(sessionId);
             using (var ctx = new ResourceScope(gsid))
             {
-                dynamic res = ctx.DatabaseProfile.GetResource(resource);
+                dynamic res = ctx.GetResource(resource);
                 var methodInfo = res.GetServiceMethod(method);
                 var internalArgs = new object[parameters.Length + 2];
                 internalArgs[0] = res;
