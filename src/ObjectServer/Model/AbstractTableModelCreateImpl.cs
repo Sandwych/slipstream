@@ -11,6 +11,7 @@ using System.Dynamic;
 using ObjectServer.Backend;
 using ObjectServer.Utility;
 using ObjectServer.SqlTree;
+using ObjectServer.Core;
 
 namespace ObjectServer.Model
 {
@@ -26,6 +27,11 @@ namespace ObjectServer.Model
             if (userRecord.ContainsKey("id"))
             {
                 throw new ArgumentException("Unable to set the 'id' field", "propertyBag");
+            }
+
+            if (!ModelSecurity.CanCreateModel(scope, scope.Session.UserId, this.Name))
+            {
+                throw new UnauthorizedAccessException("Access denied");
             }
 
             var record = ClearUserRecord(userRecord);

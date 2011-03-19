@@ -24,6 +24,11 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
+            if (!ModelSecurity.CanWriteModel(scope, scope.Session.UserId, this.Name))
+            {
+                throw new UnauthorizedAccessException("Access denied");
+            }
+
             var record = ClearUserRecord(userRecord);
 
             //处理版本字段与基类继承

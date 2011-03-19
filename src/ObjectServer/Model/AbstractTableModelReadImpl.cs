@@ -29,6 +29,11 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
+            if (!ModelSecurity.CanReadModel(scope, scope.Session.UserId, this.Name))
+            {
+                throw new UnauthorizedAccessException("Access denied");
+            }
+
             if (ids == null || ids.Count() == 0)
             {
                 return new Dictionary<string, object>[] { };

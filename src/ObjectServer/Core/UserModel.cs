@@ -181,26 +181,6 @@ namespace ObjectServer.Core
             throw new NotImplementedException();
         }
 
-        public static bool CanCreateModel(IResourceScope scope, long userId, string model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static bool CanReadModel(IResourceScope scope, long userId, string model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static bool CanWriteModel(IResourceScope scope, long userId, string model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static bool CanDeleteModel(IResourceScope scope, long userId, string model)
-        {
-            throw new NotImplementedException();
-        }
-
 
         private Session CreateSession(string dbName, string login, IDictionary<string, object> userFields)
         {

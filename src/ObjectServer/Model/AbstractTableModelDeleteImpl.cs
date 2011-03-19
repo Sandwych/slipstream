@@ -29,6 +29,11 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("ids");
             }
 
+            if (!ModelSecurity.CanDeleteModel(scope, scope.Session.UserId, this.Name))
+            {
+                throw new UnauthorizedAccessException("Access denied");
+            }
+
             //继承的删除策略很简单：先删除本尊，再删除各个基类表
             Dictionary<string, object>[] existedRecords = null;
             if (this.Inheritances.Count > 0)

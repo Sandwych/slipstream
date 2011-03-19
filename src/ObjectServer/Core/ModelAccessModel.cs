@@ -13,9 +13,10 @@ namespace ObjectServer.Core
     [Resource]
     public sealed class ModelAccessModel : AbstractTableModel
     {
+        public const string ModelName = "core.model_access";
 
         public ModelAccessModel()
-            : base("core.model_access")
+            : base(ModelName)
         {
             Fields.ManyToOne("group", "core.group").Required().SetLabel("User Group");
             Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
@@ -30,8 +31,15 @@ namespace ObjectServer.Core
                 .Required().DefaultValueGetter(s => true);
         }
 
+        /// <summary>
+        /// TODO: 此方法每次 CRUD 的时候都会被调用用来检查 CRUD 权限，因此需要缓存
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public Dictionary<string, object>[]
-            FindAllByUserId(IResourceScope scope, long userId)
+            FindByModelAndUserId(IResourceScope scope, string model, long userId)
         {
             var sql = @"
 SELECT DISTINCT ma.id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
@@ -40,9 +48,31 @@ SELECT DISTINCT ma.id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_
     INNER JOIN core_user_group_rel ugr ON ugr.gid = ma.group
     WHERE (ugr.uid = @0) AND (m.name = @1)
 ";
-            var result = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql, userId, this.Name);
+            var result = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql, userId, model);
 
             return result;
+        }
+
+        /// <summary>
+        /// TODO 更新缓存
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="userRecord"></param>
+        /// <returns></returns>
+        public override long CreateInternal(IResourceScope scope, IDictionary<string, object> userRecord)
+        {
+            return base.CreateInternal(scope, userRecord);
+        }
+
+        /// <summary>
+        /// TODO 更新缓存
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="id"></param>
+        /// <param name="userRecord"></param>
+        public override void WriteInternal(IResourceScope scope, long id, IDictionary<string, object> userRecord)
+        {
+            base.WriteInternal(scope, id, userRecord);
         }
 
 

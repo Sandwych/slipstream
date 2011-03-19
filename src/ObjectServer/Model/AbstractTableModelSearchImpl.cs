@@ -18,11 +18,16 @@ namespace ObjectServer.Model
     {
 
         public override long[] SearchInternal(
-            IResourceScope ctx, object[][] domain = null, long offset = 0, long limit = 0)
+            IResourceScope scope, object[][] domain = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {
                 throw new NotSupportedException();
+            }
+
+            if (!ModelSecurity.CanReadModel(scope, scope.Session.UserId, this.Name))
+            {
+                throw new UnauthorizedAccessException("Access denied");
             }
 
             object[] domainInternal = domain;
@@ -73,7 +78,7 @@ namespace ObjectServer.Model
                     {
                         var tableNames =
                             from i in this.Inheritances
-                            let bm = (AbstractTableModel)ctx.DatabaseProfile
+                            let bm = (AbstractTableModel)scope.DatabaseProfile
                                 .GetResource(i.BaseModel)
                             where bm.Fields.ContainsKey(fieldName)
                             select bm.TableName;
@@ -85,7 +90,7 @@ namespace ObjectServer.Model
 
                 foreach (var inheritInfo in this.Inheritances)
                 {
-                    var baseModel = (AbstractTableModel)ctx.DatabaseProfile
+                    var baseModel = (AbstractTableModel)scope.DatabaseProfile
                         .GetResource(inheritInfo.BaseModel);
                     var baseTableExp = new AliasExpression(baseModel.TableName);
                     select.FromClause.ExpressionCollection.Expressions.Add(baseTableExp);
@@ -101,7 +106,7 @@ namespace ObjectServer.Model
             select.Traverse(sv);
             var sql = sv.ToString();
 
-            using (var cmd = ctx.DatabaseProfile.DataContext.Connection.CreateCommand())
+            using (var cmd = scope.DatabaseProfile.DataContext.Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 using (var reader = cmd.ExecuteReader())
