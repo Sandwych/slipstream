@@ -16,6 +16,7 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
+        private static readonly OrderbyClause DefaultOrderClause = new OrderbyClause("id", "ASC");
 
         public override long[] SearchInternal(
             IResourceScope scope, object[][] domain = null, long offset = 0, long limit = 0)
@@ -43,6 +44,7 @@ namespace ObjectServer.Model
 
             var columnExps = new AliasExpressionList(new string[] { this.TableName + ".id" });
             var select = new SelectStatement(columnExps, new FromClause(selfFromExp));
+            select.OrderByClause = DefaultOrderClause;
 
             if (offset > 0)
             {

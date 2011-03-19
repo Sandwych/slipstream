@@ -132,10 +132,10 @@ namespace ObjectServer.Model
         private static void PrewriteManyToManyField(IResourceScope scope, long id, Dictionary<string, object> record, IMetaField f)
         {
             var relModel = (IMetaModel)scope.GetResource(f.Relation);
-            var domain = new object[][] 
-                { 
-                    new object[] { f.OriginField, "=", id }
-                };
+            var domain = new object[][]  
+            { 
+                new object[] { f.OriginField, "=", id }
+            };
 
             //删掉原来的中间表记录重新插入
             var relIds = relModel.SearchInternal(scope, domain);

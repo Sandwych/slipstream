@@ -62,21 +62,54 @@ namespace ObjectServer.Model
             //转换用户给的字段值到数据库原始类型
             this.ConvertFieldToColumn(scope, record, record.Keys.ToArray());
 
-            var id = DoCreate(scope, record);
+            this.VerifyFields(record.Keys);
+
+            var selfId = this.CreateSelf(scope, record);
+            this.PostcreateManyToManyFields(scope, record, selfId);
 
             if (this.LogCreation)
             {
                 //TODO: 可翻译的
-                this.AuditLog(scope, id, this.Label + " created");
+                this.AuditLog(scope, selfId, this.Label + " created");
             }
 
-            return id;
+            return selfId;
         }
 
-        private long DoCreate(IResourceScope ctx, IDictionary<string, object> values)
+        /// <summary>
+        /// 处理 Many-to-many 字段
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <param name="record"></param>
+        /// <param name="id"></param>
+        private void PostcreateManyToManyFields(IResourceScope scope, Dictionary<string, object> record, long id)
         {
-            this.VerifyFields(values.Keys);
 
+            //处理 Many-to-many 字段
+            var manyToManyFields =
+                from fn in record.Keys
+                let f = this.Fields[fn]
+                where f.Type == FieldType.ManyToMany && !f.IsFunctional && !f.IsReadonly
+                select f;
+
+            foreach (var f in manyToManyFields)
+            {
+                var relModel = (IMetaModel)scope.GetResource(f.Relation);
+                //写入
+                var targetIds = (long[])record[f.Name];
+
+                foreach (var targetId in targetIds)
+                {
+                    var targetRecord = new Dictionary<string, object>(2);
+                    targetRecord[f.OriginField] = id;
+                    targetRecord[f.RelatedField] = targetId;
+                    relModel.CreateInternal(scope, targetRecord);
+                }
+            }
+        }
+
+        private long CreateSelf(IResourceScope ctx, IDictionary<string, object> values)
+        {
             var serial = ctx.DatabaseProfile.DataContext.NextSerial(this.SequenceName);
 
             if (this.ContainsField(VersionFieldName))
@@ -120,7 +153,6 @@ namespace ObjectServer.Model
                 Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
                 throw new DataException();
             }
-
 
             return serial;
         }

@@ -32,7 +32,6 @@ namespace ObjectServer.Model
                 children[masterId] = childIds;
             }
 
-
             var result = new Dictionary<long, object>();
             foreach (var p in records)
             {

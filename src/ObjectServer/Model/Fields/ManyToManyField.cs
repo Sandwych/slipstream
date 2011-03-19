@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using ObjectServer.Utility;
+
 namespace ObjectServer.Model
 {
     internal sealed class ManyToManyField : AbstractField
@@ -22,29 +24,18 @@ namespace ObjectServer.Model
            IResourceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             //中间表模型
-            dynamic relationModel = ctx.GetResource(this.Relation);
-            var relationFields = new string[] { this.RelatedField };
-
-            var domain = new object[][] { new object[] { this.OriginField, "=", (long)-1 } };
+            var relationModel = (IMetaModel)ctx.GetResource(this.Relation);
             var result = new Dictionary<long, object>();
             foreach (var rec in records)
             {
-                var id = (long)rec["id"];
-                domain[0][2] = id;
-                var relIds = relationModel.SearchInternal(ctx, domain, 0, 0);
+                var selfId = (long)rec["id"];
 
                 //中间表没有记录，返回空
-                if (relIds == null || relIds.Length <= 0)
-                {
-                    result[id] = new object[] { };
-                }
-                else
-                {
-                    //TODO 优化此处，或许应该用 SQL
-                    var relationRecords = (Dictionary<string, object>[])
-                        relationModel.ReadInternal(ctx, relIds, relationFields);
-                    result[id] = relationRecords.Select(d => d[this.RelatedField]).ToArray();
-                }
+                var sql = string.Format(
+                    "SELECT \"{0}\" FROM \"{1}\" WHERE \"{2}\" = @0",
+                    this.RelatedField, relationModel.TableName, this.OriginField);
+                var targetIds = ctx.DatabaseProfile.DataContext.QueryAsArray(sql, selfId);
+                result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }
 
             return result;
@@ -72,8 +63,7 @@ namespace ObjectServer.Model
                 var id = (long)record["id"];
                 var fields = new string[] { this.Name };
                 var newRecord = ((Dictionary<string, object>[])this.Model.ReadInternal(scope, new long[] { id }, fields))[0];
-                var m2mFields = (object[])newRecord[this.Name];
-                targetIds = m2mFields.Select(tf => (long)((object[])tf)[0]);
+                targetIds = (long[])newRecord[this.Name];
             }
 
             var relationModel = (IMetaModel)scope.GetResource(this.Relation);
