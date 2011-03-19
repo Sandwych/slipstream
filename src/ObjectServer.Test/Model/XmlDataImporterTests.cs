@@ -33,11 +33,11 @@ namespace ObjectServer.Model.Test
 
                 importer.Import(xmlStream);
 
-                var ids = testObjectModel.SearchInternal(this.ResourceScope, null, 0, 0);
+                var ids = testObjectModel.SearchInternal(this.ResourceScope);
                 Assert.AreEqual(3, ids.Length);
 
                 var domain1 = new object[][] { new object[] { "name", "=", "name_changed" } };
-                ids = testObjectModel.SearchInternal(this.ResourceScope, domain1, 0, 0);
+                ids = testObjectModel.SearchInternal(this.ResourceScope, domain1);
                 Assert.AreEqual(1, ids.Length);
             }
 
@@ -49,7 +49,7 @@ namespace ObjectServer.Model.Test
                 importer.Import(xmlStream);
             }
 
-            var ids2 = testObjectModel.SearchInternal(this.ResourceScope, null, 0, 0);
+            var ids2 = testObjectModel.SearchInternal(this.ResourceScope);
             Assert.AreEqual(4, ids2.Length);
         }
 
@@ -74,7 +74,7 @@ namespace ObjectServer.Model.Test
                 object[][] domain;
 
                 domain = new object[][] { new object[] { "name", "=", "master1" } };
-                var ids = masterModel.Search(this.ResourceScope, domain, 0, 0);
+                var ids = masterModel.Search(this.ResourceScope, domain, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
                 dynamic master1 = masterModel.Browse(this.ResourceScope, ids[0]);
                 Assert.AreEqual(2, master1.children.Length);
@@ -93,7 +93,7 @@ namespace ObjectServer.Model.Test
         private void ClearAllModelData(IMetaModel model, string modelName)
         {
             var domain = new object[][] { new object[] { "model", "=", modelName } };
-            var ids = model.SearchInternal(this.ResourceScope, domain, 0, 0);
+            var ids = model.SearchInternal(this.ResourceScope, domain);
             if (ids != null && ids.Length > 0)
             {
                 model.DeleteInternal(this.ResourceScope, ids);

@@ -33,11 +33,11 @@ namespace ObjectServer
             using (var scope = new ResourceScope(new Guid(this.SessionId)))
             {
                 var domain = new object[][] { new object[] { "name", "=", "test" } };
-                dynamic moduleModel = scope.GetResource("core.module");
-                var ids = moduleModel.Search(scope, domain, 0, 0);
+                var moduleModel = (ObjectServer.Model.IMetaModel)scope.GetResource("core.module");
+                var ids = moduleModel.SearchInternal(scope, domain);
                 dynamic fields = new ExpandoObject();
                 fields.state = "activated";
-                moduleModel.Write(scope, ids[0], fields);
+                moduleModel.WriteInternal(scope, ids[0], fields);
             }
         }
 
@@ -96,7 +96,7 @@ namespace ObjectServer
         protected void ClearModel(IResourceScope scope, string model)
         {
             dynamic res = scope.GetResource(model);
-            var ids = res.SearchInternal(scope, null, 0, 0);
+            var ids = res.SearchInternal(scope);
             if (ids.Length > 0)
             {
                 res.DeleteInternal(scope, ids);

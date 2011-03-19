@@ -155,7 +155,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
 
-            var users = base.SearchInternal(ctx, domain, 0, 0);
+            var users = base.SearchInternal(ctx, domain);
             if (users.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);

@@ -24,7 +24,7 @@ namespace ObjectServer.Model.Test
 
             //Delete all records first
             var allIds = this.Service.SearchModel(
-                this.SessionId, modelName, null, 0, 0).Select(_ => (object)_).ToArray();
+                this.SessionId, modelName).Select(_ => (object)_).ToArray();
             if (allIds.Length > 0)
             {
                 this.Service.DeleteModel(this.SessionId, modelName, allIds);
@@ -41,7 +41,7 @@ namespace ObjectServer.Model.Test
             Assert.True(id > 0);
 
             var domain1 = new object[][] { new object[] { "name", "=", "sweet_name" } };
-            var foundIds = this.Service.SearchModel(this.SessionId, modelName, domain1, 0, 100);
+            var foundIds = this.Service.SearchModel(this.SessionId, modelName, domain1, null, 0, 100);
             Assert.AreEqual(1, foundIds.Length);
             Assert.AreEqual(id, foundIds[0]);
 
@@ -59,7 +59,7 @@ namespace ObjectServer.Model.Test
 
             this.Service.DeleteModel(this.SessionId, modelName, ids);
 
-            foundIds = this.Service.SearchModel(this.SessionId, modelName, domain1, 0, 100);
+            foundIds = this.Service.SearchModel(this.SessionId, modelName, domain1, null, 0, 100);
             Assert.AreEqual(0, foundIds.Length);
         }
 
@@ -110,7 +110,7 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(masterId2, masterField3[0]);
 
         }
-     
+
 
         [Test]
         public void Read_nullable_one_to_many_field()

@@ -204,7 +204,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 return (long)o;
             }
         }
-        
+
         private void CreateModel(IDatabaseProfile db)
         {
             var rowCount = db.DataContext.Execute(
@@ -300,7 +300,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
 
         public abstract NameGetter NameGetter { get; protected set; }
         public abstract long[] SearchInternal(
-            IResourceScope ctx, object[][] domain = null, long offset = 0, long limit = 0);
+            IResourceScope ctx, object[][] domain = null, OrderInfo[] orders = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag);
         public abstract void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(

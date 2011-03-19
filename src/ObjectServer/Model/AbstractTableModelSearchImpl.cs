@@ -16,10 +16,10 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        private static readonly OrderbyClause DefaultOrderClause = new OrderbyClause("id", "ASC");
+        private static readonly OrderbyClause DefaultOrderClause = new OrderbyClause("id", "asc");
 
         public override long[] SearchInternal(
-            IResourceScope scope, object[][] domain = null, long offset = 0, long limit = 0)
+            IResourceScope scope, object[][] domain = null, OrderInfo[] order = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {
@@ -40,7 +40,6 @@ namespace ObjectServer.Model
             var selfFromExp = new AliasExpression(this.TableName);
 
             var fields = domainInternal.Select(d => (string)((object[])d)[0]);
-
 
             var columnExps = new AliasExpressionList(new string[] { this.TableName + ".id" });
             var select = new SelectStatement(columnExps, new FromClause(selfFromExp));

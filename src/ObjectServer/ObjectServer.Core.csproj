@@ -161,7 +161,9 @@
     <Compile Include="Model\InheritanceCollection.cs" />
     <Compile Include="Model\InheritanceInfo.cs" />
     <Compile Include="Model\ModelSecurity.cs" />
+    <Compile Include="Model\OrderInfo.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
+    <Compile Include="Model\SearchOrder.cs" />
     <Compile Include="SessionlessResourceScope.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardActionModel.cs" />

@@ -39,6 +39,7 @@ namespace ObjectServer.Model.Test
             dynamic employeeModel = this.ResourceScope.GetResource("test.employee");
             dynamic e1 = employeeModel.Browse(this.ResourceScope, ids.eid1);
 
+            //TODO: 这里要排序再比较
             Assert.AreEqual(3, e1.departments.Length);
             Assert.AreEqual(e1.departments[0].id, ids.did2);
             Assert.AreEqual(e1.departments[1].id, ids.did3);

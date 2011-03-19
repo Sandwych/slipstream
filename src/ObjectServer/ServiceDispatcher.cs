@@ -22,13 +22,13 @@ namespace ObjectServer
         public string LogOn(string dbName, string username, string password)
         {
             using (var ctx = new ResourceScope(dbName))
-            using(var tx = new TransactionScope())
+            using (var tx = new TransactionScope())
             {
                 ctx.DatabaseProfile.DataContext.Open();
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
-                
+
                 //用新 session 替换老 session
                 ObjectServerStarter.SessionStore.PutSession(session);
                 ObjectServerStarter.SessionStore.Remove(ctx.Session.Id);
@@ -43,7 +43,7 @@ namespace ObjectServer
         {
             var sgid = new Guid(sessionId);
             using (var ctx = new ResourceScope(sgid))
-            using(var tx = new TransactionScope())
+            using (var tx = new TransactionScope())
             {
                 ctx.DatabaseProfile.DataContext.Open();
 
@@ -152,9 +152,9 @@ namespace ObjectServer
         }
 
         [CachedMethod]
-        public long[] SearchModel(string sessionId, string modelName, object[] domain, long offset = 0, long limit = 0)
+        public long[] SearchModel(string sessionId, string modelName, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
         {
-            return (long[])Execute(sessionId, modelName, "Search", new object[] { domain, offset, limit });
+            return (long[])Execute(sessionId, modelName, "Search", new object[] { domain, order, offset, limit });
         }
 
         [CachedMethod]
@@ -184,7 +184,7 @@ namespace ObjectServer
         public static IExportedService CreateDispatcher()
         {
 #if DEBUG
-                return new ServiceDispatcher();
+            return new ServiceDispatcher();
 #else
                 var generator = new ProxyGenerator();
                 var target = new ServiceDispatcher();

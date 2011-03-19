@@ -180,9 +180,22 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public static long[] Search(
-            dynamic model, IResourceScope ctx, object[] domain = null, long offset = 0, long limit = 0)
+            dynamic model, IResourceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
         {
-            return model.SearchInternal(ctx, (object[][])domain, offset, limit);
+            OrderInfo[] orderInfos = OrderInfo.GetDefaultOrders();
+
+            if (order != null)
+            {
+                orderInfos = new OrderInfo[order.Length];
+                for (int i = 0; i < orderInfos.Length; i++)
+                {
+                    var orderTuple = (object[])order[i];
+                    var so = SearchOrderParser.Parser((string)orderTuple[1]);
+                    orderInfos[i] = new OrderInfo((string)orderTuple[0], so);
+                }
+            }
+
+            return model.SearchInternal(ctx, (object[][])domain, orderInfos, offset, limit);
         }
 
         [ServiceMethod]
@@ -290,7 +303,7 @@ namespace ObjectServer.Model
 
         private static Dictionary<string, object> ClearUserRecord(IDictionary<string, object> record)
         {
-            Debug.Assert(record!= null);
+            Debug.Assert(record != null);
 
             return record.Where(p => !SystemReadonlyFields.Contains(p.Key))
                 .ToDictionary(p => p.Key, p => p.Value);

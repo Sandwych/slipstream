@@ -28,7 +28,7 @@ namespace ObjectServer.Model
                 var masterId = (long)master["id"];
                 var domain = new List<object[]>();
                 domain.Add(new object[] { this.RelatedField, "=", masterId });
-                var childIds = childModel.SearchInternal(ctx, domain.ToArray(), 0, 0xffff);
+                var childIds = childModel.SearchInternal(ctx, domain.ToArray());
                 children[masterId] = childIds;
             }
 
@@ -55,7 +55,7 @@ namespace ObjectServer.Model
             var thisId = record["id"];
             //TODO: 下面的条件可能还不够，差 active 等等
             var domain = new object[][] { new object[] { this.RelatedField, "=", thisId } };
-            var destIds = targetModel.SearchInternal(scope, domain, 0, 0);
+            var destIds = targetModel.SearchInternal(scope, domain);
             var records = (Dictionary<string, object>[])targetModel.ReadInternal(scope, destIds, null);
             return records.Select(r => new BrowsableRecord(scope, targetModel, r)).ToArray();
         }

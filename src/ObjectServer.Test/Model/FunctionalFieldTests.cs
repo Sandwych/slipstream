@@ -16,7 +16,7 @@ namespace ObjectServer.Model.Test
         public void Test_function_many2one()
         {
             var rootDomain = new object[][] { new object[] { "login", "=", "root" } };
-            var rootId = this.Service.SearchModel(this.SessionId, "core.user", rootDomain, 0, 0)[0];
+            var rootId = this.Service.SearchModel(this.SessionId, "core.user", rootDomain, null, 0, 0)[0];
             var record = new Dictionary<string, object>()
             {
                 { "name", "test1" },

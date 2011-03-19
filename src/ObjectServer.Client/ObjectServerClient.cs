@@ -98,11 +98,11 @@ namespace ObjectServer.Client
         }
 
         public void SearchModel(
-            string objectName, object[][] domain, long offset, long limit, Action<long[]> resultCallback)
+            string objectName, object[][] domain, object[][] order, long offset, long limit, Action<long[]> resultCallback)
         {
             Debug.Assert(this.Logged);
 
-            var args = new object[] { domain, offset, limit };
+            var args = new object[] { domain, order, offset, limit };
             this.Execute(objectName, "Search", args, o =>
             {
                 resultCallback(((object[])o).Select(id => (long)id).ToArray());
@@ -153,7 +153,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(this.Logged);
 
-            this.SearchModel("core.menu", null, 0, 0,
+            this.SearchModel("core.menu", null, null, 0, 0,
                 ids =>
                 {
                     this.ReadModel("core.menu", ids, null, records =>
