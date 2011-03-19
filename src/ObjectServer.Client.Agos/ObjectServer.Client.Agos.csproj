@@ -64,32 +64,35 @@
     <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Data.DataForm.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libs\System.Windows.Controls.Data.DataForm.Toolkit.dll</HintPath>
+      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Data.DataForm.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Data.Input" />
     <Reference Include="System.ServiceModel.DomainServices.Client" />
     <Reference Include="System.ServiceModel.DomainServices.Client.Web" />
     <Reference Include="System.ServiceModel.Web.Extensions" />
     <Reference Include="System.Windows.Controls.Data.Toolkit">
-      <HintPath>..\Lib\silverlight-toolkit\Bin\System.Windows.Controls.Data.Toolkit.dll</HintPath>
+      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Data.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Input.Toolkit">
-      <HintPath>..\Lib\silverlight-toolkit\Bin\System.Windows.Controls.Input.Toolkit.dll</HintPath>
+      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Input.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Layout.Toolkit">
-      <HintPath>..\Lib\silverlight-toolkit\Bin\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Theming.SystemColors">
       <HintPath>..\Lib\silverlight-toolkit\Themes\System.Windows.Controls.Theming.SystemColors.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Theming.Toolkit">
-      <HintPath>..\Lib\silverlight-toolkit\Bin\System.Windows.Controls.Theming.Toolkit.dll</HintPath>
+      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Theming.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Theming.WhistlerBlue">
       <HintPath>..\Lib\silverlight-toolkit\Themes\System.Windows.Controls.Theming.WhistlerBlue.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Toolkit">
-      <HintPath>..\Lib\silverlight-toolkit\Bin\System.Windows.Controls.Toolkit.dll</HintPath>
+      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Toolkit.Internals">
+      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Toolkit.Internals.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />

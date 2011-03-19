@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using NUnit.Framework;
+
+using ObjectServer.Backend;
+
+namespace ObjectServer.Backend.Test
+{
+    [TestFixture]
+    public class DataContextTests : LocalTestCase
+    {
+        [Test]
+        public void Query_as_dictionary()
+        {
+            using (var db = DataProvider.CreateDataContext("objectserver"))
+            {
+                db.Open();
+
+                var rows = db.QueryAsDictionary("SELECT id, name FROM core_model WHERE name = @0", "core.model");
+                Assert.NotNull(rows);
+                Assert.AreEqual(1, rows.Count);
+                Assert.AreEqual("core.model", rows[0]["name"]);
+            }
+        }
+
+        [Test]
+        public void Query_as_datatable()
+        {
+            using (var db = DataProvider.CreateDataContext("objectserver"))
+            {
+                db.Open();
+
+                var dt = db.QueryAsDataTable("SELECT id, name FROM core_model WHERE name = @0", "core.model");
+                Assert.NotNull(dt);
+
+                Assert.AreEqual(2, dt.Columns.Count);
+                Assert.AreEqual("id", dt.Columns[0].ColumnName);
+                Assert.AreEqual("name", dt.Columns[1].ColumnName);
+
+                Assert.AreEqual(1, dt.Rows.Count);
+                Assert.AreEqual("core.model", dt.Rows[0]["name"]);
+            }
+        }
+
+        [Ignore]
+        public void Create_and_delete_database()
+        {
+            var dbName = "oo_testdb";
+            ObjectServerStarter.Initialize();
+            var sha1 = ObjectServerStarter.Configuration.RootPasswordHash;
+
+            var service = ServiceDispatcher.CreateDispatcher();
+            service.CreateDatabase(sha1, dbName, "admin");
+            service.DeleteDatabase(sha1, dbName);
+
+        }
+    }
+}
