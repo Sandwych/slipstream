@@ -67,9 +67,32 @@ namespace ObjectServer.Model.Test
             Assert.IsInstanceOf<object[]>(employee1["departments"]);
             var departments1 = (object[])employee1["departments"];
             Assert.AreEqual(3, departments1.Length);
-            Assert.AreEqual(ids.did2, ((object[])departments1[0])[0]);                
-            Assert.AreEqual(ids.did3, ((object[])departments1[1])[0]);                
-            Assert.AreEqual(ids.did4, ((object[])departments1[2])[0]);                
+            Assert.AreEqual(ids.did2, ((object[])departments1[0])[0]);
+            Assert.AreEqual(ids.did3, ((object[])departments1[1])[0]);
+            Assert.AreEqual(ids.did4, ((object[])departments1[2])[0]);
+        }
+
+        [Test]
+        public void Test_write_m2m_field()
+        {
+            this.ClearManyToManyModels();
+            var ids = this.GenerateTestData();
+
+            dynamic e1 = new ExpandoObject();
+            e1.departments = new long[] { ids.did1, ids.did2 };
+            Assert.DoesNotThrow(() =>
+            {
+                this.Service.WriteModel(this.SessionId, "test.employee", ids.eid1, e1);
+            });
+
+            var fields = new string[] { "name", "departments" };
+            var record = this.Service.ReadModel(
+                this.SessionId, "test.employee", new object[] { ids.eid1 }, fields)[0];
+
+            var departments = (object[])record["departments"];
+            Assert.AreEqual(2, departments.Length);
+            Assert.AreEqual(ids.did1, ((object[])departments[0])[0]);
+            Assert.AreEqual(ids.did2, ((object[])departments[1])[0]);
         }
 
         private IdCollection GenerateTestData()

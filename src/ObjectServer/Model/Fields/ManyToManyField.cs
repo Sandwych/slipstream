@@ -52,7 +52,12 @@ namespace ObjectServer.Model
 
         protected override object OnSetFieldValue(IResourceScope scope, object value)
         {
-            throw new NotSupportedException();
+            if (!(value is long[]))
+            {
+                throw new ArgumentException("'value' must be long[]", "value");
+            }
+
+            return value;
         }
 
         public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)

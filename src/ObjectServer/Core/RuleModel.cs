@@ -13,20 +13,8 @@ namespace ObjectServer.Core
         public RuleModel()
             : base("core.rule")
         {
-            Fields.OneToMany("lines", "core.rule.line", "rule").SetLabel("Rule Details");
+            Fields.ManyToOne("group", "core.group").SetLabel("User Group").Required();
         }
 
-    }
-
-    [Resource]
-    public sealed class RuleLineModel : AbstractTableModel
-    {
-
-        public RuleLineModel()
-            : base("core.rule.line")
-        {
-
-            Fields.ManyToOne("rule", "core.rule").SetLabel("Creator");
-        }
     }
 }

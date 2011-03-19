@@ -44,6 +44,11 @@ namespace ObjectServer.Model
                 this.PrewriteBaseModels(scope, record, existedRecord);
             }
 
+            var allFields = record.Keys; //记录中的所有字段
+
+            //先写入 many-to-many 字段
+            this.PrewriteManyToManyFields(scope, id, record, allFields);
+
             //处理最近更新用户与最近更新时间字段            
             if (this.ContainsField(ModifiedTimeFieldName))
             {
@@ -54,7 +59,6 @@ namespace ObjectServer.Model
                 record[ModifiedUserFieldName] = scope.Session.UserId;
             }
 
-            var allFields = record.Keys; //记录中的所有字段
             //所有可更新的字段
             var updatableColumnFields = allFields.Where(
                 f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly).ToArray();
@@ -101,9 +105,52 @@ namespace ObjectServer.Model
                 throw new ConcurrencyException(msg);
             }
 
+
             if (this.LogWriting)
             {
                 AuditLog(scope, (long)id, this.Label + " updated");
+            }
+        }
+
+        private void PrewriteManyToManyFields(
+            IResourceScope scope, long id, Dictionary<string, object> record, ICollection<string> allFields)
+        {
+            //过滤所有可以更新的 many2many 字段
+            var writableManyToManyFields =
+                from fn in allFields
+                let f = this.Fields[fn]
+                where f.Type == FieldType.ManyToMany && !f.IsReadonly && !f.IsFunctional
+                select f;
+
+            foreach (var f in writableManyToManyFields)
+            {
+                //中间表
+                PrewriteManyToManyField(scope, id, record, f);
+            }
+        }
+
+        private static void PrewriteManyToManyField(IResourceScope scope, long id, Dictionary<string, object> record, IMetaField f)
+        {
+            var relModel = (IMetaModel)scope.GetResource(f.Relation);
+            var domain = new object[][] 
+                { 
+                    new object[] { f.OriginField, "=", id }
+                };
+
+            //删掉原来的中间表记录重新插入
+            var relIds = relModel.SearchInternal(scope, domain);
+            if (relIds.Length > 0)
+            {
+                relModel.DeleteInternal(scope, relIds);
+
+                var targetIds = (long[])record[f.Name];
+                foreach (var targetId in targetIds)
+                {
+                    var relRecord = new Dictionary<string, object>(2);
+                    relRecord[f.OriginField] = id;
+                    relRecord[f.RelatedField] = targetId;
+                    relModel.CreateInternal(scope, relRecord);
+                }
             }
         }
 
