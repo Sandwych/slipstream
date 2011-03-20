@@ -6,7 +6,7 @@ using System.Text;
 namespace ObjectServer
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class CachedMethodAttribute : Attribute
+    public sealed class CachedMethodAttribute : Attribute
     {
         public CachedMethodAttribute()
         {

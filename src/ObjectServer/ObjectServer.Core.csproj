@@ -272,7 +272,6 @@
     <Compile Include="SqlTree\LimitClause.cs" />
     <Compile Include="StaticSettings.cs" />
     <Compile Include="InternalResourceScope.cs" />
-    <Compile Include="TransactionalAttribute.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha1.cs" />
