@@ -7,12 +7,23 @@ namespace ObjectServer.SqlTree
 {
     public sealed class OrderbyClause : Node, IClause
     {
-        private IList<OrderbyItem> items = new List<OrderbyItem>();
+        private IList<OrderbyItem> items;
 
         public OrderbyClause(string column, string direction)
         {
+            this.items = new List<OrderbyItem>(1);
             this.items.Add(
                 new OrderbyItem(column, direction));
+        }
+
+        public OrderbyClause(IEnumerable<OrderbyItem> items)
+        {
+            this.items = new List<OrderbyItem>(items);
+        }
+
+        public OrderbyClause(IEnumerable<string> ascItems)
+        {
+            this.items = ascItems.Select(c => new OrderbyItem(c)).ToList();
         }
 
         public IList<OrderbyItem> Items

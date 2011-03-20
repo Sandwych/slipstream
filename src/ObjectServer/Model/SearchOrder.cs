@@ -34,5 +34,10 @@ namespace ObjectServer.Model
                     throw new NotSupportedException();
             }
         }
+
+        public static string ToUpperString(this SearchOrder so)
+        {
+            return so.ToString().ToUpper();
+        }
     }
 }

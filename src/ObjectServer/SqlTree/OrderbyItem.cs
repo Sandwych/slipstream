@@ -7,6 +7,9 @@ namespace ObjectServer.SqlTree
 {
     public sealed class OrderbyItem : Node, IExpression
     {
+        public const string Asc = "ASC";
+        public const string Desc = "DESC";
+
         public OrderbyItem(IdentifierExpression idExp, string direction)
         {
             this.Column = idExp;
@@ -15,6 +18,11 @@ namespace ObjectServer.SqlTree
 
         public OrderbyItem(string idExp, string direction)
             : this(new IdentifierExpression(idExp), direction)
+        {
+        }
+
+        public OrderbyItem(string idExp)
+            : this(idExp, Asc)
         {
         }
 

@@ -102,5 +102,19 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(allIds.Length, ids.Length + 2);
         }
 
+        [Test]
+        public void Test_simple_searching_order()
+        {
+            var ascOrder = new object[][] { new object[] { "id", "asc" } };
+            var descOrder = new object[][] { new object[] { "id", "desc" } };
+
+            var ascIds = proxy.SearchModel(this.SessionId, "core.model", null, ascOrder, 0, 0);
+            var descIds = proxy.SearchModel(this.SessionId, "core.model", null, descOrder, 0, 0);
+
+            Assert.AreEqual(ascIds.Length, descIds.Length);
+            Assert.AreNotEqual(ascIds[0], descIds[0]);
+            Assert.AreEqual(ascIds.Last(), descIds.First());
+        }
+
     }
 }

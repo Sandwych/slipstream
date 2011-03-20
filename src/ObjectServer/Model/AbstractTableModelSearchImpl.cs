@@ -16,7 +16,7 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        private static readonly OrderbyClause DefaultOrderClause = new OrderbyClause("id", "asc");
+        private static readonly OrderbyClause DefaultOrderbyClause = new OrderbyClause("id", "asc");
 
         public override long[] SearchInternal(
             IResourceScope scope, object[][] domain = null, OrderInfo[] order = null, long offset = 0, long limit = 0)
@@ -43,7 +43,21 @@ namespace ObjectServer.Model
 
             var columnExps = new AliasExpressionList(new string[] { this.TableName + ".id" });
             var select = new SelectStatement(columnExps, new FromClause(selfFromExp));
-            select.OrderByClause = DefaultOrderClause;
+
+            OrderbyClause orderbyClause = null;
+
+            if (order != null && order.Length > 0)
+            {
+                var orderbyItems = order.Select(
+                    o => new OrderbyItem(o.Field, o.Order.ToUpperString()));
+                orderbyClause = new OrderbyClause(orderbyItems);
+            }
+            else
+            {
+                orderbyClause = DefaultOrderbyClause;
+            }
+
+            select.OrderByClause = orderbyClause;
 
             if (offset > 0)
             {
@@ -58,8 +72,9 @@ namespace ObjectServer.Model
             var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
 
 
-            //TODO: 这里检查权限等，处理查询非表中字段等
+            //TODO: 这里检查过滤规则等，处理查询非表中字段等
             //TODO: 自动添加 active 字段
+            //TODO 处理 childof 等复杂查询
             //继承查询的策略很简单，直接把基类表连接到查询里
             //如果有重复的字段，就以子类的字段为准
             if (this.Inheritances.Count > 0)
