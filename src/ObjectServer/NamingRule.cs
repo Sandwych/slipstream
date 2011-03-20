@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace ObjectServer
 {
     //TODO: 完善这里的 Regex
-    public static class NamingRule
+    internal static class NamingRule
     {
         private static readonly Regex s_resourceNameRegex =
             new Regex(@"([a-z_][a-z_0-9]*)\.([a-z_][a-z_0-9]*)", 

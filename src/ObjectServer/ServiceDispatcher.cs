@@ -12,12 +12,11 @@ using ObjectServer.Core;
 
 namespace ObjectServer
 {
-    public sealed class ServiceDispatcher : MarshalByRefObject, IExportedService
+    internal sealed class ServiceDispatcher : MarshalByRefObject, IExportedService
     {
         private ServiceDispatcher()
         {
         }
-
 
         public string LogOn(string dbName, string username, string password)
         {
