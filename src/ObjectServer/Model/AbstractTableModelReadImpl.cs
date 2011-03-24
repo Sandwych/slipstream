@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override Dictionary<string, object>[] ReadInternal(
-                 IServiceScope scope, IEnumerable<long> ids, IEnumerable<string> requiredFields = null)
+                 IServiceScope scope, long[] ids, string[] requiredFields = null)
         {
             if (scope == null)
             {
@@ -121,8 +121,8 @@ namespace ObjectServer.Model
             foreach (var bm in this.Inheritances)
             {
                 var baseModel = (IMetaModel)scope.GetResource(bm.BaseModel);
-                var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys);
-                var baseIds = records.Select(r => (long)r[bm.RelatedField]);
+                var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys).ToArray();
+                var baseIds = records.Select(r => (long)r[bm.RelatedField]).ToArray();
                 var baseRecords = baseModel.ReadInternal(scope, baseIds, baseFieldsToRead);
                 //合并到结果中
                 for (int i = 0; i < baseRecords.Length; i++)

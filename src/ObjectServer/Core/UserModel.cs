@@ -129,7 +129,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IServiceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields)
+            IServiceScope ctx, long[] ids, string[] fields)
         {
             var records = base.ReadInternal(ctx, ids, fields);
 

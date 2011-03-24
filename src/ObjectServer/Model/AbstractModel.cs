@@ -300,12 +300,14 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
 
         public abstract NameGetter NameGetter { get; protected set; }
         public abstract long[] SearchInternal(
-            IServiceScope ctx, object[][] domain = null, OrderInfo[] orders = null, long offset = 0, long limit = 0);
-        public abstract long CreateInternal(IServiceScope ctx, IDictionary<string, object> propertyBag);
-        public abstract void WriteInternal(IServiceScope ctx, long id, IDictionary<string, object> record);
+            IServiceScope scope, object[][] domain = null, OrderInfo[] orders = null, long offset = 0, long limit = 0);
+        public abstract long CreateInternal(
+            IServiceScope scope, IDictionary<string, object> propertyBag);
+        public abstract void WriteInternal(
+            IServiceScope scope, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
-            IServiceScope ctx, IEnumerable<long> ids, IEnumerable<string> requiredFields = null);
-        public abstract void DeleteInternal(IServiceScope ctx, IEnumerable<long> ids);
+            IServiceScope scope, long[] ids, string[] requiredFields = null);
+        public abstract void DeleteInternal(IServiceScope ctx, long[] ids);
         public abstract dynamic Browse(IServiceScope ctx, long id);
 
         #endregion

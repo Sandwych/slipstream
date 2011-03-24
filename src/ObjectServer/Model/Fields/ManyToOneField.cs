@@ -36,7 +36,7 @@ namespace ObjectServer.Model
                 if (availableRecords.Count() > 0)
                 {
                     var masterRecords = masterModel.ReadInternal(
-                        ctx, availableRecords.Select(ar => ar.MasterId), fields);
+                        ctx, availableRecords.Select(ar => ar.MasterId).ToArray(), fields);
                     var masterNames = new Dictionary<long, string>(masterRecords.Length);
                     foreach (var mr in masterRecords)
                     {

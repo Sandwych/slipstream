@@ -92,23 +92,23 @@ namespace ObjectServer.Model
         }
 
         public override void WriteInternal(
-            IServiceScope ctx, long id, IDictionary<string, object> record)
+            IServiceScope scope, long id, IDictionary<string, object> record)
         {
             throw new NotSupportedException();
         }
 
         public override Dictionary<string, object>[] ReadInternal(
-            IServiceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields = null)
+            IServiceScope scope, long[] ids, string[] fields = null)
         {
             throw new NotSupportedException();
         }
 
-        public override void DeleteInternal(IServiceScope ctx, IEnumerable<long> ids)
+        public override void DeleteInternal(IServiceScope scope, long[] ids)
         {
             throw new NotSupportedException();
         }
 
-        public override dynamic Browse(IServiceScope ctx, long id)
+        public override dynamic Browse(IServiceScope scope, long id)
         {
             throw new NotSupportedException();
         }

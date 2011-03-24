@@ -14,8 +14,8 @@ namespace ObjectServer.Model
         long CreateInternal(IServiceScope ctx, IDictionary<string, object> propertyBag);
         void WriteInternal(IServiceScope ctx, long id, IDictionary<string, object> record);
         Dictionary<string, object>[] ReadInternal(
-            IServiceScope ctx, IEnumerable<long> ids, IEnumerable<string> requiredFields = null);
-        void DeleteInternal(IServiceScope ctx, IEnumerable<long> ids);
+            IServiceScope ctx, long[] ids, string[] requiredFields = null);
+        void DeleteInternal(IServiceScope ctx, long[] ids);
 
         dynamic Browse(IServiceScope ctx, long id);
     }

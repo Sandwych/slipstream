@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
 
-        public override void DeleteInternal(IServiceScope scope, IEnumerable<long> ids)
+        public override void DeleteInternal(IServiceScope scope, long[] ids)
         {
             if (!this.CanDelete)
             {

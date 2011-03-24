@@ -53,7 +53,7 @@ namespace ObjectServer.Model
 
         public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
-            IEnumerable<long> targetIds = null;
+            long[] targetIds = null;
             if (record.ContainsKey(this.Name))
             {
                 var targetFields = (object[][])record[this.Name];

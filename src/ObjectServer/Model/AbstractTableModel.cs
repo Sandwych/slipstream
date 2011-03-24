@@ -202,12 +202,12 @@ namespace ObjectServer.Model
         public static Dictionary<string, object>[] Read(
             dynamic model, IServiceScope ctx, object[] clientIds, object[] fields = null)
         {
-            IEnumerable<string> strFields = null;
+            string[] strFields = null;
             if (fields != null)
             {
-                strFields = fields.Select(f => (string)f);
+                strFields = fields.Select(f => (string)f).ToArray();
             }
-            var ids = clientIds.Select(id => (long)id);
+            var ids = clientIds.Select(id => (long)id).ToArray();
             return model.ReadInternal(ctx, ids, strFields);
         }
 
@@ -241,7 +241,7 @@ namespace ObjectServer.Model
         }
 
         private IDictionary<long, string> DefaultNameGetter(
-            IServiceScope ctx, IEnumerable<long> ids)
+            IServiceScope ctx, long[] ids)
         {
             var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))

@@ -177,7 +177,7 @@ namespace ObjectServer.Model
         private Dictionary<long, object> GetFieldValuesFunctional(
             IServiceScope ctx, ICollection<Dictionary<string, object>> records)
         {
-            var ids = records.Select(p => (long)p["id"]);
+            var ids = records.Select(p => (long)p["id"]).ToArray();
 
             var result = this.Getter(ctx, ids);
 
