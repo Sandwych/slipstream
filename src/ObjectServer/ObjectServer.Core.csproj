@@ -122,17 +122,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backend\AbstractDataContext.cs" />
+    <Compile Include="Backend\AbstractDBConnection.cs" />
     <Compile Include="Backend\DatabaseType.cs" />
     <Compile Include="Backend\DataProvider.cs" />
     <Compile Include="Backend\DynamicRecord.cs" />
-    <Compile Include="Backend\IDataContext.cs" />
+    <Compile Include="Backend\IDBConnection.cs" />
     <Compile Include="Backend\IDataProvider.cs" />
     <Compile Include="Backend\ISqlTypeConverter.cs" />
     <Compile Include="Backend\ITableContext.cs" />
     <Compile Include="Backend\IColumnMetadata.cs" />
     <Compile Include="Backend\Postgresql\PgColumnMetadata.cs" />
-    <Compile Include="Backend\Postgresql\PgDataContext.cs" />
+    <Compile Include="Backend\Postgresql\PgDBConnection.cs" />
     <Compile Include="Backend\Postgresql\PgDataProvider.cs" />
     <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Backend\Postgresql\PgTableContext.cs" />
@@ -164,7 +164,7 @@
     <Compile Include="Model\OrderInfo.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="Model\SearchOrder.cs" />
-    <Compile Include="SessionlessResourceScope.cs" />
+    <Compile Include="SessionlessServiceScope.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardActionModel.cs" />
     <Compile Include="Core\GroupModel.cs" />
@@ -257,7 +257,7 @@
     <Compile Include="ObjectServerStarter.cs" />
     <Compile Include="DatabaseProfileCollection.cs" />
     <Compile Include="Core\UserModel.cs" />
-    <Compile Include="IResourceScope.cs" />
+    <Compile Include="IServiceScope.cs" />
     <Compile Include="Core\FieldModel.cs" />
     <Compile Include="Core\ModelModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -266,12 +266,12 @@
     <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="ServiceMethodAttribute.cs" />
-    <Compile Include="ResourceScope.cs" />
+    <Compile Include="ServiceScope.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
     <Compile Include="SqlTree\OffsetClause.cs" />
     <Compile Include="SqlTree\LimitClause.cs" />
     <Compile Include="StaticSettings.cs" />
-    <Compile Include="InternalResourceScope.cs" />
+    <Compile Include="InternalServiceScope.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha1.cs" />

@@ -11,27 +11,27 @@ namespace ObjectServer.Model
     internal static class ModelSecurity
     {
 
-        public static bool CanCreateModel(IResourceScope scope, long userId, string model)
+        public static bool CanCreateModel(IServiceScope scope, long userId, string model)
         {
             return IsDeniedModelServiceMethod(scope, userId, model, "allow_create");
         }
 
-        public static bool CanReadModel(IResourceScope scope, long userId, string model)
+        public static bool CanReadModel(IServiceScope scope, long userId, string model)
         {
             return IsDeniedModelServiceMethod(scope, userId, model, "allow_read");
         }
 
-        public static bool CanWriteModel(IResourceScope scope, long userId, string model)
+        public static bool CanWriteModel(IServiceScope scope, long userId, string model)
         {
             return IsDeniedModelServiceMethod(scope, userId, model, "allow_write");
         }
 
-        public static bool CanDeleteModel(IResourceScope scope, long userId, string model)
+        public static bool CanDeleteModel(IServiceScope scope, long userId, string model)
         {
             return IsDeniedModelServiceMethod(scope, userId, model, "allow_delete");
         }
 
-        private static bool IsDeniedModelServiceMethod(IResourceScope scope, long userId, string model, string action)
+        private static bool IsDeniedModelServiceMethod(IServiceScope scope, long userId, string model, string action)
         {
             Debug.Assert(!string.IsNullOrEmpty(model));
             Debug.Assert(!string.IsNullOrEmpty(action));

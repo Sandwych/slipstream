@@ -165,7 +165,7 @@ namespace ObjectServer.Model
         }
 
         private void ConvertFieldToColumn(
-            IResourceScope ctx, Dictionary<string, object> record, string[] updatableColumnFields)
+            IServiceScope ctx, Dictionary<string, object> record, string[] updatableColumnFields)
         {
 
             foreach (var f in updatableColumnFields)
@@ -180,7 +180,7 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public static long[] Search(
-            dynamic model, IResourceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
+            dynamic model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
         {
             OrderInfo[] orderInfos = OrderInfo.GetDefaultOrders();
 
@@ -200,7 +200,7 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            dynamic model, IResourceScope ctx, object[] clientIds, object[] fields = null)
+            dynamic model, IServiceScope ctx, object[] clientIds, object[] fields = null)
         {
             IEnumerable<string> strFields = null;
             if (fields != null)
@@ -213,20 +213,20 @@ namespace ObjectServer.Model
 
         [ServiceMethod]
         public static long Create(
-            dynamic model, IResourceScope ctx, IDictionary<string, object> propertyBag)
+            dynamic model, IServiceScope ctx, IDictionary<string, object> propertyBag)
         {
             return model.CreateInternal(ctx, propertyBag);
         }
 
         [ServiceMethod]
         public static void Write(
-           dynamic model, IResourceScope ctx, object id, IDictionary<string, object> userRecord)
+           dynamic model, IServiceScope ctx, object id, IDictionary<string, object> userRecord)
         {
             model.WriteInternal(ctx, (long)id, userRecord);
         }
 
         [ServiceMethod]
-        public static void Delete(dynamic model, IResourceScope ctx, object[] ids)
+        public static void Delete(dynamic model, IServiceScope ctx, object[] ids)
         {
             var longIds = ids.Select(id => (long)id).ToArray();
             model.DeleteInternal(ctx, longIds);
@@ -235,13 +235,13 @@ namespace ObjectServer.Model
         #endregion
 
 
-        public override dynamic Browse(IResourceScope ctx, long id)
+        public override dynamic Browse(IServiceScope ctx, long id)
         {
             return new BrowsableRecord(ctx, this, id);
         }
 
         private IDictionary<long, string> DefaultNameGetter(
-            IResourceScope ctx, IEnumerable<long> ids)
+            IServiceScope ctx, IEnumerable<long> ids)
         {
             var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))
@@ -264,7 +264,7 @@ namespace ObjectServer.Model
             return result;
         }
 
-        private void AuditLog(IResourceScope ctx, long id, string msg)
+        private void AuditLog(IServiceScope ctx, long id, string msg)
         {
 
             var logRecord = new Dictionary<string, object>()

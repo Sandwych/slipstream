@@ -17,7 +17,7 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        public override long CreateInternal(IResourceScope scope, IDictionary<string, object> userRecord)
+        public override long CreateInternal(IServiceScope scope, IDictionary<string, object> userRecord)
         {
             if (!this.CanCreate)
             {
@@ -82,7 +82,7 @@ namespace ObjectServer.Model
         /// <param name="scope"></param>
         /// <param name="record"></param>
         /// <param name="id"></param>
-        private void PostcreateManyToManyFields(IResourceScope scope, Dictionary<string, object> record, long id)
+        private void PostcreateManyToManyFields(IServiceScope scope, Dictionary<string, object> record, long id)
         {
 
             //处理 Many-to-many 字段
@@ -108,9 +108,9 @@ namespace ObjectServer.Model
             }
         }
 
-        private long CreateSelf(IResourceScope ctx, IDictionary<string, object> values)
+        private long CreateSelf(IServiceScope ctx, IDictionary<string, object> values)
         {
-            var serial = ctx.DatabaseProfile.DataContext.NextSerial(this.SequenceName);
+            var serial = ctx.DatabaseProfile.Connection.NextSerial(this.SequenceName);
 
             if (this.ContainsField(VersionFieldName))
             {
@@ -147,7 +147,7 @@ namespace ObjectServer.Model
               serial,
               args);
 
-            var rows = ctx.DatabaseProfile.DataContext.Execute(sql, colValues);
+            var rows = ctx.DatabaseProfile.Connection.Execute(sql, colValues);
             if (rows != 1)
             {
                 Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
@@ -162,7 +162,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValues(IResourceScope ctx, IDictionary<string, object> propertyBag)
+        private void AddDefaultValues(IServiceScope ctx, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
                 this.Fields.Values.Where(

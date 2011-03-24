@@ -39,20 +39,22 @@ namespace ObjectServer.Core
             var isRootUserExisted = UserExists(db, "root");
             if (isRootUserExisted)
             {
-                this.CreateRootUser(db.DataContext);
+                this.CreateRootUser(db.Connection);
             }
         }
 
         private static bool UserExists(IDatabaseProfile db, string login)
         {
             var sql = "SELECT COUNT(*) FROM core_user WHERE \"login\" = @0";
-            var rowCount = db.DataContext.QueryValue(sql, login);
+            var rowCount = db.Connection.QueryValue(sql, login);
             var isRootUserExisted = rowCount == DBNull.Value || (long)rowCount <= 0;
             return isRootUserExisted;
         }
 
-        private void CreateRootUser(IDataContext datactx)
+        private void CreateRootUser(IDBConnection conn)
         {
+            Debug.Assert(conn != null);
+
             var sql = @"
 INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
     VALUES(@0, @1, @2, @3, @4, @5, @6)
@@ -72,7 +74,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
                     };
             var row = HashPassword(user);
 
-            datactx.Execute(
+            conn.Execute(
                 sql, row[VersionFieldName], row["name"], row["login"], row["password"],
                 row["admin"], row["_created_time"], row["salt"]);
         }
@@ -109,7 +111,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         }
 
 
-        public override long CreateInternal(IResourceScope ctx, IDictionary<string, object> values)
+        public override long CreateInternal(IServiceScope ctx, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
 
@@ -117,7 +119,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         }
 
 
-        public override void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record)
+        public override void WriteInternal(IServiceScope ctx, long id, IDictionary<string, object> record)
         {
             IDictionary<string, object> values2 = HashPassword(record);
 
@@ -127,7 +129,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields)
+            IServiceScope ctx, IEnumerable<long> ids, IEnumerable<string> fields)
         {
             var records = base.ReadInternal(ctx, ids, fields);
 
@@ -150,7 +152,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         }
 
 
-        public Session LogOn(IResourceScope ctx,
+        public Session LogOn(IServiceScope ctx,
             string database, string login, string password)
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
@@ -184,7 +186,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         }
 
 
-        public void LogOut(IResourceScope ctx, string sessionId)
+        public void LogOut(IServiceScope ctx, string sessionId)
         {
             var sessGuid = new Guid(sessionId);
             ObjectServerStarter.SessionStore.Remove(sessGuid);

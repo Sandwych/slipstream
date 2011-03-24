@@ -13,14 +13,14 @@ namespace ObjectServer
     /// <summary>
     /// 但凡是需要 RPC 的方法都需要用此 scope 包裹
     /// </summary>
-    internal sealed class ResourceScope : IResourceScope
+    internal sealed class ServiceScope : IServiceScope
     {
         private bool ownDb;
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public ResourceScope(Guid sessionId)
+        public ServiceScope(Guid sessionId)
         {
             var sessStore = ObjectServerStarter.SessionStore;
             var session = sessStore.GetSession(sessionId);
@@ -37,14 +37,14 @@ namespace ObjectServer
 
             this.ownDb = true;
             this.DatabaseProfile = ObjectServerStarter.DatabaseProfiles.GetDatabaseProfile(session);
-            this.DatabaseProfile.DataContext.Open();
+            this.DatabaseProfile.Connection.Open();
         }
 
         /// <summary>
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        internal ResourceScope(string dbName)
+        internal ServiceScope(string dbName)
         {
             Logger.Debug(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
@@ -53,22 +53,22 @@ namespace ObjectServer
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
             this.DatabaseProfile = ObjectServerStarter.DatabaseProfiles.GetDatabaseProfile(this.Session);
-            this.DatabaseProfile.DataContext.Open();
+            this.DatabaseProfile.Connection.Open();
         }
 
-        internal ResourceScope(IDatabaseProfile db)
+        internal ServiceScope(IDatabaseProfile db)
         {
             Debug.Assert(db != null);
-            Debug.Assert(db.DataContext != null);
+            Debug.Assert(db.Connection != null);
 
             Logger.Debug(() =>
                 string.Format("ContextScope is opening for DatabaseContext"));
 
-            this.Session = new Session(db.DataContext.DatabaseName, "system", 0);
+            this.Session = new Session(db.Connection.DatabaseName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = false;
             this.DatabaseProfile = db;
-            this.DatabaseProfile.DataContext.Open();
+            this.DatabaseProfile.Connection.Open();
         }
 
         public IResource GetResource(string resName)
@@ -99,7 +99,7 @@ namespace ObjectServer
         {
             if (this.ownDb)
             {
-                this.DatabaseProfile.DataContext.Close();
+                this.DatabaseProfile.Connection.Close();
             }
 
             Logger.Debug(() => "ScopeContext closed");
@@ -109,7 +109,7 @@ namespace ObjectServer
 
         #region IEquatable<IContext> 成员
 
-        public bool Equals(IResourceScope other)
+        public bool Equals(IServiceScope other)
         {
             return this.Session.Id == other.Session.Id;
         }

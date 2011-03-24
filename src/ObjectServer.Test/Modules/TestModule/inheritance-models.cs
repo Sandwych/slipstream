@@ -31,7 +31,7 @@ namespace ObjectServer.Test
 
         [ServiceMethod]
         public static long Create(
-            dynamic model, IResourceScope ctx, IDictionary<string, object> propertyBag)
+            dynamic model, IServiceScope ctx, IDictionary<string, object> propertyBag)
         {
             var record = new Dictionary<string, object>(propertyBag);
             record["age"] = 33;

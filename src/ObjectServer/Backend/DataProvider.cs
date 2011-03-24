@@ -14,7 +14,7 @@ namespace ObjectServer.Backend
         };
 
 
-        public static IDataContext CreateDataContext(string dbName)
+        public static IDBConnection CreateDataContext(string dbName)
         {
             if (dbName == null)
             {
@@ -25,7 +25,7 @@ namespace ObjectServer.Backend
             return dataProvider.CreateDataContext(dbName);
         }
 
-        public static IDataContext CreateDataContext()
+        public static IDBConnection CreateDataContext()
         {
             var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
             return dataProvider.CreateDataContext();

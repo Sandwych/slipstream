@@ -91,7 +91,7 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(IResourceScope ctx)
+        public void Load(IServiceScope ctx)
         {
             Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
 
@@ -116,7 +116,7 @@ namespace ObjectServer
             }
         }
 
-        private void LoadAdditionalModule(IResourceScope ctx)
+        private void LoadAdditionalModule(IServiceScope ctx)
         {
             Logger.Info(() => "Loading precompiled assemblies...");
 
@@ -142,7 +142,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadCoreModule(IResourceScope ctx)
+        private void LoadCoreModule(IServiceScope ctx)
         {
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(ctx.DatabaseProfile, a);
@@ -164,7 +164,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadData(IResourceScope ctx)
+        private void LoadData(IServiceScope ctx)
         {
             Logger.Info(() => "Importing data...");
 
@@ -272,7 +272,7 @@ namespace ObjectServer
             return module;
         }
 
-        public void AddToDatabase(IDataContext db)
+        public void AddToDatabase(IDBConnection db)
         {
             var state = "deactivated";
             if (this.AutoLoad)

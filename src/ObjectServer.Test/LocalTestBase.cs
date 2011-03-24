@@ -30,7 +30,7 @@ namespace ObjectServer
         private void ActiveTestModule()
         {
             //激活 test 模块
-            using (var scope = new ResourceScope(new Guid(this.SessionId)))
+            using (var scope = new ServiceScope(new Guid(this.SessionId)))
             {
                 var domain = new object[][] { new object[] { "name", "=", "test" } };
                 var moduleModel = (ObjectServer.Model.IMetaModel)scope.GetResource("core.module");
@@ -52,7 +52,7 @@ namespace ObjectServer
 
         public IExportedService Service { get; private set; }
 
-        public IResourceScope ResourceScope { get; private set; }
+        public IServiceScope ResourceScope { get; private set; }
 
         [SetUp]
         public void BeforeTest()
@@ -60,7 +60,7 @@ namespace ObjectServer
             Debug.Assert(this.ResourceScope == null);
             Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
 
-            this.ResourceScope = new ResourceScope(new Guid(this.SessionId));
+            this.ResourceScope = new ServiceScope(new Guid(this.SessionId));
         }
 
         [TearDown]
@@ -93,7 +93,7 @@ namespace ObjectServer
             this.ClearModel(this.ResourceScope, "test.employee");
         }
 
-        protected void ClearModel(IResourceScope scope, string model)
+        protected void ClearModel(IServiceScope scope, string model)
         {
             dynamic res = scope.GetResource(model);
             var ids = res.SearchInternal(scope);

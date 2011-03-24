@@ -9,7 +9,6 @@ namespace ObjectServer
 {
     public interface IDatabaseProfile : IDisposable, IResourceContainer
     {
-        IDataContext DataContext { get; }
-        
+        IDBConnection Connection { get; }
     }
 }

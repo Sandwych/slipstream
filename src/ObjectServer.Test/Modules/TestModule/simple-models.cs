@@ -70,12 +70,12 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod]
-        public static int GetSum(dynamic self, IResourceScope ctx)
+        public static int GetSum(dynamic self, IServiceScope ctx)
         {
             return 1 + 1;
         }
 
-        public Dictionary<long, object> GetField3(IResourceScope ctx, IEnumerable<long> ids)
+        public Dictionary<long, object> GetField3(IServiceScope ctx, IEnumerable<long> ids)
         {
             var fieldNames = new string[] { "field1", "field2" };
             var values = base.ReadInternal(ctx, ids, fieldNames);

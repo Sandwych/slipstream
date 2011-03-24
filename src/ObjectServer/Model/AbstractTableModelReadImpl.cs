@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override Dictionary<string, object>[] ReadInternal(
-                 IResourceScope scope, IEnumerable<long> ids, IEnumerable<string> requiredFields = null)
+                 IServiceScope scope, IEnumerable<long> ids, IEnumerable<string> requiredFields = null)
         {
             if (scope == null)
             {
@@ -77,7 +77,7 @@ namespace ObjectServer.Model
             var sql = select.ToString();
 
             //先查找表里的简单字段数据
-            var records = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql);
+            var records = scope.DatabaseProfile.Connection.QueryAsDictionary(sql);
 
             this.ReadBaseModels(scope, allFields, records);
 
@@ -87,7 +87,7 @@ namespace ObjectServer.Model
         }
 
         private void PostProcessFieldValues(
-            IResourceScope scope, IList<string> allFields, IList<Dictionary<string, object>> records)
+            IServiceScope scope, IList<string> allFields, IList<Dictionary<string, object>> records)
         {
             Debug.Assert(scope != null);
             Debug.Assert(allFields != null);
@@ -111,7 +111,7 @@ namespace ObjectServer.Model
         }
 
         private void ReadBaseModels(
-            IResourceScope scope, IList<string> allFields, Dictionary<string, object>[] records)
+            IServiceScope scope, IList<string> allFields, Dictionary<string, object>[] records)
         {
             Debug.Assert(scope != null);
             Debug.Assert(allFields != null);

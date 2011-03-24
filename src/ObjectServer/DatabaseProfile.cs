@@ -14,7 +14,7 @@ namespace ObjectServer
     /// 用于描述一个帐套数据库的上下文环境
     /// 一个数据库包含了该数据库中的所有对象
     /// </summary>
-    public class DatabaseProfile : IDatabaseProfile
+    internal class DatabaseProfile : IDatabaseProfile
     {
         private IDictionary<string, IResource> resources = new Dictionary<string, IResource>();
         private HashSet<string> loadedResources = new HashSet<string>();
@@ -25,14 +25,19 @@ namespace ObjectServer
         /// <param name="dbName"></param>
         public DatabaseProfile(string dbName)
         {
-            this.DataContext = DataProvider.CreateDataContext(dbName);
+            Debug.Assert(!string.IsNullOrEmpty(dbName));
+
+            this.Connection = DataProvider.CreateDataContext(dbName);
 
             this.EnsureInitialization();
         }
 
-        public DatabaseProfile(IDataContext dataCtx, IResourceContainer resources)
+        public DatabaseProfile(IDBConnection conn, IResourceContainer resources)
         {
-            this.DataContext = dataCtx;
+            Debug.Assert(conn != null);
+            Debug.Assert(resources != null);
+
+            this.Connection = conn;
             this.Resources = resources;
 
             this.EnsureInitialization();
@@ -41,9 +46,9 @@ namespace ObjectServer
         private void EnsureInitialization()
         {
             //如果数据库是一个新建的空数据库，那么我们就需要先初始化此数据库为一个 ObjectServer 账套数据库
-            if (!this.DataContext.IsInitialized())
+            if (!this.Connection.IsInitialized())
             {
-                this.DataContext.Initialize();
+                this.Connection.Initialize();
             }
         }
 
@@ -52,7 +57,7 @@ namespace ObjectServer
             this.Dispose(false);
         }
 
-        public IDataContext DataContext { get; private set; }
+        public IDBConnection Connection { get; private set; }
 
         public IResourceContainer Resources { get; private set; }
 
@@ -70,7 +75,7 @@ namespace ObjectServer
                 //这里处理托管对象
             }
 
-            this.DataContext.Dispose();
+            this.Connection.Dispose();
         }
 
         #endregion
@@ -79,6 +84,8 @@ namespace ObjectServer
 
         public void RegisterResource(IResource res)
         {
+            Debug.Assert(res != null);
+
             if (res == null)
             {
                 throw new ArgumentNullException("res");
@@ -102,6 +109,8 @@ namespace ObjectServer
 
         public IResource GetResource(string resName)
         {
+            Debug.Assert(!string.IsNullOrEmpty(resName));
+
             IResource res;
             if (this.resources.TryGetValue(resName, out res))
             {

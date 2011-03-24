@@ -16,7 +16,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, ICollection<Dictionary<string, object>> records)
+           IServiceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             //查询字表
             IMetaModel childModel = (IMetaModel)ctx.GetResource(this.Relation);
@@ -42,12 +42,12 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override object OnSetFieldValue(IResourceScope scope, object value)
+        protected override object OnSetFieldValue(IServiceScope scope, object value)
         {
             throw new NotSupportedException();
         }
 
-        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
             //TODO 重构成跟Many-to-many 一样的
             var targetModelName = this.Relation;

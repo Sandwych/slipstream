@@ -9,7 +9,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface IResourceScope : IDisposable, IEquatable<IResourceScope>
+    public interface IServiceScope : IDisposable, IEquatable<IServiceScope>
     {
         IDatabaseProfile DatabaseProfile { get; }
 

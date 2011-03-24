@@ -35,19 +35,19 @@ namespace ObjectServer.Model
 
 
         protected override Dictionary<long, object> OnGetFieldValues(
-            IResourceScope session, ICollection<Dictionary<string, object>> records)
+            IServiceScope session, ICollection<Dictionary<string, object>> records)
         {
             return records.ExtractFieldValues(this.Name);
         }
 
-        protected override object OnSetFieldValue(IResourceScope scope, object value)
+        protected override object OnSetFieldValue(IServiceScope scope, object value)
         {
             //TODO 检查是否在范围内
 
             return value;
         }
 
-        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
             return record[this.Name];
         }

@@ -6,29 +6,25 @@ using System.Diagnostics;
 
 namespace ObjectServer
 {
-    internal class SessionlessResourceScope : IResourceScope
+    internal class InternalServiceScope : IServiceScope
     {
-        public SessionlessResourceScope(IDatabaseProfile db)
+        public InternalServiceScope(IDatabaseProfile db, Session session)
         {
             Debug.Assert(db != null);
+            Debug.Assert(session != null);
             this.DatabaseProfile = db;
+            this.Session = session;
         }
 
         public IDatabaseProfile DatabaseProfile { get; private set; }
 
-        public Session Session
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
+        public Session Session { get; private set; }
 
         public void Dispose()
         {
         }
 
-        public bool Equals(IResourceScope other)
+        public bool Equals(IServiceScope other)
         {
             throw new NotSupportedException("Invalid Equals invocation");
         }

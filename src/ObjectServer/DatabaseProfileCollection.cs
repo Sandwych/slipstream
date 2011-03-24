@@ -70,8 +70,8 @@ namespace ObjectServer
 
             //加载其它模块
             Logger.Info(() => "Loading additional modules...");
-            var ctx = new InternalResourceScope(db, session);
-            ObjectServerStarter.Modules.UpdateModuleList(db.DataContext);
+            var ctx = new InternalServiceScope(db, session);
+            ObjectServerStarter.Modules.UpdateModuleList(db.Connection);
             ObjectServerStarter.Modules.LoadActivatedModules(ctx);
         }
 
@@ -95,7 +95,7 @@ namespace ObjectServer
             //比如两个客户端，一个正在操作数据库，另一个要删除数据库
 
             var db = this.databaseProfiles[dbName];
-            db.DataContext.Close();
+            db.Connection.Close();
             this.databaseProfiles.Remove(dbName);
         }
 

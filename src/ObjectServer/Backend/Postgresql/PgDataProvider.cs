@@ -10,24 +10,24 @@ namespace ObjectServer.Backend.Postgresql
 
         #region IDataProvider 成员
 
-        public IDataContext CreateDataContext()
+        public IDBConnection CreateDataContext()
         {
-            return new PgDataContext();
+            return new PgDBConnection();
         }
 
-        public IDataContext CreateDataContext(string dbName)
+        public IDBConnection CreateDataContext(string dbName)
         {
             if (string.IsNullOrEmpty(dbName))
             {
                 throw new ArgumentNullException("dbName");
             }
 
-            return new PgDataContext(dbName);
+            return new PgDBConnection(dbName);
         }
 
         public string[] ListDatabases()
         {
-            using (var ctx = new PgDataContext())
+            using (var ctx = new PgDBConnection())
             {
                 ctx.Open();
 
@@ -60,7 +60,7 @@ SELECT datname FROM pg_database
                 @"CREATE DATABASE ""{0}"" TEMPLATE template0 ENCODING 'unicode'",
                 dbName);
 
-            using (var ctx = new PgDataContext())
+            using (var ctx = new PgDBConnection())
             {
                 ctx.Open();
 
@@ -82,7 +82,7 @@ SELECT datname FROM pg_database
                 throw new ArgumentNullException("dbName");
             }
 
-            using (var ctx = new PgDataContext())
+            using (var ctx = new PgDBConnection())
             {
 
                 var sql = string.Format(

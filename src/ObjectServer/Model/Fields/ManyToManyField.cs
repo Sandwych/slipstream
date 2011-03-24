@@ -21,7 +21,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, ICollection<Dictionary<string, object>> records)
+           IServiceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             //中间表模型
             var relationModel = (IMetaModel)ctx.GetResource(this.Relation);
@@ -34,14 +34,14 @@ namespace ObjectServer.Model
                 var sql = string.Format(
                     "SELECT \"{0}\" FROM \"{1}\" WHERE \"{2}\" = @0",
                     this.RelatedField, relationModel.TableName, this.OriginField);
-                var targetIds = ctx.DatabaseProfile.DataContext.QueryAsArray(sql, selfId);
+                var targetIds = ctx.DatabaseProfile.Connection.QueryAsArray(sql, selfId);
                 result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }
 
             return result;
         }
 
-        protected override object OnSetFieldValue(IResourceScope scope, object value)
+        protected override object OnSetFieldValue(IServiceScope scope, object value)
         {
             if (!(value is long[]))
             {
@@ -51,7 +51,7 @@ namespace ObjectServer.Model
             return value;
         }
 
-        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
             IEnumerable<long> targetIds = null;
             if (record.ContainsKey(this.Name))

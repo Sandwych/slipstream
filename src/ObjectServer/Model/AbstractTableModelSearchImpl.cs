@@ -19,7 +19,7 @@ namespace ObjectServer.Model
         private static readonly OrderbyClause DefaultOrderbyClause = new OrderbyClause("id", "asc");
 
         public override long[] SearchInternal(
-            IResourceScope scope, object[][] domain = null, OrderInfo[] order = null, long offset = 0, long limit = 0)
+            IServiceScope scope, object[][] domain = null, OrderInfo[] order = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {
@@ -122,7 +122,7 @@ namespace ObjectServer.Model
             select.Traverse(sv);
             var sql = sv.ToString();
 
-            using (var cmd = scope.DatabaseProfile.DataContext.Connection.CreateCommand())
+            using (var cmd = scope.DatabaseProfile.Connection.Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 using (var reader = cmd.ExecuteReader())

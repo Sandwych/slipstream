@@ -12,7 +12,7 @@ namespace ObjectServer.Model
     {
         private IDatabaseProfile db;
         private IMetaModel model;
-        private IResourceScope context;
+        private IServiceScope context;
 
         public TableMigrator(IDatabaseProfile db, IMetaModel model)
         {
@@ -28,16 +28,16 @@ namespace ObjectServer.Model
 
             this.db = db;
             this.model = model;
-            this.context = new SessionlessResourceScope(db);
+            this.context = new SessionlessServiceScope(db);
         }
 
         public void Migrate()
         {
             Debug.Assert(this.db != null);
 
-            var table = this.db.DataContext.CreateTableContext(this.model.TableName);
+            var table = this.db.Connection.CreateTableContext(this.model.TableName);
 
-            if (!table.TableExists(db.DataContext, this.model.TableName))
+            if (!table.TableExists(db.Connection, this.model.TableName))
             {
                 this.CreateTable(table);
             }
@@ -49,19 +49,19 @@ namespace ObjectServer.Model
 
         private void CreateTable(ITableContext table)
         {
-            table.CreateTable(db.DataContext, this.model.TableName, this.model.Label);
+            table.CreateTable(db.Connection, this.model.TableName, this.model.Label);
 
             var storableColumns = this.model.GetAllStorableFields();
 
             foreach (var f in storableColumns)
             {
-                table.AddColumn(db.DataContext, f);
+                table.AddColumn(db.Connection, f);
 
                 if (f.Type == FieldType.ManyToOne)
                 {
                     var resources = this.db as IResourceContainer; //dyanmic workaround
                     var refModel = (IMetaModel)resources.GetResource(f.Relation);
-                    table.AddFK(db.DataContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
+                    table.AddFK(db.Connection, f.Name, refModel.TableName, OnDeleteAction.SetNull);
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace ObjectServer.Model
                 {
                     if (!table.ColumnExists(field.Name))
                     {
-                        table.AddColumn(this.db.DataContext, field);
+                        table.AddColumn(this.db.Connection, field);
                     }
                     else
                     {
@@ -112,7 +112,7 @@ namespace ObjectServer.Model
                 {
                     if (!c.Nullable && columnsToDelete.Contains(c.Name))
                     {
-                        table.AlterColumnNullable(this.db.DataContext, c.Name, true);
+                        table.AlterColumnNullable(this.db.Connection, c.Name, true);
                     }
                 }
             }
@@ -120,7 +120,7 @@ namespace ObjectServer.Model
             {
                 foreach (var c in columnsToDelete)
                 {
-                    table.DeleteColumn(this.db.DataContext, c);
+                    table.DeleteColumn(this.db.Connection, c);
                 }
             }
 
@@ -136,7 +136,7 @@ namespace ObjectServer.Model
             {
                 //TODO:转换成可移植数据库类型    
                 var sqlType = string.Format("VARCHAR({0})", field.Size);
-                table.AlterColumnType(this.db.DataContext, field.Name, sqlType);
+                table.AlterColumnType(this.db.Connection, field.Name, sqlType);
             }
 
 
@@ -152,7 +152,7 @@ namespace ObjectServer.Model
 
         private void SetColumnNullable(ITableContext table, IMetaField field)
         {
-            table.AlterColumnNullable(this.db.DataContext, field.Name, true);
+            table.AlterColumnNullable(this.db.Connection, field.Name, true);
         }
 
         private void SetColumnNotNullable(ITableContext table, IMetaField field, bool hasRow)
@@ -163,8 +163,8 @@ namespace ObjectServer.Model
                 var defaultValue = field.DefaultProc(this.context);
                 var sql = string.Format(
                     "UPDATE \"{0}\" SET \"{1}\"=@0", table.Name, field.Name);
-                this.db.DataContext.Execute(sql, defaultValue);
-                table.AlterColumnNullable(this.db.DataContext, field.Name, false);
+                this.db.Connection.Execute(sql, defaultValue);
+                table.AlterColumnNullable(this.db.Connection, field.Name, false);
             }
             else
             {
@@ -177,7 +177,7 @@ namespace ObjectServer.Model
         {
             var sql = string.Format(
                 "SELECT COUNT(*) FROM \"{0}\"", tableName);
-            var rowCount = (long)this.db.DataContext.QueryValue(sql);
+            var rowCount = (long)this.db.Connection.QueryValue(sql);
             return rowCount > 0;
         }
 

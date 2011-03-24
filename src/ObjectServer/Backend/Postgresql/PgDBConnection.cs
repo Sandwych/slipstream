@@ -9,11 +9,11 @@ using Npgsql;
 
 namespace ObjectServer.Backend.Postgresql
 {
-    internal sealed class PgDataContext : AbstractDataContext, IDataContext
+    internal sealed class PgDBConnection : AbstractDBConnection, IDBConnection
     {
         private const string INITDB = "ObjectServer.Backend.Postgresql.initdb.sql";
 
-        public PgDataContext(string dbName)
+        public PgDBConnection(string dbName)
         {
             var cfg = ObjectServerStarter.Configuration;
             string connectionString = string.Format(
@@ -27,7 +27,7 @@ namespace ObjectServer.Backend.Postgresql
             this.DatabaseName = dbName;
         }
 
-        public PgDataContext()
+        public PgDBConnection()
             : this("template1")
         {
         }

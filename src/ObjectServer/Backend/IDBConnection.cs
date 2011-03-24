@@ -7,7 +7,7 @@ using System.Data.Common;
 
 namespace ObjectServer.Backend
 {
-    public interface IDataContext : IDisposable
+    public interface IDBConnection : IDisposable
     {
 
         void Open();

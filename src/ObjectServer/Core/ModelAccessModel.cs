@@ -39,7 +39,7 @@ namespace ObjectServer.Core
         /// <param name="userId"></param>
         /// <returns></returns>
         public Dictionary<string, object>[]
-            FindByModelAndUserId(IResourceScope scope, string model, long userId)
+            FindByModelAndUserId(IServiceScope scope, string model, long userId)
         {
             var sql = @"
 SELECT DISTINCT ma.id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
@@ -48,7 +48,7 @@ SELECT DISTINCT ma.id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_
     INNER JOIN core_user_group_rel ugr ON ugr.gid = ma.group
     WHERE (ugr.uid = @0) AND (m.name = @1)
 ";
-            var result = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql, userId, model);
+            var result = scope.DatabaseProfile.Connection.QueryAsDictionary(sql, userId, model);
 
             return result;
         }
@@ -59,7 +59,7 @@ SELECT DISTINCT ma.id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_
         /// <param name="scope"></param>
         /// <param name="userRecord"></param>
         /// <returns></returns>
-        public override long CreateInternal(IResourceScope scope, IDictionary<string, object> userRecord)
+        public override long CreateInternal(IServiceScope scope, IDictionary<string, object> userRecord)
         {
             return base.CreateInternal(scope, userRecord);
         }
@@ -70,7 +70,7 @@ SELECT DISTINCT ma.id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_
         /// <param name="scope"></param>
         /// <param name="id"></param>
         /// <param name="userRecord"></param>
-        public override void WriteInternal(IResourceScope scope, long id, IDictionary<string, object> userRecord)
+        public override void WriteInternal(IServiceScope scope, long id, IDictionary<string, object> userRecord)
         {
             base.WriteInternal(scope, id, userRecord);
         }

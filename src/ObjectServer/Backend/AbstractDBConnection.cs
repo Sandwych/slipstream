@@ -10,17 +10,17 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Backend
 {
-    internal abstract class AbstractDataContext : IDataContext
+    internal abstract class AbstractDBConnection : IDBConnection
     {
         protected DbConnection conn;
         private bool opened;
 
-        public AbstractDataContext()
+        public AbstractDBConnection()
         {
             this.opened = false;
         }
 
-        ~AbstractDataContext()
+        ~AbstractDBConnection()
         {
             this.Dispose(false);
         }

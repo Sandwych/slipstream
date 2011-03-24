@@ -93,7 +93,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void UpdateModuleList(IDataContext db)
+        public void UpdateModuleList(IDBConnection db)
         {
             var cfg = ObjectServerStarter.Configuration;
             this.LookupAllModules(cfg.ModulePath);
@@ -112,12 +112,12 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadActivatedModules(IResourceScope ctx)
+        public void LoadActivatedModules(IServiceScope ctx)
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的
             var sql = "SELECT \"id\", \"name\" FROM \"core_module\" WHERE \"state\" = 'activated'";
-            var modules = ctx.DatabaseProfile.DataContext.QueryAsDictionary(sql);
+            var modules = ctx.DatabaseProfile.Connection.QueryAsDictionary(sql);
 
             var unloadModules = new List<long>();
             foreach (var m in modules)
@@ -138,12 +138,12 @@ namespace ObjectServer
 
             if (unloadModules.Count > 0)
             {
-                DeactivateModules(ctx.DatabaseProfile.DataContext, unloadModules);
+                DeactivateModules(ctx.DatabaseProfile.Connection, unloadModules);
             }
         }
 
 
-        private static void DeactivateModules(IDataContext db, IEnumerable<long> unloadedModuleIds)
+        private static void DeactivateModules(IDBConnection db, IEnumerable<long> unloadedModuleIds)
         {
             Debug.Assert(unloadedModuleIds.Count() > 0);
             Debug.Assert(db != null);

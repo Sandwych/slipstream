@@ -115,7 +115,7 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<long, object> GetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records)
+            IServiceScope scope, ICollection<Dictionary<string, object>> records)
         {
             if (this.IsFunctional)
             {
@@ -127,7 +127,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public object SetFieldValue(IResourceScope scope, object value)
+        public object SetFieldValue(IServiceScope scope, object value)
         {
             if (this.IsFunctional)
             {
@@ -140,11 +140,11 @@ namespace ObjectServer.Model
         }
 
         protected abstract Dictionary<long, object> OnGetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records);
+            IServiceScope scope, ICollection<Dictionary<string, object>> records);
 
-        protected abstract object OnSetFieldValue(IResourceScope scope, object value);
+        protected abstract object OnSetFieldValue(IServiceScope scope, object value);
 
-        public abstract object BrowseField(IResourceScope scope, IDictionary<string, object> record);
+        public abstract object BrowseField(IServiceScope scope, IDictionary<string, object> record);
 
         public bool IsProperty
         {
@@ -167,7 +167,7 @@ namespace ObjectServer.Model
         }
 
         private static Dictionary<long, object>
-            GetPropertyValues(IResourceScope session, IEnumerable<long> ids)
+            GetPropertyValues(IServiceScope session, IEnumerable<long> ids)
         {
             throw new NotImplementedException();
         }
@@ -175,7 +175,7 @@ namespace ObjectServer.Model
         #endregion
 
         private Dictionary<long, object> GetFieldValuesFunctional(
-            IResourceScope ctx, ICollection<Dictionary<string, object>> records)
+            IServiceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             var ids = records.Select(p => (long)p["id"]);
 

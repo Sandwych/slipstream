@@ -88,7 +88,7 @@ namespace ObjectServer
 
             var parameters = mi.GetParameters();
             if (parameters.Length < 2
-                || parameters[1].ParameterType != typeof(IResourceScope)
+                || parameters[1].ParameterType != typeof(IServiceScope)
                 || !mi.IsPublic)
             {
                 var msg = string.Format(

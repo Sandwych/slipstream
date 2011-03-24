@@ -26,7 +26,7 @@ namespace ObjectServer.Model.Test
             var service = ObjectServer.ObjectServerStarter.ExportedService;
             var sessionId = service.LogOn("objectserver", "testuser", "testuser");
 
-            using (var scope = new ResourceScope(new Guid(sessionId)))
+            using (var scope = new ServiceScope(new Guid(sessionId)))
             {
             }
 

@@ -20,7 +20,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope ctx, ICollection<Dictionary<string, object>> rawRecords)
+           IServiceScope ctx, ICollection<Dictionary<string, object>> rawRecords)
         {
             var fields = new string[] { "name" }; //TODO 改成静态变量
             var result = new Dictionary<long, object>(rawRecords.Count());
@@ -72,12 +72,12 @@ namespace ObjectServer.Model
         }
 
 
-        protected override object OnSetFieldValue(IResourceScope scope, object value)
+        protected override object OnSetFieldValue(IServiceScope scope, object value)
         {
             return value;
         }
 
-        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
             var destModelName = this.Relation;
             dynamic destMetaModel = scope.GetResource(destModelName);

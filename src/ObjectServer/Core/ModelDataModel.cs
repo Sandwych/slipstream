@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data;
 using System.IO;
 
 using ObjectServer.Model;
@@ -30,22 +29,24 @@ namespace ObjectServer.Core
             Fields.Text("value").SetLabel("Value");
         }
 
-        internal static void Create(IDataContext dbctx, string module, string model, string key, long resId)
+        internal static void Create(
+            IDBConnection conn, string module, string model, string key, long resId)
         {
             var sql =
                 "INSERT INTO core_model_data(name, module, model, ref_id) VALUES(@0, @1, @2, @3)";
-            var rows = dbctx.Execute(sql, key, module, model, resId);
+            var rows = conn.Execute(sql, key, module, model, resId);
             if (rows != 1)
             {
-                throw new DataException("Failed to insert row of table 'core_model_data'");
+                throw new System.Data.DataException(
+                    "Failed to insert row of table 'core_model_data'");
             }
         }
 
-        internal static long? TryLookupResourceId(IDataContext dbctx, string model, string key)
+        internal static long? TryLookupResourceId(IDBConnection conn, string model, string key)
         {
-            if (dbctx == null)
+            if (conn == null)
             {
-                throw new ArgumentNullException("dbctx");
+                throw new ArgumentNullException("conn");
             }
 
             if (string.IsNullOrEmpty(model))
@@ -59,7 +60,7 @@ namespace ObjectServer.Core
             }
 
             var sql = "SELECT ref_id FROM core_model_data WHERE model = @0 AND name = @1";
-            var rows = dbctx.QueryAsArray(sql, model, key);
+            var rows = conn.QueryAsArray(sql, model, key);
             if (rows.Length == 0)
             {
                 return null;
@@ -68,15 +69,15 @@ namespace ObjectServer.Core
             return (long)rows[0];
         }
 
-        internal static void UpdateResourceId(IDataContext dbctx, string model, string key, long refId)
+        internal static void UpdateResourceId(IDBConnection conn, string model, string key, long refId)
         {
-            if (dbctx == null)
+            if (conn == null)
             {
-                throw new ArgumentNullException("dbctx");
+                throw new ArgumentNullException("conn");
             }
 
             var sql = "UPDATE core_model_data SET ref_id = @0 WHERE model = @1 AND name = @2";
-            var rowCount = dbctx.Execute(sql, refId, model, key);
+            var rowCount = conn.Execute(sql, refId, model, key);
 
             if (rowCount != 1)
             {

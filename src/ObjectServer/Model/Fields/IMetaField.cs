@@ -38,11 +38,11 @@ namespace ObjectServer.Model
         void Validate();
 
         Dictionary<long, object> GetFieldValues(
-            IResourceScope scope, ICollection<Dictionary<string, object>> records);
+            IServiceScope scope, ICollection<Dictionary<string, object>> records);
 
-        object SetFieldValue(IResourceScope scope, object value);
+        object SetFieldValue(IServiceScope scope, object value);
 
-        object BrowseField(IResourceScope scope, IDictionary<string, object> record);
+        object BrowseField(IServiceScope scope, IDictionary<string, object> record);
 
         #region Fluent interface
 

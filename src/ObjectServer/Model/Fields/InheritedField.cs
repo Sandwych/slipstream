@@ -17,17 +17,17 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IResourceScope scope, ICollection<Dictionary<string, object>> rawRecords)
+           IServiceScope scope, ICollection<Dictionary<string, object>> rawRecords)
         {
             return this.inheritedField.GetFieldValues(scope, rawRecords);
         }
 
-        protected override object OnSetFieldValue(IResourceScope scope, object value)
+        protected override object OnSetFieldValue(IServiceScope scope, object value)
         {
             return this.inheritedField.SetFieldValue(scope, value);
         }
 
-        public override object BrowseField(IResourceScope scope, IDictionary<string, object> record)
+        public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
             return this.inheritedField.BrowseField(scope, record);
         }

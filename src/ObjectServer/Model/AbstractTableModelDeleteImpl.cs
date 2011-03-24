@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
 
-        public override void DeleteInternal(IResourceScope scope, IEnumerable<long> ids)
+        public override void DeleteInternal(IServiceScope scope, IEnumerable<long> ids)
         {
             if (!this.CanDelete)
             {
@@ -42,14 +42,14 @@ namespace ObjectServer.Model
                     "SELECT * FROM \"{0}\" WHERE \"id\" IN ({1})",
                     this.TableName,
                     ids.ToCommaList());
-                existedRecords = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql);
+                existedRecords = scope.DatabaseProfile.Connection.QueryAsDictionary(sql);
             }
 
             DoDelete(scope, ids, this);
             this.ProcessBaseModelsDeletion(scope, existedRecords);
         }
 
-        private void ProcessBaseModelsDeletion(IResourceScope scope, IEnumerable<Dictionary<string, object>> existedRecords)
+        private void ProcessBaseModelsDeletion(IServiceScope scope, IEnumerable<Dictionary<string, object>> existedRecords)
         {
 
             if (this.Inheritances.Count > 0)
@@ -73,7 +73,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private static void DoDelete(IResourceScope scope, IEnumerable<long> ids, AbstractTableModel tableModel)
+        private static void DoDelete(IServiceScope scope, IEnumerable<long> ids, AbstractTableModel tableModel)
         {
             Debug.Assert(scope != null);
             Debug.Assert(ids != null);
@@ -83,7 +83,7 @@ namespace ObjectServer.Model
                 "DELETE FROM \"{0}\" WHERE \"id\" IN ({1})",
                 tableModel.TableName, ids.ToCommaList());
 
-            var rowCount = scope.DatabaseProfile.DataContext.Execute(sql);
+            var rowCount = scope.DatabaseProfile.Connection.Execute(sql);
             if (rowCount != ids.Count())
             {
                 var msg = string.Format("Failed to delete model '{0}'", tableModel.Name);

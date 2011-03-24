@@ -125,7 +125,7 @@ namespace ObjectServer.Model
             var sql = @"
 SELECT * FROM ""core_field""  WHERE ""module""=@0 AND ""model""=@1
 ";
-            var dbFields = db.DataContext.QueryAsDictionary(sql, this.Module, modelId.Value);
+            var dbFields = db.Connection.QueryAsDictionary(sql, this.Module, modelId.Value);
             var dbFieldsNames = (from f in dbFields select (string)f["name"]).ToArray();
 
             //先插入代码定义了，但数据库不存在的            
@@ -136,7 +136,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             foreach (var f in fieldsToAppend)
             {
                 var metaField = this.Fields[f];
-                db.DataContext.Execute(sql,
+                db.Connection.Execute(sql,
                     this.Module, modelId.Value, f, metaField.Relation, metaField.Label, metaField.Type.ToString(), "");
             }
 
@@ -145,7 +145,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             sql = @"DELETE FROM ""core_field"" WHERE ""name""=@0 AND ""module""=@1 AND ""model""=@2";
             foreach (var f in fieldsToDelete)
             {
-                db.DataContext.Execute(sql, f, this.Module, modelId.Value);
+                db.Connection.Execute(sql, f, this.Module, modelId.Value);
             }
 
             //更新现存的（交集）
@@ -186,7 +186,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 fieldType != metaFieldType ||
                 fieldHelp != metaField.Help)
             {
-                db.DataContext.Execute(sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
+                db.Connection.Execute(sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
 
             }
         }
@@ -194,7 +194,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         private long? FindExistedModelInDb(IDatabaseProfile db)
         {
             var sql = "SELECT MAX(\"id\") FROM core_model WHERE name=@0";
-            var o = db.DataContext.QueryValue(sql, this.Name);
+            var o = db.Connection.QueryValue(sql, this.Name);
             if (o is DBNull)
             {
                 return null;
@@ -207,7 +207,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
 
         private void CreateModel(IDatabaseProfile db)
         {
-            var rowCount = db.DataContext.Execute(
+            var rowCount = db.Connection.Execute(
                 "INSERT INTO \"core_model\"(\"name\", \"module\", \"label\") VALUES(@0, @1, @2);",
                 this.Name, this.Module, this.Label);
 
@@ -216,12 +216,12 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 throw new DataException("Failed to insert record of table core_model");
             }
 
-            var modelId = (long)db.DataContext.QueryValue(
+            var modelId = (long)db.Connection.QueryValue(
                 "SELECT MAX(id) FROM core_model WHERE name = @0 AND module = @1", this.Name, this.Module);
 
             //插入一笔到 core_model_data 方便以后导入时引用
             var key = "model_" + this.Name.Replace('.', '_');
-            Core.ModelDataModel.Create(db.DataContext, this.Module, Core.ModelModel.ModelName, key, modelId);
+            Core.ModelDataModel.Create(db.Connection, this.Module, Core.ModelModel.ModelName, key, modelId);
         }
 
         /// <summary>
@@ -300,13 +300,13 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
 
         public abstract NameGetter NameGetter { get; protected set; }
         public abstract long[] SearchInternal(
-            IResourceScope ctx, object[][] domain = null, OrderInfo[] orders = null, long offset = 0, long limit = 0);
-        public abstract long CreateInternal(IResourceScope ctx, IDictionary<string, object> propertyBag);
-        public abstract void WriteInternal(IResourceScope ctx, long id, IDictionary<string, object> record);
+            IServiceScope ctx, object[][] domain = null, OrderInfo[] orders = null, long offset = 0, long limit = 0);
+        public abstract long CreateInternal(IServiceScope ctx, IDictionary<string, object> propertyBag);
+        public abstract void WriteInternal(IServiceScope ctx, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
-            IResourceScope ctx, IEnumerable<long> ids, IEnumerable<string> requiredFields = null);
-        public abstract void DeleteInternal(IResourceScope ctx, IEnumerable<long> ids);
-        public abstract dynamic Browse(IResourceScope ctx, long id);
+            IServiceScope ctx, IEnumerable<long> ids, IEnumerable<string> requiredFields = null);
+        public abstract void DeleteInternal(IServiceScope ctx, IEnumerable<long> ids);
+        public abstract dynamic Browse(IServiceScope ctx, long id);
 
         #endregion
     }

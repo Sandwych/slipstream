@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override void WriteInternal(
-            IResourceScope scope, long id, IDictionary<string, object> userRecord)
+            IServiceScope scope, long id, IDictionary<string, object> userRecord)
         {
             if (!this.CanWrite)
             {
@@ -37,7 +37,7 @@ namespace ObjectServer.Model
                 var sql1 = string.Format(
                     "SELECT * FROM \"{0}\" WHERE \"id\" = {1}",
                     this.TableName, id);
-                var existedRecord = scope.DatabaseProfile.DataContext.QueryAsDictionary(sql1)[0];
+                var existedRecord = scope.DatabaseProfile.Connection.QueryAsDictionary(sql1)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
@@ -95,7 +95,7 @@ namespace ObjectServer.Model
 
             var sql = updateStatement.ToString();
 
-            var rowsAffected = scope.DatabaseProfile.DataContext.Execute(sql, args.ToArray());
+            var rowsAffected = scope.DatabaseProfile.Connection.Execute(sql, args.ToArray());
 
             //检查更新结果
             if (rowsAffected != 1)
@@ -113,7 +113,7 @@ namespace ObjectServer.Model
         }
 
         private void PrewriteManyToManyFields(
-            IResourceScope scope, long id, Dictionary<string, object> record, ICollection<string> allFields)
+            IServiceScope scope, long id, Dictionary<string, object> record, ICollection<string> allFields)
         {
             //过滤所有可以更新的 many2many 字段
             var writableManyToManyFields =
@@ -129,7 +129,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private static void PrewriteManyToManyField(IResourceScope scope, long id, Dictionary<string, object> record, IMetaField f)
+        private static void PrewriteManyToManyField(IServiceScope scope, long id, Dictionary<string, object> record, IMetaField f)
         {
             var relModel = (IMetaModel)scope.GetResource(f.Relation);
             var domain = new object[][]  
@@ -154,7 +154,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void PrewriteBaseModels(IResourceScope ctx, Dictionary<string, object> record, Dictionary<string, object> existedRecord)
+        private void PrewriteBaseModels(IServiceScope ctx, Dictionary<string, object> record, Dictionary<string, object> existedRecord)
         {
             //处理继承表的策略
             //继承表写入的策略是这样的：

@@ -29,7 +29,7 @@ namespace ObjectServer.Backend.Postgresql
                 { OnDeleteAction.Restrict, "RESTRICT" },
             };
 
-        public PgTableContext(IDataContext db, string tableName)
+        public PgTableContext(IDBConnection db, string tableName)
         {
             if (db == null)
             {
@@ -46,7 +46,7 @@ namespace ObjectServer.Backend.Postgresql
 
         public string Name { get; private set; }
 
-        public bool TableExists(IDataContext db, string tableName)
+        public bool TableExists(IDBConnection db, string tableName)
         {
             if (db == null)
             {
@@ -69,7 +69,7 @@ namespace ObjectServer.Backend.Postgresql
             return n > 0;
         }
 
-        public void CreateTable(IDataContext db, string tableName, string label)
+        public void CreateTable(IDBConnection db, string tableName, string label)
         {
             if (db == null)
             {
@@ -92,7 +92,7 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(sql);
         }
 
-        public void AddColumn(IDataContext db, IMetaField field)
+        public void AddColumn(IDBConnection db, IMetaField field)
         {
             if (db == null)
             {
@@ -117,7 +117,7 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(sql);
         }
 
-        public void DeleteColumn(IDataContext db, string columnName)
+        public void DeleteColumn(IDBConnection db, string columnName)
         {
             if (db == null)
             {
@@ -134,7 +134,7 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(sql);
         }
 
-        public void AlterColumnNullable(IDataContext db, string columnName, bool nullable)
+        public void AlterColumnNullable(IDBConnection db, string columnName, bool nullable)
         {
             if (db == null)
             {
@@ -152,7 +152,7 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(sql);
         }
 
-        public void AlterColumnType(IDataContext db, string columnName, string sqlType)
+        public void AlterColumnType(IDBConnection db, string columnName, string sqlType)
         {
             if (db == null)
             {
@@ -196,7 +196,7 @@ namespace ObjectServer.Backend.Postgresql
             return this.columns.Values.ToArray();
         }
 
-        private void LoadColumns(IDataContext db, string tableName)
+        private void LoadColumns(IDBConnection db, string tableName)
         {
             if (db == null)
             {
@@ -224,13 +224,13 @@ SELECT column_name, data_type, is_nullable
         }
 
 
-        public void AddConstraint(IDataContext db, string constraintName, string constraint)
+        public void AddConstraint(IDBConnection db, string constraintName, string constraint)
         {
             throw new NotImplementedException();
         }
 
 
-        public void DeleteConstraint(IDataContext db, string constraintName)
+        public void DeleteConstraint(IDBConnection db, string constraintName)
         {
             if (db == null)
             {
@@ -248,7 +248,7 @@ SELECT column_name, data_type, is_nullable
         }
 
 
-        public void AddFK(IDataContext db, string columnName, string refTable, OnDeleteAction act)
+        public void AddFK(IDBConnection db, string columnName, string refTable, OnDeleteAction act)
         {
             if (db == null)
             {
@@ -273,7 +273,7 @@ SELECT column_name, data_type, is_nullable
         }
 
 
-        public void DeleteFK(IDataContext db, string columnName)
+        public void DeleteFK(IDBConnection db, string columnName)
         {
             if (db == null)
             {
@@ -288,7 +288,7 @@ SELECT column_name, data_type, is_nullable
             this.DeleteConstraint(db, fkName);
         }
 
-        public bool FKExists(IDataContext db, string columnName)
+        public bool FKExists(IDBConnection db, string columnName)
         {
             if (db == null)
             {

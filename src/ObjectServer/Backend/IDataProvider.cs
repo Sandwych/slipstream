@@ -7,8 +7,8 @@ namespace ObjectServer.Backend
 {
     internal interface IDataProvider
     {
-        IDataContext CreateDataContext();
-        IDataContext CreateDataContext(string dbName);
+        IDBConnection CreateDataContext();
+        IDBConnection CreateDataContext(string dbName);
 
         string[] ListDatabases();
         void CreateDatabase(string dbName);
