@@ -129,9 +129,9 @@ namespace ObjectServer.Model
             }
         }
 
-        private static void PrewriteManyToManyField(IServiceScope scope, long id, Dictionary<string, object> record, IMetaField f)
+        private static void PrewriteManyToManyField(IServiceScope scope, long id, Dictionary<string, object> record, IField f)
         {
-            var relModel = (IMetaModel)scope.GetResource(f.Relation);
+            var relModel = (IModel)scope.GetResource(f.Relation);
             var domain = new object[][]  
             { 
                 new object[] { f.OriginField, "=", id }
@@ -164,7 +164,7 @@ namespace ObjectServer.Model
             //3. 最后更新子类表
             foreach (var inheritInfo in this.Inheritances)
             {
-                var baseModel = (IMetaModel)ctx.GetResource(inheritInfo.BaseModel);
+                var baseModel = (IModel)ctx.GetResource(inheritInfo.BaseModel);
                 var baseId = (long)existedRecord[inheritInfo.RelatedField];
 
                 //看用户提供的记录的字段是否涉及到基类

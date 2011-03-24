@@ -8,7 +8,7 @@ namespace ObjectServer.Model
     public interface IFieldDescriptor
     {
 
-        IMetaModel Model { get; }
+        IModel Model { get; }
         string Name { get; }
         string Label { get; }
         bool IsFunctional { get; }

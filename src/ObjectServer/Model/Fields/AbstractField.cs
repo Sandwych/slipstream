@@ -6,11 +6,11 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    internal abstract class AbstractField : IMetaField
+    internal abstract class AbstractField : IField
     {
         private bool isProperty = false;
 
-        public AbstractField(IMetaModel model, string name)
+        public AbstractField(IModel model, string name)
         {
             if (model == null)
             {
@@ -36,7 +36,7 @@ namespace ObjectServer.Model
             this.Lazy = false;
         }
 
-        public AbstractField(IMetaModel model, string name, FieldType type)
+        public AbstractField(IModel model, string name, FieldType type)
             : this(model, name)
         {
             this.Type = type;
@@ -59,7 +59,7 @@ namespace ObjectServer.Model
 
         #region IMetaField
 
-        public IMetaModel Model { get; private set; }
+        public IModel Model { get; private set; }
 
         public string Name { get; private set; }
 
@@ -187,73 +187,73 @@ namespace ObjectServer.Model
 
         #region Fluent interface for options
 
-        public IMetaField SetLabel(string label)
+        public IField SetLabel(string label)
         {
             this.Label = label;
             return this;
         }
 
-        public IMetaField Required()
+        public IField Required()
         {
             this.IsRequired = true;
             return this;
         }
 
-        public IMetaField NotRequired()
+        public IField NotRequired()
         {
             this.IsRequired = false;
             return this;
         }
 
-        public IMetaField ValueGetter(FieldValueGetter fieldGetter)
+        public IField ValueGetter(FieldValueGetter fieldGetter)
         {
             this.Getter = fieldGetter;
             return this;
         }
 
-        public IMetaField DefaultValueGetter(FieldDefaultValueGetter defaultProc)
+        public IField DefaultValueGetter(FieldDefaultValueGetter defaultProc)
         {
             this.DefaultProc = defaultProc;
             return this;
         }
 
-        public IMetaField SetSize(int size)
+        public IField SetSize(int size)
         {
             this.Size = size;
             return this;
         }
 
-        public IMetaField SetHelp(string help)
+        public IField SetHelp(string help)
         {
             this.Help = help;
             return this;
         }
 
-        public IMetaField Readonly()
+        public IField Readonly()
         {
             this.IsReadonly = true;
             return this;
         }
 
-        public IMetaField NotReadonly()
+        public IField NotReadonly()
         {
             this.IsReadonly = false;
             return this;
         }
 
-        public IMetaField OnDelete(OnDeleteAction act)
+        public IField OnDelete(OnDeleteAction act)
         {
             this.OnDeleteAction = act;
             return this;
         }
 
-        public IMetaField BeProperty()
+        public IField BeProperty()
         {
             this.IsProperty = true;
             return this;
         }
 
-        public IMetaField SetOptions(IDictionary<string, string> options)
+        public IField SetOptions(IDictionary<string, string> options)
         {
             if (options == null)
             {

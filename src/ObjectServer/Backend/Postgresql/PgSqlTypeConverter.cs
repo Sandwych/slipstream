@@ -14,8 +14,8 @@ namespace ObjectServer.Backend
         {
         }
 
-        private static readonly Dictionary<FieldType, Func<IMetaField, string>> mapping =
-            new Dictionary<FieldType, Func<IMetaField, string>>()
+        private static readonly Dictionary<FieldType, Func<IField, string>> mapping =
+            new Dictionary<FieldType, Func<IField, string>>()
             {
                 { FieldType.Boolean, f => "BOOLEAN" },
                 { FieldType.Integer, f => "INT4"  },
@@ -33,7 +33,7 @@ namespace ObjectServer.Backend
 
         #region ISqlTypeConverter 成员
 
-        public string FieldToColumn(IMetaField field)
+        public string FieldToColumn(IField field)
         {
             //mapping[
             throw new NotImplementedException();
@@ -42,7 +42,7 @@ namespace ObjectServer.Backend
         #endregion
 
 
-        public static string GetSqlType(IMetaField field)
+        public static string GetSqlType(IField field)
         {
             if (field == null)
             {

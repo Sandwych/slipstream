@@ -7,7 +7,7 @@ namespace ObjectServer.Model
 {
     internal sealed class ScalarField : AbstractField
     {
-        public ScalarField(IMetaModel model, string name, FieldType ft)
+        public ScalarField(IModel model, string name, FieldType ft)
             : base(model, name, ft)
         {
         }

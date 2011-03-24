@@ -81,7 +81,7 @@ namespace ObjectServer.Model
         private void ReadRecordElement(XmlReader reader, bool noUpdate)
         {
             var modelName = reader["model"];
-            var model = (IMetaModel)this.context.GetResource(modelName);
+            var model = (IModel)this.context.GetResource(modelName);
             var key = reader["key"];
 
             if (model == null)
@@ -96,7 +96,7 @@ namespace ObjectServer.Model
         }
 
         private void ImportRecord(
-            bool noUpdate, IMetaModel model, Dictionary<string, object> record, string key = null)
+            bool noUpdate, IModel model, Dictionary<string, object> record, string key = null)
         {
             //查找 key 指定的记录看是否存在
             long? existedId = null;
@@ -152,7 +152,7 @@ namespace ObjectServer.Model
             var refKey = reader["ref-key"] as string;
             var fieldName = reader["name"];
 
-            IMetaField metaField = model.Fields[fieldName];
+            IField metaField = model.Fields[fieldName];
             object fieldValue = null;
             switch (metaField.Type)
             {

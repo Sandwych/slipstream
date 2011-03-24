@@ -16,7 +16,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="masterModel">主表对象</param>
-        public ReferenceField(IMetaModel model, string name)
+        public ReferenceField(IModel model, string name)
             : base(model, name, FieldType.Reference)
         {
         }
@@ -75,7 +75,7 @@ namespace ObjectServer.Model
             {
                 this.VerifyModelName(r.Model);
 
-                var masterModel = (IMetaModel)ctx.GetResource(r.Model);
+                var masterModel = (IModel)ctx.GetResource(r.Model);
                 ids[0] = r.RefId;
                 string name = null;
                 if (masterModel.Fields.ContainsKey("name"))
@@ -102,7 +102,7 @@ namespace ObjectServer.Model
         {
             var fieldValue = (object[])record[this.Name];
             var destModelName = (string)fieldValue[0];
-            var destMetaModel = (IMetaModel)scope.GetResource(destModelName);
+            var destMetaModel = (IModel)scope.GetResource(destModelName);
             var destIds = new long[] { (long)fieldValue[1] };
             var destRecord = destMetaModel.ReadInternal(scope, destIds, null)[0];
             return new BrowsableRecord(scope, destMetaModel, destRecord);

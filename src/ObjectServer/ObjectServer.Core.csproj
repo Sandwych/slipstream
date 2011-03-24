@@ -154,8 +154,8 @@
     <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
     <Compile Include="Model\AbstractTableModelDeleteImpl.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
-    <Compile Include="Model\Fields\IMetaField.cs" />
-    <Compile Include="Model\Fields\IMetaFieldCollection.cs" />
+    <Compile Include="Model\Fields\IField.cs" />
+    <Compile Include="Model\Fields\IFieldCollection.cs" />
     <Compile Include="Model\Fields\InheritedField.cs" />
     <Compile Include="Model\IModelDescriptor.cs" />
     <Compile Include="Model\InheritanceCollection.cs" />
@@ -187,7 +187,7 @@
     <Compile Include="IResourceContainer.cs" />
     <Compile Include="Model\BrowsableRecord.cs" />
     <Compile Include="Model\XmlDataImporter.cs" />
-    <Compile Include="Model\Fields\MetaFieldCollection.cs" />
+    <Compile Include="Model\Fields\FieldCollection.cs" />
     <Compile Include="Model\Fields\ReferenceField.cs" />
     <Compile Include="Model\Fields\EnumerationField.cs" />
     <Compile Include="NamingRule.cs" />
@@ -205,7 +205,7 @@
     <Compile Include="Model\Fields\OneToManyField.cs" />
     <Compile Include="Model\Fields\ScalarField.cs" />
     <Compile Include="Model\Fields\ManyToManyField.cs" />
-    <Compile Include="Model\IMetaModel.cs" />
+    <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\AbstractModel.cs" />
     <Compile Include="Model\OnDeleteAction.cs" />
     <Compile Include="Model\TableMigrator.cs" />

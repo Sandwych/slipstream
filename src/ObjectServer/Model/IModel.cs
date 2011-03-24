@@ -6,9 +6,9 @@ using System.Dynamic;
 
 namespace ObjectServer.Model
 {
-    public interface IMetaModel : IResource, IModelDescriptor
+    public interface IModel : IResource, IModelDescriptor
     {
-        IMetaField[] GetAllStorableFields();
+        IField[] GetAllStorableFields();
 
         long[] SearchInternal(IServiceScope ctx, object[][] domain = null, OrderInfo[] orders = null, long offset = 0, long limit = 0);
         long CreateInternal(IServiceScope ctx, IDictionary<string, object> propertyBag);

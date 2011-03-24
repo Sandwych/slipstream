@@ -83,14 +83,14 @@ namespace ObjectServer.Model.Test
 
         private void ClearAllModelData()
         {
-            var model = (IMetaModel)this.ResourceScope.GetResource("core.model_data");
+            var model = (IModel)this.ResourceScope.GetResource("core.model_data");
 
             ClearAllModelData(model, "test.master");
             ClearAllModelData(model, "test.child");
             ClearAllModelData(model, "test.test_model");
         }
 
-        private void ClearAllModelData(IMetaModel model, string modelName)
+        private void ClearAllModelData(IModel model, string modelName)
         {
             var domain = new object[][] { new object[] { "model", "=", modelName } };
             var ids = model.SearchInternal(this.ResourceScope, domain);

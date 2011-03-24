@@ -26,7 +26,7 @@ namespace ObjectServer.Model.Test
                 { "master", null },
             };
 
-            var childModel = (IMetaModel)this.ResourceScope.GetResource("test.child");
+            var childModel = (IModel)this.ResourceScope.GetResource("test.child");
 
             var id = childModel.CreateInternal(this.ResourceScope, child);
 

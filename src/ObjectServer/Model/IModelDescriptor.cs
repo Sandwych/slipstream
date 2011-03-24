@@ -9,7 +9,7 @@ namespace ObjectServer.Model
     {
         NameGetter NameGetter { get; }
         ICollection<InheritanceInfo> Inheritances { get; }
-        IMetaFieldCollection Fields { get; }
+        IFieldCollection Fields { get; }
         string TableName { get; }
 
         bool AutoMigration { get; }

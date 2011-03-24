@@ -285,7 +285,7 @@ namespace ObjectServer.Backend
             this.Open();
         }
 
-        public string GetSqlType(IMetaField field)
+        public string GetSqlType(IField field)
         {
             throw new NotImplementedException();
         }

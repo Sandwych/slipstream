@@ -13,7 +13,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="masterModel">主表对象</param>
-        public ManyToOneField(IMetaModel model, string name, string masterModel)
+        public ManyToOneField(IModel model, string name, string masterModel)
             : base(model, name, FieldType.ManyToOne)
         {
             this.Relation = masterModel;

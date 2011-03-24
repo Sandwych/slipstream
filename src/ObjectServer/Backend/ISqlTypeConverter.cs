@@ -9,6 +9,6 @@ namespace ObjectServer.Backend
 {
     public interface ISqlTypeConverter
     {
-        string FieldToColumn(IMetaField field);
+        string FieldToColumn(IField field);
     }
 }

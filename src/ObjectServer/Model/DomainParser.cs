@@ -82,10 +82,10 @@ namespace ObjectServer.Model
 
         private static readonly List<object[]> EmptyDomain = new List<object[]>();
 
-        IMetaModel model;
+        IModel model;
         List<object[]> domain = new List<object[]>();
 
-        public DomainParser(IMetaModel model, IEnumerable<object> domain)
+        public DomainParser(IModel model, IEnumerable<object> domain)
         {
             if (domain == null || domain.Count() <= 0)
             {
@@ -102,7 +102,7 @@ namespace ObjectServer.Model
             this.model = model;
         }
 
-        public DomainParser(IMetaModel model)
+        public DomainParser(IModel model)
             : this(model, null)
         {
         }

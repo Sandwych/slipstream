@@ -92,7 +92,7 @@ namespace ObjectServer.Backend.Postgresql
             db.Execute(sql);
         }
 
-        public void AddColumn(IDBConnection db, IMetaField field)
+        public void AddColumn(IDBConnection db, IField field)
         {
             if (db == null)
             {

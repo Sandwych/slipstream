@@ -120,7 +120,7 @@ namespace ObjectServer.Model
             //本尊及各个关联到基类模型的字段已经读出来了，现在读各个基类模型
             foreach (var bm in this.Inheritances)
             {
-                var baseModel = (IMetaModel)scope.GetResource(bm.BaseModel);
+                var baseModel = (IModel)scope.GetResource(bm.BaseModel);
                 var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys).ToArray();
                 var baseIds = records.Select(r => (long)r[bm.RelatedField]).ToArray();
                 var baseRecords = baseModel.ReadInternal(scope, baseIds, baseFieldsToRead);

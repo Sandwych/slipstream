@@ -33,7 +33,7 @@ namespace ObjectServer
             using (var scope = new ServiceScope(new Guid(this.SessionId)))
             {
                 var domain = new object[][] { new object[] { "name", "=", "test" } };
-                var moduleModel = (ObjectServer.Model.IMetaModel)scope.GetResource("core.module");
+                var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
                 var ids = moduleModel.SearchInternal(scope, domain);
                 dynamic fields = new ExpandoObject();
                 fields.state = "activated";

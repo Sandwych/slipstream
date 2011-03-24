@@ -11,7 +11,7 @@ namespace ObjectServer.Backend
     {
         string Name { get; }
 
-        void AddColumn(IDBConnection db, IMetaField field);
+        void AddColumn(IDBConnection db, IField field);
         void DeleteColumn(IDBConnection db, string columnName);
         void AlterColumnNullable(IDBConnection db, string columnName, bool nullable);
         void AlterColumnType(IDBConnection db, string columnName, string sqlType);

@@ -11,10 +11,10 @@ namespace ObjectServer.Model
     internal class TableMigrator
     {
         private IDatabaseProfile db;
-        private IMetaModel model;
+        private IModel model;
         private IServiceScope context;
 
-        public TableMigrator(IDatabaseProfile db, IMetaModel model)
+        public TableMigrator(IDatabaseProfile db, IModel model)
         {
             if (db == null)
             {
@@ -60,7 +60,7 @@ namespace ObjectServer.Model
                 if (f.Type == FieldType.ManyToOne)
                 {
                     var resources = this.db as IResourceContainer; //dyanmic workaround
-                    var refModel = (IMetaModel)resources.GetResource(f.Relation);
+                    var refModel = (IModel)resources.GetResource(f.Relation);
                     table.AddFK(db.Connection, f.Name, refModel.TableName, OnDeleteAction.SetNull);
                 }
             }
@@ -126,7 +126,7 @@ namespace ObjectServer.Model
 
         }
 
-        private void SyncColumn(ITableContext table, IMetaField field, bool hasRow)
+        private void SyncColumn(ITableContext table, IField field, bool hasRow)
         {
             //TODO 实现迁移策略
             var columnInfo = table.GetColumn(field.Name);
@@ -150,12 +150,12 @@ namespace ObjectServer.Model
             }
         }
 
-        private void SetColumnNullable(ITableContext table, IMetaField field)
+        private void SetColumnNullable(ITableContext table, IField field)
         {
             table.AlterColumnNullable(this.db.Connection, field.Name, true);
         }
 
-        private void SetColumnNotNullable(ITableContext table, IMetaField field, bool hasRow)
+        private void SetColumnNotNullable(ITableContext table, IField field, bool hasRow)
         {
             //先看有没有行，有行要先设置默认值，如果没有默认值就报错了
             if (hasRow && field.DefaultProc != null)

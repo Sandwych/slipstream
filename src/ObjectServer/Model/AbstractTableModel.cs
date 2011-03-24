@@ -274,7 +274,7 @@ namespace ObjectServer.Model
                     { "resource_id", id },
                     { "description", msg }
                 };
-            var res = (IMetaModel)ctx.GetResource(Core.AuditLogModel.ModelName);
+            var res = (IModel)ctx.GetResource(Core.AuditLogModel.ModelName);
             res.CreateInternal(ctx, logRecord);
 
         }

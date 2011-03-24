@@ -5,86 +5,86 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public class MetaFieldCollection : Dictionary<string, IMetaField>, IMetaFieldCollection
+    public class FieldCollection : Dictionary<string, IField>, IFieldCollection
     {
-        private IMetaModel model;
+        private IModel model;
 
-        public MetaFieldCollection(IMetaModel model)
+        public FieldCollection(IModel model)
         {
             this.model = model;
         }
 
-        public IMetaField Integer(string name)
+        public IField Integer(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Integer);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField BigInteger(string name)
+        public IField BigInteger(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.BigInteger);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField Float(string name)
+        public IField Float(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Float);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField Money(string name)
+        public IField Money(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Decimal);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField Boolean(string name)
+        public IField Boolean(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Boolean);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField Chars(string name)
+        public IField Chars(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Chars);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField Text(string name)
+        public IField Text(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Text);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField Binary(string name)
+        public IField Binary(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Binary);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField DateTime(string name)
+        public IField DateTime(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.DateTime);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField ManyToOne(string name, string masterModel)
+        public IField ManyToOne(string name, string masterModel)
         {
             var field = new ManyToOneField(this.model, name, masterModel);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField OneToMany(string name, string childModel, string relatedField)
+        public IField OneToMany(string name, string childModel, string relatedField)
         {
             var field = new OneToManyField(this.model, name, childModel, relatedField);
             this.Add(name, field);
@@ -92,14 +92,14 @@ namespace ObjectServer.Model
         }
 
 
-        public IMetaField ManyToMany(string name, string refModel, string originField, string targetField)
+        public IField ManyToMany(string name, string refModel, string originField, string targetField)
         {
             var field = new ManyToManyField(this.model, name, refModel, originField, targetField);
             this.Add(name, field);
             return field;
         }
 
-        public IMetaField Enumeration(
+        public IField Enumeration(
             string name, IDictionary<string, string> options)
         {
             var field = new EnumerationField(this.model, name, options);
@@ -107,7 +107,7 @@ namespace ObjectServer.Model
             return field;
         }
 
-        public IMetaField Reference(
+        public IField Reference(
             string name)
         {
             var field = new ReferenceField(this.model, name);
@@ -115,7 +115,7 @@ namespace ObjectServer.Model
             return field;
         }
 
-        public IMetaField Version()
+        public IField Version()
         {
             if (this.model.Fields.ContainsKey(AbstractModel.VersionFieldName))
             {

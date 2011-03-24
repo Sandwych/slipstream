@@ -7,10 +7,10 @@ namespace ObjectServer.Model
 {
     internal sealed class InheritedField : AbstractField
     {
-        private IMetaField inheritedField;
+        private IField inheritedField;
 
         public InheritedField(
-            IMetaModel model, IMetaField inheritedField)
+            IModel model, IField inheritedField)
             : base(model, inheritedField.Name, inheritedField.Type)
         {
             this.inheritedField = inheritedField;

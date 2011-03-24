@@ -11,17 +11,17 @@ namespace ObjectServer.Model
     public sealed class BrowsableRecord : DynamicObject
     {
         private IDictionary<string, object> record;
-        private IMetaModel metaModel;
+        private IModel metaModel;
         private IServiceScope scope;
 
-        public BrowsableRecord(IServiceScope scope, IMetaModel metaModel, long id)
+        public BrowsableRecord(IServiceScope scope, IModel metaModel, long id)
         {
             this.metaModel = metaModel;
             this.scope = scope;
             this.record = metaModel.ReadInternal(scope, new long[] { id }, null)[0];
         }
 
-        public BrowsableRecord(IServiceScope scope, IMetaModel metaModel, IDictionary<string, object> record)
+        public BrowsableRecord(IServiceScope scope, IModel metaModel, IDictionary<string, object> record)
         {
             this.metaModel = metaModel;
             this.scope = scope;

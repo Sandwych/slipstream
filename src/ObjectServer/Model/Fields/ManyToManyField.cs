@@ -9,7 +9,7 @@ namespace ObjectServer.Model
 {
     internal sealed class ManyToManyField : AbstractField
     {
-        public ManyToManyField(IMetaModel model, string name,
+        public ManyToManyField(IModel model, string name,
             string refModel, string originField, string targetField)
             : base(model, name, FieldType.ManyToMany)
         {
@@ -24,7 +24,7 @@ namespace ObjectServer.Model
            IServiceScope ctx, ICollection<Dictionary<string, object>> records)
         {
             //中间表模型
-            var relationModel = (IMetaModel)ctx.GetResource(this.Relation);
+            var relationModel = (IModel)ctx.GetResource(this.Relation);
             var result = new Dictionary<long, object>();
             foreach (var rec in records)
             {
@@ -66,9 +66,9 @@ namespace ObjectServer.Model
                 targetIds = (long[])newRecord[this.Name];
             }
 
-            var relationModel = (IMetaModel)scope.GetResource(this.Relation);
+            var relationModel = (IModel)scope.GetResource(this.Relation);
             var targetModelName = relationModel.Fields[this.RelatedField].Relation;
-            var targetModel = (IMetaModel)scope.GetResource(targetModelName);
+            var targetModel = (IModel)scope.GetResource(targetModelName);
             var targetRecords = targetModel.ReadInternal(scope, targetIds);
             return targetRecords.Select(tr => new BrowsableRecord(scope, targetModel, tr)).ToArray();
         }

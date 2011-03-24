@@ -8,7 +8,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer.Model
 {
-    public abstract class AbstractModel : AbstractResource, IMetaModel
+    public abstract class AbstractModel : AbstractResource, IModel
     {
         public const string IdFieldName = "id";
         public const string VersionFieldName = "_version";
@@ -18,14 +18,14 @@ namespace ObjectServer.Model
         public const string ModifiedUserFieldName = "_modified_user";
         public const string ActiveFieldName = "_active";
 
-        private readonly IMetaFieldCollection fields;
+        private readonly IFieldCollection fields;
 
 
         protected AbstractModel(string name)
             : base(name)
         {
             this.AutoMigration = true;
-            this.fields = new MetaFieldCollection(this);
+            this.fields = new FieldCollection(this);
             this.Inheritances = new InheritanceCollection();
         }
 
@@ -62,7 +62,7 @@ namespace ObjectServer.Model
                 }
 
                 //把“基类”模型的字段引用复制过来
-                var baseModel = (IMetaModel)db.GetResource(ii.BaseModel);
+                var baseModel = (IModel)db.GetResource(ii.BaseModel);
                 foreach (var baseField in baseModel.Fields)
                 {
                     if (!this.Fields.ContainsKey(baseField.Key))
@@ -133,11 +133,11 @@ SELECT * FROM ""core_field""  WHERE ""module""=@0 AND ""model""=@1
 INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""label"", ""type"", ""help"") 
     VALUES(@0, @1, @2, @3, @4, @5, @6)";
             var fieldsToAppend = this.Fields.Keys.Except(dbFieldsNames);
-            foreach (var f in fieldsToAppend)
+            foreach (var fieldName in fieldsToAppend)
             {
-                var metaField = this.Fields[f];
+                var field = this.Fields[fieldName];
                 db.Connection.Execute(sql,
-                    this.Module, modelId.Value, f, metaField.Relation, metaField.Label, metaField.Type.ToString(), "");
+                    this.Module, modelId.Value, fieldName, field.Relation, field.Label, field.Type.ToString(), "");
             }
 
             //删除数据库存在，但代码未定义的
@@ -244,7 +244,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             return query.Distinct().ToArray();
         }
 
-        public IMetaFieldCollection Fields { get { return this.fields; } }
+        public IFieldCollection Fields { get { return this.fields; } }
 
         protected void VerifyFields(IEnumerable<string> fields)
         {
@@ -262,7 +262,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             return this.Fields.ContainsKey(fieldName);
         }
 
-        public IMetaField[] GetAllStorableFields()
+        public IField[] GetAllStorableFields()
         {
             return this.Fields.Values.Where(f => f.IsColumn() && f.Name != "id").ToArray();
         }
@@ -271,7 +271,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         {
             base.MergeFrom(res);
 
-            var model = res as IMetaModel;
+            var model = res as IModel;
             if (model != null)
             {
                 //这里的字段合并策略也是添加，如果存在就直接替换

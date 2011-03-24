@@ -42,7 +42,7 @@ namespace ObjectServer.Model
             //插入被继承的表记录
             foreach (var i in this.Inheritances)
             {
-                var baseModel = (IMetaModel)scope.GetResource(i.BaseModel);
+                var baseModel = (IModel)scope.GetResource(i.BaseModel);
                 var baseRecord = new Dictionary<string, object>();
 
                 foreach (var f in baseModel.Fields)
@@ -94,7 +94,7 @@ namespace ObjectServer.Model
 
             foreach (var f in manyToManyFields)
             {
-                var relModel = (IMetaModel)scope.GetResource(f.Relation);
+                var relModel = (IModel)scope.GetResource(f.Relation);
                 //写入
                 var targetIds = (long[])record[f.Name];
 

@@ -11,7 +11,7 @@ namespace ObjectServer.Model
 
         public const int DefaultSize = 16;
 
-        public EnumerationField(IMetaModel model, string name, IDictionary<string, string> options)
+        public EnumerationField(IModel model, string name, IDictionary<string, string> options)
             : base(model, name, FieldType.Enumeration)
         {
             if (string.IsNullOrEmpty(name))
