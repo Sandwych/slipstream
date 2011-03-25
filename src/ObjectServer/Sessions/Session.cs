@@ -34,11 +34,11 @@ namespace ObjectServer
         {
             get
             {
-                if (!ObjectServerStarter.Initialized)
+                if (!Infrastructure.Initialized)
                 {
                     throw new InvalidOperationException("Framework uninitialized");
                 }
-                var timeout = ObjectServerStarter.Configuration.SessionTimeout;
+                var timeout = Infrastructure.Configuration.SessionTimeout;
                 return this.LastActivityTime + timeout;
             }
         }

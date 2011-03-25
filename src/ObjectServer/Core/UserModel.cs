@@ -61,7 +61,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
 ";
 
             //创建 root 用户
-            var rootPassword = ObjectServerStarter.Configuration.RootPassword;
+            var rootPassword = Infrastructure.Configuration.RootPassword;
             var user = new Dictionary<string, object>()
                     {
                         { "name", "Root User" },
@@ -179,7 +179,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
             else
             {
                 var uid = (long)user["id"];
-                ObjectServerStarter.SessionStore.RemoveSessionsByUser(database, uid);
+                Infrastructure.SessionStore.RemoveSessionsByUser(database, uid);
             }
 
             return result;
@@ -189,7 +189,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         public void LogOut(IServiceScope ctx, string sessionId)
         {
             var sessGuid = new Guid(sessionId);
-            ObjectServerStarter.SessionStore.Remove(sessGuid);
+            Infrastructure.SessionStore.Remove(sessGuid);
         }
 
         public static Dictionary<string, object>[] GetAllModelAccessEntries(long userId)
@@ -205,7 +205,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
             var uid = (long)userFields["id"];
             var session = new Session(dbName, login, uid);
 
-            var sessStore = ObjectServerStarter.SessionStore;
+            var sessStore = Infrastructure.SessionStore;
             sessStore.RemoveSessionsByUser(dbName, uid);
             sessStore.PutSession(session);
             return session;

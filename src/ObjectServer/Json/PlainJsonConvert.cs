@@ -12,7 +12,7 @@ namespace ObjectServer.Json
     {
         public static string SerializeObject(object value)
         {
-            var debug = ObjectServerStarter.Configuration.Debug;
+            var debug = Infrastructure.Configuration.Debug;
             var fmt = Formatting.None;
             if (debug)
             {

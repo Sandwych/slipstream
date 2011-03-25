@@ -71,8 +71,8 @@ namespace ObjectServer
             //加载其它模块
             Logger.Info(() => "Loading additional modules...");
             var ctx = new InternalServiceScope(db, session);
-            ObjectServerStarter.Modules.UpdateModuleList(db.Connection);
-            ObjectServerStarter.Modules.LoadActivatedModules(ctx);
+            Infrastructure.Modules.UpdateModuleList(db.Connection);
+            Infrastructure.Modules.LoadActivatedModules(ctx);
         }
 
         internal DatabaseProfile GetDatabaseProfile(Session session)

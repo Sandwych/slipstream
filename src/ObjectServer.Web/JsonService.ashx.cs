@@ -17,7 +17,7 @@ namespace ObjectServer.Web
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     public sealed class JsonService : JsonRpcHandler //IReadOnlySessionState 
     {
-        private IExportedService service = ObjectServerStarter.ExportedService;
+        private IExportedService service = Infrastructure.ExportedService;
 
         public JsonService()
         {

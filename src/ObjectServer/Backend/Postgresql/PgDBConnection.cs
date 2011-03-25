@@ -15,7 +15,7 @@ namespace ObjectServer.Backend.Postgresql
 
         public PgDBConnection(string dbName)
         {
-            var cfg = ObjectServerStarter.Configuration;
+            var cfg = Infrastructure.Configuration;
             string connectionString = string.Format(
               "Server={0};" +
               "Database={3};" +
@@ -38,7 +38,7 @@ namespace ObjectServer.Backend.Postgresql
         {
             EnsureConnectionOpened();
 
-            var dbUser = ObjectServerStarter.Configuration.DBUser;
+            var dbUser = Infrastructure.Configuration.DBUser;
             var sql = @"
                 SELECT datname FROM pg_database  
                     WHERE datdba = (SELECT DISTINCT usesysid FROM pg_user WHERE usename=@0) 

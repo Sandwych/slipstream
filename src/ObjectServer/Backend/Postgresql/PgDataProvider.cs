@@ -32,7 +32,7 @@ namespace ObjectServer.Backend.Postgresql
                 ctx.Open();
 
 
-                var dbUser = ObjectServerStarter.Configuration.DBUser;
+                var dbUser = Infrastructure.Configuration.DBUser;
                 var sql = @"
 SELECT datname FROM pg_database  
     WHERE datdba = (SELECT DISTINCT usesysid FROM pg_user WHERE usename=@0) 

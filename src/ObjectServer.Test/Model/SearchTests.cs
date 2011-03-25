@@ -12,7 +12,7 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class SearchTests : LocalTestCase
     {
-        IExportedService proxy = ObjectServerStarter.ExportedService;
+        IExportedService proxy = Infrastructure.ExportedService;
 
         [Test]
         public void Test_search_limit()

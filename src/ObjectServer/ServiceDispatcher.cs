@@ -29,8 +29,8 @@ namespace ObjectServer
                 Session session = userModel.LogOn(ctx, dbName, username, password);
 
                 //用新 session 替换老 session
-                ObjectServerStarter.SessionStore.PutSession(session);
-                ObjectServerStarter.SessionStore.Remove(ctx.Session.Id);
+                Infrastructure.SessionStore.PutSession(session);
+                Infrastructure.SessionStore.Remove(ctx.Session.Id);
 
                 tx.Complete();
                 return session.Id.ToString();
@@ -126,14 +126,14 @@ namespace ObjectServer
         {
             VerifyRootPassword(rootPasswordHash);
 
-            ObjectServerStarter.DatabaseProfiles.RemoveDatabase(dbName); //删除数据库上下文
+            Infrastructure.DatabaseProfiles.RemoveDatabase(dbName); //删除数据库上下文
             DataProvider.DeleteDatabase(dbName); //删除实际数据库
         }
 
         private static void VerifyRootPassword(string rootPasswordHash)
         {
             if (rootPasswordHash.ToUpperInvariant() !=
-                ObjectServerStarter.Configuration.RootPasswordHash.ToUpperInvariant())
+                Infrastructure.Configuration.RootPasswordHash.ToUpperInvariant())
             {
                 throw new UnauthorizedAccessException("Invalid password of root user");
             }

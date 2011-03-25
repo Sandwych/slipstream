@@ -71,7 +71,7 @@ namespace ObjectServer.Runtime
             compiler.Parameters.Pipeline = new CompileToMemory();
             compiler.Parameters.Ducky = true;
             compiler.Parameters.WarnAsError = false;
-            compiler.Parameters.Debug = ObjectServerStarter.Configuration.Debug;
+            compiler.Parameters.Debug = Infrastructure.Configuration.Debug;
             compiler.Parameters.AddAssembly(coreAssembly);
             compiler.Parameters.AddAssembly(typeof(log4net.ILog).Assembly);
         }

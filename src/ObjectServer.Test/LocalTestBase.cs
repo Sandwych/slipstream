@@ -14,12 +14,12 @@ namespace ObjectServer
         [TestFixtureSetUp()]
         public virtual void InitFramework()
         {
-            if (!ObjectServerStarter.Initialized)
+            if (!Infrastructure.Initialized)
             {
-                ObjectServerStarter.Initialize();
+                Infrastructure.Initialize();
             }
 
-            var service = ObjectServerStarter.ExportedService;
+            var service = Infrastructure.ExportedService;
             this.Service = service;
 
             this.SessionId = this.Service.LogOn("objectserver", "root", "root");
@@ -44,7 +44,7 @@ namespace ObjectServer
         [TestFixtureTearDown]
         public virtual void DisposeFramework()
         {
-            var service = ObjectServerStarter.ExportedService;
+            var service = Infrastructure.ExportedService;
             service.LogOff(this.SessionId);
         }
 

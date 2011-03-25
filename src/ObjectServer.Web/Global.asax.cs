@@ -28,10 +28,10 @@ namespace ObjectServer.Web
         private void EnsureFrameworkInitialized()
         {
             //TODO: 初始化为测试配置
-            if (!ObjectServerStarter.Initialized)
+            if (!Infrastructure.Initialized)
             {
                 var cfg = (Config)ConfigurationManager.GetSection("objectserver-config");
-                ObjectServerStarter.Initialize(cfg);
+                Infrastructure.Initialize(cfg);
             }
         }
 

@@ -16,9 +16,9 @@ namespace ObjectServer
     /// SINGLETON
     /// 框架的全局入口点
     /// </summary>
-    public sealed class ObjectServerStarter : IDisposable
+    public sealed class Infrastructure : IDisposable
     {
-        private static readonly ObjectServerStarter s_instance = new ObjectServerStarter();
+        private static readonly Infrastructure s_instance = new Infrastructure();
 
         private bool disposed = false;
         private Config config;
@@ -28,11 +28,11 @@ namespace ObjectServer
         private SessionStore sessionStore = new SessionStore();
         private IExportedService exportedService = ServiceDispatcher.CreateDispatcher();
 
-        private ObjectServerStarter()
+        private Infrastructure()
         {
         }
 
-        ~ObjectServerStarter()
+        ~Infrastructure()
         {
             Dispose(false);
         }
@@ -263,7 +263,7 @@ namespace ObjectServer
             }
         }
 
-        private static ObjectServerStarter Instance
+        private static Infrastructure Instance
         {
             get
             {

@@ -21,19 +21,19 @@ namespace ObjectServer.Backend
                 throw new ArgumentNullException("dbName");
             }
 
-            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
             return dataProvider.CreateDataContext(dbName);
         }
 
         public static IDBConnection CreateDataContext()
         {
-            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
             return dataProvider.CreateDataContext();
         }
 
         public static string[] ListDatabases()
         {
-            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
             return dataProvider.ListDatabases();
         }
 
@@ -44,7 +44,7 @@ namespace ObjectServer.Backend
                 throw new ArgumentNullException("dbName");
             }
 
-            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
             dataProvider.CreateDatabase(dbName);
         }
 
@@ -55,7 +55,7 @@ namespace ObjectServer.Backend
                 throw new ArgumentNullException("dbName");
             }
 
-            var dataProvider = dataProviders[ObjectServerStarter.Configuration.DbType];
+            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
             dataProvider.DeleteDatabase(dbName);
         }
 
