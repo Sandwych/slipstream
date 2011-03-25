@@ -9,6 +9,6 @@ namespace ObjectServer.SqlTree
     {
         IExpression Lhs { get; set; }
         IExpression Rhs { get; set; }
-        ExpressionOperator Operator { get; set; }
+        ExpressionOperator ExpressionOperator { get; set; }
     }
 }

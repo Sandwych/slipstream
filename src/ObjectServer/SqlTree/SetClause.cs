@@ -7,18 +7,18 @@ namespace ObjectServer.SqlTree
 {
     public class SetClause : IClause, IExpressionCollection
     {
-        public SetClause(IEnumerable<IBinaryExpression> exps)
+        public SetClause(IEnumerable<IBinaryExpression> expressions)
         {
-            foreach (var exp in exps)
+            foreach (var exp in expressions)
             {
                 var binExp = exp as IBinaryExpression;
-                if (binExp == null || binExp.Operator != ExpressionOperator.EqualOperator)
+                if (binExp == null || binExp.ExpressionOperator != ExpressionOperator.EqualOperator)
                 {
                     throw new System.ArgumentException("exps");
                 }
             }
 
-            this.Expressions = new List<IExpression>(exps);
+            this.Expressions = new List<IExpression>(expressions);
         }
 
         public IList<IExpression> Expressions { get; private set; }

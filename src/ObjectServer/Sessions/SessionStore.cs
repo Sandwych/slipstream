@@ -33,10 +33,10 @@ namespace ObjectServer
             this.provider.PutSession(session);
         }
 
-        public void RemoveSessionsByUser(string database, long uid)
+        public void RemoveSessionsByUser(string database, long userId)
         {
             Debug.Assert(this.provider != null);
-            this.provider.RemoveSessionsByUser(database, uid);
+            this.provider.RemoveSessionsByUser(database, userId);
         }
 
         public void Remove(Guid sessionId)

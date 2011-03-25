@@ -11,27 +11,27 @@ namespace ObjectServer.SqlTree
         public BinaryExpression(string id, string opr, object value)
         {
             this.Lhs = new IdentifierExpression(id);
-            this.Operator = new ExpressionOperator(opr);
+            this.ExpressionOperator = new ExpressionOperator(opr);
             this.Rhs = new ValueExpression(value);
         }
 
         public BinaryExpression(IExpression lhs, ExpressionOperator opr, IExpression rhs)
         {
             this.Lhs = lhs;
-            this.Operator = opr;
+            this.ExpressionOperator = opr;
             this.Rhs = rhs;
         }
 
         public IExpression Lhs { get; set; }
         public IExpression Rhs { get; set; }
-        public ExpressionOperator Operator { get; set; }
+        public ExpressionOperator ExpressionOperator { get; set; }
 
         public override void Traverse(IVisitor visitor)
         {
             visitor.VisitBefore(this);
 
             this.Lhs.Traverse(visitor);
-            this.Operator.Traverse(visitor);
+            this.ExpressionOperator.Traverse(visitor);
             this.Rhs.Traverse(visitor);
 
             visitor.VisitAfter(this);
@@ -41,7 +41,7 @@ namespace ObjectServer.SqlTree
         {
             return new BinaryExpression(
                 (IExpression)this.Lhs.Clone(),
-                (ExpressionOperator)this.Operator.Clone(),
+                (ExpressionOperator)this.ExpressionOperator.Clone(),
                 (IExpression)this.Rhs.Clone());
         }
 

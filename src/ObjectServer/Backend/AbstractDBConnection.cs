@@ -285,11 +285,6 @@ namespace ObjectServer.Backend
             this.Open();
         }
 
-        public string GetSqlType(IField field)
-        {
-            throw new NotImplementedException();
-        }
-
         public abstract bool IsInitialized();
         public abstract string[] List();
         public abstract void Create(string dbName);

@@ -15,12 +15,12 @@ namespace ObjectServer
             this.LastActivityTime = this.StartTime;
         }
 
-        public Session(string dbName, string login, long uid)
+        public Session(string dbName, string login, long userId)
             : this()
         {
             this.Database = dbName;
             this.Login = login;
-            this.UserId = uid;
+            this.UserId = userId;
         }
 
         public Guid Id { get; set; }
