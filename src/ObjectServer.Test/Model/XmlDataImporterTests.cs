@@ -13,6 +13,7 @@ namespace ObjectServer.Model.Test
     {
         const string TestModelXmlResourcePath = "ObjectServer.Test.XmlFiles.test-model-data.xml";
         const string MasterChildXmlResourcePath = "ObjectServer.Test.XmlFiles.master-child-data.xml";
+        const string ReferenceFieldXmlResourcePath = "ObjectServer.Test.XmlFiles.reference-field-data.xml";
 
         [Test]
         public void Test_simple_importing()
@@ -21,7 +22,7 @@ namespace ObjectServer.Model.Test
             this.ClearTestModelTable();
 
             //删除所有记录
-            dynamic testObjectModel = this.ResourceScope.GetResource("test.test_model");
+            dynamic testObjectModel = this.ServiceScope.GetResource("test.test_model");
 
             var domain = new object[][] { new object[] { "model", "=", "test.test_model" } };
 
@@ -29,15 +30,15 @@ namespace ObjectServer.Model.Test
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(TestModelXmlResourcePath))
             {
-                var importer = new XmlDataImporter(this.ResourceScope, "test");
+                var importer = new XmlDataImporter(this.ServiceScope, "test");
 
                 importer.Import(xmlStream);
 
-                var ids = testObjectModel.SearchInternal(this.ResourceScope);
+                var ids = testObjectModel.SearchInternal(this.ServiceScope);
                 Assert.AreEqual(3, ids.Length);
 
                 var domain1 = new object[][] { new object[] { "name", "=", "name_changed" } };
-                ids = testObjectModel.SearchInternal(this.ResourceScope, domain1);
+                ids = testObjectModel.SearchInternal(this.ServiceScope, domain1);
                 Assert.AreEqual(1, ids.Length);
             }
 
@@ -45,11 +46,11 @@ namespace ObjectServer.Model.Test
             using (var xmlStream = Assembly.GetExecutingAssembly()
              .GetManifestResourceStream(TestModelXmlResourcePath))
             {
-                var importer = new XmlDataImporter(this.ResourceScope, "test");
+                var importer = new XmlDataImporter(this.ServiceScope, "test");
                 importer.Import(xmlStream);
             }
 
-            var ids2 = testObjectModel.SearchInternal(this.ResourceScope);
+            var ids2 = testObjectModel.SearchInternal(this.ServiceScope);
             Assert.AreEqual(4, ids2.Length);
         }
 
@@ -61,42 +62,75 @@ namespace ObjectServer.Model.Test
             this.ClearAllModelData();
             //删除所有导入记录
 
-            dynamic childModel = this.ResourceScope.GetResource("test.child");
-            dynamic masterModel = this.ResourceScope.GetResource("test.master");
+            dynamic childModel = this.ServiceScope.GetResource("test.child");
+            dynamic masterModel = this.ServiceScope.GetResource("test.master");
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(MasterChildXmlResourcePath))
             {
-                var importer = new XmlDataImporter(this.ResourceScope, "test");
+                var importer = new XmlDataImporter(this.ServiceScope, "test");
 
                 importer.Import(xmlStream);
 
                 object[][] domain;
 
                 domain = new object[][] { new object[] { "name", "=", "master1" } };
-                var ids = masterModel.Search(this.ResourceScope, domain, null, 0, 0);
+                var ids = masterModel.Search(this.ServiceScope, domain, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
-                dynamic master1 = masterModel.Browse(this.ResourceScope, ids[0]);
+                dynamic master1 = masterModel.Browse(this.ServiceScope, ids[0]);
                 Assert.AreEqual(2, master1.children.Length);
+            }
+        }
+
+
+        [Test]
+        public void Test_reference_field_importing()
+        {
+            this.ClearMasterAndChildTable();
+            this.ClearAllModelData();
+            //删除所有导入记录
+
+            dynamic testModel = this.ServiceScope.GetResource("test.test_model");
+            dynamic masterModel = this.ServiceScope.GetResource("test.master");
+
+            using (var xmlStream = Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream(ReferenceFieldXmlResourcePath))
+            {
+                var importer = new XmlDataImporter(this.ServiceScope, "test");
+
+                importer.Import(xmlStream);
+
+                var masterIds = masterModel.Search(this.ServiceScope, null, null, 0, 0);
+                Assert.AreEqual(1, masterIds.Length);
+
+                var testModelIds = testModel.Search(this.ServiceScope, null, null, 0, 0);
+                Assert.AreEqual(1, testModelIds.Length);
+
+                dynamic testModelRecord = testModel.Browse(this.ServiceScope, testModelIds[0]);
+                Assert.AreEqual("master1", testModelRecord.reference_field.name);
             }
         }
 
         private void ClearAllModelData()
         {
-            var model = (IModel)this.ResourceScope.GetResource("core.model_data");
+            var model = (IModel)this.ServiceScope.GetResource("core.model_data");
 
             ClearAllModelData(model, "test.master");
             ClearAllModelData(model, "test.child");
             ClearAllModelData(model, "test.test_model");
+
+            ClearModel(this.ServiceScope, "test.child");
+            ClearModel(this.ServiceScope, "test.master");
+            ClearModel(this.ServiceScope, "test.test_model");
         }
 
         private void ClearAllModelData(IModel model, string modelName)
         {
             var domain = new object[][] { new object[] { "model", "=", modelName } };
-            var ids = model.SearchInternal(this.ResourceScope, domain);
+            var ids = model.SearchInternal(this.ServiceScope, domain);
             if (ids != null && ids.Length > 0)
             {
-                model.DeleteInternal(this.ResourceScope, ids);
+                model.DeleteInternal(this.ServiceScope, ids);
             }
         }
 

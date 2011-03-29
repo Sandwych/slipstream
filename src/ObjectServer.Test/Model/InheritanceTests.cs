@@ -16,7 +16,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_single_table()
         {
-            dynamic inheritedModel = this.ResourceScope.GetResource("test.single_table");
+            dynamic inheritedModel = this.ServiceScope.GetResource("test.single_table");
             Assert.True(inheritedModel.Fields.ContainsKey("age"));
 
             var propBag = new Dictionary<string, object>()
@@ -25,9 +25,9 @@ namespace ObjectServer.Model.Test
                     { "age", 44},
                 };
 
-            object id = inheritedModel.Create(this.ResourceScope, propBag);
+            object id = inheritedModel.Create(this.ServiceScope, propBag);
 
-            var record = inheritedModel.Read(this.ResourceScope, new object[] { id }, null)[0];
+            var record = inheritedModel.Read(this.ServiceScope, new object[] { id }, null)[0];
 
             Assert.AreEqual(33, record["age"]);
         }
@@ -41,14 +41,14 @@ namespace ObjectServer.Model.Test
             adminUserRecord.name = "admin_user_name";
             adminUserRecord.admin_info = "admin_user_info";
 
-            var adminUserModel = (IModel)this.ResourceScope
+            var adminUserModel = (IModel)this.ServiceScope
                 .GetResource("test.admin_user");
             long id = -1;
             Assert.DoesNotThrow(() =>
             {
-                id = adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
+                id = adminUserModel.CreateInternal(this.ServiceScope, adminUserRecord);
             });
-            var ids = adminUserModel.SearchInternal(this.ResourceScope);
+            var ids = adminUserModel.SearchInternal(this.ServiceScope);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id, ids[0]);
         }
@@ -56,13 +56,13 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_creation_and_reading()
         {
-            var adminUserModel = (IModel)this.ResourceScope
+            var adminUserModel = (IModel)this.ServiceScope
                 .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
 
-            var adminUser = adminUserModel.ReadInternal(this.ResourceScope, new long[] { id })[0];
+            var adminUser = adminUserModel.ReadInternal(this.ServiceScope, new long[] { id })[0];
             Assert.AreEqual("admin_user_name", (string)adminUser["name"]);
             Assert.AreEqual("admin_user_info", (string)adminUser["admin_info"]);
         }
@@ -70,13 +70,13 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_creation_and_browsing()
         {
-            var adminUserModel = (IModel)this.ResourceScope
+            var adminUserModel = (IModel)this.ServiceScope
                 .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
 
-            var adminUser = adminUserModel.Browse(this.ResourceScope, id);
+            var adminUser = adminUserModel.Browse(this.ServiceScope, id);
             Assert.AreEqual("admin_user_name", adminUser.name);
             Assert.AreEqual("admin_user_info", adminUser.admin_info);
         }
@@ -85,14 +85,14 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_deletion()
         {
-            var adminUserModel = (IModel)this.ResourceScope
+            var adminUserModel = (IModel)this.ServiceScope
                 .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
             Assert.DoesNotThrow(() =>
             {
-                adminUserModel.DeleteInternal(this.ResourceScope, new long[] { id });
+                adminUserModel.DeleteInternal(this.ServiceScope, new long[] { id });
             });
 
         }
@@ -100,7 +100,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_writing()
         {
-            var adminUserModel = (IModel)this.ResourceScope
+            var adminUserModel = (IModel)this.ServiceScope
                 .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
@@ -112,10 +112,10 @@ namespace ObjectServer.Model.Test
 
             Assert.DoesNotThrow(() =>
                 {
-                    adminUserModel.WriteInternal(this.ResourceScope, id, fieldValues);
+                    adminUserModel.WriteInternal(this.ServiceScope, id, fieldValues);
                 });
 
-            var adminUserRecord = adminUserModel.ReadInternal(this.ResourceScope, new long[] { id })[0];
+            var adminUserRecord = adminUserModel.ReadInternal(this.ServiceScope, new long[] { id })[0];
 
             Assert.AreEqual("changed_base_name", (string)adminUserRecord["name"]);
             Assert.AreEqual("changed_admin_info", (string)adminUserRecord["admin_info"]);
@@ -124,7 +124,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_searching()
         {
-            var adminUserModel = (IModel)this.ResourceScope
+            var adminUserModel = (IModel)this.ServiceScope
                 .GetResource("test.admin_user");
             this.ClearMultiTable();
             var id = this.AddMultiTableTestData();
@@ -135,7 +135,7 @@ namespace ObjectServer.Model.Test
                 new object[] { "name", "=", "admin_user_name" } 
             };
 
-            var ids = adminUserModel.SearchInternal(this.ResourceScope, domain);
+            var ids = adminUserModel.SearchInternal(this.ServiceScope, domain);
 
             Assert.AreEqual(1, ids.Length);
         }
@@ -146,16 +146,16 @@ namespace ObjectServer.Model.Test
             adminUserRecord.name = "admin_user_name";
             adminUserRecord.admin_info = "admin_user_info";
 
-            var adminUserModel = (IModel)this.ResourceScope
+            var adminUserModel = (IModel)this.ServiceScope
                 .GetResource("test.admin_user");
 
-            return adminUserModel.CreateInternal(this.ResourceScope, adminUserRecord);
+            return adminUserModel.CreateInternal(this.ServiceScope, adminUserRecord);
         }
 
         private void ClearMultiTable()
         {
-            this.ClearModel(this.ResourceScope, "test.admin_user");
-            this.ClearModel(this.ResourceScope, "test.user");
+            this.ClearModel(this.ServiceScope, "test.admin_user");
+            this.ClearModel(this.ServiceScope, "test.user");
         }
 
     }

@@ -52,45 +52,45 @@ namespace ObjectServer
 
         public IExportedService Service { get; private set; }
 
-        public IServiceScope ResourceScope { get; private set; }
+        public IServiceScope ServiceScope { get; private set; }
 
         [SetUp]
         public void BeforeTest()
         {
-            Debug.Assert(this.ResourceScope == null);
+            Debug.Assert(this.ServiceScope == null);
             Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
 
-            this.ResourceScope = new ServiceScope(new Guid(this.SessionId));
+            this.ServiceScope = new ServiceScope(new Guid(this.SessionId));
         }
 
         [TearDown]
         public void AfterTest()
         {
-            Debug.Assert(this.ResourceScope != null);
-            this.ResourceScope.Dispose();
-            this.ResourceScope = null;
+            Debug.Assert(this.ServiceScope != null);
+            this.ServiceScope.Dispose();
+            this.ServiceScope = null;
         }
 
         protected void ClearTestModelTable()
         {
-            Debug.Assert(this.ResourceScope != null);
-            this.ClearModel(this.ResourceScope, "test.test_model");
+            Debug.Assert(this.ServiceScope != null);
+            this.ClearModel(this.ServiceScope, "test.test_model");
         }
 
 
         protected void ClearMasterAndChildTable()
         {
-            Debug.Assert(this.ResourceScope != null);
-            this.ClearModel(this.ResourceScope, "test.child");
-            this.ClearModel(this.ResourceScope, "test.master");
+            Debug.Assert(this.ServiceScope != null);
+            this.ClearModel(this.ServiceScope, "test.child");
+            this.ClearModel(this.ServiceScope, "test.master");
         }
 
         protected void ClearManyToManyModels()
         {
-            Debug.Assert(this.ResourceScope != null);
-            this.ClearModel(this.ResourceScope, "test.department_employee");
-            this.ClearModel(this.ResourceScope, "test.department");
-            this.ClearModel(this.ResourceScope, "test.employee");
+            Debug.Assert(this.ServiceScope != null);
+            this.ClearModel(this.ServiceScope, "test.department_employee");
+            this.ClearModel(this.ServiceScope, "test.department");
+            this.ClearModel(this.ServiceScope, "test.employee");
         }
 
         protected void ClearModel(IServiceScope scope, string model)
