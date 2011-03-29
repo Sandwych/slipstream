@@ -150,6 +150,7 @@ namespace ObjectServer.Model
             XmlReader reader, dynamic model, Dictionary<string, object> record)
         {
             var refKey = reader["ref-key"] as string;
+            var refModel = reader["ref-model"] as string;
             var fieldName = reader["name"];
 
             IField metaField = model.Fields[fieldName];
@@ -184,6 +185,22 @@ namespace ObjectServer.Model
                 case FieldType.Text:
                 case FieldType.Enumeration:
                     fieldValue = reader.ReadElementContentAsString();
+                    break;
+
+                case FieldType.Reference:
+                    if (string.IsNullOrEmpty(refKey))
+                    {
+                        throw new InvalidDataException(
+                            "Reference field must have 'ref-key' and 'ref-model' attributes");
+                    }
+                    fieldValue = ModelDataModel.TryLookupResourceId(
+                        this.context.DatabaseProfile.Connection, refModel, refKey);
+                    if (fieldValue == null)
+                    {
+                        var msg = string.Format(
+                            "Cannot found model for reference field: {0}:{1}", refModel, refKey);
+                        throw new InvalidDataException(msg);
+                    }
                     break;
 
                 case FieldType.ManyToOne:
