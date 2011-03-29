@@ -193,14 +193,15 @@ namespace ObjectServer.Model
                         throw new InvalidDataException(
                             "Reference field must have 'ref-key' and 'ref-model' attributes");
                     }
-                    fieldValue = ModelDataModel.TryLookupResourceId(
+                    var recordId = ModelDataModel.TryLookupResourceId(
                         this.context.DatabaseProfile.Connection, refModel, refKey);
-                    if (fieldValue == null)
+                    if (recordId == null)
                     {
                         var msg = string.Format(
                             "Cannot found model for reference field: {0}:{1}", refModel, refKey);
                         throw new InvalidDataException(msg);
                     }
+                    fieldValue = new object[] { refModel, recordId };
                     break;
 
                 case FieldType.ManyToOne:

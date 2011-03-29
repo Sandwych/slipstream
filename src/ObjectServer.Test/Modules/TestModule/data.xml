@@ -12,12 +12,12 @@
     <field name="address">address2</field>
     <field name="float_field">22.0</field>
   </record> 
-
-  <record model="test.test_model">
+  <record model="test.test_model">
     <field name="name">name3</field>
     <field name="address">address3</field>
     <field name="float_field">33.0</field>
-  </record> 
+  </record>
+
 
 </data>
 

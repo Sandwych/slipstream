@@ -54,7 +54,9 @@ namespace ObjectServer.Model
             {
                 record[ModifiedTimeFieldName] = DateTime.Now;
             }
-            if (this.ContainsField(ModifiedUserFieldName))
+            if (this.ContainsField(ModifiedUserFieldName) &&
+                scope.Session != null &&
+                scope.Session.UserId > 0)
             {
                 record[ModifiedUserFieldName] = scope.Session.UserId;
             }
@@ -63,7 +65,6 @@ namespace ObjectServer.Model
             var updatableColumnFields = allFields.Where(
                 f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly).ToArray();
             this.ConvertFieldToColumn(scope, record, updatableColumnFields);
-
 
             //检查字段
             var columns = new List<IBinaryExpression>(record.Count);
