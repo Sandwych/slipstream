@@ -18,7 +18,7 @@ namespace ObjectServer
             this.Session = session;
         }
 
-        public IDBProfile DBProfile { get; private set; }
+        private IDBProfile DBProfile { get; set; }
 
         public Session Session { get; private set; }
 

@@ -90,17 +90,10 @@ namespace ObjectServer
             }
         }
 
-        #region IContext 成员
-
-        public IDBProfile DBProfile
-        {
-            get;
-            private set;
-        }
+        private IDBProfile DBProfile { get; set; }
 
         public Session Session { get; private set; }
 
-        #endregion
 
         #region IDisposable 成员
 
