@@ -119,18 +119,19 @@ namespace ObjectServer
         private void LoadAdditionalModule(IServiceScope ctx)
         {
             Logger.Info(() => "Loading precompiled assemblies...");
+            var dbProfile = Infrastructure.DBProfiles.GetDBProfile(ctx.Session);
 
             if (this.Dlls != null)
             {
-                this.LoadStaticAssemblies(ctx.DatabaseProfile);
+                this.LoadStaticAssemblies(dbProfile);
             }
 
             if (!string.IsNullOrEmpty(this.Path))
             {
-                this.LoadDynamicAssembly(ctx.DatabaseProfile, ctx.DatabaseProfile);
+                this.LoadDynamicAssembly(dbProfile, dbProfile);
             }
 
-            ctx.DatabaseProfile.InitializeAllResources();
+            dbProfile.InitializeAllResources();
 
             if (this.DataFiles != null)
             {
@@ -144,10 +145,12 @@ namespace ObjectServer
 
         private void LoadCoreModule(IServiceScope ctx)
         {
-            var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
-            RegisterResourceWithinAssembly(ctx.DatabaseProfile, a);
+            var dbProfile = Infrastructure.DBProfiles.GetDBProfile(ctx.Session);
 
-            ctx.DatabaseProfile.InitializeAllResources();
+            var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
+            RegisterResourceWithinAssembly(dbProfile, a);
+
+            dbProfile.InitializeAllResources();
 
             Logger.Info(() => "Importing core data...");
             var importer = new Model.XmlDataImporter(ctx, this.Name);
@@ -157,7 +160,6 @@ namespace ObjectServer
                 {
                     Logger.Info(() => "Importing file: " + resPath);
                     importer.Import(resStream);
-
                     resStream.Close();
                 }
             }
@@ -176,18 +178,18 @@ namespace ObjectServer
             }
         }
 
-        private void LoadDynamicAssembly(IDatabaseProfile db, IResourceContainer resources)
+        private void LoadDynamicAssembly(IResourceContainer resContainer, IResourceContainer resources)
         {
             Debug.Assert(resources != null);
 
             var a = CompileSourceFiles(this.Path);
             this.AllAssemblies.Add(a);
-            RegisterResourceWithinAssembly(db, a);
+            RegisterResourceWithinAssembly(resContainer, a);
         }
 
-        private void RegisterResourceWithinAssembly(IDatabaseProfile db, Assembly assembly)
+        private void RegisterResourceWithinAssembly(IResourceContainer resContainer, Assembly assembly)
         {
-            Debug.Assert(db != null);
+            Debug.Assert(resContainer != null);
             Debug.Assert(assembly != null);
 
             Logger.Info(() => string.Format(
@@ -200,7 +202,7 @@ namespace ObjectServer
                 var res = AbstractResource.CreateStaticResourceInstance(t);
                 res.Module = this.Name;
                 this.resources.Add(res);
-                db.RegisterResource(res);
+                resContainer.RegisterResource(res);
             }
         }
 
@@ -221,7 +223,7 @@ namespace ObjectServer
             return result.ToArray();
         }
 
-        private void LoadStaticAssemblies(IDatabaseProfile db)
+        private void LoadStaticAssemblies(IResourceContainer resContainer)
         {
             Debug.Assert(this.Dlls != null);
 
@@ -229,7 +231,7 @@ namespace ObjectServer
             {
                 var a = Assembly.LoadFile(dll);
                 this.allAssembly.Add(a);
-                RegisterResourceWithinAssembly(db, a);
+                RegisterResourceWithinAssembly(resContainer, a);
             }
         }
 

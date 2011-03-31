@@ -7,7 +7,7 @@ using ObjectServer.Backend;
 
 namespace ObjectServer
 {
-    public interface IDatabaseProfile : IDisposable, IResourceContainer
+    public interface IDBProfile : IDisposable, IResourceContainer
     {
         IDBConnection Connection { get; }
     }

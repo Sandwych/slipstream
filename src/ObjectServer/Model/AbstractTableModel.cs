@@ -96,7 +96,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Load(IDatabaseProfile db)
+        public override void Load(IDBProfile db)
         {
             this.AddInternalFields();
 

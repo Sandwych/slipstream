@@ -4,17 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
+using ObjectServer.Backend;
+
 namespace ObjectServer
 {
     internal class SessionlessServiceScope : IServiceScope
     {
-        public SessionlessServiceScope(IDatabaseProfile db)
+        public SessionlessServiceScope(IDBProfile db)
         {
             Debug.Assert(db != null);
-            this.DatabaseProfile = db;
+            this.DBProfile = db;
         }
 
-        public IDatabaseProfile DatabaseProfile { get; private set; }
+        public IDBProfile DBProfile { get; private set; }
 
         public Session Session
         {
@@ -40,7 +42,16 @@ namespace ObjectServer
                 throw new ArgumentNullException("resName");
             }
 
-            return this.DatabaseProfile.GetResource(resName);
+            return this.DBProfile.GetResource(resName);
+        }
+
+        public IDBConnection Connection
+        {
+            get
+            {
+                Debug.Assert(this.DBProfile != null);
+                return this.DBProfile.Connection;
+            }
         }
     }
 }

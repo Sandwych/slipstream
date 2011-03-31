@@ -23,7 +23,7 @@ namespace ObjectServer
             using (var ctx = new ServiceScope(dbName))
             using (var tx = new TransactionScope())
             {
-                ctx.DatabaseProfile.Connection.Open();
+                ctx.Connection.Open();
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
@@ -44,7 +44,7 @@ namespace ObjectServer
             using (var ctx = new ServiceScope(sgid))
             using (var tx = new TransactionScope())
             {
-                ctx.DatabaseProfile.Connection.Open();
+                ctx.Connection.Open();
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 userModel.LogOut(ctx, sessionId);
@@ -126,7 +126,7 @@ namespace ObjectServer
         {
             VerifyRootPassword(rootPasswordHash);
 
-            Infrastructure.DatabaseProfiles.RemoveDatabase(dbName); //删除数据库上下文
+            Infrastructure.DBProfiles.RemoveDB(dbName); //删除数据库上下文
             DataProvider.DeleteDatabase(dbName); //删除实际数据库
         }
 

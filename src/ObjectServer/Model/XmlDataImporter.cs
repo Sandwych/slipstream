@@ -103,7 +103,7 @@ namespace ObjectServer.Model
             if (!string.IsNullOrEmpty(key))
             {
                 existedId = ModelDataModel.TryLookupResourceId(
-                    this.context.DatabaseProfile.Connection, model.Name, key);
+                    this.context.Connection, model.Name, key);
             }
 
             if (existedId == null) // Create
@@ -112,7 +112,7 @@ namespace ObjectServer.Model
                 if (!string.IsNullOrEmpty(key))
                 {
                     ModelDataModel.Create(
-                        this.context.DatabaseProfile.Connection, this.currentModule, model.Name, key, existedId.Value);
+                        this.context.Connection, this.currentModule, model.Name, key, existedId.Value);
                 }
             }
             else if (existedId != null && !noUpdate) //Update 
@@ -127,7 +127,7 @@ namespace ObjectServer.Model
 
                 model.WriteInternal(this.context, existedId.Value, record);
                 ModelDataModel.UpdateResourceId(
-                    this.context.DatabaseProfile.Connection, model.Name, key, existedId.Value);
+                    this.context.Connection, model.Name, key, existedId.Value);
             }
             else
             {
@@ -194,7 +194,7 @@ namespace ObjectServer.Model
                             "Reference field must have 'ref-key' and 'ref-model' attributes");
                     }
                     var recordId = ModelDataModel.TryLookupResourceId(
-                        this.context.DatabaseProfile.Connection, refModel, refKey);
+                        this.context.Connection, refModel, refKey);
                     if (recordId == null)
                     {
                         var msg = string.Format(
@@ -210,7 +210,7 @@ namespace ObjectServer.Model
                         throw new InvalidDataException("Many-to-one field must have a 'ref-key' attribute");
                     }
                     fieldValue = ModelDataModel.TryLookupResourceId(
-                        this.context.DatabaseProfile.Connection, metaField.Relation, refKey);
+                        this.context.Connection, metaField.Relation, refKey);
                     if (fieldValue == null)
                     {
                         throw new InvalidDataException("Cannot found model for ref-key: " + refKey);

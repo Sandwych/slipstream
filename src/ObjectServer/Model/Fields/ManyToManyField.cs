@@ -34,7 +34,7 @@ namespace ObjectServer.Model
                 var sql = string.Format(
                     "SELECT \"{0}\" FROM \"{1}\" WHERE \"{2}\" = @0",
                     this.RelatedField, relationModel.TableName, this.OriginField);
-                var targetIds = ctx.DatabaseProfile.Connection.QueryAsArray(sql, selfId);
+                var targetIds = ctx.Connection.QueryAsArray(sql, selfId);
                 result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }
 

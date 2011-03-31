@@ -174,7 +174,7 @@
     <Compile Include="Core\MenuModel.cs" />
     <Compile Include="Core\CronModel.cs" />
     <Compile Include="Core\ModelDataModel.cs" />
-    <Compile Include="DatabaseProfile.cs" />
+    <Compile Include="DBProfile.cs" />
     <Compile Include="Exceptions\ConcurrencyException.cs" />
     <Compile Include="Exceptions\ResourceNotFoundException.cs" />
     <Compile Include="Exceptions\BadResourceNameException.cs" />
@@ -182,7 +182,7 @@
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
     <Compile Include="Exceptions\BadServiceMethodException.cs" />
     <Compile Include="Exceptions\DatabaseNotFoundException.cs" />
-    <Compile Include="IDatabaseProfile.cs" />
+    <Compile Include="IDBProfile.cs" />
     <Compile Include="IGlobalObject.cs" />
     <Compile Include="IResourceContainer.cs" />
     <Compile Include="Model\BrowsableRecord.cs" />
@@ -255,7 +255,7 @@
     <Compile Include="Module\Module.cs" />
     <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="Infrastructure.cs" />
-    <Compile Include="DatabaseProfileCollection.cs" />
+    <Compile Include="DBProfileCollection.cs" />
     <Compile Include="Core\UserModel.cs" />
     <Compile Include="IServiceScope.cs" />
     <Compile Include="Core\FieldModel.cs" />

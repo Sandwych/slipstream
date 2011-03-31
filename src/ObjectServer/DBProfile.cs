@@ -14,7 +14,7 @@ namespace ObjectServer
     /// 用于描述一个帐套数据库的上下文环境
     /// 一个数据库包含了该数据库中的所有对象
     /// </summary>
-    internal class DatabaseProfile : IDatabaseProfile
+    internal class DBProfile : IDBProfile
     {
         private IDictionary<string, IResource> resources = new Dictionary<string, IResource>();
         private HashSet<string> loadedResources = new HashSet<string>();
@@ -23,7 +23,7 @@ namespace ObjectServer
         /// 初始化一个数据库环境
         /// </summary>
         /// <param name="dbName"></param>
-        public DatabaseProfile(string dbName)
+        public DBProfile(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
@@ -32,7 +32,7 @@ namespace ObjectServer
             this.EnsureInitialization();
         }
 
-        public DatabaseProfile(IDBConnection conn, IResourceContainer resources)
+        public DBProfile(IDBConnection conn, IResourceContainer resources)
         {
             Debug.Assert(conn != null);
             Debug.Assert(resources != null);
@@ -52,7 +52,7 @@ namespace ObjectServer
             }
         }
 
-        ~DatabaseProfile()
+        ~DBProfile()
         {
             this.Dispose(false);
         }

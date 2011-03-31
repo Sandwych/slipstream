@@ -36,8 +36,8 @@ namespace ObjectServer
             this.SessionStore.Pulse(session.Id);
 
             this.ownDb = true;
-            this.DatabaseProfile = Infrastructure.DatabaseProfiles.GetDatabaseProfile(session);
-            this.DatabaseProfile.Connection.Open();
+            this.DBProfile = Infrastructure.DBProfiles.GetDBProfile(session);
+            this.Connection.Open();
         }
 
         /// <summary>
@@ -52,11 +52,11 @@ namespace ObjectServer
             this.Session = new Session(dbName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
-            this.DatabaseProfile = Infrastructure.DatabaseProfiles.GetDatabaseProfile(this.Session);
-            this.DatabaseProfile.Connection.Open();
+            this.DBProfile = Infrastructure.DBProfiles.GetDBProfile(this.Session);
+            this.Connection.Open();
         }
 
-        internal ServiceScope(IDatabaseProfile db)
+        internal ServiceScope(IDBProfile db)
         {
             Debug.Assert(db != null);
             Debug.Assert(db.Connection != null);
@@ -67,8 +67,8 @@ namespace ObjectServer
             this.Session = new Session(db.Connection.DatabaseName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = false;
-            this.DatabaseProfile = db;
-            this.DatabaseProfile.Connection.Open();
+            this.DBProfile = db;
+            this.Connection.Open();
         }
 
         public IResource GetResource(string resName)
@@ -78,12 +78,21 @@ namespace ObjectServer
                 throw new ArgumentNullException("resName");
             }
 
-            return this.DatabaseProfile.GetResource(resName);
+            return this.DBProfile.GetResource(resName);
+        }
+
+        public IDBConnection Connection
+        {
+            get
+            {
+                Debug.Assert(this.DBProfile != null);
+                return this.DBProfile.Connection;
+            }
         }
 
         #region IContext 成员
 
-        public IDatabaseProfile DatabaseProfile
+        public IDBProfile DBProfile
         {
             get;
             private set;
@@ -99,7 +108,7 @@ namespace ObjectServer
         {
             if (this.ownDb)
             {
-                this.DatabaseProfile.Connection.Close();
+                this.Connection.Close();
             }
 
             Logger.Debug(() => "ScopeContext closed");

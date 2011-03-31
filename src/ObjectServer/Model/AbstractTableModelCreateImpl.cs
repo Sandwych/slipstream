@@ -110,7 +110,7 @@ namespace ObjectServer.Model
 
         private long CreateSelf(IServiceScope ctx, IDictionary<string, object> values)
         {
-            var serial = ctx.DatabaseProfile.Connection.NextSerial(this.SequenceName);
+            var serial = ctx.Connection.NextSerial(this.SequenceName);
 
             if (this.ContainsField(VersionFieldName))
             {
@@ -147,7 +147,7 @@ namespace ObjectServer.Model
               serial,
               args);
 
-            var rows = ctx.DatabaseProfile.Connection.Execute(sql, colValues);
+            var rows = ctx.Connection.Execute(sql, colValues);
             if (rows != 1)
             {
                 Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));

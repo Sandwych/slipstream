@@ -37,7 +37,7 @@ namespace ObjectServer.Model
                 var sql1 = string.Format(
                     "SELECT * FROM \"{0}\" WHERE \"id\" = {1}",
                     this.TableName, id);
-                var existedRecord = scope.DatabaseProfile.Connection.QueryAsDictionary(sql1)[0];
+                var existedRecord = scope.Connection.QueryAsDictionary(sql1)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
@@ -96,7 +96,7 @@ namespace ObjectServer.Model
 
             var sql = updateStatement.ToString();
 
-            var rowsAffected = scope.DatabaseProfile.Connection.Execute(sql, args.ToArray());
+            var rowsAffected = scope.Connection.Execute(sql, args.ToArray());
 
             //检查更新结果
             if (rowsAffected != 1)

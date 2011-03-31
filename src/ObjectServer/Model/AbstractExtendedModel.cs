@@ -13,7 +13,7 @@ namespace ObjectServer.Model
 
         }
 
-        public override void Load(IDatabaseProfile db)
+        public override void Load(IDBProfile db)
         {
             if (!db.ContainsResource(this.Name))
             {

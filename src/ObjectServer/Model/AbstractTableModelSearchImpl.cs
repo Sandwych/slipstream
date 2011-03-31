@@ -94,8 +94,7 @@ namespace ObjectServer.Model
                     {
                         var tableNames =
                             from i in this.Inheritances
-                            let bm = (AbstractTableModel)scope.DatabaseProfile
-                                .GetResource(i.BaseModel)
+                            let bm = (AbstractTableModel)scope.GetResource(i.BaseModel)
                             where bm.Fields.ContainsKey(fieldName)
                             select bm.TableName;
                         tableName = tableNames.Single();
@@ -106,8 +105,7 @@ namespace ObjectServer.Model
 
                 foreach (var inheritInfo in this.Inheritances)
                 {
-                    var baseModel = (AbstractTableModel)scope.DatabaseProfile
-                        .GetResource(inheritInfo.BaseModel);
+                    var baseModel = (AbstractTableModel)scope.GetResource(inheritInfo.BaseModel);
                     var baseTableExp = new AliasExpression(baseModel.TableName);
                     select.FromClause.ExpressionCollection.Expressions.Add(baseTableExp);
                 }
@@ -122,7 +120,7 @@ namespace ObjectServer.Model
             select.Traverse(sv);
             var sql = sv.ToString();
 
-            using (var cmd = scope.DatabaseProfile.Connection.Connection.CreateCommand())
+            using (var cmd = scope.Connection.Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
                 using (var reader = cmd.ExecuteReader())

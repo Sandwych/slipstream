@@ -29,7 +29,7 @@ namespace ObjectServer.Model
             this.Inheritances = new InheritanceCollection();
         }
 
-        public override void Load(IDatabaseProfile db)
+        public override void Load(IDBProfile db)
         {
             base.Load(db);
 
@@ -42,7 +42,7 @@ namespace ObjectServer.Model
         /// 初始化继承设置
         /// </summary>
         /// <param name="db"></param>
-        private void InitializeInheritances(IDatabaseProfile db)
+        private void InitializeInheritances(IDBProfile db)
         {
             //验证继承声明
             //这里可以安全地访问 many-to-one 指向的 ResourceContainer 里的对象，因为依赖排序的原因
@@ -99,7 +99,7 @@ namespace ObjectServer.Model
         /// 同步代码定义的模型到数据库
         /// </summary>
         /// <param name="db"></param>
-        private void SyncModel(IDatabaseProfile db)
+        private void SyncModel(IDBProfile db)
         {
 
             //检测此模型是否存在于数据库 core_model 表
@@ -119,7 +119,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="db"></param>
         /// <param name="modelId"></param>
-        private void SyncFields(IDatabaseProfile db, long? modelId)
+        private void SyncFields(IDBProfile db, long? modelId)
         {
             //同步代码定义的字段与数据库 core_model_field 表里记录的字段信息
             var sql = @"
@@ -169,7 +169,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         /// <param name="dbField"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        private void SyncSingleField(IDatabaseProfile db, Dictionary<string, object> dbField, string fieldName)
+        private void SyncSingleField(IDBProfile db, Dictionary<string, object> dbField, string fieldName)
         {
             var sql = @"UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, ""help""=@3  WHERE ""id""=@4";
 
@@ -191,7 +191,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             }
         }
 
-        private long? FindExistedModelInDb(IDatabaseProfile db)
+        private long? FindExistedModelInDb(IDBProfile db)
         {
             var sql = "SELECT MAX(\"id\") FROM core_model WHERE name=@0";
             var o = db.Connection.QueryValue(sql, this.Name);
@@ -205,7 +205,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             }
         }
 
-        private void CreateModel(IDatabaseProfile db)
+        private void CreateModel(IDBProfile db)
         {
             var rowCount = db.Connection.Execute(
                 "INSERT INTO \"core_model\"(\"name\", \"module\", \"label\") VALUES(@0, @1, @2);",
