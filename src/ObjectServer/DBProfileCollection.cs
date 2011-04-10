@@ -16,14 +16,14 @@ namespace ObjectServer
     /// <summary>
     /// Singleton
     /// </summary>
-    internal sealed class DatabaseProfileCollection : IGlobalObject, IDisposable
+    internal sealed class DBProfileCollection : IGlobalObject, IDisposable
     {
         private Config config;
-        private Dictionary<string, DatabaseProfile> databaseProfiles =
-            new Dictionary<string, DatabaseProfile>();
+        private Dictionary<string, DBProfile> dbProfiles =
+            new Dictionary<string, DBProfile>();
 
 
-        ~DatabaseProfileCollection()
+        ~DBProfileCollection()
         {
             this.Dispose(false);
         }
@@ -53,50 +53,60 @@ namespace ObjectServer
                 throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
             }
 
-            var db = new DatabaseProfile(dbName);
+            var db = new DBProfile(dbName);
 
             lock (this)
             {
-                this.databaseProfiles.Add(dbName.Trim(), db);
+                this.dbProfiles.Add(dbName.Trim(), db);
             }
 
             this.LoadAdditionalModules(session, db);
         }
 
-        private void LoadAdditionalModules(Session session, DatabaseProfile db)
+        private void LoadAdditionalModules(Session session, DBProfile db)
         {
             Debug.Assert(session != null);
             Debug.Assert(db != null);
 
             //加载其它模块
             Logger.Info(() => "Loading additional modules...");
-            var ctx = new InternalServiceScope(db, session);
-            Infrastructure.Modules.UpdateModuleList(db.Connection);
-            Infrastructure.Modules.LoadActivatedModules(ctx);
+            using (var ctx = new InternalServiceScope(db, session))
+            {
+                Infrastructure.Modules.UpdateModuleList(db.Connection);
+                Infrastructure.Modules.LoadActivatedModules(ctx);
+            }
         }
 
-        internal DatabaseProfile GetDatabaseProfile(Session session)
+        internal DBProfile GetDBProfile(Session session)
         {
             Debug.Assert(session != null);
 
-            if (!this.databaseProfiles.ContainsKey(session.Database))
+            if (!this.dbProfiles.ContainsKey(session.Database))
             {
                 this.LoadDatabase(session);
             }
 
-            return this.databaseProfiles[session.Database];
+            return this.dbProfiles[session.Database];
+        }
+
+        internal DBProfile GetDBProfile(string dbName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(dbName));
+            Debug.Assert(this.dbProfiles.ContainsKey(dbName));
+
+            return this.dbProfiles[dbName];
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        internal void RemoveDatabase(string dbName)
+        internal void RemoveDB(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
             //比如两个客户端，一个正在操作数据库，另一个要删除数据库
 
-            var db = this.databaseProfiles[dbName];
+            var db = this.dbProfiles[dbName];
             db.Connection.Close();
-            this.databaseProfiles.Remove(dbName);
+            this.dbProfiles.Remove(dbName);
         }
 
         #region IDisposable 成员
@@ -112,7 +122,7 @@ namespace ObjectServer
             {
             }
 
-            foreach (var p in this.databaseProfiles)
+            foreach (var p in this.dbProfiles)
             {
                 p.Value.Dispose();
             }

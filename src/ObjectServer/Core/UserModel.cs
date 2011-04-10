@@ -31,7 +31,7 @@ namespace ObjectServer.Core
             Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
         }
 
-        public override void Load(IDatabaseProfile db)
+        public override void Load(IDBProfile db)
         {
             base.Load(db);
 
@@ -43,7 +43,7 @@ namespace ObjectServer.Core
             }
         }
 
-        private static bool UserExists(IDatabaseProfile db, string login)
+        private static bool UserExists(IDBProfile db, string login)
         {
             var sql = "SELECT COUNT(*) FROM core_user WHERE \"login\" = @0";
             var rowCount = db.Connection.QueryValue(sql, login);

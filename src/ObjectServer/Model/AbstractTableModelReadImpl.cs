@@ -77,7 +77,7 @@ namespace ObjectServer.Model
             var sql = select.ToString();
 
             //先查找表里的简单字段数据
-            var records = scope.DatabaseProfile.Connection.QueryAsDictionary(sql);
+            var records = scope.Connection.QueryAsDictionary(sql);
 
             this.ReadBaseModels(scope, allFields, records);
 

@@ -135,7 +135,7 @@ namespace ObjectServer.Model.Test
         public void test_binary_field()
         {
             this.ClearTestModelTable();
-            dynamic testModel = this.ResourceScope.GetResource("test.test_model");
+            dynamic testModel = this.ServiceScope.GetResource("test.test_model");
             var fieldData = new byte[] { 33, 44, 55, 66, 77 };
             var record = new Dictionary<string, object>()
                 {
@@ -143,9 +143,9 @@ namespace ObjectServer.Model.Test
                     { "address", "address1" },
                     { "binary_field", fieldData },
                 };
-            var id = (long)testModel.Create(this.ResourceScope, record);
+            var id = (long)testModel.Create(this.ServiceScope, record);
 
-            record = testModel.Read(this.ResourceScope, new object[] { id }, null)[0];
+            record = testModel.Read(this.ServiceScope, new object[] { id }, null)[0];
 
             var field = record["binary_field"] as byte[];
             Assert.NotNull(field);

@@ -17,7 +17,7 @@ namespace ObjectServer
         bool DatabaseRequired { get; }
         ICollection<MethodInfo> ServiceMethods { get; }
 
-        void Load(IDatabaseProfile db);
+        void Load(IDBProfile db);
 
         /// <summary>
         /// 此对象引用（依赖）的其它对象名称

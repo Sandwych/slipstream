@@ -117,7 +117,7 @@ namespace ObjectServer
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的
             var sql = "SELECT \"id\", \"name\" FROM \"core_module\" WHERE \"state\" = 'activated'";
-            var modules = ctx.DatabaseProfile.Connection.QueryAsDictionary(sql);
+            var modules = ctx.Connection.QueryAsDictionary(sql);
 
             var unloadModules = new List<long>();
             foreach (var m in modules)
@@ -138,7 +138,7 @@ namespace ObjectServer
 
             if (unloadModules.Count > 0)
             {
-                DeactivateModules(ctx.DatabaseProfile.Connection, unloadModules);
+                DeactivateModules(ctx.Connection, unloadModules);
             }
         }
 

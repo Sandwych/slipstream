@@ -48,7 +48,7 @@ SELECT DISTINCT ma.id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_
     INNER JOIN core_user_group_rel ugr ON ugr.gid = ma.group
     WHERE (ugr.uid = @0) AND (m.name = @1)
 ";
-            var result = scope.DatabaseProfile.Connection.QueryAsDictionary(sql, userId, model);
+            var result = scope.Connection.QueryAsDictionary(sql, userId, model);
 
             return result;
         }

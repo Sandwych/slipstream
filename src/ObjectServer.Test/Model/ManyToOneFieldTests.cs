@@ -26,12 +26,12 @@ namespace ObjectServer.Model.Test
                 { "master", null },
             };
 
-            var childModel = (IModel)this.ResourceScope.GetResource("test.child");
+            var childModel = (IModel)this.ServiceScope.GetResource("test.child");
 
-            var id = childModel.CreateInternal(this.ResourceScope, child);
+            var id = childModel.CreateInternal(this.ServiceScope, child);
 
             var children = childModel.ReadInternal(
-                this.ResourceScope, new long[] { id }, new string[] { "name", "master" });
+                this.ServiceScope, new long[] { id }, new string[] { "name", "master" });
             var record = children[0];
 
             Assert.IsInstanceOf<DBNull>(record["master"]);

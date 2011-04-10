@@ -96,7 +96,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Load(IDatabaseProfile db)
+        public override void Load(IDBProfile db)
         {
             this.AddInternalFields();
 
@@ -149,7 +149,8 @@ namespace ObjectServer.Model
                     .DefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
                 Fields.ManyToOne(ModifiedUserFieldName, "core.user").SetLabel("Creator")
-                    .NotRequired().DefaultValueGetter(ctx => DBNull.Value);
+                    .NotRequired()
+                    .DefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
                 if (this.Hierarchy)
                 {

@@ -37,7 +37,7 @@ namespace ObjectServer.Model
                 var sql1 = string.Format(
                     "SELECT * FROM \"{0}\" WHERE \"id\" = {1}",
                     this.TableName, id);
-                var existedRecord = scope.DatabaseProfile.Connection.QueryAsDictionary(sql1)[0];
+                var existedRecord = scope.Connection.QueryAsDictionary(sql1)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
@@ -54,7 +54,9 @@ namespace ObjectServer.Model
             {
                 record[ModifiedTimeFieldName] = DateTime.Now;
             }
-            if (this.ContainsField(ModifiedUserFieldName))
+            if (this.ContainsField(ModifiedUserFieldName) &&
+                scope.Session != null &&
+                scope.Session.UserId > 0)
             {
                 record[ModifiedUserFieldName] = scope.Session.UserId;
             }
@@ -63,7 +65,6 @@ namespace ObjectServer.Model
             var updatableColumnFields = allFields.Where(
                 f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly).ToArray();
             this.ConvertFieldToColumn(scope, record, updatableColumnFields);
-
 
             //检查字段
             var columns = new List<IBinaryExpression>(record.Count);
@@ -95,7 +96,7 @@ namespace ObjectServer.Model
 
             var sql = updateStatement.ToString();
 
-            var rowsAffected = scope.DatabaseProfile.Connection.Execute(sql, args.ToArray());
+            var rowsAffected = scope.Connection.Execute(sql, args.ToArray());
 
             //检查更新结果
             if (rowsAffected != 1)

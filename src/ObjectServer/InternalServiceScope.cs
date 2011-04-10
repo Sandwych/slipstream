@@ -4,19 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
+using ObjectServer.Backend;
+
 namespace ObjectServer
 {
     internal class InternalServiceScope : IServiceScope
     {
-        public InternalServiceScope(IDatabaseProfile db, Session session)
+        public InternalServiceScope(IDBProfile db, Session session)
         {
             Debug.Assert(db != null);
             Debug.Assert(session != null);
-            this.DatabaseProfile = db;
+            this.DBProfile = db;
             this.Session = session;
         }
 
-        public IDatabaseProfile DatabaseProfile { get; private set; }
+        private IDBProfile DBProfile { get; set; }
 
         public Session Session { get; private set; }
 
@@ -36,7 +38,16 @@ namespace ObjectServer
                 throw new ArgumentNullException("resName");
             }
 
-            return this.DatabaseProfile.GetResource(resName);
+            return this.DBProfile.GetResource(resName);
+        }
+
+        public IDBConnection Connection
+        {
+            get
+            {
+                Debug.Assert(this.DBProfile != null);
+                return this.DBProfile.Connection;
+            }
         }
     }
 }

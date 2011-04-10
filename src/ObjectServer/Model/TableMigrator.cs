@@ -10,11 +10,11 @@ namespace ObjectServer.Model
 {
     internal class TableMigrator
     {
-        private IDatabaseProfile db;
+        private IDBProfile db;
         private IModel model;
         private IServiceScope context;
 
-        public TableMigrator(IDatabaseProfile db, IModel model)
+        public TableMigrator(IDBProfile db, IModel model)
         {
             if (db == null)
             {

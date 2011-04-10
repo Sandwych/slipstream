@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<data noupdate="false">
+
+  <record model="test.master" key="m100">
+    <field name="name">master1</field>
+  </record>
+
+  <record model="test.test_model" key="tm1">
+    <field name="name">name1</field>
+    <field name="address">address1</field>
+    <field name="float_field">11.0</field>
+    <field name="reference_field" ref-model="test.master" ref-key="m100" />
+  </record> 
+
+
+</data>
+

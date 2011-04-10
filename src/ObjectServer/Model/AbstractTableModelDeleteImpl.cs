@@ -42,7 +42,7 @@ namespace ObjectServer.Model
                     "SELECT * FROM \"{0}\" WHERE \"id\" IN ({1})",
                     this.TableName,
                     ids.ToCommaList());
-                existedRecords = scope.DatabaseProfile.Connection.QueryAsDictionary(sql);
+                existedRecords = scope.Connection.QueryAsDictionary(sql);
             }
 
             DoDelete(scope, ids, this);
@@ -83,7 +83,7 @@ namespace ObjectServer.Model
                 "DELETE FROM \"{0}\" WHERE \"id\" IN ({1})",
                 tableModel.TableName, ids.ToCommaList());
 
-            var rowCount = scope.DatabaseProfile.Connection.Execute(sql);
+            var rowCount = scope.Connection.Execute(sql);
             if (rowCount != ids.Count())
             {
                 var msg = string.Format("Failed to delete model '{0}'", tableModel.Name);

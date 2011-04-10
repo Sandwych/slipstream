@@ -114,7 +114,7 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Load(IDatabaseProfile db)
+        public virtual void Load(IDBProfile db)
         {
             //确保加载资源之前设置了合适的属性
             Debug.Assert(!string.IsNullOrEmpty(this.Name));
