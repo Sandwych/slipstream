@@ -86,11 +86,11 @@
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
     <Compile Include="Security\ModelAccessTests.cs" />
-    <Compile Include="Model\ManyToOneFieldTests.cs" />
-    <Compile Include="Model\ManyToManyFieldTests.cs" />
-    <Compile Include="Model\ReferenceFieldTests.cs" />
+    <Compile Include="Model\Fields\ManyToOneFieldTests.cs" />
+    <Compile Include="Model\Fields\ManyToManyFieldTests.cs" />
+    <Compile Include="Model\Fields\ReferenceFieldTests.cs" />
     <Compile Include="Model\InheritanceTests.cs" />
-    <Compile Include="Model\FunctionalFieldTests.cs" />
+    <Compile Include="Model\Fields\FunctionalFieldTests.cs" />
     <Compile Include="Model\SearchTests.cs" />
     <Compile Include="Model\TableModelTest.cs" />
     <EmbeddedResource Include="XmlFiles\reference-field-data.xml">

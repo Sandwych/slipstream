@@ -154,13 +154,28 @@ namespace ObjectServer.Model
 
                 if (this.Hierarchy)
                 {
-                    /*
                     Fields.BigInteger(LeftFieldName).SetLabel("Left Value")
                         .Required().DefaultValueGetter(ctx => -1);
 
                     Fields.BigInteger(RightFieldName).SetLabel("Right Value")
                         .Required().DefaultValueGetter(ctx => -1);
-                    */
+
+                    //这里通过 SQL 查询返回
+                    Fields.ManyToOne("_parent", this.Name)
+                        .SetLabel("Parent")
+                        .ValueGetter((scope, ids) =>
+                            {
+                                return null;
+                            });
+
+                    //TOOD 这里通过 SQL 查询返回
+                    Fields.OneToMany("_children", this.Name, "_parent")
+                        .SetLabel("Children")
+                        .ValueGetter((scope, ids) =>
+                            {
+                                return null;
+                            });
+
                 }
             }
         }
