@@ -13,6 +13,7 @@
     <file>many-to-many-models.cs</file>
     <file>functional-field-object.cs</file>
     <file>inheritance-models.cs</file>
+    <file>tree-models.cs</file>
   </sources>
   
   <data-files>

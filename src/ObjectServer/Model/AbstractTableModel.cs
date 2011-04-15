@@ -19,6 +19,8 @@ namespace ObjectServer.Model
     {
         public const string LeftFieldName = "_left";
         public const string RightFieldName = "_right";
+        public const string ParentFieldName = "parent";
+        public const string ChildrenFieldName = "children";
 
         /// <summary>
         /// 这些字段是由 ORM 子系统处理的，客户端不能操作
@@ -160,14 +162,23 @@ namespace ObjectServer.Model
                     Fields.BigInteger(RightFieldName).SetLabel("Right Value")
                         .Required().DefaultValueGetter(ctx => -1);
 
+
                     //这里通过 SQL 查询返回
-                    Fields.ManyToOne("_parent", this.Name)
+                    Fields.ManyToOne(ParentFieldName, this.Name)
                         .SetLabel("Parent")
                         .ValueGetter((scope, ids) =>
                             {
-                                return null;
+                                //TODO 做成可存储的函数字段
+                                var result = new Dictionary<long, object>();
+                                foreach (var id in ids)
+                                {
+                                    result.Add(id, 0);
+                                }
+
+                                return result;
                             });
 
+                    /*
                     //TOOD 这里通过 SQL 查询返回
                     Fields.OneToMany("_children", this.Name, "_parent")
                         .SetLabel("Children")
@@ -175,6 +186,7 @@ namespace ObjectServer.Model
                             {
                                 return null;
                             });
+                    */
 
                 }
             }

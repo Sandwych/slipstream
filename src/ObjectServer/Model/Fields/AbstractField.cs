@@ -131,7 +131,8 @@ namespace ObjectServer.Model
         {
             if (this.IsFunctional)
             {
-                throw new NotSupportedException();
+                //TODO: 这里思考一下
+                return value;
             }
             else
             {
