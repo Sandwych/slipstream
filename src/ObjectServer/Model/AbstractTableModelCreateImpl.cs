@@ -65,7 +65,12 @@ namespace ObjectServer.Model
             this.VerifyFields(record.Keys);
 
             var selfId = this.CreateSelf(scope, record);
-            this.PostcreateHierarchy(scope, selfId, record);
+
+            if (this.Hierarchy)
+            {
+                this.PostcreateHierarchy(scope, selfId, record);
+            }
+
             this.PostcreateManyToManyFields(scope, selfId, record);
 
             if (this.LogCreation)
@@ -114,63 +119,60 @@ namespace ObjectServer.Model
             IServiceScope scope, long id, Dictionary<string, object> record)
         {
             //处理层次表
-            if (this.Hierarchy)
+            long rhsValue = 0;
+            //先检查是否给了 _parent 字段的值
+            if (record.ContainsKey(ParentFieldName))
             {
-                long rhsValue = 0;
-                //先检查是否给了 _parent 字段的值
-                if (record.ContainsKey(ParentFieldName))
+                var parentID = (long)record[ParentFieldName];
+                var sql = string.Format(
+                    "SELECT _left, _right FROM \"{0}\" WHERE \"id\" = @0",
+                    this.TableName);
+
+                var records = scope.Connection.QueryAsDictionary(sql, parentID);
+                if (records.Length == 0)
                 {
-                    var parentID = (long)record[ParentFieldName];
-                    var sql = string.Format(
-                        "SELECT _left, _right FROM \"{0}\" WHERE \"id\" = @0",
-                        this.TableName);
-
-                    var records = scope.Connection.QueryAsDictionary(sql, parentID);
-                    if (records.Length == 0)
-                    {
-                        //TODO 使用合适的异常
-                        throw new Exception("找不到记录");
-                    }
-
-                    //判断父节点是否是叶子节点
-                    var left = (long)records[0][LeftFieldName];
-                    var right = (long)records[0][RightFieldName];
-
-                    if (right - left == 1)
-                    {
-                        rhsValue = left;
-                    }
-                    else
-                    {
-                        rhsValue = right;
-                    }
-                }
-                else //没有就查找一个可用的
-                {
-                    var sql = string.Format("SELECT MAX(_right) FROM \"{0}\" ", this.TableName);
-                    var value = scope.Connection.QueryValue(sql);
-                    if (value != DBNull.Value)
-                    {
-                        rhsValue = (long)value;
-                    }
-                    else // 空表
-                    {
-                        rhsValue = 0;
-                    }
+                    //TODO 使用合适的异常
+                    throw new Exception("找不到记录");
                 }
 
-                //TODO: 需要锁表
-                var sqlUpdate1 = string.Format(
-                    "UPDATE \"{0}\" SET _right = _right + 2 WHERE _right > @0", this.TableName);
-                var sqlUpdate2 = string.Format(
-                    "UPDATE \"{0}\" SET _left = _left + 2 WHERE _left > @0", this.TableName);
-                var sqlUpdate3 = string.Format(
-                    "UPDATE \"{0}\" SET _left = @0, _right = @1 WHERE (\"id\" = @2) ", this.TableName);
+                //判断父节点是否是叶子节点
+                var left = (long)records[0][LeftFieldName];
+                var right = (long)records[0][RightFieldName];
 
-                scope.Connection.Execute(sqlUpdate1, rhsValue);
-                scope.Connection.Execute(sqlUpdate2, rhsValue);
-                scope.Connection.Execute(sqlUpdate3, rhsValue + 1, rhsValue + 2, id);
+                if (right - left == 1)
+                {
+                    rhsValue = left;
+                }
+                else
+                {
+                    rhsValue = right - 1; //添加到集合的末尾
+                }
             }
+            else //没有就查找一个可用的
+            {
+                var sql = string.Format("SELECT MAX(_right) FROM \"{0}\" WHERE _left >= 0", this.TableName);
+                var value = scope.Connection.QueryValue(sql);
+                if (value != DBNull.Value)
+                {
+                    rhsValue = (long)value;
+                }
+                else // 空表
+                {
+                    rhsValue = 0;
+                }
+            }
+
+            //TODO: 需要锁表
+            var sqlUpdate1 = string.Format(
+                "UPDATE \"{0}\" SET _right = _right + 2 WHERE _right > @0", this.TableName);
+            var sqlUpdate2 = string.Format(
+                "UPDATE \"{0}\" SET _left = _left + 2 WHERE _left > @0", this.TableName);
+            var sqlUpdate3 = string.Format(
+                "UPDATE \"{0}\" SET _left = @0, _right = @1 WHERE (\"id\" = @2) ", this.TableName);
+
+            scope.Connection.Execute(sqlUpdate1, rhsValue);
+            scope.Connection.Execute(sqlUpdate2, rhsValue);
+            scope.Connection.Execute(sqlUpdate3, rhsValue + 1, rhsValue + 2, id);
         }
 
         private long CreateSelf(IServiceScope ctx, IDictionary<string, object> values)

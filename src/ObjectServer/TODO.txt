@@ -51,3 +51,5 @@
 * AbstractTableModel 的 ReadInternal 里的 SELECT 需要重构成 SqlTree 形式（完成）
 
 * 数据导入引擎应该可以支持 one2many 和 many2many 甚至 reference 的字段
+
+* 错误：one2many 函数字段不能设成 readonly 的 

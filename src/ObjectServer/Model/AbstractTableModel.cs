@@ -21,6 +21,7 @@ namespace ObjectServer.Model
         public const string RightFieldName = "_right";
         public const string ParentFieldName = "parent";
         public const string ChildrenFieldName = "children";
+        public const string DescendantsFieldName = "descendants";
 
         /// <summary>
         /// 这些字段是由 ORM 子系统处理的，客户端不能操作
@@ -122,6 +123,7 @@ namespace ObjectServer.Model
             }
         }
 
+
         private void RegisterInternalServiceMethods()
         {
             var selfType = typeof(AbstractTableModel);
@@ -167,29 +169,108 @@ namespace ObjectServer.Model
                     Fields.ManyToOne(ParentFieldName, this.Name)
                         .SetLabel("Parent")
                         .ValueGetter((scope, ids) =>
+                        {
+                            //TODO 做成可存储的函数字段
+                            var result = new Dictionary<long, object>();
+                            foreach (var id in ids)
                             {
-                                //TODO 做成可存储的函数字段
-                                var result = new Dictionary<long, object>();
-                                foreach (var id in ids)
-                                {
-                                    result.Add(id, 0);
-                                }
+                                result.Add(id, 0);
+                            }
 
-                                return result;
-                            });
+                            return result;
+                        });
 
-                    /*
-                    //TOOD 这里通过 SQL 查询返回
-                    Fields.OneToMany("_children", this.Name, "_parent")
+                    Fields.OneToMany(ChildrenFieldName, this.Name, ParentFieldName)
                         .SetLabel("Children")
                         .ValueGetter((scope, ids) =>
+                        {
+                            var result = new Dictionary<long, object>(ids.Length);
+                            foreach (var id in ids)
                             {
-                                return null;
-                            });
-                    */
+                                var children = this.GetChildrenIDs(scope.Connection, id);
+                                result.Add(id, children);
+                            }
+                            return result;
+
+                        });
+
+                    Fields.OneToMany(DescendantsFieldName, this.Name, ParentFieldName)
+                        .SetLabel("Descendants")
+                        .ValueGetter((scope, ids) =>
+                        {
+                            var result = new Dictionary<long, object>(ids.Length);
+                            foreach (var id in ids)
+                            {
+                                var children = this.GetDescendantIDs(scope.Connection, id);
+                                result.Add(id, children);
+                            }
+                            return result;
+
+                        });
 
                 }
             }
+        }
+
+        /// <summary>
+        /// 层次表获取某指定记录的直系子记录的 IDs
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="parentID"></param>
+        /// <returns></returns>
+        private long[] GetChildrenIDs(IDBConnection conn, long parentID)
+        {
+            var sqlFmt =
+@"
+SELECT id FROM 
+(
+    SELECT node.id, (COUNT(parent.id) - (sub_tree.depth + 1)) depth
+    FROM {0} node, {0} parent, {0} sub_parent,
+        (
+            SELECT node.id, (COUNT(parent.id) - 1) depth 
+            FROM {0} node, {0} parent
+            WHERE (node._left BETWEEN parent._left AND parent._right) AND
+            (node.id = @0)
+            GROUP BY node.id
+        )sub_tree
+    WHERE (node._left BETWEEN parent._left AND parent._right) AND 
+        (node._left BETWEEN sub_parent._left AND sub_parent._right) AND
+        (sub_parent.id = sub_tree.id)
+    GROUP BY node.id, sub_tree.depth HAVING sub_tree.depth <= 1 
+) node
+WHERE depth = 1
+";
+            var sql = string.Format(sqlFmt, this.TableName);
+            var ids = conn.QueryAsArray(sql, parentID).Select(o => (long)o);
+
+            return ids.ToArray();
+        }
+
+        private long[] GetDescendantIDs(IDBConnection conn, long parentID)
+        {
+            var sqlFmt =
+@"
+SELECT id FROM 
+(
+    SELECT node.id, (COUNT(parent.id) - (sub_tree.depth + 1)) depth
+    FROM {0} node, {0} parent, {0} sub_parent,
+        (
+            SELECT node.id, (COUNT(parent.id) - 1) depth 
+            FROM {0} node, {0} parent
+            WHERE (node._left BETWEEN parent._left AND parent._right) AND
+            (node.id = @0)
+            GROUP BY node.id
+        )sub_tree
+    WHERE (node._left BETWEEN parent._left AND parent._right) AND 
+        (node._left BETWEEN sub_parent._left AND sub_parent._right) AND
+        (sub_parent.id = sub_tree.id)
+    GROUP BY node.id, sub_tree.depth HAVING sub_tree.depth <= 1 
+) node
+WHERE depth > 0
+";
+            var sql = string.Format(sqlFmt, this.TableName);
+            var ids = conn.QueryAsArray(sql, parentID).Select(o => (long)o);
+            return ids.ToArray();
         }
 
         private void ConvertFieldToColumn(

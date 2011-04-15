@@ -11,10 +11,10 @@ namespace ObjectServer.Model
     internal class TableMigrator
     {
         private IDBProfile db;
-        private IModel model;
+        private AbstractTableModel model;
         private IServiceScope context;
 
-        public TableMigrator(IDBProfile db, IModel model)
+        public TableMigrator(IDBProfile db, AbstractTableModel model)
         {
             if (db == null)
             {
@@ -63,6 +63,12 @@ namespace ObjectServer.Model
                     var refModel = (IModel)resources.GetResource(f.Relation);
                     table.AddFK(db.Connection, f.Name, refModel.TableName, OnDeleteAction.SetNull);
                 }
+            }
+
+            //为 _left 和 _right 添加索引
+            if (this.model.Hierarchy)
+            {
+                //TODO 添加索引
             }
         }
 
