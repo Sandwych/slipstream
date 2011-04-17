@@ -52,7 +52,7 @@ namespace ObjectServer.Model
 
             this.Name = name;
             this.Internal = name == AbstractModel.VersionFieldName
-                || name == AbstractModel.IdFieldName
+                || name == AbstractModel.IDFieldName
                 || name == AbstractModel.ActiveFieldName;
         }
 

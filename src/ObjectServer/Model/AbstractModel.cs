@@ -10,7 +10,7 @@ namespace ObjectServer.Model
 {
     public abstract class AbstractModel : AbstractResource, IModel
     {
-        public const string IdFieldName = "id";
+        public const string IDFieldName = "id";
         public const string VersionFieldName = "_version";
         public const string CreatedTimeFieldName = "_created_time";
         public const string ModifiedTimeFieldName = "_modified_time";

@@ -28,7 +28,7 @@ namespace ObjectServer.Model
         /// </summary>
         public static readonly string[] SystemReadonlyFields = new string[]
         {
-            IdFieldName,
+            IDFieldName,
             CreatedTimeFieldName,
             CreatedUserFieldName,
             ModifiedTimeFieldName,
@@ -136,7 +136,9 @@ namespace ObjectServer.Model
 
         private void AddInternalFields()
         {
-            Fields.BigInteger("id").SetLabel("ID").Required();
+            Debug.Assert(!this.Fields.ContainsKey(IDFieldName));
+
+            Fields.BigInteger(IDFieldName).SetLabel("ID").Required();
 
             //只有非继承的模型才添加内置字段
             if (this.AutoMigration)
@@ -158,58 +160,54 @@ namespace ObjectServer.Model
 
                 if (this.Hierarchy)
                 {
-                    Fields.BigInteger(LeftFieldName).SetLabel("Left Value")
-                        .Required().DefaultValueGetter(ctx => -1);
-
-                    Fields.BigInteger(RightFieldName).SetLabel("Right Value")
-                        .Required().DefaultValueGetter(ctx => -1);
-
-
-                    //这里通过 SQL 查询返回
-                    Fields.ManyToOne(ParentFieldName, this.Name)
-                        .SetLabel("Parent")
-                        .ValueGetter((scope, ids) =>
-                        {
-                            //TODO 做成可存储的函数字段
-                            var result = new Dictionary<long, object>();
-                            foreach (var id in ids)
-                            {
-                                result.Add(id, 0);
-                            }
-
-                            return result;
-                        });
-
-                    Fields.OneToMany(ChildrenFieldName, this.Name, ParentFieldName)
-                        .SetLabel("Children")
-                        .ValueGetter((scope, ids) =>
-                        {
-                            var result = new Dictionary<long, object>(ids.Length);
-                            foreach (var id in ids)
-                            {
-                                var children = this.GetChildrenIDs(scope.Connection, id);
-                                result.Add(id, children);
-                            }
-                            return result;
-
-                        });
-
-                    Fields.OneToMany(DescendantsFieldName, this.Name, ParentFieldName)
-                        .SetLabel("Descendants")
-                        .ValueGetter((scope, ids) =>
-                        {
-                            var result = new Dictionary<long, object>(ids.Length);
-                            foreach (var id in ids)
-                            {
-                                var children = this.GetDescendantIDs(scope.Connection, id);
-                                result.Add(id, children);
-                            }
-                            return result;
-
-                        });
-
+                    this.AddHierarchyInternalFields();
                 }
             }
+        }
+
+        private void AddHierarchyInternalFields()
+        {
+            Debug.Assert(this.Hierarchy);
+            Debug.Assert(!this.Fields.ContainsKey(LeftFieldName));
+            Debug.Assert(!this.Fields.ContainsKey(RightFieldName));
+
+            Fields.BigInteger(LeftFieldName).SetLabel("Left Value")
+                .Required().DefaultValueGetter(ctx => -1);
+
+            Fields.BigInteger(RightFieldName).SetLabel("Right Value")
+                .Required().DefaultValueGetter(ctx => -1);
+
+            //这里通过 SQL 查询返回
+            Fields.ManyToOne(ParentFieldName, this.Name)
+                .SetLabel("Parent");
+
+            Fields.OneToMany(ChildrenFieldName, this.Name, ParentFieldName)
+                .SetLabel("Children")
+                .ValueGetter((scope, ids) =>
+                {
+                    var result = new Dictionary<long, object>(ids.Length);
+                    foreach (var id in ids)
+                    {
+                        var children = this.GetChildrenIDs(scope.Connection, id);
+                        result.Add(id, children);
+                    }
+                    return result;
+
+                });
+
+            Fields.OneToMany(DescendantsFieldName, this.Name, ParentFieldName)
+                .SetLabel("Descendants")
+                .ValueGetter((scope, ids) =>
+                {
+                    var result = new Dictionary<long, object>(ids.Length);
+                    foreach (var id in ids)
+                    {
+                        var children = this.GetDescendantIDs(scope.Connection, id);
+                        result.Add(id, children);
+                    }
+                    return result;
+
+                });
         }
 
         /// <summary>
@@ -222,23 +220,18 @@ namespace ObjectServer.Model
         {
             var sqlFmt =
 @"
-SELECT id FROM 
-(
-    SELECT node.id, (COUNT(parent.id) - (sub_tree.depth + 1)) depth
-    FROM {0} node, {0} parent, {0} sub_parent,
+SELECT  hc.*
+FROM    ""{0}"" hp
+JOIN    ""{0}"" hc
+ON      hc._left BETWEEN hp._left AND hp._right
+WHERE   hp.id = @0 AND hc.id <> @0
+        AND
         (
-            SELECT node.id, (COUNT(parent.id) - 1) depth 
-            FROM {0} node, {0} parent
-            WHERE (node._left BETWEEN parent._left AND parent._right) AND
-            (node.id = @0)
-            GROUP BY node.id
-        )sub_tree
-    WHERE (node._left BETWEEN parent._left AND parent._right) AND 
-        (node._left BETWEEN sub_parent._left AND sub_parent._right) AND
-        (sub_parent.id = sub_tree.id)
-    GROUP BY node.id, sub_tree.depth HAVING sub_tree.depth <= 1 
-) node
-WHERE depth = 1
+        SELECT  COUNT(hn.id)
+        FROM    ""{0}"" hn
+        WHERE   hc._left BETWEEN hn._left AND hn._right
+                AND hn._left BETWEEN hp._left AND hp._right
+        ) <= 2
 ";
             var sql = string.Format(sqlFmt, this.TableName);
             var ids = conn.QueryAsArray(sql, parentID).Select(o => (long)o);
@@ -250,23 +243,10 @@ WHERE depth = 1
         {
             var sqlFmt =
 @"
-SELECT id FROM 
-(
-    SELECT node.id, (COUNT(parent.id) - (sub_tree.depth + 1)) depth
-    FROM {0} node, {0} parent, {0} sub_parent,
-        (
-            SELECT node.id, (COUNT(parent.id) - 1) depth 
-            FROM {0} node, {0} parent
-            WHERE (node._left BETWEEN parent._left AND parent._right) AND
-            (node.id = @0)
-            GROUP BY node.id
-        )sub_tree
-    WHERE (node._left BETWEEN parent._left AND parent._right) AND 
-        (node._left BETWEEN sub_parent._left AND sub_parent._right) AND
-        (sub_parent.id = sub_tree.id)
-    GROUP BY node.id, sub_tree.depth HAVING sub_tree.depth <= 1 
-) node
-WHERE depth > 0
+SELECT  hc.*
+FROM    ""{0}"" hp
+JOIN    ""{0}"" hc ON hc._left BETWEEN hp._left AND hp._right
+WHERE   hp.id = @0 AND hc.id <> @0
 ";
             var sql = string.Format(sqlFmt, this.TableName);
             var ids = conn.QueryAsArray(sql, parentID).Select(o => (long)o);
