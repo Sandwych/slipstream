@@ -145,9 +145,7 @@ namespace ObjectServer.Model
                 var field = (string)domainItem[0];
                 var opr = (string)domainItem[1];
                 var value = domainItem[2];
-
-                var expFactory = s_oprWhereProcessorMapping[opr];
-                var exp = expFactory(field, value);
+                var exp = ParseSingleDomain(field, opr, value);
                 var bracketExp = new BracketedExpression(exp);
                 expressions.Add(bracketExp);
             }
@@ -169,6 +167,14 @@ namespace ObjectServer.Model
             }
 
             return whereExps[0];
+        }
+
+        private IExpression ParseSingleDomain(string field, string opr, object value)
+        {
+            var expFactory = s_oprWhereProcessorMapping[opr];
+            var exp = expFactory(field, value);
+            return exp;
+
         }
 
 
