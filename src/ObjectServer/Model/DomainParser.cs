@@ -78,7 +78,8 @@ namespace ObjectServer.Model
 
             };
 
-        private static readonly IExpression s_trueExp = new BinaryExpression("0", "=", "0");
+        private static readonly IExpression s_trueExp = new BinaryExpression(
+            new ValueExpression(0), ExpressionOperator.EqualOperator, new ValueExpression(0));
         private static readonly List<object[]> EmptyDomain = new List<object[]>();
 
         private List<string> tables = new List<string>();

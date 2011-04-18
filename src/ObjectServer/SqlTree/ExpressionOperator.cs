@@ -48,7 +48,7 @@ namespace ObjectServer.SqlTree
 
         public override object Clone()
         {
-            throw new NotImplementedException();
+            return new ExpressionOperator(this.Operator);
         }
 
         public override bool Equals(object obj)
