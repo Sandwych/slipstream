@@ -16,8 +16,6 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        private static readonly OrderbyClause DefaultOrderbyClause = new OrderbyClause("id", "asc");
-
         public override long[] SearchInternal(
             IServiceScope scope, object[][] domain = null, OrderInfo[] order = null, long offset = 0, long limit = 0)
         {
@@ -37,11 +35,13 @@ namespace ObjectServer.Model
                 domainInternal = new object[][] { };
             }
 
-            var selfFromExp = new AliasExpression(this.TableName);
+            string mainTable = this.TableName;
+
+            var selfFromExp = new AliasExpression(this.TableName, mainTable);
 
             var fields = domainInternal.Select(d => (string)((object[])d)[0]);
 
-            var columnExps = new AliasExpressionList(new string[] { this.TableName + ".id" });
+            var columnExps = new AliasExpressionList(new string[] { mainTable + ".id" });
             var select = new SelectStatement(columnExps, new FromClause(selfFromExp));
 
             OrderbyClause orderbyClause = null;
@@ -49,12 +49,12 @@ namespace ObjectServer.Model
             if (order != null && order.Length > 0)
             {
                 var orderbyItems = order.Select(
-                    o => new OrderbyItem(o.Field, o.Order.ToUpperString()));
+                    o => new OrderbyItem(mainTable + "." + o.Field, o.Order.ToUpperString()));
                 orderbyClause = new OrderbyClause(orderbyItems);
             }
             else
             {
-                orderbyClause = DefaultOrderbyClause;
+                orderbyClause = new OrderbyClause(mainTable + ".id", "ASC");
             }
 
             select.OrderByClause = orderbyClause;
@@ -119,7 +119,9 @@ namespace ObjectServer.Model
             var sv = new StringifierVisitor();
             select.Traverse(sv);
             var sql = sv.ToString();
+            return scope.Connection.QueryAsArray<long>(sql);
 
+            /*
             using (var cmd = scope.Connection.Connection.CreateCommand())
             {
                 cmd.CommandText = sql;
@@ -133,6 +135,7 @@ namespace ObjectServer.Model
                     return result.ToArray();
                 }
             }
+            */
         }
 
     }

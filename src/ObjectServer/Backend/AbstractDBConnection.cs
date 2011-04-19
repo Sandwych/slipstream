@@ -202,7 +202,7 @@ namespace ObjectServer.Backend
         }
 
 
-        public virtual object[] QueryAsArray(string commandText, params object[] args)
+        public virtual T[] QueryAsArray<T>(string commandText, params object[] args)
         {
             if (string.IsNullOrEmpty(commandText))
             {
@@ -218,10 +218,10 @@ namespace ObjectServer.Backend
                 PrepareCommandParameters(command, args);
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = new List<object>();
+                    var result = new List<T>();
                     while (reader.Read())
                     {
-                        result.Add(reader[0]);
+                        result.Add((T)reader[0]);
                     }
                     return result.ToArray();
                 }

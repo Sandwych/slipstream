@@ -15,69 +15,6 @@ namespace ObjectServer.Model
             "like", "!like", "childof"
         };
 
-        public static readonly Dictionary<string, Func<string, object, IExpression>> s_oprWhereProcessorMapping
-            = new Dictionary<string, Func<string, object, IExpression>>()
-            {
-                {"=", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, "=", value); 
-                }},
-
-                {"!=", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, "<>", value); 
-                }},
-
-                {">", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, ">", value); 
-                }},
-
-                {"<", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, "<", value); 
-                }},
-
-                {">=", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, ">=", value); 
-                }},
-
-                {"<=", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, "<=", value); 
-                }},
-
-                {"in", (fieldName, value) => {
-                    var columnExp = new IdentifierExpression(fieldName);
-                    var userValues = (IEnumerable<object>)value;
-                    var values = new ExpressionGroup(userValues);
-                    return new BinaryExpression(
-                        columnExp, ExpressionOperator.InOperator, values); 
-                }},
-                
-                {"!in", (fieldName, value) => {
-                    var columnExp = new IdentifierExpression(fieldName);
-                    var userValues = (IEnumerable<object>)value;
-                    var values = new ExpressionGroup(userValues);
-                    return new BinaryExpression(
-                        columnExp, ExpressionOperator.NotInOperator, values); 
-                }},
-
-                {"like", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, "LIKE", value); 
-                }},
-
-                {"!like", (fieldName, value) => {
-                    return new BinaryExpression(fieldName, "NOT LIKE", value); 
-                }},
-
-                /*
-                {"childof", (fieldName, value) => {
-                    var expLeft = new BinaryExpression("_left", ">", 
-                    return new BinaryExpression(fieldName, "NOT LIKE", value); 
-                }},
-                 */
-
-                //TODO: childof
-                //select * from Nodes where Left > n.Left and Left < n.Right
-
-            };
-
         private static readonly IExpression s_trueExp = new BinaryExpression(
             new ValueExpression(0), ExpressionOperator.EqualOperator, new ValueExpression(0));
         private static readonly List<object[]> EmptyDomain = new List<object[]>();
@@ -103,6 +40,7 @@ namespace ObjectServer.Model
             }
 
             this.model = model;
+            this.mainTable = model.TableName;
         }
 
         public DomainParser(IModel model)
@@ -118,7 +56,7 @@ namespace ObjectServer.Model
             }
 
             var opr = (string)exp[1];
-            if (!s_oprWhereProcessorMapping.Keys.Contains(opr))
+            if (!Operators.Contains(opr))
             {
                 throw new NotSupportedException("Not supported domain operator: " + opr);
             }
@@ -171,10 +109,67 @@ namespace ObjectServer.Model
 
         private IExpression ParseSingleDomain(string field, string opr, object value)
         {
-            var expFactory = s_oprWhereProcessorMapping[opr];
-            var exp = expFactory(field, value);
-            return exp;
+            var aliasedField = field;
+            if (!field.Contains('.'))
+            {
+                aliasedField = this.mainTable + "." + field;
+            }
 
+            IExpression exp = null;
+            switch (opr)
+            {
+                case "=":
+                case ">":
+                case ">=":
+                case "<":
+                case "<=":
+                    exp = new BinaryExpression(
+                        new IdentifierExpression(aliasedField),
+                        new ExpressionOperator(opr),
+                        new ValueExpression(value));
+                    break;
+
+                case "!=":
+                    exp = new BinaryExpression(
+                        new IdentifierExpression(aliasedField),
+                        ExpressionOperator.NotEqualOperator,
+                        new ValueExpression(value));
+                    break;
+
+                case "like":
+                    exp = new BinaryExpression(
+                        new IdentifierExpression(aliasedField),
+                        ExpressionOperator.LikeOperator,
+                        new ValueExpression(value));
+                    break;
+
+                case "!like":
+                    exp = new BinaryExpression(
+                        new IdentifierExpression(aliasedField),
+                        ExpressionOperator.NotLikeOperator,
+                        new ValueExpression(value));
+                    break;
+
+                case "in":
+                    exp = new BinaryExpression(
+                        new IdentifierExpression(aliasedField),
+                        ExpressionOperator.InOperator,
+                        new ExpressionGroup((IEnumerable<object>)value));
+                    break;
+
+                case "!in":
+                    exp = new BinaryExpression(
+                        new IdentifierExpression(aliasedField),
+                        ExpressionOperator.NotInOperator,
+                        new ExpressionGroup((IEnumerable<object>)value));
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+
+            }
+
+            return exp;
         }
 
 

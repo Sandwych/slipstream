@@ -234,7 +234,7 @@ WHERE   hp.id = @0 AND hc.id <> @0
         ) <= 2
 ";
             var sql = string.Format(sqlFmt, this.TableName);
-            var ids = conn.QueryAsArray(sql, parentID).Select(o => (long)o);
+            var ids = conn.QueryAsArray<long>(sql, parentID).Select(o => (long)o);
 
             return ids.ToArray();
         }
@@ -249,7 +249,7 @@ JOIN    ""{0}"" hc ON hc._left BETWEEN hp._left AND hp._right
 WHERE   hp.id = @0 AND hc.id <> @0
 ";
             var sql = string.Format(sqlFmt, this.TableName);
-            var ids = conn.QueryAsArray(sql, parentID).Select(o => (long)o);
+            var ids = conn.QueryAsArray<long>(sql, parentID).Select(o => (long)o);
             return ids.ToArray();
         }
 

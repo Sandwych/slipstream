@@ -60,7 +60,7 @@ namespace ObjectServer.Core
             }
 
             var sql = "SELECT ref_id FROM core_model_data WHERE model = @0 AND name = @1";
-            var rows = conn.QueryAsArray(sql, model, key);
+            var rows = conn.QueryAsArray<long>(sql, model, key);
             if (rows.Length == 0)
             {
                 return null;

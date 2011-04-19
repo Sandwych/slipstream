@@ -24,7 +24,7 @@ namespace ObjectServer.Backend
         DataTable QueryAsDataTable(string commandText, params object[] args);
         Dictionary<string, object>[] QueryAsDictionary(string commandText, params object[] args);
         dynamic[] QueryAsDynamic(string commandText, params object[] args);
-        object[] QueryAsArray(string commandText, params object[] args);
+        T[] QueryAsArray<T>(string commandText, params object[] args);
 
         int Execute(string commandText, params object[] args);
 
