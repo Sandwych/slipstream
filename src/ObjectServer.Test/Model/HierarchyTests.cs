@@ -86,6 +86,12 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual((long)6, record5["_right"]);
         }
 
+        [Test]
+        public void Test_domain_and_childof_operator()
+        {
+            var model = (IModel)this.ServiceScope.GetResource("test.category");
+        }
+
 
     }
 }

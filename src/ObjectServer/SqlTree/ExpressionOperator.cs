@@ -38,6 +38,8 @@ namespace ObjectServer.SqlTree
         public static ExpressionOperator NotLikeOperator { get { return s_notLikeOpr; } }
         public static ExpressionOperator InOperator { get { return s_inOpr; } }
         public static ExpressionOperator NotInOperator { get { return s_notInOpr; } }
+        public static ExpressionOperator LessOperator { get { return s_lessOpr; } }
+        public static ExpressionOperator GreaterOperator { get { return s_greaterOpr; } }
 
         public override void Traverse(IVisitor visitor)
         {

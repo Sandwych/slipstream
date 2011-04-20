@@ -13,7 +13,7 @@ namespace ObjectServer.Model
         public static readonly string[] Operators = new string[]
         {
             "=", "!=", ">", ">=", "<", "<=", "in", "!in", 
-            "like", "!like", "childof"
+            "like", "!like", "childof", "!childof"
         };
 
         private static readonly IExpression s_trueExp = new BinaryExpression(
@@ -21,27 +21,30 @@ namespace ObjectServer.Model
         private static readonly List<object[]> EmptyDomain = new List<object[]>();
 
         private List<AliasExpression> tables = new List<AliasExpression>();
+        private List<AliasExpression> selfJoinTables = new List<AliasExpression>();
         private List<IExpression> joinRestrictions = new List<IExpression>();
         private string mainTable;
 
         IModel model;
         IServiceScope serviceScope;
-        List<object[]> domain = new List<object[]>();
+        List<object[]> internalDomain = new List<object[]>();
 
         public DomainParser(IServiceScope scope, IModel model, IEnumerable<object> domain)
         {
             Debug.Assert(scope != null);
             Debug.Assert(model != null);
 
+            //TODO 过滤掉不能处理的字段，比如函数字段等
+
             if (domain == null || domain.Count() <= 0)
             {
-                this.domain = EmptyDomain;
+                this.internalDomain = EmptyDomain;
             }
             else
             {
                 foreach (object[] o in domain)
                 {
-                    this.domain.Add(o);
+                    this.internalDomain.Add(o);
                 }
             }
 
@@ -49,53 +52,56 @@ namespace ObjectServer.Model
             this.model = model;
             this.mainTable = model.TableName;
             this.tables.Add(new AliasExpression(model.TableName));
-            this.AddInheritedTables(scope, model);
+
+            if (model.Inheritances.Count > 0)
+            {
+                this.AddInheritedTables(scope, model);
+            }
         }
 
         private void AddInheritedTables(IServiceScope scope, IModel model)
         {
+            Debug.Assert(model.Inheritances.Count > 0);
 
             //TODO: 这里检查过滤规则等，处理查询非表中字段等
             //TODO: 自动添加 active 字段
             //TODO 处理 childof 等复杂查询
             //继承查询的策略很简单，直接把基类表连接到查询里
             //如果有重复的字段，就以子类的字段为准
-            var tables = new List<AliasExpression>();
-            tables.Add(new AliasExpression(mainTable));
-            if (model.Inheritances.Count > 0)
+            var usedInheritances = new List<InheritanceInfo>();
+            foreach (var d in this.internalDomain)
             {
-                foreach (var d in this.domain)
+                string tableName = null;
+                var e = (object[])d;
+                var fieldName = (string)e[0];
+                var metaField = model.Fields[fieldName];
+
+                if (AbstractTableModel.SystemReadonlyFields.Contains(fieldName))
                 {
-                    string tableName = null;
-                    var e = (object[])d;
-                    var fieldName = (string)e[0];
-                    var metaField = model.Fields[fieldName];
-
-                    if (AbstractTableModel.SystemReadonlyFields.Contains(fieldName))
-                    {
-                        tableName = model.TableName;
-                    }
-                    else
-                    {
-                        var tableNames =
-                            from i in model.Inheritances
-                            let bm = (AbstractTableModel)scope.GetResource(i.BaseModel)
-                            where bm.Fields.ContainsKey(fieldName)
-                            select bm.TableName;
-                        tableName = tableNames.Single();
-                    }
-
+                    tableName = this.mainTable;
+                }
+                else
+                {
+                    var tableNames =
+                        from i in model.Inheritances
+                        let bm = (AbstractTableModel)scope.GetResource(i.BaseModel)
+                        where bm.Fields.ContainsKey(fieldName)
+                        select i;
+                    var ii = tableNames.Single();
+                    usedInheritances.Add(ii);
+                    tableName = ((AbstractTableModel)scope.GetResource(ii.BaseModel)).TableName;
                     e[0] = tableName + '.' + fieldName;
                 }
 
-                foreach (var inheritInfo in model.Inheritances)
+                foreach (var inheritInfo in usedInheritances)
                 {
                     var baseModel = (AbstractTableModel)scope.GetResource(inheritInfo.BaseModel);
                     this.tables.Add(new AliasExpression(baseModel.TableName));
-                    this.joinRestrictions.Add(new BinaryExpression(
+                    var joinExp = new BinaryExpression(
                         new IdentifierExpression(mainTable + '.' + inheritInfo.RelatedField),
                         ExpressionOperator.EqualOperator,
-                        new IdentifierExpression(baseModel.TableName + ".id")));
+                        new IdentifierExpression(baseModel.TableName + ".id"));
+                    this.joinRestrictions.Add(joinExp);
                 }
             }
         }
@@ -115,25 +121,25 @@ namespace ObjectServer.Model
                 throw new NotSupportedException("Not supported domain operator: " + opr);
             }
 
-            this.domain.Add(exp);
+            this.internalDomain.Add(exp);
         }
 
         public bool ContainsField(string field)
         {
-            return this.domain.Exists(exp => (string)exp[0] == field);
+            return this.internalDomain.Exists(exp => (string)exp[0] == field);
         }
 
         public IExpression ToExpressionTree()
         {
-            if (this.domain == null || this.domain.Count == 0)
+            if (this.internalDomain == null || this.internalDomain.Count == 0)
             {
                 return (IExpression)s_trueExp.Clone();
             }
 
-            var expressions = new List<IExpression>(this.joinRestrictions.Count + this.domain.Count + 1);
+            var expressions = new List<IExpression>(this.joinRestrictions.Count + this.internalDomain.Count + 1);
             expressions.AddRange(this.joinRestrictions);
 
-            foreach (var domainItem in this.domain)
+            foreach (var domainItem in this.internalDomain)
             {
                 var field = (string)domainItem[0];
                 var opr = (string)domainItem[1];
@@ -142,23 +148,30 @@ namespace ObjectServer.Model
                 var bracketExp = new BracketedExpression(exp);
                 expressions.Add(bracketExp);
             }
+            var whereExp = JoinExpressionsByAnd(expressions);
 
-            if (expressions.Count % 2 != 0)
+            return whereExp;
+        }
+
+        private static IExpression JoinExpressionsByAnd(IList<IExpression> expressions)
+        {
+            var exps = new List<IExpression>(expressions);
+
+            if (exps.Count % 2 != 0)
             {
-                //为了方便 AND 连接起见，在奇数个表达式最后加上总是 True 的单目表达式
-                expressions.Add(s_trueExp);
+                //为了方便 AND 连接起见，在奇数个表达式最后加上总是 0 = 0 的表达式
+                exps.Add(s_trueExp);
             }
 
-            int andExpCount = expressions.Count / 2;
+            int andExpCount = exps.Count / 2;
 
             var whereExps = new IExpression[andExpCount];
             for (int i = 0; i < andExpCount; ++i)
             {
                 var andExp = new BinaryExpression(
-                    expressions[i * 2], ExpressionOperator.AndOperator, expressions[i * 2 + 1]);
+                    exps[i * 2], ExpressionOperator.AndOperator, exps[i * 2 + 1]);
                 whereExps[i] = andExp;
             }
-
             return whereExps[0];
         }
 
@@ -218,6 +231,37 @@ namespace ObjectServer.Model
                         ExpressionOperator.NotInOperator,
                         new ExpressionGroup((IEnumerable<object>)value));
                     break;
+
+                case "childof":
+                    //TODO 处理继承字段
+                    var fieldInfo = this.model.Fields[field];
+                    //TODO 确认 many2one 类型字段
+                    var aliasIndex = this.selfJoinTables.Count;
+                    var joinModel = (IModel)this.serviceScope.GetResource(fieldInfo.Relation);
+                    var joinTableName = joinModel.TableName;
+                    var parentAliasName = string.Format("_{0}_parent_{1}", joinTableName, aliasIndex);
+                    var childAliasName = string.Format("_{0}_child_{1}", joinTableName, aliasIndex);
+                    this.selfJoinTables.Add(new AliasExpression(joinTableName, parentAliasName));
+                    this.selfJoinTables.Add(new AliasExpression(joinTableName, childAliasName));
+                    var exps = new IExpression[]
+                    {
+                        new BinaryExpression(new IdentifierExpression(childAliasName + "._left"),
+                            ExpressionOperator.GreaterOperator,
+                            new IdentifierExpression(parentAliasName + "._left")),
+                        new BinaryExpression(new IdentifierExpression(childAliasName + "._left"), 
+                            ExpressionOperator.LessOperator, 
+                            new IdentifierExpression(parentAliasName + "._right")),
+                        new BinaryExpression(new IdentifierExpression(childAliasName + ".id"), 
+                            ExpressionOperator.EqualOperator,  
+                            new IdentifierExpression(this.mainTable + "." + field)),
+                        new BinaryExpression(parentAliasName + ".id", "=", value),
+                    };
+                    exp = JoinExpressionsByAnd(exps);
+                    break;
+
+
+                case "!childof":
+                    throw new NotImplementedException();
 
                 default:
                     throw new NotSupportedException();
