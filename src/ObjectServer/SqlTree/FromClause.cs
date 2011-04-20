@@ -22,6 +22,11 @@ namespace ObjectServer.SqlTree
             this.ExpressionCollection = expColl;
         }
 
+        public FromClause(IEnumerable<AliasExpression> exps)
+        {
+            this.ExpressionCollection = new AliasExpressionList(exps);
+        }
+
         public FromClause(AliasExpressionList exp)
         {
             this.ExpressionCollection = exp;

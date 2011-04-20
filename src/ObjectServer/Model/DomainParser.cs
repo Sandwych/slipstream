@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 using ObjectServer.SqlTree;
 
@@ -19,14 +20,19 @@ namespace ObjectServer.Model
             new ValueExpression(0), ExpressionOperator.EqualOperator, new ValueExpression(0));
         private static readonly List<object[]> EmptyDomain = new List<object[]>();
 
-        private List<string> tables = new List<string>();
+        private List<AliasExpression> tables = new List<AliasExpression>();
+        private List<IExpression> joinRestrictions = new List<IExpression>();
         private string mainTable;
 
         IModel model;
+        IServiceScope serviceScope;
         List<object[]> domain = new List<object[]>();
 
-        public DomainParser(IModel model, IEnumerable<object> domain)
+        public DomainParser(IServiceScope scope, IModel model, IEnumerable<object> domain)
         {
+            Debug.Assert(scope != null);
+            Debug.Assert(model != null);
+
             if (domain == null || domain.Count() <= 0)
             {
                 this.domain = EmptyDomain;
@@ -39,14 +45,62 @@ namespace ObjectServer.Model
                 }
             }
 
+            this.serviceScope = scope;
             this.model = model;
             this.mainTable = model.TableName;
+            this.tables.Add(new AliasExpression(model.TableName));
+            this.AddInheritedTables(scope, model);
         }
 
-        public DomainParser(IModel model)
-            : this(model, null)
+        private void AddInheritedTables(IServiceScope scope, IModel model)
         {
+
+            //TODO: 这里检查过滤规则等，处理查询非表中字段等
+            //TODO: 自动添加 active 字段
+            //TODO 处理 childof 等复杂查询
+            //继承查询的策略很简单，直接把基类表连接到查询里
+            //如果有重复的字段，就以子类的字段为准
+            var tables = new List<AliasExpression>();
+            tables.Add(new AliasExpression(mainTable));
+            if (model.Inheritances.Count > 0)
+            {
+                foreach (var d in this.domain)
+                {
+                    string tableName = null;
+                    var e = (object[])d;
+                    var fieldName = (string)e[0];
+                    var metaField = model.Fields[fieldName];
+
+                    if (AbstractTableModel.SystemReadonlyFields.Contains(fieldName))
+                    {
+                        tableName = model.TableName;
+                    }
+                    else
+                    {
+                        var tableNames =
+                            from i in model.Inheritances
+                            let bm = (AbstractTableModel)scope.GetResource(i.BaseModel)
+                            where bm.Fields.ContainsKey(fieldName)
+                            select bm.TableName;
+                        tableName = tableNames.Single();
+                    }
+
+                    e[0] = tableName + '.' + fieldName;
+                }
+
+                foreach (var inheritInfo in model.Inheritances)
+                {
+                    var baseModel = (AbstractTableModel)scope.GetResource(inheritInfo.BaseModel);
+                    this.tables.Add(new AliasExpression(baseModel.TableName));
+                    this.joinRestrictions.Add(new BinaryExpression(
+                        new IdentifierExpression(mainTable + '.' + inheritInfo.RelatedField),
+                        ExpressionOperator.EqualOperator,
+                        new IdentifierExpression(baseModel.TableName + ".id")));
+                }
+            }
         }
+
+        public IList<AliasExpression> Tables { get { return this.tables; } }
 
         public void AddExpression(object[] exp)
         {
@@ -76,7 +130,8 @@ namespace ObjectServer.Model
                 return (IExpression)s_trueExp.Clone();
             }
 
-            var expressions = new List<IExpression>(this.domain.Count + 1);
+            var expressions = new List<IExpression>(this.joinRestrictions.Count + this.domain.Count + 1);
+            expressions.AddRange(this.joinRestrictions);
 
             foreach (var domainItem in this.domain)
             {

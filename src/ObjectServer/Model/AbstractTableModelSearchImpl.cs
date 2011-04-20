@@ -37,10 +37,9 @@ namespace ObjectServer.Model
 
             string mainTable = this.TableName;
 
+            var parser = new DomainParser(scope, this, domainInternal);
+
             var selfFromExp = new AliasExpression(this.TableName, mainTable);
-
-            var fields = domainInternal.Select(d => (string)((object[])d)[0]);
-
             var columnExps = new AliasExpressionList(new string[] { mainTable + ".id" });
             var select = new SelectStatement(columnExps, new FromClause(selfFromExp));
 
@@ -71,71 +70,15 @@ namespace ObjectServer.Model
 
             var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
 
-
-            //TODO: 这里检查过滤规则等，处理查询非表中字段等
-            //TODO: 自动添加 active 字段
-            //TODO 处理 childof 等复杂查询
-            //继承查询的策略很简单，直接把基类表连接到查询里
-            //如果有重复的字段，就以子类的字段为准
-            if (this.Inheritances.Count > 0)
-            {
-                foreach (var d in domainInternal)
-                {
-                    string tableName = null;
-                    var e = (object[])d;
-                    var fieldName = (string)e[0];
-                    var metaField = this.Fields[fieldName];
-
-                    if (SystemReadonlyFields.Contains(fieldName))
-                    {
-                        tableName = this.TableName;
-                    }
-                    else
-                    {
-                        var tableNames =
-                            from i in this.Inheritances
-                            let bm = (AbstractTableModel)scope.GetResource(i.BaseModel)
-                            where bm.Fields.ContainsKey(fieldName)
-                            select bm.TableName;
-                        tableName = tableNames.Single();
-                    }
-
-                    e[0] = tableName + '.' + fieldName;
-                }
-
-                foreach (var inheritInfo in this.Inheritances)
-                {
-                    var baseModel = (AbstractTableModel)scope.GetResource(inheritInfo.BaseModel);
-                    var baseTableExp = new AliasExpression(baseModel.TableName);
-                    select.FromClause.ExpressionCollection.Expressions.Add(baseTableExp);
-                }
-            }
-
-            var parser = new DomainParser(this, domainInternal);
+            var fromClause = new FromClause(parser.Tables);
             var whereExp = parser.ToExpressionTree();
-
             select.WhereClause = new WhereClause(whereExp);
+            select.FromClause = fromClause;
 
             var sv = new StringifierVisitor();
             select.Traverse(sv);
             var sql = sv.ToString();
             return scope.Connection.QueryAsArray<long>(sql);
-
-            /*
-            using (var cmd = scope.Connection.Connection.CreateCommand())
-            {
-                cmd.CommandText = sql;
-                using (var reader = cmd.ExecuteReader())
-                {
-                    var result = new List<long>();
-                    while (reader.Read())
-                    {
-                        result.Add(reader.GetInt64(0));
-                    }
-                    return result.ToArray();
-                }
-            }
-            */
         }
 
     }
