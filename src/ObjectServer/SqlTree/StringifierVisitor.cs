@@ -41,21 +41,7 @@ namespace ObjectServer.SqlTree
 
         public override void VisitOn(AliasExpressionList node)
         {
-            /*
-bool isFirst = true;
-foreach (var col in node.Expressions)
-{
-    if (isFirst)
-    {
-        isFirst = false;
-    }
-    else
-    {
-        this.sqlBuilder.Append(",");
-    }
-    this.sqlBuilder.Append(col);
-}
- */
+            base.VisitOn(node);
         }
 
         public override void VisitOn(FromClause node)
@@ -210,7 +196,6 @@ foreach (var col in node.Expressions)
         public override void VisitOn(AliasExpression node)
         {
             base.VisitOn(node);
-
         }
 
         public override void VisitAfter(AliasExpression node)
@@ -262,7 +247,6 @@ foreach (var col in node.Expressions)
             base.VisitOn(node);
 
             this.sqlBuilder.Append(" UPDATE ");
-
         }
 
 

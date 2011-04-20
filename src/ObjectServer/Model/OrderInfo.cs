@@ -5,6 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
+    [Serializable]
     public struct OrderInfo
     {
         private static readonly OrderInfo[] DefaultOrders = new OrderInfo[] { new OrderInfo("id", SearchOrder.Asc) };

@@ -70,8 +70,8 @@ namespace ObjectServer.Model
 
             var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
 
+            var whereExp = parser.Parse();
             var fromClause = new FromClause(parser.Tables);
-            var whereExp = parser.ToExpressionTree();
             select.WhereClause = new WhereClause(whereExp);
             select.FromClause = fromClause;
 

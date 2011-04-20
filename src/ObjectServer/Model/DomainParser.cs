@@ -21,13 +21,13 @@ namespace ObjectServer.Model
         private static readonly List<object[]> EmptyDomain = new List<object[]>();
 
         private List<AliasExpression> tables = new List<AliasExpression>();
-        private List<AliasExpression> selfJoinTables = new List<AliasExpression>();
         private List<IExpression> joinRestrictions = new List<IExpression>();
         private string mainTable;
 
         IModel model;
         IServiceScope serviceScope;
         List<object[]> internalDomain = new List<object[]>();
+        int aliasIndexCount = 0;
 
         public DomainParser(IServiceScope scope, IModel model, IEnumerable<object> domain)
         {
@@ -129,7 +129,7 @@ namespace ObjectServer.Model
             return this.internalDomain.Exists(exp => (string)exp[0] == field);
         }
 
-        public IExpression ToExpressionTree()
+        public IExpression Parse()
         {
             if (this.internalDomain == null || this.internalDomain.Count == 0)
             {
@@ -163,16 +163,16 @@ namespace ObjectServer.Model
                 exps.Add(s_trueExp);
             }
 
-            int andExpCount = exps.Count / 2;
+            int andExpCount = exps.Count - 1;
 
-            var whereExps = new IExpression[andExpCount];
-            for (int i = 0; i < andExpCount; ++i)
+            var andExps = new IExpression[andExpCount];
+            for (int i = 0; i < andExps.Length; i++)
             {
                 var andExp = new BinaryExpression(
-                    exps[i * 2], ExpressionOperator.AndOperator, exps[i * 2 + 1]);
-                whereExps[i] = andExp;
+                    exps[i], ExpressionOperator.AndOperator, exps[i + 1]);
+                andExps[i] = andExp;
             }
-            return whereExps[0];
+            return andExps[0];
         }
 
         private IExpression ParseSingleDomain(string field, string opr, object value)
@@ -233,30 +233,7 @@ namespace ObjectServer.Model
                     break;
 
                 case "childof":
-                    //TODO 处理继承字段
-                    var fieldInfo = this.model.Fields[field];
-                    //TODO 确认 many2one 类型字段
-                    var aliasIndex = this.selfJoinTables.Count;
-                    var joinModel = (IModel)this.serviceScope.GetResource(fieldInfo.Relation);
-                    var joinTableName = joinModel.TableName;
-                    var parentAliasName = string.Format("_{0}_parent_{1}", joinTableName, aliasIndex);
-                    var childAliasName = string.Format("_{0}_child_{1}", joinTableName, aliasIndex);
-                    this.selfJoinTables.Add(new AliasExpression(joinTableName, parentAliasName));
-                    this.selfJoinTables.Add(new AliasExpression(joinTableName, childAliasName));
-                    var exps = new IExpression[]
-                    {
-                        new BinaryExpression(new IdentifierExpression(childAliasName + "._left"),
-                            ExpressionOperator.GreaterOperator,
-                            new IdentifierExpression(parentAliasName + "._left")),
-                        new BinaryExpression(new IdentifierExpression(childAliasName + "._left"), 
-                            ExpressionOperator.LessOperator, 
-                            new IdentifierExpression(parentAliasName + "._right")),
-                        new BinaryExpression(new IdentifierExpression(childAliasName + ".id"), 
-                            ExpressionOperator.EqualOperator,  
-                            new IdentifierExpression(this.mainTable + "." + field)),
-                        new BinaryExpression(parentAliasName + ".id", "=", value),
-                    };
-                    exp = JoinExpressionsByAnd(exps);
+                    exp = this.ParseChildOfOperator(field, value);
                     break;
 
 
@@ -268,6 +245,56 @@ namespace ObjectServer.Model
 
             }
 
+            return exp;
+        }
+
+        private IExpression ParseChildOfOperator(string field, object value)
+        {
+            //TODO 处理继承字段
+            var joinTableName = string.Empty;
+            if (field == "id")
+            {
+                joinTableName = mainTable;
+            }
+            else
+            {
+                var fieldInfo = this.model.Fields[field];
+                var joinModel = (IModel)this.serviceScope.GetResource(fieldInfo.Relation);
+                joinTableName = joinModel.TableName;
+            }
+            //TODO 确认 many2one 类型字段
+            var aliasIndex = this.aliasIndexCount++;
+            var parentAliasName = string.Format("_{0}_parent_{1}", joinTableName, aliasIndex);
+            var childAliasName = string.Format("_{0}_child_{1}", joinTableName, aliasIndex);
+            this.tables.Add(new AliasExpression(joinTableName, parentAliasName));
+            this.tables.Add(new AliasExpression(joinTableName, childAliasName));
+            /* 生成的 SQL 形如：
+             * SELECT mainTable.id 
+             * FROM mainTable, category _category_parent_0, category AS _category_child_0
+             * WHERE _category_child_0.id = mainTable.field AND
+             *     _category_parent_0.id = {value} AND
+             *     _category_child_0._left > _category_parent_0._left AND
+             *     _category_child_0._left < _category_parent_0._right AND ...
+             * 
+             * */
+            var exps = new IExpression[]
+                    {
+                        new BinaryExpression(new IdentifierExpression(childAliasName + ".id"), 
+                            ExpressionOperator.EqualOperator,  
+                            new IdentifierExpression(this.mainTable + "." + field)),
+
+                        new BinaryExpression(parentAliasName + ".id", "=", value),
+
+                        new BinaryExpression(new IdentifierExpression(childAliasName + "._left"),
+                            ExpressionOperator.GreaterOperator,
+                            new IdentifierExpression(parentAliasName + "._left")),
+
+                        new BinaryExpression(new IdentifierExpression(childAliasName + "._left"), 
+                            ExpressionOperator.LessOperator, 
+                            new IdentifierExpression(parentAliasName + "._right")),
+                    };
+
+            var exp = JoinExpressionsByAnd(exps);
             return exp;
         }
 
