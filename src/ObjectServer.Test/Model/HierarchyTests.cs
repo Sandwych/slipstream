@@ -132,6 +132,18 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(id3, ids1[0]);
             Assert.AreEqual(id4, ids1[1]);
             Assert.AreEqual(id5, ids1[2]);
+
+            var domain2 = new object[][] 
+            { 
+                new object[] { "id", "childof", id3 }
+            };
+
+            var ids2 = model.SearchInternal(
+                this.ServiceScope, domain2,
+                new OrderInfo[] { new OrderInfo("id", SearchOrder.Asc) });
+
+            Assert.AreEqual(1, ids2.Length);
+            Assert.AreEqual(id5, ids2[0]);
         }
 
     }
