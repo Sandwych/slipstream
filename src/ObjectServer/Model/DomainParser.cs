@@ -155,24 +155,30 @@ namespace ObjectServer.Model
 
         private static IExpression JoinExpressionsByAnd(IList<IExpression> expressions)
         {
-            var exps = new List<IExpression>(expressions);
+            Debug.Assert(expressions != null);
+            Debug.Assert(expressions.Count > 0);
 
-            if (exps.Count % 2 != 0)
+            IExpression expTop;
+            int expCount = expressions.Count;
+
+            if (expressions.Count % 2 != 0)
             {
                 //为了方便 AND 连接起见，在奇数个表达式最后加上总是 0 = 0 的表达式
-                exps.Add(s_trueExp);
+                expTop = s_trueExp;
+                expCount++;
             }
-
-            int andExpCount = exps.Count - 1;
-
-            var andExps = new IExpression[andExpCount];
-            for (int i = 0; i < andExps.Length; i++)
+            else
             {
-                var andExp = new BinaryExpression(
-                    exps[i], ExpressionOperator.AndOperator, exps[i + 1]);
-                andExps[i] = andExp;
+                expTop = expressions.Last();
             }
-            return andExps[0];
+
+            for (int i = expCount - 2; i >= 0; i--)
+            {
+                var rhs = expTop;
+                var andExp = new BinaryExpression(expressions[i], ExpressionOperator.AndOperator, rhs);
+                expTop = andExp;
+            }
+            return expTop;
         }
 
         private IExpression ParseSingleDomain(string field, string opr, object value)
