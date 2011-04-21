@@ -13,6 +13,18 @@ namespace ObjectServer.Model.Test
     public class SearchTests : LocalTestCase
     {
         [Test]
+        public void Test_empty_domain()
+        {
+            var domain = new object[][] { };
+            var ids = new long[] { };
+            Assert.DoesNotThrow(() =>
+                {
+                    ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
+                });
+            Assert.That(ids.Length > 1);
+        }
+
+        [Test]
         public void Test_search_limit()
         {
             var domain = new object[][] { new object[] { "name", "like", "%" } };
@@ -54,6 +66,7 @@ namespace ObjectServer.Model.Test
             ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
             Assert.AreEqual(0, ids.Length);
         }
+
 
         [Test]
         public void Test_domain_like_operator()

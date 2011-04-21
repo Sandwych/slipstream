@@ -18,7 +18,7 @@ namespace ObjectServer.Model
 
         private static readonly IExpression s_trueExp = new BinaryExpression(
             new ValueExpression(0), ExpressionOperator.EqualOperator, new ValueExpression(0));
-        private static readonly List<object[]> EmptyDomain = new List<object[]>();
+        private static readonly List<DomainInfo> EmptyDomain = new List<DomainInfo>();
 
         private List<AliasExpression> tables = new List<AliasExpression>();
         private List<IExpression> joinRestrictions = new List<IExpression>();
@@ -26,7 +26,7 @@ namespace ObjectServer.Model
 
         IModel model;
         IServiceScope serviceScope;
-        List<object[]> internalDomain = new List<object[]>();
+        List<DomainInfo> internalDomain = new List<DomainInfo>();
         int aliasIndexCount = 0;
 
         public DomainParser(IServiceScope scope, IModel model, IEnumerable<object> domain)
@@ -44,7 +44,7 @@ namespace ObjectServer.Model
             {
                 foreach (object[] o in domain)
                 {
-                    this.internalDomain.Add(o);
+                    this.internalDomain.Add(DomainInfo.FromTuple(o));
                 }
             }
 
@@ -69,28 +69,27 @@ namespace ObjectServer.Model
             //继承查询的策略很简单，直接把基类表连接到查询里
             //如果有重复的字段，就以子类的字段为准
             var usedInheritances = new List<InheritanceInfo>();
-            foreach (var d in this.internalDomain)
+            for (int i = 0; i < this.internalDomain.Count; i++)
             {
+                var d = this.internalDomain[i];
                 string tableName = null;
-                var e = (object[])d;
-                var fieldName = (string)e[0];
-                var metaField = model.Fields[fieldName];
+                var metaField = model.Fields[d.Field];
 
-                if (AbstractTableModel.SystemReadonlyFields.Contains(fieldName))
+                if (AbstractTableModel.SystemReadonlyFields.Contains(d.Field))
                 {
                     tableName = this.mainTable;
                 }
                 else
                 {
                     var tableNames =
-                        from i in model.Inheritances
-                        let bm = (AbstractTableModel)scope.GetResource(i.BaseModel)
-                        where bm.Fields.ContainsKey(fieldName)
-                        select i;
+                        from inherit in model.Inheritances
+                        let bm = (AbstractTableModel)scope.GetResource(inherit.BaseModel)
+                        where bm.Fields.ContainsKey(d.Field)
+                        select inherit;
                     var ii = tableNames.Single();
                     usedInheritances.Add(ii);
                     tableName = ((AbstractTableModel)scope.GetResource(ii.BaseModel)).TableName;
-                    e[0] = tableName + '.' + fieldName;
+                    this.internalDomain[i] = new DomainInfo(tableName + '.' + d.Field, d.Operator, d.Value);
                 }
 
                 foreach (var inheritInfo in usedInheritances)
@@ -108,6 +107,7 @@ namespace ObjectServer.Model
 
         public IList<AliasExpression> Tables { get { return this.tables; } }
 
+        /*
         public void AddExpression(object[] exp)
         {
             if (exp.Length != 3)
@@ -122,11 +122,11 @@ namespace ObjectServer.Model
             }
 
             this.internalDomain.Add(exp);
-        }
+        }*/
 
         public bool ContainsField(string field)
         {
-            return this.internalDomain.Exists(exp => (string)exp[0] == field);
+            return this.internalDomain.Exists(exp => exp.Field == field);
         }
 
         public IExpression Parse()
@@ -141,10 +141,7 @@ namespace ObjectServer.Model
 
             foreach (var domainItem in this.internalDomain)
             {
-                var field = (string)domainItem[0];
-                var opr = (string)domainItem[1];
-                var value = domainItem[2];
-                var exp = ParseSingleDomain(field, opr, value);
+                var exp = ParseSingleDomain(domainItem);
                 var bracketExp = new BracketedExpression(exp);
                 expressions.Add(bracketExp);
             }
@@ -181,16 +178,16 @@ namespace ObjectServer.Model
             return expTop;
         }
 
-        private IExpression ParseSingleDomain(string field, string opr, object value)
+        private IExpression ParseSingleDomain(DomainInfo domain)
         {
-            var aliasedField = field;
-            if (!field.Contains('.'))
+            var aliasedField = domain.Field;
+            if (!domain.Field.Contains('.'))
             {
-                aliasedField = this.mainTable + "." + field;
+                aliasedField = this.mainTable + "." + domain.Field;
             }
 
             IExpression exp = null;
-            switch (opr)
+            switch (domain.Operator)
             {
                 case "=":
                 case ">":
@@ -199,47 +196,47 @@ namespace ObjectServer.Model
                 case "<=":
                     exp = new BinaryExpression(
                         new IdentifierExpression(aliasedField),
-                        new ExpressionOperator(opr),
-                        new ValueExpression(value));
+                        new ExpressionOperator(domain.Operator),
+                        new ValueExpression(domain.Value));
                     break;
 
                 case "!=":
                     exp = new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.NotEqualOperator,
-                        new ValueExpression(value));
+                        new ValueExpression(domain.Value));
                     break;
 
                 case "like":
                     exp = new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.LikeOperator,
-                        new ValueExpression(value));
+                        new ValueExpression(domain.Value));
                     break;
 
                 case "!like":
                     exp = new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.NotLikeOperator,
-                        new ValueExpression(value));
+                        new ValueExpression(domain.Value));
                     break;
 
                 case "in":
                     exp = new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.InOperator,
-                        new ExpressionGroup((IEnumerable<object>)value));
+                        new ExpressionGroup((IEnumerable<object>)domain.Value));
                     break;
 
                 case "!in":
                     exp = new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.NotInOperator,
-                        new ExpressionGroup((IEnumerable<object>)value));
+                        new ExpressionGroup((IEnumerable<object>)domain.Value));
                     break;
 
                 case "childof":
-                    exp = this.ParseChildOfOperator(field, value);
+                    exp = this.ParseChildOfOperator(domain.Field, domain.Value);
                     break;
 
 
