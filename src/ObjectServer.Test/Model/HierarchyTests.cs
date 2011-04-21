@@ -87,41 +87,13 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_childof()
         {
-            this.ClearModel(this.ServiceScope, "test.category");
+            dynamic data = this.PrepareTestingData();
+
             var model = (IModel)this.ServiceScope.GetResource("test.category");
-            //1
-            //2
-            //|....3
-            //     |....5
-            //|....4
-            //插入4个根节点，1，2作为根节点，3,4是2的子节点，5 是3的子节点
-            dynamic root1 = new ExpandoObject();
-            root1.name = "root1";
-            long id1 = model.CreateInternal(this.ServiceScope, root1);
-
-            dynamic root2 = new ExpandoObject();
-            root2.name = "root2";
-            long id2 = model.CreateInternal(this.ServiceScope, root2);
-
-            //插入节点3的时候节点2还是叶子
-            dynamic root3 = new ExpandoObject();
-            root3.name = "root3";
-            root3.parent = id2;
-            long id3 = model.CreateInternal(this.ServiceScope, root3);
-
-            dynamic root4 = new ExpandoObject();
-            root4.name = "root4";
-            root4.parent = id2;
-            long id4 = model.CreateInternal(this.ServiceScope, root4);
-
-            dynamic root5 = new ExpandoObject();
-            root5.name = "root5";
-            root5.parent = id3;
-            long id5 = model.CreateInternal(this.ServiceScope, root5);
-
+         
             var domain1 = new object[][] 
             { 
-                new object[] { "id", "childof", id2 }
+                new object[] { "id", "childof", data.id2 }
             };
 
             var ids1 = model.SearchInternal(
@@ -129,13 +101,13 @@ namespace ObjectServer.Model.Test
                 new OrderInfo[] { new OrderInfo("id", SearchOrder.Asc) });
 
             Assert.AreEqual(3, ids1.Length);
-            Assert.AreEqual(id3, ids1[0]);
-            Assert.AreEqual(id4, ids1[1]);
-            Assert.AreEqual(id5, ids1[2]);
+            Assert.AreEqual(data.id3, ids1[0]);
+            Assert.AreEqual(data.id4, ids1[1]);
+            Assert.AreEqual(data.id5, ids1[2]);
 
             var domain2 = new object[][] 
             { 
-                new object[] { "id", "childof", id3 }
+                new object[] { "id", "childof", data.id3 }
             };
 
             var ids2 = model.SearchInternal(
@@ -143,7 +115,47 @@ namespace ObjectServer.Model.Test
                 new OrderInfo[] { new OrderInfo("id", SearchOrder.Asc) });
 
             Assert.AreEqual(1, ids2.Length);
-            Assert.AreEqual(id5, ids2[0]);
+            Assert.AreEqual(data.id5, ids2[0]);
+        }
+
+
+        private dynamic PrepareTestingData()
+        {
+            this.ClearModel(this.ServiceScope, "test.category");
+            var model = (IModel)this.ServiceScope.GetResource("test.category");
+
+            dynamic result = new ExpandoObject();
+            //1
+            //2
+            //|....3
+            //     |....5
+            //|....4
+            //插入4个根节点，1，2作为根节点，3,4是2的子节点，5 是3的子节点
+            result.root1 = new ExpandoObject();
+            result.root1.name = "root1";
+            result.id1 = model.CreateInternal(this.ServiceScope, result.root1);
+
+            result.root2 = new ExpandoObject();
+            result.root2.name = "root2";
+            result.id2 = model.CreateInternal(this.ServiceScope, result.root2);
+
+            //插入节点3的时候节点2还是叶子
+            result.root3 = new ExpandoObject();
+            result.root3.name = "root3";
+            result.root3.parent = result.id2;
+            result.id3 = model.CreateInternal(this.ServiceScope, result.root3);
+
+            result.root4 = new ExpandoObject();
+            result.root4.name = "root4";
+            result.root4.parent = result.id2;
+            result.id4 = model.CreateInternal(this.ServiceScope, result.root4);
+
+            result.root5 = new ExpandoObject();
+            result.root5.name = "root5";
+            result.root5.parent = result.id3;
+            result.id5 = model.CreateInternal(this.ServiceScope, result.root5);
+
+            return result;
         }
 
     }
