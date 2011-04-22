@@ -48,27 +48,60 @@ namespace ObjectServer.Model
             Debug.Assert(model != null);
 
             //TODO 过滤掉不能处理的字段，比如函数字段等
-
             if (domain == null || domain.Count() <= 0)
             {
                 this.internalDomain = EmptyDomain;
             }
-            else
-            {
-                foreach (object[] o in domain)
-                {
-                    this.internalDomain.Add(DomainInfo.FromTuple(o));
-                }
-            }
+
 
             this.serviceScope = scope;
             this.model = model;
             this.mainTable = model.TableName;
             this.tables.Add(new AliasExpression(model.TableName));
 
+            this.Parse(domain);
+
             if (model.Inheritances.Count > 0)
             {
                 this.AddInheritedTables(scope, model);
+            }
+        }
+
+        private void Parse(IEnumerable<object> domain)
+        {
+
+            foreach (object[] o in domain)
+            {
+                string aliasedField;
+                var di = DomainInfo.FromTuple(o);
+                if (!di.Field.Contains('.'))
+                {
+                    aliasedField = this.mainTable + "." + di.Field;
+                }
+                else
+                {
+                    var fields = di.Field.Split('.');
+                    if (fields.Length == 2)
+                    {
+                        var selfField = fields[0];
+                        var externalField = fields[1];
+
+                        var fieldInfo = this.model.Fields[selfField];
+                        if (fieldInfo.Type == FieldType.ManyToOne)
+                        {
+                            var joinModel = (IModelDescriptor)this.serviceScope.GetResource(fieldInfo.Relation);
+                            var joinTable = joinModel.TableName;
+                            var joinAlias = "_t" + this.tables.Count.ToString();
+                            this.tables.Add(new AliasExpression(joinTable, joinAlias));
+                            this.joinRestrictions.Add(new BinaryExpression(
+                                new IdentifierExpression(this.mainTable + '.' + selfField),
+                                ExpressionOperator.EqualOperator,
+                                new IdentifierExpression(joinAlias + ".id")));
+                            aliasedField = joinAlias + '.' + externalField;
+                        }
+                    }
+                }
+                this.internalDomain.Add(DomainInfo.FromTuple(o));
             }
         }
 
@@ -166,7 +199,7 @@ namespace ObjectServer.Model
             return this.internalDomain.Exists(exp => exp.Field == field);
         }
 
-        public IExpression Parse()
+        public IExpression ToExpression()
         {
             if (this.internalDomain == null || this.internalDomain.Count == 0)
             {
@@ -220,35 +253,7 @@ namespace ObjectServer.Model
         {
             var exps = new List<IExpression>();
             var aliasedField = domain.Field;
-            if (!domain.Field.Contains('.'))
-            {
-                aliasedField = this.mainTable + "." + domain.Field;
-            }
-            /*
-            else
-            {
-                var fields = domain.Field.Split('.');
-                if (fields.Length == 2)
-                {
-                    var selfField = fields[0];
-                    var externalField = fields[1];
 
-                    var fieldInfo = this.model.Fields[selfField];
-                    if (fieldInfo.Type == FieldType.ManyToOne)
-                    {
-                        var joinModel = (IModelDescriptor)this.serviceScope.GetResource(fieldInfo.Relation);
-                        var joinTable = joinModel.TableName;
-                        var joinAlias = "_t" + this.tables.Count.ToString();
-                        this.tables.Add(new AliasExpression(joinTable, joinAlias));
-                        this.joinRestrictions.Add(new BinaryExpression(
-                            new IdentifierExpression(this.mainTable + '.' + selfField),
-                            ExpressionOperator.EqualOperator,
-                            new IdentifierExpression(joinAlias + ".id")));
-                        aliasedField = joinAlias + '.' + externalField;
-                    }
-                }
-            }
-            */
 
             switch (domain.Operator)
             {
