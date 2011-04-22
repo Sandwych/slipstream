@@ -10,6 +10,18 @@ namespace ObjectServer.Model
 {
     internal sealed class DomainParser
     {
+        private sealed class InnerJoinInfo
+        {
+            public InnerJoinInfo(string t, string a)
+            {
+                this.Table = t;
+                this.Alias = a;
+            }
+
+            public string Table { get; private set; }
+            public string Alias { get; private set; }
+        }
+
         public static readonly string[] Operators = new string[]
         {
             "=", "!=", ">", ">=", "<", "<=", "in", "!in", 
@@ -22,6 +34,7 @@ namespace ObjectServer.Model
 
         private List<AliasExpression> tables = new List<AliasExpression>();
         private List<IExpression> joinRestrictions = new List<IExpression>();
+        private List<InnerJoinInfo> innerJoins = new List<InnerJoinInfo>(4);
         private string mainTable;
 
         IModel model;
@@ -59,6 +72,33 @@ namespace ObjectServer.Model
             }
         }
 
+        private string PutInnerJoin(string table, string relatedField)
+        {
+            var joinInfo = this.innerJoins.SingleOrDefault(j => j.Table == table);
+
+            string alias;
+            if (joinInfo == null)
+            {
+                alias = "_t" + this.innerJoins.Count.ToString();
+                this.innerJoins.Add(new InnerJoinInfo(table, alias));
+                this.tables.Add(new AliasExpression(table, alias));
+                this.joinRestrictions.Add(new BinaryExpression(
+                    new IdentifierExpression(alias + ".id"),
+                    ExpressionOperator.EqualOperator,
+                    new IdentifierExpression(this.mainTable + "." + relatedField)));
+            }
+            else
+            {
+                alias = joinInfo.Alias;
+            }
+            return alias;
+        }
+
+        private InnerJoinInfo GetInnerJoin(string table)
+        {
+            return this.innerJoins.SingleOrDefault(j => j.Table == table);
+        }
+
         private void AddInheritedTables(IServiceScope scope, IModel model)
         {
             Debug.Assert(model.Inheritances.Count > 0);
@@ -83,24 +123,21 @@ namespace ObjectServer.Model
                 {
                     var tableNames =
                         from inherit in model.Inheritances
-                        let bm = (AbstractTableModel)scope.GetResource(inherit.BaseModel)
+                        let bm = (IModelDescriptor)scope.GetResource(inherit.BaseModel)
                         where bm.Fields.ContainsKey(d.Field)
                         select inherit;
                     var ii = tableNames.Single();
                     usedInheritances.Add(ii);
-                    tableName = ((AbstractTableModel)scope.GetResource(ii.BaseModel)).TableName;
-                    this.internalDomain[i] = new DomainInfo(tableName + '.' + d.Field, d.Operator, d.Value);
+                    tableName = ((IModelDescriptor)scope.GetResource(ii.BaseModel)).TableName;
+                    var baseAlias = this.PutInnerJoin(tableName, ii.RelatedField);
+                    this.internalDomain[i] = new DomainInfo(
+                        baseAlias + '.' + d.Field, d.Operator, d.Value);
                 }
 
                 foreach (var inheritInfo in usedInheritances)
                 {
-                    var baseModel = (AbstractTableModel)scope.GetResource(inheritInfo.BaseModel);
-                    this.tables.Add(new AliasExpression(baseModel.TableName));
-                    var joinExp = new BinaryExpression(
-                        new IdentifierExpression(mainTable + '.' + inheritInfo.RelatedField),
-                        ExpressionOperator.EqualOperator,
-                        new IdentifierExpression(baseModel.TableName + ".id"));
-                    this.joinRestrictions.Add(joinExp);
+                    var baseModel = (IModelDescriptor)scope.GetResource(inheritInfo.BaseModel);
+                    this.PutInnerJoin(baseModel.TableName, inheritInfo.RelatedField);
                 }
             }
         }
@@ -137,14 +174,15 @@ namespace ObjectServer.Model
             }
 
             var expressions = new List<IExpression>(this.joinRestrictions.Count + this.internalDomain.Count + 1);
-            expressions.AddRange(this.joinRestrictions);
 
             foreach (var domainItem in this.internalDomain)
             {
-                var exp = ParseSingleDomain(domainItem);
+                var exps = ParseLeafDomain(domainItem);
+                var exp = JoinExpressionsByAnd(exps);
                 var bracketExp = new BracketedExpression(exp);
                 expressions.Add(bracketExp);
             }
+            expressions.AddRange(this.joinRestrictions);
             var whereExp = JoinExpressionsByAnd(expressions);
 
             return whereExp;
@@ -178,15 +216,40 @@ namespace ObjectServer.Model
             return expTop;
         }
 
-        private IExpression ParseSingleDomain(DomainInfo domain)
+        private IList<IExpression> ParseLeafDomain(DomainInfo domain)
         {
+            var exps = new List<IExpression>();
             var aliasedField = domain.Field;
             if (!domain.Field.Contains('.'))
             {
                 aliasedField = this.mainTable + "." + domain.Field;
             }
+            /*
+            else
+            {
+                var fields = domain.Field.Split('.');
+                if (fields.Length == 2)
+                {
+                    var selfField = fields[0];
+                    var externalField = fields[1];
 
-            IExpression exp = null;
+                    var fieldInfo = this.model.Fields[selfField];
+                    if (fieldInfo.Type == FieldType.ManyToOne)
+                    {
+                        var joinModel = (IModelDescriptor)this.serviceScope.GetResource(fieldInfo.Relation);
+                        var joinTable = joinModel.TableName;
+                        var joinAlias = "_t" + this.tables.Count.ToString();
+                        this.tables.Add(new AliasExpression(joinTable, joinAlias));
+                        this.joinRestrictions.Add(new BinaryExpression(
+                            new IdentifierExpression(this.mainTable + '.' + selfField),
+                            ExpressionOperator.EqualOperator,
+                            new IdentifierExpression(joinAlias + ".id")));
+                        aliasedField = joinAlias + '.' + externalField;
+                    }
+                }
+            }
+            */
+
             switch (domain.Operator)
             {
                 case "=":
@@ -194,49 +257,49 @@ namespace ObjectServer.Model
                 case ">=":
                 case "<":
                 case "<=":
-                    exp = new BinaryExpression(
+                    exps.Add(new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         new ExpressionOperator(domain.Operator),
-                        new ValueExpression(domain.Value));
+                        new ValueExpression(domain.Value)));
                     break;
 
                 case "!=":
-                    exp = new BinaryExpression(
+                    exps.Add(new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.NotEqualOperator,
-                        new ValueExpression(domain.Value));
+                        new ValueExpression(domain.Value)));
                     break;
 
                 case "like":
-                    exp = new BinaryExpression(
+                    exps.Add(new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.LikeOperator,
-                        new ValueExpression(domain.Value));
+                        new ValueExpression(domain.Value)));
                     break;
 
                 case "!like":
-                    exp = new BinaryExpression(
+                    exps.Add(new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.NotLikeOperator,
-                        new ValueExpression(domain.Value));
+                        new ValueExpression(domain.Value)));
                     break;
 
                 case "in":
-                    exp = new BinaryExpression(
+                    exps.Add(new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.InOperator,
-                        new ExpressionGroup((IEnumerable<object>)domain.Value));
+                        new ExpressionGroup((IEnumerable<object>)domain.Value)));
                     break;
 
                 case "!in":
-                    exp = new BinaryExpression(
+                    exps.Add(new BinaryExpression(
                         new IdentifierExpression(aliasedField),
                         ExpressionOperator.NotInOperator,
-                        new ExpressionGroup((IEnumerable<object>)domain.Value));
+                        new ExpressionGroup((IEnumerable<object>)domain.Value)));
                     break;
 
                 case "childof":
-                    exp = this.ParseChildOfOperator(domain.Field, domain.Value);
+                    exps.AddRange(this.ParseChildOfOperator(domain.Field, domain.Value));
                     break;
 
 
@@ -248,10 +311,10 @@ namespace ObjectServer.Model
 
             }
 
-            return exp;
+            return exps;
         }
 
-        private IExpression ParseChildOfOperator(string field, object value)
+        private IList<IExpression> ParseChildOfOperator(string field, object value)
         {
             //TODO 处理继承字段
             var joinTableName = string.Empty;
@@ -268,9 +331,9 @@ namespace ObjectServer.Model
             //TODO 确认 many2one 类型字段
             var aliasIndex = this.aliasIndexCount++;
             var parentAliasName = string.Format("_{0}_parent_{1}", joinTableName, aliasIndex);
-            var childAliasName = string.Format("_{0}_child_{1}", joinTableName, aliasIndex);
             this.tables.Add(new AliasExpression(joinTableName, parentAliasName));
-            this.tables.Add(new AliasExpression(joinTableName, childAliasName));
+            var childAliasName = this.PutInnerJoin(joinTableName, field);
+
             /* 生成的 SQL 形如：
              * SELECT mainTable.id 
              * FROM mainTable, category _category_parent_0, category AS _category_child_0
@@ -282,9 +345,11 @@ namespace ObjectServer.Model
              * */
             var exps = new IExpression[]
                     {
+                        /*
                         new BinaryExpression(new IdentifierExpression(childAliasName + ".id"), 
                             ExpressionOperator.EqualOperator,  
                             new IdentifierExpression(this.mainTable + "." + field)),
+                        */
 
                         new BinaryExpression(parentAliasName + ".id", "=", value),
 
@@ -297,8 +362,7 @@ namespace ObjectServer.Model
                             new IdentifierExpression(parentAliasName + "._right")),
                     };
 
-            var exp = JoinExpressionsByAnd(exps);
-            return exp;
+            return exps;
         }
 
 

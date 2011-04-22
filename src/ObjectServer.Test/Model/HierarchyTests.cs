@@ -16,70 +16,38 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_create_nodes()
         {
-            this.ClearModel(this.ServiceScope, "test.category");
-
+            dynamic data = this.PrepareTestingData();
             var model = (IModel)this.ServiceScope.GetResource("test.category");
-
-            //1
-            //2
-            //|....3
-            //     |....5
-            //|....4
-            //插入4个根节点，1，2作为根节点，3,4是2的子节点，5 是3的子节点
-            dynamic root1 = new ExpandoObject();
-            root1.name = "root1";
-            long id1 = model.CreateInternal(this.ServiceScope, root1);
-
-            dynamic root2 = new ExpandoObject();
-            root2.name = "root2";
-            long id2 = model.CreateInternal(this.ServiceScope, root2);
-
-            //插入节点3的时候节点2还是叶子
-            dynamic root3 = new ExpandoObject();
-            root3.name = "root3";
-            root3.parent = id2;
-            long id3 = model.CreateInternal(this.ServiceScope, root3);
-
-            dynamic root4 = new ExpandoObject();
-            root4.name = "root4";
-            root4.parent = id2;
-            long id4 = model.CreateInternal(this.ServiceScope, root4);
-
-            dynamic root5 = new ExpandoObject();
-            root5.name = "root5";
-            root5.parent = id3;
-            long id5 = model.CreateInternal(this.ServiceScope, root5);
-
 
             //确认 _left 与 _right 设置正确
             var fields = new string[] { "name", "_left", "_right", "children", "descendants" };
 
-            var record1 = model.ReadInternal(this.ServiceScope, new long[] { id1 }, fields)[0];
+            var record1 = model.ReadInternal(this.ServiceScope, new long[] { data.id1 }, fields)[0];
             Assert.AreEqual((long)1, record1["_left"]);
             Assert.AreEqual((long)2, record1["_right"]);
 
-            var record2 = model.ReadInternal(this.ServiceScope, new long[] { id2 }, fields)[0];
+            var record2 = model.ReadInternal(this.ServiceScope, new long[] { data.id2 }, fields)[0];
             Assert.AreEqual((long)3, record2["_left"]);
             Assert.AreEqual((long)10, record2["_right"]);
             var children2 = (long[])record2["children"];
             Array.Sort(children2);
             Assert.AreEqual(2, children2.Length);
-            Assert.AreEqual(id3, children2[0]);
-            Assert.AreEqual(id4, children2[1]);
+            Assert.AreEqual(data.id3, children2[0]);
+            Assert.AreEqual(data.id4, children2[1]);
             var descendants2 = (long[])record2["descendants"];
             Array.Sort(descendants2);
             Assert.AreEqual(3, descendants2.Length);
 
 
-            var record3 = model.ReadInternal(this.ServiceScope, new long[] { id3 }, fields)[0];
+            var record3 = model.ReadInternal(this.ServiceScope, new long[] { data.id3 }, fields)[0];
             Assert.AreEqual((long)4, record3["_left"]);
             Assert.AreEqual((long)7, record3["_right"]);
 
-            var record4 = model.ReadInternal(this.ServiceScope, new long[] { id4 }, fields)[0];
+            var record4 = model.ReadInternal(this.ServiceScope, new long[] { data.id4 }, fields)[0];
             Assert.AreEqual((long)8, record4["_left"]);
             Assert.AreEqual((long)9, record4["_right"]);
 
-            var record5 = model.ReadInternal(this.ServiceScope, new long[] { id5 }, fields)[0];
+            var record5 = model.ReadInternal(this.ServiceScope, new long[] { data.id5 }, fields)[0];
             Assert.AreEqual((long)5, record5["_left"]);
             Assert.AreEqual((long)6, record5["_right"]);
         }
@@ -124,38 +92,38 @@ namespace ObjectServer.Model.Test
             this.ClearModel(this.ServiceScope, "test.category");
             var model = (IModel)this.ServiceScope.GetResource("test.category");
 
-            dynamic result = new ExpandoObject();
+            dynamic data = new ExpandoObject();
             //1
             //2
             //|....3
             //     |....5
             //|....4
             //插入4个根节点，1，2作为根节点，3,4是2的子节点，5 是3的子节点
-            result.root1 = new ExpandoObject();
-            result.root1.name = "root1";
-            result.id1 = model.CreateInternal(this.ServiceScope, result.root1);
+            data.root1 = new ExpandoObject();
+            data.root1.name = "root1";
+            data.id1 = model.CreateInternal(this.ServiceScope, data.root1);
 
-            result.root2 = new ExpandoObject();
-            result.root2.name = "root2";
-            result.id2 = model.CreateInternal(this.ServiceScope, result.root2);
+            data.root2 = new ExpandoObject();
+            data.root2.name = "root2";
+            data.id2 = model.CreateInternal(this.ServiceScope, data.root2);
 
             //插入节点3的时候节点2还是叶子
-            result.root3 = new ExpandoObject();
-            result.root3.name = "root3";
-            result.root3.parent = result.id2;
-            result.id3 = model.CreateInternal(this.ServiceScope, result.root3);
+            data.root3 = new ExpandoObject();
+            data.root3.name = "root3";
+            data.root3.parent = data.id2;
+            data.id3 = model.CreateInternal(this.ServiceScope, data.root3);
 
-            result.root4 = new ExpandoObject();
-            result.root4.name = "root4";
-            result.root4.parent = result.id2;
-            result.id4 = model.CreateInternal(this.ServiceScope, result.root4);
+            data.root4 = new ExpandoObject();
+            data.root4.name = "root4";
+            data.root4.parent = data.id2;
+            data.id4 = model.CreateInternal(this.ServiceScope, data.root4);
 
-            result.root5 = new ExpandoObject();
-            result.root5.name = "root5";
-            result.root5.parent = result.id3;
-            result.id5 = model.CreateInternal(this.ServiceScope, result.root5);
+            data.root5 = new ExpandoObject();
+            data.root5.name = "root5";
+            data.root5.parent = data.id3;
+            data.id5 = model.CreateInternal(this.ServiceScope, data.root5);
 
-            return result;
+            return data;
         }
 
     }

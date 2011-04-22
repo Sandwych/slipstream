@@ -11,8 +11,6 @@ namespace ObjectServer.Core.Test
     [TestFixture]
     public sealed class UserTest : LocalTestCase
     {
-        IExportedService proxy = ServiceDispatcher.CreateDispatcher();
-
         [Test]
         public void Test_user_password_hashing()
         {
@@ -24,8 +22,8 @@ namespace ObjectServer.Core.Test
                 { "admin", false },
             };
 
-            var uid = proxy.CreateModel(this.SessionId, UserModel.ModelName, userRecord);
-            var records = proxy.ReadModel(this.SessionId, UserModel.ModelName, new object[] { uid }, null);
+            var uid = this.Service.CreateModel(this.SessionId, UserModel.ModelName, userRecord);
+            var records = this.Service.ReadModel(this.SessionId, UserModel.ModelName, new object[] { uid }, null);
             var user1 = records[0];
 
             var salt = (string)user1["salt"];

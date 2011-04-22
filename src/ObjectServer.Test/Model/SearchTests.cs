@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Dynamic;
 
 using NUnit.Framework;
 
@@ -127,5 +128,49 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(ascIds.Last(), descIds.First());
         }
 
+
+        [Ignore]
+        public void Test_many_to_one_field_domain()
+        {
+            ClearMasterAndChildTable();
+
+            var masterModel = this.ServiceScope.GetResource("test.master");
+            var childModel = this.ServiceScope.GetResource("test.child");
+
+            dynamic master1 = new ExpandoObject();
+            master1.name = "master1";
+            var master1Id = this.Service.CreateModel(this.SessionId, "test.master", master1);
+
+            dynamic master2 = new ExpandoObject();
+            master2.name = "master2";
+            var master2Id = this.Service.CreateModel(this.SessionId, "test.master", master2);
+
+            dynamic child1 = new ExpandoObject();
+            child1.master = master1Id;
+            child1.name = "child1";
+            var child1Id = this.Service.CreateModel(this.SessionId, "test.child", child1);
+
+            dynamic child2 = new ExpandoObject();
+            child2.master = master2Id;
+            child2.name = "child2";
+            var child2Id = this.Service.CreateModel(this.SessionId, "test.child", child2);
+
+            var domain = new object[][] 
+            { 
+                new object[] { "master.name", "=", "master1" }
+            };
+            var childIds = this.Service.SearchModel(this.SessionId, "test.child", domain);
+            Assert.AreEqual(1, childIds.Length);
+            Assert.AreEqual(child1Id, childIds[0]);
+
+            domain = new object[][]
+            {
+                new object[] { "master.name", "like", "master%" }
+            };
+            childIds = this.Service.SearchModel(this.SessionId, "test.child", domain);
+            Assert.AreEqual(2, childIds.Length);
+            Assert.AreEqual(child1Id, childIds[0]);
+            Assert.AreEqual(child2Id, childIds[1]);
+        }
     }
 }
