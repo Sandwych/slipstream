@@ -37,7 +37,6 @@ namespace ObjectServer.Model
 
             string mainTable = this.TableName;
 
-            var parser = new DomainParser(scope, this, domainInternal);
 
             var columnExps = new AliasExpressionList(new string[] { mainTable + ".id" });
 
@@ -55,10 +54,12 @@ namespace ObjectServer.Model
             }
 
             var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
+            var parser = new DomainParser(scope, this, domainInternal);
+            var parsedResult = parser.Parse(domainInternal);
+            var select = new SelectStatement(
+                columnExps, new FromClause(parsedResult.Item1), new WhereClause(parsedResult.Item2));
 
-            var whereExp = parser.ToExpression();
-            var select = new SelectStatement(columnExps, new FromClause(parser.Tables), new WhereClause(whereExp));
-            select.OrderByClause = orderbyClause;
+            select.OrderByClause = orderbyClause;
             if (offset > 0)
             {
                 select.OffsetClause = new OffsetClause(offset);

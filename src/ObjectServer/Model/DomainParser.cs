@@ -41,11 +41,9 @@ namespace ObjectServer.Model
             this.serviceScope = scope;
             this.model = model;
             this.mainTableAlias = model.TableName;
-
-            this.Parse(domain);
         }
 
-        private void Parse(IEnumerable<object> domain)
+        public Tuple<AliasExpression[], IExpression> Parse(IEnumerable<object> domain)
         {
             foreach (object[] o in domain)
             {
@@ -73,6 +71,9 @@ namespace ObjectServer.Model
                 }
                 this.ParseDomainExpression(aliasedField, opr, de[2]);
             }
+
+            return new Tuple<AliasExpression[], IExpression>(
+                this.leaves.GetTableAlias(), this.leaves.GetRestrictionExpression());
         }
 
         private bool IsInheritedField(IServiceScope scope, IModel mainModel, string field)
@@ -99,18 +100,9 @@ namespace ObjectServer.Model
             }
         }
 
-        public IList<AliasExpression> Tables { get { return this.leaves.GetTableAlias(); } }
-
         public bool ContainsField(string field)
         {
             return this.internalDomain.Exists(exp => exp.Field == field);
-        }
-
-        public IExpression ToExpression()
-        {
-            var whereExp = this.leaves.GetRestrictionExpression();
-
-            return whereExp;
         }
 
         private void ParseDomainExpression(string lhs, string opr, object value)
