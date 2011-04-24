@@ -1,5 +1,5 @@
 from jsonrpc import ServiceProxy
-s = ServiceProxy('http://localhost:9287/ObjectServer.ashx')
+s = ServiceProxy('http://localhost:9287/JsonService.ashx')
 
 print s.system.echo("echo")
 print "Methods:"

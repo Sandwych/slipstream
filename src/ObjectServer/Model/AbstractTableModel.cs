@@ -269,7 +269,7 @@ WHERE   hp.id = @0 AND hc.id <> @0
 
         [ServiceMethod]
         public static long[] Search(
-            dynamic model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
+            IModel model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
         {
             OrderInfo[] orderInfos = OrderInfo.GetDefaultOrders();
 
@@ -289,7 +289,7 @@ WHERE   hp.id = @0 AND hc.id <> @0
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            dynamic model, IServiceScope ctx, object[] clientIds, object[] fields = null)
+            IModel model, IServiceScope ctx, object[] clientIds, object[] fields = null)
         {
             string[] strFields = null;
             if (fields != null)
@@ -302,20 +302,21 @@ WHERE   hp.id = @0 AND hc.id <> @0
 
         [ServiceMethod]
         public static long Create(
-            dynamic model, IServiceScope ctx, IDictionary<string, object> propertyBag)
+            IModel model, IServiceScope ctx, IDictionary<string, object> propertyBag)
         {
             return model.CreateInternal(ctx, propertyBag);
         }
 
         [ServiceMethod]
         public static void Write(
-           dynamic model, IServiceScope ctx, object id, IDictionary<string, object> userRecord)
+           IModel model, IServiceScope ctx, object id, IDictionary<string, object> userRecord)
         {
             model.WriteInternal(ctx, (long)id, userRecord);
         }
 
         [ServiceMethod]
-        public static void Delete(dynamic model, IServiceScope ctx, object[] ids)
+        public static void Delete(
+            IModel model, IServiceScope ctx, object[] ids)
         {
             var longIds = ids.Select(id => (long)id).ToArray();
             model.DeleteInternal(ctx, longIds);

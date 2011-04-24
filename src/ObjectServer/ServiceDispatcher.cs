@@ -74,33 +74,33 @@ namespace ObjectServer
         public object Execute(string sessionId, string resource, string method, params object[] parameters)
         {
             var gsid = new Guid(sessionId);
-            using (var ctx = new ServiceScope(gsid))
+            using (var scope = new ServiceScope(gsid))
             {
-                dynamic res = ctx.GetResource(resource);
-                var methodInfo = res.GetServiceMethod(method);
+                dynamic res = scope.GetResource(resource);
+                var svc = res.GetService(method);
                 var internalArgs = new object[parameters.Length + 2];
                 internalArgs[0] = res;
-                internalArgs[1] = ctx;
+                internalArgs[1] = scope;
                 parameters.CopyTo(internalArgs, 2);
 
                 if (res.DatabaseRequired)
                 {
-                    return ExecuteTransactional(ctx, methodInfo, internalArgs);
+                    return ExecuteTransactional(scope, svc, internalArgs);
                 }
                 else
                 {
-                    return methodInfo.Invoke(null, internalArgs);
+                    return svc.Invoke(internalArgs);
                 }
             }
         }
 
 
         private static object ExecuteTransactional(
-            IServiceScope ctx, MethodInfo method, params object[] internalArgs)
+            IServiceScope scope, IService svc, params object[] internalArgs)
         {
             using (var tx = new TransactionScope())
             {
-                var result = method.Invoke(null, internalArgs);
+                var result = svc.Invoke(internalArgs);
                 tx.Complete();
                 return result;
             }

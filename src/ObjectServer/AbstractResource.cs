@@ -15,8 +15,8 @@ namespace ObjectServer
     /// </summary>
     public abstract class AbstractResource : DynamicObject, IResource
     {
-        private readonly IDictionary<string, MethodInfo> serviceMethods =
-            new Dictionary<string, MethodInfo>();
+        private readonly IDictionary<string, IService> services =
+            new Dictionary<string, IService>();
 
         protected AbstractResource(string name)
         {
@@ -41,22 +41,29 @@ namespace ObjectServer
             }
         }
 
-        public MethodInfo GetServiceMethod(string name)
+        public IService GetService(string name)
         {
-            return this.serviceMethods[name];
+            return this.services[name];
         }
 
+        /// <summary>
+        /// 只能在进程内调用的方法
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="args"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public override bool TryInvokeMember(System.Dynamic.InvokeMemberBinder binder, object[] args, out object result)
         {
             result = null;
-            MethodInfo methodInfo;
+            IService service;
             var allArgs = new object[args.Length + 1];
             allArgs[0] = this;
             args.CopyTo(allArgs, 1);
 
-            if (this.serviceMethods.TryGetValue(binder.Name, out methodInfo))
+            if (this.services.TryGetValue(binder.Name, out service))
             {
-                result = methodInfo.Invoke(this, allArgs);
+                result = service.Invoke(allArgs);
                 return true;
             }
             else
@@ -72,7 +79,8 @@ namespace ObjectServer
         {
             //TODO: 再好好地思考一下模型的继承问题
             this.VerifyMethod(mi);
-            this.serviceMethods.Add(mi.Name, mi);
+            var clrSvc = new ClrService(this, mi.Name, mi);
+            this.services.Add(clrSvc.Name, clrSvc);
         }
 
         private void VerifyMethod(MethodInfo mi)
@@ -134,9 +142,9 @@ namespace ObjectServer
 
         public abstract string[] GetReferencedObjects();
 
-        public ICollection<MethodInfo> ServiceMethods
+        public ICollection<IService> Services
         {
-            get { return this.serviceMethods.Values; }
+            get { return this.services.Values; }
         }
 
         #region ServiceObject(s) factory methods
@@ -165,9 +173,9 @@ namespace ObjectServer
         public virtual void MergeFrom(IResource res)
         {
 
-            foreach (var p in res.ServiceMethods)
+            foreach (var p in res.Services)
             {
-                this.serviceMethods[p.Name] = p;
+                this.services[p.Name] = p;
             }
         }
 
