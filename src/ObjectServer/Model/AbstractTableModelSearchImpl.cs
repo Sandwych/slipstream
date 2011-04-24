@@ -39,9 +39,7 @@ namespace ObjectServer.Model
 
             var parser = new DomainParser(scope, this, domainInternal);
 
-            var selfFromExp = new AliasExpression(this.TableName, mainTable);
             var columnExps = new AliasExpressionList(new string[] { mainTable + ".id" });
-            var select = new SelectStatement(columnExps, new FromClause(selfFromExp));
 
             OrderbyClause orderbyClause = null;
 
@@ -56,8 +54,11 @@ namespace ObjectServer.Model
                 orderbyClause = new OrderbyClause(mainTable + ".id", "ASC");
             }
 
-            select.OrderByClause = orderbyClause;
+            var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
 
+            var whereExp = parser.ToExpression();
+            var select = new SelectStatement(columnExps, new FromClause(parser.Tables), new WhereClause(whereExp));
+            select.OrderByClause = orderbyClause;
             if (offset > 0)
             {
                 select.OffsetClause = new OffsetClause(offset);
@@ -67,13 +68,6 @@ namespace ObjectServer.Model
             {
                 select.LimitClause = new LimitClause(limit);
             }
-
-            var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
-
-            var whereExp = parser.ToExpression();
-            var fromClause = new FromClause(parser.Tables);
-            select.WhereClause = new WhereClause(whereExp);
-            select.FromClause = fromClause;
 
             var sv = new StringifierVisitor();
             select.Traverse(sv);

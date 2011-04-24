@@ -6,9 +6,9 @@ using System.Text;
 namespace ObjectServer.Model
 {
     [Serializable]
-    public struct DomainInfo
+    public struct DomainExpression
     {
-        public DomainInfo(string field, string opr, object value)
+        public DomainExpression(string field, string opr, object value)
             : this()
         {
             if (string.IsNullOrEmpty(field))
@@ -31,7 +31,7 @@ namespace ObjectServer.Model
         public string Operator { get; private set; }
         public object Value { get; private set; }
 
-        public static DomainInfo FromTuple(object[] domain)
+        public static DomainExpression FromTuple(object[] domain)
         {
             if (domain == null)
             {
@@ -42,7 +42,7 @@ namespace ObjectServer.Model
                 throw new ArgumentException("tuple");
             }
 
-            return new DomainInfo((string)domain[0], (string)domain[1], domain[2]);
+            return new DomainExpression((string)domain[0], (string)domain[1], domain[2]);
         }
 
     }

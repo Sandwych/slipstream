@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace ObjectServer.Model
 {
     internal sealed class InheritedField : AbstractField
     {
-        private IField inheritedField;
+        private readonly IField inheritedField;
 
         public InheritedField(
             IModel model, IField inheritedField)
             : base(model, inheritedField.Name, inheritedField.Type)
         {
+            Debug.Assert(model != null);
+            Debug.Assert(inheritedField != null);
+
             this.inheritedField = inheritedField;
         }
 
@@ -31,6 +35,8 @@ namespace ObjectServer.Model
         {
             return this.inheritedField.BrowseField(scope, record);
         }
+
+        public IField BaseField { get { return this.inheritedField; } }
 
         public override bool IsRequired
         {

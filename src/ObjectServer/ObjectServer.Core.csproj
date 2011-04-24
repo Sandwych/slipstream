@@ -153,7 +153,8 @@
     <Compile Include="Model\AbstractTableModelWriteImpl.cs" />
     <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
     <Compile Include="Model\AbstractTableModelDeleteImpl.cs" />
-    <Compile Include="Model\DomainInfo.cs" />
+    <Compile Include="Model\DomainExpression.cs" />
+    <Compile Include="Model\LeafDomainCollection.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
     <Compile Include="Model\Fields\IField.cs" />
     <Compile Include="Model\Fields\IFieldCollection.cs" />
