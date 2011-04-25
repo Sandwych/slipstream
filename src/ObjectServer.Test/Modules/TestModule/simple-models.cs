@@ -70,9 +70,9 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod]
-        public static int GetSum(dynamic self, IServiceScope ctx)
+        public static int GetNumber(IModel self, IServiceScope scope)
         {
-            return 1 + 1;
+            return 123456;
         }
 
         public Dictionary<long, object> GetField3(IServiceScope ctx, long[] ids)

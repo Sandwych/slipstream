@@ -77,5 +77,13 @@ namespace ObjectServer.Test
 
         }
 
+        [Test]
+        public void Test_execute_user_service()
+        {
+            var result = this.Service.Execute(this.SessionId, "test.test_model", "GetNumber");
+            Assert.IsInstanceOf<int>(result);
+            Assert.AreEqual(123456, (int)result);
+        }
+
     }
 }
