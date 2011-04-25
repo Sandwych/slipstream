@@ -195,7 +195,6 @@
     <Compile Include="Model\Fields\ReferenceField.cs" />
     <Compile Include="Model\Fields\EnumerationField.cs" />
     <Compile Include="NamingRule.cs" />
-    <Compile Include="ServiceMethodInterceptor.cs" />
     <Compile Include="Sessions\ISessionStoreProvider.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Exceptions\BadFieldNameException.cs" />
