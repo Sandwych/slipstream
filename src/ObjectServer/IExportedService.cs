@@ -30,6 +30,14 @@ namespace ObjectServer
         #endregion
 
 
+        /// <summary>
+        /// 执行资源的服务方法
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <param name="resourceName"></param>
+        /// <param name="name"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         object Execute(
             string sessionId, string resourceName, string name, params object[] parameters);
 
@@ -39,7 +47,7 @@ namespace ObjectServer
 
         long CreateModel(string sessionId, string modelName, IDictionary<string, object> propertyBag);
         long[] SearchModel(string sessionId, string modelName, object[] domain = null, object[] order = null, long offset = 0, long limit = 0);
-        Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields);
+        Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields = null);
         void WriteModel(string sessionId, string modelName, object id, IDictionary<string, object> record);
         void DeleteModel(string sessionId, string modelName, object[] ids);
     }
