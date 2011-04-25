@@ -36,7 +36,7 @@ namespace ObjectServer
             this.SessionStore.Pulse(session.Id);
 
             this.ownDb = true;
-            this.DBProfile = Infrastructure.DBProfiles.GetDBProfile(session);
+            this.DBProfile = Infrastructure.DBProfiles.TryGetDBProfile(session);
             this.Connection.Open();
         }
 
@@ -52,7 +52,7 @@ namespace ObjectServer
             this.Session = new Session(dbName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
-            this.DBProfile = Infrastructure.DBProfiles.GetDBProfile(this.Session);
+            this.DBProfile = Infrastructure.DBProfiles.TryGetDBProfile(this.Session);
             this.Connection.Open();
         }
 

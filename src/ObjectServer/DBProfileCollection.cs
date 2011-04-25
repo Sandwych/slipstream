@@ -77,7 +77,7 @@ namespace ObjectServer
             }
         }
 
-        internal DBProfile GetDBProfile(Session session)
+        public DBProfile TryGetDBProfile(Session session)
         {
             Debug.Assert(session != null);
 
@@ -89,16 +89,19 @@ namespace ObjectServer
             return this.dbProfiles[session.Database];
         }
 
-        internal DBProfile GetDBProfile(string dbName)
+        public DBProfile GetDBProfile(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
-            Debug.Assert(this.dbProfiles.ContainsKey(dbName));
+            if (!this.dbProfiles.ContainsKey(dbName))
+            {
+                throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
+            }
 
             return this.dbProfiles[dbName];
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        internal void RemoveDB(string dbName)
+        public void RemoveDB(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 

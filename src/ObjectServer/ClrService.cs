@@ -21,9 +21,14 @@ namespace ObjectServer
 
         #region IService Members
 
-        public object Invoke(params object[] parameters)
+        public object Invoke(IResource self, IServiceScope scope, params object[] parameters)
         {
-            return this.Method.Invoke(this.Resource, parameters);
+            var userParamCount = parameters == null ? 0 : parameters.Length;
+            var args = new object[userParamCount + 2];
+            args[0] = self;
+            args[1] = scope;
+            parameters.CopyTo(args, 2);
+            return this.Method.Invoke(self, args);
         }
 
         public IResource Resource { get; private set; }

@@ -11,6 +11,6 @@ namespace ObjectServer
         string Name { get; }
         string Help { get; }
 
-        object Invoke(params object[] args);
+        object Invoke(IResource self, IServiceScope scope, params object[] args);
     }
 }

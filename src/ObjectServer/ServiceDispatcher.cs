@@ -78,29 +78,25 @@ namespace ObjectServer
             {
                 dynamic res = scope.GetResource(resource);
                 var svc = res.GetService(method);
-                var internalArgs = new object[parameters.Length + 2];
-                internalArgs[0] = res;
-                internalArgs[1] = scope;
-                parameters.CopyTo(internalArgs, 2);
 
                 if (res.DatabaseRequired)
                 {
-                    return ExecuteTransactional(scope, svc, internalArgs);
+                    return ExecuteTransactional(res, scope, svc, parameters);
                 }
                 else
                 {
-                    return svc.Invoke(internalArgs);
+                    return svc.Invoke(res, scope, parameters);
                 }
             }
         }
 
 
         private static object ExecuteTransactional(
-            IServiceScope scope, IService svc, params object[] internalArgs)
+            IResource res, IServiceScope scope, IService svc, params object[] args)
         {
             using (var tx = new TransactionScope())
             {
-                var result = svc.Invoke(internalArgs);
+                var result = svc.Invoke(res, scope, args);
                 tx.Complete();
                 return result;
             }

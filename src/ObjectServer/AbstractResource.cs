@@ -57,18 +57,20 @@ namespace ObjectServer
         {
             result = null;
             IService service;
-            var allArgs = new object[args.Length + 1];
-            allArgs[0] = this;
-            args.CopyTo(allArgs, 1);
+
+            Debug.Assert(args.Length > 0);
+            var scope = (IServiceScope)args[0];
+            var userArgs = new object[args.Length - 1];
+            Array.Copy(args, 1, userArgs, 0, args.Length - 1);
 
             if (this.services.TryGetValue(binder.Name, out service))
             {
-                result = service.Invoke(allArgs);
+                result = service.Invoke(this, scope, userArgs);
                 return true;
             }
             else
             {
-                return base.TryInvokeMember(binder, allArgs, out result);
+                return base.TryInvokeMember(binder, args, out result);
             }
         }
 
