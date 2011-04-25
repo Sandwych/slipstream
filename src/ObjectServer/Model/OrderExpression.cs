@@ -6,11 +6,11 @@ using System.Text;
 namespace ObjectServer.Model
 {
     [Serializable]
-    public struct OrderInfo
+    public struct OrderExpression
     {
-        private static readonly OrderInfo[] DefaultOrders = new OrderInfo[] { new OrderInfo("id", SearchOrder.Asc) };
+        private static readonly OrderExpression[] DefaultOrders = new OrderExpression[] { new OrderExpression("id", SortDirection.Asc) };
 
-        public OrderInfo(string field, SearchOrder so)
+        public OrderExpression(string field, SortDirection so)
             : this()
         {
             if (string.IsNullOrEmpty(field))
@@ -23,9 +23,9 @@ namespace ObjectServer.Model
         }
 
         public string Field { get; private set; }
-        public SearchOrder Order { get; private set; }
+        public SortDirection Order { get; private set; }
 
-        public static OrderInfo[] GetDefaultOrders()
+        public static OrderExpression[] GetDefaultOrders()
         {
             return DefaultOrders;
         }

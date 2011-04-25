@@ -154,7 +154,7 @@ namespace ObjectServer
             var obj = Activator.CreateInstance(t) as AbstractResource;
             if (obj == null)
             {
-                var msg = string.Format("类型 '{0}' 没有实现 IServiceObject 接口", t.FullName);
+                var msg = string.Format("类型 '{0}' 没有实现 IResource 接口", t.FullName);
                 throw new InvalidCastException(msg);
             }
             return obj;

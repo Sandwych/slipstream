@@ -271,16 +271,16 @@ WHERE   hp.id = @0 AND hc.id <> @0
         public static long[] Search(
             IModel model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
         {
-            OrderInfo[] orderInfos = OrderInfo.GetDefaultOrders();
+            OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
 
             if (order != null)
             {
-                orderInfos = new OrderInfo[order.Length];
+                orderInfos = new OrderExpression[order.Length];
                 for (int i = 0; i < orderInfos.Length; i++)
                 {
                     var orderTuple = (object[])order[i];
-                    var so = SearchOrderParser.Parser((string)orderTuple[1]);
-                    orderInfos[i] = new OrderInfo((string)orderTuple[0], so);
+                    var so = SortDirectionParser.Parser((string)orderTuple[1]);
+                    orderInfos[i] = new OrderExpression((string)orderTuple[0], so);
                 }
             }
 

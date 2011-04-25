@@ -66,7 +66,7 @@ namespace ObjectServer.Model.Test
 
             var ids1 = model.SearchInternal(
                 this.ServiceScope, domain1,
-                new OrderInfo[] { new OrderInfo("id", SearchOrder.Asc) });
+                new OrderExpression[] { new OrderExpression("id", SortDirection.Asc) });
 
             Assert.AreEqual(3, ids1.Length);
             Assert.AreEqual(data.id3, ids1[0]);
@@ -80,7 +80,7 @@ namespace ObjectServer.Model.Test
 
             var ids2 = model.SearchInternal(
                 this.ServiceScope, domain2,
-                new OrderInfo[] { new OrderInfo("id", SearchOrder.Asc) });
+                new OrderExpression[] { new OrderExpression("id", SortDirection.Asc) });
 
             Assert.AreEqual(1, ids2.Length);
             Assert.AreEqual(data.id5, ids2[0]);

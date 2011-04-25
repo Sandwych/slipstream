@@ -17,7 +17,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override long[] SearchInternal(
-            IServiceScope scope, object[][] domain = null, OrderInfo[] order = null, long offset = 0, long limit = 0)
+            IServiceScope scope, object[][] domain = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {

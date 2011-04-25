@@ -5,15 +5,15 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public enum SearchOrder
+    public enum SortDirection
     {
         Asc,
         Desc
     }
 
-    public static class SearchOrderParser
+    public static class SortDirectionParser
     {
-        public static SearchOrder Parser(string value)
+        public static SortDirection Parser(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -25,17 +25,17 @@ namespace ObjectServer.Model
             switch (value)
             {
                 case "ASC":
-                    return SearchOrder.Asc;
+                    return SortDirection.Asc;
 
                 case "DESC":
-                    return SearchOrder.Desc;
+                    return SortDirection.Desc;
 
                 default:
                     throw new NotSupportedException();
             }
         }
 
-        public static string ToUpperString(this SearchOrder so)
+        public static string ToUpperString(this SortDirection so)
         {
             return so.ToString().ToUpper();
         }

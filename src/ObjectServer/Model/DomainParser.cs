@@ -52,7 +52,7 @@ namespace ObjectServer.Model
                 var field = (string)o[0];
                 var opr = (string)o[1];
 
-                var isBaseField = this.IsInheritedField(this.serviceScope, this.model, field);
+                var isBaseField = IsInheritedField(this.serviceScope, this.model, field);
                 string aliasedField;
 
                 if (isBaseField)
@@ -76,7 +76,7 @@ namespace ObjectServer.Model
                 this.leaves.GetTableAlias(), this.leaves.GetRestrictionExpression());
         }
 
-        private bool IsInheritedField(IServiceScope scope, IModel mainModel, string field)
+        private static bool IsInheritedField(IServiceScope scope, IModel mainModel, string field)
         {
             Debug.Assert(mainModel != null);
 
