@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace ObjectServer.Utility.Test
 {
-    class Model
+    public sealed class Model
     {
         public string Name { get; set; }
         public string[] Depend { get; set; }
@@ -17,14 +17,9 @@ namespace ObjectServer.Utility.Test
     [TestFixture]
     public class DependencySorterTest
     {
-
-        /// <summary>
-        /// 测试依赖排序类
-        /// </summary>
-        [Test]
-        public void Test_dependency_sorter()
-        {
-            var models = new Model[]
+        [Datapoint]
+        public static readonly Model[] TestData =
+            new Model[]
             {
                 new Model()
                 {
@@ -47,13 +42,27 @@ namespace ObjectServer.Utility.Test
                     Depend = new string[] { "user" }
                 },              
             };
+
+        [Datapoint]
+        public static readonly Model[] EmptyModelSet = new Model[] { };
+
+        /// <summary>
+        /// 测试依赖排序类
+        /// </summary>
+        [Theory]
+        public void Test_dependency_sorter(Model[] models)
+        {
+            Assume.That(models != null);
+
             models.DependencySort(m => m.Name, m => m.Depend);
 
-            Assert.AreEqual("user", models[0].Name);
-            Assert.AreEqual("group", models[1].Name);
-            Assert.AreEqual("menu", models[2].Name);
-            Assert.AreEqual("action", models[3].Name);
-
+            if (models.Length > 0)
+            {
+                Assert.AreEqual("user", models[0].Name);
+                Assert.AreEqual("group", models[1].Name);
+                Assert.AreEqual("menu", models[2].Name);
+                Assert.AreEqual("action", models[3].Name);
+            }
         }
 
     }

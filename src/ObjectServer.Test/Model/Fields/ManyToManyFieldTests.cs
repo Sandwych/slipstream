@@ -13,28 +13,11 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class ManyToManyFieldTests : LocalTestCase
     {
-        class IdCollection
-        {
-            public long eid1;
-            public long eid2;
-            public long eid3;
-            public long eid4;
-            public long eid5;
-
-            public long did1;
-            public long did2;
-            public long did3;
-            public long did4;
-            public long did5;
-        }
-
-
-
         [Test]
         public void Can_browse_m2m_field()
         {
             this.ClearManyToManyModels();
-            var ids = this.GenerateTestData();
+            dynamic ids = this.GenerateTestData();
 
             dynamic employeeModel = this.ServiceScope.GetResource("test.employee");
             dynamic e1 = employeeModel.Browse(this.ServiceScope, ids.eid1);
@@ -55,7 +38,7 @@ namespace ObjectServer.Model.Test
         public void Test_CRUD_m2m_field()
         {
             this.ClearManyToManyModels();
-            var ids = this.GenerateTestData();
+            dynamic ids = this.GenerateTestData();
 
             var employees = this.Service.ReadModel(this.SessionId, "test.employee",
                 new object[] { ids.eid1, ids.eid2 }, new object[] { "name", "departments" });
@@ -80,7 +63,7 @@ namespace ObjectServer.Model.Test
         public void Test_create_m2m_field()
         {
             this.ClearManyToManyModels();
-            var ids = this.GenerateTestData();
+            dynamic ids = this.GenerateTestData();
 
             dynamic e = new ExpandoObject();
             e.name = "test-employee";
@@ -107,7 +90,7 @@ namespace ObjectServer.Model.Test
         public void Test_write_m2m_field()
         {
             this.ClearManyToManyModels();
-            var ids = this.GenerateTestData();
+            dynamic ids = this.GenerateTestData();
 
             dynamic e1 = new ExpandoObject();
             e1.departments = new long[] { ids.did1, ids.did2 };
@@ -129,9 +112,9 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(originDeptIds[1], departments[1]);
         }
 
-        private IdCollection GenerateTestData()
+        private dynamic GenerateTestData()
         {
-            var ids = new IdCollection();
+            dynamic ids = new ExpandoObject();
             dynamic e = new ExpandoObject();
             e.name = "employee";
             ids.eid1 = this.Service.CreateModel(this.SessionId, "test.employee", e);

@@ -70,9 +70,9 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod]
-        public static int GetNumber(IModel self, IServiceScope scope)
+        public static int GetNumberPlusResult(IModel self, IServiceScope scope, int x, int y)
         {
-            return 123456;
+            return x + y;
         }
 
         public Dictionary<long, object> GetField3(IServiceScope ctx, long[] ids)

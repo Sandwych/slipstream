@@ -78,11 +78,13 @@ namespace ObjectServer.Test
         }
 
         [Test]
-        public void Test_execute_user_service()
+        public void Test_execute_user_service(
+            [Random(-9999, 9999, 1)] int x, [Random(-9999, 9999, 1)] int y)
         {
-            var result = this.Service.Execute(this.SessionId, "test.test_model", "GetNumber");
+            var result = this.Service.Execute(
+                this.SessionId, "test.test_model", "GetNumberPlusResult", x, y);
             Assert.IsInstanceOf<int>(result);
-            Assert.AreEqual(123456, (int)result);
+            Assert.AreEqual(x + y, (int)result);
         }
 
     }
