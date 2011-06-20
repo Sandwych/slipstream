@@ -16,6 +16,21 @@ namespace ObjectServer.Model
 
         public BrowsableRecord(IServiceScope scope, IModel metaModel, long id)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+
+            if (metaModel == null)
+            {
+                throw new ArgumentNullException("metaModel");
+            }
+
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException("id");
+            }
+
             this.metaModel = metaModel;
             this.scope = scope;
             this.record = metaModel.ReadInternal(scope, new long[] { id }, null)[0];
@@ -23,6 +38,21 @@ namespace ObjectServer.Model
 
         public BrowsableRecord(IServiceScope scope, IModel metaModel, IDictionary<string, object> record)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+
+            if (metaModel == null)
+            {
+                throw new ArgumentNullException("metaModel");
+            }
+
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             this.metaModel = metaModel;
             this.scope = scope;
             this.record = record;
@@ -48,6 +78,11 @@ namespace ObjectServer.Model
             Debug.Assert(this.record != null);
             Debug.Assert(this.metaModel != null);
             Debug.Assert(this.scope != null);
+
+            if (binder == null)
+            {
+                throw new ArgumentNullException("binder");
+            }
 
             result = null;
             if (!metaModel.Fields.ContainsKey(binder.Name))
