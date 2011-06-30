@@ -1,5 +1,33 @@
-from jsonrpc import ServiceProxy
-s = ServiceProxy('http://localhost:9287/JsonService.ashx')
+import json
+import urllib2
+
+class ServiceProxy(object):
+    def __init__(self, serviceURL, serviceName=None):
+        self.__serviceURL = serviceURL
+        self.__serviceName = serviceName
+        self.__id_count = 0
+
+    def __getattr__(self, name):
+        if self.__serviceName != None:
+            name = '%s.%s' % (self.__serviceName, name)
+        return ServiceProxy(self.__serviceURL, name)
+
+    def __call__(self, *args):
+        self.__id_count += 1
+        jobj = { 'method': self.__serviceName, 'params': args, 'id':str(self.__id_count) }
+        postdata = json.dumps(jobj)
+        print postdata
+        respdata = urllib2.urlopen(self.__serviceURL, postdata).read()
+        print respdata
+        resp = json.loads(respdata)
+        if resp['error'] != None:
+            raise Exception(resp['error'])
+        #raise JSONRPCException(resp['error'])
+        else:
+            return resp['result']
+
+
+s = ServiceProxy('http://localhost:9287/crossdomain.xml')
 
 print s.system.echo("echo")
 print "Methods:"
