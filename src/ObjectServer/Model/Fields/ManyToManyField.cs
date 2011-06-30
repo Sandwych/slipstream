@@ -23,6 +23,16 @@ namespace ObjectServer.Model
         protected override Dictionary<long, object> OnGetFieldValues(
            IServiceScope ctx, ICollection<Dictionary<string, object>> records)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (records == null)
+            {
+                throw new ArgumentNullException("records");
+            }
+
             //中间表模型
             var relationModel = (IModel)ctx.GetResource(this.Relation);
             var result = new Dictionary<long, object>();
@@ -53,6 +63,16 @@ namespace ObjectServer.Model
 
         public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             long[] targetIds = null;
             if (record.ContainsKey(this.Name))
             {
@@ -81,7 +101,7 @@ namespace ObjectServer.Model
         public override bool IsReadonly
         {
             get { return false; }
-            set { throw new NotImplementedException(); }
+            set { throw new NotSupportedException(); }
         }
 
         public override bool IsScalar

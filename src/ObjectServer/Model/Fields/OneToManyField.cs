@@ -18,9 +18,18 @@ namespace ObjectServer.Model
         protected override Dictionary<long, object> OnGetFieldValues(
            IServiceScope ctx, ICollection<Dictionary<string, object>> records)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (records == null)
+            {
+                throw new ArgumentNullException("records");
+            }
+
             //查询字表
             IModel childModel = (IModel)ctx.GetResource(this.Relation);
-            //TODO 权限等处理
 
             var children = new Dictionary<long, long[]>();
             foreach (var master in records)
@@ -49,6 +58,16 @@ namespace ObjectServer.Model
 
         public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             //TODO 重构成跟Many-to-many 一样的
             var targetModelName = this.Relation;
             IModel targetModel = (IModel)scope.GetResource(targetModelName);

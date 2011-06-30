@@ -22,6 +22,16 @@ namespace ObjectServer.Model
         protected override Dictionary<long, object> OnGetFieldValues(
            IServiceScope ctx, ICollection<Dictionary<string, object>> rawRecords)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (rawRecords == null)
+            {
+                throw new ArgumentNullException("rawRecords");
+            }
+
             var fields = new string[] { "name" }; //TODO 改成静态变量
             var result = new Dictionary<long, object>(rawRecords.Count());
             dynamic masterModel = ctx.GetResource(this.Relation);
@@ -79,6 +89,16 @@ namespace ObjectServer.Model
 
         public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             var destModelName = this.Relation;
             dynamic destMetaModel = scope.GetResource(destModelName);
             var fieldValue = (object[])record[this.Name];

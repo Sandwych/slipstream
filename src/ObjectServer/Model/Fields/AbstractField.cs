@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 
 namespace ObjectServer.Model
@@ -40,15 +41,12 @@ namespace ObjectServer.Model
             : this(model, name)
         {
             this.Type = type;
-
         }
 
         private void SetName(string name)
         {
-            if (string.IsNullOrEmpty(name) || name.Trim().Length == 0)
-            {
-                throw new ArgumentNullException("name");
-            }
+            Debug.Assert(!String.IsNullOrEmpty(name));
+            Debug.Assert(name.Trim().Length != 0);
 
             this.Name = name;
             this.Internal = name == AbstractModel.VersionFieldName
@@ -57,7 +55,7 @@ namespace ObjectServer.Model
         }
 
 
-        #region IMetaField
+        #region IField
 
         public IModel Model { get; private set; }
 
@@ -178,6 +176,9 @@ namespace ObjectServer.Model
         private Dictionary<long, object> GetFieldValuesFunctional(
             IServiceScope ctx, ICollection<Dictionary<string, object>> records)
         {
+            Debug.Assert(ctx != null);
+            Debug.Assert(records != null);
+
             var ids = records.Select(p => (long)p["id"]).ToArray();
 
             var result = this.Getter(ctx, ids);
@@ -190,6 +191,11 @@ namespace ObjectServer.Model
 
         public IField SetLabel(string label)
         {
+            if (String.IsNullOrEmpty(label))
+            {
+                throw new ArgumentNullException("label");
+            }
+
             this.Label = label;
             return this;
         }
@@ -208,18 +214,33 @@ namespace ObjectServer.Model
 
         public IField ValueGetter(FieldValueGetter fieldGetter)
         {
+            if (fieldGetter == null)
+            {
+                throw new ArgumentNullException("fieldGetter");
+            }
+
             this.Getter = fieldGetter;
             return this;
         }
 
         public IField DefaultValueGetter(FieldDefaultValueGetter defaultProc)
         {
+            if (defaultProc == null)
+            {
+                throw new ArgumentNullException("defaultProc");
+            }
+
             this.DefaultProc = defaultProc;
             return this;
         }
 
         public IField SetSize(int size)
         {
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException("size");
+            }
+
             this.Size = size;
             return this;
         }

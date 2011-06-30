@@ -44,11 +44,11 @@ namespace ObjectServer.Model
         {
             get
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
             set
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 

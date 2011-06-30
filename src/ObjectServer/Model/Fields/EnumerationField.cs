@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace ObjectServer.Model
 {
@@ -37,11 +38,29 @@ namespace ObjectServer.Model
         protected override Dictionary<long, object> OnGetFieldValues(
             IServiceScope session, ICollection<Dictionary<string, object>> records)
         {
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+
+            if (records == null)
+            {
+                throw new ArgumentNullException("records");
+            }
+
             return records.ExtractFieldValues(this.Name);
         }
 
         protected override object OnSetFieldValue(IServiceScope scope, object value)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
             //TODO 检查是否在范围内
 
             return value;
@@ -49,6 +68,16 @@ namespace ObjectServer.Model
 
         public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             return record[this.Name];
         }
 
