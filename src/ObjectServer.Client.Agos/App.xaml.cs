@@ -55,7 +55,6 @@
                 Debug.Assert(this.clientService != null);
                 return this.clientService;
             }
-
             set
             {
                 Debug.Assert(value != null);

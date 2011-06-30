@@ -10,7 +10,7 @@ namespace ObjectServer.Model
     {
         IField[] GetAllStorableFields();
 
-        long[] SearchInternal(IServiceScope ctx, object[][] domain = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
+        long[] SearchInternal(IServiceScope ctx, object[] domain = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
         long CreateInternal(IServiceScope ctx, IDictionary<string, object> propertyBag);
         void WriteInternal(IServiceScope ctx, long id, IDictionary<string, object> record);
         Dictionary<string, object>[] ReadInternal(

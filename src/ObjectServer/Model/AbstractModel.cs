@@ -300,7 +300,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
 
         public abstract NameGetter NameGetter { get; protected set; }
         public abstract long[] SearchInternal(
-            IServiceScope scope, object[][] domain = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
+            IServiceScope scope, object[] domain = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(
             IServiceScope scope, IDictionary<string, object> propertyBag);
         public abstract void WriteInternal(

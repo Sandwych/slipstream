@@ -284,7 +284,7 @@ WHERE   hp.id = @0 AND hc.id <> @0
                 }
             }
 
-            return model.SearchInternal(ctx, (object[][])domain, orderInfos, offset, limit);
+            return model.SearchInternal(ctx, domain, orderInfos, offset, limit);
         }
 
         [ServiceMethod]

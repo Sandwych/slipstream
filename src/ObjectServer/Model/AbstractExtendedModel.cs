@@ -80,7 +80,7 @@ namespace ObjectServer.Model
         }
 
         public override long[] SearchInternal(
-            IServiceScope ctx, object[][] domain = null, OrderExpression[] orders = null, long offset = 0, long limit = 0)
+            IServiceScope ctx, object[] domain = null, OrderExpression[] orders = null, long offset = 0, long limit = 0)
         {
             throw new NotSupportedException();
 
