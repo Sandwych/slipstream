@@ -24,9 +24,9 @@ namespace ObjectServer.Test
             dt.Add("id", 1111);
             dt.Add("name", "aaaaaaaa");
 
-            var str = PlainJsonConvert.SerializeObject(dt);
+            var str = PlainJsonConvert.Generate(dt);
 
-            var dt2 = (IDictionary<string, object>)PlainJsonConvert.DeserializeObject(str);
+            var dt2 = (IDictionary<string, object>)PlainJsonConvert.Parse(str);
 
             Assert.NotNull(dt2);
             Assert.AreEqual(2, dt2.Count);
@@ -39,9 +39,9 @@ namespace ObjectServer.Test
             Infrastructure.Initialize();
 
             var a1 = new object[] { 123, "aaaa", 12.5M };
-            var json = PlainJsonConvert.SerializeObject(a1);
+            var json = PlainJsonConvert.Generate(a1);
 
-            var a2 = (object[])PlainJsonConvert.DeserializeObject(json);
+            var a2 = (object[])PlainJsonConvert.Parse(json);
 
             Assert.NotNull(a2);
             Assert.AreEqual(123, a2[0]);
@@ -54,7 +54,7 @@ namespace ObjectServer.Test
             Infrastructure.Initialize();
 
             var json = "[0, 1, 2, [1,2,3], {\"aaa\": [1,2]}, [{b: 5}], {1: 1.1, 2: 2.2} ]";
-            var array = (object[])PlainJsonConvert.DeserializeObject(json);
+            var array = (object[])PlainJsonConvert.Parse(json);
 
             Assert.IsInstanceOf<object[]>(array[3]);
 

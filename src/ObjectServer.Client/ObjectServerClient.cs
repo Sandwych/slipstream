@@ -11,7 +11,7 @@ namespace ObjectServer.Client
 {
     public class ObjectServerClient : IRemotingService
     {
-        public const string ServicePath = @"/JsonService.ashx";
+        public const string ServicePath = @"/jsonrpc";
 
         private JsonRpcClient jsonRpcClient;
 

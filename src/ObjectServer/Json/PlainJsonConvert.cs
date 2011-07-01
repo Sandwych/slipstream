@@ -10,7 +10,7 @@ namespace ObjectServer.Json
 {
     public static class PlainJsonConvert
     {
-        public static string SerializeObject(object value)
+        public static string Generate(object value)
         {
             var debug = Infrastructure.Configuration.Debug;
             var fmt = Formatting.None;
@@ -23,31 +23,39 @@ namespace ObjectServer.Json
             return str;
         }
 
-        public static object DeserializeObject(string json)
+        public static object Parse(string json)
         {
             using (var ss = new StringReader(json))
             {
-                return Deserialize(ss);
+                return Parse(ss);
             }
         }
 
-        public static object Deserialize(TextReader tr)
+        public static object Parse(TextReader tr)
         {
             using (var jreader = new JsonTextReader(tr))
             {
-                return DeserializeInternal(jreader);
+                return ParseInternal(jreader);
             }
         }
 
-        public static object Deserialize(Stream ins)
+        public static object Parse(Stream ins)
         {
             using (var tr = new StreamReader(ins, Encoding.UTF8))
             {
-                return Deserialize(tr);
+                return Parse(tr);
             }
         }
 
-        private static object DeserializeInternal(JsonReader reader)
+        public static object Parse(byte[] utf8Buffer)
+        {
+            using (var ms = new MemoryStream(utf8Buffer, false))
+            {
+                return Parse(ms);
+            }
+        }
+
+        private static object ParseInternal(JsonReader reader)
         {
             reader.Read();
             return ReadToken(reader);

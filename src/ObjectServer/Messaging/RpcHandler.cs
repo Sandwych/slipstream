@@ -93,16 +93,16 @@ namespace ObjectServer
                 while (true)
                 {
                     //TODO 优化，避免转换
-                    var message = receiver.Recv(Encoding.UTF8);
+                    var message = receiver.Recv();
                     var result = DispatchJsonRpc(message);
-                    receiver.Send(result, Encoding.UTF8);
+                    receiver.Send(result);
                 }
             }
         }
 
-        private static string DispatchJsonRpc(string jsonString)
+        private static byte[] DispatchJsonRpc(byte[] json)
         {
-            var jreq = (Dictionary<string, object>)PlainJsonConvert.DeserializeObject(jsonString);
+            var jreq = (Dictionary<string, object>)PlainJsonConvert.Parse(json);
             //TODO 检查 jreq 格式
 
             //执行调用
@@ -136,7 +136,8 @@ namespace ObjectServer
                 Result = result
             };
 
-            return PlainJsonConvert.SerializeObject(jresponse);
+            var jsonResponse = PlainJsonConvert.Generate(jresponse);
+            return Encoding.UTF8.GetBytes(jsonResponse);
         }
     }
 }

@@ -34,11 +34,11 @@ namespace ObjectServer
             requestData["method"] = method;
             requestData["params"] = args;
 
-            var requestContent = PlainJsonConvert.SerializeObject(requestData);
+            var requestContent = PlainJsonConvert.Generate(requestData);
 
             // Prepare web request...
             HttpWebRequest httpRequest =
-                   (HttpWebRequest)WebRequest.Create("http://localhost:9287/JsonService.ashx");
+                   (HttpWebRequest)WebRequest.Create("http://localhost:9287/jsonrpc");
 
             httpRequest.Method = "POST";
             httpRequest.ContentType = "text/json";
@@ -53,7 +53,7 @@ namespace ObjectServer
             HttpWebResponse response = (HttpWebResponse)httpRequest.GetResponse();
             using (var responseStream = response.GetResponseStream())
             {
-                var result = (IDictionary<string, object>)PlainJsonConvert.Deserialize(responseStream);
+                var result = (IDictionary<string, object>)PlainJsonConvert.Parse(responseStream);
                 responseStream.Close();
 
                 //TODO 对比两个 ID 是否相同

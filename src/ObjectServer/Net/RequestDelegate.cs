@@ -14,11 +14,15 @@ namespace ObjectServer.Net
     {
         private readonly ZMQ.Socket sender;
 
-        public const string CrossDomainContent =
+        public const string CrossDomainText =
             "<?xml version=\"1.0\"?>" +
             "<cross-domain-policy>" +
             "<allow-access-from domain=\"*\" />" +
             "</cross-domain-policy>";
+
+        public static readonly byte[] CrossDomainContent = 
+            Encoding.UTF8.GetBytes(CrossDomainText);
+        public static readonly string CrossDomainContentLength = CrossDomainContent.Length.ToString();
 
         public RequestDelegate(ZMQ.Socket zsocket)
         {
@@ -42,8 +46,8 @@ namespace ObjectServer.Net
                     Status = "200 OK",
                     Headers = new Dictionary<string, string>() 
                     {
-                        { "Content-Type", "text/plain" },
-                        { "Content-Length", "20" },
+                        { "Content-Type", "text/xml" },
+                        { "Content-Length", CrossDomainContentLength },
                     }
                 };
                 body = new BufferedProducer(CrossDomainContent);
@@ -72,7 +76,7 @@ namespace ObjectServer.Net
                         Status = "200 OK",
                         Headers = new Dictionary<string, string>() 
                         {
-                            { "Content-Type", "text/json" },
+                            { "Content-Type", "text/javascript" },
                             { "Content-Length", jresponse.Length.ToString() },
                             { "Connection", "close" }
                         }
