@@ -25,7 +25,7 @@ namespace ObjectServer.Server
         {
             Debug.Assert(this.serverThread == null);
 
-            var cs = new RpcHost(5);
+            var cs = new RpcHost();
             this.serverThread = new Thread(cs.Start);
             this.serverThread.Start();
         }

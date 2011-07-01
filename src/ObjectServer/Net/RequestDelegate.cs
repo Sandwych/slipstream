@@ -10,8 +10,7 @@ using Kayak.Http;
 
 namespace ObjectServer.Net
 {
-
-    class RequestDelegate : IHttpRequestDelegate
+    internal class RequestDelegate : IHttpRequestDelegate
     {
         private readonly ZMQ.Socket sender;
 
