@@ -32,7 +32,7 @@ namespace ObjectServer.Client
 
         public void GetVersion(Action<Version> resultCallback)
         {
-            this.jsonRpcClient.InvokeSync("GetVersion", null, o =>
+            this.jsonRpcClient.InvokeSync("getVersion", null, o =>
             {
                 var version = Version.Parse((string)o);
                 resultCallback(version);
@@ -41,7 +41,7 @@ namespace ObjectServer.Client
 
         public void ListDatabases(Action<string[]> resultCallback)
         {
-            this.jsonRpcClient.InvokeSync("ListDatabases", null, o =>
+            this.jsonRpcClient.InvokeSync("listDatabases", null, o =>
             {
                 object[] objs = (object[])o;
                 var result = new string[objs.Length];
@@ -59,7 +59,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(!this.Logged);
 
-            this.jsonRpcClient.InvokeSync("LogOn", new object[] { dbName, userName, password }, o =>
+            this.jsonRpcClient.InvokeSync("logOn", new object[] { dbName, userName, password }, o =>
             {
                 //TODO  线程安全
                 var sid = (string)o;
@@ -78,7 +78,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(this.Logged);
 
-            this.jsonRpcClient.InvokeSync("LogOff", null, o =>
+            this.jsonRpcClient.InvokeSync("logOff", null, o =>
             {
                 this.SessionId = null;
                 resultCallback();
@@ -91,7 +91,7 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.SessionId, objectName, method, parameters };
-            this.jsonRpcClient.InvokeSync("Execute", args, o =>
+            this.jsonRpcClient.InvokeSync("execute", args, o =>
             {
                 resultCallback(o);
             });

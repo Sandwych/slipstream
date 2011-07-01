@@ -58,6 +58,9 @@
     <Reference Include="clrzmq-ext">
       <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
     </Reference>
+    <Reference Include="Kayak">
+      <HintPath>..\..\lib\Kayak\Kayak.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp">
     </Reference>
     <Reference Include="System">
@@ -178,6 +181,11 @@
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="Model\SortDirection.cs" />
     <Compile Include="Messaging\RpcHandler.cs" />
+    <Compile Include="Net\BufferedProducer.cs" />
+    <Compile Include="Net\BufferedConsumer.cs" />
+    <Compile Include="Net\HttpServer.cs" />
+    <Compile Include="Net\RequestDelegate.cs" />
+    <Compile Include="Net\SchedulerDelegate.cs" />
     <Compile Include="SessionlessServiceScope.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardActionModel.cs" />

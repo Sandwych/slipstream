@@ -11,23 +11,54 @@ namespace ObjectServer.TestServer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("ObjectServer.TestServer 测试用服务器\n\n");
+            Console.WriteLine("ObjectServer.TestServer 测试用服务器\n");
 
             InitializeFramework();
 
-            Console.WriteLine("服务器正在启动 ...");
+            var rpcThread = StartRpcServer();
+            var httpThread = StartHttpServer();
 
-            var cs = new RpcHost();
-            var serverThread = new Thread(cs.Start);
-            serverThread.Start();
-
-            Console.WriteLine("服务已经启动，按下回车键结束本程序 ...");
+            Console.WriteLine("\n系统启动完毕，开始等待客户端请求。按[回车键]终止本程序");
             Console.ReadLine();
 
-            serverThread.Abort();
+            httpThread.Abort();
+            rpcThread.Abort();
 
             Console.WriteLine("服务器已经终止");
 
+        }
+
+        private static Thread StartRpcServer()
+        {
+            Console.WriteLine("RPC 服务器正在启动 ...");
+
+
+            var serverThread = new Thread(() =>
+            {
+                var cs = new RpcHost();
+                cs.Start();
+            });
+            serverThread.Start();
+
+            Console.WriteLine("RPC 服务已经启动");
+            return serverThread;
+        }
+
+        private static Thread StartHttpServer()
+        {
+            Console.WriteLine("HTTP 服务器正在启动 ...");
+
+            var serverThread = new Thread(() =>
+            {
+                using (var cs = new ObjectServer.Net.HttpServer())
+                {
+                    cs.Start();
+
+                }
+            });
+            serverThread.Start();
+            Console.WriteLine("HTTP 服务已经启动");
+            return serverThread;
         }
 
         private static void InitializeFramework()
