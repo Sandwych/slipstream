@@ -9,6 +9,10 @@ using ObjectServer.Utility;
 
 namespace ObjectServer
 {
+    /// <summary>
+    /// 配置类
+    /// <remarks>多个线程将会读取此类实例的字段</remarks>
+    /// </summary>
     [Serializable]
     [XmlRoot("objectserver-config")]
     public sealed class Config
@@ -19,7 +23,9 @@ namespace ObjectServer
             this.LogLevel = "info";
             this.SessionTimeout = new TimeSpan(0, 20, 0);
             this.SessionProvider = "ObjectServer.StaticSessionStoreProvider, ObjectServer.Core";
-
+            this.RpcHandlerMax = 5; //默认5个工人
+            this.RpcHandlerUrl = "inproc://rpc-handlers";
+            this.RpcHostUrl = "tcp://*:5555";
         }
 
         private string rootPassword;
@@ -82,6 +88,15 @@ namespace ObjectServer
 
         [XmlIgnore]
         public string RootPasswordHash { get; private set; }
+
+        [XmlElement("rpc-handler-max")]
+        public short RpcHandlerMax { get; set; }
+
+        [XmlElement("rpc-handler-url")]
+        public string RpcHandlerUrl { get; set; }
+
+        [XmlElement("rpc-host-url")]
+        public string RpcHostUrl { get; set; }
 
     }
 }

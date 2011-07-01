@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+
+namespace ObjectServer
+{
+    public sealed class RpcHost
+    {
+        public RpcHost()
+        {
+
+            if (!Infrastructure.Initialized)
+            {
+                throw new InvalidOperationException("无法启动服务器，请先初始化框架");
+            }
+
+            if (Infrastructure.Configuration.RpcHandlerMax <= 0)
+            {
+                throw new IndexOutOfRangeException("无效的工人数量");
+            }
+
+            this.RpcHandlerMax = Infrastructure.Configuration.RpcHandlerMax;
+            this.RpcHandlerUrl = Infrastructure.Configuration.RpcHandlerUrl;
+            this.RpcHostUrl = Infrastructure.Configuration.RpcHostUrl;
+        }
+
+        public short RpcHandlerMax { get; private set; }
+        public string RpcHandlerUrl { get; private set; }
+        public string RpcHostUrl { get; private set; }
+
+        public void Start()
+        {
+            var workersUrl = this.RpcHandlerUrl;
+            var hostUrl = this.RpcHostUrl;
+
+            Logger.Info(() => string.Format(
+                "正在启动核心服务器线程：远程调用主机 URL=[{0}]，业务处理线程 URL=[{1}]",
+                hostUrl, workersUrl));
+
+            //TODO 写个自己的 WorkerPool，允许跨进程，并且要受 Supervisor 的控制，能够体面终止
+            var pool =
+                new ZMQ.ZMQDevice.WorkerPool(
+                    hostUrl, workersUrl, RpcHandler.Start, this.RpcHandlerMax);
+
+            Thread.Sleep(Timeout.Infinite);
+        }
+    }
+}

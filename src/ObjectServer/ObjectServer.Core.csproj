@@ -146,7 +146,7 @@
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Messaging\CoreServer.cs" />
+    <Compile Include="Messaging\RpcHost.cs" />
     <Compile Include="Core\AttachmentModel.cs" />
     <Compile Include="Core\ModelAccessModel.cs" />
     <Compile Include="Core\OrganizationModel.cs" />

@@ -78,7 +78,12 @@ namespace ObjectServer
 
         public static void Start()
         {
-            string rpcHandlerUrl = "inproc://workers";
+            if (!Infrastructure.Initialized)
+            {
+                throw new InvalidOperationException("无法启动 PRC-Handler 工人线程，请先初始化框架");
+            }
+
+            string rpcHandlerUrl = Infrastructure.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
             Logger.Info(() => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
             using (ZMQ.Socket receiver = new ZMQ.Socket(ZMQ.SocketType.REP))
@@ -87,6 +92,7 @@ namespace ObjectServer
                 Logger.Debug(() => string.Format("RpcHandler Thread/Process[{0}] connected to URL[{1}]", id, rpcHandlerUrl));
                 while (true)
                 {
+                    //TODO 优化，避免转换
                     var message = receiver.Recv(Encoding.UTF8);
                     var result = DispatchJsonRpc(message);
                     receiver.Send(result, Encoding.UTF8);
@@ -97,6 +103,7 @@ namespace ObjectServer
         private static string DispatchJsonRpc(string jsonString)
         {
             var jreq = (Dictionary<string, object>)PlainJsonConvert.DeserializeObject(jsonString);
+            //TODO 检查 jreq 格式
 
             //执行调用
             var id = jreq[JsonRpcProtocol.Id];
@@ -111,6 +118,7 @@ namespace ObjectServer
                 string.Format("JSON-RPC: method=[{0}], params=[{1}]", methodName, args));
 
             //TODO: 处理安全问题及日志异常等
+            //这里只捕获可控的异常
             try
             {
                 result = method.Invoke(null, args);
