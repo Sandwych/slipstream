@@ -1,0 +1,1169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+	<title>Class: RSpec::Mocks::MessageExpectation</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../../index.html">Home</a>
+          <a href="../../index.html#classes">Classes</a>
+          <a href="../../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/rspec/mocks/message_expectation_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/message_expectation.rb">lib/rspec/mocks/message_expectation.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link"><a href="BaseExpectation.html">RSpec::Mocks::BaseExpectation</a></p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-i-actual_received_count_matters%3F">#actual_received_count_matters?</a></li>
+					
+					<li><a href="#method-i-advise">#advise</a></li>
+					
+					<li><a href="#method-i-any_number_of_times">#any_number_of_times</a></li>
+					
+					<li><a href="#method-i-at_least">#at_least</a></li>
+					
+					<li><a href="#method-i-at_most">#at_most</a></li>
+					
+					<li><a href="#method-i-clear_actual_received_count%21">#clear_actual_received_count!</a></li>
+					
+					<li><a href="#method-i-exactly">#exactly</a></li>
+					
+					<li><a href="#method-i-expected_messages_received%3F">#expected_messages_received?</a></li>
+					
+					<li><a href="#method-i-generate_error">#generate_error</a></li>
+					
+					<li><a href="#method-i-ignoring_args%3F">#ignoring_args?</a></li>
+					
+					<li><a href="#method-i-increase_actual_received_count%21">#increase_actual_received_count!</a></li>
+					
+					<li><a href="#method-i-matches_at_least_count%3F">#matches_at_least_count?</a></li>
+					
+					<li><a href="#method-i-matches_at_most_count%3F">#matches_at_most_count?</a></li>
+					
+					<li><a href="#method-i-matches_exact_count%3F">#matches_exact_count?</a></li>
+					
+					<li><a href="#method-i-matches_name_but_not_args">#matches_name_but_not_args</a></li>
+					
+					<li><a href="#method-i-negative_expectation_for%3F">#negative_expectation_for?</a></li>
+					
+					<li><a href="#method-i-never">#never</a></li>
+					
+					<li><a href="#method-i-once">#once</a></li>
+					
+					<li><a href="#method-i-ordered">#ordered</a></li>
+					
+					<li><a href="#method-i-set_expected_received_count">#set_expected_received_count</a></li>
+					
+					<li><a href="#method-i-similar_messages">#similar_messages</a></li>
+					
+					<li><a href="#method-i-times">#times</a></li>
+					
+					<li><a href="#method-i-twice">#twice</a></li>
+					
+					<li><a href="#method-i-verify_messages_received">#verify_messages_received</a></li>
+					
+					<li><a href="#method-i-with">#with</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../RSpec/Mocks/AmbiguousReturnError.html">RSpec::Mocks::AmbiguousReturnError</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance.html">RSpec::Mocks::AnyInstance</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/Chain.html">RSpec::Mocks::AnyInstance::Chain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/ExpectationChain.html">RSpec::Mocks::AnyInstance::ExpectationChain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/Recorder.html">RSpec::Mocks::AnyInstance::Recorder</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/StubChain.html">RSpec::Mocks::AnyInstance::StubChain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentExpectation.html">RSpec::Mocks::ArgumentExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers.html">RSpec::Mocks::ArgumentMatchers</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/AnyArgMatcher.html">RSpec::Mocks::ArgumentMatchers::AnyArgMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/AnyArgsMatcher.html">RSpec::Mocks::ArgumentMatchers::AnyArgsMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/BooleanMatcher.html">RSpec::Mocks::ArgumentMatchers::BooleanMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/DuckTypeMatcher.html">RSpec::Mocks::ArgumentMatchers::DuckTypeMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/EqualityProxy.html">RSpec::Mocks::ArgumentMatchers::EqualityProxy</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/HashIncludingMatcher.html">RSpec::Mocks::ArgumentMatchers::HashIncludingMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/HashNotIncludingMatcher.html">RSpec::Mocks::ArgumentMatchers::HashNotIncludingMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/InstanceOf.html">RSpec::Mocks::ArgumentMatchers::InstanceOf</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/KindOf.html">RSpec::Mocks::ArgumentMatchers::KindOf</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/MatcherMatcher.html">RSpec::Mocks::ArgumentMatchers::MatcherMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/NoArgsMatcher.html">RSpec::Mocks::ArgumentMatchers::NoArgsMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/RegexpMatcher.html">RSpec::Mocks::ArgumentMatchers::RegexpMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/BaseExpectation.html">RSpec::Mocks::BaseExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ErrorGenerator.html">RSpec::Mocks::ErrorGenerator</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ExampleMethods.html">RSpec::Mocks::ExampleMethods</a></li>
+				
+					<li><a href="../../RSpec/Mocks/InstanceExec.html">RSpec::Mocks::InstanceExec</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MessageExpectation.html">RSpec::Mocks::MessageExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MethodDouble.html">RSpec::Mocks::MethodDouble</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MethodDouble/@object;.html">RSpec::Mocks::MethodDouble::@object;</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Methods.html">RSpec::Mocks::Methods</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Mock.html">RSpec::Mocks::Mock</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MockExpectationError.html">RSpec::Mocks::MockExpectationError</a></li>
+				
+					<li><a href="../../RSpec/Mocks/NegativeMessageExpectation.html">RSpec::Mocks::NegativeMessageExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/OrderGroup.html">RSpec::Mocks::OrderGroup</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Proxy.html">RSpec::Mocks::Proxy</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Serialization.html">RSpec::Mocks::Serialization</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Serialization/YAML.html">RSpec::Mocks::Serialization::YAML</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Space.html">RSpec::Mocks::Space</a></li>
+				
+					<li><a href="../../RSpec/Mocks/includer;.html">RSpec::Mocks::includer;</a></li>
+				
+					<li><a href="../../Marshal.html">Marshal</a></li>
+				
+					<li><a href="../../Psych.html">Psych</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">RSpec::Mocks::MessageExpectation</h1>
+
+		<div id="description">
+			
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="actual-received-count-matters--method" class="method-detail ">
+				<a name="method-i-actual_received_count_matters%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">actual_received_count_matters?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="actual-received-count-matters--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 314</span>
+314:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">actual_received_count_matters?</span>
+315:         <span class="ruby-ivar">@at_least</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@at_most</span> <span class="ruby-operator">||</span> <span class="ruby-ivar">@exactly</span>
+316:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="advise-method" class="method-detail ">
+				<a name="method-i-advise"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">advise</span><span
+						class="method-args">(*args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="advise-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 239</span>
+239:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">advise</span>(*<span class="ruby-identifier">args</span>)
+240:         <span class="ruby-identifier">similar_messages</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">args</span>
+241:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="any-number-of-times-method" class="method-detail ">
+				<a name="method-i-any_number_of_times"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">any_number_of_times</span><span
+						class="method-args">(&block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="any-number-of-times-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 280</span>
+280:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">any_number_of_times</span>(&amp;<span class="ruby-identifier">block</span>)
+281:         <span class="ruby-ivar">@method_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+282:         <span class="ruby-ivar">@expected_received_count</span> = <span class="ruby-value">:any</span>
+283:         <span class="ruby-keyword kw">self</span>
+284:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="at-least-method" class="method-detail ">
+				<a name="method-i-at_least"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">at_least</span><span
+						class="method-args">(n, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="at-least-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 263</span>
+263:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">at_least</span>(<span class="ruby-identifier">n</span>, &amp;<span class="ruby-identifier">block</span>)
+264:         <span class="ruby-ivar">@method_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+265:         <span class="ruby-identifier">set_expected_received_count</span> <span class="ruby-value">:at_least</span>, <span class="ruby-identifier">n</span>
+266:         <span class="ruby-keyword kw">self</span>
+267:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="at-most-method" class="method-detail ">
+				<a name="method-i-at_most"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">at_most</span><span
+						class="method-args">(n, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="at-most-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 269</span>
+269:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">at_most</span>(<span class="ruby-identifier">n</span>, &amp;<span class="ruby-identifier">block</span>)
+270:         <span class="ruby-ivar">@method_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+271:         <span class="ruby-identifier">set_expected_received_count</span> <span class="ruby-value">:at_most</span>, <span class="ruby-identifier">n</span>
+272:         <span class="ruby-keyword kw">self</span>
+273:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="exactly-method" class="method-detail ">
+				<a name="method-i-exactly"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">exactly</span><span
+						class="method-args">(n, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="exactly-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 257</span>
+257:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exactly</span>(<span class="ruby-identifier">n</span>, &amp;<span class="ruby-identifier">block</span>)
+258:         <span class="ruby-ivar">@method_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+259:         <span class="ruby-identifier">set_expected_received_count</span> <span class="ruby-value">:exactly</span>, <span class="ruby-identifier">n</span>
+260:         <span class="ruby-keyword kw">self</span>
+261:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="expected-messages-received--method" class="method-detail ">
+				<a name="method-i-expected_messages_received%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">expected_messages_received?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="expected-messages-received--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 214</span>
+214:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">expected_messages_received?</span>
+215:         <span class="ruby-identifier">ignoring_args?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">matches_exact_count?</span> <span class="ruby-operator">||</span>
+216:            <span class="ruby-identifier">matches_at_least_count?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">matches_at_most_count?</span>
+217:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="generate-error-method" class="method-detail ">
+				<a name="method-i-generate_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">generate_error</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="generate-error-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 243</span>
+243:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_error</span>
+244:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">similar_messages</span>.<span class="ruby-identifier">empty?</span>
+245:           <span class="ruby-ivar">@error_generator</span>.<span class="ruby-identifier">raise_expectation_error</span>(<span class="ruby-ivar">@sym</span>, <span class="ruby-ivar">@expected_received_count</span>, <span class="ruby-ivar">@actual_received_count</span>, *<span class="ruby-ivar">@args_expectation</span>.<span class="ruby-identifier">args</span>)
+246:         <span class="ruby-keyword kw">else</span>
+247:           <span class="ruby-ivar">@error_generator</span>.<span class="ruby-identifier">raise_similar_message_args_error</span>(<span class="ruby-keyword kw">self</span>, *<span class="ruby-ivar">@similar_messages</span>)
+248:         <span class="ruby-keyword kw">end</span>
+249:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="ignoring-args--method" class="method-detail ">
+				<a name="method-i-ignoring_args%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">ignoring_args?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="ignoring-args--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 219</span>
+219:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ignoring_args?</span>
+220:         <span class="ruby-ivar">@expected_received_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">:any</span>
+221:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="increase-actual-received-count--method" class="method-detail ">
+				<a name="method-i-increase_actual_received_count%21"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">increase_actual_received_count!</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="increase-actual-received-count--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 318</span>
+318:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">increase_actual_received_count!</span>
+319:         <span class="ruby-ivar">@actual_received_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+320:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="matches-at-least-count--method" class="method-detail ">
+				<a name="method-i-matches_at_least_count%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">matches_at_least_count?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="matches-at-least-count--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 223</span>
+223:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">matches_at_least_count?</span>
+224:         <span class="ruby-ivar">@at_least</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@actual_received_count</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@expected_received_count</span>
+225:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="matches-at-most-count--method" class="method-detail ">
+				<a name="method-i-matches_at_most_count%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">matches_at_most_count?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="matches-at-most-count--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 227</span>
+227:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">matches_at_most_count?</span>
+228:         <span class="ruby-ivar">@at_most</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@actual_received_count</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-ivar">@expected_received_count</span>
+229:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="matches-exact-count--method" class="method-detail ">
+				<a name="method-i-matches_exact_count%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">matches_exact_count?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="matches-exact-count--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 231</span>
+231:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">matches_exact_count?</span>
+232:         <span class="ruby-ivar">@expected_received_count</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@actual_received_count</span>
+233:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="matches-name-but-not-args-method" class="method-detail ">
+				<a name="method-i-matches_name_but_not_args"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">matches_name_but_not_args</span><span
+						class="method-args">(sym, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="matches-name-but-not-args-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 201</span>
+201:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">matches_name_but_not_args</span>(<span class="ruby-identifier">sym</span>, *<span class="ruby-identifier">args</span>)
+202:         <span class="ruby-ivar">@sym</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">sym</span> <span class="ruby-keyword kw">and</span> <span class="ruby-keyword kw">not</span> <span class="ruby-ivar">@args_expectation</span>.<span class="ruby-identifier">args_match?</span>(*<span class="ruby-identifier">args</span>)
+203:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="negative-expectation-for--method" class="method-detail ">
+				<a name="method-i-negative_expectation_for%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">negative_expectation_for?</span><span
+						class="method-args">(sym)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="negative-expectation-for--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 310</span>
+310:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">negative_expectation_for?</span>(<span class="ruby-identifier">sym</span>)
+311:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+312:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="never-method" class="method-detail ">
+				<a name="method-i-never"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">never</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="never-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 286</span>
+286:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">never</span>
+287:         <span class="ruby-ivar">@expected_received_count</span> = <span class="ruby-value">0</span>
+288:         <span class="ruby-keyword kw">self</span>
+289:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="once-method" class="method-detail ">
+				<a name="method-i-once"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">once</span><span
+						class="method-args">(&block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="once-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 291</span>
+291:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">once</span>(&amp;<span class="ruby-identifier">block</span>)
+292:         <span class="ruby-ivar">@method_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+293:         <span class="ruby-identifier">set_expected_received_count</span> <span class="ruby-value">:exactly</span>, <span class="ruby-value">1</span>
+294:         <span class="ruby-keyword kw">self</span>
+295:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="ordered-method" class="method-detail ">
+				<a name="method-i-ordered"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">ordered</span><span
+						class="method-args">(&block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="ordered-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 303</span>
+303:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ordered</span>(&amp;<span class="ruby-identifier">block</span>)
+304:         <span class="ruby-ivar">@method_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+305:         <span class="ruby-ivar">@order_group</span>.<span class="ruby-identifier">register</span>(<span class="ruby-keyword kw">self</span>)
+306:         <span class="ruby-ivar">@ordered</span> = <span class="ruby-keyword kw">true</span>
+307:         <span class="ruby-keyword kw">self</span>
+308:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="similar-messages-method" class="method-detail ">
+				<a name="method-i-similar_messages"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">similar_messages</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="similar-messages-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 235</span>
+235:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">similar_messages</span>
+236:         <span class="ruby-ivar">@similar_messages</span> <span class="ruby-operator">||=</span> []
+237:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="times-method" class="method-detail ">
+				<a name="method-i-times"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">times</span><span
+						class="method-args">(&block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="times-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 275</span>
+275:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">times</span>(&amp;<span class="ruby-identifier">block</span>)
+276:         <span class="ruby-ivar">@method_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+277:         <span class="ruby-keyword kw">self</span>
+278:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="twice-method" class="method-detail ">
+				<a name="method-i-twice"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">twice</span><span
+						class="method-args">(&block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="twice-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 297</span>
+297:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">twice</span>(&amp;<span class="ruby-identifier">block</span>)
+298:         <span class="ruby-ivar">@method_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+299:         <span class="ruby-identifier">set_expected_received_count</span> <span class="ruby-value">:exactly</span>, <span class="ruby-value">2</span>
+300:         <span class="ruby-keyword kw">self</span>
+301:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="verify-messages-received-method" class="method-detail ">
+				<a name="method-i-verify_messages_received"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">verify_messages_received</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="verify-messages-received-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 205</span>
+205:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">verify_messages_received</span>
+206:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">expected_messages_received?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">failed_fast?</span>
+207:     
+208:         <span class="ruby-identifier">generate_error</span>
+209:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Mocks</span><span class="ruby-operator">::</span><span class="ruby-constant">MockExpectationError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">error</span>
+210:         <span class="ruby-identifier">error</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-value">0</span>, <span class="ruby-ivar">@expected_from</span>)
+211:         <span class="ruby-constant">Kernel</span><span class="ruby-operator">::</span><span class="ruby-identifier">raise</span> <span class="ruby-identifier">error</span>
+212:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="with-method" class="method-detail ">
+				<a name="method-i-with"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">with</span><span
+						class="method-args">(*args, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="with-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 251</span>
+251:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">with</span>(*<span class="ruby-identifier">args</span>, &amp;<span class="ruby-identifier">block</span>)
+252:         <span class="ruby-ivar">@return_block</span> = <span class="ruby-identifier">block</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span>
+253:         <span class="ruby-ivar">@args_expectation</span> = <span class="ruby-constant">ArgumentExpectation</span>.<span class="ruby-identifier">new</span>(*<span class="ruby-identifier">args</span>, &amp;<span class="ruby-identifier">block</span>)
+254:         <span class="ruby-keyword kw">self</span>
+255:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="protected-instance-method-details" class="method-section section">
+			<h3 class="section-header">Protected Instance Methods</h3>
+
+		
+			<div id="clear-actual-received-count--method" class="method-detail ">
+				<a name="method-i-clear_actual_received_count%21"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">clear_actual_received_count!</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="clear-actual-received-count--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 337</span>
+337:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear_actual_received_count!</span>
+338:           <span class="ruby-ivar">@actual_received_count</span> = <span class="ruby-value">0</span>
+339:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="set-expected-received-count-method" class="method-detail ">
+				<a name="method-i-set_expected_received_count"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">set_expected_received_count</span><span
+						class="method-args">(relativity, n)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="set-expected-received-count-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/message_expectation.rb, line 323</span>
+323:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_expected_received_count</span>(<span class="ruby-identifier">relativity</span>, <span class="ruby-identifier">n</span>)
+324:           <span class="ruby-ivar">@at_least</span> = (<span class="ruby-identifier">relativity</span> <span class="ruby-operator">==</span> <span class="ruby-value">:at_least</span>)
+325:           <span class="ruby-ivar">@at_most</span> = (<span class="ruby-identifier">relativity</span> <span class="ruby-operator">==</span> <span class="ruby-value">:at_most</span>)
+326:           <span class="ruby-ivar">@exactly</span> = (<span class="ruby-identifier">relativity</span> <span class="ruby-operator">==</span> <span class="ruby-value">:exactly</span>)
+327:           <span class="ruby-ivar">@expected_received_count</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">n</span>
+328:             <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Numeric</span>
+329:               <span class="ruby-identifier">n</span>
+330:             <span class="ruby-keyword kw">when</span> <span class="ruby-value">:once</span>
+331:               <span class="ruby-value">1</span>
+332:             <span class="ruby-keyword kw">when</span> <span class="ruby-value">:twice</span>
+333:               <span class="ruby-value">2</span>
+334:           <span class="ruby-keyword kw">end</span>
+335:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

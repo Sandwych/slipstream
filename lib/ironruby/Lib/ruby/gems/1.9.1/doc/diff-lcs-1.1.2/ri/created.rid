@@ -1,0 +1,12 @@
+Sat, 02 Jul 2011 11:58:50 +0800
+lib/diff/lcs/array.rb	Sat, 02 Jul 2011 11:58:31 +0800
+lib/diff/lcs/block.rb	Sat, 02 Jul 2011 11:58:31 +0800
+lib/diff/lcs/callbacks.rb	Sat, 02 Jul 2011 11:58:31 +0800
+lib/diff/lcs/change.rb	Sat, 02 Jul 2011 11:58:31 +0800
+lib/diff/lcs/hunk.rb	Sat, 02 Jul 2011 11:58:31 +0800
+lib/diff/lcs/ldiff.rb	Sat, 02 Jul 2011 11:58:31 +0800
+lib/diff/lcs/string.rb	Sat, 02 Jul 2011 11:58:31 +0800
+lib/diff/lcs.rb	Sat, 02 Jul 2011 11:58:31 +0800
+README	Sat, 02 Jul 2011 11:58:31 +0800
+ChangeLog	Sat, 02 Jul 2011 11:58:31 +0800
+Install	Sat, 02 Jul 2011 11:58:31 +0800

@@ -1,0 +1,1450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+	<title>Class: RSpec::Core::Formatters::BaseFormatter</title>
+
+	<link rel="stylesheet" href="../../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../../../index.html">Home</a>
+          <a href="../../../index.html#classes">Classes</a>
+          <a href="../../../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../../lib/rspec/core/formatters/base_formatter_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/core/formatters/base_formatter.rb">lib/rspec/core/formatters/base_formatter.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">Object</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-c-new">::new</a></li>
+					
+					<li><a href="#method-c-relative_path">::relative_path</a></li>
+					
+					<li><a href="#method-i-backtrace_line">#backtrace_line</a></li>
+					
+					<li><a href="#method-i-close">#close</a></li>
+					
+					<li><a href="#method-i-color_enabled%3F">#color_enabled?</a></li>
+					
+					<li><a href="#method-i-configuration">#configuration</a></li>
+					
+					<li><a href="#method-i-dump_failures">#dump_failures</a></li>
+					
+					<li><a href="#method-i-dump_pending">#dump_pending</a></li>
+					
+					<li><a href="#method-i-dump_summary">#dump_summary</a></li>
+					
+					<li><a href="#method-i-example_failed">#example_failed</a></li>
+					
+					<li><a href="#method-i-example_group_finished">#example_group_finished</a></li>
+					
+					<li><a href="#method-i-example_group_started">#example_group_started</a></li>
+					
+					<li><a href="#method-i-example_passed">#example_passed</a></li>
+					
+					<li><a href="#method-i-example_pending">#example_pending</a></li>
+					
+					<li><a href="#method-i-example_started">#example_started</a></li>
+					
+					<li><a href="#method-i-find_failed_line">#find_failed_line</a></li>
+					
+					<li><a href="#method-i-format_backtrace">#format_backtrace</a></li>
+					
+					<li><a href="#method-i-message">#message</a></li>
+					
+					<li><a href="#method-i-output_supports_sync">#output_supports_sync</a></li>
+					
+					<li><a href="#method-i-profile_examples%3F">#profile_examples?</a></li>
+					
+					<li><a href="#method-i-read_failed_line">#read_failed_line</a></li>
+					
+					<li><a href="#method-i-restore_sync_output">#restore_sync_output</a></li>
+					
+					<li><a href="#method-i-start">#start</a></li>
+					
+					<li><a href="#method-i-start_dump">#start_dump</a></li>
+					
+					<li><a href="#method-i-start_sync_output">#start_sync_output</a></li>
+					
+					<li><a href="#method-i-stop">#stop</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+			<div id="includes-section" class="section">
+				<h3 class="section-header">Included Modules</h3>
+				<ul class="link-list">
+				
+				
+					<li><span class="include">Helpers</span></li>
+				
+				
+				</ul>
+			</div>
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../../RSpec/Core/CommandLine.html">RSpec::Core::CommandLine</a></li>
+				
+					<li><a href="../../../RSpec/Core/CommandLineConfiguration.html">RSpec::Core::CommandLineConfiguration</a></li>
+				
+					<li><a href="../../../RSpec/Core/CommandLineConfiguration/Autotest.html">RSpec::Core::CommandLineConfiguration::Autotest</a></li>
+				
+					<li><a href="../../../RSpec/Core/Configuration.html">RSpec::Core::Configuration</a></li>
+				
+					<li><a href="../../../RSpec/Core/ConfigurationOptions.html">RSpec::Core::ConfigurationOptions</a></li>
+				
+					<li><a href="../../../RSpec/Core/ConstMissing.html">RSpec::Core::ConstMissing</a></li>
+				
+					<li><a href="../../../RSpec/Core/DRbCommandLine.html">RSpec::Core::DRbCommandLine</a></li>
+				
+					<li><a href="../../../RSpec/Core/DSL.html">RSpec::Core::DSL</a></li>
+				
+					<li><a href="../../../RSpec/Core/Example.html">RSpec::Core::Example</a></li>
+				
+					<li><a href="../../../RSpec/Core/Example/Procsy.html">RSpec::Core::Example::Procsy</a></li>
+				
+					<li><a href="../../../RSpec/Core/ExampleGroup.html">RSpec::Core::ExampleGroup</a></li>
+				
+					<li><a href="../../../RSpec/Core/ExpectationFrameworkAdapter.html">RSpec::Core::ExpectationFrameworkAdapter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Extensions.html">RSpec::Core::Extensions</a></li>
+				
+					<li><a href="../../../RSpec/Core/Extensions/InstanceEvalWithArgs.html">RSpec::Core::Extensions::InstanceEvalWithArgs</a></li>
+				
+					<li><a href="../../../RSpec/Core/Extensions/ModuleEvalWithArgs.html">RSpec::Core::Extensions::ModuleEvalWithArgs</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters.html">RSpec::Core::Formatters</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters/BaseFormatter.html">RSpec::Core::Formatters::BaseFormatter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters/BaseTextFormatter.html">RSpec::Core::Formatters::BaseTextFormatter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters/DocumentationFormatter.html">RSpec::Core::Formatters::DocumentationFormatter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters/Helpers.html">RSpec::Core::Formatters::Helpers</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters/HtmlFormatter.html">RSpec::Core::Formatters::HtmlFormatter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters/ProgressFormatter.html">RSpec::Core::Formatters::ProgressFormatter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters/SnippetExtractor/NullConverter.html">RSpec::Core::Formatters::SnippetExtractor::NullConverter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Formatters/TextMateFormatter.html">RSpec::Core::Formatters::TextMateFormatter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks.html">RSpec::Core::Hooks</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks/AfterHook.html">RSpec::Core::Hooks::AfterHook</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks/AfterHooks.html">RSpec::Core::Hooks::AfterHooks</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks/AroundHook.html">RSpec::Core::Hooks::AroundHook</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks/AroundHooks.html">RSpec::Core::Hooks::AroundHooks</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks/BeforeHook.html">RSpec::Core::Hooks::BeforeHook</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks/BeforeHooks.html">RSpec::Core::Hooks::BeforeHooks</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks/Hook.html">RSpec::Core::Hooks::Hook</a></li>
+				
+					<li><a href="../../../RSpec/Core/Hooks/HookCollection.html">RSpec::Core::Hooks::HookCollection</a></li>
+				
+					<li><a href="../../../RSpec/Core/Let.html">RSpec::Core::Let</a></li>
+				
+					<li><a href="../../../RSpec/Core/Let/ClassMethods.html">RSpec::Core::Let::ClassMethods</a></li>
+				
+					<li><a href="../../../RSpec/Core/Let/InstanceMethods.html">RSpec::Core::Let::InstanceMethods</a></li>
+				
+					<li><a href="../../../RSpec/Core/Metadata.html">RSpec::Core::Metadata</a></li>
+				
+					<li><a href="../../../RSpec/Core/Metadata/LocationKeys.html">RSpec::Core::Metadata::LocationKeys</a></li>
+				
+					<li><a href="../../../RSpec/Core/MetadataHashBuilder.html">RSpec::Core::MetadataHashBuilder</a></li>
+				
+					<li><a href="../../../RSpec/Core/MetadataHashBuilder/Common.html">RSpec::Core::MetadataHashBuilder::Common</a></li>
+				
+					<li><a href="../../../RSpec/Core/MetadataHashBuilder/WithConfigWarning.html">RSpec::Core::MetadataHashBuilder::WithConfigWarning</a></li>
+				
+					<li><a href="../../../RSpec/Core/MetadataHashBuilder/WithDeprecationWarning.html">RSpec::Core::MetadataHashBuilder::WithDeprecationWarning</a></li>
+				
+					<li><a href="../../../RSpec/Core/MockFrameworkAdapter.html">RSpec::Core::MockFrameworkAdapter</a></li>
+				
+					<li><a href="../../../RSpec/Core/Parser.html">RSpec::Core::Parser</a></li>
+				
+					<li><a href="../../../RSpec/Core/Pending.html">RSpec::Core::Pending</a></li>
+				
+					<li><a href="../../../RSpec/Core/Pending/PendingDeclaredInExample.html">RSpec::Core::Pending::PendingDeclaredInExample</a></li>
+				
+					<li><a href="../../../RSpec/Core/PendingExampleFixedError.html">RSpec::Core::PendingExampleFixedError</a></li>
+				
+					<li><a href="../../../RSpec/Core/RakeTask.html">RSpec::Core::RakeTask</a></li>
+				
+					<li><a href="../../../RSpec/Core/Reporter.html">RSpec::Core::Reporter</a></li>
+				
+					<li><a href="../../../RSpec/Core/RubyProject.html">RSpec::Core::RubyProject</a></li>
+				
+					<li><a href="../../../RSpec/Core/Runner.html">RSpec::Core::Runner</a></li>
+				
+					<li><a href="../../../RSpec/Core/SharedContext.html">RSpec::Core::SharedContext</a></li>
+				
+					<li><a href="../../../RSpec/Core/SharedExampleGroup.html">RSpec::Core::SharedExampleGroup</a></li>
+				
+					<li><a href="../../../RSpec/Core/SharedExampleGroup/mod;.html">RSpec::Core::SharedExampleGroup::mod;</a></li>
+				
+					<li><a href="../../../RSpec/Core/Subject.html">RSpec::Core::Subject</a></li>
+				
+					<li><a href="../../../RSpec/Core/Subject/ClassMethods.html">RSpec::Core::Subject::ClassMethods</a></li>
+				
+					<li><a href="../../../RSpec/Core/Subject/InstanceMethods.html">RSpec::Core::Subject::InstanceMethods</a></li>
+				
+					<li><a href="../../../RSpec/Core/World.html">RSpec::Core::World</a></li>
+				
+					<li><a href="../../../RSpec/Core/World/Describable.html">RSpec::Core::World::Describable</a></li>
+				
+					<li><a href="../../../RSpec/HashWithDeprecationNotice.html">RSpec::HashWithDeprecationNotice</a></li>
+				
+					<li><a href="../../../RSpec/Rake.html">RSpec::Rake</a></li>
+				
+					<li><a href="../../../RSpec/Runner.html">RSpec::Runner</a></li>
+				
+					<li><a href="../../../Spork.html">Spork</a></li>
+				
+					<li><a href="../../../Spork/TestFramework.html">Spork::TestFramework</a></li>
+				
+					<li><a href="../../../Spork/TestFramework/RSpec.html">Spork::TestFramework::RSpec</a></li>
+				
+					<li><a href="../../../Autotest.html">Autotest</a></li>
+				
+					<li><a href="../../../Autotest/Rspec2.html">Autotest::Rspec2</a></li>
+				
+					<li><a href="../../../Kernel.html">Kernel</a></li>
+				
+					<li><a href="../../../RSpecCommandError.html">RSpecCommandError</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">RSpec::Core::Formatters::BaseFormatter</h1>
+
+		<div id="description">
+			
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="example-group-attribute-method" class="method-detail">
+				<a name="example_group"></a>
+				
+				<a name="example_group="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">example_group</span><span
+						class="attribute-access-type">[RW]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="duration-attribute-method" class="method-detail">
+				<a name="duration"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">duration</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="examples-attribute-method" class="method-detail">
+				<a name="examples"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">examples</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="output-attribute-method" class="method-detail">
+				<a name="output"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">output</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="example-count-attribute-method" class="method-detail">
+				<a name="example_count"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">example_count</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="pending-count-attribute-method" class="method-detail">
+				<a name="pending_count"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">pending_count</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="failure-count-attribute-method" class="method-detail">
+				<a name="failure_count"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">failure_count</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="failed-examples-attribute-method" class="method-detail">
+				<a name="failed_examples"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">failed_examples</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+			<div id="pending-examples-attribute-method" class="method-detail">
+				<a name="pending_examples"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">pending_examples</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="method-c-new"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">(output)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 22</span>
+22:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">output</span>)
+23:           <span class="ruby-ivar">@output</span> = <span class="ruby-identifier">output</span> <span class="ruby-operator">||</span> <span class="ruby-constant">StringIO</span>.<span class="ruby-identifier">new</span>
+24:           <span class="ruby-ivar">@example_count</span> = <span class="ruby-ivar">@pending_count</span> = <span class="ruby-ivar">@failure_count</span> = <span class="ruby-value">0</span>
+25:           <span class="ruby-ivar">@examples</span> = []
+26:           <span class="ruby-ivar">@failed_examples</span> = []
+27:           <span class="ruby-ivar">@pending_examples</span> = []
+28:           <span class="ruby-ivar">@example_group</span> = <span class="ruby-keyword kw">nil</span>
+29:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="relative-path-method" class="method-detail ">
+				<a name="method-c-relative_path"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">relative_path</span><span
+						class="method-args">(line)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="relative-path-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 15</span>
+15:         <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">relative_path</span>(<span class="ruby-identifier">line</span>)
+16:           <span class="ruby-identifier">line</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-value str">&quot;.&quot;</span>), <span class="ruby-value str">&quot;.&quot;</span>)
+17:           <span class="ruby-identifier">line</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp re">/\A([^:]+:\d+)$/</span>, <span class="ruby-value str">'\1'</span>)
+18:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'-e:1'</span>
+19:           <span class="ruby-identifier">line</span>
+20:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="close-method" class="method-detail ">
+				<a name="method-i-close"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">close</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+This method is invoked at the very end. Allows the formatter to clean up,
+like closing open streams.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="close-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 99</span>
+ 99:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close</span>
+100:           <span class="ruby-identifier">restore_sync_output</span>
+101:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="dump-failures-method" class="method-detail ">
+				<a name="method-i-dump_failures"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dump_failures</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Dumps detailed information about each example failure.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="dump-failures-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 83</span>
+83:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dump_failures</span>
+84:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="dump-pending-method" class="method-detail ">
+				<a name="method-i-dump_pending"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dump_pending</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+This gets invoked after the summary if option is set to do so.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="dump-pending-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 95</span>
+95:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dump_pending</span>
+96:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="dump-summary-method" class="method-detail ">
+				<a name="method-i-dump_summary"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">dump_summary</span><span
+						class="method-args">(duration, example_count, failure_count, pending_count)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+This method is invoked after the dumping of examples and failures.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="dump-summary-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 87</span>
+87:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">dump_summary</span>(<span class="ruby-identifier">duration</span>, <span class="ruby-identifier">example_count</span>, <span class="ruby-identifier">failure_count</span>, <span class="ruby-identifier">pending_count</span>)
+88:           <span class="ruby-ivar">@duration</span> = <span class="ruby-identifier">duration</span>
+89:           <span class="ruby-ivar">@example_count</span> = <span class="ruby-identifier">example_count</span>
+90:           <span class="ruby-ivar">@failure_count</span> = <span class="ruby-identifier">failure_count</span>
+91:           <span class="ruby-ivar">@pending_count</span> = <span class="ruby-identifier">pending_count</span>
+92:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="example-failed-method" class="method-detail ">
+				<a name="method-i-example_failed"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">example_failed</span><span
+						class="method-args">(example)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="example-failed-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 67</span>
+67:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">example_failed</span>(<span class="ruby-identifier">example</span>)
+68:           <span class="ruby-ivar">@failed_examples</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">example</span>
+69:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="example-group-finished-method" class="method-detail ">
+				<a name="method-i-example_group_finished"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">example_group_finished</span><span
+						class="method-args">(example_group)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+This method is invoked at the end of the execution of each example group.
+<tt><a href="BaseFormatter.html#example_group">example_group</a></tt> is
+the example_group.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="example-group-finished-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 53</span>
+53:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">example_group_finished</span>(<span class="ruby-identifier">example_group</span>)
+54:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="example-group-started-method" class="method-detail ">
+				<a name="method-i-example_group_started"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">example_group_started</span><span
+						class="method-args">(example_group)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+This method is invoked at the beginning of the execution of each example
+group. <tt><a
+href="BaseFormatter.html#example_group">example_group</a></tt> is the
+example_group.
+</p>
+<p>
+The next method to be invoked after this is <tt><a
+href="BaseFormatter.html#method-i-example_passed">example_passed</a></tt>,
+<tt><a
+href="BaseFormatter.html#method-i-example_pending">example_pending</a></tt>,
+or <tt>example_finished</tt>
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="example-group-started-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 47</span>
+47:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">example_group_started</span>(<span class="ruby-identifier">example_group</span>)
+48:           <span class="ruby-ivar">@example_group</span> = <span class="ruby-identifier">example_group</span>
+49:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="example-passed-method" class="method-detail ">
+				<a name="method-i-example_passed"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">example_passed</span><span
+						class="method-args">(example)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="example-passed-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 60</span>
+60:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">example_passed</span>(<span class="ruby-identifier">example</span>)
+61:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="example-pending-method" class="method-detail ">
+				<a name="method-i-example_pending"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">example_pending</span><span
+						class="method-args">(example)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="example-pending-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 63</span>
+63:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">example_pending</span>(<span class="ruby-identifier">example</span>)
+64:           <span class="ruby-ivar">@pending_examples</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">example</span>
+65:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="example-started-method" class="method-detail ">
+				<a name="method-i-example_started"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">example_started</span><span
+						class="method-args">(example)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="example-started-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 56</span>
+56:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">example_started</span>(<span class="ruby-identifier">example</span>)
+57:           <span class="ruby-identifier">examples</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">example</span>
+58:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="format-backtrace-method" class="method-detail ">
+				<a name="method-i-format_backtrace"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">format_backtrace</span><span
+						class="method-args">(backtrace, example)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="format-backtrace-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 103</span>
+103:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_backtrace</span>(<span class="ruby-identifier">backtrace</span>, <span class="ruby-identifier">example</span>)
+104:           <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">backtrace</span>
+105:           <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">backtrace</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">example</span>.<span class="ruby-identifier">metadata</span>[<span class="ruby-value">:full_backtrace</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+106: 
+107:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">at_exit_index</span> = <span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">index</span>(<span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">Runner</span><span class="ruby-operator">::</span><span class="ruby-constant">AT_EXIT_HOOK_BACKTRACE_LINE</span>)
+108:             <span class="ruby-identifier">backtrace</span> = <span class="ruby-identifier">backtrace</span>[<span class="ruby-value">0</span>, <span class="ruby-identifier">at_exit_index</span>]
+109:           <span class="ruby-keyword kw">end</span>
+110: 
+111:           <span class="ruby-identifier">cleansed</span> = <span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> <span class="ruby-identifier">backtrace_line</span>(<span class="ruby-identifier">line</span>) }.<span class="ruby-identifier">compact</span>
+112:           <span class="ruby-identifier">cleansed</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">backtrace</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">cleansed</span>
+113:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="message-method" class="method-detail ">
+				<a name="method-i-message"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">message</span><span
+						class="method-args">(message)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="message-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 71</span>
+71:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">message</span>(<span class="ruby-identifier">message</span>)
+72:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="start-method" class="method-detail ">
+				<a name="method-i-start"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">start</span><span
+						class="method-args">(example_count)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+This method is invoked before any examples are run, right after they have
+all been collected. This can be useful for special formatters that need to
+provide progress on feedback (graphical ones)
+</p>
+<p>
+This will only be invoked once, and the next one to be invoked is <a
+href="BaseFormatter.html#method-i-example_group_started">#</a>
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="start-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 37</span>
+37:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">start</span>(<span class="ruby-identifier">example_count</span>)
+38:           <span class="ruby-identifier">start_sync_output</span>
+39:           <span class="ruby-ivar">@example_count</span> = <span class="ruby-identifier">example_count</span>
+40:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="start-dump-method" class="method-detail ">
+				<a name="method-i-start_dump"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">start_dump</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+This method is invoked after all of the examples have executed. The next
+method to be invoked after this one is # (once for each failed example),
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="start-dump-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 79</span>
+79:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">start_dump</span>
+80:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="stop-method" class="method-detail ">
+				<a name="method-i-stop"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">stop</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="stop-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 74</span>
+74:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">stop</span>
+75:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="protected-instance-method-details" class="method-section section">
+			<h3 class="section-header">Protected Instance Methods</h3>
+
+		
+			<div id="backtrace-line-method" class="method-detail ">
+				<a name="method-i-backtrace_line"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">backtrace_line</span><span
+						class="method-args">(line)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="backtrace-line-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 121</span>
+121:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">backtrace_line</span>(<span class="ruby-identifier">line</span>)
+122:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">cleaned_from_backtrace?</span>(<span class="ruby-identifier">line</span>)
+123:           <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">relative_path</span>(<span class="ruby-identifier">line</span>)
+124:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="color-enabled--method" class="method-detail ">
+				<a name="method-i-color_enabled%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">color_enabled?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="color-enabled--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 164</span>
+164:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">color_enabled?</span>
+165:           <span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">color_enabled?</span>
+166:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="configuration-method" class="method-detail ">
+				<a name="method-i-configuration"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">configuration</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="configuration-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 117</span>
+117:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">configuration</span>
+118:           <span class="ruby-constant">RSpec</span>.<span class="ruby-identifier">configuration</span>
+119:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="find-failed-line-method" class="method-detail ">
+				<a name="method-i-find_failed_line"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">find_failed_line</span><span
+						class="method-args">(backtrace, path)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="find-failed-line-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 140</span>
+140:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_failed_line</span>(<span class="ruby-identifier">backtrace</span>, <span class="ruby-identifier">path</span>)
+141:           <span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+142:             <span class="ruby-identifier">match</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp re">/(.+?):(\d+)(|:\d+)/</span>)
+143:             <span class="ruby-identifier">match</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">match</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">path</span>.<span class="ruby-identifier">downcase</span>
+144:           }
+145: 
+146:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="output-supports-sync-method" class="method-detail ">
+				<a name="method-i-output_supports_sync"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">output_supports_sync</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="output-supports-sync-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 156</span>
+156:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">output_supports_sync</span>
+157:           <span class="ruby-identifier">output</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:sync=</span>)
+158:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="profile-examples--method" class="method-detail ">
+				<a name="method-i-profile_examples%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">profile_examples?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="profile-examples--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 160</span>
+160:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">profile_examples?</span>
+161:           <span class="ruby-identifier">configuration</span>.<span class="ruby-identifier">profile_examples</span>
+162:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="read-failed-line-method" class="method-detail ">
+				<a name="method-i-read_failed_line"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">read_failed_line</span><span
+						class="method-args">(exception, example)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="read-failed-line-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 126</span>
+126:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_failed_line</span>(<span class="ruby-identifier">exception</span>, <span class="ruby-identifier">example</span>)
+127:           <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">matching_line</span> = <span class="ruby-identifier">find_failed_line</span>(<span class="ruby-identifier">exception</span>.<span class="ruby-identifier">backtrace</span>, <span class="ruby-identifier">example</span>.<span class="ruby-identifier">file_path</span>)
+128:             <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;Unable to find matching line from backtrace&quot;</span>
+129:           <span class="ruby-keyword kw">end</span>
+130: 
+131:           <span class="ruby-identifier">file_path</span>, <span class="ruby-identifier">line_number</span> = <span class="ruby-identifier">matching_line</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp re">/(.+?):(\d+)(|:\d+)/</span>)[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>]
+132: 
+133:           <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">file_path</span>)
+134:             <span class="ruby-constant">File</span>.<span class="ruby-identifier">readlines</span>(<span class="ruby-identifier">file_path</span>)[<span class="ruby-identifier">line_number</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>]
+135:           <span class="ruby-keyword kw">else</span>
+136:             <span class="ruby-node">&quot;Unable to find #{file_path} to read failed line&quot;</span>
+137:           <span class="ruby-keyword kw">end</span>
+138:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="restore-sync-output-method" class="method-detail ">
+				<a name="method-i-restore_sync_output"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">restore_sync_output</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="restore-sync-output-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 152</span>
+152:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restore_sync_output</span>
+153:           <span class="ruby-identifier">output</span>.<span class="ruby-identifier">sync</span> = <span class="ruby-ivar">@old_sync</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">output_supports_sync</span> <span class="ruby-keyword kw">and</span> <span class="ruby-operator">!</span><span class="ruby-identifier">output</span>.<span class="ruby-identifier">closed?</span>
+154:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="start-sync-output-method" class="method-detail ">
+				<a name="method-i-start_sync_output"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">start_sync_output</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="start-sync-output-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/formatters/base_formatter.rb, line 148</span>
+148:         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">start_sync_output</span>
+149:           <span class="ruby-ivar">@old_sync</span>, <span class="ruby-identifier">output</span>.<span class="ruby-identifier">sync</span> = <span class="ruby-identifier">output</span>.<span class="ruby-identifier">sync</span>, <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">output_supports_sync</span>
+150:         <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

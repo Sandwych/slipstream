@@ -1,0 +1,2427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+	<title>Class: RSpec::Core::Configuration</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../../index.html">Home</a>
+          <a href="../../index.html#classes">Classes</a>
+          <a href="../../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/rspec/core/configuration_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/core/configuration.rb">lib/rspec/core/configuration.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">Object</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-c-add_setting">::add_setting</a></li>
+					
+					<li><a href="#method-c-new">::new</a></li>
+					
+					<li><a href="#method-i-add_formatter">#add_formatter</a></li>
+					
+					<li><a href="#method-i-add_setting">#add_setting</a></li>
+					
+					<li><a href="#method-i-alias_example_to">#alias_example_to</a></li>
+					
+					<li><a href="#method-i-alias_it_should_behave_like_to">#alias_it_should_behave_like_to</a></li>
+					
+					<li><a href="#method-i-built_in_formatter">#built_in_formatter</a></li>
+					
+					<li><a href="#method-i-cleaned_from_backtrace%3F">#cleaned_from_backtrace?</a></li>
+					
+					<li><a href="#method-i-color_enabled">#color_enabled</a></li>
+					
+					<li><a href="#method-i-color_enabled%3D">#color_enabled=</a></li>
+					
+					<li><a href="#method-i-color_enabled%3F">#color_enabled?</a></li>
+					
+					<li><a href="#method-i-configure_expectation_framework">#configure_expectation_framework</a></li>
+					
+					<li><a href="#method-i-configure_group">#configure_group</a></li>
+					
+					<li><a href="#method-i-configure_mock_framework">#configure_mock_framework</a></li>
+					
+					<li><a href="#method-i-custom_formatter">#custom_formatter</a></li>
+					
+					<li><a href="#method-i-debug%3D">#debug=</a></li>
+					
+					<li><a href="#method-i-exclusion_filter">#exclusion_filter</a></li>
+					
+					<li><a href="#method-i-exclusion_filter%3D">#exclusion_filter=</a></li>
+					
+					<li><a href="#method-i-expect_with">#expect_with</a></li>
+					
+					<li><a href="#method-i-expectation_framework%3D">#expectation_framework=</a></li>
+					
+					<li><a href="#method-i-expectation_frameworks">#expectation_frameworks</a></li>
+					
+					<li><a href="#method-i-extend">#extend</a></li>
+					
+					<li><a href="#method-i-file_at">#file_at</a></li>
+					
+					<li><a href="#method-i-files_or_directories_to_run%3D">#files_or_directories_to_run=</a></li>
+					
+					<li><a href="#method-i-filter_run">#filter_run</a></li>
+					
+					<li><a href="#method-i-filter_run_excluding">#filter_run_excluding</a></li>
+					
+					<li><a href="#method-i-filter_run_including">#filter_run_including</a></li>
+					
+					<li><a href="#method-i-formatter%3D">#formatter=</a></li>
+					
+					<li><a href="#method-i-formatters">#formatters</a></li>
+					
+					<li><a href="#method-i-full_backtrace%3D">#full_backtrace=</a></li>
+					
+					<li><a href="#method-i-full_description%3D">#full_description=</a></li>
+					
+					<li><a href="#method-i-include">#include</a></li>
+					
+					<li><a href="#method-i-inclusion_filter">#inclusion_filter</a></li>
+					
+					<li><a href="#method-i-inclusion_filter%3D">#inclusion_filter=</a></li>
+					
+					<li><a href="#method-i-libs%3D">#libs=</a></li>
+					
+					<li><a href="#method-i-line_number%3D">#line_number=</a></li>
+					
+					<li><a href="#method-i-load_spec_files">#load_spec_files</a></li>
+					
+					<li><a href="#method-i-mock_framework">#mock_framework</a></li>
+					
+					<li><a href="#method-i-mock_framework%3D">#mock_framework=</a></li>
+					
+					<li><a href="#method-i-mock_with">#mock_with</a></li>
+					
+					<li><a href="#method-i-output_to_tty%3F">#output_to_tty?</a></li>
+					
+					<li><a href="#method-i-path_for">#path_for</a></li>
+					
+					<li><a href="#method-i-puts">#puts</a></li>
+					
+					<li><a href="#method-i-raise_if_rspec_1_is_loaded">#raise_if_rspec_1_is_loaded</a></li>
+					
+					<li><a href="#method-i-reporter">#reporter</a></li>
+					
+					<li><a href="#method-i-requires%3D">#requires=</a></li>
+					
+					<li><a href="#method-i-reset">#reset</a></li>
+					
+					<li><a href="#method-i-settings">#settings</a></li>
+					
+					<li><a href="#method-i-string_const%3F">#string_const?</a></li>
+					
+					<li><a href="#method-i-underscore">#underscore</a></li>
+					
+					<li><a href="#method-i-underscore_with_fix_for_non_standard_rspec_naming">#underscore_with_fix_for_non_standard_rspec_naming</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+			<div id="includes-section" class="section">
+				<h3 class="section-header">Included Modules</h3>
+				<ul class="link-list">
+				
+				
+					<li><a class="include" href="Hooks.html">RSpec::Core::Hooks</a></li>
+				
+				
+				</ul>
+			</div>
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../RSpec/Core/CommandLine.html">RSpec::Core::CommandLine</a></li>
+				
+					<li><a href="../../RSpec/Core/CommandLineConfiguration.html">RSpec::Core::CommandLineConfiguration</a></li>
+				
+					<li><a href="../../RSpec/Core/CommandLineConfiguration/Autotest.html">RSpec::Core::CommandLineConfiguration::Autotest</a></li>
+				
+					<li><a href="../../RSpec/Core/Configuration.html">RSpec::Core::Configuration</a></li>
+				
+					<li><a href="../../RSpec/Core/ConfigurationOptions.html">RSpec::Core::ConfigurationOptions</a></li>
+				
+					<li><a href="../../RSpec/Core/ConstMissing.html">RSpec::Core::ConstMissing</a></li>
+				
+					<li><a href="../../RSpec/Core/DRbCommandLine.html">RSpec::Core::DRbCommandLine</a></li>
+				
+					<li><a href="../../RSpec/Core/DSL.html">RSpec::Core::DSL</a></li>
+				
+					<li><a href="../../RSpec/Core/Example.html">RSpec::Core::Example</a></li>
+				
+					<li><a href="../../RSpec/Core/Example/Procsy.html">RSpec::Core::Example::Procsy</a></li>
+				
+					<li><a href="../../RSpec/Core/ExampleGroup.html">RSpec::Core::ExampleGroup</a></li>
+				
+					<li><a href="../../RSpec/Core/ExpectationFrameworkAdapter.html">RSpec::Core::ExpectationFrameworkAdapter</a></li>
+				
+					<li><a href="../../RSpec/Core/Extensions.html">RSpec::Core::Extensions</a></li>
+				
+					<li><a href="../../RSpec/Core/Extensions/InstanceEvalWithArgs.html">RSpec::Core::Extensions::InstanceEvalWithArgs</a></li>
+				
+					<li><a href="../../RSpec/Core/Extensions/ModuleEvalWithArgs.html">RSpec::Core::Extensions::ModuleEvalWithArgs</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters.html">RSpec::Core::Formatters</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters/BaseFormatter.html">RSpec::Core::Formatters::BaseFormatter</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters/BaseTextFormatter.html">RSpec::Core::Formatters::BaseTextFormatter</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters/DocumentationFormatter.html">RSpec::Core::Formatters::DocumentationFormatter</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters/Helpers.html">RSpec::Core::Formatters::Helpers</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters/HtmlFormatter.html">RSpec::Core::Formatters::HtmlFormatter</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters/ProgressFormatter.html">RSpec::Core::Formatters::ProgressFormatter</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters/SnippetExtractor/NullConverter.html">RSpec::Core::Formatters::SnippetExtractor::NullConverter</a></li>
+				
+					<li><a href="../../RSpec/Core/Formatters/TextMateFormatter.html">RSpec::Core::Formatters::TextMateFormatter</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks.html">RSpec::Core::Hooks</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks/AfterHook.html">RSpec::Core::Hooks::AfterHook</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks/AfterHooks.html">RSpec::Core::Hooks::AfterHooks</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks/AroundHook.html">RSpec::Core::Hooks::AroundHook</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks/AroundHooks.html">RSpec::Core::Hooks::AroundHooks</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks/BeforeHook.html">RSpec::Core::Hooks::BeforeHook</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks/BeforeHooks.html">RSpec::Core::Hooks::BeforeHooks</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks/Hook.html">RSpec::Core::Hooks::Hook</a></li>
+				
+					<li><a href="../../RSpec/Core/Hooks/HookCollection.html">RSpec::Core::Hooks::HookCollection</a></li>
+				
+					<li><a href="../../RSpec/Core/Let.html">RSpec::Core::Let</a></li>
+				
+					<li><a href="../../RSpec/Core/Let/ClassMethods.html">RSpec::Core::Let::ClassMethods</a></li>
+				
+					<li><a href="../../RSpec/Core/Let/InstanceMethods.html">RSpec::Core::Let::InstanceMethods</a></li>
+				
+					<li><a href="../../RSpec/Core/Metadata.html">RSpec::Core::Metadata</a></li>
+				
+					<li><a href="../../RSpec/Core/Metadata/LocationKeys.html">RSpec::Core::Metadata::LocationKeys</a></li>
+				
+					<li><a href="../../RSpec/Core/MetadataHashBuilder.html">RSpec::Core::MetadataHashBuilder</a></li>
+				
+					<li><a href="../../RSpec/Core/MetadataHashBuilder/Common.html">RSpec::Core::MetadataHashBuilder::Common</a></li>
+				
+					<li><a href="../../RSpec/Core/MetadataHashBuilder/WithConfigWarning.html">RSpec::Core::MetadataHashBuilder::WithConfigWarning</a></li>
+				
+					<li><a href="../../RSpec/Core/MetadataHashBuilder/WithDeprecationWarning.html">RSpec::Core::MetadataHashBuilder::WithDeprecationWarning</a></li>
+				
+					<li><a href="../../RSpec/Core/MockFrameworkAdapter.html">RSpec::Core::MockFrameworkAdapter</a></li>
+				
+					<li><a href="../../RSpec/Core/Parser.html">RSpec::Core::Parser</a></li>
+				
+					<li><a href="../../RSpec/Core/Pending.html">RSpec::Core::Pending</a></li>
+				
+					<li><a href="../../RSpec/Core/Pending/PendingDeclaredInExample.html">RSpec::Core::Pending::PendingDeclaredInExample</a></li>
+				
+					<li><a href="../../RSpec/Core/PendingExampleFixedError.html">RSpec::Core::PendingExampleFixedError</a></li>
+				
+					<li><a href="../../RSpec/Core/RakeTask.html">RSpec::Core::RakeTask</a></li>
+				
+					<li><a href="../../RSpec/Core/Reporter.html">RSpec::Core::Reporter</a></li>
+				
+					<li><a href="../../RSpec/Core/RubyProject.html">RSpec::Core::RubyProject</a></li>
+				
+					<li><a href="../../RSpec/Core/Runner.html">RSpec::Core::Runner</a></li>
+				
+					<li><a href="../../RSpec/Core/SharedContext.html">RSpec::Core::SharedContext</a></li>
+				
+					<li><a href="../../RSpec/Core/SharedExampleGroup.html">RSpec::Core::SharedExampleGroup</a></li>
+				
+					<li><a href="../../RSpec/Core/SharedExampleGroup/mod;.html">RSpec::Core::SharedExampleGroup::mod;</a></li>
+				
+					<li><a href="../../RSpec/Core/Subject.html">RSpec::Core::Subject</a></li>
+				
+					<li><a href="../../RSpec/Core/Subject/ClassMethods.html">RSpec::Core::Subject::ClassMethods</a></li>
+				
+					<li><a href="../../RSpec/Core/Subject/InstanceMethods.html">RSpec::Core::Subject::InstanceMethods</a></li>
+				
+					<li><a href="../../RSpec/Core/World.html">RSpec::Core::World</a></li>
+				
+					<li><a href="../../RSpec/Core/World/Describable.html">RSpec::Core::World::Describable</a></li>
+				
+					<li><a href="../../RSpec/HashWithDeprecationNotice.html">RSpec::HashWithDeprecationNotice</a></li>
+				
+					<li><a href="../../RSpec/Rake.html">RSpec::Rake</a></li>
+				
+					<li><a href="../../RSpec/Runner.html">RSpec::Runner</a></li>
+				
+					<li><a href="../../Spork.html">Spork</a></li>
+				
+					<li><a href="../../Spork/TestFramework.html">Spork::TestFramework</a></li>
+				
+					<li><a href="../../Spork/TestFramework/RSpec.html">Spork::TestFramework::RSpec</a></li>
+				
+					<li><a href="../../Autotest.html">Autotest</a></li>
+				
+					<li><a href="../../Autotest/Rspec2.html">Autotest::Rspec2</a></li>
+				
+					<li><a href="../../Kernel.html">Kernel</a></li>
+				
+					<li><a href="../../RSpecCommandError.html">RSpecCommandError</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">RSpec::Core::Configuration</h1>
+
+		<div id="description">
+			
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="CONDITIONAL_FILTERS">CONDITIONAL_FILTERS</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="DEFAULT_BACKTRACE_PATTERNS">DEFAULT_BACKTRACE_PATTERNS</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="add-setting-method" class="method-detail ">
+				<a name="method-c-add_setting"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add_setting</span><span
+						class="method-args">(name, opts={})</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="add-setting-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 9</span>
+ 9:       <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">add_setting</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">opts</span>={})
+10:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:alias</span>]
+11:           <span class="ruby-identifier">alias_method</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">opts</span>[<span class="ruby-value">:alias</span>]
+12:           <span class="ruby-identifier">alias_method</span> <span class="ruby-node">&quot;#{name}=&quot;</span>, <span class="ruby-node">&quot;#{opts[:alias]}=&quot;</span>
+13:           <span class="ruby-identifier">alias_method</span> <span class="ruby-node">&quot;#{name}?&quot;</span>, <span class="ruby-node">&quot;#{opts[:alias]}?&quot;</span>
+14:         <span class="ruby-keyword kw">else</span>
+15:           <span class="ruby-identifier">define_method</span>(<span class="ruby-node">&quot;#{name}=&quot;</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">val</span><span class="ruby-operator">|</span> <span class="ruby-identifier">settings</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">val</span>}
+16:           <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">name</span>)       { <span class="ruby-identifier">settings</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">name</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">settings</span>[<span class="ruby-identifier">name</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:default</span>] }
+17:           <span class="ruby-identifier">define_method</span>(<span class="ruby-node">&quot;#{name}?&quot;</span>) { <span class="ruby-identifier">send</span> <span class="ruby-identifier">name</span> }
+18:         <span class="ruby-keyword kw">end</span>
+19:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="method-c-new"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 55</span>
+55:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>
+56:         <span class="ruby-ivar">@color_enabled</span> = <span class="ruby-keyword kw">false</span>
+57:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">include_or_extend_modules</span> = []
+58:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">files_to_run</span> = []
+59:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">backtrace_clean_patterns</span> = <span class="ruby-constant">DEFAULT_BACKTRACE_PATTERNS</span>.<span class="ruby-identifier">dup</span>
+60:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">exclusion_filter</span> = <span class="ruby-constant">CONDITIONAL_FILTERS</span>.<span class="ruby-identifier">dup</span>
+61:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="add-formatter-method" class="method-detail ">
+				<a name="method-i-add_formatter"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add_formatter</span><span
+						class="method-args">(formatter_to_use, path=nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="add-formatter-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 277</span>
+277:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_formatter</span>(<span class="ruby-identifier">formatter_to_use</span>, <span class="ruby-identifier">path</span>=<span class="ruby-keyword kw">nil</span>)
+278:         <span class="ruby-identifier">formatter_class</span> =
+279:           <span class="ruby-identifier">built_in_formatter</span>(<span class="ruby-identifier">formatter_to_use</span>) <span class="ruby-operator">||</span>
+280:           <span class="ruby-identifier">custom_formatter</span>(<span class="ruby-identifier">formatter_to_use</span>) <span class="ruby-operator">||</span>
+281:           (<span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Formatter '#{formatter_to_use}' unknown - maybe you meant 'documentation' or 'progress'?.&quot;</span>)
+282: 
+283:         <span class="ruby-identifier">formatters</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">formatter_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">path</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">file_at</span>(<span class="ruby-identifier">path</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">output</span>)
+284:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+				<div class="aliases">
+					Also aliased as: <a href="Configuration.html#method-i-formatter%3D">formatter=</a>
+				</div>
+				
+
+				
+			</div>
+
+		
+			<div id="add-setting-method" class="method-detail ">
+				<a name="method-i-add_setting"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-callseq">add_setting(:name)
+add_setting(:name, :default => "default_value")
+add_setting(:name, :alias => :other_setting)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Use this to add custom settings to the RSpec.configuration object.
+</p>
+<pre>
+  RSpec.configuration.add_setting :foo
+</pre>
+<p>
+Creates three methods on the configuration object, a setter, a getter, and
+a predicate:
+</p>
+<pre>
+  RSpec.configuration.foo=(value)
+  RSpec.configuration.foo()
+  RSpec.configuration.foo?() # returns true if foo returns anything but nil or false
+</pre>
+<p>
+Intended for extension frameworks like rspec-rails, so they can add config
+settings that are domain specific. For example:
+</p>
+<pre>
+  RSpec.configure do |c|
+    c.add_setting :use_transactional_fixtures, :default =&gt; true
+    c.add_setting :use_transactional_examples, :alias =&gt; :use_transactional_fixtures
+  end
+</pre>
+<h2>Options</h2>
+<p>
+<tt><a href="Configuration.html#method-c-add_setting">add_setting</a></tt>
+takes an optional hash that supports the following keys:
+</p>
+<pre>
+  :default =&gt; &quot;default value&quot;
+</pre>
+<p>
+This sets the default value for the getter and the predicate (which will
+return <tt>true</tt> as long as the value is not <tt>false</tt> or
+<tt>nil</tt>).
+</p>
+<pre>
+  :alias =&gt; :other_setting
+</pre>
+<p>
+Aliases its setter, getter, and predicate, to those for the
+<tt>other_setting</tt>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="add-setting-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 105</span>
+105:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_setting</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">opts</span>={})
+106:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">add_setting</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">opts</span>)
+107:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="alias-example-to-method" class="method-detail ">
+				<a name="method-i-alias_example_to"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">alias_example_to</span><span
+						class="method-args">(new_name, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+E.g. <a
+href="Configuration.html#method-i-alias_example_to">alias_example_to</a>
+:crazy_slow, :speed => &#8216;crazy_slow&#8217; defines crazy_slow as an
+example variant that has the crazy_slow speed option
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="alias-example-to-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 318</span>
+318:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">alias_example_to</span>(<span class="ruby-identifier">new_name</span>, *<span class="ruby-identifier">args</span>)
+319:         <span class="ruby-identifier">extra_options</span> = <span class="ruby-identifier">build_metadata_hash_from</span>(<span class="ruby-identifier">args</span>)
+320:         <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">ExampleGroup</span>.<span class="ruby-identifier">alias_example_to</span>(<span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">extra_options</span>)
+321:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="alias-it-should-behave-like-to-method" class="method-detail ">
+				<a name="method-i-alias_it_should_behave_like_to"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">alias_it_should_behave_like_to</span><span
+						class="method-args">(new_name, report_label = '')</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Define an alias for it_should_behave_like that allows different language
+(like &#8220;it_has_behavior&#8220; or &#8220;it_behaves_like&#8220;) to be
+employed when including shared examples.
+</p>
+<p>
+Example:
+</p>
+<pre>
+    alias_it_should_behave_like_to(:it_has_behavior, 'has behavior:')
+</pre>
+<p>
+allows the user to include a shared example group like:
+</p>
+<pre>
+    describe Entity do
+      it_has_behavior 'sortability' do
+        let(:sortable) { Entity.new }
+      end
+    end
+</pre>
+<p>
+which is reported in the output as:
+</p>
+<pre>
+    Entity
+      has behavior: sortability
+        # sortability examples here</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="alias-it-should-behave-like-to-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 344</span>
+344:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">alias_it_should_behave_like_to</span>(<span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">report_label</span> = <span class="ruby-value str">''</span>)
+345:         <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">ExampleGroup</span>.<span class="ruby-identifier">alias_it_should_behave_like_to</span>(<span class="ruby-identifier">new_name</span>, <span class="ruby-identifier">report_label</span>)
+346:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="cleaned-from-backtrace--method" class="method-detail ">
+				<a name="method-i-cleaned_from_backtrace%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">cleaned_from_backtrace?</span><span
+						class="method-args">(line)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="cleaned-from-backtrace--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 121</span>
+121:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">cleaned_from_backtrace?</span>(<span class="ruby-identifier">line</span>)
+122:         <span class="ruby-identifier">backtrace_clean_patterns</span>.<span class="ruby-identifier">any?</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">regex</span><span class="ruby-operator">|</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">regex</span> }
+123:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="color-enabled-method" class="method-detail ">
+				<a name="method-i-color_enabled"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">color_enabled</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="color-enabled-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 223</span>
+223:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">color_enabled</span>
+224:         <span class="ruby-ivar">@color_enabled</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">output_to_tty?</span>
+225:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="color-enabled--method" class="method-detail ">
+				<a name="method-i-color_enabled%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">color_enabled=</span><span
+						class="method-args">(bool)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="color-enabled--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 231</span>
+231:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">color_enabled=</span>(<span class="ruby-identifier">bool</span>)
+232:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">bool</span>
+233:         <span class="ruby-ivar">@color_enabled</span> = <span class="ruby-keyword kw">true</span>
+234:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">bool</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">::</span><span class="ruby-constant">RbConfig</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG</span>[<span class="ruby-value str">'host_os'</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/mswin|mingw/</span>
+235:           <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'ANSICON'</span>]
+236:             <span class="ruby-identifier">warn</span> <span class="ruby-value str">&quot;You must use ANSICON 1.31 or later (http://adoxa.110mb.com/ansicon/) to use colour on Windows&quot;</span>
+237:             <span class="ruby-ivar">@color_enabled</span> = <span class="ruby-keyword kw">false</span>
+238:           <span class="ruby-keyword kw">end</span>
+239:         <span class="ruby-keyword kw">end</span>
+240:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="color-enabled--method" class="method-detail ">
+				<a name="method-i-color_enabled%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">color_enabled?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="color-enabled--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 227</span>
+227:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">color_enabled?</span>
+228:         <span class="ruby-identifier">color_enabled</span>
+229:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="configure-expectation-framework-method" class="method-detail ">
+				<a name="method-i-configure_expectation_framework"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">configure_expectation_framework</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="configure-expectation-framework-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 412</span>
+412:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">configure_expectation_framework</span>
+413:         <span class="ruby-identifier">expectation_frameworks</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">framework</span><span class="ruby-operator">|</span>
+414:           <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">ExampleGroup</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:include</span>, <span class="ruby-identifier">framework</span>)
+415:         <span class="ruby-keyword kw">end</span>
+416:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="configure-group-method" class="method-detail ">
+				<a name="method-i-configure_group"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">configure_group</span><span
+						class="method-args">(group)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="configure-group-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 401</span>
+401:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">configure_group</span>(<span class="ruby-identifier">group</span>)
+402:         <span class="ruby-identifier">include_or_extend_modules</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">include_or_extend</span>, <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">filters</span><span class="ruby-operator">|</span>
+403:           <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">filters</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">apply?</span>(<span class="ruby-value">:any?</span>, <span class="ruby-identifier">filters</span>)
+404:           <span class="ruby-identifier">group</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">include_or_extend</span>, <span class="ruby-identifier">mod</span>)
+405:         <span class="ruby-keyword kw">end</span>
+406:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="configure-mock-framework-method" class="method-detail ">
+				<a name="method-i-configure_mock_framework"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">configure_mock_framework</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="configure-mock-framework-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 408</span>
+408:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">configure_mock_framework</span>
+409:         <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">ExampleGroup</span>.<span class="ruby-identifier">send</span>(<span class="ruby-value">:include</span>, <span class="ruby-identifier">mock_framework</span>)
+410:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="debug--method" class="method-detail ">
+				<a name="method-i-debug%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">debug=</span><span
+						class="method-args">(bool)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="debug--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 250</span>
+250:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">debug=</span>(<span class="ruby-identifier">bool</span>)
+251:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">bool</span>
+252:         <span class="ruby-keyword kw">begin</span>
+253:           <span class="ruby-identifier">require</span> <span class="ruby-value str">'ruby-debug'</span>
+254:           <span class="ruby-constant">Debugger</span>.<span class="ruby-identifier">start</span>
+255:         <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">LoadError</span>
+256:           <span class="ruby-identifier">raise</span> <span class="ruby-value str">#{'*'*50}You must install ruby-debug to run rspec with the --debug option.If you have ruby-debug installed as a ruby gem, then you need to eitherrequire 'rubygems' or configure the RUBYOPT environment variable withthe value 'rubygems'.#{'*'*50}</span>
+257:         <span class="ruby-keyword kw">end</span>
+258:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="exclusion-filter-method" class="method-detail ">
+				<a name="method-i-exclusion_filter"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">exclusion_filter</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="exclusion-filter-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 352</span>
+352:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exclusion_filter</span>
+353:         <span class="ruby-identifier">settings</span>[<span class="ruby-value">:exclusion_filter</span>] <span class="ruby-operator">||</span> {}
+354:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="exclusion-filter--method" class="method-detail ">
+				<a name="method-i-exclusion_filter%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">exclusion_filter=</span><span
+						class="method-args">(filter)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="exclusion-filter--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 348</span>
+348:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exclusion_filter=</span>(<span class="ruby-identifier">filter</span>)
+349:         <span class="ruby-identifier">settings</span>[<span class="ruby-value">:exclusion_filter</span>] = <span class="ruby-identifier">filter</span>
+350:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="expect-with-method" class="method-detail ">
+				<a name="method-i-expect_with"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">expect_with</span><span
+						class="method-args">(*frameworks)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Sets the expectation framework module(s).
+</p>
+<p>
+<tt>frameworks</tt> can be :rspec, :stdlib, or both 
+</p>
+<p>
+Given :rspec, configures rspec/expectations. Given :stdlib, configures
+test/unit/assertions Given both, configures both
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="expect-with-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 200</span>
+200:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">expect_with</span>(*<span class="ruby-identifier">frameworks</span>)
+201:         <span class="ruby-identifier">settings</span>[<span class="ruby-value">:expectation_frameworks</span>] = []
+202:         <span class="ruby-identifier">frameworks</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">framework</span><span class="ruby-operator">|</span>
+203:           <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">framework</span>
+204:           <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Symbol</span>
+205:             <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">framework</span>
+206:             <span class="ruby-keyword kw">when</span> <span class="ruby-value">:rspec</span>
+207:               <span class="ruby-identifier">require</span> <span class="ruby-value str">'rspec/core/expecting/with_rspec'</span>
+208:               <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">expecting_with_rspec</span> = <span class="ruby-keyword kw">true</span>
+209:             <span class="ruby-keyword kw">when</span> <span class="ruby-value">:stdlib</span>
+210:               <span class="ruby-identifier">require</span> <span class="ruby-value str">'rspec/core/expecting/with_stdlib'</span>
+211:             <span class="ruby-keyword kw">else</span>
+212:               <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;#{framework.inspect} is not supported&quot;</span>
+213:             <span class="ruby-keyword kw">end</span>
+214:             <span class="ruby-identifier">settings</span>[<span class="ruby-value">:expectation_frameworks</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">ExpectationFrameworkAdapter</span>
+215:           <span class="ruby-keyword kw">end</span>
+216:         <span class="ruby-keyword kw">end</span>
+217:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="expectation-framework--method" class="method-detail ">
+				<a name="method-i-expectation_framework%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">expectation_framework=</span><span
+						class="method-args">(framework)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Delegates to <a
+href="Configuration.html#method-i-expect_with">expect_with</a>([framework])
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="expectation-framework--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 189</span>
+189:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">expectation_framework=</span>(<span class="ruby-identifier">framework</span>)
+190:         <span class="ruby-identifier">expect_with</span>([<span class="ruby-identifier">framework</span>])
+191:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="expectation-frameworks-method" class="method-detail ">
+				<a name="method-i-expectation_frameworks"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">expectation_frameworks</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Returns the configured expectation framework adapter module(s)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="expectation-frameworks-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 183</span>
+183:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">expectation_frameworks</span>
+184:         <span class="ruby-identifier">expect_with</span> <span class="ruby-value">:rspec</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">settings</span>[<span class="ruby-value">:expectation_frameworks</span>]
+185:         <span class="ruby-identifier">settings</span>[<span class="ruby-value">:expectation_frameworks</span>]
+186:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="extend-method" class="method-detail ">
+				<a name="method-i-extend"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">extend</span><span
+						class="method-args">(mod, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="extend-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 396</span>
+396:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">extend</span>(<span class="ruby-identifier">mod</span>, *<span class="ruby-identifier">args</span>)
+397:         <span class="ruby-identifier">filters</span> = <span class="ruby-identifier">build_metadata_hash_from</span>(<span class="ruby-identifier">args</span>)
+398:         <span class="ruby-identifier">include_or_extend_modules</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-value">:extend</span>, <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">filters</span>]
+399:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="files-or-directories-to-run--method" class="method-detail ">
+				<a name="method-i-files_or_directories_to_run%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">files_or_directories_to_run=</span><span
+						class="method-args">(*files)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="files-or-directories-to-run--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 299</span>
+299:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">files_or_directories_to_run=</span>(*<span class="ruby-identifier">files</span>)
+300:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">files_to_run</span> = <span class="ruby-identifier">files</span>.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
+301:           <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">file</span>)
+302:             <span class="ruby-identifier">pattern</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">&quot;,&quot;</span>).<span class="ruby-identifier">collect</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pattern</span><span class="ruby-operator">|</span>
+303:               <span class="ruby-constant">Dir</span>[<span class="ruby-node">&quot;#{file}/#{pattern.strip}&quot;</span>]
+304:             <span class="ruby-keyword kw">end</span>
+305:           <span class="ruby-keyword kw">else</span>
+306:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">file</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/(\:(\d+))$/</span>
+307:               <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">line_number</span> = <span class="ruby-node">$2</span>
+308:               <span class="ruby-identifier">file</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-node">$1</span>,<span class="ruby-value str">''</span>)
+309:             <span class="ruby-keyword kw">else</span>
+310:               <span class="ruby-identifier">file</span>
+311:             <span class="ruby-keyword kw">end</span>
+312:           <span class="ruby-keyword kw">end</span>
+313:         <span class="ruby-keyword kw">end</span>.<span class="ruby-identifier">flatten</span>
+314:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="filter-run-method" class="method-detail method-alias">
+				<a name="method-i-filter_run"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">filter_run</span><span
+						class="method-args">(*args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+				</div>
+
+				
+
+				
+				<div class="aliases">
+          Alias for: <a href="Configuration.html#method-i-filter_run_including">filter_run_including</a>
+				</div>
+				
+			</div>
+
+		
+			<div id="filter-run-excluding-method" class="method-detail ">
+				<a name="method-i-filter_run_excluding"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">filter_run_excluding</span><span
+						class="method-args">(*args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="filter-run-excluding-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 386</span>
+386:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">filter_run_excluding</span>(*<span class="ruby-identifier">args</span>)
+387:         <span class="ruby-identifier">options</span> = <span class="ruby-identifier">build_metadata_hash_from</span>(<span class="ruby-identifier">args</span>)
+388:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">exclusion_filter</span> = (<span class="ruby-identifier">exclusion_filter</span> <span class="ruby-operator">||</span> {}).<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)
+389:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="filter-run-including-method" class="method-detail ">
+				<a name="method-i-filter_run_including"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">filter_run_including</span><span
+						class="method-args">(*args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="filter-run-including-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 363</span>
+363:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">filter_run_including</span>(*<span class="ruby-identifier">args</span>)
+364:         <span class="ruby-identifier">force_overwrite</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">last</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>)
+365:           <span class="ruby-keyword kw">false</span>
+366:         <span class="ruby-keyword kw">else</span>
+367:           <span class="ruby-identifier">args</span>.<span class="ruby-identifier">pop</span>
+368:         <span class="ruby-keyword kw">end</span>
+369: 
+370:         <span class="ruby-identifier">options</span> = <span class="ruby-identifier">build_metadata_hash_from</span>(<span class="ruby-identifier">args</span>)
+371: 
+372:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">inclusion_filter</span>[<span class="ruby-value">:line_number</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">inclusion_filter</span>[<span class="ruby-value">:full_description</span>]
+373:           <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Filtering by #{options.inspect} is not possible since &quot;</span>                 <span class="ruby-node">&quot;you are already filtering by #{inclusion_filter.inspect}&quot;</span>
+374:         <span class="ruby-keyword kw">else</span>
+375:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">force_overwrite</span>
+376:             <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">inclusion_filter</span> = <span class="ruby-identifier">options</span>
+377:           <span class="ruby-keyword kw">else</span>
+378:             <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">inclusion_filter</span> = (<span class="ruby-identifier">inclusion_filter</span> <span class="ruby-operator">||</span> {}).<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">options</span>)
+379:           <span class="ruby-keyword kw">end</span>
+380:         <span class="ruby-keyword kw">end</span>
+381:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+				<div class="aliases">
+					Also aliased as: <a href="Configuration.html#method-i-filter_run">filter_run</a>
+				</div>
+				
+
+				
+			</div>
+
+		
+			<div id="formatter--method" class="method-detail method-alias">
+				<a name="method-i-formatter%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">formatter=</span><span
+						class="method-args">(formatter_to_use, path=nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+				</div>
+
+				
+
+				
+				<div class="aliases">
+          Alias for: <a href="Configuration.html#method-i-add_formatter">add_formatter</a>
+				</div>
+				
+			</div>
+
+		
+			<div id="formatters-method" class="method-detail ">
+				<a name="method-i-formatters"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">formatters</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="formatters-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 288</span>
+288:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">formatters</span>
+289:         <span class="ruby-ivar">@formatters</span> <span class="ruby-operator">||=</span> []
+290:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="full-backtrace--method" class="method-detail ">
+				<a name="method-i-full_backtrace%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">full_backtrace=</span><span
+						class="method-args">(true_or_false)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="full-backtrace--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 219</span>
+219:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">full_backtrace=</span>(<span class="ruby-identifier">true_or_false</span>)
+220:         <span class="ruby-identifier">settings</span>[<span class="ruby-value">:backtrace_clean_patterns</span>] = <span class="ruby-identifier">true_or_false</span> <span class="ruby-operator">?</span> [] <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT_BACKTRACE_PATTERNS</span>
+221:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="full-description--method" class="method-detail ">
+				<a name="method-i-full_description%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">full_description=</span><span
+						class="method-args">(description)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="full-description--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 273</span>
+273:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">full_description=</span>(<span class="ruby-identifier">description</span>)
+274:         <span class="ruby-identifier">filter_run</span>({ <span class="ruby-value">:full_description</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">/#{description}/</span> }, <span class="ruby-keyword kw">true</span>)
+275:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="include-method" class="method-detail ">
+				<a name="method-i-include"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">include</span><span
+						class="method-args">(mod, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="include-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 391</span>
+391:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">include</span>(<span class="ruby-identifier">mod</span>, *<span class="ruby-identifier">args</span>)
+392:         <span class="ruby-identifier">filters</span> = <span class="ruby-identifier">build_metadata_hash_from</span>(<span class="ruby-identifier">args</span>)
+393:         <span class="ruby-identifier">include_or_extend_modules</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-value">:include</span>, <span class="ruby-identifier">mod</span>, <span class="ruby-identifier">filters</span>]
+394:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="inclusion-filter-method" class="method-detail ">
+				<a name="method-i-inclusion_filter"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">inclusion_filter</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="inclusion-filter-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 360</span>
+360:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inclusion_filter</span>
+361:         <span class="ruby-identifier">settings</span>[<span class="ruby-value">:inclusion_filter</span>] <span class="ruby-operator">||</span> {}
+362:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="inclusion-filter--method" class="method-detail ">
+				<a name="method-i-inclusion_filter%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">inclusion_filter=</span><span
+						class="method-args">(filter)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="inclusion-filter--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 356</span>
+356:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inclusion_filter=</span>(<span class="ruby-identifier">filter</span>)
+357:         <span class="ruby-identifier">settings</span>[<span class="ruby-value">:inclusion_filter</span>] = <span class="ruby-identifier">filter</span>
+358:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="libs--method" class="method-detail ">
+				<a name="method-i-libs%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">libs=</span><span
+						class="method-args">(libs)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="libs--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 242</span>
+242:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">libs=</span>(<span class="ruby-identifier">libs</span>)
+243:         <span class="ruby-identifier">libs</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">lib</span><span class="ruby-operator">|</span> <span class="ruby-identifier">$LOAD_PATH</span>.<span class="ruby-identifier">unshift</span> <span class="ruby-identifier">lib</span>}
+244:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="line-number--method" class="method-detail ">
+				<a name="method-i-line_number%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">line_number=</span><span
+						class="method-args">(line_number)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="line-number--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 269</span>
+269:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">line_number=</span>(<span class="ruby-identifier">line_number</span>)
+270:         <span class="ruby-identifier">filter_run</span>({ <span class="ruby-value">:line_number</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">line_number</span>.<span class="ruby-identifier">to_i</span> }, <span class="ruby-keyword kw">true</span>)
+271:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="load-spec-files-method" class="method-detail ">
+				<a name="method-i-load_spec_files"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">load_spec_files</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="load-spec-files-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 418</span>
+418:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">load_spec_files</span>
+419:         <span class="ruby-identifier">files_to_run</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span> <span class="ruby-identifier">load</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">f</span>) }
+420:         <span class="ruby-identifier">raise_if_rspec_1_is_loaded</span>
+421:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="mock-framework-method" class="method-detail ">
+				<a name="method-i-mock_framework"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">mock_framework</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Returns the configured mock framework adapter module
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="mock-framework-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 126</span>
+126:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mock_framework</span>
+127:         <span class="ruby-identifier">settings</span>[<span class="ruby-value">:mock_framework</span>] <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">begin</span>
+128:                                         <span class="ruby-identifier">require</span> <span class="ruby-value str">'rspec/core/mocking/with_rspec'</span>
+129:                                         <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">MockFrameworkAdapter</span>
+130:                                       <span class="ruby-keyword kw">end</span>
+131:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="mock-framework--method" class="method-detail ">
+				<a name="method-i-mock_framework%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">mock_framework=</span><span
+						class="method-args">(framework)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Sets the mock framework adapter module.
+</p>
+<p>
+<tt>framework</tt> can be a Symbol or a Module.
+</p>
+<p>
+Given any of :rspec, :mocha, :flexmock, or :rr, configures the named
+framework.
+</p>
+<p>
+Given :nothing, configures no framework. Use this if you don&#8217;t use
+any mocking framework to save a little bit of overhead.
+</p>
+<p>
+Given a Module, includes that module in every example group. The module
+should adhere to RSpec&#8217;s mock framework adapter API:
+</p>
+<pre>
+  setup_mocks_for_rspec
+    * called before each example
+
+  verify_mocks_for_rspec
+    * called after each example. Framework should raise an exception
+      when expectations fail
+
+  teardown_mocks_for_rspec
+    * called after verify_mocks_for_rspec (even if there are errors)</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="mock-framework--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 160</span>
+160:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mock_framework=</span>(<span class="ruby-identifier">framework</span>)
+161:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">framework</span>
+162:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Module</span>
+163:           <span class="ruby-identifier">settings</span>[<span class="ruby-value">:mock_framework</span>] = <span class="ruby-identifier">framework</span>
+164:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>, <span class="ruby-constant">Symbol</span>
+165:           <span class="ruby-identifier">require</span> <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">framework</span>.<span class="ruby-identifier">to_s</span>
+166:                   <span class="ruby-keyword kw">when</span> <span class="ruby-regexp re">/rspec/</span>
+167:                     <span class="ruby-value str">'rspec/core/mocking/with_rspec'</span>
+168:                   <span class="ruby-keyword kw">when</span> <span class="ruby-regexp re">/mocha/</span>
+169:                     <span class="ruby-value str">'rspec/core/mocking/with_mocha'</span>
+170:                   <span class="ruby-keyword kw">when</span> <span class="ruby-regexp re">/rr/</span>
+171:                     <span class="ruby-value str">'rspec/core/mocking/with_rr'</span>
+172:                   <span class="ruby-keyword kw">when</span> <span class="ruby-regexp re">/flexmock/</span>
+173:                     <span class="ruby-value str">'rspec/core/mocking/with_flexmock'</span>
+174:                   <span class="ruby-keyword kw">else</span>
+175:                     <span class="ruby-value str">'rspec/core/mocking/with_absolutely_nothing'</span>
+176:                   <span class="ruby-keyword kw">end</span>
+177:           <span class="ruby-identifier">settings</span>[<span class="ruby-value">:mock_framework</span>] = <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">MockFrameworkAdapter</span>
+178:         <span class="ruby-keyword kw">else</span>
+179:         <span class="ruby-keyword kw">end</span>
+180:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="mock-with-method" class="method-detail ">
+				<a name="method-i-mock_with"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">mock_with</span><span
+						class="method-args">(framework)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Delegates to <a
+href="Configuration.html#method-i-mock_framework">mock_framework</a>=(framework)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="mock-with-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 134</span>
+134:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mock_with</span>(<span class="ruby-identifier">framework</span>)
+135:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">mock_framework</span> = <span class="ruby-identifier">framework</span>
+136:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="puts-method" class="method-detail ">
+				<a name="method-i-puts"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">puts</span><span
+						class="method-args">(message)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="puts-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 109</span>
+109:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">puts</span>(<span class="ruby-identifier">message</span>)
+110:         <span class="ruby-identifier">output_stream</span>.<span class="ruby-identifier">puts</span>(<span class="ruby-identifier">message</span>)
+111:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="reporter-method" class="method-detail ">
+				<a name="method-i-reporter"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">reporter</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="reporter-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 292</span>
+292:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reporter</span>
+293:         <span class="ruby-ivar">@reporter</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">begin</span>
+294:                         <span class="ruby-identifier">add_formatter</span>(<span class="ruby-value str">'progress'</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">formatters</span>.<span class="ruby-identifier">empty?</span>
+295:                         <span class="ruby-constant">Reporter</span>.<span class="ruby-identifier">new</span>(*<span class="ruby-identifier">formatters</span>)
+296:                       <span class="ruby-keyword kw">end</span>
+297:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="requires--method" class="method-detail ">
+				<a name="method-i-requires%3D"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">requires=</span><span
+						class="method-args">(paths)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="requires--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 246</span>
+246:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">requires=</span>(<span class="ruby-identifier">paths</span>)
+247:         <span class="ruby-identifier">paths</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">path</span><span class="ruby-operator">|</span> <span class="ruby-identifier">require</span> <span class="ruby-identifier">path</span>}
+248:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="reset-method" class="method-detail ">
+				<a name="method-i-reset"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">reset</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="reset-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 63</span>
+63:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset</span>
+64:         <span class="ruby-ivar">@reporter</span> = <span class="ruby-keyword kw">nil</span>
+65:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="settings-method" class="method-detail ">
+				<a name="method-i-settings"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">settings</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="settings-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 113</span>
+113:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">settings</span>
+114:         <span class="ruby-ivar">@settings</span> <span class="ruby-operator">||=</span> {}
+115:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="private-instance-method-details" class="method-section section">
+			<h3 class="section-header">Private Instance Methods</h3>
+
+		
+			<div id="built-in-formatter-method" class="method-detail ">
+				<a name="method-i-built_in_formatter"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">built_in_formatter</span><span
+						class="method-args">(key)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="built-in-formatter-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 449</span>
+449:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">built_in_formatter</span>(<span class="ruby-identifier">key</span>)
+450:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">to_s</span>
+451:         <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'d'</span>, <span class="ruby-value str">'doc'</span>, <span class="ruby-value str">'documentation'</span>, <span class="ruby-value str">'s'</span>, <span class="ruby-value str">'n'</span>, <span class="ruby-value str">'spec'</span>, <span class="ruby-value str">'nested'</span>
+452:           <span class="ruby-identifier">require</span> <span class="ruby-value str">'rspec/core/formatters/documentation_formatter'</span>
+453:           <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">Formatters</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentationFormatter</span>
+454:         <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'h'</span>, <span class="ruby-value str">'html'</span>
+455:           <span class="ruby-identifier">require</span> <span class="ruby-value str">'rspec/core/formatters/html_formatter'</span>
+456:           <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">Formatters</span><span class="ruby-operator">::</span><span class="ruby-constant">HtmlFormatter</span>
+457:         <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'t'</span>, <span class="ruby-value str">'textmate'</span>
+458:           <span class="ruby-identifier">require</span> <span class="ruby-value str">'rspec/core/formatters/text_mate_formatter'</span>
+459:           <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">Formatters</span><span class="ruby-operator">::</span><span class="ruby-constant">TextMateFormatter</span>
+460:         <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'p'</span>, <span class="ruby-value str">'progress'</span>
+461:           <span class="ruby-identifier">require</span> <span class="ruby-value str">'rspec/core/formatters/progress_formatter'</span>
+462:           <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Core</span><span class="ruby-operator">::</span><span class="ruby-constant">Formatters</span><span class="ruby-operator">::</span><span class="ruby-constant">ProgressFormatter</span>
+463:         <span class="ruby-keyword kw">end</span>
+464:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="custom-formatter-method" class="method-detail ">
+				<a name="method-i-custom_formatter"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">custom_formatter</span><span
+						class="method-args">(formatter_ref)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="custom-formatter-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 466</span>
+466:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">custom_formatter</span>(<span class="ruby-identifier">formatter_ref</span>)
+467:         <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Class</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">formatter_ref</span>
+468:           <span class="ruby-identifier">formatter_ref</span>
+469:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">string_const?</span>(<span class="ruby-identifier">formatter_ref</span>)
+470:           <span class="ruby-keyword kw">begin</span>
+471:             <span class="ruby-identifier">eval</span>(<span class="ruby-identifier">formatter_ref</span>)
+472:           <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">NameError</span>
+473:             <span class="ruby-identifier">require</span> <span class="ruby-identifier">path_for</span>(<span class="ruby-identifier">formatter_ref</span>)
+474:             <span class="ruby-identifier">eval</span>(<span class="ruby-identifier">formatter_ref</span>)
+475:           <span class="ruby-keyword kw">end</span>
+476:         <span class="ruby-keyword kw">end</span>
+477:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="file-at-method" class="method-detail ">
+				<a name="method-i-file_at"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">file_at</span><span
+						class="method-args">(path)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="file-at-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 502</span>
+502:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">file_at</span>(<span class="ruby-identifier">path</span>)
+503:         <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">path</span>))
+504:         <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">path</span>, <span class="ruby-value str">'w'</span>)
+505:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="output-to-tty--method" class="method-detail ">
+				<a name="method-i-output_to_tty%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">output_to_tty?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="output-to-tty--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 441</span>
+441:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">output_to_tty?</span>
+442:         <span class="ruby-keyword kw">begin</span>
+443:           <span class="ruby-identifier">output_stream</span>.<span class="ruby-identifier">tty?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">tty?</span>
+444:         <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">NoMethodError</span>
+445:           <span class="ruby-keyword kw">false</span>
+446:         <span class="ruby-keyword kw">end</span>
+447:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="path-for-method" class="method-detail ">
+				<a name="method-i-path_for"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">path_for</span><span
+						class="method-args">(const_ref)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="path-for-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 483</span>
+483:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">path_for</span>(<span class="ruby-identifier">const_ref</span>)
+484:         <span class="ruby-identifier">underscore_with_fix_for_non_standard_rspec_naming</span>(<span class="ruby-identifier">const_ref</span>)
+485:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-if-rspec-is-loaded-method" class="method-detail ">
+				<a name="method-i-raise_if_rspec_1_is_loaded"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_if_rspec_1_is_loaded</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-if-rspec-is-loaded-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 425</span>
+425:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_if_rspec_1_is_loaded</span>
+426:         <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">defined?</span>(<span class="ruby-constant">Spec</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">defined?</span>(<span class="ruby-constant">Spec</span><span class="ruby-operator">::</span><span class="ruby-constant">VERSION</span><span class="ruby-operator">::</span><span class="ruby-constant">MAJOR</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Spec</span><span class="ruby-operator">::</span><span class="ruby-constant">VERSION</span><span class="ruby-operator">::</span><span class="ruby-constant">MAJOR</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+427:           <span class="ruby-identifier">raise</span> <span class="ruby-value str">#{'*'*80}  You are running rspec-2, but it seems as though rspec-1 has been loaded as  well.  This is likely due to a statement like this somewhere in the specs:      require 'spec'  Please locate that statement, remove it, and try again.#{'*'*80}</span>
+428:         <span class="ruby-keyword kw">end</span>
+429:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="string-const--method" class="method-detail ">
+				<a name="method-i-string_const%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">string_const?</span><span
+						class="method-args">(str)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="string-const--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 479</span>
+479:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">string_const?</span>(<span class="ruby-identifier">str</span>)
+480:         <span class="ruby-identifier">str</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-regexp re">/\A[A-Z][a-zA-Z0-9_:]*\z/</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">str</span>
+481:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="underscore-method" class="method-detail ">
+				<a name="method-i-underscore"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">underscore</span><span
+						class="method-args">(camel_cased_word)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+activesupport/lib/active_support/inflector/methods.rb, line 48
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="underscore-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 492</span>
+492:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">underscore</span>(<span class="ruby-identifier">camel_cased_word</span>)
+493:         <span class="ruby-identifier">word</span> = <span class="ruby-identifier">camel_cased_word</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">dup</span>
+494:         <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/::/</span>, <span class="ruby-value str">'/'</span>)
+495:         <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/([A-Z]+)([A-Z][a-z])/</span>,<span class="ruby-value str">'\1_\2'</span>)
+496:         <span class="ruby-identifier">word</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/([a-z\d])([A-Z])/</span>,<span class="ruby-value str">'\1_\2'</span>)
+497:         <span class="ruby-identifier">word</span>.<span class="ruby-identifier">tr!</span>(<span class="ruby-value str">&quot;-&quot;</span>, <span class="ruby-value str">&quot;_&quot;</span>)
+498:         <span class="ruby-identifier">word</span>.<span class="ruby-identifier">downcase!</span>
+499:         <span class="ruby-identifier">word</span>
+500:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="underscore-with-fix-for-non-standard-rspec-naming-method" class="method-detail ">
+				<a name="method-i-underscore_with_fix_for_non_standard_rspec_naming"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">underscore_with_fix_for_non_standard_rspec_naming</span><span
+						class="method-args">(string)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="underscore-with-fix-for-non-standard-rspec-naming-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/core/configuration.rb, line 487</span>
+487:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">underscore_with_fix_for_non_standard_rspec_naming</span>(<span class="ruby-identifier">string</span>)
+488:         <span class="ruby-identifier">underscore</span>(<span class="ruby-identifier">string</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-regexp re">%{(^|/)r_spec($|/)}</span>, <span class="ruby-value str">'\1rspec\2'</span>)
+489:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

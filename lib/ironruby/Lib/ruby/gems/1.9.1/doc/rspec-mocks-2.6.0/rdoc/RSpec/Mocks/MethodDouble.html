@@ -1,0 +1,1149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+	<title>Class: RSpec::Mocks::MethodDouble</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../../index.html">Home</a>
+          <a href="../../index.html#classes">Classes</a>
+          <a href="../../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/rspec/mocks/method_double_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/method_double.rb">lib/rspec/mocks/method_double.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">Hash</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+			<div id="namespace-list-section" class="section">
+				<h3 class="section-header">Namespace</h3>
+				<ul class="link-list">
+					
+					<li><span class="type">MODULE</span> <a href="MethodDouble/@object;.html">RSpec::Mocks::MethodDouble::@object;</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-c-new">::new</a></li>
+					
+					<li><a href="#method-i-add_expectation">#add_expectation</a></li>
+					
+					<li><a href="#method-i-add_negative_expectation">#add_negative_expectation</a></li>
+					
+					<li><a href="#method-i-add_stub">#add_stub</a></li>
+					
+					<li><a href="#method-i-clear">#clear</a></li>
+					
+					<li><a href="#method-i-configure_method">#configure_method</a></li>
+					
+					<li><a href="#method-i-define_proxy_method">#define_proxy_method</a></li>
+					
+					<li><a href="#method-i-expectations">#expectations</a></li>
+					
+					<li><a href="#method-i-obfuscate">#obfuscate</a></li>
+					
+					<li><a href="#method-i-object_responds_to%3F">#object_responds_to?</a></li>
+					
+					<li><a href="#method-i-object_singleton_class">#object_singleton_class</a></li>
+					
+					<li><a href="#method-i-proxy_for_nil_class%3F">#proxy_for_nil_class?</a></li>
+					
+					<li><a href="#method-i-raise_method_not_stubbed_error">#raise_method_not_stubbed_error</a></li>
+					
+					<li><a href="#method-i-remove_stub">#remove_stub</a></li>
+					
+					<li><a href="#method-i-reset">#reset</a></li>
+					
+					<li><a href="#method-i-reset_nil_expectations_warning">#reset_nil_expectations_warning</a></li>
+					
+					<li><a href="#method-i-restore_original_method">#restore_original_method</a></li>
+					
+					<li><a href="#method-i-stash_original_method">#stash_original_method</a></li>
+					
+					<li><a href="#method-i-stashed_method_name">#stashed_method_name</a></li>
+					
+					<li><a href="#method-i-stubs">#stubs</a></li>
+					
+					<li><a href="#method-i-verify">#verify</a></li>
+					
+					<li><a href="#method-i-visibility">#visibility</a></li>
+					
+					<li><a href="#method-i-warn_if_nil_class">#warn_if_nil_class</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../RSpec/Mocks/AmbiguousReturnError.html">RSpec::Mocks::AmbiguousReturnError</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance.html">RSpec::Mocks::AnyInstance</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/Chain.html">RSpec::Mocks::AnyInstance::Chain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/ExpectationChain.html">RSpec::Mocks::AnyInstance::ExpectationChain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/Recorder.html">RSpec::Mocks::AnyInstance::Recorder</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/StubChain.html">RSpec::Mocks::AnyInstance::StubChain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentExpectation.html">RSpec::Mocks::ArgumentExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers.html">RSpec::Mocks::ArgumentMatchers</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/AnyArgMatcher.html">RSpec::Mocks::ArgumentMatchers::AnyArgMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/AnyArgsMatcher.html">RSpec::Mocks::ArgumentMatchers::AnyArgsMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/BooleanMatcher.html">RSpec::Mocks::ArgumentMatchers::BooleanMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/DuckTypeMatcher.html">RSpec::Mocks::ArgumentMatchers::DuckTypeMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/EqualityProxy.html">RSpec::Mocks::ArgumentMatchers::EqualityProxy</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/HashIncludingMatcher.html">RSpec::Mocks::ArgumentMatchers::HashIncludingMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/HashNotIncludingMatcher.html">RSpec::Mocks::ArgumentMatchers::HashNotIncludingMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/InstanceOf.html">RSpec::Mocks::ArgumentMatchers::InstanceOf</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/KindOf.html">RSpec::Mocks::ArgumentMatchers::KindOf</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/MatcherMatcher.html">RSpec::Mocks::ArgumentMatchers::MatcherMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/NoArgsMatcher.html">RSpec::Mocks::ArgumentMatchers::NoArgsMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/RegexpMatcher.html">RSpec::Mocks::ArgumentMatchers::RegexpMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/BaseExpectation.html">RSpec::Mocks::BaseExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ErrorGenerator.html">RSpec::Mocks::ErrorGenerator</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ExampleMethods.html">RSpec::Mocks::ExampleMethods</a></li>
+				
+					<li><a href="../../RSpec/Mocks/InstanceExec.html">RSpec::Mocks::InstanceExec</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MessageExpectation.html">RSpec::Mocks::MessageExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MethodDouble.html">RSpec::Mocks::MethodDouble</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MethodDouble/@object;.html">RSpec::Mocks::MethodDouble::@object;</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Methods.html">RSpec::Mocks::Methods</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Mock.html">RSpec::Mocks::Mock</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MockExpectationError.html">RSpec::Mocks::MockExpectationError</a></li>
+				
+					<li><a href="../../RSpec/Mocks/NegativeMessageExpectation.html">RSpec::Mocks::NegativeMessageExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/OrderGroup.html">RSpec::Mocks::OrderGroup</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Proxy.html">RSpec::Mocks::Proxy</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Serialization.html">RSpec::Mocks::Serialization</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Serialization/YAML.html">RSpec::Mocks::Serialization::YAML</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Space.html">RSpec::Mocks::Space</a></li>
+				
+					<li><a href="../../RSpec/Mocks/includer;.html">RSpec::Mocks::includer;</a></li>
+				
+					<li><a href="../../Marshal.html">Marshal</a></li>
+				
+					<li><a href="../../Psych.html">Psych</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">RSpec::Mocks::MethodDouble</h1>
+
+		<div id="description">
+			
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="method-name-attribute-method" class="method-detail">
+				<a name="method_name"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">method_name</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="method-c-new"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">(object, method_name, proxy)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 6</span>
+ 6:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">object</span>, <span class="ruby-identifier">method_name</span>, <span class="ruby-identifier">proxy</span>)
+ 7:         <span class="ruby-ivar">@method_name</span> = <span class="ruby-identifier">method_name</span>
+ 8:         <span class="ruby-ivar">@object</span> = <span class="ruby-identifier">object</span>
+ 9:         <span class="ruby-ivar">@proxy</span> = <span class="ruby-identifier">proxy</span>
+10:         <span class="ruby-ivar">@stashed</span> = <span class="ruby-keyword kw">false</span>
+11:         <span class="ruby-identifier">store</span>(<span class="ruby-value">:expectations</span>, [])
+12:         <span class="ruby-identifier">store</span>(<span class="ruby-value">:stubs</span>, [])
+13:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="add-expectation-method" class="method-detail ">
+				<a name="method-i-add_expectation"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add_expectation</span><span
+						class="method-args">(error_generator, expectation_ordering, expected_from, opts, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="add-expectation-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 116</span>
+116:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_expectation</span>(<span class="ruby-identifier">error_generator</span>, <span class="ruby-identifier">expectation_ordering</span>, <span class="ruby-identifier">expected_from</span>, <span class="ruby-identifier">opts</span>, &amp;<span class="ruby-identifier">block</span>)
+117:         <span class="ruby-identifier">configure_method</span>
+118:         <span class="ruby-identifier">expectation</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">existing_stub</span> = <span class="ruby-identifier">stubs</span>.<span class="ruby-identifier">first</span>
+119:           <span class="ruby-identifier">existing_stub</span>.<span class="ruby-identifier">build_child</span>(<span class="ruby-identifier">expected_from</span>, <span class="ruby-identifier">block</span>, <span class="ruby-value">1</span>, <span class="ruby-identifier">opts</span>)
+120:         <span class="ruby-keyword kw">else</span>
+121:           <span class="ruby-constant">MessageExpectation</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">error_generator</span>, <span class="ruby-identifier">expectation_ordering</span>, <span class="ruby-identifier">expected_from</span>, <span class="ruby-ivar">@method_name</span>, <span class="ruby-identifier">block</span>, <span class="ruby-value">1</span>, <span class="ruby-identifier">opts</span>)
+122:         <span class="ruby-keyword kw">end</span>
+123:         <span class="ruby-identifier">expectations</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">expectation</span>
+124:         <span class="ruby-identifier">expectation</span>
+125:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="add-negative-expectation-method" class="method-detail ">
+				<a name="method-i-add_negative_expectation"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add_negative_expectation</span><span
+						class="method-args">(error_generator, expectation_ordering, expected_from, &implementation)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="add-negative-expectation-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 127</span>
+127:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_negative_expectation</span>(<span class="ruby-identifier">error_generator</span>, <span class="ruby-identifier">expectation_ordering</span>, <span class="ruby-identifier">expected_from</span>, &amp;<span class="ruby-identifier">implementation</span>)
+128:         <span class="ruby-identifier">configure_method</span>
+129:         <span class="ruby-identifier">expectation</span> = <span class="ruby-constant">NegativeMessageExpectation</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">error_generator</span>, <span class="ruby-identifier">expectation_ordering</span>, <span class="ruby-identifier">expected_from</span>, <span class="ruby-ivar">@method_name</span>, <span class="ruby-identifier">implementation</span>)
+130:         <span class="ruby-identifier">expectations</span>.<span class="ruby-identifier">unshift</span> <span class="ruby-identifier">expectation</span>
+131:         <span class="ruby-identifier">expectation</span>
+132:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="add-stub-method" class="method-detail ">
+				<a name="method-i-add_stub"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">add_stub</span><span
+						class="method-args">(error_generator, expectation_ordering, expected_from, opts={}, &implementation)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="add-stub-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 134</span>
+134:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_stub</span>(<span class="ruby-identifier">error_generator</span>, <span class="ruby-identifier">expectation_ordering</span>, <span class="ruby-identifier">expected_from</span>, <span class="ruby-identifier">opts</span>={}, &amp;<span class="ruby-identifier">implementation</span>)
+135:         <span class="ruby-identifier">configure_method</span>
+136:         <span class="ruby-identifier">stub</span> = <span class="ruby-constant">MessageExpectation</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">error_generator</span>, <span class="ruby-identifier">expectation_ordering</span>, <span class="ruby-identifier">expected_from</span>, <span class="ruby-ivar">@method_name</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-value">:any</span>, <span class="ruby-identifier">opts</span>, &amp;<span class="ruby-identifier">implementation</span>)
+137:         <span class="ruby-identifier">stubs</span>.<span class="ruby-identifier">unshift</span> <span class="ruby-identifier">stub</span>
+138:         <span class="ruby-identifier">stub</span>
+139:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="clear-method" class="method-detail ">
+				<a name="method-i-clear"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">clear</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="clear-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 111</span>
+111:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">clear</span>
+112:         <span class="ruby-identifier">expectations</span>.<span class="ruby-identifier">clear</span>
+113:         <span class="ruby-identifier">stubs</span>.<span class="ruby-identifier">clear</span>
+114:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="configure-method-method" class="method-detail ">
+				<a name="method-i-configure_method"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">configure_method</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="configure-method-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 57</span>
+57:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">configure_method</span>
+58:         <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Mocks</span><span class="ruby-operator">::</span><span class="ruby-identifier">space</span>.<span class="ruby-identifier">add</span>(<span class="ruby-ivar">@object</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Mocks</span><span class="ruby-operator">::</span><span class="ruby-identifier">space</span>
+59:         <span class="ruby-identifier">warn_if_nil_class</span>
+60:         <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@stashed</span>
+61:           <span class="ruby-identifier">stash_original_method</span>
+62:           <span class="ruby-identifier">define_proxy_method</span>
+63:         <span class="ruby-keyword kw">end</span>
+64:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="define-proxy-method-method" class="method-detail ">
+				<a name="method-i-define_proxy_method"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">define_proxy_method</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="define-proxy-method-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 75</span>
+75:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">define_proxy_method</span>
+76:         <span class="ruby-identifier">method_name</span> = <span class="ruby-ivar">@method_name</span>
+77:         <span class="ruby-identifier">visibility_for_method</span> = <span class="ruby-node">&quot;#{visibility} :#{method_name}&quot;</span>
+78:         <span class="ruby-identifier">object_singleton_class</span>.<span class="ruby-identifier">class_eval</span>(<span class="ruby-value str">          def #{method_name}(*args, &amp;block)            __mock_proxy.message_received :#{method_name}, *args, &amp;block          end          #{visibility_for_method}</span>, <span class="ruby-keyword kw">__FILE__</span>, <span class="ruby-keyword kw">__LINE__</span>)
+79:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="expectations-method" class="method-detail ">
+				<a name="method-i-expectations"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">expectations</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="expectations-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 15</span>
+15:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">expectations</span>
+16:         <span class="ruby-keyword kw">self</span>[<span class="ruby-value">:expectations</span>]
+17:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="obfuscate-method" class="method-detail ">
+				<a name="method-i-obfuscate"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">obfuscate</span><span
+						class="method-args">(method_name)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="obfuscate-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 39</span>
+39:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">obfuscate</span>(<span class="ruby-identifier">method_name</span>)
+40:         <span class="ruby-node">&quot;obfuscated_by_rspec_mocks__#{method_name}&quot;</span>
+41:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="object-responds-to--method" class="method-detail ">
+				<a name="method-i-object_responds_to%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">object_responds_to?</span><span
+						class="method-args">(method_name)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="object-responds-to--source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 47</span>
+47:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">object_responds_to?</span>(<span class="ruby-identifier">method_name</span>)
+48:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@proxy</span>.<span class="ruby-identifier">already_proxied_respond_to?</span>
+49:           <span class="ruby-ivar">@object</span>.<span class="ruby-identifier">__send__</span>(<span class="ruby-identifier">obfuscate</span>(<span class="ruby-value">:respond_to?</span>), <span class="ruby-identifier">method_name</span>)
+50:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">method_name</span> <span class="ruby-operator">==</span> <span class="ruby-value">:respond_to?</span>
+51:           <span class="ruby-ivar">@proxy</span>.<span class="ruby-identifier">already_proxied_respond_to</span>
+52:         <span class="ruby-keyword kw">else</span>
+53:           <span class="ruby-ivar">@object</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">method_name</span>, <span class="ruby-keyword kw">true</span>)
+54:         <span class="ruby-keyword kw">end</span>
+55:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="object-singleton-class-method" class="method-detail ">
+				<a name="method-i-object_singleton_class"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">object_singleton_class</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="object-singleton-class-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 35</span>
+35:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">object_singleton_class</span>
+36:         <span class="ruby-keyword kw">class</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@object</span>; <span class="ruby-keyword kw">self</span>; <span class="ruby-keyword kw">end</span>
+37:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="proxy-for-nil-class--method" class="method-detail ">
+				<a name="method-i-proxy_for_nil_class%3F"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">proxy_for_nil_class?</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="proxy-for-nil-class--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 146</span>
+146:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">proxy_for_nil_class?</span>
+147:         <span class="ruby-ivar">@object</span>.<span class="ruby-identifier">nil?</span>
+148:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-method-not-stubbed-error-method" class="method-detail ">
+				<a name="method-i-raise_method_not_stubbed_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_method_not_stubbed_error</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-method-not-stubbed-error-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 156</span>
+156:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_method_not_stubbed_error</span>
+157:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">MockExpectationError</span>, <span class="ruby-node">&quot;The method `#{method_name}` was not stubbed or was already unstubbed&quot;</span> 
+158:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="remove-stub-method" class="method-detail ">
+				<a name="method-i-remove_stub"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">remove_stub</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="remove-stub-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 141</span>
+141:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remove_stub</span>
+142:         <span class="ruby-identifier">raise_method_not_stubbed_error</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">stubs</span>.<span class="ruby-identifier">empty?</span>
+143:         <span class="ruby-identifier">expectations</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">reset</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">stubs</span>.<span class="ruby-identifier">clear</span>
+144:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="reset-method" class="method-detail ">
+				<a name="method-i-reset"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">reset</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="reset-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 105</span>
+105:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset</span>
+106:         <span class="ruby-identifier">reset_nil_expectations_warning</span>
+107:         <span class="ruby-identifier">restore_original_method</span>
+108:         <span class="ruby-identifier">clear</span>
+109:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="reset-nil-expectations-warning-method" class="method-detail ">
+				<a name="method-i-reset_nil_expectations_warning"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">reset_nil_expectations_warning</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="reset-nil-expectations-warning-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 160</span>
+160:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reset_nil_expectations_warning</span>
+161:         <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Mocks</span><span class="ruby-operator">::</span><span class="ruby-constant">Proxy</span>.<span class="ruby-identifier">warn_about_expectations_on_nil</span> = <span class="ruby-keyword kw">true</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">proxy_for_nil_class?</span>
+162:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="restore-original-method-method" class="method-detail ">
+				<a name="method-i-restore_original_method"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">restore_original_method</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="restore-original-method-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 86</span>
+86:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restore_original_method</span>
+87:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@stashed</span>
+88:           <span class="ruby-identifier">method_name</span> = <span class="ruby-ivar">@method_name</span>
+89:           <span class="ruby-identifier">stashed_method_name</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stashed_method_name</span>
+90:           <span class="ruby-identifier">object_singleton_class</span>.<span class="ruby-identifier">instance_eval</span> <span class="ruby-keyword kw">do</span>
+91:             <span class="ruby-identifier">remove_method</span> <span class="ruby-identifier">method_name</span>
+92:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">method_defined?</span>(<span class="ruby-identifier">stashed_method_name</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">private_method_defined?</span>(<span class="ruby-identifier">stashed_method_name</span>)
+93:               <span class="ruby-identifier">alias_method</span> <span class="ruby-identifier">method_name</span>, <span class="ruby-identifier">stashed_method_name</span>
+94:               <span class="ruby-identifier">remove_method</span> <span class="ruby-identifier">stashed_method_name</span>
+95:             <span class="ruby-keyword kw">end</span>
+96:           <span class="ruby-keyword kw">end</span>
+97:           <span class="ruby-ivar">@stashed</span> = <span class="ruby-keyword kw">false</span>
+98:         <span class="ruby-keyword kw">end</span>
+99:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="stash-original-method-method" class="method-detail ">
+				<a name="method-i-stash_original_method"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">stash_original_method</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="stash-original-method-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 66</span>
+66:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">stash_original_method</span>
+67:         <span class="ruby-identifier">stashed</span> = <span class="ruby-identifier">stashed_method_name</span>
+68:         <span class="ruby-identifier">orig</span> = <span class="ruby-ivar">@method_name</span>
+69:         <span class="ruby-identifier">object_singleton_class</span>.<span class="ruby-identifier">class_eval</span> <span class="ruby-keyword kw">do</span>
+70:           <span class="ruby-identifier">alias_method</span>(<span class="ruby-identifier">stashed</span>, <span class="ruby-identifier">orig</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">method_defined?</span>(<span class="ruby-identifier">orig</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">private_method_defined?</span>(<span class="ruby-identifier">orig</span>)
+71:         <span class="ruby-keyword kw">end</span>
+72:         <span class="ruby-ivar">@stashed</span> = <span class="ruby-keyword kw">true</span>
+73:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="stashed-method-name-method" class="method-detail ">
+				<a name="method-i-stashed_method_name"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">stashed_method_name</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="stashed-method-name-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 43</span>
+43:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">stashed_method_name</span>
+44:         <span class="ruby-identifier">obfuscate</span>(<span class="ruby-identifier">method_name</span>)
+45:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="stubs-method" class="method-detail ">
+				<a name="method-i-stubs"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">stubs</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="stubs-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 19</span>
+19:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">stubs</span>
+20:         <span class="ruby-keyword kw">self</span>[<span class="ruby-value">:stubs</span>]
+21:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="verify-method" class="method-detail ">
+				<a name="method-i-verify"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">verify</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="verify-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 101</span>
+101:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">verify</span>
+102:         <span class="ruby-identifier">expectations</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">verify_messages_received</span>}
+103:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="visibility-method" class="method-detail ">
+				<a name="method-i-visibility"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">visibility</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="visibility-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 23</span>
+23:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">visibility</span>
+24:         <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Mock</span> <span class="ruby-operator">===</span> <span class="ruby-ivar">@object</span>
+25:           <span class="ruby-value str">'public'</span>
+26:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">object_singleton_class</span>.<span class="ruby-identifier">private_method_defined?</span>(<span class="ruby-ivar">@method_name</span>)
+27:           <span class="ruby-value str">'private'</span>
+28:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">object_singleton_class</span>.<span class="ruby-identifier">protected_method_defined?</span>(<span class="ruby-ivar">@method_name</span>)
+29:           <span class="ruby-value str">'protected'</span>
+30:         <span class="ruby-keyword kw">else</span>
+31:           <span class="ruby-value str">'public'</span>
+32:         <span class="ruby-keyword kw">end</span>
+33:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="warn-if-nil-class-method" class="method-detail ">
+				<a name="method-i-warn_if_nil_class"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">warn_if_nil_class</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="warn-if-nil-class-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rspec/mocks/method_double.rb, line 150</span>
+150:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">warn_if_nil_class</span>
+151:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">proxy_for_nil_class?</span> &amp; <span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Mocks</span><span class="ruby-operator">::</span><span class="ruby-constant">Proxy</span>.<span class="ruby-identifier">warn_about_expectations_on_nil</span>
+152:           <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">warn</span>(<span class="ruby-node">&quot;An expectation of :#{@method_name} was set on nil. Called from #{caller[4]}. Use allow_message_expectations_on_nil to disable warnings.&quot;</span>)
+153:         <span class="ruby-keyword kw">end</span>
+154:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

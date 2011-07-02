@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+	<title>Module: RSpec::Mocks</title>
+
+	<link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="module">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#classes">Classes</a>
+          <a href="../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../lib/rspec/mocks/any_instance_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/any_instance.rb">lib/rspec/mocks/any_instance.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/argument_expectation_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/argument_expectation.rb">lib/rspec/mocks/argument_expectation.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/argument_matchers_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/argument_matchers.rb">lib/rspec/mocks/argument_matchers.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/errors_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/errors.rb">lib/rspec/mocks/errors.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/error_generator_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/error_generator.rb">lib/rspec/mocks/error_generator.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/extensions/instance_exec_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/extensions/instance_exec.rb">lib/rspec/mocks/extensions/instance_exec.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/message_expectation_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/message_expectation.rb">lib/rspec/mocks/message_expectation.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/methods_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/methods.rb">lib/rspec/mocks/methods.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/method_double_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/method_double.rb">lib/rspec/mocks/method_double.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/mock_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/mock.rb">lib/rspec/mocks/mock.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/order_group_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/order_group.rb">lib/rspec/mocks/order_group.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/proxy_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/proxy.rb">lib/rspec/mocks/proxy.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/serialization_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/serialization.rb">lib/rspec/mocks/serialization.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/space_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/space.rb">lib/rspec/mocks/space.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/spec_methods_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/spec_methods.rb">lib/rspec/mocks/spec_methods.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks/version_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/version.rb">lib/rspec/mocks/version.rb</a></li>
+					
+						<li><a href="../lib/rspec/mocks_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks.rb">lib/rspec/mocks.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+
+			<!-- Namespace Contents -->
+			
+			<div id="namespace-list-section" class="section">
+				<h3 class="section-header">Namespace</h3>
+				<ul class="link-list">
+					
+					<li><span class="type">MODULE</span> <a href="Mocks/AnyInstance.html">RSpec::Mocks::AnyInstance</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="Mocks/ArgumentMatchers.html">RSpec::Mocks::ArgumentMatchers</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="Mocks/ExampleMethods.html">RSpec::Mocks::ExampleMethods</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="Mocks/InstanceExec.html">RSpec::Mocks::InstanceExec</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="Mocks/Methods.html">RSpec::Mocks::Methods</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="Mocks/Serialization.html">RSpec::Mocks::Serialization</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="Mocks/Version.html">RSpec::Mocks::Version</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="Mocks/includer;.html">RSpec::Mocks::includer;</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/AmbiguousReturnError.html">RSpec::Mocks::AmbiguousReturnError</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/ArgumentExpectation.html">RSpec::Mocks::ArgumentExpectation</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/BaseExpectation.html">RSpec::Mocks::BaseExpectation</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/ErrorGenerator.html">RSpec::Mocks::ErrorGenerator</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/MessageExpectation.html">RSpec::Mocks::MessageExpectation</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/MethodDouble.html">RSpec::Mocks::MethodDouble</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/Mock.html">RSpec::Mocks::Mock</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/MockExpectationError.html">RSpec::Mocks::MockExpectationError</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/NegativeMessageExpectation.html">RSpec::Mocks::NegativeMessageExpectation</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/OrderGroup.html">RSpec::Mocks::OrderGroup</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/Proxy.html">RSpec::Mocks::Proxy</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="Mocks/Space.html">RSpec::Mocks::Space</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Method Quickref -->
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../RSpec/Mocks/AmbiguousReturnError.html">RSpec::Mocks::AmbiguousReturnError</a></li>
+				
+					<li><a href="../RSpec/Mocks/AnyInstance.html">RSpec::Mocks::AnyInstance</a></li>
+				
+					<li><a href="../RSpec/Mocks/AnyInstance/Chain.html">RSpec::Mocks::AnyInstance::Chain</a></li>
+				
+					<li><a href="../RSpec/Mocks/AnyInstance/ExpectationChain.html">RSpec::Mocks::AnyInstance::ExpectationChain</a></li>
+				
+					<li><a href="../RSpec/Mocks/AnyInstance/Recorder.html">RSpec::Mocks::AnyInstance::Recorder</a></li>
+				
+					<li><a href="../RSpec/Mocks/AnyInstance/StubChain.html">RSpec::Mocks::AnyInstance::StubChain</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentExpectation.html">RSpec::Mocks::ArgumentExpectation</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers.html">RSpec::Mocks::ArgumentMatchers</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/AnyArgMatcher.html">RSpec::Mocks::ArgumentMatchers::AnyArgMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/AnyArgsMatcher.html">RSpec::Mocks::ArgumentMatchers::AnyArgsMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/BooleanMatcher.html">RSpec::Mocks::ArgumentMatchers::BooleanMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/DuckTypeMatcher.html">RSpec::Mocks::ArgumentMatchers::DuckTypeMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/EqualityProxy.html">RSpec::Mocks::ArgumentMatchers::EqualityProxy</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/HashIncludingMatcher.html">RSpec::Mocks::ArgumentMatchers::HashIncludingMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/HashNotIncludingMatcher.html">RSpec::Mocks::ArgumentMatchers::HashNotIncludingMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/InstanceOf.html">RSpec::Mocks::ArgumentMatchers::InstanceOf</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/KindOf.html">RSpec::Mocks::ArgumentMatchers::KindOf</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/MatcherMatcher.html">RSpec::Mocks::ArgumentMatchers::MatcherMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/NoArgsMatcher.html">RSpec::Mocks::ArgumentMatchers::NoArgsMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/ArgumentMatchers/RegexpMatcher.html">RSpec::Mocks::ArgumentMatchers::RegexpMatcher</a></li>
+				
+					<li><a href="../RSpec/Mocks/BaseExpectation.html">RSpec::Mocks::BaseExpectation</a></li>
+				
+					<li><a href="../RSpec/Mocks/ErrorGenerator.html">RSpec::Mocks::ErrorGenerator</a></li>
+				
+					<li><a href="../RSpec/Mocks/ExampleMethods.html">RSpec::Mocks::ExampleMethods</a></li>
+				
+					<li><a href="../RSpec/Mocks/InstanceExec.html">RSpec::Mocks::InstanceExec</a></li>
+				
+					<li><a href="../RSpec/Mocks/MessageExpectation.html">RSpec::Mocks::MessageExpectation</a></li>
+				
+					<li><a href="../RSpec/Mocks/MethodDouble.html">RSpec::Mocks::MethodDouble</a></li>
+				
+					<li><a href="../RSpec/Mocks/MethodDouble/@object;.html">RSpec::Mocks::MethodDouble::@object;</a></li>
+				
+					<li><a href="../RSpec/Mocks/Methods.html">RSpec::Mocks::Methods</a></li>
+				
+					<li><a href="../RSpec/Mocks/Mock.html">RSpec::Mocks::Mock</a></li>
+				
+					<li><a href="../RSpec/Mocks/MockExpectationError.html">RSpec::Mocks::MockExpectationError</a></li>
+				
+					<li><a href="../RSpec/Mocks/NegativeMessageExpectation.html">RSpec::Mocks::NegativeMessageExpectation</a></li>
+				
+					<li><a href="../RSpec/Mocks/OrderGroup.html">RSpec::Mocks::OrderGroup</a></li>
+				
+					<li><a href="../RSpec/Mocks/Proxy.html">RSpec::Mocks::Proxy</a></li>
+				
+					<li><a href="../RSpec/Mocks/Serialization.html">RSpec::Mocks::Serialization</a></li>
+				
+					<li><a href="../RSpec/Mocks/Serialization/YAML.html">RSpec::Mocks::Serialization::YAML</a></li>
+				
+					<li><a href="../RSpec/Mocks/Space.html">RSpec::Mocks::Space</a></li>
+				
+					<li><a href="../RSpec/Mocks/includer;.html">RSpec::Mocks::includer;</a></li>
+				
+					<li><a href="../Marshal.html">Marshal</a></li>
+				
+					<li><a href="../Psych.html">Psych</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="module">RSpec::Mocks</h1>
+
+		<div id="description">
+			<h2>Test Doubles</h2>
+<p>
+A Test Double is an object that stands in for a real object in a test.
+RSpec creates test doubles that support method stubs and message
+expectations.
+</p>
+<pre>
+  book = double(&quot;book&quot;)
+</pre>
+<h2>Method Stubs</h2>
+<p>
+A method stub is an implementation that returns a pre-determined value.
+</p>
+<pre>
+  book = double(&quot;book&quot;)
+  double.stub(:title) { &quot;The RSpec Book&quot; }
+  double.title =&gt; &quot;The RSpec Book&quot;
+</pre>
+<p>
+When we declare a stub, we say we are &#8220;stubbing&#8221; a method.
+</p>
+<h2>Message Expectations</h2>
+<p>
+A message expectation is an expectation that the test double will receive a
+message some time before the example ends. If the message is received, the
+expectation is satisfied. If not, the example fails.
+</p>
+<pre>
+  validator = double(&quot;validator&quot;)
+  validator.should_receive(:validate).with(&quot;02134&quot;)
+  zipcode = Zipcode.new(&quot;02134&quot;, validator)
+  zipcode.valid?
+  
+</pre>
+<p>
+When we declare a message expectation, we say we are &#8220;mocking&#8221;
+a method.
+</p>
+<h2><a href="Mocks/Mock.html">Mock</a> Objects and Test Stubs</h2>
+<p>
+The names <a href="Mocks/Mock.html">Mock</a> Object and Test Stub suggest
+specialized Test Doubles.  i.e. Test Stub evokes Test Double that only
+supports method stubs, and a <a href="Mocks/Mock.html">Mock</a> Object
+evokes a Test Double that only supports message expectations, or sometimes
+supports message expectations in addition to method stubs.
+</p>
+<p>
+There is a lot of overlapping nomenclature here, and there are many
+variations of these patterns (fakes, spies, etc). Keep in mind that most of
+the time we&#8217;re talking about method-level concepts that are
+variations of method stubs and message expectations, and we&#8217;re
+applying to them to <em>one</em> generic kind of object: a Test Double.
+</p>
+<h2>Test-Specific Extension</h2>
+<p>
+a.k.a. Partial Stub/Mock, a Test-Specific Extension is an extension of a
+real object in a system that is instrumented with test-double like
+behaviour in the context of a test. This technique is very common in Ruby
+because we often see class objects acting as global namespaces for methods.
+For example, in Rails:
+</p>
+<pre>
+  person = double(&quot;person&quot;)
+  Person.stub(:find) { person }
+</pre>
+<p>
+In this case we&#8217;re instrumenting Person to return the person object
+we&#8217;ve defined whenever it receives the <tt>find</tt> message. We can
+do this with any object in a system because RSpec adds the <tt>stub</tt>
+and <tt>should_receive</tt> methods to every object. When we use either,
+RSpec replaces the method we&#8217;re stubbing or mocking with it&#8217;s
+own test-double-like method. At the end of the example, RSpec verifies any
+message expectations, and then restores the original methods.
+</p>
+<h2>Expecting Arguments</h2>
+<pre>
+  double.should_receive(:msg).with(*args)
+  double.should_not_receive(:msg).with(*args)
+</pre>
+<h2>Argument Matchers</h2>
+<p>
+Arguments that are passed to # are compared with actual arguments received
+using == by default. In cases in which you want to specify things about the
+arguments rather than the arguments themselves, you can use any of
+RSpec&#8217;s Expression Matchers. They don&#8217;t all make syntactic
+sense (they were primarily designed for use with RSpec::Expectations), but
+you are free to create your own custom RSpec::Matchers.
+</p>
+<p>
+RSpec::Mocks does provide one additional Matcher method named #.
+</p>
+<p>
+In addition, RSpec::Mocks adds some keyword Symbols that you can use to
+specify certain kinds of arguments:
+</p>
+<pre>
+  double.should_receive(:msg).with(no_args())
+  double.should_receive(:msg).with(any_args())
+  double.should_receive(:msg).with(1, kind_of(Numeric), &quot;b&quot;) #2nd argument can any kind of Numeric
+  double.should_receive(:msg).with(1, boolean(), &quot;b&quot;) #2nd argument can true or false
+  double.should_receive(:msg).with(1, /abc/, &quot;b&quot;) #2nd argument can be any String matching the submitted Regexp
+  double.should_receive(:msg).with(1, anything(), &quot;b&quot;) #2nd argument can be anything at all
+  double.should_receive(:msg).with(1, ducktype(:abs, :div), &quot;b&quot;)
+                           #2nd argument can be object that responds to #abs and #div
+                                                                      
+</pre>
+<h2>Receive Counts</h2>
+<pre>
+  double.should_receive(:msg).once
+  double.should_receive(:msg).twice
+  double.should_receive(:msg).exactly(n).times
+  double.should_receive(:msg).at_least(:once)
+  double.should_receive(:msg).at_least(:twice)
+  double.should_receive(:msg).at_least(n).times
+  double.should_receive(:msg).at_most(:once)
+  double.should_receive(:msg).at_most(:twice)
+  double.should_receive(:msg).at_most(n).times
+  double.should_receive(:msg).any_number_of_times
+</pre>
+<h2>Ordering</h2>
+<pre>
+  double.should_receive(:msg).ordered
+  double.should_receive(:other_msg).ordered
+    #This will fail if the messages are received out of order
+</pre>
+<h2>Setting Reponses</h2>
+<p>
+Whether you are setting a message expectation or a method stub, you can
+tell the object precisely how to respond. The most generic way is to pass a
+block to <tt>stub</tt> or <tt>should_receive</tt>:
+</p>
+<pre>
+  double.should_receive(:msg) { value }
+</pre>
+<p>
+When the double receives the <tt>msg</tt> message, it evaluates the block
+and returns the result.
+</p>
+<pre>
+  double.should_receive(:msg).and_return(value)
+  double.should_receive(:msg).exactly(3).times.and_return(value1, value2, value3)
+    # returns value1 the first time, value2 the second, etc
+  double.should_receive(:msg).and_raise(error)
+    #error can be an instantiated object or a class
+    #if it is a class, it must be instantiable with no args
+  double.should_receive(:msg).and_throw(:msg)
+  double.should_receive(:msg).and_yield(values,to,yield)
+  double.should_receive(:msg).and_yield(values,to,yield).and_yield(some,other,values,this,time)
+    # for methods that yield to a block multiple times
+</pre>
+<p>
+Any of these responses can be applied to a stub as well
+</p>
+<pre>
+  double.stub(:msg).and_return(value)
+  double.stub(:msg).and_return(value1, value2, value3)
+  double.stub(:msg).and_raise(error)
+  double.stub(:msg).and_throw(:msg)
+  double.stub(:msg).and_yield(values,to,yield)
+  double.stub(:msg).and_yield(values,to,yield).and_yield(some,other,values,this,time)
+</pre>
+<h2>Arbitrary Handling</h2>
+<p>
+Once in a while you&#8217;ll find that the available expectations
+don&#8217;t solve the particular problem you are trying to solve. Imagine
+that you expect the message to come with an Array argument that has a
+specific length, but you don&#8217;t care what is in it. You could do this:
+</p>
+<pre>
+  double.should_receive(:msg) do |arg|
+    arg.should be_an_istance_of(Array)
+    arg.length.should == 7
+  end
+</pre>
+<h2>Combining Expectation Details</h2>
+<p>
+Combining the message name with specific arguments, receive counts and
+responses you can get quite a bit of detail in your expectations:
+</p>
+<pre>
+  double.should_receive(:&lt;&lt;).with(&quot;illegal value&quot;).once.and_raise(ArgumentError)
+</pre>
+<h2>Further Reading</h2>
+<p>
+There are many different viewpoints about the meaning of mocks and stubs.
+If you are interested in learning more, here is some recommended reading:
+</p>
+<ul>
+<li><p>
+<a href="Mocks/Mock.html">Mock</a> Objects: <a
+href="http://www.mockobjects.com/">www.mockobjects.com/</a>
+</p>
+</li>
+<li><p>
+Endo-Testing: <a
+href="http://www.mockobjects.com/files/endotesting.pdf">www.mockobjects.com/files/endotesting.pdf</a>
+</p>
+</li>
+<li><p>
+<a href="Mocks/Mock.html">Mock</a> Roles, Not Objects: <a
+href="http://www.mockobjects.com/files/mockrolesnotobjects.pdf">www.mockobjects.com/files/mockrolesnotobjects.pdf</a>
+</p>
+</li>
+<li><p>
+Test Double Patterns: <a
+href="http://xunitpatterns.com/Test%20Double%20Patterns.html">xunitpatterns.com/Test%20Double%20Patterns.html</a>
+</p>
+</li>
+<li><p>
+Mocks aren&#8217;t stubs: <a
+href="http://www.martinfowler.com/articles/mocksArentStubs.html">www.martinfowler.com/articles/mocksArentStubs.html</a>
+</p>
+</li>
+</ul>
+
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

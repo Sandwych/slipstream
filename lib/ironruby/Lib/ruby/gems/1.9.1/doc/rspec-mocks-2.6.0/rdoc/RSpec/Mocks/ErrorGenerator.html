@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+	<title>Class: RSpec::Mocks::ErrorGenerator</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../../index.html">Home</a>
+          <a href="../../index.html#classes">Classes</a>
+          <a href="../../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/rspec/mocks/error_generator_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/rspec/mocks/error_generator.rb">lib/rspec/mocks/error_generator.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">Object</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-c-new">::new</a></li>
+					
+					<li><a href="#method-i-__raise">#__raise</a></li>
+					
+					<li><a href="#method-i-arg_list">#arg_list</a></li>
+					
+					<li><a href="#method-i-arg_message">#arg_message</a></li>
+					
+					<li><a href="#method-i-count_message">#count_message</a></li>
+					
+					<li><a href="#method-i-format_args">#format_args</a></li>
+					
+					<li><a href="#method-i-intro">#intro</a></li>
+					
+					<li><a href="#method-i-opts">#opts</a></li>
+					
+					<li><a href="#method-i-pretty_print">#pretty_print</a></li>
+					
+					<li><a href="#method-i-raise_block_failed_error">#raise_block_failed_error</a></li>
+					
+					<li><a href="#method-i-raise_expectation_error">#raise_expectation_error</a></li>
+					
+					<li><a href="#method-i-raise_missing_block_error">#raise_missing_block_error</a></li>
+					
+					<li><a href="#method-i-raise_out_of_order_error">#raise_out_of_order_error</a></li>
+					
+					<li><a href="#method-i-raise_similar_message_args_error">#raise_similar_message_args_error</a></li>
+					
+					<li><a href="#method-i-raise_unexpected_message_args_error">#raise_unexpected_message_args_error</a></li>
+					
+					<li><a href="#method-i-raise_unexpected_message_error">#raise_unexpected_message_error</a></li>
+					
+					<li><a href="#method-i-raise_wrong_arity_error">#raise_wrong_arity_error</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../RSpec/Mocks/AmbiguousReturnError.html">RSpec::Mocks::AmbiguousReturnError</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance.html">RSpec::Mocks::AnyInstance</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/Chain.html">RSpec::Mocks::AnyInstance::Chain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/ExpectationChain.html">RSpec::Mocks::AnyInstance::ExpectationChain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/Recorder.html">RSpec::Mocks::AnyInstance::Recorder</a></li>
+				
+					<li><a href="../../RSpec/Mocks/AnyInstance/StubChain.html">RSpec::Mocks::AnyInstance::StubChain</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentExpectation.html">RSpec::Mocks::ArgumentExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers.html">RSpec::Mocks::ArgumentMatchers</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/AnyArgMatcher.html">RSpec::Mocks::ArgumentMatchers::AnyArgMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/AnyArgsMatcher.html">RSpec::Mocks::ArgumentMatchers::AnyArgsMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/BooleanMatcher.html">RSpec::Mocks::ArgumentMatchers::BooleanMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/DuckTypeMatcher.html">RSpec::Mocks::ArgumentMatchers::DuckTypeMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/EqualityProxy.html">RSpec::Mocks::ArgumentMatchers::EqualityProxy</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/HashIncludingMatcher.html">RSpec::Mocks::ArgumentMatchers::HashIncludingMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/HashNotIncludingMatcher.html">RSpec::Mocks::ArgumentMatchers::HashNotIncludingMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/InstanceOf.html">RSpec::Mocks::ArgumentMatchers::InstanceOf</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/KindOf.html">RSpec::Mocks::ArgumentMatchers::KindOf</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/MatcherMatcher.html">RSpec::Mocks::ArgumentMatchers::MatcherMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/NoArgsMatcher.html">RSpec::Mocks::ArgumentMatchers::NoArgsMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ArgumentMatchers/RegexpMatcher.html">RSpec::Mocks::ArgumentMatchers::RegexpMatcher</a></li>
+				
+					<li><a href="../../RSpec/Mocks/BaseExpectation.html">RSpec::Mocks::BaseExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ErrorGenerator.html">RSpec::Mocks::ErrorGenerator</a></li>
+				
+					<li><a href="../../RSpec/Mocks/ExampleMethods.html">RSpec::Mocks::ExampleMethods</a></li>
+				
+					<li><a href="../../RSpec/Mocks/InstanceExec.html">RSpec::Mocks::InstanceExec</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MessageExpectation.html">RSpec::Mocks::MessageExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MethodDouble.html">RSpec::Mocks::MethodDouble</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MethodDouble/@object;.html">RSpec::Mocks::MethodDouble::@object;</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Methods.html">RSpec::Mocks::Methods</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Mock.html">RSpec::Mocks::Mock</a></li>
+				
+					<li><a href="../../RSpec/Mocks/MockExpectationError.html">RSpec::Mocks::MockExpectationError</a></li>
+				
+					<li><a href="../../RSpec/Mocks/NegativeMessageExpectation.html">RSpec::Mocks::NegativeMessageExpectation</a></li>
+				
+					<li><a href="../../RSpec/Mocks/OrderGroup.html">RSpec::Mocks::OrderGroup</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Proxy.html">RSpec::Mocks::Proxy</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Serialization.html">RSpec::Mocks::Serialization</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Serialization/YAML.html">RSpec::Mocks::Serialization::YAML</a></li>
+				
+					<li><a href="../../RSpec/Mocks/Space.html">RSpec::Mocks::Space</a></li>
+				
+					<li><a href="../../RSpec/Mocks/includer;.html">RSpec::Mocks::includer;</a></li>
+				
+					<li><a href="../../Marshal.html">Marshal</a></li>
+				
+					<li><a href="../../Psych.html">Psych</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">RSpec::Mocks::ErrorGenerator</h1>
+
+		<div id="description">
+			
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="opts-attribute-method" class="method-detail">
+				<a name="opts"></a>
+				
+				<a name="opts="></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">opts</span><span
+						class="attribute-access-type">[W]</span>
+				</div>
+
+				<div class="method-description">
+				
+				
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="method-c-new"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">(target, name, options={})</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 6</span>
+ 6:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">target</span>, <span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>={})
+ 7:         <span class="ruby-ivar">@declared_as</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:__declared_as</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">'Mock'</span>
+ 8:         <span class="ruby-ivar">@target</span> = <span class="ruby-identifier">target</span>
+ 9:         <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+10:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="opts-method" class="method-detail ">
+				<a name="method-i-opts"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">opts</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="opts-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 12</span>
+12:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">opts</span>
+13:         <span class="ruby-ivar">@opts</span> <span class="ruby-operator">||=</span> {}
+14:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-block-failed-error-method" class="method-detail ">
+				<a name="method-i-raise_block_failed_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_block_failed_error</span><span
+						class="method-args">(sym, detail)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-block-failed-error-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 40</span>
+40:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_block_failed_error</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-identifier">detail</span>)
+41:         <span class="ruby-identifier">__raise</span> <span class="ruby-node">&quot;#{intro} received :#{sym} but passed block failed with: #{detail}&quot;</span>
+42:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-expectation-error-method" class="method-detail ">
+				<a name="method-i-raise_expectation_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_expectation_error</span><span
+						class="method-args">(sym, expected_received_count, actual_received_count, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-expectation-error-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 32</span>
+32:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_expectation_error</span>(<span class="ruby-identifier">sym</span>, <span class="ruby-identifier">expected_received_count</span>, <span class="ruby-identifier">actual_received_count</span>, *<span class="ruby-identifier">args</span>)
+33:         <span class="ruby-identifier">__raise</span> <span class="ruby-node">&quot;(#{intro}).#{sym}#{format_args(*args)}\n    expected: #{count_message(expected_received_count)}\n    received: #{count_message(actual_received_count)}&quot;</span>
+34:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-missing-block-error-method" class="method-detail ">
+				<a name="method-i-raise_missing_block_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_missing_block_error</span><span
+						class="method-args">(args_to_yield)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-missing-block-error-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 44</span>
+44:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_missing_block_error</span>(<span class="ruby-identifier">args_to_yield</span>)
+45:         <span class="ruby-identifier">__raise</span> <span class="ruby-node">&quot;#{intro} asked to yield |#{arg_list(*args_to_yield)}| but no block was passed&quot;</span>
+46:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-out-of-order-error-method" class="method-detail ">
+				<a name="method-i-raise_out_of_order_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_out_of_order_error</span><span
+						class="method-args">(sym)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-out-of-order-error-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 36</span>
+36:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_out_of_order_error</span>(<span class="ruby-identifier">sym</span>)
+37:         <span class="ruby-identifier">__raise</span> <span class="ruby-node">&quot;#{intro} received :#{sym} out of order&quot;</span>
+38:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-similar-message-args-error-method" class="method-detail ">
+				<a name="method-i-raise_similar_message_args_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_similar_message_args_error</span><span
+						class="method-args">(expectation, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-similar-message-args-error-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 26</span>
+26:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_similar_message_args_error</span>(<span class="ruby-identifier">expectation</span>, *<span class="ruby-identifier">args</span>)
+27:         <span class="ruby-identifier">expected_args</span> = <span class="ruby-identifier">format_args</span>(*<span class="ruby-identifier">expectation</span>.<span class="ruby-identifier">expected_args</span>)
+28:         <span class="ruby-identifier">actual_args</span> = <span class="ruby-identifier">args</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">format_args</span>(*<span class="ruby-identifier">a</span>)}.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;, &quot;</span>)
+29:         <span class="ruby-identifier">__raise</span> <span class="ruby-node">&quot;#{intro} received #{expectation.sym.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}&quot;</span>
+30:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-unexpected-message-args-error-method" class="method-detail ">
+				<a name="method-i-raise_unexpected_message_args_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_unexpected_message_args_error</span><span
+						class="method-args">(expectation, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-unexpected-message-args-error-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 20</span>
+20:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_unexpected_message_args_error</span>(<span class="ruby-identifier">expectation</span>, *<span class="ruby-identifier">args</span>)
+21:         <span class="ruby-identifier">expected_args</span> = <span class="ruby-identifier">format_args</span>(*<span class="ruby-identifier">expectation</span>.<span class="ruby-identifier">expected_args</span>)
+22:         <span class="ruby-identifier">actual_args</span> = <span class="ruby-identifier">format_args</span>(*<span class="ruby-identifier">args</span>)
+23:         <span class="ruby-identifier">__raise</span> <span class="ruby-node">&quot;#{intro} received #{expectation.sym.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}&quot;</span>
+24:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-unexpected-message-error-method" class="method-detail ">
+				<a name="method-i-raise_unexpected_message_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_unexpected_message_error</span><span
+						class="method-args">(sym, *args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-unexpected-message-error-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 16</span>
+16:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_unexpected_message_error</span>(<span class="ruby-identifier">sym</span>, *<span class="ruby-identifier">args</span>)
+17:         <span class="ruby-identifier">__raise</span> <span class="ruby-node">&quot;#{intro} received unexpected message :#{sym}#{arg_message(*args)}&quot;</span>
+18:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="raise-wrong-arity-error-method" class="method-detail ">
+				<a name="method-i-raise_wrong_arity_error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">raise_wrong_arity_error</span><span
+						class="method-args">(args_to_yield, arity)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="raise-wrong-arity-error-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 48</span>
+48:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">raise_wrong_arity_error</span>(<span class="ruby-identifier">args_to_yield</span>, <span class="ruby-identifier">arity</span>)
+49:         <span class="ruby-identifier">__raise</span> <span class="ruby-node">&quot;#{intro} yielded |#{arg_list(*args_to_yield)}| to block with arity of #{arity}&quot;</span>
+50:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="private-instance-method-details" class="method-section section">
+			<h3 class="section-header">Private Instance Methods</h3>
+
+		
+			<div id="-raise-method" class="method-detail ">
+				<a name="method-i-__raise"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">__raise</span><span
+						class="method-args">(message)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="-raise-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 68</span>
+68:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">__raise</span>(<span class="ruby-identifier">message</span>)
+69:         <span class="ruby-identifier">message</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-value">:message</span>] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">opts</span>[<span class="ruby-value">:message</span>].<span class="ruby-identifier">nil?</span>
+70:         <span class="ruby-constant">Kernel</span><span class="ruby-operator">::</span><span class="ruby-identifier">raise</span>(<span class="ruby-constant">RSpec</span><span class="ruby-operator">::</span><span class="ruby-constant">Mocks</span><span class="ruby-operator">::</span><span class="ruby-constant">MockExpectationError</span>, <span class="ruby-identifier">message</span>)
+71:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="arg-list-method" class="method-detail ">
+				<a name="method-i-arg_list"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">arg_list</span><span
+						class="method-args">(*args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="arg-list-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 81</span>
+81:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">arg_list</span>(*<span class="ruby-identifier">args</span>)
+82:         <span class="ruby-identifier">args</span>.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">arg</span><span class="ruby-operator">|</span> <span class="ruby-identifier">arg</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:description</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">arg</span>.<span class="ruby-identifier">description</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">arg</span>.<span class="ruby-identifier">inspect</span>}.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;, &quot;</span>)
+83:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="arg-message-method" class="method-detail ">
+				<a name="method-i-arg_message"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">arg_message</span><span
+						class="method-args">(*args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="arg-message-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 73</span>
+73:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">arg_message</span>(*<span class="ruby-identifier">args</span>)
+74:         <span class="ruby-value str">&quot; with &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">format_args</span>(*<span class="ruby-identifier">args</span>)
+75:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="count-message-method" class="method-detail ">
+				<a name="method-i-count_message"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">count_message</span><span
+						class="method-args">(count)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="count-message-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 85</span>
+85:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">count_message</span>(<span class="ruby-identifier">count</span>)
+86:         <span class="ruby-keyword kw">return</span> <span class="ruby-node">&quot;at least #{pretty_print(count.abs)}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">count</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>
+87:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">pretty_print</span>(<span class="ruby-identifier">count</span>)
+88:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="format-args-method" class="method-detail ">
+				<a name="method-i-format_args"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">format_args</span><span
+						class="method-args">(*args)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="format-args-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 77</span>
+77:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">format_args</span>(*<span class="ruby-identifier">args</span>)
+78:         <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">?</span> <span class="ruby-value str">&quot;(no args)&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-value str">&quot;(&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">arg_list</span>(*<span class="ruby-identifier">args</span>) <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;)&quot;</span>
+79:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="intro-method" class="method-detail ">
+				<a name="method-i-intro"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">intro</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="intro-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 54</span>
+54:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">intro</span>
+55:         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@name</span>
+56:           <span class="ruby-node">&quot;#{@declared_as} #{@name.inspect}&quot;</span>
+57:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-constant">Mock</span> <span class="ruby-operator">===</span> <span class="ruby-ivar">@target</span>
+58:           <span class="ruby-ivar">@declared_as</span>
+59:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-constant">Class</span> <span class="ruby-operator">===</span> <span class="ruby-ivar">@target</span>
+60:           <span class="ruby-node">&quot;&lt;#{@target.inspect} (class)&gt;&quot;</span>
+61:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-ivar">@target</span>
+62:           <span class="ruby-ivar">@target</span>
+63:         <span class="ruby-keyword kw">else</span>
+64:           <span class="ruby-value str">&quot;nil&quot;</span>
+65:         <span class="ruby-keyword kw">end</span>
+66:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="pretty-print-method" class="method-detail ">
+				<a name="method-i-pretty_print"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">pretty_print</span><span
+						class="method-args">(count)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="pretty-print-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rspec/mocks/error_generator.rb, line 90</span>
+90:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">pretty_print</span>(<span class="ruby-identifier">count</span>)
+91:         <span class="ruby-node">&quot;#{count} time#{count == 1 ? '' : 's'}&quot;</span>
+92:       <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

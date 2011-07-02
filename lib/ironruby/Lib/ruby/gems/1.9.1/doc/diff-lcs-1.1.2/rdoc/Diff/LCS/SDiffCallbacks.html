@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: Diff::LCS::SDiffCallbacks</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../../index.html">Home</a>
+          <a href="../../index.html#classes">Classes</a>
+          <a href="../../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/diff/lcs/callbacks_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/diff/lcs/callbacks.rb">lib/diff/lcs/callbacks.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">Object</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-c-new">::new</a></li>
+					
+					<li><a href="#method-i-change">#change</a></li>
+					
+					<li><a href="#method-i-discard_a">#discard_a</a></li>
+					
+					<li><a href="#method-i-discard_b">#discard_b</a></li>
+					
+					<li><a href="#method-i-match">#match</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="../../ChangeLog.html">ChangeLog</a></li>
+				
+					<li class="file"><a href="../../Install.html">Install</a></li>
+				
+					<li class="file"><a href="../../README.html">README</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../Diff.html">Diff</a></li>
+				
+					<li><a href="../../Diff/LCS.html">Diff::LCS</a></li>
+				
+					<li><a href="../../Diff/LCS/Block.html">Diff::LCS::Block</a></li>
+				
+					<li><a href="../../Diff/LCS/Change.html">Diff::LCS::Change</a></li>
+				
+					<li><a href="../../Diff/LCS/ChangeTypeTests.html">Diff::LCS::ChangeTypeTests</a></li>
+				
+					<li><a href="../../Diff/LCS/ContextChange.html">Diff::LCS::ContextChange</a></li>
+				
+					<li><a href="../../Diff/LCS/ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/DiffCallbacks.html">Diff::LCS::DiffCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/Hunk.html">Diff::LCS::Hunk</a></li>
+				
+					<li><a href="../../Diff/LCS/Ldiff.html">Diff::LCS::Ldiff</a></li>
+				
+					<li><a href="../../Diff/LCS/SDiffCallbacks.html">Diff::LCS::SDiffCallbacks</a></li>
+				
+					<li><a href="../../Array.html">Array</a></li>
+				
+					<li><a href="../../String.html">String</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">Diff::LCS::SDiffCallbacks</h1>
+
+		<div id="description">
+			<p>
+This will produce a simple array of diff change objects. Each element in
+the # array is a single <a href="ContextChange.html">ContextChange</a>. In
+the set of # provided by <a href="SDiffCallbacks.html">SDiffCallbacks</a>,
+both old and new objects will be presented for both changed <strong>and
+unchanged</strong> objects. <tt>nil</tt> will be substituted for a
+discarded object.
+</p>
+<p>
+The diffset produced by this callback, when provided to <a
+href="../LCS.html#method-i-sdiff">Diff::LCS#sdiff</a>, will compute and
+display the necessary components to show two sequences and their minimized
+differences side by side, just like the Unix utility <tt>sdiff</tt>.
+</p>
+<pre>
+    same             same
+    before     |     after
+    old        &lt;     -
+    *          &gt;     new
+
+    seq1 = %w(a b c e h j l m n p)
+    seq2 = %w(b c d e f j k l m r s t)
+
+    diffs = Diff::LCS.sdiff(seq1, seq2)
+      # This example shows a simplified array format.
+      # [ [ &quot;-&quot;, [  0, &quot;a&quot;], [  0, nil ] ],
+      #   [ &quot;=&quot;, [  1, &quot;b&quot;], [  0, &quot;b&quot; ] ],
+      #   [ &quot;=&quot;, [  2, &quot;c&quot;], [  1, &quot;c&quot; ] ],
+      #   [ &quot;+&quot;, [  3, nil], [  2, &quot;d&quot; ] ],
+      #   [ &quot;=&quot;, [  3, &quot;e&quot;], [  3, &quot;e&quot; ] ],
+      #   [ &quot;!&quot;, [  4, &quot;h&quot;], [  4, &quot;f&quot; ] ],
+      #   [ &quot;=&quot;, [  5, &quot;j&quot;], [  5, &quot;j&quot; ] ],
+      #   [ &quot;+&quot;, [  6, nil], [  6, &quot;k&quot; ] ],
+      #   [ &quot;=&quot;, [  6, &quot;l&quot;], [  7, &quot;l&quot; ] ],
+      #   [ &quot;=&quot;, [  7, &quot;m&quot;], [  8, &quot;m&quot; ] ],
+      #   [ &quot;!&quot;, [  8, &quot;n&quot;], [  9, &quot;r&quot; ] ],
+      #   [ &quot;!&quot;, [  9, &quot;p&quot;], [ 10, &quot;s&quot; ] ],
+      #   [ &quot;+&quot;, [ 10, nil], [ 11, &quot;t&quot; ] ] ]
+</pre>
+<p>
+The result of this operation is similar to that of <a
+href="ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a>. They
+may be compared as:
+</p>
+<pre>
+    s = Diff::LCS.sdiff(seq1, seq2).reject { |e| e.action == &quot;=&quot; }
+    c = Diff::LCS.sdiff(seq1, seq2, Diff::LCS::ContextDiffCallbacks).flatten
+
+    s == c # -&gt; true
+</pre>
+<h3>Use</h3>
+<p>
+This callback object must be initialised and is used by the <a
+href="../LCS.html#method-i-sdiff">Diff::LCS#sdiff</a> method.
+</p>
+<pre>
+    cbo = Diff::LCS::SDiffCallbacks.new
+    Diff::LCS.LCS(seq1, seq2, cbo)
+</pre>
+<p>
+As with the other initialisable callback objects, <a
+href="SDiffCallbacks.html">Diff::LCS::SDiffCallbacks</a> can be initialised
+with a block. As there is no &#8220;fininishing&#8221; to be done, this has
+no effect on the state of the object.
+</p>
+<pre>
+    cbo = Diff::LCS::SDiffCallbacks.new { |tcbo| Diff::LCS.LCS(seq1, seq2, tcbo) }
+</pre>
+<h3>Simplified <a href="../../Array.html">Array</a> Format</h3>
+<p>
+The simplified array format used in the example above can be obtained with:
+</p>
+<pre>
+    require 'pp'
+    pp diffs.map { |e| e.to_a }</pre>
+
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+		<div id="attribute-method-details" class="method-section section">
+			<h3 class="section-header">Attributes</h3>
+
+			
+			<div id="diffs-attribute-method" class="method-detail">
+				<a name="diffs"></a>
+				
+				<div class="method-heading attribute-method-heading">
+					<span class="method-name">diffs</span><span
+						class="attribute-access-type">[R]</span>
+				</div>
+
+				<div class="method-description">
+				
+				<p>
+Returns the difference set collected during the diff process.
+</p>
+				
+				</div>
+			</div>
+			
+		</div>
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="method-c-new"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs/callbacks.rb, line 302</span>
+302:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span> <span class="ruby-comment cmt">#:yields self:</span>
+303:     <span class="ruby-ivar">@diffs</span> = []
+304:     <span class="ruby-keyword kw">yield</span> <span class="ruby-keyword kw">self</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+305:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="change-method" class="method-detail ">
+				<a name="method-i-change"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">change</span><span
+						class="method-args">(event)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="change-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs/callbacks.rb, line 319</span>
+319:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">change</span>(<span class="ruby-identifier">event</span>)
+320:     <span class="ruby-ivar">@diffs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">simplify</span>(<span class="ruby-identifier">event</span>)
+321:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="discard-a-method" class="method-detail ">
+				<a name="method-i-discard_a"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">discard_a</span><span
+						class="method-args">(event)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="discard-a-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs/callbacks.rb, line 311</span>
+311:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">discard_a</span>(<span class="ruby-identifier">event</span>)
+312:     <span class="ruby-ivar">@diffs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">simplify</span>(<span class="ruby-identifier">event</span>)
+313:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="discard-b-method" class="method-detail ">
+				<a name="method-i-discard_b"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">discard_b</span><span
+						class="method-args">(event)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="discard-b-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs/callbacks.rb, line 315</span>
+315:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">discard_b</span>(<span class="ruby-identifier">event</span>)
+316:     <span class="ruby-ivar">@diffs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">simplify</span>(<span class="ruby-identifier">event</span>)
+317:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="match-method" class="method-detail ">
+				<a name="method-i-match"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">match</span><span
+						class="method-args">(event)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					
+					
+
+					
+					<div class="method-source-code"
+						id="match-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs/callbacks.rb, line 307</span>
+307:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">match</span>(<span class="ruby-identifier">event</span>)
+308:     <span class="ruby-ivar">@diffs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">simplify</span>(<span class="ruby-identifier">event</span>)
+309:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

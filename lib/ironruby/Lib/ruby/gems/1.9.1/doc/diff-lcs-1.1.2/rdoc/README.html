@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>File: README [diff-lcs-1.1.2 Documentation]</title>
+
+	<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+</head>
+
+<body class="file">
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="./ChangeLog.html">ChangeLog</a></li>
+				
+					<li class="file"><a href="./Install.html">Install</a></li>
+				
+					<li class="file"><a href="./README.html">README</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./Diff.html">Diff</a></li>
+				
+					<li><a href="./Diff/LCS.html">Diff::LCS</a></li>
+				
+					<li><a href="./Diff/LCS/Block.html">Diff::LCS::Block</a></li>
+				
+					<li><a href="./Diff/LCS/Change.html">Diff::LCS::Change</a></li>
+				
+					<li><a href="./Diff/LCS/ChangeTypeTests.html">Diff::LCS::ChangeTypeTests</a></li>
+				
+					<li><a href="./Diff/LCS/ContextChange.html">Diff::LCS::ContextChange</a></li>
+				
+					<li><a href="./Diff/LCS/ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a></li>
+				
+					<li><a href="./Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="./Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="./Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="./Diff/LCS/DiffCallbacks.html">Diff::LCS::DiffCallbacks</a></li>
+				
+					<li><a href="./Diff/LCS/Hunk.html">Diff::LCS::Hunk</a></li>
+				
+					<li><a href="./Diff/LCS/Ldiff.html">Diff::LCS::Ldiff</a></li>
+				
+					<li><a href="./Diff/LCS/SDiffCallbacks.html">Diff::LCS::SDiffCallbacks</a></li>
+				
+					<li><a href="./Array.html">Array</a></li>
+				
+					<li><a href="./String.html">String</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<p>
+<a href="Diff/LCS.html">Diff::LCS</a> <a href="README.html">README</a>
+</p>
+<h6><a href="Diff/LCS.html">Diff::LCS</a> is a port of Algorithm::Diff[1] that uses the McIlroy-Hunt</h6>
+<p>
+longest common subsequence (LCS) algorithm to compute intelligent
+differences between two sequenced enumerable containers[2]. The
+implementation is based on Mario I. Wolczko&#8217;s[3] Smalltalk version
+(1.2, 1993)[4] and Ned Konz&#8217;s[5] Perl version (Algorithm::Diff)[6].
+</p>
+<p>
+This release is version 1.1.2, fixing an htmldiff bug in 1.1.1. Version
+1.1.0 added new features, including the ability to # and # changes as well
+as a new contextual diff callback, <a
+href="Diff/LCS/ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a>,
+that should improve the context sensitivity of patching.
+</p>
+<p>
+Using this module is quite simple. By default, <a
+href="Diff/LCS.html">Diff::LCS</a> does not extend objects with the <a
+href="Diff/LCS.html">Diff::LCS</a> interface, but will be called as if it
+were a function:
+</p>
+<pre>
+  require 'diff/lcs'
+
+  seq1 = %w(a b c e h j l m n p)
+  seq2 = %w(b c d e f j k l m r s t)
+
+  lcs = Diff::LCS.LCS(seq1, seq2)
+  diffs = Diff::LCS.diff(seq1, seq2)
+  sdiff = Diff::LCS.sdiff(seq1, seq2)
+  seq = Diff::LCS.traverse_sequences(seq1, seq2, callback_obj)
+  bal = Diff::LCS.traverse_balanced(seq1, seq2, callback_obj)
+  seq2 == Diff::LCS.patch!(seq1, diffs)
+  seq1 == Diff::LCS.unpatch!(seq2, diffs)
+  seq2 == Diff::LCS.patch!(seq1, sdiff)
+  seq1 == Diff::LCS.unpatch!(seq2, sdiff)
+</pre>
+<p>
+Objects can be extended with Diff::LCS:
+</p>
+<pre>
+  seq1.extend(Diff::LCS)
+  lcs = seq1.lcs(seq2)
+  diffs = seq1.diff(seq2)
+  sdiff = seq1.sdiff(seq2)
+  seq = seq1.traverse_sequences(seq2, callback_obj)
+  bal = seq1.traverse_balanced(seq2, callback_obj)
+  seq2 == seq1.patch!(diffs)
+  seq1 == seq2.unpatch!(diffs)
+  seq2 == seq1.patch!(sdiff)
+  seq1 == seq2.unpatch!(sdiff)
+</pre>
+<p>
+By requiring &#8216;diff/lcs/array&#8217; or &#8216;diff/lcs/string&#8217;,
+<a href="Array.html">Array</a> or <a href="String.html">String</a> will be
+extended for use this way.
+</p>
+<p>
+Copyright
+</p>
+<h6># Copyright 2004 Austin Ziegler <diff-lcs@halostatue.ca></h6>
+<p>
+#   adapted from: #     Algorithm::Diff (Perl) by Ned Konz
+<perl@bike-nomad.com> #     Smalltalk by Mario I. Wolczko
+<mario@wolczko.com> #   implements McIlroy-Hunt diff algorithm # # This
+program is free software. It may be redistributed and/or modified # under
+the terms of the GPL version 2 (or later), the Perl Artistic # licence, or
+the Ruby licence. #  # $Id: <a href="README.html">README</a>,v 1.7
+2004/10/17 20:31:10 austin Exp $
+</p>
+<p>
+Footnotes
+</p>
+<h6>[1] This library is called <a href="Diff/LCS.html">Diff::LCS</a> because there are multiple</h6>
+<pre>
+    Ruby libraries called Algorithm::Diff maintained by other authors.
+</pre>
+<dl>
+<dt>2</dt><dd><p>
+By sequenced enumerable, I mean that the order of enumeration is
+predictable and consistent for the same set of data. While it is
+theoretically possible to generate a diff for unordereded hash, it will
+only be meaningful if the enumeration of the hashes is consistent. In
+general, this will mean that containers that behave like <a
+href="String.html">String</a> or <a href="Array.html">Array</a> will
+perform best.
+</p>
+</dd>
+<dt>3</dt><dd><p>
+mario@wolczko.com
+</p>
+</dd>
+<dt>4</dt><dd><p>
+<a
+href="ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st">st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st</a>
+</p>
+</dd>
+<dt>5</dt><dd><p>
+perl@bike-nomad.com
+</p>
+</dd>
+<dt>6</dt><dd><p>
+<a
+href="http://search.cpan.org/~nedkonz/Algorithm-Diff-1.15/">search.cpan.org/~nedkonz/Algorithm-Diff-1.15/</a>
+</p>
+</dd>
+</dl>
+
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+</body>
+</html>
+

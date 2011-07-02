@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Module: Diff::LCS::Ldiff</title>
+
+	<link rel="stylesheet" href="../../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="module">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../../index.html">Home</a>
+          <a href="../../index.html#classes">Classes</a>
+          <a href="../../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../../lib/diff/lcs/ldiff_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/diff/lcs/ldiff.rb">lib/diff/lcs/ldiff.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="../../ChangeLog.html">ChangeLog</a></li>
+				
+					<li class="file"><a href="../../Install.html">Install</a></li>
+				
+					<li class="file"><a href="../../README.html">README</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../../Diff.html">Diff</a></li>
+				
+					<li><a href="../../Diff/LCS.html">Diff::LCS</a></li>
+				
+					<li><a href="../../Diff/LCS/Block.html">Diff::LCS::Block</a></li>
+				
+					<li><a href="../../Diff/LCS/Change.html">Diff::LCS::Change</a></li>
+				
+					<li><a href="../../Diff/LCS/ChangeTypeTests.html">Diff::LCS::ChangeTypeTests</a></li>
+				
+					<li><a href="../../Diff/LCS/ContextChange.html">Diff::LCS::ContextChange</a></li>
+				
+					<li><a href="../../Diff/LCS/ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/DiffCallbacks.html">Diff::LCS::DiffCallbacks</a></li>
+				
+					<li><a href="../../Diff/LCS/Hunk.html">Diff::LCS::Hunk</a></li>
+				
+					<li><a href="../../Diff/LCS/Ldiff.html">Diff::LCS::Ldiff</a></li>
+				
+					<li><a href="../../Diff/LCS/SDiffCallbacks.html">Diff::LCS::SDiffCallbacks</a></li>
+				
+					<li><a href="../../Array.html">Array</a></li>
+				
+					<li><a href="../../String.html">String</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="module">Diff::LCS::Ldiff</h1>
+
+		<div id="description">
+			<h2>ldiff Usage</h2>
+<pre>
+  ldiff [options] oldfile newfile
+</pre>
+<table>
+<tr><td valign="top">-c</td><td><p>
+Displays a context diff with 3 lines of context.
+</p>
+</td></tr>
+<tr><td valign="top">-C [LINES], &#8212;context [LINES]</td><td><p>
+Displays a context diff with LINES lines of context. Default 3 lines.
+</p>
+</td></tr>
+<tr><td valign="top">-u</td><td><p>
+Displays a unified diff with 3 lines of context.
+</p>
+</td></tr>
+<tr><td valign="top">-U [LINES], &#8212;unified [LINES]</td><td><p>
+Displays a unified diff with LINES lines of context. Default 3 lines.
+</p>
+</td></tr>
+<tr><td valign="top">-e</td><td><p>
+Creates an &#8216;ed&#8217; script to change oldfile to newfile.
+</p>
+</td></tr>
+<tr><td valign="top">-f</td><td><p>
+Creates an &#8216;ed&#8217; script to change oldfile to newfile in reverse
+order.
+</p>
+</td></tr>
+<tr><td valign="top">-a, &#8212;text</td><td><p>
+Treats the files as text and compares them line-by-line, even if they do
+not seem to be text.
+</p>
+</td></tr>
+<tr><td valign="top">&#8212;binary</td><td><p>
+Treats the files as binary.
+</p>
+</td></tr>
+<tr><td valign="top">-q, &#8212;brief</td><td><p>
+Reports only whether or not the files differ, not the details.
+</p>
+</td></tr>
+<tr><td valign="top">&#8212;help</td><td><p>
+Shows the command-line help.
+</p>
+</td></tr>
+<tr><td valign="top">&#8212;version</td><td><p>
+Shows the version of <a href="../LCS.html">Diff::LCS</a>.
+</p>
+</td></tr>
+</table>
+<p>
+By default, runs produces an &#8220;old-style&#8221; diff, with output like
+UNIX diff.
+</p>
+<h2>Copyright</h2>
+<p>
+Copyright &amp;copy; 2004 Austin Ziegler
+</p>
+<pre>
+  Part of Diff::LCS &lt;http://rubyforge.org/projects/ruwiki/&gt;
+  Austin Ziegler &lt;diff-lcs@halostatue.ca&gt;
+</pre>
+<p>
+This program is free software. It may be redistributed and/or modified
+under the terms of the GPL version 2 (or later), the Perl Artistic licence,
+or the Ruby licence.
+</p>
+
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="BANNER">BANNER</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

@@ -1,0 +1,2207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Module: Diff::LCS</title>
+
+	<link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="module">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#classes">Classes</a>
+          <a href="../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../lib/diff/lcs/callbacks_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/diff/lcs/callbacks.rb">lib/diff/lcs/callbacks.rb</a></li>
+					
+						<li><a href="../lib/diff/lcs_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/diff/lcs.rb">lib/diff/lcs.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+
+			<!-- Namespace Contents -->
+			
+			<div id="namespace-list-section" class="section">
+				<h3 class="section-header">Namespace</h3>
+				<ul class="link-list">
+					
+					<li><span class="type">MODULE</span> <a href="LCS/ChangeTypeTests.html">Diff::LCS::ChangeTypeTests</a></li>
+					
+					<li><span class="type">MODULE</span> <a href="LCS/Ldiff.html">Diff::LCS::Ldiff</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/Block.html">Diff::LCS::Block</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/Change.html">Diff::LCS::Change</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/ContextChange.html">Diff::LCS::ContextChange</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/DiffCallbacks.html">Diff::LCS::DiffCallbacks</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/Hunk.html">Diff::LCS::Hunk</a></li>
+					
+					<li><span class="type">CLASS</span> <a href="LCS/SDiffCallbacks.html">Diff::LCS::SDiffCallbacks</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-c-LCS">::LCS</a></li>
+					
+					<li><a href="#method-c-__diff_direction">::__diff_direction</a></li>
+					
+					<li><a href="#method-c-__inverse_vector">::__inverse_vector</a></li>
+					
+					<li><a href="#method-c-__lcs">::__lcs</a></li>
+					
+					<li><a href="#method-c-__normalize_patchset">::__normalize_patchset</a></li>
+					
+					<li><a href="#method-c-__position_hash">::__position_hash</a></li>
+					
+					<li><a href="#method-c-__replace_next_larger">::__replace_next_larger</a></li>
+					
+					<li><a href="#method-c-diff">::diff</a></li>
+					
+					<li><a href="#method-c-patch">::patch</a></li>
+					
+					<li><a href="#method-c-patch%21">::patch!</a></li>
+					
+					<li><a href="#method-c-sdiff">::sdiff</a></li>
+					
+					<li><a href="#method-c-traverse_balanced">::traverse_balanced</a></li>
+					
+					<li><a href="#method-c-traverse_sequences">::traverse_sequences</a></li>
+					
+					<li><a href="#method-c-unpatch%21">::unpatch!</a></li>
+					
+					<li><a href="#method-i-diff">#diff</a></li>
+					
+					<li><a href="#method-i-lcs">#lcs</a></li>
+					
+					<li><a href="#method-i-patch">#patch</a></li>
+					
+					<li><a href="#method-i-patch%21">#patch!</a></li>
+					
+					<li><a href="#method-i-sdiff">#sdiff</a></li>
+					
+					<li><a href="#method-i-traverse_balanced">#traverse_balanced</a></li>
+					
+					<li><a href="#method-i-traverse_sequences">#traverse_sequences</a></li>
+					
+					<li><a href="#method-i-unpatch">#unpatch</a></li>
+					
+					<li><a href="#method-i-unpatch%21">#unpatch!</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="../ChangeLog.html">ChangeLog</a></li>
+				
+					<li class="file"><a href="../Install.html">Install</a></li>
+				
+					<li class="file"><a href="../README.html">README</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../Diff.html">Diff</a></li>
+				
+					<li><a href="../Diff/LCS.html">Diff::LCS</a></li>
+				
+					<li><a href="../Diff/LCS/Block.html">Diff::LCS::Block</a></li>
+				
+					<li><a href="../Diff/LCS/Change.html">Diff::LCS::Change</a></li>
+				
+					<li><a href="../Diff/LCS/ChangeTypeTests.html">Diff::LCS::ChangeTypeTests</a></li>
+				
+					<li><a href="../Diff/LCS/ContextChange.html">Diff::LCS::ContextChange</a></li>
+				
+					<li><a href="../Diff/LCS/ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a></li>
+				
+					<li><a href="../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../Diff/LCS/DefaultCallbacks.html">Diff::LCS::DefaultCallbacks</a></li>
+				
+					<li><a href="../Diff/LCS/DiffCallbacks.html">Diff::LCS::DiffCallbacks</a></li>
+				
+					<li><a href="../Diff/LCS/Hunk.html">Diff::LCS::Hunk</a></li>
+				
+					<li><a href="../Diff/LCS/Ldiff.html">Diff::LCS::Ldiff</a></li>
+				
+					<li><a href="../Diff/LCS/SDiffCallbacks.html">Diff::LCS::SDiffCallbacks</a></li>
+				
+					<li><a href="../Array.html">Array</a></li>
+				
+					<li><a href="../String.html">String</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="module">Diff::LCS</h1>
+
+		<div id="description">
+			<h1><a href="LCS.html">Diff::LCS</a> 1.1.2</h1>
+<p>
+Computes &#8220;intelligent&#8221; differences between two sequenced
+Enumerables. This is an implementation of the McIlroy-Hunt
+&#8220;diff&#8221; algorithm for Enumerable objects that include Diffable.
+</p>
+<p>
+Based on Mario I. Wolczko&#8217;s <mario@wolczko.com> Smalltalk version
+(1.2, 1993) and Ned Konz&#8217;s <perl@bike-nomad.com> Perl version
+(Algorithm::Diff).
+</p>
+<h2>Synopsis</h2>
+<pre>
+  require 'diff/lcs'
+
+  seq1 = %w(a b c e h j l m n p)
+  seq2 = %w(b c d e f j k l m r s t)
+
+  lcs = Diff::LCS.LCS(seq1, seq2)
+  diffs = Diff::LCS.diff(seq1, seq2)
+  sdiff = Diff::LCS.sdiff(seq1, seq2)
+  seq = Diff::LCS.traverse_sequences(seq1, seq2, callback_obj)
+  bal = Diff::LCS.traverse_balanced(seq1, seq2, callback_obj)
+  seq2 == Diff::LCS.patch(seq1, diffs)
+  seq2 == Diff::LCS.patch!(seq1, diffs)
+  seq1 == Diff::LCS.unpatch(seq2, diffs)
+  seq1 == Diff::LCS.unpatch!(seq2, diffs)
+  seq2 == Diff::LCS.patch(seq1, sdiff)
+  seq2 == Diff::LCS.patch!(seq1, sdiff)
+  seq1 == Diff::LCS.unpatch(seq2, sdiff)
+  seq1 == Diff::LCS.unpatch!(seq2, sdiff)
+</pre>
+<p>
+Alternatively, objects can be extended with Diff::LCS:
+</p>
+<pre>
+  seq1.extend(Diff::LCS)
+  lcs = seq1.lcs(seq2)
+  diffs = seq1.diff(seq2)
+  sdiff = seq1.sdiff(seq2)
+  seq = seq1.traverse_sequences(seq2, callback_obj)
+  bal = seq1.traverse_balanced(seq2, callback_obj)
+  seq2 == seq1.patch(diffs)
+  seq2 == seq1.patch!(diffs)
+  seq1 == seq2.unpatch(diffs)
+  seq1 == seq2.unpatch!(diffs)
+  seq2 == seq1.patch(sdiff)
+  seq2 == seq1.patch!(sdiff)
+  seq1 == seq2.unpatch(sdiff)
+  seq1 == seq2.unpatch!(sdiff)
+</pre>
+<p>
+Default extensions are provided for <a href="../Array.html">Array</a> and
+<a href="../String.html">String</a> objects through the use of
+&#8216;diff/lcs/array&#8217; and &#8216;diff/lcs/string&#8217;.
+</p>
+<h2>Introduction (by Mark-Jason Dominus)</h2>
+<p>
+<em>The following text is from the Perl documentation. The only changes
+have been to make the text appear better in Rdoc</em>.
+</p>
+<p>
+I once read an article written by the authors of <tt>diff</tt>; they said
+that they hard worked very hard on the algorithm until they found the right
+one.
+</p>
+<p>
+I think what they ended up using (and I hope someone will correct me,
+because I am not very confident about this) was the `longest common
+subsequence&#8217; method. In the <a href="LCS.html#method-c-LCS">LCS</a>
+problem, you have two sequences of items:
+</p>
+<pre>
+   a b c d f g h j q z
+   a b c d e f g i j k r x y z
+</pre>
+<p>
+and you want to find the longest sequence of items that is present in both
+original sequences in the same order. That is, you want to find a new
+sequence <b>S</b> which can be obtained from the first sequence by deleting
+some items, and from the second sequence by deleting other items. You also
+want <b>S</b> to be as long as possible. In this case <b>S</b> is:
+</p>
+<pre>
+   a b c d f g j z
+</pre>
+<p>
+From there it&#8217;s only a small step to get diff-like output:
+</p>
+<pre>
+   e   h i   k   q r x y
+   +   - +   +   - + + +
+</pre>
+<p>
+This module solves the <a href="LCS.html#method-c-LCS">LCS</a> problem. It
+also includes a canned function to generate <tt>diff</tt>-like output.
+</p>
+<p>
+It might seem from the example above that the <a
+href="LCS.html#method-c-LCS">LCS</a> of two sequences is always pretty
+obvious, but that&#8217;s not always the case, especially when the two
+sequences have many repeated elements. For example, consider
+</p>
+<pre>
+   a x b y c z p d q
+   a b c a x b y c z
+</pre>
+<p>
+A naive approach might start by matching up the <tt>a</tt> and <tt>b</tt>
+that appear at the beginning of each sequence, like this:
+</p>
+<pre>
+   a x b y c         z p d q
+   a   b   c a b y c z
+</pre>
+<p>
+This finds the common subsequence +a b c z+. But actually, the <a
+href="LCS.html#method-c-LCS">LCS</a> is +a x b y c z+:
+</p>
+<pre>
+         a x b y c z p d q
+   a b c a x b y c z
+</pre>
+<h2>Author</h2>
+<p>
+This version is by Austin Ziegler <diff-lcs@halostatue.ca>.
+</p>
+<p>
+It is based on the Perl Algorithm::Diff by Ned Konz <perl@bike-nomad.com>,
+copyright &amp;copy; 2000 - 2002 and the Smalltalk diff version by Mario I.
+Wolczko <mario@wolczko.com>, copyright &amp;copy;
+</p>
+<ol>
+<li><p>
+Documentation includes work by Mark-Jason Dominus.
+</p>
+</li>
+</ol>
+<h2>Licence</h2>
+<p>
+Copyright &amp;copy; 2004 Austin Ziegler This program is free software; you
+can redistribute it and/or modify it under the same terms as Ruby, or
+alternatively under the Perl Artistic licence.
+</p>
+<h2>Credits</h2>
+<p>
+Much of the documentation is taken directly from the Perl Algorithm::Diff
+implementation and was written originally by Mark-Jason Dominus
+<mjd-perl-diff@plover.com> and later by Ned Konz. The basic Ruby
+implementation was re-ported from the Smalltalk implementation, available
+at <a
+href="ftp://st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st">st.cs.uiuc.edu/pub/Smalltalk/MANCHESTER/manchester/4.0/diff.st</a>
+</p>
+<p>
+<a href="LCS.html#method-i-sdiff">#</a> and <a
+href="LCS.html#method-i-traverse_balanced">#</a> were written for the Perl
+version by Mike Schilli <m@perlmeister.com>.
+</p>
+<p>
+&#8220;The algorithm is described in <em>A Fast Algorithm for Computing
+Longest Common Subsequences</em>, CACM, vol.20, no.5, pp.350-353, May 1977,
+with a few minor improvements to improve the speed.&#8220;
+</p>
+
+		</div>
+
+		<!-- Constants -->
+		
+		<div id="constants-list" class="section">
+			<h3 class="section-header">Constants</h3>
+			<dl>
+			
+				<dt><a name="SequenceCallbacks">SequenceCallbacks</a></dt>
+				
+				<dd class="description"><p>
+An alias for <a href="LCS/DefaultCallbacks.html">DefaultCallbacks</a> that
+is used in <a
+href="LCS.html#method-i-traverse_sequences">Diff::LCS#traverse_sequences</a>.
+</p>
+<pre>
+    Diff::LCS.LCS(seq1, seq2, Diff::LCS::SequenceCallbacks)</pre></dd>
+				
+			
+				<dt><a name="BalancedCallbacks">BalancedCallbacks</a></dt>
+				
+				<dd class="description"><p>
+<a href="LCS.html">Diff::LCS</a>.LCS(seq1, seq2, <a
+href="LCS/DefaultCallbacks.html">Diff::LCS::BalancedCallbacks</a>)
+</p></dd>
+				
+			
+				<dt><a name="VERSION">VERSION</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+				<dt><a name="PATCH_MAP">PATCH_MAP</a></dt>
+				
+				<dd class="description"></dd>
+				
+			
+			</dl>
+		</div>
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-class-method-details" class="method-section section">
+			<h3 class="section-header">Public Class Methods</h3>
+
+		
+			<div id="--method" class="method-detail ">
+				<a name="method-c-LCS"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">LCS</span><span
+						class="method-args">(seq1, seq2, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Given two sequenced Enumerables, <a href="LCS.html#method-c-LCS">LCS</a>
+returns an <a href="../Array.html">Array</a> containing their longest
+common subsequences.
+</p>
+<pre>
+  lcs = Diff::LCS.LCS(seq1, seq2)
+</pre>
+<p>
+This array whose contents is such that:
+</p>
+<pre>
+  lcs.each_with_index do |ee, ii|
+    assert(ee.nil? || (seq1[ii] == seq2[ee]))
+  end
+</pre>
+<p>
+If a block is provided, the matching subsequences will be yielded from
+<tt>seq1</tt> in turn and may be modified before they are placed into the
+returned <a href="../Array.html">Array</a> of subsequences.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 230</span>
+230:     <span class="ruby-keyword kw">def</span> <span class="ruby-constant">LCS</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, &amp;<span class="ruby-identifier">block</span>) <span class="ruby-comment cmt">#:yields seq1[ii] for each matched:</span>
+231:       <span class="ruby-identifier">matches</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">__lcs</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>)
+232:       <span class="ruby-identifier">ret</span> = []
+233:       <span class="ruby-identifier">matches</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ee</span>, <span class="ruby-identifier">ii</span><span class="ruby-operator">|</span>
+234:         <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">matches</span>[<span class="ruby-identifier">ii</span>].<span class="ruby-identifier">nil?</span>
+235:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+236:             <span class="ruby-identifier">ret</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ii</span>])
+237:           <span class="ruby-keyword kw">else</span>
+238:             <span class="ruby-identifier">ret</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ii</span>]
+239:           <span class="ruby-keyword kw">end</span>
+240:         <span class="ruby-keyword kw">end</span>
+241:       <span class="ruby-keyword kw">end</span>
+242:       <span class="ruby-identifier">ret</span>
+243:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="-diff-direction-method" class="method-detail ">
+				<a name="method-c-__diff_direction"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">__diff_direction</span><span
+						class="method-args">(src, patchset, limit = nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Examine the patchset and the source to see in which direction the patch
+should be applied.
+</p>
+<p>
+WARNING: By default, this examines the whole patch, so this could take some
+time. This also works better with <a
+href="LCS/ContextChange.html">Diff::LCS::ContextChange</a> or <a
+href="LCS/Change.html">Diff::LCS::Change</a> as its source, as an array
+will cause the creation of one of the above.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="-diff-direction-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 939</span>
+ 939:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">__diff_direction</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">patchset</span>, <span class="ruby-identifier">limit</span> = <span class="ruby-keyword kw">nil</span>)
+ 940:       <span class="ruby-identifier">count</span> = <span class="ruby-identifier">left</span> = <span class="ruby-identifier">left_miss</span> = <span class="ruby-identifier">right</span> = <span class="ruby-identifier">right_miss</span> = <span class="ruby-value">0</span>
+ 941:       <span class="ruby-identifier">string</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
+ 942: 
+ 943:       <span class="ruby-identifier">patchset</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">change</span><span class="ruby-operator">|</span>
+ 944:         <span class="ruby-identifier">count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 945: 
+ 946:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">change</span>
+ 947:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>
+ 948:             <span class="ruby-comment cmt"># With a simplistic change, we can't tell the difference between</span>
+ 949:             <span class="ruby-comment cmt"># the left and right on '!' actions, so we ignore those. On '='</span>
+ 950:             <span class="ruby-comment cmt"># actions, if there's a miss, we miss both left and right.</span>
+ 951:           <span class="ruby-identifier">element</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">position</span>]
+ 952: 
+ 953:           <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">action</span>
+ 954:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'-'</span>
+ 955:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">element</span>
+ 956:               <span class="ruby-identifier">left</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 957:             <span class="ruby-keyword kw">else</span>
+ 958:               <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 959:             <span class="ruby-keyword kw">end</span>
+ 960:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'+'</span>
+ 961:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">element</span>
+ 962:               <span class="ruby-identifier">right</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 963:             <span class="ruby-keyword kw">else</span>
+ 964:               <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 965:             <span class="ruby-keyword kw">end</span>
+ 966:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'='</span>
+ 967:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">element</span>
+ 968:               <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 969:               <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 970:             <span class="ruby-keyword kw">end</span>
+ 971:           <span class="ruby-keyword kw">end</span>
+ 972:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>
+ 973:           <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">action</span>
+ 974:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'-'</span> <span class="ruby-comment cmt"># Remove details from the old string</span>
+ 975:             <span class="ruby-identifier">element</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_position</span>]
+ 976:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_element</span>
+ 977:               <span class="ruby-identifier">left</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 978:             <span class="ruby-keyword kw">else</span>
+ 979:               <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 980:             <span class="ruby-keyword kw">end</span>
+ 981:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'+'</span>
+ 982:             <span class="ruby-identifier">element</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>]
+ 983:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_element</span>
+ 984:               <span class="ruby-identifier">right</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 985:             <span class="ruby-keyword kw">else</span>
+ 986:               <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 987:             <span class="ruby-keyword kw">end</span>
+ 988:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'='</span>
+ 989:             <span class="ruby-identifier">le</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_position</span>]
+ 990:             <span class="ruby-identifier">re</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>]
+ 991: 
+ 992:             <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">le</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_element</span>
+ 993:             <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">re</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_element</span>
+ 994:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'!'</span>
+ 995:             <span class="ruby-identifier">element</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_position</span>]
+ 996:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_element</span>
+ 997:               <span class="ruby-identifier">left</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+ 998:             <span class="ruby-keyword kw">else</span>
+ 999:               <span class="ruby-identifier">element</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>]
+1000:               <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">element</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_element</span>
+1001:                 <span class="ruby-identifier">right</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+1002:               <span class="ruby-keyword kw">else</span>
+1003:                 <span class="ruby-identifier">left_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+1004:                 <span class="ruby-identifier">right_miss</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+1005:               <span class="ruby-keyword kw">end</span>
+1006:             <span class="ruby-keyword kw">end</span>
+1007:           <span class="ruby-keyword kw">end</span>
+1008:         <span class="ruby-keyword kw">end</span>
+1009: 
+1010:         <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">not</span> <span class="ruby-identifier">limit</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">limit</span>
+1011:       <span class="ruby-keyword kw">end</span>
+1012: 
+1013:       <span class="ruby-identifier">no_left</span> = (<span class="ruby-identifier">left</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">left_miss</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">0</span>)
+1014:       <span class="ruby-identifier">no_right</span> = (<span class="ruby-identifier">right</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">right_miss</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">0</span>)
+1015: 
+1016:       <span class="ruby-keyword kw">case</span> [<span class="ruby-identifier">no_left</span>, <span class="ruby-identifier">no_right</span>]
+1017:       <span class="ruby-keyword kw">when</span> [<span class="ruby-keyword kw">false</span>, <span class="ruby-keyword kw">true</span>]
+1018:         <span class="ruby-keyword kw">return</span> <span class="ruby-value">:patch</span>
+1019:       <span class="ruby-keyword kw">when</span> [<span class="ruby-keyword kw">true</span>, <span class="ruby-keyword kw">false</span>]
+1020:         <span class="ruby-keyword kw">return</span> <span class="ruby-value">:unpatch</span>
+1021:       <span class="ruby-keyword kw">else</span>
+1022:         <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;The provided patchset does not appear to apply to the provided value as either source or destination value.&quot;</span>
+1023:       <span class="ruby-keyword kw">end</span>
+1024:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="-inverse-vector-method" class="method-detail ">
+				<a name="method-c-__inverse_vector"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">__inverse_vector</span><span
+						class="method-args">(a, vector)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+If <tt>vector</tt> maps the matching elements of another collection onto
+this Enumerable, compute the inverse <tt>vector</tt> that maps this
+Enumerable onto the collection. (Currently unused.)
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="-inverse-vector-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 912</span>
+912:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">__inverse_vector</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">vector</span>)
+913:       <span class="ruby-identifier">inverse</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">dup</span>
+914:       (<span class="ruby-value">0</span> <span class="ruby-operator">...</span> <span class="ruby-identifier">vector</span>.<span class="ruby-identifier">size</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ii</span><span class="ruby-operator">|</span>
+915:         <span class="ruby-identifier">inverse</span>[<span class="ruby-identifier">vector</span>[<span class="ruby-identifier">ii</span>]] = <span class="ruby-identifier">ii</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">vector</span>[<span class="ruby-identifier">ii</span>].<span class="ruby-identifier">nil?</span>
+916:       <span class="ruby-keyword kw">end</span>
+917:       <span class="ruby-identifier">inverse</span>
+918:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="-lcs-method" class="method-detail ">
+				<a name="method-c-__lcs"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">__lcs</span><span
+						class="method-args">(a, b)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+private Compute the longest common subsequence between the sequenced
+Enumerables <tt>a</tt> and <tt>b</tt>. The result is an array whose
+contents is such that
+</p>
+<pre>
+    result = Diff::LCS.__lcs(a, b)
+    result.each_with_index do |e, ii|
+      assert_equal(a[ii], b[e]) unless e.nil?
+    end</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="-lcs-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 816</span>
+816:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">__lcs</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>)
+817:       <span class="ruby-identifier">a_start</span> = <span class="ruby-identifier">b_start</span> = <span class="ruby-value">0</span>
+818:       <span class="ruby-identifier">a_finish</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+819:       <span class="ruby-identifier">b_finish</span> = <span class="ruby-identifier">b</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+820:       <span class="ruby-identifier">vector</span> = []
+821: 
+822:         <span class="ruby-comment cmt"># Prune off any common elements at the beginning...</span>
+823:       <span class="ruby-keyword kw">while</span> (<span class="ruby-identifier">a_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">a_finish</span>) <span class="ruby-keyword kw">and</span>
+824:             (<span class="ruby-identifier">b_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">b_finish</span>) <span class="ruby-keyword kw">and</span>
+825:             (<span class="ruby-identifier">a</span>[<span class="ruby-identifier">a_start</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">b</span>[<span class="ruby-identifier">b_start</span>])
+826:         <span class="ruby-identifier">vector</span>[<span class="ruby-identifier">a_start</span>] = <span class="ruby-identifier">b_start</span>
+827:         <span class="ruby-identifier">a_start</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+828:         <span class="ruby-identifier">b_start</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+829:       <span class="ruby-keyword kw">end</span>
+830: 
+831:         <span class="ruby-comment cmt"># Now the end...</span>
+832:       <span class="ruby-keyword kw">while</span> (<span class="ruby-identifier">a_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">a_finish</span>) <span class="ruby-keyword kw">and</span>
+833:             (<span class="ruby-identifier">b_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">b_finish</span>) <span class="ruby-keyword kw">and</span>
+834:             (<span class="ruby-identifier">a</span>[<span class="ruby-identifier">a_finish</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">b</span>[<span class="ruby-identifier">b_finish</span>])
+835:         <span class="ruby-identifier">vector</span>[<span class="ruby-identifier">a_finish</span>] = <span class="ruby-identifier">b_finish</span>
+836:         <span class="ruby-identifier">a_finish</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+837:         <span class="ruby-identifier">b_finish</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+838:       <span class="ruby-keyword kw">end</span>
+839: 
+840:         <span class="ruby-comment cmt"># Now, compute the equivalence classes of positions of elements.</span>
+841:       <span class="ruby-identifier">b_matches</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">__position_hash</span>(<span class="ruby-identifier">b</span>, <span class="ruby-identifier">b_start</span> <span class="ruby-operator">..</span> <span class="ruby-identifier">b_finish</span>)
+842: 
+843:       <span class="ruby-identifier">thresh</span> = []
+844:       <span class="ruby-identifier">links</span> = []
+845: 
+846:       (<span class="ruby-identifier">a_start</span> <span class="ruby-operator">..</span> <span class="ruby-identifier">a_finish</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ii</span><span class="ruby-operator">|</span>
+847:         <span class="ruby-identifier">ai</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">a</span>[<span class="ruby-identifier">ii</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">a</span>[<span class="ruby-identifier">ii</span>]
+848:         <span class="ruby-identifier">bm</span> = <span class="ruby-identifier">b_matches</span>[<span class="ruby-identifier">ai</span>]
+849:         <span class="ruby-identifier">kk</span> = <span class="ruby-keyword kw">nil</span>
+850:         <span class="ruby-identifier">bm</span>.<span class="ruby-identifier">reverse_each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">jj</span><span class="ruby-operator">|</span>
+851:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">kk</span> <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">thresh</span>[<span class="ruby-identifier">kk</span>] <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">jj</span>) <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">thresh</span>[<span class="ruby-identifier">kk</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">jj</span>)
+852:             <span class="ruby-identifier">thresh</span>[<span class="ruby-identifier">kk</span>] = <span class="ruby-identifier">jj</span>
+853:           <span class="ruby-keyword kw">else</span>
+854:             <span class="ruby-identifier">kk</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">__replace_next_larger</span>(<span class="ruby-identifier">thresh</span>, <span class="ruby-identifier">jj</span>, <span class="ruby-identifier">kk</span>)
+855:           <span class="ruby-keyword kw">end</span>
+856:           <span class="ruby-identifier">links</span>[<span class="ruby-identifier">kk</span>] = [ (<span class="ruby-identifier">kk</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">links</span>[<span class="ruby-identifier">kk</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">ii</span>, <span class="ruby-identifier">jj</span> ] <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">kk</span>.<span class="ruby-identifier">nil?</span>
+857:         <span class="ruby-keyword kw">end</span>
+858:       <span class="ruby-keyword kw">end</span>
+859: 
+860:       <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">thresh</span>.<span class="ruby-identifier">empty?</span>
+861:         <span class="ruby-identifier">link</span> = <span class="ruby-identifier">links</span>[<span class="ruby-identifier">thresh</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>]
+862:         <span class="ruby-keyword kw">while</span> <span class="ruby-keyword kw">not</span> <span class="ruby-identifier">link</span>.<span class="ruby-identifier">nil?</span>
+863:           <span class="ruby-identifier">vector</span>[<span class="ruby-identifier">link</span>[<span class="ruby-value">1</span>]] = <span class="ruby-identifier">link</span>[<span class="ruby-value">2</span>]
+864:           <span class="ruby-identifier">link</span> = <span class="ruby-identifier">link</span>[<span class="ruby-value">0</span>]
+865:         <span class="ruby-keyword kw">end</span>
+866:       <span class="ruby-keyword kw">end</span>
+867: 
+868:       <span class="ruby-identifier">vector</span>
+869:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="-normalize-patchset-method" class="method-detail ">
+				<a name="method-c-__normalize_patchset"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">__normalize_patchset</span><span
+						class="method-args">(patchset)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Normalize the patchset. A patchset is always a sequence of changes, but how
+those changes are represented may vary, depending on how they were
+generated. In all cases we support, we also support the array
+representation of the changes. The formats are:
+</p>
+<pre>
+  [ # patchset &lt;- Diff::LCS.diff(a, b)
+    [ # one or more hunks
+      Diff::LCS::Change # one or more changes
+    ] ]
+
+  [ # patchset, equivalent to the above
+    [ # one or more hunks
+      [ action, line, value ] # one or more changes
+    ] ]
+
+  [ # patchset &lt;- Diff::LCS.diff(a, b, Diff::LCS::ContextDiffCallbacks)
+    #       OR &lt;- Diff::LCS.sdiff(a, b, Diff::LCS::ContextDiffCallbacks)
+    [ # one or more hunks
+      Diff::LCS::ContextChange # one or more changes
+    ] ]
+
+  [ # patchset, equivalent to the above
+    [ # one or more hunks
+      [ action, [ old line, old value ], [ new line, new value ] ]
+        # one or more changes
+    ] ]
+
+  [ # patchset &lt;- Diff::LCS.sdiff(a, b)
+    #       OR &lt;- Diff::LCS.diff(a, b, Diff::LCS::SDiffCallbacks)
+    Diff::LCS::ContextChange # one or more changes
+  ]
+
+  [ # patchset, equivalent to the above
+    [ action, [ old line, old value ], [ new line, new value ] ]
+      # one or more changes
+  ]
+</pre>
+<p>
+The result of this will be either of the following.
+</p>
+<pre>
+  [ # patchset
+    Diff::LCS::ContextChange # one or more changes
+  ]
+
+  [ # patchset
+    Diff::LCS::Change # one or more changes
+  ]
+</pre>
+<p>
+If either of the above is provided, it will be returned as such.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="-normalize-patchset-source">
+<pre>
+      <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 1075</span>
+1075:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">__normalize_patchset</span>(<span class="ruby-identifier">patchset</span>)
+1076:       <span class="ruby-identifier">patchset</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hunk</span><span class="ruby-operator">|</span>
+1077:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">hunk</span>
+1078:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>, <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>
+1079:           <span class="ruby-identifier">hunk</span>
+1080:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Array</span>
+1081:           <span class="ruby-keyword kw">if</span> (<span class="ruby-keyword kw">not</span> <span class="ruby-identifier">hunk</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)) <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">hunk</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>) <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">hunk</span>[<span class="ruby-value">2</span>].<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)
+1082:             <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">from_a</span>(<span class="ruby-identifier">hunk</span>)
+1083:           <span class="ruby-keyword kw">else</span>
+1084:             <span class="ruby-identifier">hunk</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">change</span><span class="ruby-operator">|</span>
+1085:               <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">change</span>
+1086:               <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>, <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>
+1087:                 <span class="ruby-identifier">change</span>
+1088:               <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Array</span>
+1089:                   <span class="ruby-comment cmt"># change[1] will ONLY be an array in a ContextChange#to_a call.</span>
+1090:                   <span class="ruby-comment cmt"># In Change#to_a, it represents the line (singular).</span>
+1091:                 <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">change</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)
+1092:                   <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">from_a</span>(<span class="ruby-identifier">change</span>)
+1093:                 <span class="ruby-keyword kw">else</span>
+1094:                   <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>.<span class="ruby-identifier">from_a</span>(<span class="ruby-identifier">change</span>)
+1095:                 <span class="ruby-keyword kw">end</span>
+1096:               <span class="ruby-keyword kw">end</span>
+1097:             <span class="ruby-keyword kw">end</span>
+1098:           <span class="ruby-keyword kw">end</span>
+1099:         <span class="ruby-keyword kw">else</span>
+1100:           <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Cannot normalise a hunk of class #{hunk.class}.&quot;</span>
+1101:         <span class="ruby-keyword kw">end</span>
+1102:       <span class="ruby-keyword kw">end</span>.<span class="ruby-identifier">flatten</span>
+1103:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="-position-hash-method" class="method-detail ">
+				<a name="method-c-__position_hash"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">__position_hash</span><span
+						class="method-args">(enum, interval = 0 .. -1)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Returns a hash mapping each element of an Enumerable to the set of
+positions it occupies in the Enumerable, optionally restricted to the
+elements specified in the range of indexes specified by <tt>interval</tt>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="-position-hash-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 923</span>
+923:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">__position_hash</span>(<span class="ruby-identifier">enum</span>, <span class="ruby-identifier">interval</span> = <span class="ruby-value">0</span> <span class="ruby-operator">..</span> <span class="ruby-value">1</span>)
+924:       <span class="ruby-identifier">hash</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">hh</span>, <span class="ruby-identifier">kk</span><span class="ruby-operator">|</span> <span class="ruby-identifier">hh</span>[<span class="ruby-identifier">kk</span>] = [] }
+925:       <span class="ruby-identifier">interval</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ii</span><span class="ruby-operator">|</span>
+926:         <span class="ruby-identifier">kk</span> = <span class="ruby-identifier">enum</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">enum</span>[<span class="ruby-identifier">ii</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">enum</span>[<span class="ruby-identifier">ii</span>]
+927:         <span class="ruby-identifier">hash</span>[<span class="ruby-identifier">kk</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ii</span>
+928:       <span class="ruby-keyword kw">end</span>
+929:       <span class="ruby-identifier">hash</span>
+930:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="-replace-next-larger-method" class="method-detail ">
+				<a name="method-c-__replace_next_larger"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">__replace_next_larger</span><span
+						class="method-args">(enum, value, last_index = nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Find the place at which <tt>value</tt> would normally be inserted into the
+Enumerable. If that place is already occupied by <tt>value</tt>, do nothing
+and return <tt>nil</tt>. If the place does not exist (i.e., it is off the
+end of the Enumerable), add it to the end. Otherwise, replace the element
+at that point with <tt>value</tt>. It is assumed that the
+Enumerable&#8217;s values are numeric.
+</p>
+<p>
+This operation preserves the sort order.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="-replace-next-larger-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 879</span>
+879:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">__replace_next_larger</span>(<span class="ruby-identifier">enum</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">last_index</span> = <span class="ruby-keyword kw">nil</span>)
+880:         <span class="ruby-comment cmt"># Off the end?</span>
+881:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">enum</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">or</span> (<span class="ruby-identifier">value</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">enum</span>[<span class="ruby-value">1</span>])
+882:         <span class="ruby-identifier">enum</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">value</span>
+883:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">enum</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+884:       <span class="ruby-keyword kw">end</span>
+885: 
+886:         <span class="ruby-comment cmt"># Binary search for the insertion point</span>
+887:       <span class="ruby-identifier">last_index</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">enum</span>.<span class="ruby-identifier">size</span>
+888:       <span class="ruby-identifier">first_index</span> = <span class="ruby-value">0</span>
+889:       <span class="ruby-keyword kw">while</span> (<span class="ruby-identifier">first_index</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">last_index</span>)
+890:         <span class="ruby-identifier">ii</span> = (<span class="ruby-identifier">first_index</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">last_index</span>) <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-value">1</span>
+891: 
+892:         <span class="ruby-identifier">found</span> = <span class="ruby-identifier">enum</span>[<span class="ruby-identifier">ii</span>]
+893: 
+894:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">found</span>
+895:           <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>
+896:         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">found</span>
+897:           <span class="ruby-identifier">first_index</span> = <span class="ruby-identifier">ii</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+898:         <span class="ruby-keyword kw">else</span>
+899:           <span class="ruby-identifier">last_index</span> = <span class="ruby-identifier">ii</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+900:         <span class="ruby-keyword kw">end</span>
+901:       <span class="ruby-keyword kw">end</span>
+902: 
+903:         <span class="ruby-comment cmt"># The insertion point is in first_index; overwrite the next larger</span>
+904:         <span class="ruby-comment cmt"># value.</span>
+905:       <span class="ruby-identifier">enum</span>[<span class="ruby-identifier">first_index</span>] = <span class="ruby-identifier">value</span>
+906:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">first_index</span>
+907:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="diff-method" class="method-detail ">
+				<a name="method-c-diff"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">diff</span><span
+						class="method-args">(seq1, seq2, callbacks = nil, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+<a href="LCS.html#method-i-diff">Diff::LCS.diff</a> computes the smallest
+set of additions and deletions necessary to turn the first sequence into
+the second, and returns a description of these changes.
+</p>
+<p>
+See <a href="LCS/DiffCallbacks.html">Diff::LCS::DiffCallbacks</a> for the
+default behaviour. An alternate behaviour may be implemented with <a
+href="LCS/ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a>.
+If a Class argument is provided for <tt>callbacks</tt>, <a
+href="LCS.html#method-i-diff">#</a> will attempt to initialise it. If the
+<tt>callbacks</tt> object (possibly initialised) responds to #, it will be
+called.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="diff-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 254</span>
+254:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">diff</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callbacks</span> = <span class="ruby-keyword kw">nil</span>, &amp;<span class="ruby-identifier">block</span>) <span class="ruby-comment cmt"># :yields diff changes:</span>
+255:       <span class="ruby-identifier">callbacks</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">DiffCallbacks</span>
+256:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Class</span>)
+257:         <span class="ruby-identifier">cb</span> = <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-identifier">callbacks</span>
+258:         <span class="ruby-identifier">callbacks</span> = <span class="ruby-identifier">cb</span>
+259:       <span class="ruby-keyword kw">end</span>
+260:       <span class="ruby-identifier">traverse_sequences</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callbacks</span>)
+261:       <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">finish</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:finish</span>)
+262: 
+263:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+264:         <span class="ruby-identifier">res</span> = <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">diffs</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hunk</span><span class="ruby-operator">|</span>
+265:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">hunk</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)
+266:             <span class="ruby-identifier">hunk</span> = <span class="ruby-identifier">hunk</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">block</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">block</span> }
+267:           <span class="ruby-keyword kw">else</span>
+268:             <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">hunk</span>
+269:           <span class="ruby-keyword kw">end</span>
+270:         <span class="ruby-keyword kw">end</span>
+271:         <span class="ruby-identifier">res</span>
+272:       <span class="ruby-keyword kw">else</span>
+273:         <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">diffs</span>
+274:       <span class="ruby-keyword kw">end</span>
+275:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="patch-method" class="method-detail ">
+				<a name="method-c-patch"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">patch</span><span
+						class="method-args">(src, patchset, direction = nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Given a patchset, convert the current version to the new version. If
+<tt>direction</tt> is not specified (must be <tt>:patch</tt> or
+<tt>:unpatch</tt>), then discovery of the direction of the patch will be
+attempted.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="patch-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 697</span>
+697:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">patch</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">patchset</span>, <span class="ruby-identifier">direction</span> = <span class="ruby-keyword kw">nil</span>)
+698:       <span class="ruby-identifier">string</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
+699:         <span class="ruby-comment cmt"># Start with a new empty type of the source's class</span>
+700:       <span class="ruby-identifier">res</span> = <span class="ruby-identifier">src</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">new</span>
+701: 
+702:         <span class="ruby-comment cmt"># Normalize the patchset.</span>
+703:       <span class="ruby-identifier">patchset</span> = <span class="ruby-identifier">__normalize_patchset</span>(<span class="ruby-identifier">patchset</span>)
+704: 
+705:       <span class="ruby-identifier">direction</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">__diff_direction</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">patchset</span>)
+706:       <span class="ruby-identifier">direction</span> <span class="ruby-operator">||=</span> <span class="ruby-value">:patch</span>
+707: 
+708:       <span class="ruby-identifier">ai</span> = <span class="ruby-identifier">bj</span> = <span class="ruby-value">0</span>
+709: 
+710:       <span class="ruby-identifier">patchset</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">change</span><span class="ruby-operator">|</span>
+711:           <span class="ruby-comment cmt"># Both Change and ContextChange support #action</span>
+712:         <span class="ruby-identifier">action</span> = <span class="ruby-constant">PATCH_MAP</span>[<span class="ruby-identifier">direction</span>][<span class="ruby-identifier">change</span>.<span class="ruby-identifier">action</span>]
+713: 
+714:         <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">change</span>
+715:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>
+716:           <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">direction</span>
+717:           <span class="ruby-keyword kw">when</span> <span class="ruby-value">:patch</span>
+718:             <span class="ruby-identifier">el</span> = <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_element</span>
+719:             <span class="ruby-identifier">op</span> = <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_position</span>
+720:             <span class="ruby-identifier">np</span> = <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>
+721:           <span class="ruby-keyword kw">when</span> <span class="ruby-value">:unpatch</span>
+722:             <span class="ruby-identifier">el</span> = <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_element</span>
+723:             <span class="ruby-identifier">op</span> = <span class="ruby-identifier">change</span>.<span class="ruby-identifier">new_position</span>
+724:             <span class="ruby-identifier">np</span> = <span class="ruby-identifier">change</span>.<span class="ruby-identifier">old_position</span>
+725:           <span class="ruby-keyword kw">end</span>
+726: 
+727:           <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">action</span>
+728:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'-'</span> <span class="ruby-comment cmt"># Remove details from the old string</span>
+729:             <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">op</span>
+730:               <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>])
+731:               <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+732:               <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+733:             <span class="ruby-keyword kw">end</span>
+734:             <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+735:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'+'</span>
+736:             <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">np</span>
+737:               <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>])
+738:               <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+739:               <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+740:             <span class="ruby-keyword kw">end</span>
+741: 
+742:             <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">el</span>
+743:             <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+744:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'='</span>
+745:               <span class="ruby-comment cmt"># This only appears in sdiff output with the SDiff callback.</span>
+746:               <span class="ruby-comment cmt"># Therefore, we only need to worry about dealing with a single</span>
+747:               <span class="ruby-comment cmt"># element.</span>
+748:             <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">el</span>
+749: 
+750:             <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+751:             <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+752:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'!'</span>
+753:             <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">op</span>
+754:               <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>])
+755:               <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+756:               <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+757:             <span class="ruby-keyword kw">end</span>
+758: 
+759:             <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+760:             <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+761: 
+762:             <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">el</span>
+763:           <span class="ruby-keyword kw">end</span>
+764:         <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">Change</span>
+765:           <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">action</span>
+766:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'-'</span>
+767:             <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">position</span>
+768:               <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>])
+769:               <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+770:               <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+771:             <span class="ruby-keyword kw">end</span>
+772:             <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+773:           <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'+'</span>
+774:             <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">position</span>
+775:               <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>])
+776:               <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+777:               <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+778:             <span class="ruby-keyword kw">end</span>
+779: 
+780:             <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+781: 
+782:             <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">change</span>.<span class="ruby-identifier">element</span>
+783:           <span class="ruby-keyword kw">end</span>
+784:         <span class="ruby-keyword kw">end</span>
+785:       <span class="ruby-keyword kw">end</span>
+786: 
+787:       <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">src</span>.<span class="ruby-identifier">size</span>
+788:         <span class="ruby-identifier">res</span> <span class="ruby-operator">&lt;&lt;</span> (<span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">src</span>[<span class="ruby-identifier">ai</span>])
+789:         <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+790:         <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+791:       <span class="ruby-keyword kw">end</span>
+792: 
+793:       <span class="ruby-identifier">res</span>
+794:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="patch--method" class="method-detail ">
+				<a name="method-c-patch%21"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">patch!</span><span
+						class="method-args">(src, patchset)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Given a set of patchset, convert the current version to the next version.
+Does no auto-discovery.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="patch--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 804</span>
+804:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">patch!</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">patchset</span>)
+805:       <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">patch</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">patchset</span>, <span class="ruby-value">:patch</span>)
+806:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="sdiff-method" class="method-detail ">
+				<a name="method-c-sdiff"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">sdiff</span><span
+						class="method-args">(seq1, seq2, callbacks = nil, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+<a href="LCS.html#method-i-sdiff">Diff::LCS.sdiff</a> computes all
+necessary components to show two sequences and their minimized differences
+side by side, just like the Unix utility <em>sdiff</em> does:
+</p>
+<pre>
+    old        &lt;     -
+    same             same
+    before     |     after
+    *          &gt;     new
+</pre>
+<p>
+See <a href="LCS/SDiffCallbacks.html">Diff::LCS::SDiffCallbacks</a> for the
+default behaviour. An alternate behaviour may be implemented with <a
+href="LCS/ContextDiffCallbacks.html">Diff::LCS::ContextDiffCallbacks</a>.
+If a Class argument is provided for <tt>callbacks</tt>, <a
+href="LCS.html#method-i-diff">#</a> will attempt to initialise it. If the
+<tt>callbacks</tt> object (possibly initialised) responds to #, it will be
+called.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="sdiff-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 291</span>
+291:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sdiff</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callbacks</span> = <span class="ruby-keyword kw">nil</span>, &amp;<span class="ruby-identifier">block</span>) <span class="ruby-comment cmt">#:yields diff changes:</span>
+292:       <span class="ruby-identifier">callbacks</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">SDiffCallbacks</span>
+293:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Class</span>)
+294:         <span class="ruby-identifier">cb</span> = <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-identifier">callbacks</span>
+295:         <span class="ruby-identifier">callbacks</span> = <span class="ruby-identifier">cb</span>
+296:       <span class="ruby-keyword kw">end</span>
+297:       <span class="ruby-identifier">traverse_balanced</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callbacks</span>)
+298:       <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">finish</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:finish</span>)
+299: 
+300:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+301:         <span class="ruby-identifier">res</span> = <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">diffs</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hunk</span><span class="ruby-operator">|</span>
+302:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">hunk</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Array</span>)
+303:             <span class="ruby-identifier">hunk</span> = <span class="ruby-identifier">hunk</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">block</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">block</span> }
+304:           <span class="ruby-keyword kw">else</span>
+305:             <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">hunk</span>
+306:           <span class="ruby-keyword kw">end</span>
+307:         <span class="ruby-keyword kw">end</span>
+308:         <span class="ruby-identifier">res</span>
+309:       <span class="ruby-keyword kw">else</span>
+310:         <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">diffs</span>
+311:       <span class="ruby-keyword kw">end</span>
+312:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="traverse-balanced-method" class="method-detail ">
+				<a name="method-c-traverse_balanced"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">traverse_balanced</span><span
+						class="method-args">(seq1, seq2, callbacks = Diff::LCS::BalancedCallbacks)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+<a href="LCS.html#method-i-traverse_balanced">#</a> is an alternative to <a
+href="LCS.html#method-i-traverse_sequences">#</a>. It uses a different
+algorithm to iterate through the entries in the computed longest common
+subsequence. Instead of viewing the changes as insertions or deletions from
+one of the sequences, <a href="LCS.html#method-i-traverse_balanced">#</a>
+will report <em>changes</em> between the sequences. To represent a
+</p>
+<p>
+The arguments to <a href="LCS.html#method-i-traverse_balanced">#</a> are
+the two sequences to traverse and a callback object, like this:
+</p>
+<pre>
+  traverse_balanced(seq1, seq2, Diff::LCS::ContextDiffCallbacks.new)
+</pre>
+<p>
+<a href="LCS.html#method-i-sdiff">#</a> is implemented with <a
+href="LCS.html#method-i-traverse_balanced">#</a>.
+</p>
+<h2>Callback Methods</h2>
+<p>
+Optional callback methods are <em>emphasized</em>.
+</p>
+<table>
+<tr><td valign="top">callbacks#</td><td><p>
+Called when <tt>a</tt> and <tt>b</tt> are pointing to common elements in
+<tt>A</tt> and <tt>B</tt>.
+</p>
+</td></tr>
+<tr><td valign="top">callbacks#</td><td><p>
+Called when <tt>a</tt> is pointing to an element not in <tt>B</tt>.
+</p>
+</td></tr>
+<tr><td valign="top">callbacks#</td><td><p>
+Called when <tt>b</tt> is pointing to an element not in <tt>A</tt>.
+</p>
+</td></tr>
+<tr><td valign="top"><em>callbacks#</em></td><td><p>
+Called when <tt>a</tt> and <tt>b</tt> are pointing to the same relative
+position, but <tt>A[a]</tt> and <tt>B[b]</tt> are not the same; a
+<em>change</em> has occurred.
+</p>
+</td></tr>
+</table>
+<p>
+<a href="LCS.html#method-i-traverse_balanced">#</a> might be a bit slower
+than <a href="LCS.html#method-i-traverse_sequences">#</a>, noticable only
+while processing huge amounts of data.
+</p>
+<p>
+The <tt>sdiff</tt> function of this module is implemented as call to <a
+href="LCS.html#method-i-traverse_balanced">#</a>.
+</p>
+<h2>Algorithm</h2>
+<pre>
+      a---+
+          v
+      A = a b c e h j l m n p
+      B = b c d e f j k l m r s t
+          ^
+      b---+
+</pre>
+<h3>Matches</h3>
+<p>
+If there are two arrows (<tt>a</tt> and <tt>b</tt>) pointing to elements of
+sequences <tt>A</tt> and <tt>B</tt>, the arrows will initially point to the
+first elements of their respective sequences. <a
+href="LCS.html#method-i-traverse_sequences">#</a> will advance the arrows
+through the sequences one element at a time, calling a method on the
+user-specified callback object before each advance. It will advance the
+arrows in such a way that if there are elements <tt>A[ii]</tt> and
+<tt>B[jj]</tt> which are both equal and part of the longest common
+subsequence, there will be some moment during the execution of <a
+href="LCS.html#method-i-traverse_sequences">#</a> when arrow <tt>a</tt> is
+pointing to <tt>A[ii]</tt> and arrow <tt>b</tt> is pointing to
+<tt>B[jj]</tt>. When this happens, <a
+href="LCS.html#method-i-traverse_sequences">#</a> will call
+<tt>callbacks#</tt> and then it will advance both arrows.
+</p>
+<h3>Discards</h3>
+<p>
+Otherwise, one of the arrows is pointing to an element of its sequence that
+is not part of the longest common subsequence. <a
+href="LCS.html#method-i-traverse_sequences">#</a> will advance that arrow
+and will call <tt>callbacks#</tt> or <tt>callbacks#</tt>, depending on
+which arrow it advanced.
+</p>
+<h3>Changes</h3>
+<p>
+If both <tt>a</tt> and <tt>b</tt> point to elements that are not part of
+the longest common subsequence, then <a
+href="LCS.html#method-i-traverse_sequences">#</a> will try to call
+<tt>callbacks#</tt> and advance both arrows. If <tt>callbacks#</tt> is not
+implemented, then <tt>callbacks#</tt> and <tt>callbacks#</tt> will be
+called in turn.
+</p>
+<p>
+The methods for <tt>callbacks#</tt>, <tt>callbacks#</tt>,
+<tt>callbacks#</tt>, and <tt>callbacks#</tt> are invoked with an event
+comprising the action (&#8220;=&#8221;, &#8220;+&#8221;, &#8220;-&#8221;,
+or &#8220;!&#8221;, respectively), the indicies <tt>ii</tt> and
+<tt>jj</tt>, and the elements <tt>A[ii]</tt> and <tt>B[jj]</tt>. Return
+values are discarded by <a
+href="LCS.html#method-i-traverse_balanced">#</a>.
+</p>
+<h3>Context</h3>
+<p>
+Note that <tt>ii</tt> and <tt>jj</tt> may not be the same index position,
+even if <tt>a</tt> and <tt>b</tt> are considered to be pointing to matching
+or changed elements.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="traverse-balanced-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 585</span>
+585:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">traverse_balanced</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callbacks</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">BalancedCallbacks</span>)
+586:       <span class="ruby-identifier">matches</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">__lcs</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>)
+587:       <span class="ruby-identifier">a_size</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">size</span>
+588:       <span class="ruby-identifier">b_size</span> = <span class="ruby-identifier">seq2</span>.<span class="ruby-identifier">size</span>
+589:       <span class="ruby-identifier">ai</span> = <span class="ruby-identifier">bj</span> = <span class="ruby-identifier">mb</span> = <span class="ruby-value">0</span>
+590:       <span class="ruby-identifier">ma</span> = <span class="ruby-value">1</span>
+591:       <span class="ruby-identifier">string</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
+592: 
+593:         <span class="ruby-comment cmt"># Process all the lines in the match vector.</span>
+594:       <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
+595:           <span class="ruby-comment cmt"># Find next match indices +ma+ and +mb+</span>
+596:         <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
+597:           <span class="ruby-identifier">ma</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+598:           <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ma</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">matches</span>.<span class="ruby-identifier">size</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">matches</span>[<span class="ruby-identifier">ma</span>].<span class="ruby-identifier">nil?</span>
+599:         <span class="ruby-keyword kw">end</span>
+600: 
+601:         <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ma</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">matches</span>.<span class="ruby-identifier">size</span> <span class="ruby-comment cmt"># end of matches?</span>
+602:         <span class="ruby-identifier">mb</span> = <span class="ruby-identifier">matches</span>[<span class="ruby-identifier">ma</span>]
+603: 
+604:           <span class="ruby-comment cmt"># Change(seq2)</span>
+605:         <span class="ruby-keyword kw">while</span> (<span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ma</span>) <span class="ruby-keyword kw">or</span> (<span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">mb</span>)
+606:           <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+607:           <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+608: 
+609:           <span class="ruby-keyword kw">case</span> [(<span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">ma</span>), (<span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">mb</span>)]
+610:           <span class="ruby-keyword kw">when</span> [<span class="ruby-keyword kw">true</span>, <span class="ruby-keyword kw">true</span>]
+611:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:change</span>)
+612:               <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'!'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+613:               <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+614:               <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">change</span>(<span class="ruby-identifier">event</span>)
+615:               <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+616:               <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+617:             <span class="ruby-keyword kw">else</span>
+618:               <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'-'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+619:               <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+620:               <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_a</span>(<span class="ruby-identifier">event</span>)
+621:               <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+622:               <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+623:               <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'+'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+624:               <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+625:               <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_b</span>(<span class="ruby-identifier">event</span>)
+626:               <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+627:             <span class="ruby-keyword kw">end</span>
+628:           <span class="ruby-keyword kw">when</span> [<span class="ruby-keyword kw">true</span>, <span class="ruby-keyword kw">false</span>]
+629:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'-'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+630:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+631:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_a</span>(<span class="ruby-identifier">event</span>)
+632:             <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+633:           <span class="ruby-keyword kw">when</span> [<span class="ruby-keyword kw">false</span>, <span class="ruby-keyword kw">true</span>]
+634:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'+'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+635:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+636:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_b</span>(<span class="ruby-identifier">event</span>)
+637:             <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+638:           <span class="ruby-keyword kw">end</span>
+639:         <span class="ruby-keyword kw">end</span>
+640: 
+641:           <span class="ruby-comment cmt"># Match</span>
+642:         <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+643:         <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+644:         <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'='</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+645:         <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+646:         <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">event</span>)
+647:         <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+648:         <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+649:       <span class="ruby-keyword kw">end</span>
+650: 
+651:       <span class="ruby-keyword kw">while</span> (<span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">a_size</span>) <span class="ruby-keyword kw">or</span> (<span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b_size</span>)
+652:         <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+653:         <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+654: 
+655:         <span class="ruby-keyword kw">case</span> [(<span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">a_size</span>), (<span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b_size</span>)]
+656:         <span class="ruby-keyword kw">when</span> [<span class="ruby-keyword kw">true</span>, <span class="ruby-keyword kw">true</span>]
+657:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:change</span>)
+658:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'!'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+659:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+660:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">change</span>(<span class="ruby-identifier">event</span>)
+661:             <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+662:             <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+663:           <span class="ruby-keyword kw">else</span>
+664:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'-'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+665:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+666:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_a</span>(<span class="ruby-identifier">event</span>)
+667:             <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+668:             <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+669:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'+'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+670:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+671:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_b</span>(<span class="ruby-identifier">event</span>)
+672:             <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+673:           <span class="ruby-keyword kw">end</span>
+674:         <span class="ruby-keyword kw">when</span> [<span class="ruby-keyword kw">true</span>, <span class="ruby-keyword kw">false</span>]
+675:           <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'-'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+676:           <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+677:           <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_a</span>(<span class="ruby-identifier">event</span>)
+678:           <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+679:         <span class="ruby-keyword kw">when</span> [<span class="ruby-keyword kw">false</span>, <span class="ruby-keyword kw">true</span>]
+680:           <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'+'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+681:           <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+682:           <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_b</span>(<span class="ruby-identifier">event</span>)
+683:           <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+684:         <span class="ruby-keyword kw">end</span>
+685:       <span class="ruby-keyword kw">end</span>
+686:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="traverse-sequences-method" class="method-detail ">
+				<a name="method-c-traverse_sequences"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">traverse_sequences</span><span
+						class="method-args">(seq1, seq2, callbacks = Diff::LCS::SequenceCallbacks, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+<a
+href="LCS.html#method-i-traverse_sequences">Diff::LCS.traverse_sequences</a>
+is the most general facility provided by this module; <tt>diff</tt> and
+<tt>LCS</tt> are implemented as calls to it.
+</p>
+<p>
+The arguments to <a href="LCS.html#method-i-traverse_sequences">#</a> are
+the two sequences to traverse, and a callback object, like this:
+</p>
+<pre>
+  traverse_sequences(seq1, seq2, Diff::LCS::ContextDiffCallbacks.new)
+</pre>
+<p>
+<a href="LCS.html#method-i-diff">#</a> is implemented with <a
+href="LCS.html#method-i-traverse_sequences">#</a>.
+</p>
+<h2>Callback Methods</h2>
+<p>
+Optional callback methods are <em>emphasized</em>.
+</p>
+<table>
+<tr><td valign="top">callbacks#</td><td><p>
+Called when <tt>a</tt> and <tt>b</tt> are pointing to common elements in
+<tt>A</tt> and <tt>B</tt>.
+</p>
+</td></tr>
+<tr><td valign="top">callbacks#</td><td><p>
+Called when <tt>a</tt> is pointing to an element not in <tt>B</tt>.
+</p>
+</td></tr>
+<tr><td valign="top">callbacks#</td><td><p>
+Called when <tt>b</tt> is pointing to an element not in <tt>A</tt>.
+</p>
+</td></tr>
+<tr><td valign="top"><em>callbacks#</em></td><td><p>
+Called when <tt>a</tt> has reached the end of sequence <tt>A</tt>.
+</p>
+</td></tr>
+<tr><td valign="top"><em>callbacks#</em></td><td><p>
+Called when <tt>b</tt> has reached the end of sequence <tt>B</tt>.
+</p>
+</td></tr>
+</table>
+<h2>Algorithm</h2>
+<pre>
+      a---+
+          v
+      A = a b c e h j l m n p
+      B = b c d e f j k l m r s t
+          ^
+      b---+
+</pre>
+<p>
+If there are two arrows (<tt>a</tt> and <tt>b</tt>) pointing to elements of
+sequences <tt>A</tt> and <tt>B</tt>, the arrows will initially point to the
+first elements of their respective sequences. <a
+href="LCS.html#method-i-traverse_sequences">#</a> will advance the arrows
+through the sequences one element at a time, calling a method on the
+user-specified callback object before each advance. It will advance the
+arrows in such a way that if there are elements <tt>A[ii]</tt> and
+<tt>B[jj]</tt> which are both equal and part of the longest common
+subsequence, there will be some moment during the execution of <a
+href="LCS.html#method-i-traverse_sequences">#</a> when arrow <tt>a</tt> is
+pointing to <tt>A[ii]</tt> and arrow <tt>b</tt> is pointing to
+<tt>B[jj]</tt>. When this happens, <a
+href="LCS.html#method-i-traverse_sequences">#</a> will call
+<tt>callbacks#</tt> and then it will advance both arrows.
+</p>
+<p>
+Otherwise, one of the arrows is pointing to an element of its sequence that
+is not part of the longest common subsequence. <a
+href="LCS.html#method-i-traverse_sequences">#</a> will advance that arrow
+and will call <tt>callbacks#</tt> or <tt>callbacks#</tt>, depending on
+which arrow it advanced. If both arrows point to elements that are not part
+of the longest common subsequence, then <a
+href="LCS.html#method-i-traverse_sequences">#</a> will advance one of them
+and call the appropriate callback, but it is not specified which it will
+call.
+</p>
+<p>
+The methods for <tt>callbacks#</tt>, <tt>callbacks#</tt>, and
+<tt>callbacks#</tt> are invoked with an event comprising the action
+(&#8220;=&#8221;, &#8220;+&#8221;, or &#8220;-&#8221;, respectively), the
+indicies <tt>ii</tt> and <tt>jj</tt>, and the elements <tt>A[ii]</tt> and
+<tt>B[jj]</tt>. Return values are discarded by <a
+href="LCS.html#method-i-traverse_sequences">#</a>.
+</p>
+<h3>End of Sequences</h3>
+<p>
+If arrow <tt>a</tt> reaches the end of its sequence before arrow <tt>b</tt>
+does, # try to call <tt>callbacks#</tt> with the last index and element of
+<tt>A</tt> (<tt>A[-1]</tt>) and the current index and element of <tt>B</tt>
+(<tt>B[jj]</tt>). If <tt>callbacks#</tt> does not exist, then
+<tt>callbacks#</tt> will be called on each element of <tt>B</tt> until the
+end of the sequence is reached (the call will be done with <tt>A[-1]</tt>
+and <tt>B[jj]</tt> for each element).
+</p>
+<p>
+If <tt>b</tt> reaches the end of <tt>B</tt> before <tt>a</tt> reaches the
+end of <tt>A</tt>, <tt>callbacks#</tt> will be called with the current
+index and element of <tt>A</tt> (<tt>A[ii]</tt>) and the last index and
+element of <tt>B</tt> (<tt>A[-1]</tt>). Again, if <tt>callbacks#</tt> does
+not exist on the callback object, then <tt>callbacks#</tt> will be called
+on each element of <tt>A</tt> until the end of the sequence is reached
+(<tt>A[ii]</tt> and <tt>B[-1]</tt>).
+</p>
+<p>
+There is a chance that one additional <tt>callbacks#</tt> or
+<tt>callbacks#</tt> will be called after the end of the sequence is
+reached, if <tt>a</tt> has not yet reached the end of <tt>A</tt> or
+<tt>b</tt> has not yet reached the end of <tt>B</tt>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="traverse-sequences-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 395</span>
+395:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">traverse_sequences</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>, <span class="ruby-identifier">callbacks</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">SequenceCallbacks</span>, &amp;<span class="ruby-identifier">block</span>) <span class="ruby-comment cmt">#:yields change events:</span>
+396:       <span class="ruby-identifier">matches</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">__lcs</span>(<span class="ruby-identifier">seq1</span>, <span class="ruby-identifier">seq2</span>)
+397: 
+398:       <span class="ruby-identifier">run_finished_a</span> = <span class="ruby-identifier">run_finished_b</span> = <span class="ruby-keyword kw">false</span>
+399:       <span class="ruby-identifier">string</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">String</span>)
+400: 
+401:       <span class="ruby-identifier">a_size</span> = <span class="ruby-identifier">seq1</span>.<span class="ruby-identifier">size</span>
+402:       <span class="ruby-identifier">b_size</span> = <span class="ruby-identifier">seq2</span>.<span class="ruby-identifier">size</span>
+403:       <span class="ruby-identifier">ai</span> = <span class="ruby-identifier">bj</span> = <span class="ruby-value">0</span>
+404: 
+405:       (<span class="ruby-value">0</span> <span class="ruby-operator">..</span> <span class="ruby-identifier">matches</span>.<span class="ruby-identifier">size</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ii</span><span class="ruby-operator">|</span>
+406:         <span class="ruby-identifier">b_line</span> = <span class="ruby-identifier">matches</span>[<span class="ruby-identifier">ii</span>]
+407: 
+408:         <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ii</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ii</span>]
+409:         <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+410: 
+411:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">b_line</span>.<span class="ruby-identifier">nil?</span>
+412:           <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">ax</span>.<span class="ruby-identifier">nil?</span>
+413:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'-'</span>, <span class="ruby-identifier">ii</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+414:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+415:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_a</span>(<span class="ruby-identifier">event</span>)
+416:           <span class="ruby-keyword kw">end</span>
+417:         <span class="ruby-keyword kw">else</span>
+418:           <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
+419:             <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b_line</span>
+420:             <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+421:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'+'</span>, <span class="ruby-identifier">ii</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+422:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+423:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_b</span>(<span class="ruby-identifier">event</span>)
+424:             <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+425:           <span class="ruby-keyword kw">end</span>
+426:           <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+427:           <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'='</span>, <span class="ruby-identifier">ii</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+428:           <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+429:           <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">event</span>)
+430:           <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+431:         <span class="ruby-keyword kw">end</span>
+432:         <span class="ruby-identifier">ai</span> = <span class="ruby-identifier">ii</span>
+433:       <span class="ruby-keyword kw">end</span>
+434:       <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+435: 
+436:         <span class="ruby-comment cmt"># The last entry (if any) processed was a match. +ai+ and +bj+ point</span>
+437:         <span class="ruby-comment cmt"># just past the last matching lines in their sequences.</span>
+438:       <span class="ruby-keyword kw">while</span> (<span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">a_size</span>) <span class="ruby-keyword kw">or</span> (<span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b_size</span>)
+439:           <span class="ruby-comment cmt"># last A?</span>
+440:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ai</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">a_size</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b_size</span>
+441:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:finished_a</span>) <span class="ruby-keyword kw">and</span> <span class="ruby-keyword kw">not</span> <span class="ruby-identifier">run_finished_a</span>
+442:             <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-value">1</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-value">1</span>]
+443:             <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+444:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'&gt;'</span>, (<span class="ruby-identifier">a_size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>), <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+445:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+446:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">finished_a</span>(<span class="ruby-identifier">event</span>)
+447:             <span class="ruby-identifier">run_finished_a</span> = <span class="ruby-keyword kw">true</span>
+448:           <span class="ruby-keyword kw">else</span>
+449:             <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+450:             <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
+451:               <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+452:               <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'+'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+453:               <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+454:               <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_b</span>(<span class="ruby-identifier">event</span>)
+455:               <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+456:               <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b_size</span>
+457:             <span class="ruby-keyword kw">end</span>
+458:           <span class="ruby-keyword kw">end</span>
+459:         <span class="ruby-keyword kw">end</span>
+460: 
+461:           <span class="ruby-comment cmt"># last B?</span>
+462:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">bj</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">b_size</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">a_size</span>
+463:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:finished_b</span>) <span class="ruby-keyword kw">and</span> <span class="ruby-keyword kw">not</span> <span class="ruby-identifier">run_finished_b</span>
+464:             <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+465:             <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-value">1</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-value">1</span>]
+466:             <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'&lt;'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, (<span class="ruby-identifier">b_size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>), <span class="ruby-identifier">bx</span>)
+467:             <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+468:             <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">finished_b</span>(<span class="ruby-identifier">event</span>)
+469:             <span class="ruby-identifier">run_finished_b</span> = <span class="ruby-keyword kw">true</span>
+470:           <span class="ruby-keyword kw">else</span>
+471:             <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+472:             <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
+473:               <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+474:               <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'-'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+475:               <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+476:               <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_a</span>(<span class="ruby-identifier">event</span>)
+477:               <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+478:               <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b_size</span>
+479:             <span class="ruby-keyword kw">end</span>
+480:           <span class="ruby-keyword kw">end</span>
+481:         <span class="ruby-keyword kw">end</span>
+482: 
+483:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ai</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">a_size</span>
+484:           <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+485:           <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+486:           <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'-'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+487:           <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+488:           <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_a</span>(<span class="ruby-identifier">event</span>)
+489:           <span class="ruby-identifier">ai</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+490:         <span class="ruby-keyword kw">end</span>
+491: 
+492:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">bj</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">b_size</span>
+493:           <span class="ruby-identifier">ax</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq1</span>[<span class="ruby-identifier">ai</span>]
+494:           <span class="ruby-identifier">bx</span> = <span class="ruby-identifier">string</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>, <span class="ruby-value">1</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">seq2</span>[<span class="ruby-identifier">bj</span>]
+495:           <span class="ruby-identifier">event</span> = <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">ContextChange</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'+'</span>, <span class="ruby-identifier">ai</span>, <span class="ruby-identifier">ax</span>, <span class="ruby-identifier">bj</span>, <span class="ruby-identifier">bx</span>)
+496:           <span class="ruby-identifier">event</span> = <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">event</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+497:           <span class="ruby-identifier">callbacks</span>.<span class="ruby-identifier">discard_b</span>(<span class="ruby-identifier">event</span>)
+498:           <span class="ruby-identifier">bj</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+499:         <span class="ruby-keyword kw">end</span>
+500:       <span class="ruby-keyword kw">end</span>
+501:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="unpatch--method" class="method-detail ">
+				<a name="method-c-unpatch%21"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">unpatch!</span><span
+						class="method-args">(src, patchset)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Given a set of patchset, convert the current version to the prior version.
+Does no auto-discovery.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="unpatch--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 798</span>
+798:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">unpatch!</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">patchset</span>)
+799:       <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-identifier">patch</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">patchset</span>, <span class="ruby-value">:unpatch</span>)
+800:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="diff-method" class="method-detail ">
+				<a name="method-i-diff"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">diff</span><span
+						class="method-args">(other, callbacks = nil, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Returns the difference set between <tt>self</tt> and <tt>other</tt>. See <a
+href="LCS.html#method-i-diff">Diff::LCS#diff</a>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="diff-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 164</span>
+164:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">diff</span>(<span class="ruby-identifier">other</span>, <span class="ruby-identifier">callbacks</span> = <span class="ruby-keyword kw">nil</span>, &amp;<span class="ruby-identifier">block</span>)
+165:     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-identifier">diff</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">other</span>, <span class="ruby-identifier">callbacks</span>, &amp;<span class="ruby-identifier">block</span>)
+166:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="lcs-method" class="method-detail ">
+				<a name="method-i-lcs"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">lcs</span><span
+						class="method-args">(other, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Returns an <a href="../Array.html">Array</a> containing the longest common
+subsequence(s) between <tt>self</tt> and <tt>other</tt>. See Diff::LCS#<a
+href="LCS.html#method-c-LCS">LCS</a>.
+</p>
+<pre>
+  lcs = seq1.lcs(seq2)</pre>
+					
+
+					
+					<div class="method-source-code"
+						id="lcs-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 158</span>
+158:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">lcs</span>(<span class="ruby-identifier">other</span>, &amp;<span class="ruby-identifier">block</span>) <span class="ruby-comment cmt">#:yields self[ii] if there are matched subsequences:</span>
+159:     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span>.<span class="ruby-constant">LCS</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">other</span>, &amp;<span class="ruby-identifier">block</span>)
+160:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="patch-method" class="method-detail ">
+				<a name="method-i-patch"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">patch</span><span
+						class="method-args">(patchset)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Attempts to patch a copy of <tt>self</tt> with the provided
+<tt>patchset</tt>. See <a
+href="LCS.html#method-i-patch">Diff::LCS#patch</a>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="patch-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 191</span>
+191:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">patch</span>(<span class="ruby-identifier">patchset</span>)
+192:     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-identifier">patch</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">dup</span>, <span class="ruby-identifier">patchset</span>)
+193:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="patch--method" class="method-detail ">
+				<a name="method-i-patch%21"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">patch!</span><span
+						class="method-args">(patchset)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Attempts to patch <tt>self</tt> with the provided <tt>patchset</tt>. See <a
+href="LCS.html#method-i-patch%21">Diff::LCS#patch!</a>. Does no
+autodiscovery.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="patch--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 203</span>
+203:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">patch!</span>(<span class="ruby-identifier">patchset</span>)
+204:     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-identifier">patch!</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">patchset</span>)
+205:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="sdiff-method" class="method-detail ">
+				<a name="method-i-sdiff"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">sdiff</span><span
+						class="method-args">(other, callbacks = nil, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Returns the balanced (&#8220;side-by-side&#8221;) difference set between
+<tt>self</tt> and <tt>other</tt>. See <a
+href="LCS.html#method-i-sdiff">Diff::LCS#sdiff</a>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="sdiff-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 170</span>
+170:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sdiff</span>(<span class="ruby-identifier">other</span>, <span class="ruby-identifier">callbacks</span> = <span class="ruby-keyword kw">nil</span>, &amp;<span class="ruby-identifier">block</span>)
+171:     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-identifier">sdiff</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">other</span>, <span class="ruby-identifier">callbacks</span>, &amp;<span class="ruby-identifier">block</span>)
+172:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="traverse-balanced-method" class="method-detail ">
+				<a name="method-i-traverse_balanced"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">traverse_balanced</span><span
+						class="method-args">(other, callbacks = nil, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Traverses the discovered longest common subsequences between <tt>self</tt>
+and <tt>other</tt> using the alternate, balanced algorithm. See <a
+href="LCS.html#method-i-traverse_balanced">Diff::LCS#traverse_balanced</a>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="traverse-balanced-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 184</span>
+184:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">traverse_balanced</span>(<span class="ruby-identifier">other</span>, <span class="ruby-identifier">callbacks</span> = <span class="ruby-keyword kw">nil</span>, &amp;<span class="ruby-identifier">block</span>)
+185:     <span class="ruby-identifier">traverse_balanced</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">other</span>, <span class="ruby-identifier">callbacks</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">YieldingCallbacks</span>,
+186:                       &amp;<span class="ruby-identifier">block</span>)
+187:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="traverse-sequences-method" class="method-detail ">
+				<a name="method-i-traverse_sequences"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">traverse_sequences</span><span
+						class="method-args">(other, callbacks = nil, &block)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Traverses the discovered longest common subsequences between <tt>self</tt>
+and <tt>other</tt>. See <a
+href="LCS.html#method-i-traverse_sequences">Diff::LCS#traverse_sequences</a>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="traverse-sequences-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 176</span>
+176:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">traverse_sequences</span>(<span class="ruby-identifier">other</span>, <span class="ruby-identifier">callbacks</span> = <span class="ruby-keyword kw">nil</span>, &amp;<span class="ruby-identifier">block</span>)
+177:     <span class="ruby-identifier">traverse_sequences</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">other</span>, <span class="ruby-identifier">callbacks</span> <span class="ruby-operator">||</span> <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-constant">YieldingCallbacks</span>,
+178:                        &amp;<span class="ruby-identifier">block</span>)
+179:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="unpatch-method" class="method-detail ">
+				<a name="method-i-unpatch"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">unpatch</span><span
+						class="method-args">(patchset)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Attempts to unpatch a copy of <tt>self</tt> with the provided
+<tt>patchset</tt>. See <a
+href="LCS.html#method-i-patch">Diff::LCS#patch</a>.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="unpatch-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 197</span>
+197:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">unpatch</span>(<span class="ruby-identifier">patchset</span>)
+198:     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-identifier">unpatch</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">dup</span>, <span class="ruby-identifier">patchset</span>)
+199:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="unpatch--method" class="method-detail ">
+				<a name="method-i-unpatch%21"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">unpatch!</span><span
+						class="method-args">(patchset)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Attempts to unpatch <tt>self</tt> with the provided <tt>patchset</tt>. See
+<a href="LCS.html#method-i-unpatch">Diff::LCS#unpatch</a>. Does no
+autodiscovery.
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="unpatch--source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/diff/lcs.rb, line 209</span>
+209:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">unpatch!</span>(<span class="ruby-identifier">patchset</span>)
+210:     <span class="ruby-constant">Diff</span><span class="ruby-operator">::</span><span class="ruby-constant">LCS</span><span class="ruby-operator">::</span><span class="ruby-identifier">unpatch!</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">patchset</span>)
+211:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+
