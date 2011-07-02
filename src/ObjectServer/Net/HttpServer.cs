@@ -9,15 +9,27 @@ using Kayak.Http;
 
 namespace ObjectServer.Net
 {
+
+    /// <summary>
+    /// HTTP RPC 接口服务器
+    /// </summary>
     public sealed class HttpServer : IDisposable
     {
 
         private readonly string rpcHostUrl;
+        private readonly IPEndPoint httpEndPoint;
         private ZMQ.Socket zsocket;
 
         public HttpServer()
         {
             //检测是否初始化框架
+
+            if (!Infrastructure.Initialized)
+            {
+                throw new InvalidOperationException("请先初始化框架");
+            }
+        
+            this.httpEndPoint = new IPEndPoint(IPAddress.Any, Infrastructure.Configuration.HttpListenPort);
 
             this.rpcHostUrl = "tcp://127.0.0.1:5555";
             this.zsocket = new ZMQ.Socket(ZMQ.SocketType.REQ);

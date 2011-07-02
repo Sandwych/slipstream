@@ -26,6 +26,7 @@ namespace ObjectServer
             this.RpcHandlerMax = 5; //默认5个工人
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "tcp://*:5555";
+            this.HttpListenPort = 9287;
         }
 
         private string rootPassword;
@@ -97,6 +98,8 @@ namespace ObjectServer
 
         [XmlElement("rpc-host-url")]
         public string RpcHostUrl { get; set; }
-
+        
+        [XmlElement("http-listen-port")]
+        public int HttpListenPort { get; set; }
     }
 }
