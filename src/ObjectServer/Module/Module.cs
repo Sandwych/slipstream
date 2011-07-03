@@ -99,6 +99,9 @@ namespace ObjectServer
 
             if (this.Name == "core")
             {
+#if DEBUG //调试模式不捕获异常，以便于调试
+                this.LoadCoreModule(ctx);
+#else
                 try
                 {
                     this.LoadCoreModule(ctx);
@@ -109,6 +112,7 @@ namespace ObjectServer
                     Logger.Fatal(msg, ex);
                     throw new InitializationException(msg, ex);
                 }
+#endif
             }
             else
             {

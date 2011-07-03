@@ -27,6 +27,9 @@ namespace ObjectServer.Model
             this.AutoMigration = true;
             this.fields = new FieldCollection(this);
             this.Inheritances = new InheritanceCollection();
+
+            this.RegisterInternalServiceMethods();
+            this.AddInternalFields();
         }
 
         /// <summary>
@@ -34,12 +37,33 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="db"></param>
         public override void Load(IDBProfile db)
-        {
+        {            
             base.Load(db);
 
             this.InitializeInheritances(db);
 
             this.SyncModel(db);
+        }
+
+
+        /// <summary>
+        /// 注册内部服务，每个模型都有
+        /// </summary>
+        private void RegisterInternalServiceMethods()
+        {
+            var selfType = typeof(AbstractModel);
+            this.RegisterServiceMethod(selfType.GetMethod("Search"));
+            this.RegisterServiceMethod(selfType.GetMethod("Create"));
+            this.RegisterServiceMethod(selfType.GetMethod("Read"));
+            this.RegisterServiceMethod(selfType.GetMethod("Write"));
+            this.RegisterServiceMethod(selfType.GetMethod("Delete"));
+        }
+
+        private void AddInternalFields()
+        {
+            Debug.Assert(!this.Fields.ContainsKey(IDFieldName));
+
+            Fields.BigInteger(IDFieldName).SetLabel("ID").Required();
         }
 
         /// <summary>
@@ -285,6 +309,75 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 }
             }
         }
+
+
+
+        #region Service Methods
+
+        [ServiceMethod]
+        public static long[] Search(
+            IModel model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
+        {
+            OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
+
+            if (order != null)
+            {
+                orderInfos = new OrderExpression[order.Length];
+                for (int i = 0; i < orderInfos.Length; i++)
+                {
+                    var orderTuple = (object[])order[i];
+                    var so = SortDirectionParser.Parser((string)orderTuple[1]);
+                    orderInfos[i] = new OrderExpression((string)orderTuple[0], so);
+                }
+            }
+
+            return model.SearchInternal(ctx, domain, orderInfos, offset, limit);
+        }
+
+        [ServiceMethod]
+        public static Dictionary<string, object>[] Read(
+            IModel model, IServiceScope ctx, object[] clientIds, object[] fields = null)
+        {
+            string[] strFields = null;
+            if (fields != null)
+            {
+                strFields = fields.Select(f => (string)f).ToArray();
+            }
+            var ids = clientIds.Select(id => (long)id).ToArray();
+            return model.ReadInternal(ctx, ids, strFields);
+        }
+
+        [ServiceMethod]
+        public static long Create(
+            IModel model, IServiceScope ctx, IDictionary<string, object> propertyBag)
+        {
+            return model.CreateInternal(ctx, propertyBag);
+        }
+
+        [ServiceMethod]
+        public static void Write(
+           IModel model, IServiceScope ctx, object id, IDictionary<string, object> userRecord)
+        {
+            model.WriteInternal(ctx, (long)id, userRecord);
+        }
+
+        [ServiceMethod]
+        public static void Delete(
+            IModel model, IServiceScope ctx, object[] ids)
+        {
+            var longIds = ids.Select(id => (long)id).ToArray();
+            model.DeleteInternal(ctx, longIds);
+        }
+
+        [ServiceMethod]
+        public static Dictionary<string, object> GetDefaultView(IModel self, string viewType = "form")
+        {
+            throw new NotImplementedException();
+        }
+
+
+        #endregion
+
 
         #region IModel Members
 

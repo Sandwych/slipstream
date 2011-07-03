@@ -20,6 +20,8 @@ namespace ObjectServer
 
         protected AbstractResource(string name)
         {
+            Debug.Assert(!string.IsNullOrEmpty(name));
+
             this.SetName(name);
             this.RegisterAllServiceMethods(this.GetType());
         }
@@ -43,6 +45,11 @@ namespace ObjectServer
 
         public IService GetService(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
             return this.services[name];
         }
 
@@ -79,6 +86,8 @@ namespace ObjectServer
         /// </summary>
         protected void RegisterServiceMethod(MethodInfo mi)
         {
+            Debug.Assert(mi != null);
+
             //TODO: 再好好地思考一下模型的继承问题
             this.VerifyMethod(mi);
             var clrSvc = new ClrService(this, mi.Name, mi);
@@ -87,6 +96,8 @@ namespace ObjectServer
 
         private void VerifyMethod(MethodInfo mi)
         {
+            Debug.Assert(mi != null);
+
             if (!mi.IsStatic)
             {
                 var msg = string.Format(
@@ -126,6 +137,11 @@ namespace ObjectServer
 
         public virtual void Load(IDBProfile db)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+
             //确保加载资源之前设置了合适的属性
             Debug.Assert(!string.IsNullOrEmpty(this.Name));
             Debug.Assert(!string.IsNullOrEmpty(this.Module));
@@ -153,6 +169,8 @@ namespace ObjectServer
 
         internal static AbstractResource CreateStaticResourceInstance(Type t)
         {
+            Debug.Assert(t != null);
+
             var obj = Activator.CreateInstance(t) as AbstractResource;
             if (obj == null)
             {
@@ -174,6 +192,10 @@ namespace ObjectServer
 
         public virtual void MergeFrom(IResource res)
         {
+            if (res == null)
+            {
+                throw new ArgumentNullException("res");
+            }
 
             foreach (var p in res.Services)
             {

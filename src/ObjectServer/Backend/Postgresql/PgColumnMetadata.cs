@@ -9,9 +9,15 @@ namespace ObjectServer.Backend.Postgresql
     {
         public PgColumnMetadata(IDictionary<string, object> row)
         {
-            Name = (string)row["column_name"];
-            Nullable = (string)row["is_nullable"] == "YES";
-            SqlType = (string)row["data_type"];
+            this.Name = (string)row["column_name"];
+            this.Nullable = (string)row["is_nullable"] == "YES";
+            this.SqlType = (string)row["data_type"];
+
+            var charsMaxLength = row["character_maximum_length"];
+            if (charsMaxLength != DBNull.Value)
+            {
+                Length = (int)charsMaxLength;
+            }            
         }
 
 

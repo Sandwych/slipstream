@@ -147,7 +147,7 @@ namespace ObjectServer.Backend.Postgresql
 
             var action = nullable ? "DROP NOT NULL" : "SET NOT NULL";
             var sql = string.Format(
-                "ALTER TABLE \"{0}\"ALTER COLUMN \"{1}\" {2}",
+                "ALTER TABLE \"{0}\" ALTER COLUMN \"{1}\" {2}",
                 this.Name, columnName, action);
             db.Execute(sql);
         }
@@ -164,7 +164,7 @@ namespace ObjectServer.Backend.Postgresql
             }
 
             var sql = string.Format(
-                "ALTER TABLE \"{0}\"ALTER \"{1}\" TYPE {2}",
+                "ALTER TABLE \"{0}\" ALTER \"{1}\" TYPE {2}",
                 this.Name, columnName, sqlType);
             db.Execute(sql);
         }
@@ -208,7 +208,7 @@ namespace ObjectServer.Backend.Postgresql
             }
 
             var sql = @"
-SELECT column_name, data_type, is_nullable
+SELECT column_name, data_type, is_nullable, character_maximum_length
     FROM information_schema.columns
     WHERE table_name = @0
     ORDER BY ordinal_position;
