@@ -23,7 +23,7 @@ namespace ObjectServer.Core
         {
             Fields.Version().SetLabel("Version");
             Fields.Chars("login").SetLabel("User Name").SetSize(64).Required();
-            Fields.Chars("password").SetLabel("Password").SetSize(40).Required();
+            Fields.Chars("password").SetLabel("Password").SetSize(64).Required();
             Fields.Chars("salt").SetLabel("Salt").SetSize(64).Required();
             Fields.Boolean("admin").SetLabel("Administrator?").Required();
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
@@ -90,7 +90,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
                 var salt = GenerateSalt();
                 values2["salt"] = salt;
                 var password = (string)values2["password"];
-                values2["password"] = (password + salt).ToSha1(); //数据库里要保存 hash 而不是明文
+                values2["password"] = (password + salt).ToSha256(); //数据库里要保存 hash 而不是明文
             }
             return values2;
         }
@@ -107,7 +107,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
 
         private static bool IsPasswordMatched(string hashedPassword, string salt, string password)
         {
-            return hashedPassword == (password + salt).ToSha1();
+            return hashedPassword == (password + salt).ToSha256();
         }
 
 

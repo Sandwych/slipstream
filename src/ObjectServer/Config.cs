@@ -71,7 +71,7 @@ namespace ObjectServer
             set
             {
                 this.rootPassword = value;
-                this.RootPasswordHash = value.ToSha1();
+                this.RootPasswordHash = value.ToSha256();
             }
         }
 

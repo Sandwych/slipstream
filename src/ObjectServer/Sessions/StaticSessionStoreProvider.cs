@@ -20,6 +20,11 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void PutSession(Session session)
         {
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+
             this.Sweep();
             this.sessions[session.Id] = session;
         }
@@ -28,6 +33,16 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void RemoveSessionsByUser(string database, long uid)
         {
+            if (database == null)
+            {
+                throw new ArgumentNullException("database");
+            }
+
+            if (uid <= 0)
+            {
+                throw new ArgumentOutOfRangeException("uid");
+            }
+
             var sessions =
                 from p in this.sessions
                 where p.Value.Database == database && p.Value.UserId == uid
@@ -43,6 +58,11 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Remove(Guid sessionId)
         {
+            if (sessionId == Guid.Empty)
+            {
+                throw new ArgumentOutOfRangeException("sessionId");
+            }
+
             if (this.sessions.ContainsKey(sessionId))
             {
                 this.sessions.Remove(sessionId);
@@ -52,6 +72,11 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Pulse(Guid sessionId)
         {
+            if (sessionId == Guid.Empty)
+            {
+                throw new ArgumentOutOfRangeException("sessionId");
+            }
+
             var sess = this.sessions[sessionId];
             sess.LastActivityTime = DateTime.Now;
         }
