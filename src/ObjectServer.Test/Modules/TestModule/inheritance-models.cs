@@ -29,8 +29,9 @@ namespace ObjectServer.Test
             Fields.Integer("age").SetLabel("Age");
         }
 
+        
         [ServiceMethod]
-        public static long Create(IModel model, IServiceScope ctx, IDictionary<string, object> propertyBag)
+        public new static long Create(IModel model, IServiceScope ctx, IDictionary<string, object> propertyBag)
         {
             var record = new Dictionary<string, object>(propertyBag);
             record["age"] = 33;

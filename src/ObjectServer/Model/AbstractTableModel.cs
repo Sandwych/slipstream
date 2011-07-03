@@ -263,67 +263,7 @@ WHERE   hp.id = @0 AND hc.id <> @0
                 var columnValue = fieldInfo.SetFieldValue(ctx, record[f]);
                 record[f] = columnValue;
             }
-        }
-
-        #region Service Methods
-
-        [ServiceMethod]
-        public static long[] Search(
-            IModel model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
-        {
-            OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
-
-            if (order != null)
-            {
-                orderInfos = new OrderExpression[order.Length];
-                for (int i = 0; i < orderInfos.Length; i++)
-                {
-                    var orderTuple = (object[])order[i];
-                    var so = SortDirectionParser.Parser((string)orderTuple[1]);
-                    orderInfos[i] = new OrderExpression((string)orderTuple[0], so);
-                }
-            }
-
-            return model.SearchInternal(ctx, domain, orderInfos, offset, limit);
-        }
-
-        [ServiceMethod]
-        public static Dictionary<string, object>[] Read(
-            IModel model, IServiceScope ctx, object[] clientIds, object[] fields = null)
-        {
-            string[] strFields = null;
-            if (fields != null)
-            {
-                strFields = fields.Select(f => (string)f).ToArray();
-            }
-            var ids = clientIds.Select(id => (long)id).ToArray();
-            return model.ReadInternal(ctx, ids, strFields);
-        }
-
-        [ServiceMethod]
-        public static long Create(
-            IModel model, IServiceScope ctx, IDictionary<string, object> propertyBag)
-        {
-            return model.CreateInternal(ctx, propertyBag);
-        }
-
-        [ServiceMethod]
-        public static void Write(
-           IModel model, IServiceScope ctx, object id, IDictionary<string, object> userRecord)
-        {
-            model.WriteInternal(ctx, (long)id, userRecord);
-        }
-
-        [ServiceMethod]
-        public static void Delete(
-            IModel model, IServiceScope ctx, object[] ids)
-        {
-            var longIds = ids.Select(id => (long)id).ToArray();
-            model.DeleteInternal(ctx, longIds);
-        }
-
-        #endregion
-
+        }        
 
         public override dynamic Browse(IServiceScope ctx, long id)
         {
@@ -389,6 +329,73 @@ WHERE   hp.id = @0 AND hc.id <> @0
 
             return sb.ToString();
         }
+
+
+        #region Service Methods
+
+        [ServiceMethod]
+        public static long[] Search(
+            IModel model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
+        {
+            OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
+
+            if (order != null)
+            {
+                orderInfos = new OrderExpression[order.Length];
+                for (int i = 0; i < orderInfos.Length; i++)
+                {
+                    var orderTuple = (object[])order[i];
+                    var so = SortDirectionParser.Parser((string)orderTuple[1]);
+                    orderInfos[i] = new OrderExpression((string)orderTuple[0], so);
+                }
+            }
+
+            return model.SearchInternal(ctx, domain, orderInfos, offset, limit);
+        }
+
+        [ServiceMethod]
+        public static Dictionary<string, object>[] Read(
+            IModel model, IServiceScope ctx, object[] clientIds, object[] fields = null)
+        {
+            string[] strFields = null;
+            if (fields != null)
+            {
+                strFields = fields.Select(f => (string)f).ToArray();
+            }
+            var ids = clientIds.Select(id => (long)id).ToArray();
+            return model.ReadInternal(ctx, ids, strFields);
+        }
+
+        [ServiceMethod]
+        public static long Create(
+            IModel model, IServiceScope ctx, IDictionary<string, object> propertyBag)
+        {
+            return model.CreateInternal(ctx, propertyBag);
+        }
+
+        [ServiceMethod]
+        public static void Write(
+           IModel model, IServiceScope ctx, object id, IDictionary<string, object> userRecord)
+        {
+            model.WriteInternal(ctx, (long)id, userRecord);
+        }
+
+        [ServiceMethod]
+        public static void Delete(
+            IModel model, IServiceScope ctx, object[] ids)
+        {
+            var longIds = ids.Select(id => (long)id).ToArray();
+            model.DeleteInternal(ctx, longIds);
+        }
+
+        [ServiceMethod]
+        public static Dictionary<string, object> GetDefaultView(IModel self, string viewType = "form")
+        {
+            throw new NotImplementedException();
+        }
+
+
+        #endregion
 
 
         private static Dictionary<string, object> ClearUserRecord(IDictionary<string, object> record)

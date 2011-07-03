@@ -29,6 +29,10 @@ namespace ObjectServer.Model
             this.Inheritances = new InheritanceCollection();
         }
 
+        /// <summary>
+        /// 此函数要允许多次调用
+        /// </summary>
+        /// <param name="db"></param>
         public override void Load(IDBProfile db)
         {
             base.Load(db);
@@ -281,7 +285,6 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 }
             }
         }
-
 
         #region IModel Members
 

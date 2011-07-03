@@ -9,7 +9,7 @@ using ObjectServer.Core;
 
 namespace ObjectServer.Model
 {
-    public sealed class XmlDataImporter
+    internal sealed class XmlDataImporter
     {
         private IServiceScope context;
         private string currentModule;
