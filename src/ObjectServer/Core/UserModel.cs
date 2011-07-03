@@ -36,7 +36,7 @@ namespace ObjectServer.Core
             base.Load(db);
 
             //检测是否有 root 用户
-            var isRootUserExisted = UserExists(db, "root");
+            var isRootUserExisted = UserExists(db, RootUserName);
             if (isRootUserExisted)
             {
                 this.CreateRootUser(db.Connection);
@@ -65,7 +65,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
             var user = new Dictionary<string, object>()
                     {
                         { "name", "Root User" },
-                        { "login", "root" },
+                        { "login", RootUserName },
                         { "password", rootPassword } ,
                         { "admin", true },
                         { CreatedUserFieldName, DBNull.Value }, //一定要覆盖掉默认设置，因为此时系统里还没有用户，取 Session 里的 UserId 是无意义的
