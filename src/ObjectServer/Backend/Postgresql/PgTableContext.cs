@@ -42,7 +42,7 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("tableName");
             }
 
-            if (!tableName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(tableName))
             {
                 throw new ArgumentOutOfRangeException("tableName");
             }
@@ -65,7 +65,7 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("tableName");
             }
 
-            if (!tableName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(tableName))
             {
                 throw new ArgumentOutOfRangeException("tableName");
             }
@@ -93,7 +93,7 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("tableName");
             }
 
-            if (!tableName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(tableName))
             {
                 throw new ArgumentOutOfRangeException("tableName");
             }
@@ -149,7 +149,7 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }
@@ -172,7 +172,7 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }
@@ -196,7 +196,7 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }
@@ -214,7 +214,7 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }
@@ -229,7 +229,7 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }
@@ -254,7 +254,7 @@ namespace ObjectServer.Backend.Postgresql
             {
                 throw new ArgumentNullException("tableName");
             }
-            if (!tableName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(tableName))
             {
                 throw new ArgumentOutOfRangeException("tableName");
             }
@@ -310,7 +310,7 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
             {
                 throw new ArgumentNullException("columnName");
             }
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }
@@ -339,7 +339,7 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
             {
                 throw new ArgumentNullException("columnName");
             }
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }
@@ -358,7 +358,7 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
             {
                 throw new ArgumentNullException("columnName");
             }
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }
@@ -378,7 +378,7 @@ SELECT COALESCE(COUNT(constraint_name), 0)
             {
                 throw new ArgumentNullException("columnName");
             }
-            if (!columnName.IsValidSqlIdentifier())
+            if (!NamingRule.IsValidSqlName(columnName))
             {
                 throw new ArgumentOutOfRangeException("columnName");
             }

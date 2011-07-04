@@ -9,29 +9,60 @@ namespace ObjectServer
     //TODO: 完善这里的 Regex
     internal static class NamingRule
     {
-        private static readonly Regex s_resourceNameRegex =
-            new Regex(@"([a-z_][a-z_0-9]*)\.([a-z_][a-z_0-9]*)", 
+        public static readonly Regex ResourcePattern =
+            new Regex(@"^([a-z_][a-z_0-9]*)\.([a-z_][a-z_0-9]*)$",
                 RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        private static readonly Regex s_methodNameRegex = 
-            new Regex(@"([A-Za-z_][A-Za-z_0-9]*)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        public static readonly Regex SqlNamePattern =
+            new Regex(@"^[a-z_][a-z_0-9]*$",
+                RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        private static readonly Regex s_fieldNameRegex = 
-            new Regex(@"([a-z_][a-z_0-9]*)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        public static readonly Regex IdentifierPattern =
+            new Regex(@"^[A-Za-z_][A-Za-z_0-9]*$",
+                RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+        public static readonly Regex FieldPattern =
+            new Regex(@"^[a-z_][a-z_0-9]*$",
+                RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         public static bool IsValidResourceName(string name)
         {
-            return s_resourceNameRegex.IsMatch(name);
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            return ResourcePattern.IsMatch(name);
         }
 
         public static bool IsValidMethodName(string name)
         {
-            return s_methodNameRegex.IsMatch(name);
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            return IdentifierPattern.IsMatch(name);
         }
 
         public static bool IsValidFieldName(string name)
         {
-            return s_fieldNameRegex.IsMatch(name);
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            return FieldPattern.IsMatch(name);
+        }
+
+        public static bool IsValidSqlName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            return SqlNamePattern.IsMatch(name);
         }
     }
 }
