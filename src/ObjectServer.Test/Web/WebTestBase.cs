@@ -56,7 +56,7 @@ namespace ObjectServer
                 var result = (IDictionary<string, object>)PlainJsonConvert.Parse(responseStream);
                 responseStream.Close();
 
-                //TODO 对比两个 ID 是否相同
+                Assert.AreEqual(id, result["id"]);
 
                 return result;
             }

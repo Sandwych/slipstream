@@ -296,6 +296,7 @@
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha256.cs" />
+    <Compile Include="Utility\StringExtension.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />
