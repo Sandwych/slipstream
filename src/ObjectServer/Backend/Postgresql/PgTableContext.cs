@@ -13,6 +13,7 @@ using Npgsql;
 #endif //MONO
 
 using ObjectServer.Model;
+using ObjectServer.Utility;
 
 namespace ObjectServer.Backend.Postgresql
 {
@@ -35,9 +36,15 @@ namespace ObjectServer.Backend.Postgresql
             {
                 throw new ArgumentNullException("db");
             }
+
             if (string.IsNullOrEmpty(tableName))
             {
                 throw new ArgumentNullException("tableName");
+            }
+
+            if (!NamingRule.IsValidSqlName(tableName))
+            {
+                throw new ArgumentOutOfRangeException("tableName");
             }
 
             this.Name = tableName;
@@ -58,6 +65,11 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("tableName");
             }
 
+            if (!NamingRule.IsValidSqlName(tableName))
+            {
+                throw new ArgumentOutOfRangeException("tableName");
+            }
+
             //检查连接
             var sql = @"
     SELECT COALESCE(COUNT(table_name), 0)
@@ -75,17 +87,25 @@ namespace ObjectServer.Backend.Postgresql
             {
                 throw new ArgumentNullException("db");
             }
+
             if (string.IsNullOrEmpty(tableName))
             {
                 throw new ArgumentNullException("tableName");
             }
-            
 
+            if (!NamingRule.IsValidSqlName(tableName))
+            {
+                throw new ArgumentOutOfRangeException("tableName");
+            }
+
+            tableName = tableName.SqlEscape();
             //TODO SQL 注入风险
             var sql = string.Format(
-                @"CREATE TABLE ""{0}"" (id BIGSERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS",
+                @"CREATE TABLE ""{0}"" (id BIGSERIAL NOT NULL, PRIMARY KEY(""id"")) WITHOUT OIDS",
                 tableName);
             db.Execute(sql);
+
+            label = label.SqlEscape();
             sql = string.Format(
                 @"COMMENT ON TABLE ""{0}"" IS '{1}';",
                 tableName, label);
@@ -98,6 +118,7 @@ namespace ObjectServer.Backend.Postgresql
             {
                 throw new ArgumentNullException("db");
             }
+
             if (field == null)
             {
                 throw new ArgumentNullException("field");
@@ -128,6 +149,11 @@ namespace ObjectServer.Backend.Postgresql
                 throw new ArgumentNullException("columnName");
             }
 
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
+            }
+
             var sql = string.Format(
                 "ALTER TABLE \"{0}\" DROP COLUMN \"{1}\"",
                 this.Name, columnName);
@@ -140,9 +166,15 @@ namespace ObjectServer.Backend.Postgresql
             {
                 throw new ArgumentNullException("db");
             }
+
             if (string.IsNullOrEmpty(columnName))
             {
                 throw new ArgumentNullException("columnName");
+            }
+
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
             }
 
             var action = nullable ? "DROP NOT NULL" : "SET NOT NULL";
@@ -158,9 +190,15 @@ namespace ObjectServer.Backend.Postgresql
             {
                 throw new ArgumentNullException("db");
             }
+
             if (string.IsNullOrEmpty(columnName))
             {
                 throw new ArgumentNullException("columnName");
+            }
+
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
             }
 
             var sql = string.Format(
@@ -171,9 +209,14 @@ namespace ObjectServer.Backend.Postgresql
 
         public bool ColumnExists(string columnName)
         {
-            if(string.IsNullOrEmpty(columnName))
+            if (string.IsNullOrEmpty(columnName))
             {
                 throw new ArgumentNullException("columnName");
+            }
+
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
             }
 
             return this.columns.ContainsKey(columnName);
@@ -184,6 +227,11 @@ namespace ObjectServer.Backend.Postgresql
             if (string.IsNullOrEmpty(columnName))
             {
                 throw new ArgumentNullException("columnName");
+            }
+
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
             }
 
             return this.columns[columnName];
@@ -205,6 +253,10 @@ namespace ObjectServer.Backend.Postgresql
             if (string.IsNullOrEmpty(tableName))
             {
                 throw new ArgumentNullException("tableName");
+            }
+            if (!NamingRule.IsValidSqlName(tableName))
+            {
+                throw new ArgumentOutOfRangeException("tableName");
             }
 
             var sql = @"
@@ -258,6 +310,10 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
             {
                 throw new ArgumentNullException("columnName");
             }
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
+            }
             if (string.IsNullOrEmpty(refTable))
             {
                 throw new ArgumentNullException("refTable");
@@ -283,6 +339,10 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
             {
                 throw new ArgumentNullException("columnName");
             }
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
+            }
 
             var fkName = this.GenerateFkName(columnName);
             this.DeleteConstraint(db, fkName);
@@ -297,6 +357,10 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
             if (string.IsNullOrEmpty(columnName))
             {
                 throw new ArgumentNullException("columnName");
+            }
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
             }
 
             var sql = @"
@@ -313,6 +377,10 @@ SELECT COALESCE(COUNT(constraint_name), 0)
             if (string.IsNullOrEmpty(columnName))
             {
                 throw new ArgumentNullException("columnName");
+            }
+            if (!NamingRule.IsValidSqlName(columnName))
+            {
+                throw new ArgumentOutOfRangeException("columnName");
             }
 
             return string.Format("{0}_{1}_fkey", this.Name, columnName);

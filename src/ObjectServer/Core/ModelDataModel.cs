@@ -59,7 +59,9 @@ namespace ObjectServer.Core
                 throw new ArgumentNullException("model");
             }
 
-            var sql = "SELECT ref_id FROM core_model_data WHERE model = @0 AND name = @1";
+            var sql = 
+                @"SELECT ref_id FROM core_model_data 
+                    WHERE model = @0 AND name = @1";
             var rows = conn.QueryAsArray<long>(sql, model, key);
             if (rows.Length == 0)
             {

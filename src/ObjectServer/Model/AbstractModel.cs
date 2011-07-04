@@ -37,7 +37,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="db"></param>
         public override void Load(IDBProfile db)
-        {            
+        {
             base.Load(db);
 
             this.InitializeInheritances(db);
@@ -199,7 +199,6 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         /// <returns></returns>
         private void SyncSingleField(IDBProfile db, Dictionary<string, object> dbField, string fieldName)
         {
-            var sql = @"UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, ""help""=@3  WHERE ""id""=@4";
 
             var fieldLabel = dbField["label"] is DBNull ? null : (string)dbField["label"];
             var fieldRelation = dbField["relation"] is DBNull ? null : (string)dbField["relation"];
@@ -214,6 +213,10 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 fieldType != metaFieldType ||
                 fieldHelp != metaField.Help)
             {
+                var sql = 
+@"
+UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, 
+    ""help""=@3  WHERE ""id""=@4";
                 db.Connection.Execute(sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
 
             }
@@ -318,6 +321,8 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         public static long[] Search(
             IModel model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
         {
+            EnsureServiceMethodArgs(model, ctx);
+
             OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
 
             if (order != null)
@@ -338,6 +343,8 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         public static Dictionary<string, object>[] Read(
             IModel model, IServiceScope ctx, object[] clientIds, object[] fields = null)
         {
+            EnsureServiceMethodArgs(model, ctx);
+
             string[] strFields = null;
             if (fields != null)
             {
@@ -351,6 +358,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         public static long Create(
             IModel model, IServiceScope ctx, IDictionary<string, object> propertyBag)
         {
+            EnsureServiceMethodArgs(model, ctx);
             return model.CreateInternal(ctx, propertyBag);
         }
 
@@ -358,6 +366,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         public static void Write(
            IModel model, IServiceScope ctx, object id, IDictionary<string, object> userRecord)
         {
+            EnsureServiceMethodArgs(model, ctx);
             model.WriteInternal(ctx, (long)id, userRecord);
         }
 
@@ -365,14 +374,24 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         public static void Delete(
             IModel model, IServiceScope ctx, object[] ids)
         {
+            EnsureServiceMethodArgs(model, ctx);
             var longIds = ids.Select(id => (long)id).ToArray();
             model.DeleteInternal(ctx, longIds);
         }
 
-        [ServiceMethod]
-        public static Dictionary<string, object> GetDefaultView(IModel self, string viewType = "form")
+      
+
+        private static void EnsureServiceMethodArgs(IModel self, IServiceScope ctx)
         {
-            throw new NotImplementedException();
+            if (self == null)
+            {
+                throw new ArgumentNullException("self");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
         }
 
 

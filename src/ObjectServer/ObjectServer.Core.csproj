@@ -81,38 +81,6 @@
     </Reference>
     <Reference Include="System.Configuration">
     </Reference>
-    <Reference Include="Boo.Lang, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\boo\Boo.Lang.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.CodeDom, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\boo\Boo.Lang.CodeDom.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Compiler, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\boo\Boo.Lang.Compiler.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Extensions, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\boo\Boo.Lang.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Interpreter, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\boo\Boo.Lang.Interpreter.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Parser, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\boo\Boo.Lang.Parser.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.PatternMatching, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\boo\Boo.Lang.PatternMatching.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Useful, Version=2.0.9.4, Culture=neutral, PublicKeyToken=32c39770e9a21a67">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\boo\Boo.Lang.Useful.dll</HintPath>
-    </Reference>
     <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\castle-core\Castle.Core.dll</HintPath>
@@ -149,12 +117,13 @@
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Messaging\RpcHost.cs" />
     <Compile Include="Core\AttachmentModel.cs" />
     <Compile Include="Core\ModelAccessModel.cs" />
     <Compile Include="Core\OrganizationModel.cs" />
     <Compile Include="Core\PropertyModel.cs" />
-    <Compile Include="Core\ViewActionModel.cs" />
+    <Compile Include="Core\WindowActionModel.cs" />
     <Compile Include="Core\UserGroupModel.cs" />
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
@@ -181,6 +150,8 @@
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="Model\SortDirection.cs" />
     <Compile Include="Messaging\RpcHandler.cs" />
+    <Compile Include="Model\ViewBuilder.cs" />
+    <Compile Include="Model\ViewGenerator.cs" />
     <Compile Include="Net\BufferedProducer.cs" />
     <Compile Include="Net\BufferedConsumer.cs" />
     <Compile Include="Net\HttpServer.cs" />
@@ -282,7 +253,6 @@
     <Compile Include="Core\FieldModel.cs" />
     <Compile Include="Core\ModelModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runtime\BooCompiler.cs" />
     <Compile Include="Runtime\CompilerProvider.cs" />
     <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
@@ -296,6 +266,7 @@
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha256.cs" />
+    <Compile Include="Utility\StringExtension.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />

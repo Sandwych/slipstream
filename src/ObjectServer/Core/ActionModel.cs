@@ -16,7 +16,7 @@ namespace ObjectServer.Core
             : base("core.action")
         {
             Fields.Chars("name").SetLabel("Action Name").Required();
-            Fields.Chars("kind").SetLabel("View Kind").Required();
+            Fields.Chars("type").SetLabel("Action Type").Required();
         }
 
     }
