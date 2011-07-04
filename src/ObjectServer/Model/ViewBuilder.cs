@@ -48,13 +48,7 @@ namespace ObjectServer.Model
             sbView.AppendFormat("<label text=\"{0}\" />\n", text);
         }
 
-        public void WriteFieldLabel(string field)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(field));
-            sbView.AppendFormat("<label field=\"{0}\" />\n", field);
-        }
-
-        public void WriteGridStart(int cols = 4)
+        public void WriteGridStart(int cols = 2)
         {
             sbView.AppendFormat("<grid cols=\"{0}\" >\n", cols);
         }

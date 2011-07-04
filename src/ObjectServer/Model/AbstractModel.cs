@@ -199,7 +199,6 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         /// <returns></returns>
         private void SyncSingleField(IDBProfile db, Dictionary<string, object> dbField, string fieldName)
         {
-            var sql = @"UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, ""help""=@3  WHERE ""id""=@4";
 
             var fieldLabel = dbField["label"] is DBNull ? null : (string)dbField["label"];
             var fieldRelation = dbField["relation"] is DBNull ? null : (string)dbField["relation"];
@@ -214,6 +213,10 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 fieldType != metaFieldType ||
                 fieldHelp != metaField.Help)
             {
+                var sql = 
+@"
+UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, 
+    ""help""=@3  WHERE ""id""=@4";
                 db.Connection.Execute(sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
 
             }

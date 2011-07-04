@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data noupdate="true">
 
-  <record model="core.view" key="user_tree">
+  <record model="core.view" key="user_tree_view">
     <field name="name">Users</field>
     <field name="model">core.user</field>
     <field name="kind">list</field>
@@ -17,7 +17,7 @@
     </field>
   </record>
 
-  <record model="core.view" key="user_form">
+  <record model="core.view" key="user_form_view">
     <field name="name">Users</field>
     <field name="model">core.user</field>
     <field name="kind">form</field>
@@ -35,6 +35,14 @@
       ]]>
     </field>
   </record>
+
+  <record  model="core.action_window" key="user_form_action">
+    <field name="name">Users Management</field>
+    <field name="type">core.action_window</field>
+    <field name="view" ref-key="user_tree_view" />
+    <field name="model">core.user</field>
+  </record>
+
 
 
 </data>

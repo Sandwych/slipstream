@@ -24,6 +24,12 @@
     <field name="ordinal">0</field>
   </record>
 
+  <record model="core.menu" key="menu_base_user">
+    <field name="parent" ref-key="menu_admin_base" />
+    <field name="name">User Management</field>
+    <field name="ordinal">0</field>
+  </record>
+
 
 </data>
 

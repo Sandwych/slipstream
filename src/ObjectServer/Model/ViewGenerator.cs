@@ -16,7 +16,6 @@ namespace ObjectServer.Model
             vb.WriteFormStart();
             foreach (var f in fields)
             {
-                vb.WriteFieldLabel(f.Value.Name);
                 vb.WriteField(f.Value.Name);
             }
             vb.WriteFormEnd();

@@ -18,7 +18,11 @@ namespace ObjectServer.Core
             Inherit("core.action", "action");
             Fields.ManyToOne("action", "core.action")
                 .SetLabel("Base Action").Required().OnDelete(OnDeleteAction.Cascade);
-            Fields.ManyToOne("primary_view", "core.view").SetLabel("Primary View").Required();           
+
+            Fields.Chars("model").SetLabel("Related Model").Required().SetSize(128);
+            Fields.ManyToOne("view", "core.view").SetLabel("Master View").Required();
+            Fields.OneToMany("views", "core.action_window_view", "window_action")
+                .SetLabel("Views");
         }
 
     }
