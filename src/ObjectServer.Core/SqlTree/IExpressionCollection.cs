@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ObjectServer.SqlTree
+{
+    public interface IExpressionCollection : IExpression
+    {
+        IList<IExpression> Expressions { get; }
+    }
+}

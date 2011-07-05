@@ -1,0 +1,60 @@
+﻿* JOSN-RPC 边界上，考虑二进制浮点数与十进制浮点数的序列化精度舍入问题
+
+* 搜索功能完善与补强
+	实现 childof 操作符（依赖实现层次表）
+
+* 实体的继承（完成）
+
+* 用户登录与注销（完成）
+
+* Many2Many 字段（完成）
+
+* SQLite 支持
+
+* 自动初始化数据库（完成）
+
+* log4net 配置（完成）
+
+* 层次结构的实体
+	* 创建（完成）
+	* 查询
+	* 修改
+	* 删除
+
+
+* 复杂字段类型的 Setter（完成）
+
+* 定时任务调度器
+
+* 实现以下字段类型：
+	Reference 字段（完成）
+	Property 字段
+	Binary 字段（完成）
+	Enumeration 字段（进行中，需要检查赋予获取的字符串是否属于 enum 定义的范围）
+	
+* Money 类型名称替换成 Decimal（完成）
+
+* 给字段属性加上 IsScalar IsLazy（完成）
+
+* IMetaField 缺少 on delete（完成）
+
+* 重构 MetaField 的 Fluent 接口（完成）
+
+* 函数字段也要可以设置，而不仅仅是 Getter
+
+* 客户端远程获取进度的
+
+* Many2one 可空的字段有问题（完成）
+
+* 导入数据检测 key 是否已经存在还有问题，会重复创建 ModelData（完成）
+
+* 考虑一下要不要引入一个类似 Monogo 之类的文档（key/value）
+	数据库来保存系统中的低价值非业务数据，比如操作日志、内部邮件等（拒绝）
+
+* 检查如果用户错误地从 AbstractExtendedModel 继承的时候，需要检查被继承的 Model 是否存在 
+
+* AbstractTableModel 的 ReadInternal 里的 SELECT 需要重构成 SqlTree 形式（完成）
+
+* 数据导入引擎应该可以支持 one2many 和 many2many 甚至 reference 的字段
+
+* 错误：one2many 函数字段不能设成 readonly 的 

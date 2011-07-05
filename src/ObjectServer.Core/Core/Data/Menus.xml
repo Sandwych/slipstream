@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<data noupdate="true">
+
+  <record model="core.menu" key="menu_admin_root">
+    <field name="name">Administration</field>
+    <field name="ordinal">9999</field>
+  </record>
+
+  <record model="core.menu" key="menu_admin_module">
+    <field name="parent" ref-key="menu_admin_root" />
+    <field name="name">Module Management</field>
+    <field name="ordinal">0</field>
+  </record>
+
+  <record model="core.menu" key="menu_admin_base">
+    <field name="parent" ref-key="menu_admin_root" />
+    <field name="name">Base System</field>
+    <field name="ordinal">0</field>
+  </record>
+
+  <record model="core.menu" key="menu_base_model">
+    <field name="parent" ref-key="menu_admin_base" />
+    <field name="name">Model Management</field>
+    <field name="ordinal">0</field>
+  </record>
+
+  <record model="core.menu" key="menu_base_user">
+    <field name="parent" ref-key="menu_admin_base" />
+    <field name="name">User Management</field>
+    <field name="ordinal">0</field>
+  </record>
+
+
+</data>
+

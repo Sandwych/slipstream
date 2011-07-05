@@ -55,13 +55,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ObjectServer\ObjectServer.Core.csproj">
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ObjectServer.Core\ObjectServer.Core.csproj">
       <Project>{443BAECA-181D-45B8-9EB8-FCA3A35051E1}</Project>
       <Name>ObjectServer.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <ProjectReference Include="..\ObjectServer.Http\ObjectServer.Http.csproj">
+      <Project>{8272D46C-F350-4329-9E07-8B49A234C749}</Project>
+      <Name>ObjectServer.Http</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectServer.Infrastructure\ObjectServer.Infrastructure.csproj">
+      <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
+      <Name>ObjectServer.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
