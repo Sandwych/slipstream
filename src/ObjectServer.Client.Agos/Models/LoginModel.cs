@@ -22,7 +22,11 @@ namespace ObjectServer.Client.Agos.Models
             get { return this.address; }
             set
             {
-                Validator.ValidateProperty(value, new ValidationContext(this, null, null) { MemberName = "Address" });
+                var vc = new ValidationContext(this, null, null)
+                {
+                    MemberName = "Address"
+                };
+                Validator.ValidateProperty(value, vc);
                 this.address = value;
             }
         }

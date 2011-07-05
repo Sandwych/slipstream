@@ -8,9 +8,9 @@
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <tree label="Users">
-        <field name="name" />
-        <field name="login" />
-        <field name="admin" />
+        <field name="name" where="basic" />
+        <field name="login" where="basic" />
+        <field name="admin" where="advanced" />
       </tree>
       ]]>
     </field>
@@ -23,11 +23,8 @@
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <form label="Users">
-        <label field="name" />
         <field name="name" />
-        <label field="login" />
         <field name="login" />
-        <label field="admin" />
         <field name="admin" />
       </form>
       ]]>

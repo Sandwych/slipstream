@@ -22,6 +22,12 @@ namespace ObjectServer.Core
             Fields.Integer("ordinal").SetLabel("Ordinal Number")
                 .Required().DefaultValueGetter(arg => 0);
             Fields.Boolean("active").SetLabel("Active").Required().DefaultValueGetter(arg => true);
+            Fields.Reference("action").SetLabel("Action").SetOptions(
+                   new Dictionary<string, string>()
+                {
+                    { "core.action_window", "Window Action" },
+                    { "core.action_wizard", "Wizard Action" },
+                });
         }
 
     }

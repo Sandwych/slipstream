@@ -92,6 +92,7 @@
     <Reference Include="System.Windows.Controls.Toolkit.Internals, Version=4.0.5.0, Culture=neutral, PublicKeyToken=2c5c654d367bf4a7">
       <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Toolkit.Internals.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
@@ -126,7 +127,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityQuestions.resx</DependentUpon>
     </Compile>
+    <Compile Include="Models\IWindowAction.cs" />
+    <Compile Include="Models\ListWindowModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\WindowManager.cs" />
     <Compile Include="Utility\XamlLoader.cs" />
     <Compile Include="Views\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
