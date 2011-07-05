@@ -58,7 +58,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IRemotingService.cs" />
+    <Compile Include="IRemoteService.cs" />
     <Compile Include="JsonRpc\JsonRpcClient.cs" />
     <Compile Include="JsonRpc\JsonRpcRequest.cs" />
     <Compile Include="JsonRpc\JsonRpcResponse.cs" />

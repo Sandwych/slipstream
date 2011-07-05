@@ -9,7 +9,7 @@ using ObjectServer.Client.Model;
 
 namespace ObjectServer.Client
 {
-    public class ObjectServerClient : IRemotingService
+    public class ObjectServerClient : IRemoteService
     {
         public const string ServicePath = @"/jsonrpc";
 
