@@ -12,7 +12,7 @@ namespace ObjectServer.Json
     {
         public static string Generate(object value)
         {
-            var debug = Infrastructure.Configuration.Debug;
+            var debug = Platform.Configuration.Debug;
             var fmt = Formatting.None;
             if (debug)
             {

@@ -95,7 +95,7 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void UpdateModuleList(IDBConnection db)
         {
-            var cfg = Infrastructure.Configuration;
+            var cfg = Platform.Configuration;
             this.LookupAllModules(cfg.ModulePath);
 
             var sql = "SELECT COUNT(*) FROM \"core_module\" WHERE \"name\" = @0";

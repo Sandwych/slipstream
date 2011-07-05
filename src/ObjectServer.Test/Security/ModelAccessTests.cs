@@ -23,7 +23,7 @@ namespace ObjectServer.Model.Test
             this.Service.CreateModel(this.SessionId, "core.user", testUser);
             
 
-            var service = ObjectServer.Infrastructure.ExportedService;
+            var service = ObjectServer.Platform.ExportedService;
             var sessionId = service.LogOn("objectserver", "testuser", "testuser");
 
             using (var scope = new ServiceScope(new Guid(sessionId)))

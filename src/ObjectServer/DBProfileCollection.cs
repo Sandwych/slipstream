@@ -72,8 +72,8 @@ namespace ObjectServer
             Logger.Info(() => "Loading additional modules...");
             using (var ctx = new InternalServiceScope(db, session))
             {
-                Infrastructure.Modules.UpdateModuleList(db.Connection);
-                Infrastructure.Modules.LoadActivatedModules(ctx);
+                Platform.Modules.UpdateModuleList(db.Connection);
+                Platform.Modules.LoadActivatedModules(ctx);
             }
         }
 

@@ -123,7 +123,7 @@ namespace ObjectServer
         private void LoadAdditionalModule(IServiceScope ctx)
         {
             Logger.Info(() => "Loading precompiled assemblies...");
-            var dbProfile = Infrastructure.DBProfiles.TryGetDBProfile(ctx.Session);
+            var dbProfile = Platform.DBProfiles.TryGetDBProfile(ctx.Session);
 
             if (this.Dlls != null)
             {
@@ -149,7 +149,7 @@ namespace ObjectServer
 
         private void LoadCoreModule(IServiceScope ctx)
         {
-            var dbProfile = Infrastructure.DBProfiles.TryGetDBProfile(ctx.Session);
+            var dbProfile = Platform.DBProfiles.TryGetDBProfile(ctx.Session);
 
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(dbProfile, a);

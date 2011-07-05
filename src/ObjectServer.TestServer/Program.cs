@@ -51,7 +51,7 @@ namespace ObjectServer.TestServer
             var serverThread = new Thread(() =>
             {
                 using (var cs = new ObjectServer.Http.HttpServer(
-                    Infrastructure.Configuration.HttpListenPort))
+                    Platform.Configuration.HttpListenPort))
                 {
                     cs.Start();
 
@@ -69,15 +69,15 @@ namespace ObjectServer.TestServer
             Console.WriteLine("ObjectServer 框架已经成功初始化");
 
             Console.WriteLine("日志文件目录=[{0}]，RPC 服务主机 URL=[{1}]",
-                Infrastructure.Configuration.LogPath,
-                Infrastructure.Configuration.RpcHostUrl);
+                Platform.Configuration.LogPath,
+                Platform.Configuration.RpcHostUrl);
         }
 
         private static void EnsureFrameworkInitialized()
         {
-            if (!Infrastructure.Initialized)
+            if (!Platform.Initialized)
             {
-                Infrastructure.Initialize();
+                Platform.Initialize();
             }
         }
     }

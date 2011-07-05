@@ -18,7 +18,7 @@ namespace ObjectServer.Test
         [Test]
         public void Test_serialization_of_property_bag()
         {
-            Infrastructure.Initialize();
+            Platform.Initialize();
 
             var dt = new Dictionary<string, object>();
             dt.Add("id", 1111);
@@ -36,7 +36,7 @@ namespace ObjectServer.Test
         [Test]
         public void Test_serialization_of_array()
         {
-            Infrastructure.Initialize();
+            Platform.Initialize();
 
             var a1 = new object[] { 123, "aaaa", 12.5M };
             var json = PlainJsonConvert.Generate(a1);
@@ -51,7 +51,7 @@ namespace ObjectServer.Test
         [Test]
         public void Test_serialization_complex_json()
         {
-            Infrastructure.Initialize();
+            Platform.Initialize();
 
             var json = "[0, 1, 2, [1,2,3], {\"aaa\": [1,2]}, [{b: 5}], {1: 1.1, 2: 2.2} ]";
             var array = (object[])PlainJsonConvert.Parse(json);

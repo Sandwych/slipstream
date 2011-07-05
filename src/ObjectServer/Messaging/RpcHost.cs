@@ -11,19 +11,19 @@ namespace ObjectServer
         public RpcHost()
         {
 
-            if (!Infrastructure.Initialized)
+            if (!Platform.Initialized)
             {
                 throw new InvalidOperationException("无法启动服务器，请先初始化框架");
             }
 
-            if (Infrastructure.Configuration.RpcHandlerMax <= 0)
+            if (Platform.Configuration.RpcHandlerMax <= 0)
             {
                 throw new IndexOutOfRangeException("无效的工人数量");
             }
 
-            this.RpcHandlerMax = Infrastructure.Configuration.RpcHandlerMax;
-            this.RpcHandlerUrl = Infrastructure.Configuration.RpcHandlerUrl;
-            this.RpcHostUrl = Infrastructure.Configuration.RpcHostUrl;
+            this.RpcHandlerMax = Platform.Configuration.RpcHandlerMax;
+            this.RpcHandlerUrl = Platform.Configuration.RpcHandlerUrl;
+            this.RpcHostUrl = Platform.Configuration.RpcHostUrl;
         }
 
         public short RpcHandlerMax { get; private set; }

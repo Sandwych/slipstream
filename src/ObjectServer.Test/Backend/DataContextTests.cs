@@ -65,8 +65,8 @@ namespace ObjectServer.Backend.Test
         public void Create_and_delete_database()
         {
             var dbName = "oo_testdb";
-            Infrastructure.Initialize();
-            var hash = Infrastructure.Configuration.RootPassword.ToSha256();
+            Platform.Initialize();
+            var hash = Platform.Configuration.RootPassword.ToSha256();
 
             var service = ServiceDispatcher.CreateDispatcher();
             service.CreateDatabase(hash, dbName, "admin");

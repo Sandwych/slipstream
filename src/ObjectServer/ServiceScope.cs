@@ -22,7 +22,7 @@ namespace ObjectServer
         /// <param name="sessionId"></param>
         public ServiceScope(Guid sessionId)
         {
-            var sessStore = Infrastructure.SessionStore;
+            var sessStore = Platform.SessionStore;
             var session = sessStore.GetSession(sessionId);
             if (session == null || !session.IsActive)
             {
@@ -36,7 +36,7 @@ namespace ObjectServer
             this.SessionStore.Pulse(session.Id);
 
             this.ownDb = true;
-            this.DBProfile = Infrastructure.DBProfiles.TryGetDBProfile(session);
+            this.DBProfile = Platform.DBProfiles.TryGetDBProfile(session);
             this.Connection.Open();
         }
 
@@ -52,7 +52,7 @@ namespace ObjectServer
             this.Session = new Session(dbName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
-            this.DBProfile = Infrastructure.DBProfiles.TryGetDBProfile(this.Session);
+            this.DBProfile = Platform.DBProfiles.TryGetDBProfile(this.Session);
             this.Connection.Open();
         }
 
@@ -125,7 +125,7 @@ namespace ObjectServer
 
         private SessionStore SessionStore
         {
-            get { return Infrastructure.SessionStore; }
+            get { return Platform.SessionStore; }
         }
     }
 }
