@@ -7,7 +7,7 @@ using System.Net;
 using Kayak;
 using Kayak.Http;
 
-namespace ObjectServer.Net
+namespace ObjectServer.Http
 {
 
     /// <summary>
@@ -20,16 +20,10 @@ namespace ObjectServer.Net
         private readonly IPEndPoint httpEndPoint;
         private ZMQ.Socket zsocket;
 
-        public HttpServer()
+        public HttpServer(int listenPort)
         {
-            //检测是否初始化框架
-
-            if (!Infrastructure.Initialized)
-            {
-                throw new InvalidOperationException("请先初始化框架");
-            }
-        
-            this.httpEndPoint = new IPEndPoint(IPAddress.Any, Infrastructure.Configuration.HttpListenPort);
+            
+            this.httpEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
 
             this.rpcHostUrl = "tcp://127.0.0.1:5555";
             this.zsocket = new ZMQ.Socket(ZMQ.SocketType.REQ);

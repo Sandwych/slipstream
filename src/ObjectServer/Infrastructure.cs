@@ -6,7 +6,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-using log4net;
 
 using Newtonsoft.Json;
 
@@ -88,21 +87,7 @@ namespace ObjectServer
                 return;
             }
 
-            var cfg = new Config()
-            {
-                ConfigurationPath = null,
-                DbType = ObjectServer.Backend.DatabaseType.Postgresql,
-                DBHost = "localhost",
-                DbName = "objectserver",
-                DBPassword = "objectserver",
-                DBPort = 5432,
-                DBUser = "objectserver",
-                ModulePath = "Modules",
-                RootPassword = "root",
-                Debug = true,
-                LogLevel = "debug",
-                SessionTimeout = TimeSpan.FromDays(1),
-            };
+            var cfg = new Config();
             s_instance.InitializeInternal(cfg);
         }
 
@@ -129,7 +114,7 @@ namespace ObjectServer
             }
 
             //日志子系统必须最先初始化
-            ConfigurateLog4net(cfg);
+            ConfigurateLogger(cfg);
 
             Logger.Info(() => "Initializing Session Storage Subsystem...");
             s_instance.sessionStore.Initialize(cfg.SessionProvider);
@@ -192,57 +177,9 @@ namespace ObjectServer
             }
         }
 
-        private static void ConfigurateLog4net(Config cfg)
+        private static void ConfigurateLogger(Config cfg)
         {
-            log4net.Appender.IAppender appender;
-            var layout = new log4net.Layout.PatternLayout(StaticSettings.LogPattern);
-
-            if (string.IsNullOrEmpty(cfg.LogPath))
-            {
-                var consoleAppender = new log4net.Appender.ConsoleAppender()
-                {
-                    Layout = layout,
-                };
-                consoleAppender.ActivateOptions();
-                appender = consoleAppender;
-            }
-            else
-            {
-                if (!System.IO.Directory.Exists(cfg.LogPath))
-                {
-                    throw new DirectoryNotFoundException(cfg.LogPath);
-                }
-
-                var fileAppender = new log4net.Appender.RollingFileAppender()
-                {
-                    File = Path.Combine(cfg.LogPath, StaticSettings.LogFileName),
-                    AppendToFile = true,
-                    RollingStyle = log4net.Appender.RollingFileAppender.RollingMode.Size,
-                    Layout = layout,
-                    Encoding = Encoding.UTF8,
-                    StaticLogFileName = true,
-                };
-                fileAppender.ActivateOptions();
-                appender = fileAppender;
-            }
-            layout.ActivateOptions();
-
-            var hierarchy = 
-                (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
-            var rootLogger = hierarchy.Root;
-
-            rootLogger.RemoveAllAppenders();
-            rootLogger.AddAppender(appender);
-
-            if (cfg.Debug)
-            {
-                rootLogger.Level = log4net.Core.Level.All;
-            }
-            else
-            {
-                rootLogger.Level = log4net.Core.Level.Info;
-            }
-
+            Logger.Configurate(cfg);
         }
 
 

@@ -7,7 +7,7 @@ using System.Diagnostics;
 using Kayak;
 using Kayak.Http;
 
-namespace ObjectServer.Net
+namespace ObjectServer.Http
 {
     internal class BufferedConsumer : IDataConsumer
     {

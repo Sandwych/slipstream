@@ -5,8 +5,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-using ObjectServer.Utility;
-
 namespace ObjectServer
 {
     /// <summary>
@@ -19,6 +17,13 @@ namespace ObjectServer
     {
         public Config()
         {
+            this.DbType = "postgres";
+            this.DBHost = "localhost";
+            this.DBPort = 5432;
+            this.DBUser = "objectserver";
+            this.DBPassword = "objectserver";
+            this.Debug = true;
+
             this.LogPath = null;
             this.LogLevel = "info";
             this.SessionTimeout = new TimeSpan(0, 20, 0);
@@ -27,9 +32,10 @@ namespace ObjectServer
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "tcp://*:5555";
             this.HttpListenPort = 9287;
-        }
+            this.ModulePath = "Modules";
 
-        private string rootPassword;
+            this.RootPassword = "root";
+        }
 
         /// <summary>
         /// 配置文件路径
@@ -38,7 +44,7 @@ namespace ObjectServer
         public string ConfigurationPath { get; set; }
 
         [XmlElement("db-type", IsNullable = false)]
-        public Backend.DatabaseType DbType { get; set; }
+        public string DbType { get; set; }
 
         [XmlElement("db-host")]
         public string DBHost { get; set; }
@@ -64,16 +70,8 @@ namespace ObjectServer
         [XmlElement("debug")]
         public bool Debug { get; set; }
 
-        [XmlElement("root-password")]
-        public string RootPassword
-        {
-            get { return this.rootPassword; }
-            set
-            {
-                this.rootPassword = value;
-                this.RootPasswordHash = value.ToSha256();
-            }
-        }
+        [XmlElement("root-password", IsNullable = false)]
+        public string RootPassword { get; set; }
 
         [XmlElement("log-path")]
         public string LogPath { get; set; }
@@ -87,9 +85,6 @@ namespace ObjectServer
         [XmlElement("session-provider", IsNullable = false)]
         public string SessionProvider { get; set; }
 
-        [XmlIgnore]
-        public string RootPasswordHash { get; private set; }
-
         [XmlElement("rpc-handler-max")]
         public short RpcHandlerMax { get; set; }
 
@@ -98,7 +93,7 @@ namespace ObjectServer
 
         [XmlElement("rpc-host-url")]
         public string RpcHostUrl { get; set; }
-        
+
         [XmlElement("http-listen-port")]
         public int HttpListenPort { get; set; }
     }

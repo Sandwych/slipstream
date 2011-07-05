@@ -52,14 +52,15 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\castle-core\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="clrzmq">
       <HintPath>..\..\lib\zmq\clrzmq.dll</HintPath>
     </Reference>
     <Reference Include="clrzmq-ext">
       <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
-    </Reference>
-    <Reference Include="Kayak">
-      <HintPath>..\..\lib\Kayak\Kayak.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
     </Reference>
@@ -80,14 +81,6 @@
     <Reference Include="System.Xml">
     </Reference>
     <Reference Include="System.Configuration">
-    </Reference>
-    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\castle-core\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <SpecificVersion>False</SpecificVersion>
@@ -116,7 +109,6 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
-    <Compile Include="Config.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Messaging\RpcHost.cs" />
     <Compile Include="Core\AttachmentModel.cs" />
@@ -152,11 +144,6 @@
     <Compile Include="Messaging\RpcHandler.cs" />
     <Compile Include="Model\ViewBuilder.cs" />
     <Compile Include="Model\ViewGenerator.cs" />
-    <Compile Include="Net\BufferedProducer.cs" />
-    <Compile Include="Net\BufferedConsumer.cs" />
-    <Compile Include="Net\HttpServer.cs" />
-    <Compile Include="Net\RequestDelegate.cs" />
-    <Compile Include="Net\SchedulerDelegate.cs" />
     <Compile Include="SessionlessServiceScope.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardActionModel.cs" />
@@ -185,7 +172,6 @@
     <Compile Include="Model\Fields\EnumerationField.cs" />
     <Compile Include="NamingRule.cs" />
     <Compile Include="Sessions\ISessionStoreProvider.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="Exceptions\BadFieldNameException.cs" />
     <Compile Include="IExportedService.cs" />
     <Compile Include="IResource.cs" />
@@ -261,7 +247,6 @@
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
     <Compile Include="SqlTree\OffsetClause.cs" />
     <Compile Include="SqlTree\LimitClause.cs" />
-    <Compile Include="StaticSettings.cs" />
     <Compile Include="InternalServiceScope.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
@@ -305,6 +290,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Workflow\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ObjectServer.Infrastructure\ObjectServer.Infrastructure.csproj">
+      <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
+      <Name>ObjectServer.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

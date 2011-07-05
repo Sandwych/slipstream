@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ObjectServer
 {
-    internal static class StaticSettings
+    public static class StaticSettings
     {
         public const string CoreModuleName = "core";
 
@@ -14,7 +14,7 @@ namespace ObjectServer
 
         public const string LogFileName = "objectserver.log";
 
-        public const string LogPattern = 
+        public const string LogPattern =
             "[%date %-5level]: %message%newline";
 
         public static Version Version

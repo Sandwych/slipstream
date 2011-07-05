@@ -79,7 +79,7 @@
             {
                 this.IsBusy = true;
 
-                callback();
+                callback.Execute();
             }
             catch
             {

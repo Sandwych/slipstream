@@ -86,6 +86,7 @@ namespace ObjectServer
             string rpcHandlerUrl = Infrastructure.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
             Logger.Info(() => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
+
             using (ZMQ.Socket receiver = new ZMQ.Socket(ZMQ.SocketType.REP))
             {
                 receiver.Connect(rpcHandlerUrl);

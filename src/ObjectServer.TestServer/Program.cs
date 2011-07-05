@@ -50,7 +50,8 @@ namespace ObjectServer.TestServer
 
             var serverThread = new Thread(() =>
             {
-                using (var cs = new ObjectServer.Net.HttpServer())
+                using (var cs = new ObjectServer.Http.HttpServer(
+                    Infrastructure.Configuration.HttpListenPort))
                 {
                     cs.Start();
 
@@ -74,11 +75,9 @@ namespace ObjectServer.TestServer
 
         private static void EnsureFrameworkInitialized()
         {
-            //TODO: 初始化为测试配置
             if (!Infrastructure.Initialized)
             {
-                var cfg = (Config)ConfigurationManager.GetSection("objectserver-config");
-                Infrastructure.Initialize(cfg);
+                Infrastructure.Initialize();
             }
         }
     }

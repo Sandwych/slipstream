@@ -2,21 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{77E560B0-09B9-4EA5-8983-6F3C5B9FD1C6}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{8272D46C-F350-4329-9E07-8B49A234C749}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectServer.TestServer</RootNamespace>
-    <AssemblyName>ObjectServer.TestServer</AssemblyName>
+    <RootNamespace>ObjectServer.Http</RootNamespace>
+    <AssemblyName>ObjectServer.Http</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,8 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,8 +31,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="clrzmq">
+      <HintPath>..\..\lib\zmq\clrzmq.dll</HintPath>
+    </Reference>
+    <Reference Include="clrzmq-ext">
+      <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
+    </Reference>
+    <Reference Include="HttpMachine">
+      <HintPath>..\..\lib\Kayak\HttpMachine.dll</HintPath>
+    </Reference>
+    <Reference Include="Kayak">
+      <HintPath>..\..\lib\Kayak\Kayak.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,17 +52,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BufferedConsumer.cs" />
+    <Compile Include="BufferedProducer.cs" />
+    <Compile Include="HttpServer.cs" />
+    <Compile Include="RequestDelegate.cs" />
+    <Compile Include="SchedulerDelegate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ObjectServer.Infrastructure\ObjectServer.Infrastructure.csproj">
       <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
       <Name>ObjectServer.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ObjectServer\ObjectServer.Core.csproj">
-      <Project>{443BAECA-181D-45B8-9EB8-FCA3A35051E1}</Project>
-      <Name>ObjectServer.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

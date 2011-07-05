@@ -6,6 +6,7 @@ using System.Text;
 using NUnit.Framework;
 
 using ObjectServer.Backend;
+using ObjectServer.Utility;
 
 namespace ObjectServer.Backend.Test
 {
@@ -65,11 +66,11 @@ namespace ObjectServer.Backend.Test
         {
             var dbName = "oo_testdb";
             Infrastructure.Initialize();
-            var sha1 = Infrastructure.Configuration.RootPasswordHash;
+            var hash = Infrastructure.Configuration.RootPassword.ToSha256();
 
             var service = ServiceDispatcher.CreateDispatcher();
-            service.CreateDatabase(sha1, dbName, "admin");
-            service.DeleteDatabase(sha1, dbName);
+            service.CreateDatabase(hash, dbName, "admin");
+            service.DeleteDatabase(hash, dbName);
 
         }
     }

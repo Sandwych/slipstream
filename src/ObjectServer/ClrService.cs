@@ -23,6 +23,9 @@ namespace ObjectServer
 
         public object Invoke(IResource self, IServiceScope scope, params object[] parameters)
         {
+            Debug.Assert(self != null);
+            Debug.Assert(scope != null);
+
             var userParamCount = parameters == null ? 0 : parameters.Length;
             var args = new object[userParamCount + 2];
             args[0] = self;

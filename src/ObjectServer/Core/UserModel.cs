@@ -107,7 +107,12 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
 
         private static bool IsPasswordMatched(string hashedPassword, string salt, string password)
         {
-            return hashedPassword == (password + salt).ToSha256();
+            Debug.Assert(!string.IsNullOrEmpty(hashedPassword));
+            Debug.Assert(!string.IsNullOrEmpty(salt));
+            Debug.Assert(!string.IsNullOrEmpty(password));
+
+            var newHash = (password + salt).ToSha256();
+            return hashedPassword == newHash;
         }
 
 
@@ -121,8 +126,16 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
 
         public override void WriteInternal(IServiceScope ctx, long id, IDictionary<string, object> record)
         {
-            IDictionary<string, object> values2 = HashPassword(record);
-
+            //更新用户记录业务是不能修改密码与 Salt 的
+            var values2 = new Dictionary<string, object>(record);
+            if (record.ContainsKey("password"))
+            {
+                values2.Remove("password");
+            }
+            if (record.ContainsKey("salt"))
+            {
+                values2.Remove("salt");
+            }
 
             base.WriteInternal(ctx, id, values2);
         }
@@ -190,6 +203,18 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         {
             var sessGuid = new Guid(sessionId);
             Infrastructure.SessionStore.Remove(sessGuid);
+        }
+
+        [ServiceMethod]
+        public static void ChangePassword(
+            IModel model, IServiceScope ctx, string newPassword)
+        {
+            var record = new Dictionary<string, object>()
+            {
+                { "password", newPassword },
+            };
+            HashPassword(record);
+            model.WriteInternal(ctx, ctx.Session.UserId, record);
         }
 
         public static Dictionary<string, object>[] GetAllModelAccessEntries(long userId)

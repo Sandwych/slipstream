@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace ObjectServer
 {
-    //TODO: 完善这里的 Regex
+    /// <summary>
+    /// 系统的命名规则
+    /// </summary>
     internal static class NamingRule
     {
         public static readonly Regex ResourcePattern =

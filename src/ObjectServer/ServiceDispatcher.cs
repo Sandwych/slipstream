@@ -9,6 +9,7 @@ using Castle.DynamicProxy;
 
 using ObjectServer.Backend;
 using ObjectServer.Core;
+using ObjectServer.Utility;
 
 namespace ObjectServer
 {
@@ -128,8 +129,8 @@ namespace ObjectServer
 
         private static void VerifyRootPassword(string rootPasswordHash)
         {
-            if (rootPasswordHash.ToUpperInvariant() !=
-                Infrastructure.Configuration.RootPasswordHash.ToUpperInvariant())
+            var cfgRootPasswordHash = Infrastructure.Configuration.RootPassword.ToSha256();
+            if (rootPasswordHash != cfgRootPasswordHash)
             {
                 throw new UnauthorizedAccessException("Invalid password of root user");
             }

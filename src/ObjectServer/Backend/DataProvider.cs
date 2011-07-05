@@ -13,6 +13,12 @@ namespace ObjectServer.Backend
             { DatabaseType.Postgresql, new Postgresql.PgDataProvider() },
         };
 
+        private static readonly Dictionary<string, Backend.DatabaseType>
+            dbTypeMapping = new Dictionary<string, DatabaseType>()
+        {
+            { "postgres", Backend.DatabaseType.Postgresql },
+        };
+
 
         public static IDBConnection CreateDataContext(string dbName)
         {
@@ -21,19 +27,22 @@ namespace ObjectServer.Backend
                 throw new ArgumentNullException("dbName");
             }
 
-            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
+            var dbType = dbTypeMapping[Infrastructure.Configuration.DbType];
+            var dataProvider = dataProviders[dbType];
             return dataProvider.CreateDataContext(dbName);
         }
 
         public static IDBConnection CreateDataContext()
         {
-            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
+            var dbType = dbTypeMapping[Infrastructure.Configuration.DbType];
+            var dataProvider = dataProviders[dbType];
             return dataProvider.CreateDataContext();
         }
 
         public static string[] ListDatabases()
         {
-            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
+            var dbType = dbTypeMapping[Infrastructure.Configuration.DbType];
+            var dataProvider = dataProviders[dbType];
             return dataProvider.ListDatabases();
         }
 
@@ -44,7 +53,8 @@ namespace ObjectServer.Backend
                 throw new ArgumentNullException("dbName");
             }
 
-            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
+            var dbType = dbTypeMapping[Infrastructure.Configuration.DbType];
+            var dataProvider = dataProviders[dbType];
             dataProvider.CreateDatabase(dbName);
         }
 
@@ -55,7 +65,8 @@ namespace ObjectServer.Backend
                 throw new ArgumentNullException("dbName");
             }
 
-            var dataProvider = dataProviders[Infrastructure.Configuration.DbType];
+            var dbType = dbTypeMapping[Infrastructure.Configuration.DbType];
+            var dataProvider = dataProviders[dbType];
             dataProvider.DeleteDatabase(dbName);
         }
 

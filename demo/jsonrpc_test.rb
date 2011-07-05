@@ -129,7 +129,7 @@ for m in models
     puts m
 end
 
-TIMES = 200
+TIMES = 50
 puts "测试查询和读取上面的数据[#{TIMES}]次"
 time = Benchmark.measure do
   for i in 1..TIMES
