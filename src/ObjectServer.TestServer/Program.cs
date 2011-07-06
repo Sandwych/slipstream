@@ -15,7 +15,7 @@ namespace ObjectServer.TestServer
 
             InitializeFramework();
 
-            var rpcThread = StartRpcServer();
+            var rpcThread = StartApplicationServer();
             var httpThread = StartHttpServer();
 
             Console.WriteLine("\n系统启动完毕，开始等待客户端请求。按[回车键]终止本程序");
@@ -28,9 +28,9 @@ namespace ObjectServer.TestServer
 
         }
 
-        private static Thread StartRpcServer()
+        private static Thread StartApplicationServer()
         {
-            Console.WriteLine("RPC 服务器正在启动 ...");
+            Console.WriteLine("应用服务器正在启动 ...");
 
 
             var serverThread = new Thread(() =>
@@ -40,7 +40,7 @@ namespace ObjectServer.TestServer
             });
             serverThread.Start();
 
-            Console.WriteLine("RPC 服务已经启动");
+            Console.WriteLine("应用服务已经启动");
             return serverThread;
         }
 
@@ -68,7 +68,7 @@ namespace ObjectServer.TestServer
             EnsureFrameworkInitialized();
             Console.WriteLine("ObjectServer 框架已经成功初始化");
 
-            Console.WriteLine("日志文件目录=[{0}]，RPC 服务主机 URL=[{1}]",
+            Console.WriteLine("日志文件目录=[{0}]，应用服务器主机 URL=[{1}]",
                 Platform.Configuration.LogPath,
                 Platform.Configuration.RpcHostUrl);
         }

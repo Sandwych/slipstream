@@ -35,9 +35,7 @@ namespace ObjectServer
             this.RpcHostUrl = "tcp://*:5555";
             this.HttpListenPort = 9287;
 
-            var appPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            this.ModulePath = Path.Combine(appPath, "Modules");
-
+            this.ModulePath = "Modules";
             this.RootPassword = "root";
         }
 

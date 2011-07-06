@@ -236,6 +236,10 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
             return session;
         }
 
+        /// <summary>
+        /// 凡是 init.sql 里建立的表都不应该返回引用对象
+        /// </summary>
+        /// <returns></returns>
         public override string[] GetReferencedObjects()
         {
             return new string[] { };
