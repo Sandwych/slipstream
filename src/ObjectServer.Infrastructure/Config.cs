@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.IO;
+using System.Reflection;
 
 namespace ObjectServer
 {
@@ -32,7 +34,9 @@ namespace ObjectServer
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "tcp://*:5555";
             this.HttpListenPort = 9287;
-            this.ModulePath = "Modules";
+
+            var appPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            this.ModulePath = Path.Combine(appPath, "Modules");
 
             this.RootPassword = "root";
         }

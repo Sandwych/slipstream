@@ -13,7 +13,7 @@ namespace ObjectServer
 
             if (!Platform.Initialized)
             {
-                throw new InvalidOperationException("无法启动服务器，请先初始化框架");
+                throw new InvalidOperationException("无法应用启动服务器，请先初始化框架");
             }
 
             if (Platform.Configuration.RpcHandlerMax <= 0)
@@ -36,7 +36,7 @@ namespace ObjectServer
             var hostUrl = this.RpcHostUrl;
 
             Logger.Info(() => string.Format(
-                "正在启动核心服务器线程：远程调用主机 URL=[{0}]，业务处理线程 URL=[{1}]",
+                "正在启动应用服务器 RPC 处理器线程：远程调用主机 URL=[{0}]，RPC 处理器线程 URL=[{1}]",
                 hostUrl, workersUrl));
 
             //TODO 写个自己的 WorkerPool，允许跨进程，并且要受 Supervisor 的控制，能够体面终止
