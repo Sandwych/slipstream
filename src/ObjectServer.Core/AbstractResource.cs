@@ -50,7 +50,13 @@ namespace ObjectServer
                 throw new ArgumentNullException("name");
             }
 
-            return this.services[name];
+            IService service;
+            if (!this.services.TryGetValue(name, out service))
+            {
+                throw new ArgumentOutOfRangeException("name");
+            }
+
+            return service;
         }
 
         /// <summary>

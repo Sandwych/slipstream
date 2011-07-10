@@ -5,13 +5,13 @@ using System.Diagnostics;
 
 namespace ObjectServer.Client.Model
 {
-    public class Menu
+    public class MenuModel : IModel
     {
-        public Menu()
+        public MenuModel()
         {
         }
 
-        public Menu(IDictionary<string, object> record)
+        public MenuModel(IDictionary<string, object> record)
         {
             this.Id = (long)record["id"];
             this.Name = (string)record["name"];
@@ -29,6 +29,12 @@ namespace ObjectServer.Client.Model
                 var x = record["ordinal"];
                 this.Ordinal = (long)record["ordinal"];
             }
+
+            object action;
+            if (record.TryGetValue("action", out action) && action != null)
+            {
+                this.Action = ModelHelper.ConvertReferencedField(action);
+            }
         }
 
         public long Id { get; set; }
@@ -40,5 +46,7 @@ namespace ObjectServer.Client.Model
         public string ParentName { get; set; }
 
         public long Ordinal { get; set; }
+
+        public Tuple<string, long> Action { get; set; }
     }
 }

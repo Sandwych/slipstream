@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ObjectServer.Client</RootNamespace>
-    <AssemblyName>ObjectServer.SilverlightClient</AssemblyName>
+    <AssemblyName>os-agclient</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>false</SilverlightApplication>
@@ -64,7 +64,9 @@
     <Compile Include="JsonRpc\JsonRpcResponse.cs" />
     <Compile Include="JsonRpc\PlainJsonConvert.cs" />
     <Compile Include="JsonRpc\RequestState.cs" />
-    <Compile Include="Model\Menu.cs" />
+    <Compile Include="Model\IModel.cs" />
+    <Compile Include="Model\MenuModel.cs" />
+    <Compile Include="Model\ModelHelper.cs" />
     <Compile Include="ObjectServerClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -150,8 +150,19 @@ namespace ObjectServer.Model
             XmlReader reader, dynamic model, Dictionary<string, object> record)
         {
             var refKey = reader["ref-key"] as string;
+            if (refKey != null)
+            {
+                refKey.Trim();
+            }
+
             var refModel = reader["ref-model"] as string;
-            var fieldName = reader["name"];
+            if (refModel != null)
+            {
+                refModel.Trim();
+            }
+
+            var fieldName = (string)reader["name"];
+            fieldName.Trim();
 
             IField metaField = model.Fields[fieldName];
             object fieldValue = null;
@@ -184,7 +195,7 @@ namespace ObjectServer.Model
                 case FieldType.Chars:
                 case FieldType.Text:
                 case FieldType.Enumeration:
-                    fieldValue = reader.ReadElementContentAsString();
+                    fieldValue = reader.ReadElementContentAsString().Trim();
                     break;
 
                 case FieldType.Reference:

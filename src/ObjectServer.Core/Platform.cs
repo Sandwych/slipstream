@@ -117,7 +117,12 @@ namespace ObjectServer
             ConfigurateLogger(cfg);
 
             Logger.Info(() => "Initializing Session Storage Subsystem...");
-            s_instance.sessionStore.Initialize(cfg.SessionProvider);
+            string sessionProviderType = cfg.SessionProvider;
+            if (string.IsNullOrEmpty(sessionProviderType))
+            {
+                sessionProviderType = typeof(ObjectServer.StaticSessionStoreProvider).AssemblyQualifiedName;
+            }
+            s_instance.sessionStore.Initialize(sessionProviderType);
 
             //查找所有模块并加载模块元信息
             Logger.Info(() => "Initializing Module Management Subsystem...");

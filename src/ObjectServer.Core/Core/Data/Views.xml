@@ -31,11 +31,11 @@
     </field>
   </record>
 
-  <record  model="core.action_window" key="user_form_action">
+  <record  model="core.action_window" key="user_menu_action">
     <field name="name">Users Management</field>
     <field name="type">core.action_window</field>
     <field name="view" ref-key="user_tree_view" />
-    <field name="model">core.user</field>
+    <field name="model">core.user</field>  
   </record>
 
 

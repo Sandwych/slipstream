@@ -9,10 +9,10 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-namespace ObjectServer.Client.Agos.Models
+namespace ObjectServer.Client.Model
 {
-    public interface IWindowAction
+    public interface IModel
     {
-        void Load(long actionId);
+        long Id { get; }
     }
 }

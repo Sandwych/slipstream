@@ -15,7 +15,7 @@ namespace ObjectServer.Json
         public object Result { get; set; }
 
         [JsonProperty("error", Required = Required.AllowNull)]
-        public object Error { get; set; }
+        public JsonRpcError Error { get; set; }
 
         [JsonProperty("id", Required = Required.Always)]
         public object Id { get; set; }

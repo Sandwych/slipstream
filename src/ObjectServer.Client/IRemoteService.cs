@@ -23,6 +23,6 @@ namespace ObjectServer.Client
             string objectName, string method, object[] parameters, Action<object> resultCallback);
 
         //辅助方法
-        void ReadAllMenus(Action<Menu[]> resultCallback);
+        void ReadAllMenus(Action<MenuModel[]> resultCallback);
     }
 }

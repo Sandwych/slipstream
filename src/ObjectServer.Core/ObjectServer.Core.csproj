@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ObjectServer</RootNamespace>
-    <AssemblyName>ObjectServer.Core</AssemblyName>
+    <AssemblyName>os-core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -110,6 +110,7 @@
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
+    <Compile Include="Json\JsonRpcError.cs" />
     <Compile Include="Messaging\RpcHost.cs" />
     <Compile Include="Core\AttachmentModel.cs" />
     <Compile Include="Core\ModelAccessModel.cs" />
@@ -190,7 +191,6 @@
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Module\ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
-    <Compile Include="Exceptions\ServiceException.cs" />
     <Compile Include="Sessions\Session.cs" />
     <Compile Include="Sessions\SessionStore.cs" />
     <Compile Include="SqlTree\AliasExpressionList.cs" />

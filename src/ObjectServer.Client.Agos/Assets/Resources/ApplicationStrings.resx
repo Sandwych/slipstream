@@ -142,7 +142,7 @@
     <comment>Displayed while registration is being processed by the server</comment>
   </data>
   <data name="CancelButton" xml:space="preserve">
-    <value>Cancel</value>
+    <value>取消</value>
   </data>
   <data name="HomePageTitle" xml:space="preserve">
     <value>Home</value>
@@ -160,7 +160,7 @@
     <value>Not registered yet?</value>
   </data>
   <data name="OKButton" xml:space="preserve">
-    <value>OK</value>
+    <value>确定</value>
   </data>
   <data name="RegisterNowButton" xml:space="preserve">
     <value>Register now</value>

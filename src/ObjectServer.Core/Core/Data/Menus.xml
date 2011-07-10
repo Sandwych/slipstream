@@ -28,8 +28,9 @@
     <field name="parent" ref-key="menu_admin_base" />
     <field name="name">User Management</field>
     <field name="ordinal">0</field>
+    <field name="action" ref-model="core.action_window" ref-key="user_menu_action" />
   </record>
-
+   
 
 </data>
 

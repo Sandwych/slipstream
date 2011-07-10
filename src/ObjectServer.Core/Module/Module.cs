@@ -25,13 +25,14 @@ namespace ObjectServer
         private readonly List<Assembly> allAssembly = new List<Assembly>();
         private static readonly Module s_coreModule;
         private readonly List<IResource> resources = new List<IResource>();
-
+        
         private static readonly string[] s_coreDataFiles = new string[] 
         {
+            //TODO 下面的初始化顺序很重要，底层的放在前，高层的放在后
             "ObjectServer.Core.Data.InitData.xml",
-            "ObjectServer.Core.Data.Security.xml",
-            "ObjectServer.Core.Data.Menus.xml",
+            "ObjectServer.Core.Data.Security.xml",            
             "ObjectServer.Core.Data.Views.xml",
+            "ObjectServer.Core.Data.Menus.xml",
         };
 
         static Module()

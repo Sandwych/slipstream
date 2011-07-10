@@ -110,7 +110,7 @@ namespace ObjectServer
             var id = jreq[JsonRpcProtocol.Id];
             var methodName = (string)jreq[JsonRpcProtocol.Method];
             var method = s_methods[methodName];
-            string error = null;
+            JsonRpcError error = null;
             object result = null;
 
             var args = (object[])jreq[JsonRpcProtocol.Params];
@@ -124,9 +124,18 @@ namespace ObjectServer
             {
                 result = method.Invoke(null, args);
             }
+            catch (ArgumentException)
+            {
+                error = JsonRpcError.RpcArgumentError;
+            }
+            catch (FatalException fex)
+            {
+                Logger.Fatal("系统发生了致命错误", fex);
+                throw fex; //接着抛出异常，让系统结束运行
+            }
             catch (System.Exception ex)
             {
-                error = ex.Message;
+                error = JsonRpcError.ServerInternalError;
                 Logger.Error("RPCHandler Error", ex);
             }
 

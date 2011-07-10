@@ -48,53 +48,39 @@
             var app = App.Current as App;
 
             var tvi = this.Menu.SelectedItem as TreeViewItem;
-            var menu = tvi.DataContext as Menu;
+            var menu = tvi.DataContext as MenuModel;
 
-            /* if (menu.Action != null)
-             {
-                 //OpenActionTab(menu);
-             }
-             */
-
+            if (menu.Action != null)
+            {
+                this.OpenActionTab(menu);
+            }
         }
 
-        /*
-        private void OpenActionTab(Menu menu)
+
+        private void OpenActionTab(MenuModel menu)
         {
             //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
-            var existedActionTab =
-                (from TabItem tab in this.tabWindows.Items
-                 where tab.DataContext is ReferenceField &&
-                 ((ReferenceField)tab.DataContext).Id == menu.Action.Id
-                 select tab).FirstOrDefault();
+            var actWin = new Windows.ListWindow();
 
-            if (existedActionTab != null)
-            {
-                this.tabWindows.SelectedItem = existedActionTab;
-                return;
-            }
-
-
-            var actWin = new Views.WindowAction(
-                this.objectService, menu.Action.Model, menu.Action.Id);
+            actWin.Load(menu.Action.Item2);
 
             var tabPage = new TabItem();
             tabPage.DataContext = menu.Action;
             tabPage.Content = actWin;
-            tabPage.Header = menu.Action.Model;
-            this.tabWindows.Items.Add(tabPage);
-            this.tabWindows.SelectedItem = tabPage;
-        }*/
+            //tabPage.Header = menu.Action.Model;
+            this.TabContainer.Items.Add(tabPage);
+            this.TabContainer.SelectedItem = tabPage;
+        }
 
 
 
-        public void LoadMenus(IEnumerable<Menu> menus)
+        public void LoadMenus(IEnumerable<MenuModel> menus)
         {
             this.Menu.Items.Clear();
             this.InsertMenus(menus);
         }
 
-        private void InsertMenus(IEnumerable<Menu> menus)
+        private void InsertMenus(IEnumerable<MenuModel> menus)
         {
             var rootMenus =
                 from m in menus
@@ -111,7 +97,7 @@
         }
 
 
-        private TreeViewItem InsertMenu(TreeViewItem parent, Menu menu)
+        private TreeViewItem InsertMenu(TreeViewItem parent, MenuModel menu)
         {
             var node = new TreeViewItem();
             node.Header = menu.Name;
@@ -130,7 +116,7 @@
         }
 
         private void InsertSubmenus(
-            IEnumerable<Menu> menus, Menu parentMenu, TreeViewItem parentNode)
+            IEnumerable<MenuModel> menus, MenuModel parentMenu, TreeViewItem parentNode)
         {
             //子菜单们
             var submenus =

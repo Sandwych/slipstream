@@ -24,13 +24,13 @@ namespace ObjectServer.Client.Agos.Controls
             this.Tree.SelectedValuePath = "Id";
         }
 
-        public void LoadMenus(IEnumerable<Menu> menus)
+        public void LoadMenus(IEnumerable<MenuModel> menus)
         {
             this.Tree.Items.Clear();
             this.InsertMenus(menus);
         }
 
-        private void InsertMenus(IEnumerable<Menu> menus)
+        private void InsertMenus(IEnumerable<MenuModel> menus)
         {
             var rootMenus =
                 from m in menus
@@ -47,7 +47,7 @@ namespace ObjectServer.Client.Agos.Controls
         }
 
 
-        private TreeViewItem InsertMenu(TreeViewItem parent, Menu menu)
+        private TreeViewItem InsertMenu(TreeViewItem parent, MenuModel menu)
         {
             var node = new TreeViewItem();
             node.Header = menu.Name;
@@ -66,7 +66,7 @@ namespace ObjectServer.Client.Agos.Controls
         }
 
         private void InsertSubmenus(
-            IEnumerable<Menu> menus, Menu parentMenu, TreeViewItem parentNode)
+            IEnumerable<MenuModel> menus, MenuModel parentMenu, TreeViewItem parentNode)
         {
             //子菜单们
             var submenus =

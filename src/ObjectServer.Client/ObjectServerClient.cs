@@ -149,7 +149,7 @@ namespace ObjectServer.Client
         }
 
 
-        public void ReadAllMenus(Action<Menu[]> resultCallback)
+        public void ReadAllMenus(Action<MenuModel[]> resultCallback)
         {
             Debug.Assert(this.Logged);
 
@@ -158,7 +158,7 @@ namespace ObjectServer.Client
                 {
                     this.ReadModel("core.menu", ids, null, records =>
                         {
-                            var menus = records.Select(r => new Menu(r));
+                            var menus = records.Select(r => new MenuModel(r));
 
                             resultCallback(menus.ToArray());
                         });

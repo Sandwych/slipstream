@@ -17,7 +17,7 @@
     <SupportedCultures>en-US</SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>ObjectServer.Client.Agos.xap</XapFilename>
+    <XapFilename>Agos.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
     <SilverlightAppEntry>ObjectServer.Client.Agos.App</SilverlightAppEntry>
     <TestPageFileName>TestPage.html</TestPageFileName>
@@ -115,6 +115,7 @@
     <Compile Include="Controls\MenuTree.xaml.cs">
       <DependentUpon>MenuTree.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataSourceCreator.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Controls\VisualStates.cs" />
     <Compile Include="Helpers\DataBindingExtensions.cs" />
