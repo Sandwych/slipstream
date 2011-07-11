@@ -66,12 +66,10 @@
 
             var tabPage = new TabItem();
             tabPage.DataContext = menu.Action;
-            tabPage.Content = actWin;
-            //tabPage.Header = menu.Action.Model;
+            tabPage.Content = actWin;            
             this.TabContainer.Items.Add(tabPage);
             this.TabContainer.SelectedItem = tabPage;
         }
-
 
 
         public void LoadMenus(IEnumerable<MenuModel> menus)

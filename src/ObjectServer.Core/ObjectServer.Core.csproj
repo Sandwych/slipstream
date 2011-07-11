@@ -110,6 +110,7 @@
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Json\JsonRpcError.cs" />
     <Compile Include="Messaging\RpcHost.cs" />
     <Compile Include="Core\AttachmentModel.cs" />
