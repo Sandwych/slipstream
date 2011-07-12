@@ -57,20 +57,6 @@ namespace ObjectServer
             }
         }
 
-        /*
-        public string[] GetResourceNames(string sessionId)
-        {
-            var sgid = new Guid(sessionId);
-            using (var ctx = new ContextScope(sgid))
-            {
-                //ctx.Database.DataContext.Open();
-                ctx.Database.ServiceObjects. 
-                
-                userModel.LogOut(ctx, sessionId);
-            }
-        }*/
-
-
         public string GetVersion()
         {
             return StaticSettings.Version.ToString();

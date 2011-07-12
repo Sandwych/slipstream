@@ -17,12 +17,17 @@ namespace ObjectServer.Http
     public sealed class HttpServer : IDisposable
     {
 
-        private readonly string rpcHostUrl;
+        private readonly string rpcReqUrl;
         private readonly IPEndPoint httpEndPoint;
         private ZMQ.Socket zsocket;
 
-        public HttpServer(int listenPort)
+        public HttpServer(string rpcHostUrl, int listenPort)
         {
+            if (string.IsNullOrEmpty(rpcHostUrl))
+            {
+                throw new ArgumentNullException("rpcHostUrl");
+            }
+
             if (listenPort <= 0 || listenPort >= UInt16.MaxValue)
             {
                 throw new ArgumentOutOfRangeException("listenPort");
@@ -30,9 +35,10 @@ namespace ObjectServer.Http
 
             this.httpEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
 
-            this.rpcHostUrl = "tcp://127.0.0.1:5555";
+            //TODO: 看一下为什么只能用 TCP 的
+            this.rpcReqUrl = rpcHostUrl;
+            this.rpcReqUrl = "tcp://127.0.0.1:5555";
             this.zsocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
-            this.zsocket.Connect(this.rpcHostUrl);
         }
 
         ~HttpServer()
@@ -46,6 +52,8 @@ namespace ObjectServer.Http
         public void Start()
         {
             Debug.Assert(this.zsocket != null);
+
+            this.zsocket.Connect(this.rpcReqUrl);
 
             var scheduler = new KayakScheduler(new SchedulerDelegate());
             scheduler.Post(() =>

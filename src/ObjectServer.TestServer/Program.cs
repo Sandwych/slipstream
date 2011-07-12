@@ -66,6 +66,7 @@ namespace ObjectServer.TestServer
             var serverThread = new Thread(() =>
             {
                 using (var cs = new ObjectServer.Http.HttpServer(
+                    Platform.Configuration.RpcHostUrl,
                     Platform.Configuration.HttpListenPort))
                 {
                     cs.Start();

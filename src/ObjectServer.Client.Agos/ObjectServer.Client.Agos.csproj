@@ -116,7 +116,7 @@
       <DependentUpon>MenuTree.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataSourceCreator.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\GlobalSuppressions.cs" />
     <Compile Include="Controls\VisualStates.cs" />
     <Compile Include="Helpers\DataBindingExtensions.cs" />
     <Compile Include="Helpers\NotOperatorValueConverter.cs" />
