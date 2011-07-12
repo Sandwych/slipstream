@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Browser;
+using System.Diagnostics;
 
 namespace ObjectServer.Client.Agos
 {
@@ -18,11 +18,26 @@ namespace ObjectServer.Client.Agos
     public static class DataSourceCreator
     {
         //动态生成类型的缓存
-        private static readonly Dictionary<string, Type> _typeBySigniture = new Dictionary<string, Type>();
-
+        //需要线程安全访问
+        private static readonly Dictionary<string, Type> s_typeBySigniture = new Dictionary<string, Type>();
 
         public static IEnumerable ToDataSource(this IEnumerable<IDictionary> list, string typeid, string[] properties)
         {
+            if (list == null)
+            {
+                throw new ArgumentNullException("list");
+            }
+
+            if (string.IsNullOrEmpty(typeid))
+            {
+                throw new ArgumentNullException("typeid");
+            }
+
+            if (properties == null)
+            {
+                throw new ArgumentNullException("properties");
+            }
+
             //string typeSigniture = GetTypeSigniture(firstDict);
             string typeSigniture = typeid;
             Type objectType = GetTypeByTypeSigniture(typeSigniture);
@@ -47,7 +62,10 @@ namespace ObjectServer.Client.Agos
                 }
                 objectType = tb.CreateType();
 
-                _typeBySigniture.Add(typeSigniture, objectType);
+                lock (s_typeBySigniture)
+                {
+                    s_typeBySigniture.Add(typeSigniture, objectType);
+                }
             }
 
             return GenerateEnumerable(objectType, list, properties);
@@ -55,8 +73,10 @@ namespace ObjectServer.Client.Agos
 
         private static Type GetTypeByTypeSigniture(string typeSigniture)
         {
+            Debug.Assert(!string.IsNullOrEmpty(typeSigniture));
+
             Type type;
-            return _typeBySigniture.TryGetValue(typeSigniture, out type) ? type : null;
+            return s_typeBySigniture.TryGetValue(typeSigniture, out type) ? type : null;
         }
 
         private static Type GetValueType(object value)
@@ -67,6 +87,10 @@ namespace ObjectServer.Client.Agos
         private static IEnumerable GenerateEnumerable(
                  Type objectType, IEnumerable<IDictionary> list, string[] properties)
         {
+            Debug.Assert(objectType != null);
+            Debug.Assert(list != null);
+            Debug.Assert(properties != null);
+
             var listType = typeof(List<>).MakeGenericType(new[] { objectType });
             var listOfCustom = Activator.CreateInstance(listType);
 
@@ -93,6 +117,8 @@ namespace ObjectServer.Client.Agos
 
         private static TypeBuilder GetTypeBuilder(string typeSigniture)
         {
+            Debug.Assert(!string.IsNullOrEmpty(typeSigniture));
+
             AssemblyName an = new AssemblyName("TempAssembly" + typeSigniture);
             AssemblyBuilder assemblyBuilder =
                 AppDomain.CurrentDomain.DefineDynamicAssembly(
@@ -110,17 +136,17 @@ namespace ObjectServer.Client.Agos
             return tb;
         }
 
-        private static void CreateProperty(
-                        TypeBuilder tb, string propertyName, Type propertyType)
+        private static void CreateProperty(TypeBuilder tb, string propertyName, Type propertyType)
         {
-            FieldBuilder fieldBuilder = tb.DefineField("_" + propertyName,
-                                                        propertyType,
-                                                        FieldAttributes.Private);
+            Debug.Assert(tb != null);
+            Debug.Assert(!string.IsNullOrEmpty(propertyName));
+            Debug.Assert(propertyType != null);
 
+            FieldBuilder fieldBuilder =
+                tb.DefineField("_" + propertyName, propertyType, FieldAttributes.Private);
 
             PropertyBuilder propertyBuilder =
-                tb.DefineProperty(
-                    propertyName, PropertyAttributes.HasDefault, propertyType, null);
+                tb.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
             MethodBuilder getPropMthdBldr =
                 tb.DefineMethod("get_" + propertyName,
                     MethodAttributes.Public |
@@ -152,8 +178,5 @@ namespace ObjectServer.Client.Agos
             propertyBuilder.SetSetMethod(setPropMthdBldr);
         }
     }
-
-
-
 
 }

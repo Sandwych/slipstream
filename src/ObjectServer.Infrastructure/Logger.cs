@@ -128,7 +128,7 @@ namespace ObjectServer
                 var fileAppender = new log4net.Appender.RollingFileAppender()
                 {
                     File = Path.Combine(cfg.LogPath, StaticSettings.LogFileName),
-                    AppendToFile = true,
+                    AppendToFile = false,
                     RollingStyle = log4net.Appender.RollingFileAppender.RollingMode.Size,
                     Layout = layout,
                     Encoding = Encoding.UTF8,
@@ -137,14 +137,12 @@ namespace ObjectServer
                 appender = fileAppender;
             }
 
+
+            log4net.Config.BasicConfigurator.Configure(appender);
+
             var hierarchy =
                 (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
             var rootLogger = hierarchy.Root;
-
-            rootLogger.RemoveAllAppenders();
-            rootLogger.AddAppender(appender);
-
-            log4net.Config.BasicConfigurator.Configure(appender);
 
             if (cfg.Debug)
             {

@@ -66,7 +66,7 @@ namespace ObjectServer.Backend.Test
         {
             var dbName = "oo_testdb";
             Platform.Initialize();
-            var hash = Platform.Configuration.RootPassword.ToSha256();
+            var hash = Platform.Configuration.RootPassword.ToSha();
 
             var service = ServiceDispatcher.CreateDispatcher();
             service.CreateDatabase(hash, dbName, "admin");

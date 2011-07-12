@@ -110,6 +110,7 @@
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
+    <Compile Include="Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Json\JsonRpcError.cs" />
     <Compile Include="Messaging\RpcHost.cs" />
@@ -251,7 +252,7 @@
     <Compile Include="InternalServiceScope.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
-    <Compile Include="Utility\Sha256.cs" />
+    <Compile Include="Utility\Sha.cs" />
     <Compile Include="Utility\StringExtension.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />

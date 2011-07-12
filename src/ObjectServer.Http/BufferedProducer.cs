@@ -18,11 +18,20 @@ namespace ObjectServer.Http
         public BufferedProducer(byte[] data) : this(new ArraySegment<byte>(data)) { }
         public BufferedProducer(ArraySegment<byte> data)
         {
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
+
             this.data = data;
         }
 
         public IDisposable Connect(IDataConsumer channel)
         {
+            if (channel == null)
+            {
+                throw new ArgumentNullException("channel");
+            }
             // null continuation, consumer must swallow the data immediately.
             channel.OnData(data, null);
             channel.OnEnd();

@@ -6,12 +6,12 @@ using System.Text;
 namespace ObjectServer
 {
     [Serializable]
-    public sealed class ResourceNotFoundException : Exception
+    public sealed class RecordNotFoundException : Exception
     {
-        public ResourceNotFoundException(string msg, string resName)
+        public RecordNotFoundException(string msg, string resourceName)
             : base(msg)
         {
-            this.ResourceName = resName;
+            this.ResourceName = resourceName;
         }
 
         public string ResourceName { get; private set; }

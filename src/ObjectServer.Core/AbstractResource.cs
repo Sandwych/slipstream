@@ -94,7 +94,6 @@ namespace ObjectServer
         {
             Debug.Assert(mi != null);
 
-            //TODO: 再好好地思考一下模型的继承问题
             this.VerifyMethod(mi);
             var clrSvc = new ClrService(this, mi.Name, mi);
             this.services.Add(clrSvc.Name, clrSvc);

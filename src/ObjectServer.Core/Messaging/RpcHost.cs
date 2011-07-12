@@ -26,7 +26,7 @@ namespace ObjectServer
             this.RpcHostUrl = Platform.Configuration.RpcHostUrl;
         }
 
-        public short RpcHandlerMax { get; private set; }
+        public int RpcHandlerMax { get; private set; }
         public string RpcHandlerUrl { get; private set; }
         public string RpcHostUrl { get; private set; }
 
@@ -42,7 +42,7 @@ namespace ObjectServer
             //TODO 写个自己的 WorkerPool，允许跨进程，并且要受 Supervisor 的控制，能够体面终止
             var pool =
                 new ZMQ.ZMQDevice.WorkerPool(
-                    hostUrl, workersUrl, RpcHandler.Start, this.RpcHandlerMax);
+                    hostUrl, workersUrl, RpcHandler.Start, (short)this.RpcHandlerMax);
 
             Thread.Sleep(Timeout.Infinite);
         }

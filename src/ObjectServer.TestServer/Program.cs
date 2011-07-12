@@ -9,14 +9,28 @@ namespace ObjectServer.TestServer
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Console.WriteLine("ObjectServer.TestServer 测试用服务器\n");
 
-            InitializeFramework();
+            Thread rpcThread;
+            Thread httpThread;
 
-            var rpcThread = StartApplicationServer();
-            var httpThread = StartHttpServer();
+            try
+            {
+                InitializeFramework();
+
+                rpcThread = StartApplicationServer();
+                httpThread = StartHttpServer();
+            }
+            catch (Exception ex)
+            {
+                var oldColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("启动服务器失败，异常信息：[{0}]", ex.Message);
+                Console.ForegroundColor = oldColor;
+                return -1;
+            }
 
             Console.WriteLine("\n系统启动完毕，开始等待客户端请求。按[回车键]终止本程序");
             Console.ReadLine();
@@ -26,12 +40,13 @@ namespace ObjectServer.TestServer
 
             Console.WriteLine("服务器已经终止");
 
+            return 0;
+
         }
 
         private static Thread StartApplicationServer()
         {
             Console.WriteLine("应用服务器正在启动 ...");
-
 
             var serverThread = new Thread(() =>
             {

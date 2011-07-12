@@ -28,12 +28,12 @@ namespace ObjectServer
 
             this.SessionTimeout = new TimeSpan(0, 20, 0);            
 
-            this.LogPath = null;
-            this.LogLevel = "info";
+            this.LogPath = "";
+            this.LogLevel = "all";
             
             this.RpcHandlerMax = 5; //默认5个工人
             this.RpcHandlerUrl = "inproc://rpc-handlers";
-            this.RpcHostUrl = "tcp://*:5555";
+            this.RpcHostUrl = "inproc://rpc-entrance";
             this.HttpListenPort = 9287;
 
             this.ModulePath = "Modules";
@@ -89,7 +89,7 @@ namespace ObjectServer
         public string SessionProvider { get; set; }
 
         [XmlElement("rpc-handler-max")]
-        public short RpcHandlerMax { get; set; }
+        public int RpcHandlerMax { get; set; }
 
         [XmlElement("rpc-handler-url")]
         public string RpcHandlerUrl { get; set; }

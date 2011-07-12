@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
+using System.Diagnostics;
 
 using Kayak;
 using Kayak.Http;
@@ -22,7 +23,11 @@ namespace ObjectServer.Http
 
         public HttpServer(int listenPort)
         {
-            
+            if (listenPort <= 0 || listenPort >= UInt16.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException("listenPort");
+            }
+
             this.httpEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
 
             this.rpcHostUrl = "tcp://127.0.0.1:5555";
@@ -40,6 +45,8 @@ namespace ObjectServer.Http
 
         public void Start()
         {
+            Debug.Assert(this.zsocket != null);
+
             var scheduler = new KayakScheduler(new SchedulerDelegate());
             scheduler.Post(() =>
             {

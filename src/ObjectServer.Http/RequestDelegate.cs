@@ -36,6 +36,16 @@ namespace ObjectServer.Http
         public void OnRequest(HttpRequestHead request, IDataProducer requestBody,
             IHttpResponseDelegate response)
         {
+            if (requestBody == null)
+            {
+                throw new ArgumentNullException("requestBody");
+            }
+
+            if (response == null)
+            {
+                throw new ArgumentNullException("response");
+            }
+
             HttpResponseHead headers;
             IDataProducer body = null;
 
@@ -111,6 +121,8 @@ namespace ObjectServer.Http
 
         private byte[] CallJsonRpc(byte[] jrequest)
         {
+            Debug.Assert(jrequest != null);
+
             //TODO Dispose
             this.sender.Send(jrequest);
             var rep = this.sender.Recv();

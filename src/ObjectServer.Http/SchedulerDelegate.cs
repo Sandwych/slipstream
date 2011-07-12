@@ -14,11 +14,17 @@ namespace ObjectServer.Http
     {
         public void OnException(IScheduler scheduler, Exception e)
         {
+            // TODO 完善错误处理
+            // 这里容易出错的地方应该就是 ZMQ 了
             Logger.Error("Error on scheduler.", e);
         }
 
         public void OnStop(IScheduler scheduler)
         {
+            if (scheduler == null)
+            {
+                throw new ArgumentNullException("scheduler");
+            }
 
         }
     }

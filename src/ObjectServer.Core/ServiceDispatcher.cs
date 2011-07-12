@@ -29,6 +29,11 @@ namespace ObjectServer
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
 
+                if (session == null)
+                {
+                    throw new System.Security.SecurityException("Failed to logon");
+                }
+
                 //用新 session 替换老 session
                 Platform.SessionStore.PutSession(session);
                 Platform.SessionStore.Remove(ctx.Session.Id);
@@ -71,7 +76,6 @@ namespace ObjectServer
             return StaticSettings.Version.ToString();
         }
 
-        [CachedMethod(Timeout = 120)]
         public object Execute(string sessionId, string resource, string method, params object[] parameters)
         {
             var gsid = new Guid(sessionId);
@@ -129,7 +133,7 @@ namespace ObjectServer
 
         private static void VerifyRootPassword(string rootPasswordHash)
         {
-            var cfgRootPasswordHash = Platform.Configuration.RootPassword.ToSha256();
+            var cfgRootPasswordHash = Platform.Configuration.RootPassword.ToSha();
             if (rootPasswordHash != cfgRootPasswordHash)
             {
                 throw new UnauthorizedAccessException("Invalid password of root user");
@@ -141,32 +145,27 @@ namespace ObjectServer
 
         #region Model methods
 
-        [CachedMethod]
         public long CreateModel(string sessionId, string modelName, IDictionary<string, object> propertyBag)
         {
             return (long)Execute(sessionId, modelName, "Create", new object[] { propertyBag });
         }
 
-        [CachedMethod]
         public long[] SearchModel(string sessionId, string modelName, object[] domain, object[] order, long offset, long limit)
         {
             return (long[])Execute(sessionId, modelName, "Search", new object[] { domain, order, offset, limit });
         }
 
-        [CachedMethod]
         public Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields)
         {
             return (Dictionary<string, object>[])Execute(
                 sessionId, modelName, "Read", new object[] { ids, fields });
         }
 
-        [CachedMethod]
         public void WriteModel(string sessionId, string modelName, object id, IDictionary<string, object> record)
         {
             Execute(sessionId, modelName, "Write", new object[] { id, record });
         }
 
-        [CachedMethod]
         public void DeleteModel(string sessionId, string modelName, object[] ids)
         {
             Execute(sessionId, modelName, "Delete", new object[] { ids });

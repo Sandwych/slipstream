@@ -9,12 +9,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("ObjectServer Framework Assembly")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Wei Li")]
-[assembly: AssemblyProduct("ObjectServer Frame")]
+[assembly: AssemblyProduct("Malt ObjectServer Framework")]
 [assembly: AssemblyCopyright("Copyright ©  2011-TODAY Wei Li")]
 [assembly: AssemblyTrademark("All rights reserved.")]
 [assembly: AssemblyCulture("")]
 [assembly: System.CLSCompliant(true)]
-[assembly: InternalsVisibleTo("ObjectServer.Test")]
+[assembly: InternalsVisibleTo("os-unittest")]
 
 // 将 ComVisible 设置为 false 使此程序集中的类型
 // 对 COM 组件不可见。如果需要从 COM 访问此程序集中的类型，

@@ -34,6 +34,8 @@ namespace ObjectServer.Model
             ModifiedTimeFieldName,
             ModifiedUserFieldName,
             VersionFieldName,
+            LeftFieldName,
+            RightFieldName,
         };
 
         private string tableName = null;

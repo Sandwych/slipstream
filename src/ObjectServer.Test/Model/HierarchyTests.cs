@@ -101,27 +101,27 @@ namespace ObjectServer.Model.Test
             //插入4个根节点，1，2作为根节点，3,4是2的子节点，5 是3的子节点
             data.root1 = new ExpandoObject();
             data.root1.name = "root1";
-            data.id1 = model.CreateInternal(this.ServiceScope, data.root1);
+            data.id1 = this.Service.CreateModel(this.SessionId, "test.category", data.root1);
 
             data.root2 = new ExpandoObject();
             data.root2.name = "root2";
-            data.id2 = model.CreateInternal(this.ServiceScope, data.root2);
+            data.id2 = this.Service.CreateModel(this.SessionId, "test.category", data.root2);
 
             //插入节点3的时候节点2还是叶子
             data.root3 = new ExpandoObject();
             data.root3.name = "root3";
             data.root3.parent = data.id2;
-            data.id3 = model.CreateInternal(this.ServiceScope, data.root3);
+            data.id3 = this.Service.CreateModel(this.SessionId, "test.category", data.root3);
 
             data.root4 = new ExpandoObject();
             data.root4.name = "root4";
             data.root4.parent = data.id2;
-            data.id4 = model.CreateInternal(this.ServiceScope, data.root4);
+            data.id4 = this.Service.CreateModel(this.SessionId, "test.category", data.root4);
 
             data.root5 = new ExpandoObject();
             data.root5.name = "root5";
             data.root5.parent = data.id3;
-            data.id5 = model.CreateInternal(this.ServiceScope, data.root5);
+            data.id5 = this.Service.CreateModel(this.SessionId, "test.category", data.root5);
 
             return data;
         }

@@ -132,7 +132,7 @@ namespace ObjectServer.Model
                 if (records.Length == 0)
                 {
                     //TODO 使用合适的异常
-                    throw new Exception("找不到记录");
+                    throw new ResourceNotFoundException("找不到记录", this.Name);
                 }
 
                 //判断父节点是否是叶子节点
@@ -162,7 +162,6 @@ namespace ObjectServer.Model
                 }
             }
 
-            //TODO: 需要锁表
             var sqlUpdate1 = string.Format(
                 "UPDATE \"{0}\" SET _right = _right + 2 WHERE _right > @0", this.TableName);
             var sqlUpdate2 = string.Format(
@@ -170,6 +169,7 @@ namespace ObjectServer.Model
             var sqlUpdate3 = string.Format(
                 "UPDATE \"{0}\" SET _left = @0, _right = @1 WHERE (\"id\" = @2) ", this.TableName);
 
+            //conn.LockTable(this.TableName); //TODO 这里需要锁定表，防止其它连接修改
             conn.Execute(sqlUpdate1, rhsValue);
             conn.Execute(sqlUpdate2, rhsValue);
             conn.Execute(sqlUpdate3, rhsValue + 1, rhsValue + 2, id);
