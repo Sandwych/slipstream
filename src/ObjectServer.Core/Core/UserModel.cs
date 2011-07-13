@@ -24,7 +24,7 @@ namespace ObjectServer.Core
             : base(ModelName)
         {
             Fields.Version().SetLabel("Version");
-            Fields.Chars("login").SetLabel("User Name").SetSize(64).Required();
+            Fields.Chars("login").SetLabel("User Name").SetSize(64).Required().Unique();
             Fields.Chars("password").SetLabel("Password").SetSize(64).Required();
             Fields.Chars("salt").SetLabel("Salt").SetSize(64).Required();
             Fields.Boolean("admin").SetLabel("Administrator?").Required();

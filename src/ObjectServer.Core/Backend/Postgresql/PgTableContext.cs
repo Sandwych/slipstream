@@ -132,10 +132,16 @@ namespace ObjectServer.Backend.Postgresql
                 this.Name, field.Name, sqlType, notNull);
             db.Execute(sql);
 
+            //添加注释
             sql = string.Format(
                 "COMMENT ON COLUMN \"{0}\".\"{1}\" IS '{2}'",
                 this.Name, field.Name, field.Label);
             db.Execute(sql);
+
+            if (field.IsUnique)
+            {
+                this.AddUniqueConstraint(db, field.Name);
+            }
         }
 
         public void DeleteColumn(IDBConnection db, string columnName)
@@ -275,12 +281,27 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
 
         }
 
+        private void AddUniqueConstraint(IDBConnection db, string column)
+        {
+            Debug.Assert(db != null);
+            Debug.Assert(!string.IsNullOrEmpty(column));
+
+            var constraintName = column + "_unique";
+            var constraint = string.Format("UNIQUE(\"{0}\")", column);
+            this.AddConstraint(db, constraintName, constraint);
+        }
+
 
         public void AddConstraint(IDBConnection db, string constraintName, string constraint)
         {
-            throw new NotImplementedException();
-        }
+            Debug.Assert(db != null);
+            Debug.Assert(!string.IsNullOrEmpty(constraintName));
+            Debug.Assert(!string.IsNullOrEmpty(constraint));
 
+            var sql = "ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" {2}";
+            sql = string.Format(sql, this.Name, constraintName, constraint);
+            db.Execute(sql);
+        }
 
         public void DeleteConstraint(IDBConnection db, string constraintName)
         {

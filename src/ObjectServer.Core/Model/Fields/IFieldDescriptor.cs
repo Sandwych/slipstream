@@ -22,6 +22,7 @@ namespace ObjectServer.Model
         bool IsReadonly { get; set; }
         bool IsProperty { get; set; }
         bool Lazy { get; set; }
+        bool IsUnique { get; }
         bool IsScalar { get; }
         string Help { get; }
         OnDeleteAction OnDeleteAction { get; set; }

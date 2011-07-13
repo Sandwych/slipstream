@@ -98,6 +98,8 @@ namespace ObjectServer.Model
 
         public abstract bool IsScalar { get; }
 
+        public bool IsUnique { get; private set; }
+
         public abstract OnDeleteAction OnDeleteAction { get; set; }
 
         public abstract IDictionary<string, string> Options { get; set; }
@@ -282,6 +284,18 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("options");
             }
             this.Options = options;
+            return this;
+        }
+
+        public IField Unique()
+        {
+            this.IsUnique = true;
+            return this;
+        }
+
+        public IField NotUnique()
+        {
+            this.IsUnique = false;
             return this;
         }
 

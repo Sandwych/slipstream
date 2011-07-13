@@ -33,6 +33,8 @@ namespace ObjectServer.Model
         IField OnDelete(OnDeleteAction act);
         IField BeProperty();
         IField SetOptions(IDictionary<string, string> options);
+        IField Unique();
+        IField NotUnique();
 
         #endregion
 
