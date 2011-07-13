@@ -30,7 +30,7 @@ namespace ObjectServer
         private void ActiveTestModule()
         {
             //激活 test 模块
-            using (var scope = new ServiceScope(new Guid(this.SessionId)))
+            using (var scope = new ServiceScope(this.SessionId))
             {
                 var domain = new object[][] { new object[] { "name", "=", "test" } };
                 var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
@@ -60,7 +60,7 @@ namespace ObjectServer
             Debug.Assert(this.ServiceScope == null);
             Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
 
-            this.ServiceScope = new ServiceScope(new Guid(this.SessionId));
+            this.ServiceScope = new ServiceScope(this.SessionId);
         }
 
         [TearDown]

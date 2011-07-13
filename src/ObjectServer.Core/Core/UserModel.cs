@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 using ObjectServer.Model;
 using ObjectServer.Utility;
@@ -17,6 +18,7 @@ namespace ObjectServer.Core
         public const string ModelName = "core.user";
         public const string PasswordMask = "************";
         public const string RootUserName = "root";
+        public const int SaltLength = 16;
 
         public UserModel()
             : base(ModelName)
@@ -98,10 +100,12 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
 
         private static string GenerateSalt()
         {
-            var r = new Random();
-            var bytes = new byte[16];
-            r.NextBytes(bytes);
-            return Convert.ToBase64String(bytes);
+            var bytes = new byte[SaltLength];
+            using (var rng = RNGCryptoServiceProvider.Create())
+            {
+                rng.GetBytes(bytes);
+            }
+            return bytes.ToHex();
         }
 
 
@@ -203,8 +207,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
 
         public void LogOut(IServiceScope ctx, string sessionId)
         {
-            var sessGuid = new Guid(sessionId);
-            Platform.SessionStore.Remove(sessGuid);
+            Platform.SessionStore.Remove(sessionId);
         }
 
         [ServiceMethod]

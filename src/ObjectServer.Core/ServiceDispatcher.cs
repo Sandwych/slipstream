@@ -21,7 +21,7 @@ namespace ObjectServer
 
         public string LogOn(string dbName, string username, string password)
         {
-            using (var ctx = new ServiceScope(dbName))
+            using (var ctx = new ServiceScope(dbName, "system"))
             using (var tx = new TransactionScope())
             {
                 ctx.Connection.Open();
@@ -46,8 +46,7 @@ namespace ObjectServer
 
         public void LogOff(string sessionId)
         {
-            var sgid = new Guid(sessionId);
-            using (var ctx = new ServiceScope(sgid))
+            using (var ctx = new ServiceScope(sessionId))
             using (var tx = new TransactionScope())
             {
                 ctx.Connection.Open();
@@ -64,8 +63,7 @@ namespace ObjectServer
 
         public object Execute(string sessionId, string resource, string method, params object[] parameters)
         {
-            var gsid = new Guid(sessionId);
-            using (var scope = new ServiceScope(gsid))
+            using (var scope = new ServiceScope(sessionId))
             {
                 dynamic res = scope.GetResource(resource);
                 var svc = res.GetService(method);

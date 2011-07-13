@@ -8,12 +8,17 @@ namespace ObjectServer
 {
     internal class StaticSessionStoreProvider : ISessionStoreProvider
     {
-        Dictionary<Guid, Session> sessions = new Dictionary<Guid, Session>();
+        Dictionary<string, Session> sessions = new Dictionary<string, Session>();
 
         #region ISessionStoreProvider 成员
 
-        public Session GetSession(Guid sessionId)
+        public Session GetSession(string sessionId)
         {
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentNullException("sessionId");
+            }
+
             return this.sessions[sessionId];
         }
 
@@ -56,9 +61,9 @@ namespace ObjectServer
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Remove(Guid sessionId)
+        public void Remove(string sessionId)
         {
-            if (sessionId == Guid.Empty)
+            if (string.IsNullOrEmpty(sessionId))
             {
                 throw new ArgumentOutOfRangeException("sessionId");
             }
@@ -70,9 +75,9 @@ namespace ObjectServer
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Pulse(Guid sessionId)
+        public void Pulse(string sessionId)
         {
-            if (sessionId == Guid.Empty)
+            if (string.IsNullOrEmpty(sessionId))
             {
                 throw new ArgumentOutOfRangeException("sessionId");
             }

@@ -20,7 +20,7 @@ namespace ObjectServer
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public ServiceScope(Guid sessionId)
+        public ServiceScope(string sessionId)
         {
             var sessStore = Platform.SessionStore;
             var session = sessStore.GetSession(sessionId);
@@ -44,12 +44,12 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        internal ServiceScope(string dbName)
+        internal ServiceScope(string dbName, string login)
         {
             Logger.Debug(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
 
-            this.Session = new Session(dbName, "system", 0);
+            this.Session = new Session(dbName, login, 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
             this.DBProfile = Platform.DBProfiles.TryGetDBProfile(this.Session);

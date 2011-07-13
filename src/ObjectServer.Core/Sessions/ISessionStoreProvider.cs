@@ -7,15 +7,15 @@ namespace ObjectServer
 {
     public interface ISessionStoreProvider
     {
-        Session GetSession(Guid sessionId);
+        Session GetSession(string sessionId);
 
         void PutSession(Session session);
 
         void RemoveSessionsByUser(string database, long uid);
 
-        void Remove(Guid sessionId);
+        void Remove(string sessionId);
 
-        void Pulse(Guid sessionId);
+        void Pulse(string sessionId);
 
     }
 }

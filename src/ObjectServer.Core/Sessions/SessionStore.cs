@@ -21,33 +21,62 @@ namespace ObjectServer
             this.provider = (ISessionStoreProvider)Activator.CreateInstance(t);
         }
 
-        public Session GetSession(Guid sessionId)
+        public Session GetSession(string sessionId)
         {
             Debug.Assert(this.provider != null);
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentNullException("sessionId");
+            }
+
             return this.provider.GetSession(sessionId);
         }
 
         public void PutSession(Session session)
         {
             Debug.Assert(this.provider != null);
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
             this.provider.PutSession(session);
         }
 
         public void RemoveSessionsByUser(string database, long userId)
         {
             Debug.Assert(this.provider != null);
+            if (string.IsNullOrEmpty(database))
+            {
+                throw new ArgumentNullException("database");
+            }
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException("userId");
+            }
             this.provider.RemoveSessionsByUser(database, userId);
         }
 
-        public void Remove(Guid sessionId)
+        public void Remove(string sessionId)
         {
             Debug.Assert(this.provider != null);
+
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentNullException("sessionId");
+            }
+
             this.provider.Remove(sessionId);
         }
 
-        public void Pulse(Guid sessionId)
+        public void Pulse(string sessionId)
         {
             Debug.Assert(this.provider != null);
+
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentNullException("sessionId");
+            }
+
             this.provider.Pulse(sessionId);
         }
 

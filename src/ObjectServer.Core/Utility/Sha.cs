@@ -23,7 +23,7 @@ namespace ObjectServer.Utility
             {
                 var bytes = Encoding.ASCII.GetBytes(value);                
                 var hash = sha.ComputeHash(bytes);
-                return BitConverter.ToString(hash).Replace("-", "").ToUpperInvariant();
+                return hash.ToHex();
             }
         }
 

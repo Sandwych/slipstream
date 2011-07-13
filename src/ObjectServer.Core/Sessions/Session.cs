@@ -2,17 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Security.Cryptography;
+
+using ObjectServer.Utility;
 
 namespace ObjectServer
 {
     [Serializable]
     public sealed class Session
     {
+        public const int IdLength = 16;
+
         public Session()
         {
-            this.Id = Guid.NewGuid();
+            this.Id = GenerateSessionId();
             this.StartTime = DateTime.Now;
             this.LastActivityTime = this.StartTime;
+        }
+
+        private static string GenerateSessionId()
+        {
+            var bytes = new byte[IdLength];
+            using (var rng = RNGCryptoServiceProvider.Create())
+            {
+                rng.GetBytes(bytes);
+            }
+            return bytes.ToHex();
         }
 
         public Session(string dbName, string login, long userId)
@@ -23,7 +38,7 @@ namespace ObjectServer
             this.UserId = userId;
         }
 
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime LastActivityTime { get; set; }
         public string Database { get; set; }

@@ -33,6 +33,8 @@ namespace ObjectServer.Model
 
         private static bool IsDeniedModelServiceMethod(IServiceScope scope, long userId, string model, string action)
         {
+            Debug.Assert(scope != null);
+            Debug.Assert(userId >= 0);
             Debug.Assert(!string.IsNullOrEmpty(model));
             Debug.Assert(!string.IsNullOrEmpty(action));
 

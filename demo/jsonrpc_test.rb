@@ -118,12 +118,12 @@ proxy.logOn("objectserver", "root", "root")
 
 #尝试查询模块表里的核心模块
 domain = [["name","like","core%"]]
-ids = proxy.execute('core.model', 'Search', domain, nil, 0, 100);
+ids = proxy.execute('core.model', 'Search', domain, nil, 0, 100)
 
 #读取查询到的核心模块信息
 fields = ['name', 'label', 'info']
 
-models = proxy.execute('core.model', 'Read', ids, fields);
+models = proxy.execute('core.model', 'Read', ids, fields)
 puts "查询出的模型："
 for m in models
     puts m
@@ -133,8 +133,8 @@ TIMES = 50
 puts "测试查询和读取上面的数据[#{TIMES}]次"
 time = Benchmark.measure do
   for i in 1..TIMES
-    ids = proxy.execute('core.model', 'Search', domain, nil, 0, 100);
-    models = proxy.execute('core.model', 'Read', ids, fields);
+    ids = proxy.execute('core.model', 'Search', domain, nil, 0, 100)
+    models = proxy.execute('core.model', 'Read', ids, fields)
     print '.'
   end
 end
