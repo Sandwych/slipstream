@@ -16,7 +16,7 @@ namespace ObjectServer.Core
         {
             Hierarchy = true;
 
-            Fields.Chars("code").SetLabel("Code").SetSize(64).Required();
+            Fields.Chars("code").SetLabel("Code").SetSize(64).Required().Unique();
             Fields.Chars("name").SetLabel("Name").Required();
         }
 

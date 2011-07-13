@@ -286,7 +286,7 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
             Debug.Assert(db != null);
             Debug.Assert(!string.IsNullOrEmpty(column));
 
-            var constraintName = column + "_unique";
+            var constraintName = this.Name + "_" + column + "_unique";
             var constraint = string.Format("UNIQUE(\"{0}\")", column);
             this.AddConstraint(db, constraintName, constraint);
         }
@@ -315,7 +315,7 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
             }
 
             var sql = string.Format(
-                "alter table \"{0}\" drop constraint \"{1}\"",
+                "ALTER TABLE \"{0}\" DROP CONSTRAINT \"{1}\"",
                 this.Name, constraintName);
             db.Execute(sql);
         }

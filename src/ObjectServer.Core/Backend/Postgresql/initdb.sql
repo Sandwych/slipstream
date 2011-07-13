@@ -2,7 +2,7 @@
 
 CREATE TABLE core_model (
     id BIGSERIAL NOT NULL,
-    "name" VARCHAR NOT NULL,
+    "name" VARCHAR NOT NULL UNIQUE,
     label VARCHAR,
     info TEXT,
     module VARCHAR NOT NULL,
@@ -27,7 +27,7 @@ CREATE INDEX index_core_field_name ON core_field ("name");
 CREATE TABLE core_module (
     id BIGSERIAL NOT NULL,  
     website VARCHAR(256),
-    "name" VARCHAR(128) NOT NULL,
+    "name" VARCHAR(128) NOT NULL UNIQUE,
     author VARCHAR(128),
     url VARCHAR(128),
     "state" VARCHAR(16) NOT NULL,
