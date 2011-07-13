@@ -20,7 +20,7 @@ namespace ObjectServer.Core
         {
             this.AutoMigration = false;
 
-            Fields.Chars("name").SetLabel("Name").SetSize(256).Required();
+            Fields.Chars("name").SetLabel("Name").SetSize(256).Required().Unique();
             Fields.Chars("label").SetLabel("Label").SetSize(256);
             Fields.Text("info").SetLabel("Information");
             Fields.Chars("module").SetLabel("Module").SetSize(128).Required();

@@ -8,7 +8,7 @@ CREATE TABLE core_model (
     module VARCHAR NOT NULL,
     PRIMARY KEY(id)
 );
-CREATE UNIQUE INDEX index_core_model_name ON core_model ("name");
+CREATE INDEX index_core_model_name ON core_model ("name");
 
 CREATE TABLE core_field (
     id BIGSERIAL NOT NULL,
@@ -40,7 +40,6 @@ CREATE TABLE core_module (
     license VARCHAR(32),
     PRIMARY KEY(id)
 );
-ALTER TABLE core_module ADD CONSTRAINT name_uniq UNIQUE (name);
 CREATE UNIQUE INDEX index_core_module_name ON core_module ("name");
 
 

@@ -45,7 +45,20 @@ namespace ObjectServer
         public virtual void DisposeFramework()
         {
             var service = Platform.ExportedService;
+            ClearTestUsers(service);
+
             service.LogOff(this.SessionId);
+        }
+
+        private void ClearTestUsers(IExportedService service)
+        {
+
+            var domain = new object[] { new object[] { "login", "=", "test" } };
+            var ids = service.SearchModel(this.SessionId, "core.user", domain);
+            if (ids.Length > 0)
+            {
+                service.DeleteModel(this.SessionId, "core.user", ids.Select(i => (object)i).ToArray());
+            }
         }
 
         public string SessionId { get; private set; }
