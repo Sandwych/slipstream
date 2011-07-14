@@ -14,7 +14,7 @@ namespace ObjectServer.Backend.Postgresql
             this.SqlType = (string)row["data_type"];
 
             var charsMaxLength = row["character_maximum_length"];
-            if (charsMaxLength != DBNull.Value)
+            if (!charsMaxLength.IsNull())
             {
                 Length = (int)charsMaxLength;
             }            

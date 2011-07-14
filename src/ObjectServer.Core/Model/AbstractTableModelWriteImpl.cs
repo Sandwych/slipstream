@@ -24,7 +24,7 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
-            if (!ModelSecurity.CanWriteModel(scope, scope.Session.UserId, this.Name))
+            if (!scope.CanWriteModel(scope.Session.UserId, this.Name))
             {
                 throw new UnauthorizedAccessException("Access denied");
             }

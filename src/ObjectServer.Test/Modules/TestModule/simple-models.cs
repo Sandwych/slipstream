@@ -86,7 +86,7 @@ namespace ObjectServer.Test
                 var field1 = r["field1"];
                 var field2 = r["field2"];
 
-                if (field1 is DBNull || field2 is DBNull)
+                if (field1.IsNull() || field2.IsNull())
                 {
                     rows[id] = DBNull.Value;
                 }
@@ -99,7 +99,7 @@ namespace ObjectServer.Test
         }
     }
 
-   
+
 
     [Resource]
     public sealed class ProductModel : AbstractTableModel

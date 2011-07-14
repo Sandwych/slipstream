@@ -34,8 +34,7 @@ namespace ObjectServer.Model.Test
                 this.ServiceScope, new long[] { id }, new string[] { "name", "master" });
             var record = children[0];
 
-            Assert.IsInstanceOf<DBNull>(record["master"]);
-            Assert.AreEqual(DBNull.Value, record["master"]);
+            Assert.True(record["master"].IsNull());
             Assert.AreEqual(nameFieldValue, (string)record["name"]);
         }
     }

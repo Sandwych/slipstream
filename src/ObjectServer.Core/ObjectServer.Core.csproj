@@ -98,7 +98,6 @@
     <Compile Include="Backend\DynamicRecord.cs" />
     <Compile Include="Backend\IDBConnection.cs" />
     <Compile Include="Backend\IDataProvider.cs" />
-    <Compile Include="Backend\ISqlTypeConverter.cs" />
     <Compile Include="Backend\ITableContext.cs" />
     <Compile Include="Backend\IColumnMetadata.cs" />
     <Compile Include="Backend\Postgresql\PgColumnMetadata.cs" />
@@ -109,6 +108,7 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
+    <Compile Include="Core\RuleGroupModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
@@ -140,7 +140,7 @@
     <Compile Include="Model\IModelDescriptor.cs" />
     <Compile Include="Model\InheritanceCollection.cs" />
     <Compile Include="Model\InheritanceInfo.cs" />
-    <Compile Include="Model\ModelSecurity.cs" />
+    <Compile Include="Model\ModelSecurityExtensions.cs" />
     <Compile Include="Model\OrderExpression.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="Model\SortDirection.cs" />

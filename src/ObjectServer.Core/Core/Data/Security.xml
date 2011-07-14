@@ -66,6 +66,15 @@
     <field name="allow_delete">false</field>
   </record>
 
+  
+  <!-- 各种 rules -->
+  <record model="core.rule" >
+    <field name="name">Company Rule</field>
+    <field name="model" ref-key="model_core_organization" />
+    <field name="global">true</field>
+    <field name="domain">[["id","child_of", user.company_id.id]]</field>
+  </record>
+
 
 </data>
 

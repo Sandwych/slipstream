@@ -49,7 +49,7 @@ namespace ObjectServer.Core
         {
             var sql = "SELECT COUNT(*) FROM core_user WHERE \"login\" = @0";
             var rowCount = db.Connection.QueryValue(sql, login);
-            var isRootUserExisted = rowCount == DBNull.Value || (long)rowCount <= 0;
+            var isRootUserExisted = rowCount.IsNull() || (long)rowCount <= 0;
             return isRootUserExisted;
         }
 

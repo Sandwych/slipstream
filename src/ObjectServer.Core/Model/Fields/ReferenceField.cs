@@ -60,7 +60,7 @@ namespace ObjectServer.Model
             //从原始记录里把所有该字段的值取出
             var availableRecords =
                 from r in rawRecords
-                where r[this.Name] != null && r[this.Name] != DBNull.Value
+                where !r[this.Name].IsNull()
                 let parts = ((string)r[this.Name]).Split(':')
                 select new
                 {
@@ -90,7 +90,7 @@ namespace ObjectServer.Model
 
             var nullRecords = from r in rawRecords
                               let mid = r[this.Name]
-                              where mid == null || mid == DBNull.Value
+                              where mid.IsNull()
                               select (long)r["id"];
             foreach (var mid in nullRecords)
             {

@@ -15,6 +15,11 @@ namespace ObjectServer.Backend.Postgresql
 
         public PgDBConnection(string dbName)
         {
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
             var cfg = Platform.Configuration;
             string connectionString = string.Format(
               "Server={0};" +

@@ -164,6 +164,12 @@ namespace ObjectServer.Model
             var fieldName = (string)reader["name"];
             fieldName.Trim();
 
+            if (!model.Fields.ContainsKey(fieldName))
+            {
+                var msg = string.Format("Cannot found field: [{0}]", fieldName);
+                throw new BadFieldNameException(msg, fieldName);
+            }
+
             IField metaField = model.Fields[fieldName];
             object fieldValue = null;
             switch (metaField.Type)

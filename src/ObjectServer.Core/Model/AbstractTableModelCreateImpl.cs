@@ -29,7 +29,7 @@ namespace ObjectServer.Model
                 throw new ArgumentException("Unable to set the 'id' field", "propertyBag");
             }
 
-            if (!ModelSecurity.CanCreateModel(scope, scope.Session.UserId, this.Name))
+            if (!scope.CanCreateModel(scope.Session.UserId, this.Name))
             {
                 throw new UnauthorizedAccessException("Access denied");
             }
@@ -152,7 +152,7 @@ namespace ObjectServer.Model
             {
                 var sql = string.Format("SELECT MAX(_right) FROM \"{0}\" WHERE _left >= 0", this.TableName);
                 var value = conn.QueryValue(sql);
-                if (value != DBNull.Value)
+                if (!value.IsNull())
                 {
                     rhsValue = (long)value;
                 }

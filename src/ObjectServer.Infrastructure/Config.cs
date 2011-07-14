@@ -26,18 +26,21 @@ namespace ObjectServer
             this.DBPassword = "objectserver";
             this.Debug = true;
 
-            this.SessionTimeout = new TimeSpan(0, 20, 0);            
+            this.SessionTimeout = new TimeSpan(0, 20, 0);
 
+            var defaultLogPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "ObjectServer", "log");
             this.LogPath = "";
             this.LogLevel = "all";
-            
+
             this.RpcHandlerMax = 5; //默认5个工人
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "tcp://*:5555";
             this.HttpListenPort = 9287;
 
             this.ModulePath = "Modules";
-            this.RootPassword = "root";            
+            this.RootPassword = "root";
         }
 
         /// <summary>

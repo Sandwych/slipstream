@@ -44,6 +44,7 @@ namespace ObjectServer.Runtime
         private static CompilerParameters CreateCompilerParameters()
         {
             var selfAssembly = Assembly.GetExecutingAssembly();
+            var infrastructureAssembly = typeof(Config).Assembly;
 
             //设置编译参数，加入所需的组件 
             var options = new CompilerParameters();
@@ -53,6 +54,7 @@ namespace ObjectServer.Runtime
             options.ReferencedAssemblies.Add("System.Data.dll");
             options.ReferencedAssemblies.Add("System.Transactions.dll");
             options.ReferencedAssemblies.Add(selfAssembly.Location);
+            options.ReferencedAssemblies.Add(infrastructureAssembly.Location);
             options.GenerateInMemory = true;
             options.GenerateExecutable = false;
             options.IncludeDebugInformation = Platform.Configuration.Debug;

@@ -99,10 +99,9 @@ namespace ObjectServer.Backend.Postgresql
             }
 
             tableName = tableName.SqlEscape();
-            //TODO SQL 注入风险
             var sql = string.Format(
                 @"CREATE TABLE ""{0}"" (id BIGSERIAL NOT NULL, PRIMARY KEY(""id"")) WITHOUT OIDS",
-                tableName);
+                tableName.SqlEscape());
             db.Execute(sql);
 
             label = label.SqlEscape();

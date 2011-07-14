@@ -126,9 +126,8 @@ namespace ObjectServer.Model.Test
 
             Assert.IsInstanceOf<long[]>(record["children"]);
             Assert.AreEqual(0, ((long[])record["children"]).Length);
-            Assert.IsInstanceOf<DBNull>(record["name"]);
+            Assert.True(record["name"].IsNull());
         }
-
 
 
         [Test]

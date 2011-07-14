@@ -11,7 +11,6 @@ namespace ObjectServer.Core
     [Resource]
     public sealed class ActionModel : AbstractTableModel
     {
-
         public ActionModel()
             : base("core.action")
         {

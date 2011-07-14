@@ -200,9 +200,9 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
         private void SyncSingleField(IDBProfile db, Dictionary<string, object> dbField, string fieldName)
         {
 
-            var fieldLabel = dbField["label"] is DBNull ? null : (string)dbField["label"];
-            var fieldRelation = dbField["relation"] is DBNull ? null : (string)dbField["relation"];
-            var fieldHelp = dbField["help"] is DBNull ? null : (string)dbField["help"];
+            var fieldLabel = dbField["label"].IsNull() ? null : (string)dbField["label"];
+            var fieldRelation = dbField["relation"].IsNull() ? null : (string)dbField["relation"];
+            var fieldHelp = dbField["help"].IsNull() ? null : (string)dbField["help"];
             var fieldType = (string)dbField["type"];
             var fieldId = (long)dbField["id"];
 
@@ -213,7 +213,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 fieldType != metaFieldType ||
                 fieldHelp != metaField.Help)
             {
-                var sql = 
+                var sql =
 @"
 UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, 
     ""help""=@3  WHERE ""id""=@4";
@@ -226,7 +226,7 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
         {
             var sql = "SELECT MAX(\"id\") FROM core_model WHERE name=@0";
             var o = db.Connection.QueryValue(sql, this.Name);
-            if (o is DBNull)
+            if (o.IsNull())
             {
                 return null;
             }
@@ -379,7 +379,7 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
             model.DeleteInternal(ctx, longIds);
         }
 
-      
+
 
         private static void EnsureServiceMethodArgs(IModel self, IServiceScope ctx)
         {

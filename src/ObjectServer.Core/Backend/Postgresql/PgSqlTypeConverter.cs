@@ -8,7 +8,7 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Backend
 {
-    internal sealed class PgSqlTypeConverter : ISqlTypeConverter
+    internal sealed class PgSqlTypeConverter
     {
         private PgSqlTypeConverter()
         {
@@ -31,17 +31,6 @@ namespace ObjectServer.Backend
                 { FieldType.Reference, f => "VARCHAR(128)" },
             };
 
-        #region ISqlTypeConverter 成员
-
-        public string FieldToColumn(IField field)
-        {
-            //mapping[
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-
         public static string GetSqlType(IField field)
         {
             if (field == null)
@@ -49,7 +38,9 @@ namespace ObjectServer.Backend
                 throw new ArgumentNullException("field");
             }
 
-            return mapping[field.Type](field);
+            var func = mapping[field.Type];
+
+            return func(field);
         }
     }
 }

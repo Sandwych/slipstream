@@ -41,7 +41,7 @@ namespace ObjectServer.Model
 
                 var availableRecords = from r in rawRecords
                                        let mid = r[this.Name]
-                                       where mid != null && mid != DBNull.Value
+                                       where !mid.IsNull()
                                        select new { MasterId = (long)mid, SelfId = (long)r["id"] };
                 if (availableRecords.Count() > 0)
                 {
@@ -61,7 +61,7 @@ namespace ObjectServer.Model
 
                 var nullRecords = from r in rawRecords
                                   let mid = r[this.Name]
-                                  where mid == null || mid == DBNull.Value
+                                  where mid.IsNull()
                                   select (long)r["id"];
                 foreach (var mid in nullRecords)
                 {

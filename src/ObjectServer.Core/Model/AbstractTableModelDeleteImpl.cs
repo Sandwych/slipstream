@@ -29,7 +29,7 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("ids");
             }
 
-            if (!ModelSecurity.CanDeleteModel(scope, scope.Session.UserId, this.Name))
+            if (!scope.CanDeleteModel(scope.Session.UserId, this.Name))
             {
                 throw new UnauthorizedAccessException("Access denied");
             }
@@ -60,8 +60,7 @@ namespace ObjectServer.Model
                 {
                     var baseIds = from r in existedRecords
                                   let f = r[inheritInfo.RelatedField]
-                                  where f != DBNull.Value && f != null
-                                  select (long)f;
+                                  where !f.IsNull() select (long)f;
 
                     if (baseIds.Count() > 0)
                     {
