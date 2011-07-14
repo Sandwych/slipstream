@@ -11,6 +11,7 @@ namespace ObjectServer.Core
     public class FieldModel : AbstractTableModel
     {
         public const string ModelName = "core.field";
+        public const int FieldNameMax = 64;
 
         public FieldModel()
             : base(ModelName)

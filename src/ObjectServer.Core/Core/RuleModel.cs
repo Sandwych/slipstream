@@ -15,9 +15,21 @@ namespace ObjectServer.Core
         {
             Fields.Chars("name").SetLabel("Name").Required();
             Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
-            Fields.Chars("domain").SetLabel("Domain").Required();
             Fields.Boolean("global").SetLabel("Global")
                 .Required().DefaultValueGetter(s => true);
+            Fields.Chars("field").SetLabel("Field").Required().SetSize(FieldModel.FieldNameMax);
+            Fields.Enumeration("operator",
+                new Dictionary<string, string>() { 
+                    { "=", "=" }, 
+                    { "<>", "<>" }, 
+                    { "<=", "<=" }, 
+                    { "=>", "=>" }, 
+                    { "in", "in" }, 
+                    { ">", ">" }, 
+                    { "<", "<" }, 
+                    { "childof", "Child Of" } })
+                .Required().SetLabel("Operator");
+            Fields.Chars("operand").SetLabel("Operand").Required().SetSize(128);
             Fields.Boolean("on_create").SetLabel("Apply for Creation")
                .Required().DefaultValueGetter(s => true);
             Fields.Boolean("on_read").SetLabel("Apply for Reading")

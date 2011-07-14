@@ -72,7 +72,9 @@
     <field name="name">Company Rule</field>
     <field name="model" ref-key="model_core_organization" />
     <field name="global">true</field>
-    <field name="domain">[["id","child_of", user.company_id.id]]</field>
+    <field name="field">id</field>
+    <field name="operator">childof</field>
+    <field name="operand">organization.id</field>
   </record>
 
 
