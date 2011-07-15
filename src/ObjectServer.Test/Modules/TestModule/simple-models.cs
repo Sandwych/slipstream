@@ -112,4 +112,16 @@ namespace ObjectServer.Test
         }
     }
 
+    [Resource]
+    public sealed class SalesOrderModel : AbstractTableModel
+    {
+        public SalesOrderModel()
+            : base("test.sales_order")
+        {
+            Fields.Chars("name").SetLabel("Code");
+            Fields.DateTime("order_date").SetLabel("Date");
+            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
+        }
+    }
+
 }

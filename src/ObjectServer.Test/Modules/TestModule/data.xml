@@ -25,6 +25,11 @@
     <field name="float_field">33.0</field>
   </record>
 
+  <record model="test.sales_order">
+    <field name="name">S/0001</field>
+    <field name="order_date">2011-03-01T07:33:23</field>
+    <field name="organization" ref-key="org_sales_dept" />
+  </record>
 
 </data>
 
