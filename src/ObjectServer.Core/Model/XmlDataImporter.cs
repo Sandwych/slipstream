@@ -121,8 +121,7 @@ namespace ObjectServer.Model
                 {
                     var fields = new string[] { AbstractModel.VersionFieldName };
                     var read = model.ReadInternal(this.context, new long[] { existedId.Value }, fields)[0];
-                    var version = (long)read[AbstractModel.VersionFieldName];
-                    record[AbstractModel.VersionFieldName] = version + 1;
+                    record[AbstractModel.VersionFieldName] = read[AbstractModel.VersionFieldName];
                 }
 
                 model.WriteInternal(this.context, existedId.Value, record);
