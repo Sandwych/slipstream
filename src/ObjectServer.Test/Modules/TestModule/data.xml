@@ -7,25 +7,55 @@
     <field name="parent" ref-key="org_root" />
   </record>
 
-  <record model="test.test_model">
+  <record model="core.group" key="group_salesmen">
+    <field name="name">Salesmen</field>
+  </record>
+
+  <record model="core.user" key="user_user1">
+    <field name="login">user1</field>
+    <field name="name">User1</field>
+    <field name="organization" ref-key="org_sales_dept" />
+    <field name="password">user1</field>
+  </record>
+
+  <record model="core.user_group" key="ug_user1_salesmen">
+    <field name="gid" ref-key="group_salesmen" />
+    <field name="uid" ref-key="user_user1" />
+  </record>
+
+  <record model="core.rule" key="rule_salesmen_company" >
+    <field name="name">销售员只能访问所在公司的销售订单</field>
+    <field name="model" ref-key="model_test_sales_order" />
+    <field name="global">false</field>
+    <field name="field">organization.id</field>
+    <field name="operator">=</field>
+    <field name="operand">user.organization.id</field>
+  </record> 
+
+  <record model="core.rule_group" key="rg_salesmen">
+    <field name="gid" ref-key="group_salesmen" />
+    <field name="rid" ref-key="rule_salesmen_company" />
+  </record>
+
+  <record model="test.test_model" key="test_model1">
     <field name="name">name1</field>
     <field name="address">address1</field>
     <field name="float_field">11.0</field>
-  </record> 
+  </record>
 
-  <record model="test.test_model">
+  <record model="test.test_model" key="test_model2">
     <field name="name">name2</field>
     <field name="address">address2</field>
     <field name="float_field">22.0</field>
-  </record> 
+  </record>
 
-  <record model="test.test_model">
+  <record model="test.test_model" key="test_model3">
     <field name="name">name3</field>
     <field name="address">address3</field>
     <field name="float_field">33.0</field>
   </record>
 
-  <record model="test.sales_order">
+  <record model="test.sales_order" key="test_model4">
     <field name="name">S/0001</field>
     <field name="order_date">2011-03-01T07:33:23</field>
     <field name="organization" ref-key="org_sales_dept" />

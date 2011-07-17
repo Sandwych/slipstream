@@ -320,6 +320,27 @@ SELECT column_name, data_type, is_nullable, character_maximum_length
         }
 
 
+        public bool ConstraintExists(IDBConnection db, string constraintName)
+        {
+            //TODO ESCAPE SQL
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+            if (string.IsNullOrEmpty(constraintName))
+            {
+                throw new ArgumentNullException("constraintName");
+            }
+
+            var sql = @"
+SELECT COALESCE(COUNT(constraint_name), 0)
+    FROM information_schema.table_constraints
+    WHERE table_catalog = @0 AND constraint_schema = 'public' AND constraint_name = @1
+";
+            var n = (long)db.QueryValue(sql, db.DatabaseName, constraintName);
+            return n > 0;
+        }
+
         public void AddFK(IDBConnection db, string columnName, string refTable, OnDeleteAction act)
         {
             if (db == null)

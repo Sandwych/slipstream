@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Newtonsoft.Json;
+
 namespace ObjectServer.Model
 {
     [Serializable]
-    public struct OrderExpression
+    [JsonArray]
+    public class OrderExpression
     {
-        private static readonly OrderExpression[] DefaultOrders = new OrderExpression[] { new OrderExpression("id", SortDirection.Asc) };
+        private static readonly OrderExpression[] DefaultOrders =
+            new OrderExpression[] { new OrderExpression("id", SortDirection.Asc) };
 
         public OrderExpression(string field, SortDirection so)
-            : this()
         {
             if (string.IsNullOrEmpty(field))
             {
@@ -22,8 +25,11 @@ namespace ObjectServer.Model
             this.Order = so;
         }
 
-        public string Field { get; private set; }
-        public SortDirection Order { get; private set; }
+        [JsonProperty("field")]
+        public string Field { get; set; }
+
+        [JsonProperty("order")]
+        public SortDirection Order { get; set; }
 
         public static OrderExpression[] GetDefaultOrders()
         {

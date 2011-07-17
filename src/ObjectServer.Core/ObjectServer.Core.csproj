@@ -62,7 +62,25 @@
     <Reference Include="clrzmq-ext">
       <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
     </Reference>
+    <Reference Include="IronRuby">
+      <HintPath>..\..\lib\ironruby\bin\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\..\lib\ironruby\bin\IronRuby.Libraries.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries.Yaml">
+      <HintPath>..\..\lib\ironruby\bin\IronRuby.Libraries.Yaml.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp">
+    </Reference>
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>..\..\lib\ironruby\bin\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\..\lib\ironruby\bin\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata">
+      <HintPath>..\..\lib\ironruby\bin\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>
@@ -262,9 +280,7 @@
     <Compile Include="ConfigSectionHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Backend\Postgresql\initdb.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Backend\Postgresql\initdb.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Data\Menus.xml" />

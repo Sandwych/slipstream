@@ -12,7 +12,7 @@
 
   <!-- Normal User 组 -->
   <!-- 普通用户有权限可以读取系统中的所有 core model -->
-  <record model="core.model_access">
+  <record model="core.model_access" key="access_core_model">
     <field name="model" ref-key="model_core_model" />
     <field name="group" ref-key="group_user" />
     <field name="allow_create">false</field>
@@ -21,7 +21,7 @@
     <field name="allow_delete">false</field>
   </record>
 
-  <record model="core.model_access">
+  <record model="core.model_access"  key="access_core_field">
     <field name="model" ref-key="model_core_field" />
     <field name="group" ref-key="group_user" />
     <field name="allow_create">false</field>
@@ -30,7 +30,7 @@
     <field name="allow_delete">false</field>
   </record>
 
-  <record model="core.model_access">
+  <record model="core.model_access" key="access_core_module">
     <field name="model" ref-key="model_core_module" />
     <field name="group" ref-key="group_user" />
     <field name="allow_create">false</field>
@@ -39,7 +39,7 @@
     <field name="allow_delete">false</field>
   </record>
 
-  <record model="core.model_access">
+  <record model="core.model_access" key="access_core_model_data">
     <field name="model" ref-key="model_core_model_data" />
     <field name="group" ref-key="group_user" />
     <field name="allow_create">false</field>
@@ -48,7 +48,7 @@
     <field name="allow_delete">false</field>
   </record>
 
-  <record model="core.model_access">
+  <record model="core.model_access" key="access_core_user">
     <field name="model" ref-key="model_core_user" />
     <field name="group" ref-key="group_user" />
     <field name="allow_create">false</field>
@@ -57,8 +57,17 @@
     <field name="allow_delete">false</field>
   </record>
 
-  <record model="core.model_access">
+  <record model="core.model_access" key="access_core_organization">
     <field name="model" ref-key="model_core_organization" />
+    <field name="group" ref-key="group_user" />
+    <field name="allow_create">false</field>
+    <field name="allow_read">true</field>
+    <field name="allow_write">false</field>
+    <field name="allow_delete">false</field>
+  </record>
+
+  <record model="core.model_access" key="access_core_rule">
+    <field name="model" ref-key="model_core_rule" />
     <field name="group" ref-key="group_user" />
     <field name="allow_create">false</field>
     <field name="allow_read">true</field>
@@ -68,13 +77,13 @@
 
   
   <!-- 各种 rules -->
-  <record model="core.rule" >
+  <record model="core.rule" key="rule_company_rule" >
     <field name="name">Company Rule</field>
     <field name="model" ref-key="model_core_organization" />
     <field name="global">true</field>
     <field name="field">id</field>
     <field name="operator">childof</field>
-    <field name="operand">organization.id</field>
+    <field name="operand">user.organization.id</field>
   </record>
 
 

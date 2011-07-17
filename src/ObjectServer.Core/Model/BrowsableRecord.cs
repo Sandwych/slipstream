@@ -70,7 +70,8 @@ namespace ObjectServer.Model
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
-            throw new NotSupportedException();
+            result = null;
+            return false;
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -83,17 +84,21 @@ namespace ObjectServer.Model
             {
                 throw new ArgumentNullException("binder");
             }
+            return this.GetPropertyValue(binder.Name, out result);
+        }
+
+        private bool GetPropertyValue(string memberName, out object result)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(memberName));
 
             result = null;
-            if (!metaModel.Fields.ContainsKey(binder.Name))
+            if (!metaModel.Fields.ContainsKey(memberName))
             {
                 return false;
             }
 
-            var metaField = metaModel.Fields[binder.Name];
-
+            var metaField = metaModel.Fields[memberName];
             result = metaField.BrowseField(this.scope, this.record);
-
             return true;
         }
 

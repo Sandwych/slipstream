@@ -31,30 +31,30 @@ namespace ObjectServer.Core
         /// 提供一个方便读取指定模型所有字段的方法
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="ctx"></param>
+        /// <param name="scope"></param>
         /// <param name="modelName"></param>
         /// <returns></returns>
         [ServiceMethod]
-        public static Dictionary<string, object>[] GetFields(IModel model, IServiceScope ctx, string modelName)
+        public static Dictionary<string, object>[] GetFields(IModel model, IServiceScope scope, string modelName)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
             }
 
-            if (ctx == null)
+            if (scope == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("scope");
             }
             var modelDomain = new object[] { new object[] { "name", "=", modelName } };
-            var modelIds = model.SearchInternal(ctx, modelDomain);
+            var modelIds = model.SearchInternal(scope, modelDomain);
 
             //TODO 检查 IDS 错误
 
-            var fieldModel = (IModel)ctx.GetResource("core.field");
+            var fieldModel = (IModel)scope.GetResource("core.field");
             var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
-            var fieldIds = fieldModel.SearchInternal(ctx, fieldDomain);
-            var records = fieldModel.ReadInternal(ctx, fieldIds);
+            var fieldIds = fieldModel.SearchInternal(scope, fieldDomain);
+            var records = fieldModel.ReadInternal(scope, fieldIds);
 
             return records;
         }

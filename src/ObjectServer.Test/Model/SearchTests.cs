@@ -66,6 +66,8 @@ namespace ObjectServer.Model.Test
             };
             ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
             Assert.AreEqual(0, ids.Length);
+
+            //测试 many-to-one 字段的 = 操作符            
         }
 
 

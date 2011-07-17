@@ -27,7 +27,7 @@ namespace ObjectServer.Core
             Fields.Chars("login").SetLabel("User Name").SetSize(64).Required().Unique();
             Fields.Chars("password").SetLabel("Password").SetSize(64).Required();
             Fields.Chars("salt").SetLabel("Salt").SetSize(64).Required();
-            Fields.Boolean("admin").SetLabel("Administrator?").Required();
+            Fields.Boolean("admin").SetLabel("Administrator?").Required().DefaultValueGetter(r => false);
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
             Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
             Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
@@ -120,15 +120,15 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         }
 
 
-        public override long CreateInternal(IServiceScope ctx, IDictionary<string, object> values)
+        public override long CreateInternal(IServiceScope scope, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
 
-            return base.CreateInternal(ctx, values2);
+            return base.CreateInternal(scope, values2);
         }
 
 
-        public override void WriteInternal(IServiceScope ctx, long id, IDictionary<string, object> record)
+        public override void WriteInternal(IServiceScope scope, long id, IDictionary<string, object> record)
         {
             //更新用户记录业务是不能修改密码与 Salt 的
             var values2 = new Dictionary<string, object>(record);
@@ -141,16 +141,16 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
                 values2.Remove("salt");
             }
 
-            base.WriteInternal(ctx, id, values2);
+            base.WriteInternal(scope, id, values2);
 
             //TODO 通知 Session 缓存
         }
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IServiceScope ctx, long[] ids, string[] fields)
+            IServiceScope scope, long[] ids, string[] fields)
         {
-            var records = base.ReadInternal(ctx, ids, fields);
+            var records = base.ReadInternal(scope, ids, fields);
 
             //"salt" "password" 是敏感字段，不要让客户端获取
             foreach (var record in records)
@@ -171,18 +171,18 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         }
 
 
-        public Session LogOn(IServiceScope ctx,
+        public Session LogOn(IServiceScope scope,
             string database, string login, string password)
         {
             var domain = new object[][] { new object[] { "login", "=", login } };
 
-            var users = base.SearchInternal(ctx, domain);
+            var users = base.SearchInternal(scope, domain);
             if (users.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);
             }
 
-            var user = base.ReadInternal(ctx,
+            var user = base.ReadInternal(scope,
                 new long[] { users[0] },
                 new string[] { "password", "salt" })[0];
 
@@ -205,21 +205,21 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         }
 
 
-        public void LogOut(IServiceScope ctx, string sessionId)
+        public void LogOut(IServiceScope scope, string sessionId)
         {
             Platform.SessionStore.Remove(sessionId);
         }
 
         [ServiceMethod]
         public static void ChangePassword(
-            IModel model, IServiceScope ctx, string newPassword)
+            IModel model, IServiceScope scope, string newPassword)
         {
             var record = new Dictionary<string, object>()
             {
                 { "password", newPassword },
             };
             HashPassword(record);
-            model.WriteInternal(ctx, ctx.Session.UserId, record);
+            model.WriteInternal(scope, scope.Session.UserId, record);
         }
 
         public static Dictionary<string, object>[] GetAllModelAccessEntries(long userId)

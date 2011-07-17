@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Newtonsoft.Json;
+
 namespace ObjectServer.Model
 {
     [Serializable]
-    public struct DomainExpression
+    [JsonArray(false)]
+    public class DomainExpression
     {
+        public DomainExpression()
+        {
+        }
+
         public DomainExpression(string field, string opr, object value)
-            : this()
         {
             if (string.IsNullOrEmpty(field))
             {
@@ -27,9 +33,14 @@ namespace ObjectServer.Model
             this.Value = value;
         }
 
-        public string Field { get; private set; }
-        public string Operator { get; private set; }
-        public object Value { get; private set; }
+        [JsonProperty("field")]
+        public string Field { get; set; }
+
+        [JsonProperty("operator")]
+        public string Operator { get; set; }
+
+        [JsonProperty("value")]
+        public object Value { get; set; }
 
         public static DomainExpression FromTuple(object[] domain)
         {

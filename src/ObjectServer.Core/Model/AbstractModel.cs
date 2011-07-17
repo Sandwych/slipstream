@@ -319,9 +319,9 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
 
         [ServiceMethod]
         public static long[] Search(
-            IModel model, IServiceScope ctx, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
+            IModel model, IServiceScope scope, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            EnsureServiceMethodArgs(model, scope);
 
             OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
 
@@ -336,14 +336,14 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
                 }
             }
 
-            return model.SearchInternal(ctx, domain, orderInfos, offset, limit);
+            return model.SearchInternal(scope, domain, orderInfos, offset, limit);
         }
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            IModel model, IServiceScope ctx, object[] clientIds, object[] fields = null)
+            IModel model, IServiceScope scope, object[] clientIds, object[] fields = null)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            EnsureServiceMethodArgs(model, scope);
 
             string[] strFields = null;
             if (fields != null)
@@ -351,46 +351,46 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
                 strFields = fields.Select(f => (string)f).ToArray();
             }
             var ids = clientIds.Select(id => (long)id).ToArray();
-            return model.ReadInternal(ctx, ids, strFields);
+            return model.ReadInternal(scope, ids, strFields);
         }
 
         [ServiceMethod]
         public static long Create(
-            IModel model, IServiceScope ctx, IDictionary<string, object> propertyBag)
+            IModel model, IServiceScope scope, IDictionary<string, object> propertyBag)
         {
-            EnsureServiceMethodArgs(model, ctx);
-            return model.CreateInternal(ctx, propertyBag);
+            EnsureServiceMethodArgs(model, scope);
+            return model.CreateInternal(scope, propertyBag);
         }
 
         [ServiceMethod]
         public static void Write(
-           IModel model, IServiceScope ctx, object id, IDictionary<string, object> userRecord)
+           IModel model, IServiceScope scope, object id, IDictionary<string, object> userRecord)
         {
-            EnsureServiceMethodArgs(model, ctx);
-            model.WriteInternal(ctx, (long)id, userRecord);
+            EnsureServiceMethodArgs(model, scope);
+            model.WriteInternal(scope, (long)id, userRecord);
         }
 
         [ServiceMethod]
         public static void Delete(
-            IModel model, IServiceScope ctx, object[] ids)
+            IModel model, IServiceScope scope, object[] ids)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            EnsureServiceMethodArgs(model, scope);
             var longIds = ids.Select(id => (long)id).ToArray();
-            model.DeleteInternal(ctx, longIds);
+            model.DeleteInternal(scope, longIds);
         }
 
 
 
-        private static void EnsureServiceMethodArgs(IModel self, IServiceScope ctx)
+        private static void EnsureServiceMethodArgs(IModel self, IServiceScope scope)
         {
             if (self == null)
             {
                 throw new ArgumentNullException("self");
             }
 
-            if (ctx == null)
+            if (scope == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("scope");
             }
         }
 
@@ -422,8 +422,8 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
             IServiceScope scope, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
             IServiceScope scope, long[] ids, string[] requiredFields = null);
-        public abstract void DeleteInternal(IServiceScope ctx, long[] ids);
-        public abstract dynamic Browse(IServiceScope ctx, long id);
+        public abstract void DeleteInternal(IServiceScope scope, long[] ids);
+        public abstract dynamic Browse(IServiceScope scope, long id);
 
         #endregion
     }

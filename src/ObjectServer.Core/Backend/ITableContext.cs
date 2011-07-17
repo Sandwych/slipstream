@@ -24,6 +24,7 @@ namespace ObjectServer.Backend
 
         void AddConstraint(IDBConnection db, string constraintName, string constraint);
         void DeleteConstraint(IDBConnection db, string constraintName);
+        bool ConstraintExists(IDBConnection db, string constraintName);
 
         void AddFK(IDBConnection db, string columnName, string refTable, OnDeleteAction refAct);
         void DeleteFK(IDBConnection db, string columnName);
