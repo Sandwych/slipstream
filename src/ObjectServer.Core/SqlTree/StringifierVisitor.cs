@@ -165,9 +165,13 @@ namespace ObjectServer.SqlTree
                 this.sqlBuilder.Append(str);
                 this.sqlBuilder.Append('\'');
             }
-            else
+            else if (node.Value != null)
             {
                 this.sqlBuilder.Append(node.Value.ToString());
+            }
+            else
+            {
+                this.sqlBuilder.Append("NULL");
             }
             this.sqlBuilder.Append(' ');
         }

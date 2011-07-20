@@ -14,38 +14,19 @@ namespace ObjectServer.Core.Test
     public sealed class RuleTest : LocalTestCase
     {
         [Test]
-        public void Test_GetRuleDomain()
+        public void Test_search_with_rules()
         {
-            var sid = this.Service.LogOn("objectserver", "user1", "user1");
-            var ruleModel = (RuleModel)this.ServiceScope.GetResource("core.rule");
-            var salesOrderModel = (IModel)this.ServiceScope.GetResource("test.sales_order");
-            var userModel = (UserModel)this.ServiceScope.GetResource("core.user");
+            var expectedOrderNames1 = new string[] { "S/0001" };
+            AssertSearchingOfSalesOrder("user1", "user1", expectedOrderNames1);
 
-            try
-            {
-                using (var scope = new ServiceScope(sid))
-                {
-                    dynamic user = userModel.Browse(scope, scope.Session.UserId);
-
-                    var domains = RuleModel.GetRuleDomain(scope, "test.sales_order", "read");
-                    Assert.AreEqual(1, domains.Length); //sales_order 涉及到的应该只有一组rule
-                    Assert.AreEqual("organization._id", domains[0].Field);
-                    Assert.AreEqual("=", domains[0].Operator);
-                    Assert.AreEqual(user.organization._id, domains[0].Value);
-                }
-            }
-            finally
-            {
-                this.Service.LogOff(sid);
-            }
-
-
+            var expectedOrderNames2 = new string[] { "S/0002", "S/0003" };
+            AssertSearchingOfSalesOrder("user2", "user2", expectedOrderNames2);
         }
 
-        [Test]
-        public void Test_SearchDomain()
+
+        private void AssertSearchingOfSalesOrder(string login, string password, string[] expectedOrderNames)
         {
-            var sid = this.Service.LogOn("objectserver", "user1", "user1");
+            var sid = this.Service.LogOn("objectserver", login, password);
             var ruleModel = (RuleModel)this.ServiceScope.GetResource("core.rule");
             var salesOrderModel = (IModel)this.ServiceScope.GetResource("test.sales_order");
 
@@ -53,16 +34,24 @@ namespace ObjectServer.Core.Test
             {
                 using (var scope = new ServiceScope(sid))
                 {
-                    var ids = salesOrderModel.SearchInternal(scope);
-                    Assert.AreEqual(1, ids.Length);
+                    var orders = new OrderExpression[] {
+                        new OrderExpression("name", SortDirection.Asc) 
+                    };
+                    var ids = salesOrderModel.SearchInternal(scope, null, orders);
+                    Assert.AreEqual(expectedOrderNames.Length, ids.Length);
+                    var records = salesOrderModel.ReadInternal(scope, ids);
+                    var names = records.Select(r => (string)r["name"]).ToArray();
+                    Assert.AreEqual(expectedOrderNames.Length, names.Length);
+                    for (int i = 0; i < expectedOrderNames.Length; i++)
+                    {
+                        Assert.AreEqual(expectedOrderNames[i], names[i]);
+                    }
                 }
             }
             finally
             {
                 this.Service.LogOff(sid);
             }
-
-
         }
 
     }

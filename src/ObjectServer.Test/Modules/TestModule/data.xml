@@ -24,9 +24,21 @@
     <field name="password">user1</field>
   </record>
 
+  <record model="core.user" key="user_user2">
+    <field name="login">user2</field>
+    <field name="name">User2</field>
+    <field name="organization" ref-key="org_sales_dept2" />
+    <field name="password">user2</field>
+  </record>
+
   <record model="core.user_group" key="ug_user1_salesmen">
     <field name="gid" ref-key="group_salesmen" />
     <field name="uid" ref-key="user_user1" />
+  </record>
+
+  <record model="core.user_group" key="ug_user2_salesmen">
+    <field name="gid" ref-key="group_salesmen" />
+    <field name="uid" ref-key="user_user2" />
   </record>
 
   <record model="core.rule" key="rule_salesmen_company" >
@@ -36,7 +48,7 @@
     <field name="field">organization._id</field>
     <field name="operator">=</field>
     <field name="operand">user.organization._id</field>
-  </record> 
+  </record>
 
   <record model="core.rule_group" key="rg_salesmen">
     <field name="gid" ref-key="group_salesmen" />
@@ -61,14 +73,20 @@
     <field name="float_field">33.0</field>
   </record>
 
-  <record model="test.sales_order" key="test_model4">
+  <record model="test.sales_order" key="test_sales_order1">
     <field name="name">S/0001</field>
     <field name="order_date">2011-03-01T07:33:23</field>
     <field name="organization" ref-key="org_sales_dept1" />
   </record>
 
-  <record model="test.sales_order" key="test_model5">
+  <record model="test.sales_order" key="test_sales_order2">
     <field name="name">S/0002</field>
+    <field name="order_date">2011-03-01T07:33:23</field>
+    <field name="organization" ref-key="org_sales_dept2" />
+  </record>
+
+  <record model="test.sales_order" key="test_sales_order3">
+    <field name="name">S/0003</field>
     <field name="order_date">2011-03-01T07:33:23</field>
     <field name="organization" ref-key="org_sales_dept2" />
   </record>
