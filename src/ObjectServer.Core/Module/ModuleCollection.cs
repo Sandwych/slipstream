@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
+using ObjectServer.Model;
 using ObjectServer.Runtime;
 using ObjectServer.Data;
 using ObjectServer.Core;
@@ -130,7 +131,7 @@ namespace ObjectServer
                 }
                 else
                 {
-                    unloadModules.Add((long)m["id"]);
+                    unloadModules.Add((long)m[AbstractModel.IDFieldName]);
                     Logger.Warn(() => string.Format(
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }

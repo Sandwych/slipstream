@@ -197,7 +197,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
             }
             else
             {
-                var uid = (long)user["id"];
+                var uid = (long)user[IDFieldName];
                 Platform.SessionStore.RemoveSessionsByUser(database, uid);
             }
 
@@ -232,7 +232,7 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         {
             Debug.Assert(userFields.ContainsKey("password"));
 
-            var uid = (long)userFields["id"];
+            var uid = (long)userFields[IDFieldName];
             var session = new Session(dbName, login, uid);
 
             var sessStore = Platform.SessionStore;

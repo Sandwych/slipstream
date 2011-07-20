@@ -148,7 +148,7 @@ namespace ObjectServer.Model
             var fieldParts = aliasedField.Split('.');
             var selfField = fieldParts[1];
             var joinTableName = string.Empty;
-            if (selfField == "id")
+            if (selfField == AbstractModel.IDFieldName)
             {
                 joinTableName = mainTableAlias;
             }
@@ -173,7 +173,7 @@ namespace ObjectServer.Model
              * 
              * */
             //添加约束
-            this.leaves.AppendLeaf(parentAliasName + ".id", "=", value);
+            this.leaves.AppendLeaf(parentAliasName + "." + AbstractModel.IDFieldName, "=", value);
             this.leaves.AddJoinRestriction(childAliasName + "._left", ">", parentAliasName + "._left");
             this.leaves.AddJoinRestriction(childAliasName + "._left", "<", parentAliasName + "._right");
         }

@@ -34,17 +34,17 @@ namespace ObjectServer.Model
             var children = new Dictionary<long, long[]>();
             foreach (var master in records)
             {
-                var masterId = (long)master["id"];
+                var masterID = (long)master[AbstractModel.IDFieldName];
                 var domain = new List<object[]>();
-                domain.Add(new object[] { this.RelatedField, "=", masterId });
-                var childIds = childModel.SearchInternal(ctx, domain.ToArray());
-                children[masterId] = childIds;
+                domain.Add(new object[] { this.RelatedField, "=", masterID });
+                var childIDs = childModel.SearchInternal(ctx, domain.ToArray());
+                children[masterID] = childIDs;
             }
 
             var result = new Dictionary<long, object>();
             foreach (var p in records)
             {
-                var masterId = (long)p["id"];
+                var masterId = (long)p[AbstractModel.IDFieldName];
                 result.Add(masterId, children[masterId]);
             }
 
@@ -71,7 +71,7 @@ namespace ObjectServer.Model
             //TODO 重构成跟Many-to-many 一样的
             var targetModelName = this.Relation;
             IModel targetModel = (IModel)scope.GetResource(targetModelName);
-            var thisId = record["id"];
+            var thisId = record[AbstractModel.IDFieldName];
             //TODO: 下面的条件可能还不够，差 active 等等
             var domain = new object[][] { new object[] { this.RelatedField, "=", thisId } };
             var destIds = targetModel.SearchInternal(scope, domain);

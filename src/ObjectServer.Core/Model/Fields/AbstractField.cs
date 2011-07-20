@@ -181,7 +181,7 @@ namespace ObjectServer.Model
             Debug.Assert(ctx != null);
             Debug.Assert(records != null);
 
-            var ids = records.Select(p => (long)p["id"]).ToArray();
+            var ids = records.Select(p => (long)p[AbstractModel.IDFieldName]).ToArray();
 
             var result = this.Getter(ctx, ids);
 

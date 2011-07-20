@@ -86,7 +86,7 @@ namespace ObjectServer.Model
             this.Hierarchy = false;
             this.LogCreation = false;
             this.LogWriting = false;
-            this.SetName(name);            
+            this.SetName(name);
         }
 
 
@@ -125,7 +125,7 @@ namespace ObjectServer.Model
         private void AddInternalFields()
         {
             Debug.Assert(this.Fields.ContainsKey(IDFieldName));
-            
+
             //只有非继承的模型才添加内置字段
             if (this.AutoMigration)
             {
@@ -249,7 +249,7 @@ WHERE   hp.id = @0 AND hc.id <> @0
                 var columnValue = fieldInfo.SetFieldValue(ctx, record[f]);
                 record[f] = columnValue;
             }
-        }        
+        }
 
         public override dynamic Browse(IServiceScope ctx, long id)
         {
@@ -262,10 +262,10 @@ WHERE   hp.id = @0 AND hc.id <> @0
             var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))
             {
-                var records = this.ReadInternal(ctx, ids, new string[] { "id", "name" });
+                var records = this.ReadInternal(ctx, ids, new string[] { IDFieldName, "name" });
                 foreach (var r in records)
                 {
-                    var id = (long)r["id"];
+                    var id = (long)r[IDFieldName];
                     result.Add(id, (string)r["name"]);
                 }
             }

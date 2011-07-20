@@ -38,8 +38,7 @@ namespace ObjectServer.Model
             var result = new Dictionary<long, object>();
             foreach (var rec in records)
             {
-                var selfId = (long)rec["id"];
-
+                var selfId = (long)rec[AbstractModel.IDFieldName];
                 //中间表没有记录，返回空
                 var sql = string.Format(
                     "SELECT \"{0}\" FROM \"{1}\" WHERE \"{2}\" = @0",
@@ -80,7 +79,7 @@ namespace ObjectServer.Model
             }
             else //Lazy 的字段，我们重新读取
             {
-                var id = (long)record["id"];
+                var id = (long)record[AbstractModel.IDFieldName];
                 var fields = new string[] { this.Name };
                 var newRecord = ((Dictionary<string, object>[])this.Model.ReadInternal(scope, new long[] { id }, fields))[0];
                 targetIds = (long[])newRecord[this.Name];

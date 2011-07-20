@@ -204,7 +204,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
             var fieldRelation = dbField["relation"].IsNull() ? null : (string)dbField["relation"];
             var fieldHelp = dbField["help"].IsNull() ? null : (string)dbField["help"];
             var fieldType = (string)dbField["type"];
-            var fieldId = (long)dbField["id"];
+            var fieldId = (long)dbField[IDFieldName];
 
             var metaField = this.Fields[fieldName];
             var metaFieldType = metaField.Type.ToString();
@@ -295,7 +295,7 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
 
         public IField[] GetAllStorableFields()
         {
-            return this.Fields.Values.Where(f => f.IsColumn() && f.Name != "id").ToArray();
+            return this.Fields.Values.Where(f => f.IsColumn() && f.Name != IDFieldName).ToArray();
         }
 
         public override void MergeFrom(IResource res)

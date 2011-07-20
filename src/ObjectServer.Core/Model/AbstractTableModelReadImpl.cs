@@ -52,9 +52,9 @@ namespace ObjectServer.Model
                 allFields = userFields.ToList();
             }
 
-            if (!allFields.Contains("id"))
+            if (!allFields.Contains(IDFieldName))
             {
-                allFields.Add("id");
+                allFields.Add(IDFieldName);
             }
 
             //表里的列，也就是可以直接用 SQL 查的列
@@ -65,7 +65,7 @@ namespace ObjectServer.Model
             columnFields = columnFields.Union(this.Inheritances.Select(i => i.RelatedField));
 
             var whereExp = new BinaryExpression(
-                new IdentifierExpression("id"),
+                new IdentifierExpression(IDFieldName),
                 ExpressionOperator.InOperator,
                 new ExpressionGroup(ids));
 
@@ -96,7 +96,7 @@ namespace ObjectServer.Model
             foreach (var fieldName in allFields)
             {
                 var f = this.Fields[fieldName];
-                if (f.Name == "id")
+                if (f.Name == IDFieldName)
                 {
                     continue;
                 }
@@ -104,7 +104,7 @@ namespace ObjectServer.Model
                 var fieldValues = f.GetFieldValues(scope, records);
                 foreach (var record in records)
                 {
-                    var id = (long)record["id"];
+                    var id = (long)record[IDFieldName];
                     record[f.Name] = fieldValues[id];
                 }
             }

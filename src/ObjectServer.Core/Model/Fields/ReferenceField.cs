@@ -64,7 +64,7 @@ namespace ObjectServer.Model
                 let parts = ((string)r[this.Name]).Split(':')
                 select new
                 {
-                    SelfId = (long)r["id"],
+                    SelfId = (long)r[AbstractModel.IDFieldName],
                     Model = parts[0],
                     RefId = long.Parse(parts[1])
                 };
@@ -91,7 +91,7 @@ namespace ObjectServer.Model
             var nullRecords = from r in rawRecords
                               let mid = r[this.Name]
                               where mid.IsNull()
-                              select (long)r["id"];
+                              select (long)r[AbstractModel.IDFieldName];
             foreach (var mid in nullRecords)
             {
                 result[mid] = DBNull.Value;

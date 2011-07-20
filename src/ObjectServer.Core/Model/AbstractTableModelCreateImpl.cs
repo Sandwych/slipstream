@@ -24,9 +24,10 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
-            if (userRecord.ContainsKey("id"))
+            if (userRecord.ContainsKey(AbstractModel.IDFieldName))
             {
-                throw new ArgumentException("Unable to set the 'id' field", "propertyBag");
+                var msg = string.Format("Unable to set the '{0}' field", AbstractModel.IDFieldName);
+                throw new ArgumentException(msg, "propertyBag");
             }
 
             if (!scope.CanCreateModel(scope.Session.UserId, this.Name))

@@ -123,7 +123,7 @@ namespace ObjectServer.Model
         }
 
         public AliasExpression[] GetTableAlias()
-        {                           
+        {
             var joins = this.outerJoins.Union(this.innerJoins).Select(j => new AliasExpression(j.Table, j.Alias));
             return joins.ToArray();
         }
@@ -138,7 +138,7 @@ namespace ObjectServer.Model
                 alias = "_t" + this.joinCount.ToString();
                 this.innerJoins.Add(new TableJoin(table, alias));
                 this.restrictions.Add(new BinaryExpression(
-                    new IdentifierExpression(alias + ".id"),
+                    new IdentifierExpression(alias + "." + AbstractModel.IDFieldName),
                     ExpressionOperator.EqualOperator,
                     new IdentifierExpression(this.mainTableAlias + "." + relatedField)));
 

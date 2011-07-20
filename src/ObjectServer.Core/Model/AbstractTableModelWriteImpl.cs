@@ -83,7 +83,7 @@ namespace ObjectServer.Model
             }
 
             var whereExp = new BinaryExpression(
-                new AliasExpression("id"),
+                new AliasExpression(IDFieldName),
                 ExpressionOperator.EqualOperator,
                 new ValueExpression(id));
 
