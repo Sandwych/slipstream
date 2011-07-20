@@ -81,7 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backend\DataContextTests.cs" />
+    <Compile Include="Data\DataContextTests.cs" />
     <Compile Include="Core\RuleTest.cs" />
     <Compile Include="Core\ModelTest.cs" />
     <Compile Include="Core\UserTest.cs" />

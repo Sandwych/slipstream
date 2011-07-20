@@ -110,19 +110,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backend\AbstractDBConnection.cs" />
-    <Compile Include="Backend\DatabaseType.cs" />
-    <Compile Include="Backend\DataProvider.cs" />
-    <Compile Include="Backend\DynamicRecord.cs" />
-    <Compile Include="Backend\IDBConnection.cs" />
-    <Compile Include="Backend\IDataProvider.cs" />
-    <Compile Include="Backend\ITableContext.cs" />
-    <Compile Include="Backend\IColumnMetadata.cs" />
-    <Compile Include="Backend\Postgresql\PgColumnMetadata.cs" />
-    <Compile Include="Backend\Postgresql\PgDBConnection.cs" />
-    <Compile Include="Backend\Postgresql\PgDataProvider.cs" />
-    <Compile Include="Backend\Postgresql\PgSqlTypeConverter.cs" />
-    <Compile Include="Backend\Postgresql\PgTableContext.cs" />
+    <Compile Include="Data\AbstractDBConnection.cs" />
+    <Compile Include="Data\DatabaseType.cs" />
+    <Compile Include="Data\DataProvider.cs" />
+    <Compile Include="Data\DynamicRecord.cs" />
+    <Compile Include="Data\IDBConnection.cs" />
+    <Compile Include="Data\IDataProvider.cs" />
+    <Compile Include="Data\ITableContext.cs" />
+    <Compile Include="Data\IColumnMetadata.cs" />
+    <Compile Include="Data\Postgresql\PgColumnMetadata.cs" />
+    <Compile Include="Data\Postgresql\PgDBConnection.cs" />
+    <Compile Include="Data\Postgresql\PgDataProvider.cs" />
+    <Compile Include="Data\Postgresql\PgSqlTypeConverter.cs" />
+    <Compile Include="Data\Postgresql\PgTableContext.cs" />
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
@@ -280,7 +280,7 @@
     <Compile Include="ConfigSectionHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Backend\Postgresql\initdb.sql" />
+    <EmbeddedResource Include="Data\Postgresql\initdb.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Data\Menus.xml" />

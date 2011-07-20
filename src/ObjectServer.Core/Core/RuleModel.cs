@@ -93,8 +93,8 @@ SELECT DISTINCT r.id, r.name, r.field, r.operator, r.operand FROM core_rule r
                 var row = result.Rows[i];
 
                 var exp = (string)row["operand"];
-
-                var operand = s_engine.Execute(exp, scriptScope);
+                //FUCK IRONRUBY
+                dynamic operand = s_engine.Execute(exp, scriptScope);
                 var domain = new DomainExpression(
                     (string)row["field"], (string)row["operator"], operand);
                 domains[i] = domain;

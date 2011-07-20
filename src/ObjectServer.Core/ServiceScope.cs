@@ -6,7 +6,7 @@ using System.Data;
 using System.Reflection;
 using System.Diagnostics;
 
-using ObjectServer.Backend;
+using ObjectServer.Data;
 
 namespace ObjectServer
 {

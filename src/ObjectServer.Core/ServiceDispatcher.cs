@@ -7,7 +7,7 @@ using System.Reflection;
 
 using Castle.DynamicProxy;
 
-using ObjectServer.Backend;
+using ObjectServer.Data;
 using ObjectServer.Core;
 using ObjectServer.Utility;
 

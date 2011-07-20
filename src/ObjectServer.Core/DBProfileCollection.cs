@@ -8,7 +8,7 @@ using System.Transactions;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-using ObjectServer.Backend;
+using ObjectServer.Data;
 using ObjectServer.Core;
 
 namespace ObjectServer
