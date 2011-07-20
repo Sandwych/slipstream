@@ -27,9 +27,9 @@
     <field name="name">销售员只能访问所在公司的销售订单</field>
     <field name="model" ref-key="model_test_sales_order" />
     <field name="global">false</field>
-    <field name="field">organization.id</field>
+    <field name="field">organization._id</field>
     <field name="operator">=</field>
-    <field name="operand">user.organization.id</field>
+    <field name="operand">user.organization._id</field>
   </record> 
 
   <record model="core.rule_group" key="rg_salesmen">

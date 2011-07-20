@@ -82,7 +82,7 @@ namespace ObjectServer.Test
             var rows = new Dictionary<long, object>(ids.Count());
             foreach (var r in values)
             {
-                var id = (long)r["id"];
+                var id = (long)r["_id"];
                 var field1 = r["field1"];
                 var field2 = r["field2"];
 

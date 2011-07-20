@@ -83,7 +83,7 @@
     <field name="global">true</field>
     <field name="field">id</field>
     <field name="operator">childof</field>
-    <field name="operand">user.organization.id</field>
+    <field name="operand">user.organization._id</field>
   </record>
 
 

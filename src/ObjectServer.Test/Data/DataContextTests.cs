@@ -20,7 +20,7 @@ namespace ObjectServer.Data.Test
             {
                 db.Open();
 
-                var rows = db.QueryAsDictionary("SELECT id, name FROM core_model WHERE name = @0", "core.model");
+                var rows = db.QueryAsDictionary("SELECT _id, name FROM core_model WHERE name = @0", "core.model");
                 Assert.NotNull(rows);
                 Assert.AreEqual(1, rows.Length);
                 Assert.AreEqual("core.model", rows[0]["name"]);
@@ -34,11 +34,11 @@ namespace ObjectServer.Data.Test
             {
                 db.Open();
 
-                var dt = db.QueryAsDataTable("SELECT id, name FROM core_model WHERE name = @0", "core.model");
+                var dt = db.QueryAsDataTable("SELECT _id, name FROM core_model WHERE name = @0", "core.model");
                 Assert.NotNull(dt);
 
                 Assert.AreEqual(2, dt.Columns.Count);
-                Assert.AreEqual("id", dt.Columns[0].ColumnName);
+                Assert.AreEqual("_id", dt.Columns[0].ColumnName);
                 Assert.AreEqual("name", dt.Columns[1].ColumnName);
 
                 Assert.AreEqual(1, dt.Rows.Count);
@@ -53,7 +53,7 @@ namespace ObjectServer.Data.Test
             {
                 db.Open();
 
-                var records = db.QueryAsDynamic("SELECT id, name FROM core_model WHERE name = @0", "core.model");
+                var records = db.QueryAsDynamic("SELECT _id, name FROM core_model WHERE name = @0", "core.model");
                 Assert.NotNull(records);
 
                 Assert.AreEqual(1, records.Length);

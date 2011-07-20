@@ -24,14 +24,14 @@ namespace ObjectServer.Model.Test
 
             //TODO: 这里要排序再比较
             Assert.AreEqual(3, e1.departments.Length);
-            Assert.AreEqual(e1.departments[0].id, ids.did2);
-            Assert.AreEqual(e1.departments[1].id, ids.did3);
-            Assert.AreEqual(e1.departments[2].id, ids.did4);
+            Assert.AreEqual(e1.departments[0]._id, ids.did2);
+            Assert.AreEqual(e1.departments[1]._id, ids.did3);
+            Assert.AreEqual(e1.departments[2]._id, ids.did4);
 
             dynamic e2 = employeeModel.Browse(this.ServiceScope, ids.eid2);
             Assert.AreEqual(2, e2.departments.Length);
-            Assert.AreEqual(e2.departments[0].id, ids.did3);
-            Assert.AreEqual(e2.departments[1].id, ids.did4);
+            Assert.AreEqual(e2.departments[0]._id, ids.did3);
+            Assert.AreEqual(e2.departments[1]._id, ids.did4);
         }
 
         [Test]

@@ -164,10 +164,10 @@ namespace ObjectServer.Model
 
 
             /* 生成的 SQL 形如：
-             * SELECT mainTable.id 
+             * SELECT mainTable._id 
              * FROM mainTable, category _category_parent_0, category AS _category_child_0
-             * WHERE _category_child_0.id = mainTable.field AND
-             *     _category_parent_0.id = {value} AND
+             * WHERE _category_child_0._id = mainTable.field AND
+             *     _category_parent_0._id = {value} AND
              *     _category_child_0._left > _category_parent_0._left AND
              *     _category_child_0._left < _category_parent_0._right AND ...
              * 

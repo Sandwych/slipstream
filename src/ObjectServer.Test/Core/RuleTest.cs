@@ -29,9 +29,9 @@ namespace ObjectServer.Core.Test
 
                     var domains = RuleModel.GetRuleDomain(scope, "test.sales_order", "read");
                     Assert.AreEqual(1, domains.Length); //只有一组rule
-                    Assert.AreEqual("organization.id", domains[0].Field);
+                    Assert.AreEqual("organization._id", domains[0].Field);
                     Assert.AreEqual("=", domains[0].Operator);
-                    Assert.AreEqual(user.organization.id, domains[0].Value);
+                    Assert.AreEqual(user.organization._id, domains[0].Value);
                 }
             }
             finally

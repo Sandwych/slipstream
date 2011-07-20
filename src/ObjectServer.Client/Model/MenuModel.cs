@@ -13,7 +13,7 @@ namespace ObjectServer.Client.Model
 
         public MenuModel(IDictionary<string, object> record)
         {
-            this.Id = (long)record["id"];
+            this.Id = (long)record["_id"];
             this.Name = (string)record["name"];
 
             var parentField = record["parent"];

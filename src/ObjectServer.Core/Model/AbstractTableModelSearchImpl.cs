@@ -38,7 +38,7 @@ namespace ObjectServer.Model
             string mainTable = this.TableName;
 
 
-            var columnExps = new AliasExpressionList(new string[] { mainTable + ".id" });
+            var columnExps = new AliasExpressionList(new string[] { mainTable + "." + IDFieldName });
 
             OrderbyClause orderbyClause = null;
 
@@ -50,7 +50,7 @@ namespace ObjectServer.Model
             }
             else
             {
-                orderbyClause = new OrderbyClause(mainTable + ".id", "ASC");
+                orderbyClause = new OrderbyClause(mainTable + "." + IDFieldName, "ASC");
             }
 
             var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);

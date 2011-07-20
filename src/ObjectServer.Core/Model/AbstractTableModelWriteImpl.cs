@@ -35,7 +35,7 @@ namespace ObjectServer.Model
             if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0)
             {
                 var sql1 = string.Format(
-                    "SELECT * FROM \"{0}\" WHERE \"id\" = {1}",
+                    "SELECT * FROM \"{0}\" WHERE \"_id\" = {1}",
                     this.TableName, id);
                 var existedRecord = scope.Connection.QueryAsDictionary(sql1)[0];
 

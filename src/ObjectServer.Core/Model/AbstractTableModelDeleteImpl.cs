@@ -39,7 +39,7 @@ namespace ObjectServer.Model
             if (this.Inheritances.Count > 0)
             {
                 var sql = string.Format(
-                    "SELECT * FROM \"{0}\" WHERE \"id\" IN ({1})",
+                    "SELECT * FROM \"{0}\" WHERE \"_id\" IN ({1})",
                     this.TableName,
                     ids.ToCommaList());
                 existedRecords = scope.Connection.QueryAsDictionary(sql);
@@ -79,7 +79,7 @@ namespace ObjectServer.Model
             Debug.Assert(tableModel != null);
 
             var sql = string.Format(
-                "DELETE FROM \"{0}\" WHERE \"id\" IN ({1})",
+                "DELETE FROM \"{0}\" WHERE \"_id\" IN ({1})",
                 tableModel.TableName, ids.ToCommaList());
 
             var rowCount = scope.Connection.Execute(sql);

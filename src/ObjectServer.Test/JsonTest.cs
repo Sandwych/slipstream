@@ -21,7 +21,7 @@ namespace ObjectServer.Test
             Platform.Initialize();
 
             var dt = new Dictionary<string, object>();
-            dt.Add("id", 1111);
+            dt.Add("_id", 1111);
             dt.Add("name", "aaaaaaaa");
 
             var str = PlainJsonConvert.Generate(dt);
@@ -30,7 +30,7 @@ namespace ObjectServer.Test
 
             Assert.NotNull(dt2);
             Assert.AreEqual(2, dt2.Count);
-            Assert.AreEqual(1111, (long)dt2["id"]);
+            Assert.AreEqual(1111, (long)dt2["_id"]);
         }
 
         [Test]

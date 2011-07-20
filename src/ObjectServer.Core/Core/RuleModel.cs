@@ -73,10 +73,10 @@ namespace ObjectServer.Core
             //TODO 缓存
 
             var sql = @"
-SELECT DISTINCT r.id, r.name, r.field, r.operator, r.operand FROM core_rule r
-	INNER JOIN core_model m ON (r.model = m.id)
+SELECT DISTINCT r._id, r.name, r.field, r.operator, r.operand FROM core_rule r
+	INNER JOIN core_model m ON (r.model = m._id)
 	WHERE m.name = @0 AND r.on_{0}
-    AND (r.global OR (r.id IN 
+    AND (r.global OR (r._id IN 
         (SELECT rg.rid  FROM core_rule_group_rel rg 
             INNER JOIN core_user_group_rel ug ON (rg.gid = ug.gid) 
             WHERE ug.uid = @1)))";
@@ -93,8 +93,7 @@ SELECT DISTINCT r.id, r.name, r.field, r.operator, r.operand FROM core_rule r
                 var row = result.Rows[i];
 
                 var exp = (string)row["operand"];
-                //FUCK IRONRUBY
-                dynamic operand = s_engine.Execute(exp, scriptScope);
+                var operand = s_engine.Execute(exp, scriptScope);
                 var domain = new DomainExpression(
                     (string)row["field"], (string)row["operator"], operand);
                 domains[i] = domain;

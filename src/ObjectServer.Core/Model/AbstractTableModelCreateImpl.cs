@@ -126,7 +126,7 @@ namespace ObjectServer.Model
             {
                 var parentID = (long)record[ParentFieldName];
                 var sql = string.Format(
-                    "SELECT _left, _right FROM \"{0}\" WHERE \"id\" = @0",
+                    "SELECT _left, _right FROM \"{0}\" WHERE \"_id\" = @0",
                     this.TableName);
 
                 var records = conn.QueryAsDictionary(sql, parentID);
@@ -168,7 +168,7 @@ namespace ObjectServer.Model
             var sqlUpdate2 = string.Format(
                 "UPDATE \"{0}\" SET _left = _left + 2 WHERE _left > @0", this.TableName);
             var sqlUpdate3 = string.Format(
-                "UPDATE \"{0}\" SET _left = @0, _right = @1 WHERE (\"id\" = @2) ", this.TableName);
+                "UPDATE \"{0}\" SET _left = @0, _right = @1 WHERE (\"_id\" = @2) ", this.TableName);
 
             //conn.LockTable(this.TableName); //TODO 这里需要锁定表，防止其它连接修改
             conn.Execute(sqlUpdate1, rhsValue);
@@ -209,7 +209,7 @@ namespace ObjectServer.Model
             var args = sbArgs.ToString();
 
             var sql = string.Format(
-              "INSERT INTO \"{0}\" (\"id\" {1}) VALUES ( {2} {3} );",
+              "INSERT INTO \"{0}\" (\"_id\" {1}) VALUES ( {2} {3} );",
               this.TableName,
               columnNames,
               serial,

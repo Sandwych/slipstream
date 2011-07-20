@@ -121,7 +121,7 @@ domain = [["name","like","core%"]]
 ids = proxy.execute('core.model', 'Search', domain, nil, 0, 100)
 
 #读取查询到的核心模块信息
-fields = ['name', 'label', 'info']
+fields = ['_id', 'name', 'label', 'info']
 
 models = proxy.execute('core.model', 'Read', ids, fields)
 puts "查询出的模型："

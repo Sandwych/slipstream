@@ -10,7 +10,7 @@ namespace ObjectServer.Model
 {
     public abstract class AbstractModel : AbstractResource, IModel
     {
-        public const string IDFieldName = "id";
+        public const string IDFieldName = "_id";
         public const string VersionFieldName = "_version";
         public const string CreatedTimeFieldName = "_created_time";
         public const string ModifiedTimeFieldName = "_modified_time";
@@ -216,7 +216,7 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 var sql =
 @"
 UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, 
-    ""help""=@3  WHERE ""id""=@4";
+    ""help""=@3  WHERE ""_id""=@4";
                 db.Connection.Execute(sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
 
             }
@@ -224,7 +224,7 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
 
         private long? FindExistedModelInDb(IDBProfile db)
         {
-            var sql = "SELECT MAX(\"id\") FROM core_model WHERE name=@0";
+            var sql = "SELECT MAX(\"_id\") FROM core_model WHERE name=@0";
             var o = db.Connection.QueryValue(sql, this.Name);
             if (o.IsNull())
             {
@@ -248,7 +248,7 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
             }
 
             var modelId = (long)db.Connection.QueryValue(
-                "SELECT MAX(id) FROM core_model WHERE name = @0 AND module = @1", this.Name, this.Module);
+                "SELECT MAX(_id) FROM core_model WHERE name = @0 AND module = @1", this.Name, this.Module);
 
             //插入一笔到 core_model_data 方便以后导入时引用
             var key = "model_" + this.Name.Replace('.', '_');

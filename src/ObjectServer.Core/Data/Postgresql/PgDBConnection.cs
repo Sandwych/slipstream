@@ -11,7 +11,7 @@ namespace ObjectServer.Data.Postgresql
 {
     internal sealed class PgDBConnection : AbstractDBConnection, IDBConnection
     {
-        private const string INITDB = "ObjectServer.Backend.Postgresql.initdb.sql";
+        private const string INITDB = "ObjectServer.Data.Postgresql.initdb.sql";
 
         public PgDBConnection(string dbName)
         {

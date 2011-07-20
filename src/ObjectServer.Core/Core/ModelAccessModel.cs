@@ -42,9 +42,9 @@ namespace ObjectServer.Core
             FindByModelAndUserId(IServiceScope scope, string model, long userId)
         {
             var sql = @"
-SELECT DISTINCT ma.id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
+SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
     FROM core_model_access ma
-    INNER JOIN core_model m ON m.id = ma.model
+    INNER JOIN core_model m ON m._id = ma.model
     INNER JOIN core_user_group_rel ugr ON ugr.gid = ma.group
     WHERE (ugr.uid = @0) AND (m.name = @1)
 ";

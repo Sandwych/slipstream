@@ -61,12 +61,12 @@ namespace ObjectServer.Model.Test
          
             var domain1 = new object[][] 
             { 
-                new object[] { "id", "childof", data.id2 }
+                new object[] { "_id", "childof", data.id2 }
             };
 
             var ids1 = model.SearchInternal(
                 this.ServiceScope, domain1,
-                new OrderExpression[] { new OrderExpression("id", SortDirection.Asc) });
+                new OrderExpression[] { new OrderExpression("_id", SortDirection.Asc) });
 
             Assert.AreEqual(3, ids1.Length);
             Assert.AreEqual(data.id3, ids1[0]);
@@ -75,12 +75,12 @@ namespace ObjectServer.Model.Test
 
             var domain2 = new object[][] 
             { 
-                new object[] { "id", "childof", data.id3 }
+                new object[] { "_id", "childof", data.id3 }
             };
 
             var ids2 = model.SearchInternal(
                 this.ServiceScope, domain2,
-                new OrderExpression[] { new OrderExpression("id", SortDirection.Asc) });
+                new OrderExpression[] { new OrderExpression("_id", SortDirection.Asc) });
 
             Assert.AreEqual(1, ids2.Length);
             Assert.AreEqual(data.id5, ids2[0]);

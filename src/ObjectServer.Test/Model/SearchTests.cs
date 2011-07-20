@@ -119,8 +119,8 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_simple_searching_order()
         {
-            var ascOrder = new object[][] { new object[] { "id", "asc" } };
-            var descOrder = new object[][] { new object[] { "id", "desc" } };
+            var ascOrder = new object[][] { new object[] { "_id", "asc" } };
+            var descOrder = new object[][] { new object[] { "_id", "desc" } };
 
             var ascIds = this.Service.SearchModel(this.SessionId, "core.model", null, ascOrder, 0, 0);
             var descIds = this.Service.SearchModel(this.SessionId, "core.model", null, descOrder, 0, 0);

@@ -69,7 +69,7 @@ namespace ObjectServer.Model
                 }
 
                 this.tableName = value;
-                this.SequenceName = value + "_id_seq";
+                this.SequenceName = value + "_" + IDFieldName + "_seq";
             }
         }
 
@@ -210,10 +210,10 @@ SELECT  hc.*
 FROM    ""{0}"" hp
 JOIN    ""{0}"" hc
 ON      hc._left BETWEEN hp._left AND hp._right
-WHERE   hp.id = @0 AND hc.id <> @0
+WHERE   hp._id = @0 AND hc._id <> @0
         AND
         (
-        SELECT  COUNT(hn.id)
+        SELECT  COUNT(hn._id)
         FROM    ""{0}"" hn
         WHERE   hc._left BETWEEN hn._left AND hn._right
                 AND hn._left BETWEEN hp._left AND hp._right
@@ -232,7 +232,7 @@ WHERE   hp.id = @0 AND hc.id <> @0
 SELECT  hc.*
 FROM    ""{0}"" hp
 JOIN    ""{0}"" hc ON hc._left BETWEEN hp._left AND hp._right
-WHERE   hp.id = @0 AND hc.id <> @0
+WHERE   hp._id = @0 AND hc._id <> @0
 ";
             var sql = string.Format(sqlFmt, this.TableName);
             var ids = conn.QueryAsArray<long>(sql, parentID).Select(o => (long)o);

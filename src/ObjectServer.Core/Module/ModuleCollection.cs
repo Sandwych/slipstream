@@ -117,7 +117,7 @@ namespace ObjectServer
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的
-            var sql = "SELECT \"id\", \"name\" FROM \"core_module\" WHERE \"state\" = 'activated'";
+            var sql = "SELECT \"_id\", \"name\" FROM \"core_module\" WHERE \"state\" = 'activated'";
             var modules = ctx.Connection.QueryAsDictionary(sql);
 
             var unloadModules = new List<long>();
@@ -151,7 +151,7 @@ namespace ObjectServer
 
             var ids = unloadedModuleIds.ToCommaList();
             var sql2 = string.Format(
-                "UPDATE \"core_module\" SET \"state\" = 'deactivated' WHERE \"id\" IN ({0})",
+                "UPDATE \"core_module\" SET \"state\" = 'deactivated' WHERE \"_id\" IN ({0})",
                 ids);
 
             db.Execute(sql2);

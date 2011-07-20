@@ -100,7 +100,7 @@ namespace ObjectServer.Data.Postgresql
 
             tableName = tableName.SqlEscape();
             var sql = string.Format(
-                @"CREATE TABLE ""{0}"" (id BIGSERIAL NOT NULL, PRIMARY KEY(""id"")) WITHOUT OIDS",
+                @"CREATE TABLE ""{0}"" (""_id"" BIGSERIAL NOT NULL, PRIMARY KEY(""_id"")) WITHOUT OIDS",
                 tableName.SqlEscape());
             db.Execute(sql);
 
