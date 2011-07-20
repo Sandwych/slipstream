@@ -131,7 +131,7 @@ namespace ObjectServer.Model.Test
         }
 
 
-        [Ignore]
+        [Test]
         public void Test_many_to_one_field_domain()
         {
             ClearMasterAndChildTable();
@@ -173,6 +173,7 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(2, childIds.Length);
             Assert.AreEqual(child1Id, childIds[0]);
             Assert.AreEqual(child2Id, childIds[1]);
+
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Data;
 using System.Reflection;
 using System.Dynamic;
 
+using ObjectServer.Core;
 using ObjectServer.Data;
 using ObjectServer.Utility;
 using ObjectServer.SqlTree;
@@ -31,14 +32,17 @@ namespace ObjectServer.Model
                 throw new UnauthorizedAccessException("Access denied");
             }
 
-            IEnumerable<DomainExpression> domainInternal;
-            if (domain == null)
+            var domainInternal = new List<DomainExpression>();
+            if (domain != null)
             {
-                domainInternal = EmptyDomain;
+                domainInternal.AddRange(from o in domain select new DomainExpression(o));
             }
-            else
+
+            //安全：加入访问规则限制
+            if (!scope.Session.IsSystemUser) //系统用户不检查访问规则
             {
-                domainInternal = from o in domain select new DomainExpression(o);
+                var ruleDomain = RuleModel.GetRuleDomain(scope, this.Name, "read");
+                domainInternal.AddRange(ruleDomain);
             }
 
             string mainTable = this.TableName;

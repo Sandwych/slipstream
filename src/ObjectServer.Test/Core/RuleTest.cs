@@ -42,5 +42,28 @@ namespace ObjectServer.Core.Test
 
         }
 
+        [Test]
+        public void Test_SearchDomain()
+        {
+            var sid = this.Service.LogOn("objectserver", "user1", "user1");
+            var ruleModel = (RuleModel)this.ServiceScope.GetResource("core.rule");
+            var salesOrderModel = (IModel)this.ServiceScope.GetResource("test.sales_order");
+
+            try
+            {
+                using (var scope = new ServiceScope(sid))
+                {
+                    var ids = salesOrderModel.SearchInternal(scope);
+                    Assert.AreEqual(1, ids.Length);
+                }
+            }
+            finally
+            {
+                this.Service.LogOff(sid);
+            }
+
+
+        }
+
     }
 }

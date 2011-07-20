@@ -15,6 +15,7 @@ namespace ObjectServer
 
         public Session()
         {
+            this.UserId = 0;
             this.Id = GenerateSessionId();
             this.StartTime = DateTime.Now;
             this.LastActivityTime = this.StartTime;
@@ -63,6 +64,14 @@ namespace ObjectServer
             get
             {
                 return DateTime.Now <= this.Deadline;
+            }
+        }
+
+        public bool IsSystemUser
+        {
+            get
+            {
+                return this.UserId <= 0;
             }
         }
     }

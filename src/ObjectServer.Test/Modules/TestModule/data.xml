@@ -1,9 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data>
 
-  <record model="core.organization" key="org_sales_dept">
-    <field name="code">sales-dept</field>
-    <field name="name">Sales Department</field>
+  <record model="core.organization" key="org_sales_dept1">
+    <field name="code">sales-dept1</field>
+    <field name="name">Sales Department #1</field>
+    <field name="parent" ref-key="org_root" />
+  </record>
+
+  <record model="core.organization" key="org_sales_dept2">
+    <field name="code">sales-dept2</field>
+    <field name="name">Sales Department #2</field>
     <field name="parent" ref-key="org_root" />
   </record>
 
@@ -14,7 +20,7 @@
   <record model="core.user" key="user_user1">
     <field name="login">user1</field>
     <field name="name">User1</field>
-    <field name="organization" ref-key="org_sales_dept" />
+    <field name="organization" ref-key="org_sales_dept1" />
     <field name="password">user1</field>
   </record>
 
@@ -24,7 +30,7 @@
   </record>
 
   <record model="core.rule" key="rule_salesmen_company" >
-    <field name="name">销售员只能访问所在公司的销售订单</field>
+    <field name="name">销售员只能访问所在部门的销售订单</field>
     <field name="model" ref-key="model_test_sales_order" />
     <field name="global">false</field>
     <field name="field">organization._id</field>
@@ -58,7 +64,13 @@
   <record model="test.sales_order" key="test_model4">
     <field name="name">S/0001</field>
     <field name="order_date">2011-03-01T07:33:23</field>
-    <field name="organization" ref-key="org_sales_dept" />
+    <field name="organization" ref-key="org_sales_dept1" />
+  </record>
+
+  <record model="test.sales_order" key="test_model5">
+    <field name="name">S/0002</field>
+    <field name="order_date">2011-03-01T07:33:23</field>
+    <field name="organization" ref-key="org_sales_dept2" />
   </record>
 
 </data>
