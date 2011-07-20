@@ -28,7 +28,7 @@ namespace ObjectServer.Core.Test
                     dynamic user = userModel.Browse(scope, scope.Session.UserId);
 
                     var domains = RuleModel.GetRuleDomain(scope, "test.sales_order", "read");
-                    Assert.AreEqual(1, domains.Length); //只有一组rule
+                    Assert.AreEqual(1, domains.Length); //sales_order 涉及到的应该只有一组rule
                     Assert.AreEqual("organization._id", domains[0].Field);
                     Assert.AreEqual("=", domains[0].Operator);
                     Assert.AreEqual(user.organization._id, domains[0].Value);

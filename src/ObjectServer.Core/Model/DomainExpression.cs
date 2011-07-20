@@ -15,6 +15,20 @@ namespace ObjectServer.Model
         {
         }
 
+        public DomainExpression(object o)
+        {
+            if (o == null)
+            {
+                throw new ArgumentNullException("o");
+            }
+
+            var arr = (object[])o;
+
+            this.Field = (string)arr[0];
+            this.Operator = (string)arr[1];
+            this.Value = arr[2];
+        }
+
         public DomainExpression(string field, string opr, object value)
         {
             if (string.IsNullOrEmpty(field))

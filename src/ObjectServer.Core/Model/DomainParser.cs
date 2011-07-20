@@ -16,26 +16,17 @@ namespace ObjectServer.Model
             "like", "!like", "childof", "!childof"
         };
 
-        private static readonly List<DomainExpression> EmptyDomain = new List<DomainExpression>();
         private LeafDomainCollection leaves;
 
         private string mainTableAlias;
 
         IModel model;
         IServiceScope serviceScope;
-        List<DomainExpression> internalDomain = new List<DomainExpression>();
 
-        public DomainParser(IServiceScope scope, IModel model, IEnumerable<object> domain)
+        public DomainParser(IServiceScope scope, IModel model)
         {
             Debug.Assert(scope != null);
             Debug.Assert(model != null);
-
-            //TODO 过滤掉不能处理的字段，比如函数字段等
-            if (domain == null || domain.Count() <= 0)
-            {
-                this.internalDomain = EmptyDomain;
-            }
-
 
             this.leaves = new LeafDomainCollection(model.TableName, model.TableName);
             this.serviceScope = scope;
@@ -43,42 +34,57 @@ namespace ObjectServer.Model
             this.mainTableAlias = model.TableName;
         }
 
-        public Tuple<AliasExpression[], IExpression> Parse(IEnumerable<object> domain)
+        public Tuple<AliasExpression[], IExpression> Parse(IEnumerable<DomainExpression> domain)
         {
-            foreach (object[] o in domain)
+
+            if (domain == null)
             {
+                throw new ArgumentNullException("domain");
+            }
 
-                var de = (object[])o;
-                var field = (string)o[0];
-                var opr = (string)o[1];
-
-                var isBaseField = IsInheritedField(this.serviceScope, this.model, field);
+            foreach (var o in domain)
+            {
+                var isBaseField = IsInheritedField(this.serviceScope, this.model, o.Field);
                 string aliasedField;
 
                 if (isBaseField)
                 {
-                    var baseField = ((InheritedField)this.model.Fields[field]).BaseField;
+                    var baseField = ((InheritedField)this.model.Fields[o.Field]).BaseField;
                     var relatedField = this.model.Inheritances
                         .Where(i1 => i1.BaseModel == baseField.Model.Name)
                         .Select(i2 => i2.RelatedField)
                         .Single();
                     var baseTableAlias = this.leaves.PutInnerJoin(baseField.Model.TableName, relatedField);
-                    aliasedField = baseTableAlias + '.' + field;
+                    aliasedField = baseTableAlias + '.' + o.Field;
                 }
                 else
                 {
-                    aliasedField = this.mainTableAlias + '.' + field;
+                    aliasedField = this.mainTableAlias + '.' + o.Field;
                 }
-                this.ParseDomainExpression(aliasedField, opr, de[2]);
+                this.ParseDomainExpression(aliasedField, o.Operator, o.Value);
             }
 
             return new Tuple<AliasExpression[], IExpression>(
                 this.leaves.GetTableAlias(), this.leaves.GetRestrictionExpression());
+
+        }
+
+        public Tuple<AliasExpression[], IExpression> Parse(IEnumerable<object> domain)
+        {
+            if (domain == null)
+            {
+                throw new ArgumentNullException("domain");
+            }
+
+            var domains = from o in domain select new DomainExpression(o);
+            return this.Parse(domains);
         }
 
         private static bool IsInheritedField(IServiceScope scope, IModel mainModel, string field)
         {
+            Debug.Assert(scope != null);
             Debug.Assert(mainModel != null);
+            Debug.Assert(!string.IsNullOrEmpty(field));
 
             if (mainModel.Inheritances.Count == 0)
             {
@@ -100,13 +106,11 @@ namespace ObjectServer.Model
             }
         }
 
-        public bool ContainsField(string field)
-        {
-            return this.internalDomain.Exists(exp => exp.Field == field);
-        }
-
         private void ParseDomainExpression(string lhs, string opr, object value)
         {
+            Debug.Assert(!string.IsNullOrEmpty(lhs));
+            Debug.Assert(!string.IsNullOrEmpty(opr));
+
             var aliasedField = lhs;
 
             var exps = new List<IExpression>();

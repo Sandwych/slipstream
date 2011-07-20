@@ -70,3 +70,5 @@
 * Silverlight 端的界面生成与管理
 
 * Domain 的操作数怎么表示字段？
+
+* 给 BrowsableRecord 添加 IComparable

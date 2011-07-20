@@ -16,6 +16,8 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
+        private static readonly DomainExpression[] EmptyDomain = { };
+
         public override long[] SearchInternal(
             IServiceScope scope, object[] domain = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
         {
@@ -29,14 +31,17 @@ namespace ObjectServer.Model
                 throw new UnauthorizedAccessException("Access denied");
             }
 
-            object[] domainInternal = domain;
+            IEnumerable<DomainExpression> domainInternal;
             if (domain == null)
             {
-                domainInternal = new object[][] { };
+                domainInternal = EmptyDomain;
+            }
+            else
+            {
+                domainInternal = from o in domain select new DomainExpression(o);
             }
 
             string mainTable = this.TableName;
-
 
             var columnExps = new AliasExpressionList(new string[] { mainTable + "." + IDFieldName });
 
@@ -54,7 +59,7 @@ namespace ObjectServer.Model
             }
 
             var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
-            var parser = new DomainParser(scope, this, domainInternal);
+            var parser = new DomainParser(scope, this);
             var parsedResult = parser.Parse(domainInternal);
             var select = new SelectStatement(
                 columnExps, new FromClause(parsedResult.Item1), new WhereClause(parsedResult.Item2));
