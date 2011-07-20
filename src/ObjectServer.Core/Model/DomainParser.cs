@@ -113,6 +113,15 @@ namespace ObjectServer.Model
 
             var aliasedField = lhs;
 
+            //如果是引用或者many-to-one类型的字段可以使用 '.' 来访问关联表的字段
+            //比如 [["user.organization.code", "=", "main-company"]]
+            var fieldParts = lhs.Split('.');
+            if (fieldParts.Length > 2)
+            {
+                var aliasName = PreprocessReferenceField(opr, value, fieldParts);
+                aliasedField = aliasName + '.' + fieldParts.Last();
+            }
+
             var exps = new List<IExpression>();
 
             switch (opr)
@@ -141,6 +150,23 @@ namespace ObjectServer.Model
                     throw new NotSupportedException();
 
             }
+        }
+
+        private string PreprocessReferenceField(string opr, object value, string[] fieldParts)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(opr));
+            Debug.Assert(fieldParts != null && fieldParts.Length > 2);
+
+            //检查类型
+            var selfFieldName = fieldParts[1];
+            var selfField = this.model.Fields[selfFieldName];
+            var joinModel = (IModel)this.serviceScope.GetResource(selfField.Relation);
+            var joinTableName = joinModel.TableName;
+            var aliasName = this.leaves.PutInnerJoin(joinTableName, selfFieldName);
+            var aliasIDExpr = aliasName + '.' + AbstractModel.IDFieldName;
+            this.leaves.AddJoinRestriction(
+                this.model.TableName + '.' + selfFieldName, "=", aliasIDExpr);
+            return aliasName;
         }
 
         private void ParseChildOfOperator(string aliasedField, object value)
