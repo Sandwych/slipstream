@@ -3,8 +3,8 @@
   <name>test</name>
   <label>Module for unit test</label>
   <description>
-   <![CDATA[
-   ]]> 
+    <![CDATA[
+   ]]>
   </description>
   <auto-load>true</auto-load>
   <source-language>csharp</source-language>
@@ -15,10 +15,10 @@
     <file>inheritance-models.cs</file>
     <file>tree-models.cs</file>
   </sources>
-  
+
   <data-files>
-    <file>data.xml</file>
     <file>security-data.xml</file>
+    <file>data.xml</file>
   </data-files>
-  
+
 </module-metadata>
