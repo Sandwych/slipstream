@@ -87,6 +87,7 @@
     <Compile Include="Core\UserTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
+    <Compile Include="Model\DomainParserTests.cs" />
     <Compile Include="Model\HierarchyTests.cs" />
     <Compile Include="Modules\TestModule\tree-models.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

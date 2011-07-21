@@ -135,6 +135,7 @@ namespace ObjectServer.Model
             string alias;
             if (joinInfo == null)
             {
+                this.joinCount++;
                 alias = "_t" + this.joinCount.ToString();
                 this.innerJoins.Add(new TableJoin(table, alias));
                 this.restrictions.Add(new BinaryExpression(
@@ -142,7 +143,6 @@ namespace ObjectServer.Model
                     ExpressionOperator.EqualOperator,
                     new IdentifierExpression(this.mainTableAlias + "." + relatedField)));
 
-                this.joinCount++;
             }
             else
             {
@@ -153,9 +153,9 @@ namespace ObjectServer.Model
 
         public string PutOuterJoin(string table)
         {
+            this.joinCount++;
             string alias = "_t" + this.joinCount.ToString();
             this.outerJoins.Add(new TableJoin(table, alias));
-            this.joinCount++;
             return alias;
         }
 

@@ -47,19 +47,20 @@ namespace ObjectServer.Model
 
             string mainTable = this.TableName;
 
-            var columnExps = new AliasExpressionList(new string[] { mainTable + "." + IDFieldName });
+            var mainTableAlias = "_t0";
+            var columnExps = new AliasExpressionList(new string[] { mainTableAlias + "." + IDFieldName });
 
             OrderbyClause orderbyClause = null;
 
             if (order != null && order.Length > 0)
             {
                 var orderbyItems = order.Select(
-                    o => new OrderbyItem(mainTable + "." + o.Field, o.Order.ToUpperString()));
+                    o => new OrderbyItem(mainTableAlias + "." + o.Field, o.Order.ToUpperString()));
                 orderbyClause = new OrderbyClause(orderbyItems);
             }
             else
             {
-                orderbyClause = new OrderbyClause(mainTable + "." + IDFieldName, "ASC");
+                orderbyClause = new OrderbyClause(mainTableAlias + "." + IDFieldName, "ASC");
             }
 
             var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);

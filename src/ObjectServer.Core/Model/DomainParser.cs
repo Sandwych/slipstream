@@ -28,10 +28,10 @@ namespace ObjectServer.Model
             Debug.Assert(scope != null);
             Debug.Assert(model != null);
 
-            this.leaves = new LeafDomainCollection(model.TableName, model.TableName);
             this.serviceScope = scope;
             this.model = model;
-            this.mainTableAlias = model.TableName;
+            this.mainTableAlias = "_t0";
+            this.leaves = new LeafDomainCollection(model.TableName, this.mainTableAlias);
         }
 
         public Tuple<AliasExpression[], IExpression> Parse(IEnumerable<DomainExpression> domain)
@@ -165,7 +165,7 @@ namespace ObjectServer.Model
             var aliasName = this.leaves.PutInnerJoin(joinTableName, selfFieldName);
             var aliasIDExpr = aliasName + '.' + AbstractModel.IDFieldName;
             this.leaves.AddJoinRestriction(
-                this.model.TableName + '.' + selfFieldName, "=", aliasIDExpr);
+                this.mainTableAlias + '.' + selfFieldName, "=", aliasIDExpr);
             return aliasName;
         }
 
@@ -180,7 +180,7 @@ namespace ObjectServer.Model
             var joinTableName = string.Empty;
             if (selfField == AbstractModel.IDFieldName)
             {
-                joinTableName = mainTableAlias;
+                joinTableName = this.model.TableName;
             }
             else
             {
