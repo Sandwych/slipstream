@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<data>
+
+  <record model="core.organization" key="org_sales_dept1">
+    <field name="code">sales-dept1</field>
+    <field name="name">Sales Department #1</field>
+    <field name="parent" ref-key="org_root" />
+  </record>
+
+  <record model="core.organization" key="org_sales_dept2">
+    <field name="code">sales-dept2</field>
+    <field name="name">Sales Department #2</field>
+    <field name="parent" ref-key="org_root" />
+  </record>
+
+  <record model="core.group" key="group_salesmen">
+    <field name="name">Salesmen</field>
+  </record>
+
+  <record model="core.user" key="user_user1">
+    <field name="login">user1</field>
+    <field name="name">User1</field>
+    <field name="organization" ref-key="org_sales_dept1" />
+    <field name="password">user1</field>
+  </record>
+
+  <record model="core.user" key="user_user2">
+    <field name="login">user2</field>
+    <field name="name">User2</field>
+    <field name="organization" ref-key="org_sales_dept2" />
+    <field name="password">user2</field>
+  </record>
+
+  <record model="core.user_group" key="ug_user1_salesmen">
+    <field name="gid" ref-key="group_salesmen" />
+    <field name="uid" ref-key="user_user1" />
+  </record>
+
+  <record model="core.user_group" key="ug_user2_salesmen">
+    <field name="gid" ref-key="group_salesmen" />
+    <field name="uid" ref-key="user_user2" />
+  </record>
+
+  <record model="core.rule" key="rule_salesmen_company" >
+    <field name="name">销售员只能访问所在部门的销售订单</field>
+    <field name="model" ref-key="model_test_sales_order" />
+    <field name="global">false</field>
+    <field name="field">organization._id</field>
+    <field name="operator">=</field>
+    <field name="operand">user.organization._id</field>
+  </record>
+
+  <record model="core.rule_group" key="rg_salesmen">
+    <field name="gid" ref-key="group_salesmen" />
+    <field name="rid" ref-key="rule_salesmen_company" />
+  </record>
+
+</data>
+

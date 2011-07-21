@@ -18,6 +18,7 @@
   
   <data-files>
     <file>data.xml</file>
+    <file>security-data.xml</file>
   </data-files>
   
 </module-metadata>
