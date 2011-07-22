@@ -15,12 +15,12 @@ namespace ObjectServer.Test.Web
         [Ignore]
         public void Test_json_serialized_CRUD()
         {
-            var domain = new object[][] 
+            var constraints = new object[][] 
             { 
                 new object[] { "name", "=", "core.model"}
             };
 
-            var result = JsonRpc("Execute", this.SessionId, "core.model", "Search", domain, 0, 0);
+            var result = JsonRpc("Execute", this.SessionId, "core.model", "Search", constraints, 0, 0);
             var ids = (object[])result["result"];
 
             Assert.AreEqual(1, ids.Length);

@@ -108,7 +108,7 @@ namespace ObjectServer.Model
         }
 
         public long[] SearchInternal(
-            IServiceScope ctx, object[] domain = null,
+            IServiceScope ctx, object[] constraints = null,
             OrderExpression[] orders = null, long offset = 0, long limit = 0)
         {
             throw new NotSupportedException();

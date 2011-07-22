@@ -133,13 +133,13 @@ namespace ObjectServer.Model
         private static void PrewriteManyToManyField(IServiceScope scope, long id, Dictionary<string, object> record, IField f)
         {
             var relModel = (IModel)scope.GetResource(f.Relation);
-            var domain = new object[][]  
+            var constraints = new object[][]  
             { 
                 new object[] { f.OriginField, "=", id }
             };
 
             //删掉原来的中间表记录重新插入
-            var relIds = relModel.SearchInternal(scope, domain);
+            var relIds = relModel.SearchInternal(scope, constraints);
             if (relIds.Length > 0)
             {
                 relModel.DeleteInternal(scope, relIds);

@@ -39,7 +39,7 @@ namespace ObjectServer.Core
             Fields.Boolean("on_delete").SetLabel("Apply for Deleting")
                 .Required().DefaultValueGetter(s => true);
             Fields.ManyToMany("groups", "core.user_group", "rid", "gid").SetLabel("Groups");
-            Fields.Text("domain").Required().SetLabel("Constraint Domain");
+            Fields.Chars("constraints").Required().SetLabel("Constraint Domain");
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static DomainExpression[] GetRuleDomain(IServiceScope scope, string modelName, string action)
+        internal static IList<ConstraintExpression[]> GetRuleConstraints(IServiceScope scope, string modelName, string action)
         {
             Debug.Assert(scope != null);
             Debug.Assert(!string.IsNullOrEmpty(modelName));
@@ -60,7 +60,7 @@ namespace ObjectServer.Core
             //TODO 缓存
 
             var sql = @"
-SELECT DISTINCT r._id, r.name, r.domain FROM core_rule r
+SELECT DISTINCT r._id, r.name, r.constraints FROM core_rule r
 	INNER JOIN core_model m ON (r.model = m._id)
 	WHERE m.name = @0 AND r.on_{0}
     AND (r.global OR (r._id IN 
@@ -73,21 +73,23 @@ SELECT DISTINCT r._id, r.name, r.domain FROM core_rule r
 
             var scriptScope = CreateScriptScope(scope);
 
-            var domains = new List<DomainExpression>();
+            var constraintGroups = new List<ConstraintExpression[]>();
             foreach (DataRow row in result.Rows)
             {
-                var domainExp = (string)row["domain"];
-                var dynObj = s_engine.Execute(domainExp, scriptScope);
+                var constraints = new List<ConstraintExpression>();
+                var constraintExp = (string)row["constraints"];
+                var dynObj = s_engine.Execute(constraintExp, scriptScope);
 
                 foreach (dynamic d in dynObj)
                 {
-                    var domain = new DomainExpression(
+                    var c = new ConstraintExpression(
                         (string)d[0], (string)d[1], d[2]);
-                    domains.Add(domain);
+                    constraints.Add(c);
                 }
+                constraintGroups.Add(constraints.ToArray());
             }
 
-            return domains.ToArray();
+            return constraintGroups;
         }
 
         private static ScriptScope CreateScriptScope(IServiceScope scope)
@@ -109,7 +111,7 @@ SELECT DISTINCT r._id, r.name, r.domain FROM core_rule r
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static DomainExpression[] GetRuleDomainCached(IServiceScope scope, string modelName, string action)
+        internal static ConstraintExpression[] GetRuleConstraintsCached(IServiceScope scope, string modelName, string action)
         {
             throw new NotImplementedException();
         }

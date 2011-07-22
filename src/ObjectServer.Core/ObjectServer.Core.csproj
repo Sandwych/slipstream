@@ -149,7 +149,7 @@
     <Compile Include="Model\AbstractTableModelWriteImpl.cs" />
     <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
     <Compile Include="Model\AbstractTableModelDeleteImpl.cs" />
-    <Compile Include="Model\DomainExpression.cs" />
+    <Compile Include="Model\ConstraintExpression.cs" />
     <Compile Include="Model\LeafDomainCollection.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
     <Compile Include="Model\Fields\IField.cs" />
@@ -197,7 +197,7 @@
     <Compile Include="IExportedService.cs" />
     <Compile Include="IResource.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
-    <Compile Include="Model\DomainParser.cs" />
+    <Compile Include="Model\ConstraintParser.cs" />
     <Compile Include="Model\NameGetter.cs" />
     <Compile Include="Model\Fields\FieldDefaultValueGetter.cs" />
     <Compile Include="Model\Fields\ManyToOneField.cs" />
@@ -214,6 +214,7 @@
     <Compile Include="Sessions\Session.cs" />
     <Compile Include="Sessions\SessionStore.cs" />
     <Compile Include="SqlTree\AliasExpressionList.cs" />
+    <Compile Include="SqlTree\ExpressionExtensions.cs" />
     <Compile Include="SqlTree\ParameterExpression.cs" />
     <Compile Include="SqlTree\NodeExtensions.cs" />
     <Compile Include="SqlTree\SetClause.cs" />

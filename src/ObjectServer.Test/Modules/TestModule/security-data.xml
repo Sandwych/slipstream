@@ -45,7 +45,7 @@
     <field name="name">销售员只能访问所在部门的销售订单</field>
     <field name="model" ref-key="model_test_sales_order" />
     <field name="global">false</field>
-    <field name="domain">[ ["organization._id", "=", user.organization._id] ]</field>
+    <field name="constraints">[ ["organization._id", "=", user.organization._id] ]</field>
   </record>
 
   <record model="core.rule_group" key="rg_salesmen">

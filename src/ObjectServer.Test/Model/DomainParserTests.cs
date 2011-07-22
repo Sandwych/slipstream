@@ -14,41 +14,43 @@ namespace ObjectServer.Model.Test
     {
 
         [Test]
-        public void Test_simple_domain()
+        public void Test_simple_constraints()
         {
             var model = (IModel)this.ServiceScope.GetResource("core.user");
 
-            var domain = new DomainExpression[] {
-                new DomainExpression("login", "=", "root"),
+            var constraints = new ConstraintExpression[] {
+                new ConstraintExpression("login", "=", "root"),
             };
 
-            var dp = new DomainParser(this.ServiceScope, model);
-            var result = dp.Parse(domain);
+            var dp = new ConstraintParser(this.ServiceScope, model);
+            var result = dp.Parse(constraints);
 
-            Assert.AreEqual(1, result.Item1.Length);
-            Assert.AreEqual("\"core_user\"", result.Item1[0].Lhs.ToString());
-            Assert.AreEqual("\"_t0\"", result.Item1[0].Rhs.ToString());
+            var aliases = dp.GetAllAliases();
+            Assert.AreEqual(1, dp.GetAllAliases().Length);
+            Assert.AreEqual("\"core_user\"", aliases[0].Lhs.ToString());
+            Assert.AreEqual("\"_t0\"", aliases[0].Rhs.ToString());
         }
 
         [Test]
-        public void Test_multiexp_domain()
+        public void Test_multiexp_constraints()
         {
             var model = (IModel)this.ServiceScope.GetResource("core.user");
 
-            var domain = new DomainExpression[] {
-                new DomainExpression("login", "=", "root"),
-                new DomainExpression("organization.code", "=", "org1"),
-                new DomainExpression("organization.name", "=", "my org"),
+            var constraints = new ConstraintExpression[] {
+                new ConstraintExpression("login", "=", "root"),
+                new ConstraintExpression("organization.code", "=", "org1"),
+                new ConstraintExpression("organization.name", "=", "my org"),
             };
 
-            var dp = new DomainParser(this.ServiceScope, model);
-            var result = dp.Parse(domain);
+            var dp = new ConstraintParser(this.ServiceScope, model);
+            var result = dp.Parse(constraints);
 
-            Assert.AreEqual(2, result.Item1.Length);
-            Assert.AreEqual("\"core_user\"", result.Item1[0].Lhs.ToString());
-            Assert.AreEqual("\"_t0\"", result.Item1[0].Rhs.ToString());
-            Assert.AreEqual("\"core_organization\"", result.Item1[1].Lhs.ToString());
-            Assert.AreEqual("\"_t1\"", result.Item1[1].Rhs.ToString());
+            var aliases = dp.GetAllAliases();
+            Assert.AreEqual(2, aliases.Length);
+            Assert.AreEqual("\"core_user\"", aliases[0].Lhs.ToString());
+            Assert.AreEqual("\"_t0\"", aliases[0].Rhs.ToString());
+            Assert.AreEqual("\"core_organization\"", aliases[1].Lhs.ToString());
+            Assert.AreEqual("\"_t1\"", aliases[1].Rhs.ToString());
         }
 
 

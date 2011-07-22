@@ -43,8 +43,8 @@ namespace ObjectServer.Test
             var ids = new long[] { };
             Assert.DoesNotThrow(() =>
             {
-                var domain = new object[][] { new object[] { "name", "=", "name1" } };
-                ids = this.Service.SearchModel(this.SessionId, "test.test_model", domain);
+                var constraints = new object[][] { new object[] { "name", "=", "name1" } };
+                ids = this.Service.SearchModel(this.SessionId, "test.test_model", constraints);
             });
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(testId1, ids[0]);

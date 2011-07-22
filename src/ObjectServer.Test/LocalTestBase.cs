@@ -32,9 +32,9 @@ namespace ObjectServer
             //激活 test 模块
             using (var scope = new ServiceScope(this.SessionId))
             {
-                var domain = new object[][] { new object[] { "name", "=", "test" } };
+                var constraints = new object[][] { new object[] { "name", "=", "test" } };
                 var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
-                var ids = moduleModel.SearchInternal(scope, domain);
+                var ids = moduleModel.SearchInternal(scope, constraints);
                 dynamic fields = new ExpandoObject();
                 fields.state = "activated";
                 moduleModel.WriteInternal(scope, ids[0], fields);
@@ -53,8 +53,8 @@ namespace ObjectServer
         private void ClearTestUsers(IExportedService service)
         {
 
-            var domain = new object[] { new object[] { "login", "=", "test" } };
-            var ids = service.SearchModel(this.SessionId, "core.user", domain);
+            var constraints = new object[] { new object[] { "login", "=", "test" } };
+            var ids = service.SearchModel(this.SessionId, "core.user", constraints);
             if (ids.Length > 0)
             {
                 service.DeleteModel(this.SessionId, "core.user", ids.Select(i => (object)i).ToArray());

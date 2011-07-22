@@ -17,10 +17,10 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        private static readonly DomainExpression[] EmptyDomain = { };
+        private static readonly ConstraintExpression[] EmptyDomain = { };
 
         public override long[] SearchInternal(
-            IServiceScope scope, object[] domain = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
+            IServiceScope scope, object[] constraints = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
         {
             if (!this.CanRead)
             {
@@ -32,42 +32,31 @@ namespace ObjectServer.Model
                 throw new UnauthorizedAccessException("Access denied");
             }
 
-            var domainInternal = new List<DomainExpression>();
-            if (domain != null)
-            {
-                domainInternal.AddRange(from o in domain select new DomainExpression(o));
-            }
-
-            //安全：加入访问规则限制
-            if (!scope.Session.IsSystemUser) //系统用户不检查访问规则
-            {
-                var ruleDomain = RuleModel.GetRuleDomain(scope, this.Name, "read");
-                domainInternal.AddRange(ruleDomain);
-            }
-
             string mainTable = this.TableName;
-
             var mainTableAlias = "_t0";
+
+            var parser = new ConstraintParser(scope, this);
+
+            var userConstraints = new List<ConstraintExpression>();
+            if (constraints != null)
+            {
+                userConstraints.AddRange(from o in constraints select new ConstraintExpression(o));
+            }
+            var userExp = parser.Parse(userConstraints);
+
+            IExpression ruleExp = RuleConstraintsToSqlExpression(scope, parser);
+
+            //var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
+            var whereExp = new BinaryExpression(ruleExp, ExpressionOperator.AndOperator, userExp);
+            var tableAliases = parser.GetAllAliases();
+
+            //处理排序
+            OrderbyClause orderbyClause = ConvertOrderExpression(order, mainTableAlias);
+
             var columnExps = new AliasExpressionList(new string[] { mainTableAlias + "." + IDFieldName });
 
-            OrderbyClause orderbyClause = null;
-
-            if (order != null && order.Length > 0)
-            {
-                var orderbyItems = order.Select(
-                    o => new OrderbyItem(mainTableAlias + "." + o.Field, o.Order.ToUpperString()));
-                orderbyClause = new OrderbyClause(orderbyItems);
-            }
-            else
-            {
-                orderbyClause = new OrderbyClause(mainTableAlias + "." + IDFieldName, "ASC");
-            }
-
-            var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
-            var parser = new DomainParser(scope, this);
-            var parsedResult = parser.Parse(domainInternal);
             var select = new SelectStatement(
-                columnExps, new FromClause(parsedResult.Item1), new WhereClause(parsedResult.Item2));
+                columnExps, new FromClause(tableAliases), new WhereClause(whereExp));
 
             select.OrderByClause = orderbyClause;
             if (offset > 0)
@@ -84,6 +73,45 @@ namespace ObjectServer.Model
             select.Traverse(sv);
             var sql = sv.ToString();
             return scope.Connection.QueryAsArray<long>(sql);
+        }
+
+        private IExpression RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintParser parser)
+        {
+            IExpression ruleExp = ValueExpression.TrueExpression;
+            //安全：加入访问规则限制
+            if (!scope.Session.IsSystemUser) //系统用户不检查访问规则
+            {
+                //每组之间使用 OR 连接，一组中的元素之间使用 AND 连接
+                var ruleConstraints = RuleModel.GetRuleConstraints(scope, this.Name, "read");
+                var groupExps = new List<IExpression>(ruleConstraints.Count);
+                foreach (var ruleGroup in ruleConstraints)
+                {
+                    var groupConstraint = parser.Parse(ruleGroup);
+                    groupExps.Add(groupConstraint);
+                }
+
+                if (groupExps.Count > 0)
+                {
+                    ruleExp = groupExps.JoinExpressions(ExpressionOperator.OrOperator);
+                }
+            }
+            return ruleExp;
+        }
+
+        private static OrderbyClause ConvertOrderExpression(OrderExpression[] order, string mainTableAlias)
+        {
+            OrderbyClause orderbyClause = null;
+            if (order != null && order.Length > 0)
+            {
+                var orderbyItems = order.Select(
+                    o => new OrderbyItem(mainTableAlias + "." + o.Field, o.Order.ToUpperString()));
+                orderbyClause = new OrderbyClause(orderbyItems);
+            }
+            else
+            {
+                orderbyClause = new OrderbyClause(mainTableAlias + "." + IDFieldName, "ASC");
+            }
+            return orderbyClause;
         }
 
     }

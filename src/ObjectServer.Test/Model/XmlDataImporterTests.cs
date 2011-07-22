@@ -24,7 +24,7 @@ namespace ObjectServer.Model.Test
             //删除所有记录
             dynamic testObjectModel = this.ServiceScope.GetResource("test.test_model");
 
-            var domain = new object[][] { new object[] { "model", "=", "test.test_model" } };
+            var constraints = new object[][] { new object[] { "model", "=", "test.test_model" } };
 
             //第一遍更新，应该是插入3条，更新一条，总记录数 3 条
             using (var xmlStream = Assembly.GetExecutingAssembly()
@@ -72,10 +72,10 @@ namespace ObjectServer.Model.Test
 
                 importer.Import(xmlStream);
 
-                object[][] domain;
+                object[][] constraints;
 
-                domain = new object[][] { new object[] { "name", "=", "master1" } };
-                var ids = masterModel.Search(this.ServiceScope, domain, null, 0, 0);
+                constraints = new object[][] { new object[] { "name", "=", "master1" } };
+                var ids = masterModel.Search(this.ServiceScope, constraints, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
                 dynamic master1 = masterModel.Browse(this.ServiceScope, ids[0]);
                 Assert.AreEqual(2, master1.children.Length);
@@ -126,8 +126,8 @@ namespace ObjectServer.Model.Test
 
         private void ClearAllModelData(IModel model, string modelName)
         {
-            var domain = new object[][] { new object[] { "model", "=", modelName } };
-            var ids = model.SearchInternal(this.ServiceScope, domain);
+            var constraints = new object[][] { new object[] { "model", "=", modelName } };
+            var ids = model.SearchInternal(this.ServiceScope, constraints);
             if (ids != null && ids.Length > 0)
             {
                 model.DeleteInternal(this.ServiceScope, ids);

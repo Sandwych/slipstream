@@ -319,7 +319,7 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
 
         [ServiceMethod]
         public static long[] Search(
-            IModel model, IServiceScope scope, object[] domain = null, object[] order = null, long offset = 0, long limit = 0)
+            IModel model, IServiceScope scope, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
         {
             EnsureServiceMethodArgs(model, scope);
 
@@ -336,7 +336,7 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
                 }
             }
 
-            return model.SearchInternal(scope, domain, orderInfos, offset, limit);
+            return model.SearchInternal(scope, constraints, orderInfos, offset, limit);
         }
 
         [ServiceMethod]
@@ -415,7 +415,7 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
 
         public abstract NameGetter NameGetter { get; protected set; }
         public abstract long[] SearchInternal(
-            IServiceScope scope, object[] domain = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
+            IServiceScope scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(
             IServiceScope scope, IDictionary<string, object> propertyBag);
         public abstract void WriteInternal(

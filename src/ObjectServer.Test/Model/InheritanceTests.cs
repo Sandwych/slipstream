@@ -130,12 +130,12 @@ namespace ObjectServer.Model.Test
             var id = this.AddMultiTableTestData();
             Assert.That(id > 0);
 
-            var domain = new object[][]
+            var constraints = new object[][]
             { 
                 new object[] { "name", "=", "admin_user_name" } 
             };
 
-            var ids = adminUserModel.SearchInternal(this.ServiceScope, domain);
+            var ids = adminUserModel.SearchInternal(this.ServiceScope, constraints);
 
             Assert.AreEqual(1, ids.Length);
         }

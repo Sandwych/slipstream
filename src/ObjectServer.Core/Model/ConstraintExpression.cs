@@ -9,13 +9,13 @@ namespace ObjectServer.Model
 {
     [Serializable]
     [JsonArray(false)]
-    public class DomainExpression
+    public class ConstraintExpression
     {
-        public DomainExpression()
+        public ConstraintExpression()
         {
         }
 
-        public DomainExpression(object o)
+        public ConstraintExpression(object o)
         {
             if (o == null)
             {
@@ -29,7 +29,7 @@ namespace ObjectServer.Model
             this.Value = arr[2];
         }
 
-        public DomainExpression(string field, string opr, object value)
+        public ConstraintExpression(string field, string opr, object value)
         {
             if (string.IsNullOrEmpty(field))
             {
@@ -56,18 +56,18 @@ namespace ObjectServer.Model
         [JsonProperty("value")]
         public object Value { get; set; }
 
-        public static DomainExpression FromTuple(object[] domain)
+        public static ConstraintExpression FromTuple(object[] constraint)
         {
-            if (domain == null)
+            if (constraint == null)
             {
                 throw new ArgumentNullException("tuple");
             }
-            if (domain.Length != 3)
+            if (constraint.Length != 3)
             {
                 throw new ArgumentException("tuple");
             }
 
-            return new DomainExpression((string)domain[0], (string)domain[1], domain[2]);
+            return new ConstraintExpression((string)constraint[0], (string)constraint[1], constraint[2]);
         }
 
     }

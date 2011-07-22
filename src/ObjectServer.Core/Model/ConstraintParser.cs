@@ -8,7 +8,7 @@ using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
-    internal sealed class DomainParser
+    internal sealed class ConstraintParser
     {
         public static readonly string[] Operators = new string[]
         {
@@ -23,7 +23,7 @@ namespace ObjectServer.Model
         IModel model;
         IServiceScope serviceScope;
 
-        public DomainParser(IServiceScope scope, IModel model)
+        public ConstraintParser(IServiceScope scope, IModel model)
         {
             Debug.Assert(scope != null);
             Debug.Assert(model != null);
@@ -34,15 +34,15 @@ namespace ObjectServer.Model
             this.leaves = new LeafDomainCollection(model.TableName, this.mainTableAlias);
         }
 
-        public Tuple<AliasExpression[], IExpression> Parse(IEnumerable<DomainExpression> domain)
+        public IExpression Parse(IEnumerable<ConstraintExpression> constraints)
         {
 
-            if (domain == null)
+            if (constraints == null)
             {
-                throw new ArgumentNullException("domain");
+                throw new ArgumentNullException("constraints");
             }
 
-            foreach (var o in domain)
+            foreach (var o in constraints)
             {
                 var isBaseField = IsInheritedField(this.serviceScope, this.model, o.Field);
                 string aliasedField;
@@ -64,20 +64,24 @@ namespace ObjectServer.Model
                 this.ParseDomainExpression(aliasedField, o.Operator, o.Value);
             }
 
-            return new Tuple<AliasExpression[], IExpression>(
-                this.leaves.GetTableAlias(), this.leaves.GetRestrictionExpression());
+            return this.leaves.GetRestrictionExpression();
 
         }
 
-        public Tuple<AliasExpression[], IExpression> Parse(IEnumerable<object> domain)
+        public IExpression Parse(IEnumerable<object> constraints)
         {
-            if (domain == null)
+            if (constraints == null)
             {
-                throw new ArgumentNullException("domain");
+                throw new ArgumentNullException("constraints");
             }
 
-            var domains = from o in domain select new DomainExpression(o);
-            return this.Parse(domains);
+            var constraintExps = from o in constraints select new ConstraintExpression(o);
+            return this.Parse(constraintExps);
+        }
+
+        public AliasExpression[] GetAllAliases()
+        {
+            return this.leaves.GetTableAliases();
         }
 
         private static bool IsInheritedField(IServiceScope scope, IModel mainModel, string field)

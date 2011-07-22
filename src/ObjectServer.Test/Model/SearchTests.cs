@@ -14,13 +14,13 @@ namespace ObjectServer.Model.Test
     public class SearchTests : LocalTestCase
     {
         [Test]
-        public void Test_empty_domain()
+        public void Test_empty_constraints()
         {
-            var domain = new object[][] { };
+            var constraints = new object[][] { };
             var ids = new long[] { };
             Assert.DoesNotThrow(() =>
                 {
-                    ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
+                    ids = this.Service.SearchModel(this.SessionId, "core.model", constraints);
                 });
             Assert.That(ids.Length > 1);
         }
@@ -28,43 +28,43 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_search_limit()
         {
-            var domain = new object[][] { new object[] { "name", "like", "%" } };
+            var constraints = new object[][] { new object[] { "name", "like", "%" } };
             var ids = this.Service.SearchModel(this.SessionId, "core.model",
-                domain, null, 0, 2);
+                constraints, null, 0, 2);
             Assert.AreEqual(2, ids.Length);
 
             ids = this.Service.SearchModel(this.SessionId, "core.model",
-                domain, null, 0, 3);
+                constraints, null, 0, 3);
             Assert.AreEqual(3, ids.Length);
         }
 
         [Test]
         public void Test_search_offset()
         {
-            var domain = new object[][] { new object[] { "name", "like", "%" } };
+            var constraints = new object[][] { new object[] { "name", "like", "%" } };
             var ids1 = this.Service.SearchModel(this.SessionId, "core.model",
-                domain, null, 0, 2);
+                constraints, null, 0, 2);
             var ids2 = this.Service.SearchModel(this.SessionId, "core.model",
-                domain, null, 1, 2);
+                constraints, null, 1, 2);
             Assert.AreNotEqual(ids1[0], ids2[0]);
             Assert.AreEqual(ids1[1], ids2[0]);
 
         }
 
         [Test]
-        public void Test_domain_equal_operator()
+        public void Test_constraints_equal_operator()
         {
-            var domain = new object[][] { 
+            var constraints = new object[][] { 
                 new object[] {  "name", "=", "core.model" } 
             };
 
-            var ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
+            var ids = this.Service.SearchModel(this.SessionId, "core.model", constraints);
             Assert.AreEqual(1, ids.Length);
 
-            domain = new object[][] {
+            constraints = new object[][] {
                 new object[] { "name", "=", "a dummy model" }
             };
-            ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
+            ids = this.Service.SearchModel(this.SessionId, "core.model", constraints);
             Assert.AreEqual(0, ids.Length);
 
             //测试 many-to-one 字段的 = 操作符            
@@ -72,36 +72,36 @@ namespace ObjectServer.Model.Test
 
 
         [Test]
-        public void Test_domain_like_operator()
+        public void Test_constraints_like_operator()
         {
-            var domain = new object[][] { new object[] { "name", "like", "core.modu%" } };
-            var ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
+            var constraints = new object[][] { new object[] { "name", "like", "core.modu%" } };
+            var ids = this.Service.SearchModel(this.SessionId, "core.model", constraints);
             Assert.AreEqual(1, ids.Length);
 
-            domain = new object[][] { new object[] { "name", "like", "%like dummy%" } };
-            ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
+            constraints = new object[][] { new object[] { "name", "like", "%like dummy%" } };
+            ids = this.Service.SearchModel(this.SessionId, "core.model", constraints);
             Assert.AreEqual(0, ids.Length);
 
-            domain = new object[][] { new object[] { "name", "like", "core.modul_" } };
-            ids = this.Service.SearchModel(this.SessionId, "core.model", domain);
+            constraints = new object[][] { new object[] { "name", "like", "core.modul_" } };
+            ids = this.Service.SearchModel(this.SessionId, "core.model", constraints);
             Assert.AreEqual(1, ids.Length);
         }
 
         [Test]
-        public void Test_domain_in_operator()
+        public void Test_constraints_in_operator()
         {
-            var domain = new object[][] { 
+            var constraints = new object[][] { 
                 new object[] { 
                     "name", "in", 
                     new object[] { "core.model", "core.field", "core.module" } 
                 } 
             };
-            var ids = this.Service.SearchModel(this.SessionId, "core.model", domain, null, 0, 0);
+            var ids = this.Service.SearchModel(this.SessionId, "core.model", constraints, null, 0, 0);
             Assert.AreEqual(3, ids.Length);
         }
 
         [Test]
-        public void Test_domain_notin_operator()
+        public void Test_constraints_notin_operator()
         {
             var allIds = this.Service.SearchModel(this.SessionId, "core.model", null, null, 0, 0);
 
@@ -132,7 +132,7 @@ namespace ObjectServer.Model.Test
 
 
         [Test]
-        public void Test_many_to_one_field_domain()
+        public void Test_many_to_one_field_constraints()
         {
             ClearMasterAndChildTable();
 
@@ -157,19 +157,19 @@ namespace ObjectServer.Model.Test
             child2.name = "child2";
             var child2Id = this.Service.CreateModel(this.SessionId, "test.child", child2);
 
-            var domain = new object[][] 
+            var constraints = new object[][] 
             { 
                 new object[] { "master.name", "=", "master1" }
             };
-            var childIds = this.Service.SearchModel(this.SessionId, "test.child", domain);
+            var childIds = this.Service.SearchModel(this.SessionId, "test.child", constraints);
             Assert.AreEqual(1, childIds.Length);
             Assert.AreEqual(child1Id, childIds[0]);
 
-            domain = new object[][]
+            constraints = new object[][]
             {
                 new object[] { "master.name", "like", "master%" }
             };
-            childIds = this.Service.SearchModel(this.SessionId, "test.child", domain);
+            childIds = this.Service.SearchModel(this.SessionId, "test.child", constraints);
             Assert.AreEqual(2, childIds.Length);
             Assert.AreEqual(child1Id, childIds[0]);
             Assert.AreEqual(child2Id, childIds[1]);

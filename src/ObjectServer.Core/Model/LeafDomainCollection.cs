@@ -114,7 +114,7 @@ namespace ObjectServer.Model
         {
             if (this.restrictions.Count > 0)
             {
-                return JoinExpressionsByAnd(this.restrictions);
+                return this.restrictions.JoinExpressions(ExpressionOperator.AndOperator);
             }
             else
             {
@@ -122,7 +122,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public AliasExpression[] GetTableAlias()
+        public AliasExpression[] GetTableAliases()
         {
             var joins = this.outerJoins.Union(this.innerJoins).Select(j => new AliasExpression(j.Table, j.Alias));
             return joins.ToArray();
@@ -157,34 +157,6 @@ namespace ObjectServer.Model
             string alias = "_t" + this.joinCount.ToString();
             this.outerJoins.Add(new TableJoin(table, alias));
             return alias;
-        }
-
-        private static IExpression JoinExpressionsByAnd(IList<IExpression> expressions)
-        {
-            Debug.Assert(expressions != null);
-            Debug.Assert(expressions.Count > 0);
-
-            IExpression expTop;
-            int expCount = expressions.Count;
-
-            if (expressions.Count % 2 != 0)
-            {
-                //为了方便 AND 连接起见，在奇数个表达式最后加上总是 0 = 0 的表达式
-                expTop = s_trueExp;
-                expCount++;
-            }
-            else
-            {
-                expTop = expressions.Last();
-            }
-
-            for (int i = expCount - 2; i >= 0; i--)
-            {
-                var rhs = expTop;
-                var andExp = new BinaryExpression(expressions[i], ExpressionOperator.AndOperator, rhs);
-                expTop = andExp;
-            }
-            return expTop;
         }
 
     }

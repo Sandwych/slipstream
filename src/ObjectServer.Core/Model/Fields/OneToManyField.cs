@@ -35,9 +35,9 @@ namespace ObjectServer.Model
             foreach (var master in records)
             {
                 var masterID = (long)master[AbstractModel.IDFieldName];
-                var domain = new List<object[]>();
-                domain.Add(new object[] { this.RelatedField, "=", masterID });
-                var childIDs = childModel.SearchInternal(ctx, domain.ToArray());
+                var constraints = new List<object[]>();
+                constraints.Add(new object[] { this.RelatedField, "=", masterID });
+                var childIDs = childModel.SearchInternal(ctx, constraints.ToArray());
                 children[masterID] = childIDs;
             }
 
@@ -73,8 +73,8 @@ namespace ObjectServer.Model
             IModel targetModel = (IModel)scope.GetResource(targetModelName);
             var thisId = record[AbstractModel.IDFieldName];
             //TODO: 下面的条件可能还不够，差 active 等等
-            var domain = new object[][] { new object[] { this.RelatedField, "=", thisId } };
-            var destIds = targetModel.SearchInternal(scope, domain);
+            var constraints = new object[][] { new object[] { this.RelatedField, "=", thisId } };
+            var destIds = targetModel.SearchInternal(scope, constraints);
             var records = (Dictionary<string, object>[])targetModel.ReadInternal(scope, destIds, null);
             return records.Select(r => new BrowsableRecord(scope, targetModel, r)).ToArray();
         }

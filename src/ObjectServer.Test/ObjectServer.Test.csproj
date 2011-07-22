@@ -133,6 +133,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceDispatcherTests.cs" />
+    <Compile Include="SqlTree\ExpressionExtensionsTests.cs" />
     <Compile Include="SqlTree\SelectTest.cs" />
     <Compile Include="LocalTestBase.cs" />
     <Compile Include="SqlTree\UpdateTests.cs" />

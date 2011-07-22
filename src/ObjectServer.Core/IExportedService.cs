@@ -46,7 +46,7 @@ namespace ObjectServer
         void DeleteDatabase(string rootPasswordHash, string dbName);
 
         long CreateModel(string sessionId, string modelName, IDictionary<string, object> propertyBag);
-        long[] SearchModel(string sessionId, string modelName, object[] domain = null, object[] order = null, long offset = 0, long limit = 0);
+        long[] SearchModel(string sessionId, string modelName, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0);
         Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields = null);
         void WriteModel(string sessionId, string modelName, object id, IDictionary<string, object> record);
         void DeleteModel(string sessionId, string modelName, object[] ids);

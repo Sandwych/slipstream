@@ -174,9 +174,9 @@ INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _c
         public Session LogOn(IServiceScope scope,
             string database, string login, string password)
         {
-            var domain = new object[][] { new object[] { "login", "=", login } };
+            var constraints = new object[][] { new object[] { "login", "=", login } };
 
-            var users = base.SearchInternal(scope, domain);
+            var users = base.SearchInternal(scope, constraints);
             if (users.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);

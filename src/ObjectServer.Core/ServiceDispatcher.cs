@@ -134,9 +134,9 @@ namespace ObjectServer
             return (long)Execute(sessionId, modelName, "Create", new object[] { propertyBag });
         }
 
-        public long[] SearchModel(string sessionId, string modelName, object[] domain, object[] order, long offset, long limit)
+        public long[] SearchModel(string sessionId, string modelName, object[] constraints, object[] order, long offset, long limit)
         {
-            return (long[])Execute(sessionId, modelName, "Search", new object[] { domain, order, offset, limit });
+            return (long[])Execute(sessionId, modelName, "Search", new object[] { constraints, order, offset, limit });
         }
 
         public Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields)

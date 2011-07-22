@@ -23,8 +23,8 @@ namespace ObjectServer.Test
         private Dictionary<long, object> GetUser(IServiceScope ctx, IEnumerable<long> ids)
         {
             var userModel = (IModel)ctx.GetResource("core.user");
-            var domain = new object[][] { new object[] { "login", "=", "root" } };
-            var userIds = Search(userModel, ctx, domain, null, 0, 0);
+            var constraints = new object[][] { new object[] { "login", "=", "root" } };
+            var userIds = Search(userModel, ctx, constraints, null, 0, 0);
             var rootId = userIds[0];
             var result = new Dictionary<long, object>();
             foreach (var id in ids)
