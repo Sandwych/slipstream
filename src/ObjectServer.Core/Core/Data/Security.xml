@@ -76,16 +76,5 @@
   </record>
 
   
-  <!-- 各种 rules -->
-  <record model="core.rule" key="rule_company_rule" >
-    <field name="name">Company Rule</field>
-    <field name="model" ref-key="model_core_organization" />
-    <field name="global">true</field>
-    <field name="field">id</field>
-    <field name="operator">childof</field>
-    <field name="operand">user.organization._id</field>
-  </record>
-
-
 </data>
 

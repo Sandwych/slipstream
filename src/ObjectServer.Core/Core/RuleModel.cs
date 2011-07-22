@@ -5,8 +5,8 @@ using System.Text;
 using System.Diagnostics;
 using System.Data;
 using System.Linq.Expressions;
-
 using System.Reflection;
+
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using IronRuby;
@@ -30,19 +30,6 @@ namespace ObjectServer.Core
             Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
             Fields.Boolean("global").SetLabel("Global")
                 .Required().DefaultValueGetter(s => true);
-            Fields.Chars("field").SetLabel("Field").Required().SetSize(FieldModel.FieldNameMax);
-            Fields.Enumeration("operator",
-                new Dictionary<string, string>() { 
-                    { "=", "=" }, 
-                    { "<>", "<>" }, 
-                    { "<=", "<=" }, 
-                    { "=>", "=>" }, 
-                    { "in", "in" }, 
-                    { ">", ">" }, 
-                    { "<", "<" }, 
-                    { "childof", "Child Of" } })
-                .Required().SetLabel("Operator");
-            Fields.Chars("operand").SetLabel("Operand").Required().SetSize(128);
             Fields.Boolean("on_create").SetLabel("Apply for Creation")
                .Required().DefaultValueGetter(s => true);
             Fields.Boolean("on_read").SetLabel("Apply for Reading")
@@ -52,7 +39,7 @@ namespace ObjectServer.Core
             Fields.Boolean("on_delete").SetLabel("Apply for Deleting")
                 .Required().DefaultValueGetter(s => true);
             Fields.ManyToMany("groups", "core.user_group", "rid", "gid").SetLabel("Groups");
-
+            Fields.Text("domain").Required().SetLabel("Constraint Domain");
         }
 
         /// <summary>
@@ -73,7 +60,7 @@ namespace ObjectServer.Core
             //TODO 缓存
 
             var sql = @"
-SELECT DISTINCT r._id, r.name, r.field, r.operator, r.operand FROM core_rule r
+SELECT DISTINCT r._id, r.name, r.domain FROM core_rule r
 	INNER JOIN core_model m ON (r.model = m._id)
 	WHERE m.name = @0 AND r.on_{0}
     AND (r.global OR (r._id IN 
@@ -84,22 +71,23 @@ SELECT DISTINCT r._id, r.name, r.field, r.operator, r.operand FROM core_rule r
             var result = scope.Connection.QueryAsDataTable(
                 sql, modelName, scope.Session.UserId);
 
-
             var scriptScope = CreateScriptScope(scope);
 
-            var domains = new DomainExpression[result.Rows.Count];
-            for (int i = 0; i < result.Rows.Count; i++)
+            var domains = new List<DomainExpression>();
+            foreach (DataRow row in result.Rows)
             {
-                var row = result.Rows[i];
+                var domainExp = (string)row["domain"];
+                var dynObj = s_engine.Execute(domainExp, scriptScope);
 
-                var exp = (string)row["operand"];
-                var operand = s_engine.Execute(exp, scriptScope);
-                var domain = new DomainExpression(
-                    (string)row["field"], (string)row["operator"], operand);
-                domains[i] = domain;
+                foreach (dynamic d in dynObj)
+                {
+                    var domain = new DomainExpression(
+                        (string)d[0], (string)d[1], d[2]);
+                    domains.Add(domain);
+                }
             }
 
-            return domains;
+            return domains.ToArray();
         }
 
         private static ScriptScope CreateScriptScope(IServiceScope scope)
