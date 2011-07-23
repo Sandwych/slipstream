@@ -22,14 +22,12 @@ namespace ObjectServer.Model
             public string Alias { get; private set; }
         }
 
-        private static readonly IExpression s_trueExp = new BinaryExpression(
-         new ValueExpression(0), ExpressionOperator.EqualOperator, new ValueExpression(0));
-
         private int joinCount = 0;
         private string mainTableAlias;
         private IList<TableJoin> innerJoins = new List<TableJoin>();
         private IList<TableJoin> outerJoins = new List<TableJoin>();
         private IList<IExpression> restrictions = new List<IExpression>();
+        private IList<IExpression> joinRestrictions = new List<IExpression>();
 
         public LeafDomainCollection(string mainTable, string mainTableAlias)
         {
@@ -39,6 +37,11 @@ namespace ObjectServer.Model
 
             //这里打了个洞，做的不够好，重构
             this.innerJoins.Add(new TableJoin(mainTable, mainTableAlias));
+        }
+
+        public void ClearLeaves()
+        {
+            this.restrictions.Clear();
         }
 
         public void AppendLeaf(string lhs, string opr, object value)
@@ -103,11 +106,23 @@ namespace ObjectServer.Model
 
         public void AddJoinRestriction(string lhs, string opr, string rhs)
         {
-            //检查是否已经存在： 
-            this.restrictions.Add(new BinaryExpression(
+            //TODO 检查是否已经存在： 
+            this.joinRestrictions.Add(new BinaryExpression(
                 new IdentifierExpression(lhs),
                 new ExpressionOperator(opr),
                 new IdentifierExpression(rhs)));
+        }
+
+        public IExpression GetJoinRestrictionExpression()
+        {
+            if (this.joinRestrictions.Count > 0)
+            {
+                return this.joinRestrictions.JoinExpressions(ExpressionOperator.AndOperator);
+            }
+            else
+            {
+                return ValueExpression.TrueExpression;
+            }
         }
 
         public IExpression GetRestrictionExpression()
@@ -118,7 +133,7 @@ namespace ObjectServer.Model
             }
             else
             {
-                return s_trueExp;
+                return ValueExpression.TrueExpression;
             }
         }
 
@@ -138,7 +153,7 @@ namespace ObjectServer.Model
                 this.joinCount++;
                 alias = "_t" + this.joinCount.ToString();
                 this.innerJoins.Add(new TableJoin(table, alias));
-                this.restrictions.Add(new BinaryExpression(
+                this.joinRestrictions.Add(new BinaryExpression(
                     new IdentifierExpression(alias + "." + AbstractModel.IDFieldName),
                     ExpressionOperator.EqualOperator,
                     new IdentifierExpression(this.mainTableAlias + "." + relatedField)));
@@ -152,6 +167,22 @@ namespace ObjectServer.Model
         }
 
         public string PutOuterJoin(string table)
+        {
+            var existedJoin = this.outerJoins.SingleOrDefault(oj => oj.Table == table);
+            if (existedJoin != null)
+            {
+                return existedJoin.Alias;
+            }
+            else
+            {
+                this.joinCount++;
+                string alias = "_t" + this.joinCount.ToString();
+                this.outerJoins.Add(new TableJoin(table, alias));
+                return alias;
+            }
+        }
+
+        public string AddOuterJoin(string table)
         {
             this.joinCount++;
             string alias = "_t" + this.joinCount.ToString();

@@ -8,7 +8,7 @@ using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
-    internal sealed class ConstraintParser
+    internal sealed class ConstraintBuilder
     {
         public static readonly string[] Operators = new string[]
         {
@@ -23,7 +23,7 @@ namespace ObjectServer.Model
         IModel model;
         IServiceScope serviceScope;
 
-        public ConstraintParser(IServiceScope scope, IModel model)
+        public ConstraintBuilder(IServiceScope scope, IModel model)
         {
             Debug.Assert(scope != null);
             Debug.Assert(model != null);
@@ -34,13 +34,15 @@ namespace ObjectServer.Model
             this.leaves = new LeafDomainCollection(model.TableName, this.mainTableAlias);
         }
 
-        public IExpression Parse(IEnumerable<ConstraintExpression> constraints)
+        public IExpression Push(IEnumerable<ConstraintExpression> constraints)
         {
 
             if (constraints == null)
             {
                 throw new ArgumentNullException("constraints");
             }
+
+            this.leaves.ClearLeaves();
 
             foreach (var o in constraints)
             {
@@ -65,10 +67,9 @@ namespace ObjectServer.Model
             }
 
             return this.leaves.GetRestrictionExpression();
-
         }
 
-        public IExpression Parse(IEnumerable<object> constraints)
+        public IExpression Push(IEnumerable<object> constraints)
         {
             if (constraints == null)
             {
@@ -76,12 +77,17 @@ namespace ObjectServer.Model
             }
 
             var constraintExps = from o in constraints select new ConstraintExpression(o);
-            return this.Parse(constraintExps);
+            return this.Push(constraintExps);
         }
 
         public AliasExpression[] GetAllAliases()
         {
             return this.leaves.GetTableAliases();
+        }
+
+        public IExpression GetJoinRestrictionExpression()
+        {
+            return this.leaves.GetJoinRestrictionExpression();
         }
 
         private static bool IsInheritedField(IServiceScope scope, IModel mainModel, string field)
@@ -164,12 +170,31 @@ namespace ObjectServer.Model
             //检查类型
             var selfFieldName = fieldParts[1];
             var selfField = this.model.Fields[selfFieldName];
+
+            if (selfField.Type != FieldType.Reference && selfField.Type != FieldType.ManyToOne)
+            {
+                throw new  NotSupportedException("仅支持 Reference 和 ManyToOne 类型的字段");
+            }
+
             var joinModel = (IModel)this.serviceScope.GetResource(selfField.Relation);
             var joinTableName = joinModel.TableName;
-            var aliasName = this.leaves.PutInnerJoin(joinTableName, selfFieldName);
-            var aliasIDExpr = aliasName + '.' + AbstractModel.IDFieldName;
-            this.leaves.AddJoinRestriction(
-                this.mainTableAlias + '.' + selfFieldName, "=", aliasIDExpr);
+
+            string aliasName;
+            if (selfField.IsRequired)
+            {
+                aliasName = this.leaves.PutInnerJoin(joinTableName, selfFieldName);
+                var aliasIDExpr = aliasName + '.' + AbstractModel.IDFieldName;
+                this.leaves.AddJoinRestriction(
+                    this.mainTableAlias + '.' + selfFieldName, "=", aliasIDExpr);
+            }
+            else
+            {
+                aliasName = this.leaves.PutOuterJoin(joinTableName);
+                var aliasIDExpr = aliasName + '.' + AbstractModel.IDFieldName;
+                this.leaves.AddJoinRestriction(
+                    this.mainTableAlias + '.' + selfFieldName, "=", aliasIDExpr);
+            }
+
             return aliasName;
         }
 
@@ -193,7 +218,7 @@ namespace ObjectServer.Model
                 joinTableName = joinModel.TableName;
             }
             //TODO 确认 many2one 类型字段
-            var parentAliasName = this.leaves.PutOuterJoin(joinTableName);
+            var parentAliasName = this.leaves.AddOuterJoin(joinTableName);
             var childAliasName = this.leaves.PutInnerJoin(joinTableName, selfField);
 
 

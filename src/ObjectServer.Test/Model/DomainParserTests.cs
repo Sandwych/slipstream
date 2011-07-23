@@ -22,8 +22,8 @@ namespace ObjectServer.Model.Test
                 new ConstraintExpression("login", "=", "root"),
             };
 
-            var dp = new ConstraintParser(this.ServiceScope, model);
-            var result = dp.Parse(constraints);
+            var dp = new ConstraintBuilder(this.ServiceScope, model);
+            var result = dp.Push(constraints);
 
             var aliases = dp.GetAllAliases();
             Assert.AreEqual(1, dp.GetAllAliases().Length);
@@ -42,8 +42,8 @@ namespace ObjectServer.Model.Test
                 new ConstraintExpression("organization.name", "=", "my org"),
             };
 
-            var dp = new ConstraintParser(this.ServiceScope, model);
-            var result = dp.Parse(constraints);
+            var dp = new ConstraintBuilder(this.ServiceScope, model);
+            var result = dp.Push(constraints);
 
             var aliases = dp.GetAllAliases();
             Assert.AreEqual(2, aliases.Length);

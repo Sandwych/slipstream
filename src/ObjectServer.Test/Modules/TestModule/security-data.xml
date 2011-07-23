@@ -48,9 +48,21 @@
     <field name="constraints">[ ["organization._id", "=", user.organization._id] ]</field>
   </record>
 
+  <record model="core.rule" key="rule_salesmen_access_all" >
+    <field name="name">销售员可以访问所有尚未设置所属部门的销售订单</field>
+    <field name="model" ref-key="model_test_sales_order" />
+    <field name="global">false</field>
+    <field name="constraints">[ ["organization", "=", nil] ]</field>
+  </record>
+
   <record model="core.rule_group" key="rg_salesmen">
     <field name="gid" ref-key="group_salesmen" />
     <field name="rid" ref-key="rule_salesmen_company" />
+  </record>
+
+  <record model="core.rule_group" key="rg_salesmen_access_all">
+    <field name="gid" ref-key="group_salesmen" />
+    <field name="rid" ref-key="rule_salesmen_access_all" />
   </record>
 
 </data>

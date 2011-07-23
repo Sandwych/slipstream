@@ -19,6 +19,8 @@
     <field name="float_field">33.0</field>
   </record>
 
+  <!-- Sales Orders -->
+
   <record model="test.sales_order" key="test_sales_order1">
     <field name="name">S/0001</field>
     <field name="order_date">2011-03-01T07:33:23</field>
@@ -35,6 +37,11 @@
     <field name="name">S/0003</field>
     <field name="order_date">2011-03-01T07:33:23</field>
     <field name="organization" ref-key="org_sales_dept2" />
+  </record>
+
+  <record model="test.sales_order" key="test_sales_order4">
+    <field name="name">S/0004</field>
+    <field name="order_date">2011-03-01T07:33:23</field>
   </record>
 
 </data>

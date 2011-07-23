@@ -35,19 +35,23 @@ namespace ObjectServer.Model
             string mainTable = this.TableName;
             var mainTableAlias = "_t0";
 
-            var parser = new ConstraintParser(scope, this);
+            var parser = new ConstraintBuilder(scope, this);
 
             var userConstraints = new List<ConstraintExpression>();
             if (constraints != null)
             {
                 userConstraints.AddRange(from o in constraints select new ConstraintExpression(o));
             }
-            var userExp = parser.Parse(userConstraints);
 
-            IExpression ruleExp = RuleConstraintsToSqlExpression(scope, parser);
+            var ruleExp = new BracketedExpression(RuleConstraintsToSqlExpression(scope, parser));
+            var userExp = new BracketedExpression(parser.Push(userConstraints));
+            var joinExp = new BracketedExpression(parser.GetJoinRestrictionExpression());
+
+            var exps = new IExpression[] { joinExp, ruleExp, userExp };
 
             //var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
-            var whereExp = new BinaryExpression(ruleExp, ExpressionOperator.AndOperator, userExp);
+            var whereExp = exps.JoinExpressions(ExpressionOperator.AndOperator);
+
             var tableAliases = parser.GetAllAliases();
 
             //处理排序
@@ -75,7 +79,7 @@ namespace ObjectServer.Model
             return scope.Connection.QueryAsArray<long>(sql);
         }
 
-        private IExpression RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintParser parser)
+        private IExpression RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintBuilder parser)
         {
             IExpression ruleExp = ValueExpression.TrueExpression;
             //安全：加入访问规则限制
@@ -86,8 +90,8 @@ namespace ObjectServer.Model
                 var groupExps = new List<IExpression>(ruleConstraints.Count);
                 foreach (var ruleGroup in ruleConstraints)
                 {
-                    var groupConstraint = parser.Parse(ruleGroup);
-                    groupExps.Add(groupConstraint);
+                    var groupConstraint = parser.Push(ruleGroup);
+                    groupExps.Add(new BracketedExpression(groupConstraint));
                 }
 
                 if (groupExps.Count > 0)

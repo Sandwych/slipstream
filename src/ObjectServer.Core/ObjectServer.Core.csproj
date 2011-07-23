@@ -197,7 +197,7 @@
     <Compile Include="IExportedService.cs" />
     <Compile Include="IResource.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
-    <Compile Include="Model\ConstraintParser.cs" />
+    <Compile Include="Model\ConstraintBuilder.cs" />
     <Compile Include="Model\NameGetter.cs" />
     <Compile Include="Model\Fields\FieldDefaultValueGetter.cs" />
     <Compile Include="Model\Fields\ManyToOneField.cs" />

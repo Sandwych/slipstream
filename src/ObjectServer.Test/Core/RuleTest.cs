@@ -16,10 +16,10 @@ namespace ObjectServer.Core.Test
         [Test]
         public void Test_search_with_rules()
         {
-            var expectedOrderNames1 = new string[] { "S/0001" };
+            var expectedOrderNames1 = new string[] { "S/0001", "S/0004" };
             AssertSearchingOfSalesOrder("user1", "user1", expectedOrderNames1);
 
-            var expectedOrderNames2 = new string[] { "S/0002", "S/0003" };
+            var expectedOrderNames2 = new string[] { "S/0002", "S/0003", "S/0004" };
             AssertSearchingOfSalesOrder("user2", "user2", expectedOrderNames2);
         }
 
