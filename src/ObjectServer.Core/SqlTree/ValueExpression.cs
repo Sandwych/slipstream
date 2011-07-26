@@ -9,6 +9,7 @@ namespace ObjectServer.SqlTree
     {
         private static readonly ValueExpression s_trueExp = new ValueExpression(true);
         private static readonly ValueExpression s_falseExp = new ValueExpression(false);
+        private static readonly ValueExpression s_nullExp = new ValueExpression(null);
 
         public ValueExpression(object value)
         {
@@ -38,15 +39,8 @@ namespace ObjectServer.SqlTree
 
         #endregion
 
-
-        public static IExpression TrueExpression
-        {
-            get { return s_trueExp; }
-        }
-
-        public static IExpression FalseExpression
-        {
-            get { return s_falseExp; }
-        }
+        public static IExpression TrueExpression { get { return s_trueExp; } }
+        public static IExpression FalseExpression { get { return s_falseExp; } }
+        public static IExpression NullExpression { get { return s_nullExp; } }
     }
 }

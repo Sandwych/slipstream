@@ -125,12 +125,19 @@ namespace ObjectServer.Model
 
             //如果是引用或者many-to-one类型的字段可以使用 '.' 来访问关联表的字段
             //比如 [["user.organization.code", "=", "main-company"]]
+            string selfFieldName = string.Empty;
             var fieldParts = lhs.Split('.');
             if (fieldParts.Length > 2)
             {
                 var aliasName = PreprocessReferenceField(opr, value, fieldParts);
                 aliasedField = aliasName + '.' + fieldParts.Last();
+                selfFieldName = fieldParts[1];
             }
+            else
+            {
+                selfFieldName = fieldParts.Last();
+            }
+            var selfField = this.model.Fields[selfFieldName];
 
             var exps = new List<IExpression>();
 
@@ -146,7 +153,10 @@ namespace ObjectServer.Model
                 case "!like":
                 case "in":
                 case "!in":
-                    this.leaves.AppendLeaf(aliasedField, opr, value);
+                    if (selfField.Type != FieldType.Reference && selfField.Type != FieldType.ManyToOne)
+                    {
+                        this.leaves.AppendLeaf(aliasedField, opr, value);
+                    }
                     break;
 
                 case "childof":
@@ -173,26 +183,33 @@ namespace ObjectServer.Model
 
             if (selfField.Type != FieldType.Reference && selfField.Type != FieldType.ManyToOne)
             {
-                throw new  NotSupportedException("仅支持 Reference 和 ManyToOne 类型的字段");
+                throw new NotSupportedException("仅支持 Reference 和 ManyToOne 类型的字段");
             }
 
             var joinModel = (IModel)this.serviceScope.GetResource(selfField.Relation);
             var joinTableName = joinModel.TableName;
 
             string aliasName;
-            if (selfField.IsRequired)
+            var idExp = new IdentifierExpression(this.mainTableAlias + '.' + selfFieldName);
+            if (selfField.IsRequired) //处理内连接
             {
                 aliasName = this.leaves.PutInnerJoin(joinTableName, selfFieldName);
-                var aliasIDExpr = aliasName + '.' + AbstractModel.IDFieldName;
-                this.leaves.AddJoinRestriction(
-                    this.mainTableAlias + '.' + selfFieldName, "=", aliasIDExpr);
             }
-            else
+            else //处理外连接
             {
                 aliasName = this.leaves.PutOuterJoin(joinTableName);
-                var aliasIDExpr = aliasName + '.' + AbstractModel.IDFieldName;
-                this.leaves.AddJoinRestriction(
-                    this.mainTableAlias + '.' + selfFieldName, "=", aliasIDExpr);
+                var fieldExp = new IdentifierExpression(aliasName + '.' + fieldParts.Last());
+                var joinIdExp = new IdentifierExpression(aliasName + '.' + AbstractModel.IDFieldName);
+
+                var joinExp1 = new BinaryExpression(idExp, ExpressionOperator.EqualOperator, joinIdExp);
+                var joinExp2 = new BinaryExpression(
+                    fieldExp, new ExpressionOperator(opr), new ValueExpression(value));
+                var lexp = new BinaryExpression(joinExp1, ExpressionOperator.AndOperator, joinExp2);
+                var rexp = new BinaryExpression(
+                    idExp, ExpressionOperator.IsOperator, ValueExpression.NullExpression);
+                var orExp = new BinaryExpression(
+                    new BracketedExpression(lexp), ExpressionOperator.OrOperator, new BracketedExpression(rexp));
+                this.leaves.AddJoinRestriction(orExp);
             }
 
             return aliasName;

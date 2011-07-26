@@ -55,7 +55,7 @@ namespace ObjectServer.Model
             var tableAliases = parser.GetAllAliases();
 
             //处理排序
-            OrderbyClause orderbyClause = ConvertOrderExpression(order, mainTableAlias);
+            var orderbyClause = ConvertOrderExpression(order, mainTableAlias);
 
             var columnExps = new AliasExpressionList(new string[] { mainTableAlias + "." + IDFieldName });
 

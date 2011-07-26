@@ -106,11 +106,35 @@ namespace ObjectServer.Model
 
         public void AddJoinRestriction(string lhs, string opr, string rhs)
         {
+            if (string.IsNullOrEmpty(lhs))
+            {
+                throw new ArgumentNullException("lhs");
+            }
+
+            if (string.IsNullOrEmpty(opr))
+            {
+                throw new ArgumentNullException("opr");
+            }
+
+            if (string.IsNullOrEmpty(rhs))
+            {
+                throw new ArgumentNullException("rhs");
+            }
+
             //TODO 检查是否已经存在： 
-            this.joinRestrictions.Add(new BinaryExpression(
+            this.AddJoinRestriction(new BinaryExpression(
                 new IdentifierExpression(lhs),
                 new ExpressionOperator(opr),
                 new IdentifierExpression(rhs)));
+        }
+
+        public void AddJoinRestriction(IExpression exp)
+        {
+            if (exp == null)
+            {
+                throw new ArgumentNullException("exp");
+            }
+            this.joinRestrictions.Add(exp);
         }
 
         public IExpression GetJoinRestrictionExpression()

@@ -72,3 +72,5 @@
 * Domain 的操作数怎么表示字段？
 
 * 给 BrowsableRecord 添加 IComparable
+
+* 给 SQLTree 添加 DISTINCT 
