@@ -38,6 +38,20 @@ namespace ObjectServer.SqlTree
             }
         }
 
+        public override void VisitOn(DistinctClause node)
+        {
+            base.VisitOn(node);
+
+            this.sqlBuilder.Append(" DISTINCT ");
+
+            if (node.Columns != null)
+            {
+                this.sqlBuilder.Append("ON (");
+                node.Columns.Traverse(this);
+                this.sqlBuilder.Append(") ");
+            }
+        }
+
 
         public override void VisitOn(AliasExpressionList node)
         {

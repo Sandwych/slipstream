@@ -214,6 +214,7 @@
     <Compile Include="Sessions\Session.cs" />
     <Compile Include="Sessions\SessionStore.cs" />
     <Compile Include="SqlTree\AliasExpressionList.cs" />
+    <Compile Include="SqlTree\DistinctClause.cs" />
     <Compile Include="SqlTree\ExpressionExtensions.cs" />
     <Compile Include="SqlTree\ParameterExpression.cs" />
     <Compile Include="SqlTree\NodeExtensions.cs" />

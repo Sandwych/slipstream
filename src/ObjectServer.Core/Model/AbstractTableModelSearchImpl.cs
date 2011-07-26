@@ -61,6 +61,8 @@ namespace ObjectServer.Model
 
             var select = new SelectStatement(
                 columnExps, new FromClause(tableAliases), new WhereClause(whereExp));
+            select.DistinctClause = new DistinctClause(
+                new IdentifierExpression[] { new IdentifierExpression("_t0._id") });
 
             select.OrderByClause = orderbyClause;
             if (offset > 0)

@@ -15,6 +15,10 @@ namespace ObjectServer.SqlTree
         void VisitOn(SelectStatement node);
         void VisitAfter(SelectStatement node);
 
+        void VisitBefore(DistinctClause node);
+        void VisitOn(DistinctClause node);
+        void VisitAfter(DistinctClause node);
+
         void VisitBefore(AliasExpressionList node);
         void VisitOn(AliasExpressionList node);
         void VisitAfter(AliasExpressionList node);

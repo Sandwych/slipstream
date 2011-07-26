@@ -56,6 +56,14 @@ namespace ObjectServer.SqlTree
             this.Pop();
         }
 
+        public virtual void VisitBefore(DistinctClause node) { this.Push(node); }
+        public virtual void VisitOn(DistinctClause node) { }
+        public virtual void VisitAfter(DistinctClause node)
+        {
+            Debug.Assert(object.ReferenceEquals(this.Parent, node));
+            this.Pop();
+        }
+
         public virtual void VisitBefore(AliasExpressionList node) { this.Push(node); }
         public virtual void VisitOn(AliasExpressionList node) { }
         public virtual void VisitAfter(AliasExpressionList node)

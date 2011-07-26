@@ -7,6 +7,7 @@ namespace ObjectServer.SqlTree
 {
     public class SelectStatement : Node, IStatement
     {
+        public DistinctClause DistinctClause { get; set; }
         public IExpression Expression { get; set; }
         public FromClause FromClause { get; set; }
         public WhereClause WhereClause { get; set; }
@@ -37,8 +38,18 @@ namespace ObjectServer.SqlTree
 
         public override void Traverse(IVisitor visitor)
         {
+            if (visitor == null)
+            {
+                throw new ArgumentNullException("visitor");
+            }
+
             visitor.VisitBefore(this);
             visitor.VisitOn(this);
+
+            if (this.DistinctClause != null)
+            {
+                this.DistinctClause.Traverse(visitor);
+            }
 
             if (this.Expression != null)
             {
