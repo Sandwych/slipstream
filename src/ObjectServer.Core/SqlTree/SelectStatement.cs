@@ -11,7 +11,7 @@ namespace ObjectServer.SqlTree
         public IExpression Expression { get; set; }
         public FromClause FromClause { get; set; }
         public WhereClause WhereClause { get; set; }
-        public JoinClause JoinClause { get; set; }
+        public JoinClause[] JoinClauses { get; set; }
         public OrderbyClause OrderByClause { get; set; }
         public OffsetClause OffsetClause { get; set; }
         public LimitClause LimitClause { get; set; }
@@ -32,7 +32,6 @@ namespace ObjectServer.SqlTree
             this.FromClause = from;
             this.WhereClause = where;
         }
-
 
         #region INode 成员
 
@@ -61,9 +60,12 @@ namespace ObjectServer.SqlTree
                 this.FromClause.Traverse(visitor);
             }
 
-            if (this.JoinClause != null)
+            if (this.JoinClauses != null && this.JoinClauses.Length > 0)
             {
-                this.JoinClause.Traverse(visitor);
+                foreach (var jc in this.JoinClauses)
+                {
+                    jc.Traverse(visitor);
+                }
             }
 
             if (this.WhereClause != null)

@@ -35,7 +35,8 @@ namespace ObjectServer.Model
             string mainTable = this.TableName;
             var mainTableAlias = "_t0";
 
-            var parser = new ConstraintBuilder(scope, this);
+            var selectBuilder = new SelectBuilder(mainTable, mainTableAlias);
+            var parser = new ConstraintBuilder(scope, this, selectBuilder);
 
             var userConstraints = new List<ConstraintExpression>();
             if (constraints != null)
@@ -44,23 +45,25 @@ namespace ObjectServer.Model
             }
 
             var ruleExp = new BracketedExpression(RuleConstraintsToSqlExpression(scope, parser));
-            var userExp = new BracketedExpression(parser.Push(userConstraints));
-            var joinExp = new BracketedExpression(parser.GetJoinRestrictionExpression());
+            var userExp = ValueExpression.TrueExpression;
+            var joinExp = ValueExpression.TrueExpression;
 
             var exps = new IExpression[] { joinExp, ruleExp, userExp };
 
             //var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
             var whereExp = exps.JoinExpressions(ExpressionOperator.AndOperator);
 
-            var tableAliases = parser.GetAllAliases();
-
             //处理排序
             var orderbyClause = ConvertOrderExpression(order, mainTableAlias);
 
             var columnExps = new AliasExpressionList(new string[] { mainTableAlias + "." + IDFieldName });
 
+            var joinClauses = selectBuilder.
+
+            var mainTableAliasExp = new AliasExpression(mainTable, mainTableAlias);
             var select = new SelectStatement(
-                columnExps, new FromClause(tableAliases), new WhereClause(whereExp));
+                columnExps, new FromClause(mainTableAliasExp), new WhereClause(whereExp));
+            select.JoinClauses = joinClauses;
             select.DistinctClause = new DistinctClause(
                 new IdentifierExpression[] { new IdentifierExpression("_t0._id") });
 

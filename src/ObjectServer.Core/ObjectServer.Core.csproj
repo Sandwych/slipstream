@@ -150,7 +150,7 @@
     <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
     <Compile Include="Model\AbstractTableModelDeleteImpl.cs" />
     <Compile Include="Model\ConstraintExpression.cs" />
-    <Compile Include="Model\LeafDomainCollection.cs" />
+    <Compile Include="Model\Sql\SelectBuilder.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
     <Compile Include="Model\Fields\IField.cs" />
     <Compile Include="Model\Fields\IFieldCollection.cs" />
@@ -163,6 +163,7 @@
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="Model\SortDirection.cs" />
     <Compile Include="Messaging\RpcHandler.cs" />
+    <Compile Include="Model\Sql\TableJoinInfo.cs" />
     <Compile Include="Model\ViewBuilder.cs" />
     <Compile Include="Model\ViewGenerator.cs" />
     <Compile Include="SessionlessServiceScope.cs" />

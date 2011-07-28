@@ -18,6 +18,7 @@ namespace ObjectServer.SqlTree.Test
 SELECT ""col1"", ""col2"", ""col3"" 
     FROM ""table1"" AS ""t1""
     LEFT JOIN ""table2"" AS ""t2"" ON ""t2"".""table1_id"" = ""t1"".""id""
+    LEFT JOIN ""table3"" AS ""t3"" ON ""t3"".""table1_id"" = ""t1"".""id""
     WHERE (""col1"" = 123) AND (""col2"" LIKE 'exp3') 
     ORDER BY ""id"" ASC
 "
@@ -36,7 +37,7 @@ SELECT ""col1"", ""col2"", ""col3""
                     ExpressionOperator.LikeOperator,
                     new ValueExpression("exp3"))));
 
-            IExpression joinExp = new BinaryExpression(
+            IExpression joinExp1 = new BinaryExpression(
                 new BinaryExpression(
                     new IdentifierExpression("t2"),
                     new ExpressionOperator("."),
@@ -47,15 +48,26 @@ SELECT ""col1"", ""col2"", ""col3""
                     new ExpressionOperator("."),
                     new IdentifierExpression("id")));
 
-            var joinClause = new JoinClause(
-                "LEFT",
-                new AliasExpression("table2", "t2"),
-                joinExp);
+            IExpression joinExp2 = new BinaryExpression(
+                new BinaryExpression(
+                    new IdentifierExpression("t3"),
+                    new ExpressionOperator("."),
+                    new IdentifierExpression("table1_id")),
+                    ExpressionOperator.EqualOperator,
+                new BinaryExpression(
+                    new IdentifierExpression("t1"),
+                    new ExpressionOperator("."),
+                    new IdentifierExpression("id")));
+
+            var joinClauses = new JoinClause[] {
+                new JoinClause("LEFT", new AliasExpression("table2", "t2"), joinExp1),
+                new JoinClause("LEFT", new AliasExpression("table3", "t3"), joinExp2),
+            };
 
 
             var fromClause = new FromClause(new AliasExpression("table1", "t1"));
             var select = new SelectStatement(cols, fromClause);
-            select.JoinClause = joinClause;
+            select.JoinClauses = joinClauses;
             select.WhereClause = new WhereClause(whereExp);
             select.OrderByClause = new OrderbyClause("id", "asc");
 

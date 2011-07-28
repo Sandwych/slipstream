@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 
 using ObjectServer.SqlTree;
+using ObjectServer.Model.Sql;
 
 namespace ObjectServer.Model
 {
@@ -16,14 +17,13 @@ namespace ObjectServer.Model
             "like", "!like", "childof", "!childof"
         };
 
-        private LeafDomainCollection leaves;
-
+        private readonly SelectBuilder selectBuilder;
         private string mainTableAlias;
 
         IModel model;
         IServiceScope serviceScope;
 
-        public ConstraintBuilder(IServiceScope scope, IModel model)
+        public ConstraintBuilder(IServiceScope scope, IModel model, SelectBuilder selectBuilder)
         {
             Debug.Assert(scope != null);
             Debug.Assert(model != null);
@@ -31,18 +31,15 @@ namespace ObjectServer.Model
             this.serviceScope = scope;
             this.model = model;
             this.mainTableAlias = "_t0";
-            this.leaves = new LeafDomainCollection(model.TableName, this.mainTableAlias);
+            this.selectBuilder = selectBuilder;
         }
 
-        public IExpression Push(IEnumerable<ConstraintExpression> constraints)
+        public void Push(IEnumerable<ConstraintExpression> constraints)
         {
-
             if (constraints == null)
             {
                 throw new ArgumentNullException("constraints");
             }
-
-            this.leaves.ClearLeaves();
 
             foreach (var o in constraints)
             {
@@ -54,9 +51,8 @@ namespace ObjectServer.Model
                     var baseField = ((InheritedField)this.model.Fields[o.Field]).BaseField;
                     var relatedField = this.model.Inheritances
                         .Where(i1 => i1.BaseModel == baseField.Model.Name)
-                        .Select(i2 => i2.RelatedField)
-                        .Single();
-                    var baseTableAlias = this.leaves.PutInnerJoin(baseField.Model.TableName, relatedField);
+                        .Select(i2 => i2.RelatedField).Single();
+                    var baseTableAlias = this.selectBuilder.SetInnerJoin(baseField.Model.TableName, relatedField);
                     aliasedField = baseTableAlias + '.' + o.Field;
                 }
                 else
@@ -65,29 +61,6 @@ namespace ObjectServer.Model
                 }
                 this.ParseDomainExpression(aliasedField, o.Operator, o.Value);
             }
-
-            return this.leaves.GetRestrictionExpression();
-        }
-
-        public IExpression Push(IEnumerable<object> constraints)
-        {
-            if (constraints == null)
-            {
-                throw new ArgumentNullException("constraints");
-            }
-
-            var constraintExps = from o in constraints select new ConstraintExpression(o);
-            return this.Push(constraintExps);
-        }
-
-        public AliasExpression[] GetAllAliases()
-        {
-            return this.leaves.GetTableAliases();
-        }
-
-        public IExpression GetJoinRestrictionExpression()
-        {
-            return this.leaves.GetJoinRestrictionExpression();
         }
 
         private static bool IsInheritedField(IServiceScope scope, IModel mainModel, string field)
@@ -155,7 +128,7 @@ namespace ObjectServer.Model
                 case "!in":
                     if (selfField.Type != FieldType.Reference && selfField.Type != FieldType.ManyToOne)
                     {
-                        this.leaves.AppendLeaf(aliasedField, opr, value);
+                        this.selectBuilder.AppendLeaf(aliasedField, opr, value);
                     }
                     break;
 
@@ -193,11 +166,11 @@ namespace ObjectServer.Model
             var idExp = new IdentifierExpression(this.mainTableAlias + '.' + selfFieldName);
             if (selfField.IsRequired) //处理内连接
             {
-                aliasName = this.leaves.PutInnerJoin(joinTableName, selfFieldName);
+                aliasName = this.selectBuilder.SetInnerJoin(joinTableName, selfFieldName);
             }
             else //处理外连接
             {
-                aliasName = this.leaves.PutOuterJoin(joinTableName);
+                aliasName = this.selectBuilder.SetOuterJoin(joinTableName);
                 var fieldExp = new IdentifierExpression(aliasName + '.' + fieldParts.Last());
                 var joinIdExp = new IdentifierExpression(aliasName + '.' + AbstractModel.IDFieldName);
 
@@ -209,7 +182,7 @@ namespace ObjectServer.Model
                     idExp, ExpressionOperator.IsOperator, ValueExpression.NullExpression);
                 var orExp = new BinaryExpression(
                     new BracketedExpression(lexp), ExpressionOperator.OrOperator, new BracketedExpression(rexp));
-                this.leaves.AddJoinRestriction(orExp);
+                this.selectBuilder.AddJoinRestriction(orExp);
             }
 
             return aliasName;
@@ -235,8 +208,8 @@ namespace ObjectServer.Model
                 joinTableName = joinModel.TableName;
             }
             //TODO 确认 many2one 类型字段
-            var parentAliasName = this.leaves.AddOuterJoin(joinTableName);
-            var childAliasName = this.leaves.PutInnerJoin(joinTableName, selfField);
+            var parentAliasName = this.selectBuilder.AppendOuterJoin(joinTableName);
+            var childAliasName = this.selectBuilder.SetInnerJoin(joinTableName, selfField);
 
 
             /* 生成的 SQL 形如：
@@ -249,9 +222,9 @@ namespace ObjectServer.Model
              * 
              * */
             //添加约束
-            this.leaves.AppendLeaf(parentAliasName + "." + AbstractModel.IDFieldName, "=", value);
-            this.leaves.AddJoinRestriction(childAliasName + "._left", ">", parentAliasName + "._left");
-            this.leaves.AddJoinRestriction(childAliasName + "._left", "<", parentAliasName + "._right");
+            this.selectBuilder.AppendLeaf(parentAliasName + "." + AbstractModel.IDFieldName, "=", value);
+            this.selectBuilder.AddJoinRestriction(childAliasName + "._left", ">", parentAliasName + "._left");
+            this..AddJoinRestriction(childAliasName + "._left", "<", parentAliasName + "._right");
         }
 
 
