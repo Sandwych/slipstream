@@ -6,6 +6,7 @@ using System.Dynamic;
 
 using NUnit.Framework;
 
+using ObjectServer.Sql;
 using ObjectServer.Model;
 
 namespace ObjectServer.Model.Test

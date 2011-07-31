@@ -93,7 +93,7 @@
     <Compile Include="Core\UserTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
-    <Compile Include="Sql\QueryTranslatorTests.cs" />
+    <Compile Include="Sql\ConstraintTranslatorTests.cs" />
     <Compile Include="Model\HierarchyTests.cs" />
     <Compile Include="Sql\SelectBuilderTests.cs" />
     <Compile Include="Modules\TestModule\tree-models.cs">

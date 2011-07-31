@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Dynamic;
 
+using ObjectServer.Sql;
+
 namespace ObjectServer.Model
 {
     public interface IModel : IResource, IModelDescriptor

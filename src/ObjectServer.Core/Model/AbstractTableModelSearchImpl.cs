@@ -8,11 +8,13 @@ using System.Data;
 using System.Reflection;
 using System.Dynamic;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Core;
 using ObjectServer.Data;
 using ObjectServer.Utility;
 using ObjectServer.SqlTree;
-using ObjectServer.Model.Sql;
+using ObjectServer.Sql;
 
 namespace ObjectServer.Model
 {
@@ -33,64 +35,54 @@ namespace ObjectServer.Model
                 throw new UnauthorizedAccessException("Access denied");
             }
 
-            string mainTable = this.TableName;
-            var mainTableAlias = "_t0";
+            var translator = new ConstraintTranslator(scope, this);
 
-            var selectBuilder = new SelectBuilder(mainTable, mainTableAlias);
-            var parser = new ConstraintBuilderOld(scope, this, selectBuilder);
-
-            var userConstraints = new List<ConstraintExpression>();
-            if (constraints != null)
+            //处理查询约束
+            foreach (var c in constraints)
             {
-                userConstraints.AddRange(from o in constraints select new ConstraintExpression(o));
+                translator.Add(new ConstraintExpression(c));
             }
-
-            RuleConstraintsToSqlExpression(scope, parser);
-            var userExp = ValueExpression.TrueExpression;
-            var joinExp = ValueExpression.TrueExpression;
-
-            var exps = new IExpression[] { joinExp, userExp };
-
-            //var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
-            var whereExp = exps.JoinExpressions(ExpressionOperator.AndOperator);
 
             //处理排序
-            var orderbyClause = ConvertOrderExpression(order, mainTableAlias);
-
-            var columnExps = new AliasExpressionList(new string[] { mainTableAlias + "." + IDFieldName });
-
-            var joinClauses = new List<JoinClause>();
-            var innerJoins = selectBuilder.InnerJoins.Select(
-                join => new JoinClause(
-                    "INNER JOIN", new AliasExpression(join.Table, join.Alias), join.Restriction));
-            joinClauses.AddRange(innerJoins);
-            var outerJoins = selectBuilder.OuterJoins.Select(
-                join => new JoinClause(
-                    "INNER JOIN", new AliasExpression(join.Table, join.Alias), join.Restriction));
-            joinClauses.AddRange(outerJoins);
-
-            var mainTableAliasExp = new AliasExpression(mainTable, mainTableAlias);
-            var select = new SelectStatement(
-                columnExps, new FromClause(mainTableAliasExp), new WhereClause(whereExp));
-            select.JoinClauses = joinClauses.ToArray();
-            select.DistinctClause = new DistinctClause(
-                new IdentifierExpression[] { new IdentifierExpression("_t0._id") });
-
-            select.OrderByClause = orderbyClause;
-            if (offset > 0)
+            if (order != null)
             {
-                select.OffsetClause = new OffsetClause(offset);
+                translator.SetOrders(order);
             }
 
-            if (limit > 0)
+            //TODO 处理 Rules
+            var querySql = translator.ToSqlString();
+
+            if (limit > 0) //处理数量限制
             {
-                select.LimitClause = new LimitClause(limit);
+                querySql = Data.DataProvider.Dialect.GetLimitString(
+                    querySql, new SqlString(offset.ToString()), new SqlString(limit.ToString()));
             }
 
-            var sv = new StringifierVisitor();
-            select.Traverse(sv);
-            var sql = sv.ToString();
-            return scope.Connection.QueryAsArray<long>(sql);
+            using (var sqlCommand = Data.DataProvider.Driver.GenerateCommand(
+                CommandType.Text, querySql, new NHibernate.SqlTypes.SqlType[] { }))
+            {
+
+                sqlCommand.Connection = scope.Connection.DBConnection;
+                var sql = sqlCommand.CommandText;
+                for (int i = 0; i < translator.Values.Length; i++)
+                {
+                    var value = translator.Values[i];
+                    var param = sqlCommand.CreateParameter();
+                    param.ParameterName = "p" + i.ToString();
+                    param.Value = value;
+                    sqlCommand.Parameters.Add(param);
+                }
+
+                using (var reader = sqlCommand.ExecuteReader())
+                {
+                    var result = new List<long>();
+                    while (reader.Read())
+                    {
+                        result.Add((long)reader[0]);
+                    }
+                    return result.ToArray();
+                }
+            }
         }
 
         private void RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintBuilderOld parser)

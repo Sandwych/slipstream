@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
+using ObjectServer.Sql;
+
 namespace ObjectServer.Model
 {
     public abstract class AbstractExtendedModel : AbstractResource, IModel

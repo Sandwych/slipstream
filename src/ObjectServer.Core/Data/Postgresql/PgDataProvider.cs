@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 
 using NHibernate.Dialect;
+using NHibernate.Driver;
 
 namespace ObjectServer.Data.Postgresql
 {
     internal class PgDataProvider : IDataProvider
     {
         private static readonly Dialect s_dialect = new PostgreSQL82Dialect();
+        private static readonly IDriver s_driver = new NpgsqlDriver();
 
         #region IDataProvider 成员
 
@@ -67,7 +69,7 @@ SELECT datname FROM pg_database
             {
                 ctx.Open();
 
-                var cmd = ctx.Connection.CreateCommand();
+                var cmd = ctx.DBConnection.CreateCommand();
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
 
@@ -93,7 +95,7 @@ SELECT datname FROM pg_database
 
                 Logger.Debug(() => "SQL: " + sql);
 
-                var cmd = ctx.Connection.CreateCommand();
+                var cmd = ctx.DBConnection.CreateCommand();
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
 
@@ -104,6 +106,11 @@ SELECT datname FROM pg_database
         public Dialect Dialect
         {
             get { return s_dialect; }
+        }
+
+        public IDriver Driver
+        {
+            get { return s_driver; }
         }
 
         #endregion

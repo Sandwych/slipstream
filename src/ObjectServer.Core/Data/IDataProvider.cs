@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using NHibernate.Dialect;
+using NHibernate.Driver;
 
 namespace ObjectServer.Data
 {
@@ -17,5 +18,6 @@ namespace ObjectServer.Data
         void DeleteDatabase(string dbName);
 
         Dialect Dialect { get; }
+        IDriver Driver { get; }
     }
 }

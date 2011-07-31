@@ -5,6 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Data
 {
+    //重构此类
     public static class DataProvider
     {
         private static readonly Dictionary<DatabaseType, IDataProvider> dataProviders
@@ -77,6 +78,16 @@ namespace ObjectServer.Data
                 var dbType = dbTypeMapping[Platform.Configuration.DbType];
                 var dataProvider = dataProviders[dbType];
                 return dataProvider.Dialect;
+            }
+        }
+
+        public static NHibernate.Driver.IDriver Driver
+        {
+            get
+            {
+                var dbType = dbTypeMapping[Platform.Configuration.DbType];
+                var dataProvider = dataProviders[dbType];
+                return dataProvider.Driver;
             }
         }
 

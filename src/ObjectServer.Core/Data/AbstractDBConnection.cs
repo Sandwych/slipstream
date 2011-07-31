@@ -57,13 +57,13 @@ namespace ObjectServer.Data
 
             Logger.Debug(() => "SQL: " + sql);
 
-            var cmd = this.Connection.CreateCommand();
+            var cmd = this.DBConnection.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
         }
 
 
-        public DbConnection Connection { get { return this.conn; } }
+        public DbConnection DBConnection { get { return this.conn; } }
 
         public string DatabaseName { get; protected set; }
 

@@ -83,7 +83,7 @@ namespace ObjectServer.Data.Postgresql
 
             Logger.Debug(() => (sql));
 
-            var cmd = this.Connection.CreateCommand();
+            var cmd = this.DBConnection.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
 

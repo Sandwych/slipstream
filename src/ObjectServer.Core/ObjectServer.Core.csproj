@@ -134,7 +134,9 @@
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\RuleGroupModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
-    <Compile Include="Sql\QueryTranslator.cs" />
+    <Compile Include="Sql\OrderExpression.cs" />
+    <Compile Include="Sql\ConstraintTranslator.cs" />
+    <Compile Include="Sql\SortDirection.cs" />
     <Compile Include="Sql\SqlStringExtensions.cs" />
     <Compile Include="Sql\TableJoinInfo.cs" />
     <Compile Include="Exceptions\RecordNotFoundException.cs" />
@@ -169,9 +171,7 @@
     <Compile Include="Model\InheritanceCollection.cs" />
     <Compile Include="Model\InheritanceInfo.cs" />
     <Compile Include="Model\ModelSecurityExtensions.cs" />
-    <Compile Include="Model\OrderExpression.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
-    <Compile Include="Model\SortDirection.cs" />
     <Compile Include="Messaging\RpcHandler.cs" />
     <Compile Include="Model\Sql\TableJoinInfo.cs" />
     <Compile Include="Model\ViewBuilder.cs" />
