@@ -69,6 +69,5 @@ namespace ObjectServer.Model
 
             return new ConstraintExpression((string)constraint[0], (string)constraint[1], constraint[2]);
         }
-
     }
 }

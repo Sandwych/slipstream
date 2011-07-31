@@ -164,8 +164,11 @@ namespace ObjectServer.Sql
                     new string[] { outerJoin.PkColumn }, JoinType.LeftOuterJoin);
             }
 
-            var whereTokens = new SqlString[] { this.whereRestrictions.JoinByAnd() };
-            qs.SetWhereTokens((ICollection)whereTokens);
+            if (this.whereRestrictions.Count > 0)
+            {
+                var whereTokens = new SqlString[] { this.whereRestrictions.JoinByAnd() };
+                qs.SetWhereTokens((ICollection)whereTokens);
+            }
 
             foreach (var o in this.orders)
             {
@@ -224,7 +227,7 @@ namespace ObjectServer.Sql
                     //TODO 处理 childof 运算符
                     var column = lastTableAlias + '.' + fieldName;
                     var whereExp = new SqlString(
-                        column, constraint.Operator, Parameter.WithIndex(this.parameterIndex));
+                        column, " ", constraint.Operator, " ", Parameter.WithIndex(this.parameterIndex));
                     this.parameterIndex++;
                     this.whereRestrictions.Add(whereExp);
                     this.values.Add(constraint.Value);

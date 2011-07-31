@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Dynamic;
 
 using NHibernate.SqlCommand;
+using NHibernate.SqlTypes;
 
 using ObjectServer.Core;
 using ObjectServer.Data;
@@ -38,9 +39,12 @@ namespace ObjectServer.Model
             var translator = new ConstraintTranslator(scope, this);
 
             //处理查询约束
-            foreach (var c in constraints)
+            if (constraints != null)
             {
-                translator.Add(new ConstraintExpression(c));
+                foreach (var c in constraints)
+                {
+                    translator.Add(new ConstraintExpression(c));
+                }
             }
 
             //处理排序
@@ -54,34 +58,49 @@ namespace ObjectServer.Model
 
             if (limit > 0) //处理数量限制
             {
-                querySql = Data.DataProvider.Dialect.GetLimitString(
+                querySql = DataProvider.Dialect.GetLimitString(
                     querySql, new SqlString(offset.ToString()), new SqlString(limit.ToString()));
             }
 
-            using (var sqlCommand = Data.DataProvider.Driver.GenerateCommand(
-                CommandType.Text, querySql, new NHibernate.SqlTypes.SqlType[] { }))
+            using (var sqlCommand = DataProvider.Driver.GenerateCommand(
+                CommandType.Text, querySql, new SqlType[] { }))
             {
-
                 sqlCommand.Connection = scope.Connection.DBConnection;
                 var sql = sqlCommand.CommandText;
-                for (int i = 0; i < translator.Values.Length; i++)
-                {
-                    var value = translator.Values[i];
-                    var param = sqlCommand.CreateParameter();
-                    param.ParameterName = "p" + i.ToString();
-                    param.Value = value;
-                    sqlCommand.Parameters.Add(param);
-                }
+                PrepareNamedParameters(translator, sqlCommand);
 
-                using (var reader = sqlCommand.ExecuteReader())
+                var result = QueryIDs(sqlCommand);
+                return result.ToArray();
+            }
+        }
+
+        private static List<long> QueryIDs(IDbCommand sqlCommand)
+        {
+            Debug.Assert(sqlCommand != null);
+
+            var result = new List<long>();
+            using (var reader = sqlCommand.ExecuteReader())
+            {
+                while (reader.Read())
                 {
-                    var result = new List<long>();
-                    while (reader.Read())
-                    {
-                        result.Add((long)reader[0]);
-                    }
-                    return result.ToArray();
+                    result.Add((long)reader[0]);
                 }
+            }
+            return result;
+        }
+
+        private static void PrepareNamedParameters(ConstraintTranslator translator, IDbCommand sqlCommand)
+        {
+            Debug.Assert(translator != null);
+            Debug.Assert(sqlCommand != null);
+
+            for (int i = 0; i < translator.Values.Length; i++)
+            {
+                var value = translator.Values[i];
+                var param = sqlCommand.CreateParameter();
+                param.ParameterName = "p" + i.ToString();
+                param.Value = value;
+                sqlCommand.Parameters.Add(param);
             }
         }
 
