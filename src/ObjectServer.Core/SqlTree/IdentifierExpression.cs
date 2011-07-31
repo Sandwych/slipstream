@@ -34,5 +34,10 @@ namespace ObjectServer.SqlTree
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return this.Id;
+        }
     }
 }

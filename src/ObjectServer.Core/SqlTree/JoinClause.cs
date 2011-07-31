@@ -7,9 +7,9 @@ namespace ObjectServer.SqlTree
 {
     public class JoinClause : Node, IClause
     {
-        public JoinClause(string join, AliasExpression joinSource, IExpression joinCond)
+        public JoinClause(string joinType, AliasExpression joinSource, IExpression joinCond)
         {
-            this.JoinType = join;
+            this.JoinType = joinType;
             this.JoinCondition = joinCond;
             this.JoinSource = joinSource;
         }

@@ -52,7 +52,13 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp">
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>
@@ -87,9 +93,9 @@
     <Compile Include="Core\UserTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
-    <Compile Include="Model\DomainParserTests.cs" />
+    <Compile Include="Sql\QueryTranslatorTests.cs" />
     <Compile Include="Model\HierarchyTests.cs" />
-    <Compile Include="Model\Sql\SelectBuilderTests.cs" />
+    <Compile Include="Sql\SelectBuilderTests.cs" />
     <Compile Include="Modules\TestModule\tree-models.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -150,6 +156,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Model\Sql\" />
     <Folder Include="Runtime\" />
   </ItemGroup>
   <ItemGroup>

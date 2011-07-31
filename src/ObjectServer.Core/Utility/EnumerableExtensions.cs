@@ -7,7 +7,6 @@ namespace ObjectServer.Utility
 {
     public static class EnumerableExtensions
     {
-
         public static string ToCommaList<T>(this IEnumerable<T> items)
         {
             if (items == null)

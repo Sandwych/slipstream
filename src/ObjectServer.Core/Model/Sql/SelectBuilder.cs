@@ -26,16 +26,11 @@ namespace ObjectServer.Model.Sql
             this.mainTableAlias = mainTableAlias;
         }
 
-        public TableJoinInfo SetOuterJoin(string table, IExpression[] restrictions)
+        public TableJoinInfo SetOuterJoin(string table, string field)
         {
             if (string.IsNullOrEmpty(table))
             {
                 throw new ArgumentNullException("table");
-            }
-
-            if (restrictions == null)
-            {
-                throw new ArgumentNullException("restrictions");
             }
 
             var existedJoin = this.outerJoins.SingleOrDefault(oj => oj.Table == table);
@@ -45,29 +40,24 @@ namespace ObjectServer.Model.Sql
             }
             else
             {
-                this.joinCount++;
-                string alias = "_t" + this.joinCount.ToString();
-                var tj = new TableJoinInfo(table, alias, restrictions);
-                this.outerJoins.Add(tj);
-                return tj;
+                return this.AppendOuterJoin(table, field);
             }
         }
 
-        public TableJoinInfo AppendOuterJoin(string table, IExpression[] restrictions)
+        public TableJoinInfo AppendOuterJoin(string table, string field)
         {
             if (string.IsNullOrEmpty(table))
             {
                 throw new ArgumentNullException("table");
             }
 
-            if (restrictions == null)
-            {
-                throw new ArgumentNullException("restrictions");
-            }
-
             this.joinCount++;
             string alias = "_t" + this.joinCount.ToString();
-            var tj = new TableJoinInfo(table, alias, restrictions);
+            var joinCond = new BinaryExpression(
+            new IdentifierExpression(this.mainTableAlias + "." + field),
+            ExpressionOperator.EqualOperator,
+            new IdentifierExpression(alias + "." + AbstractModel.IDFieldName));
+            var tj = new TableJoinInfo(table, alias, joinCond);
             this.outerJoins.Add(tj);
             return tj;
         }

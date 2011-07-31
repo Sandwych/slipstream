@@ -42,5 +42,17 @@ namespace ObjectServer.SqlTree
         public static IExpression TrueExpression { get { return s_trueExp; } }
         public static IExpression FalseExpression { get { return s_falseExp; } }
         public static IExpression NullExpression { get { return s_nullExp; } }
+
+        public override string ToString()
+        {
+            if (!this.Value.IsNull())
+            {
+                return this.Value.ToString();
+            }
+            else
+            {
+                return "NULL";
+            }
+        }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NHibernate.Dialect;
+
 namespace ObjectServer.Data
 {
     internal interface IDataProvider
@@ -14,5 +16,6 @@ namespace ObjectServer.Data
         void CreateDatabase(string dbName);
         void DeleteDatabase(string dbName);
 
+        Dialect Dialect { get; }
     }
 }

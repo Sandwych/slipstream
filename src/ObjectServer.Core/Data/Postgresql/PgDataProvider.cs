@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NHibernate.Dialect;
+
 namespace ObjectServer.Data.Postgresql
 {
     internal class PgDataProvider : IDataProvider
     {
+        private static readonly Dialect s_dialect = new PostgreSQL82Dialect();
 
         #region IDataProvider 成员
 
@@ -96,6 +99,11 @@ SELECT datname FROM pg_database
 
                 ctx.Close();
             }
+        }
+
+        public Dialect Dialect
+        {
+            get { return s_dialect; }
         }
 
         #endregion

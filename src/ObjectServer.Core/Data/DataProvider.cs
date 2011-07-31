@@ -70,5 +70,15 @@ namespace ObjectServer.Data
             dataProvider.DeleteDatabase(dbName);
         }
 
+        public static NHibernate.Dialect.Dialect Dialect
+        {
+            get
+            {
+                var dbType = dbTypeMapping[Platform.Configuration.DbType];
+                var dataProvider = dataProviders[dbType];
+                return dataProvider.Dialect;
+            }
+        }
+
     }
 }

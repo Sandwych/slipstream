@@ -62,6 +62,9 @@
     <Reference Include="clrzmq-ext">
       <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="IronRuby">
       <HintPath>..\..\lib\ironruby\bin\IronRuby.dll</HintPath>
     </Reference>
@@ -81,6 +84,9 @@
     </Reference>
     <Reference Include="Microsoft.Scripting.Metadata">
       <HintPath>..\..\lib\ironruby\bin\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>
@@ -128,6 +134,9 @@
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\RuleGroupModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
+    <Compile Include="Sql\QueryTranslator.cs" />
+    <Compile Include="Sql\SqlStringExtensions.cs" />
+    <Compile Include="Sql\TableJoinInfo.cs" />
     <Compile Include="Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Json\JsonRpcError.cs" />
@@ -150,6 +159,7 @@
     <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
     <Compile Include="Model\AbstractTableModelDeleteImpl.cs" />
     <Compile Include="Model\ConstraintExpression.cs" />
+    <Compile Include="Model\ConstraintBuilder.cs" />
     <Compile Include="Model\Sql\SelectBuilder.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
     <Compile Include="Model\Fields\IField.cs" />
@@ -166,6 +176,7 @@
     <Compile Include="Model\Sql\TableJoinInfo.cs" />
     <Compile Include="Model\ViewBuilder.cs" />
     <Compile Include="Model\ViewGenerator.cs" />
+    <Compile Include="Data\DummySessionFactoryImplementor.cs" />
     <Compile Include="SessionlessServiceScope.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardActionModel.cs" />
@@ -198,7 +209,7 @@
     <Compile Include="IExportedService.cs" />
     <Compile Include="IResource.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
-    <Compile Include="Model\ConstraintBuilder.cs" />
+    <Compile Include="Model\ConstraintBuilderOld.cs" />
     <Compile Include="Model\NameGetter.cs" />
     <Compile Include="Model\Fields\FieldDefaultValueGetter.cs" />
     <Compile Include="Model\Fields\ManyToOneField.cs" />

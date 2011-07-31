@@ -12,6 +12,7 @@ using ObjectServer.Core;
 using ObjectServer.Data;
 using ObjectServer.Utility;
 using ObjectServer.SqlTree;
+using ObjectServer.Model.Sql;
 
 namespace ObjectServer.Model
 {
@@ -36,7 +37,7 @@ namespace ObjectServer.Model
             var mainTableAlias = "_t0";
 
             var selectBuilder = new SelectBuilder(mainTable, mainTableAlias);
-            var parser = new ConstraintBuilder(scope, this, selectBuilder);
+            var parser = new ConstraintBuilderOld(scope, this, selectBuilder);
 
             var userConstraints = new List<ConstraintExpression>();
             if (constraints != null)
@@ -44,11 +45,11 @@ namespace ObjectServer.Model
                 userConstraints.AddRange(from o in constraints select new ConstraintExpression(o));
             }
 
-            var ruleExp = new BracketedExpression(RuleConstraintsToSqlExpression(scope, parser));
+            RuleConstraintsToSqlExpression(scope, parser);
             var userExp = ValueExpression.TrueExpression;
             var joinExp = ValueExpression.TrueExpression;
 
-            var exps = new IExpression[] { joinExp, ruleExp, userExp };
+            var exps = new IExpression[] { joinExp, userExp };
 
             //var selfFields = this.Fields.Where(p => p.Value.IsColumn()).Select(p => p.Key);
             var whereExp = exps.JoinExpressions(ExpressionOperator.AndOperator);
@@ -58,12 +59,20 @@ namespace ObjectServer.Model
 
             var columnExps = new AliasExpressionList(new string[] { mainTableAlias + "." + IDFieldName });
 
-            var joinClauses = selectBuilder.
+            var joinClauses = new List<JoinClause>();
+            var innerJoins = selectBuilder.InnerJoins.Select(
+                join => new JoinClause(
+                    "INNER JOIN", new AliasExpression(join.Table, join.Alias), join.Restriction));
+            joinClauses.AddRange(innerJoins);
+            var outerJoins = selectBuilder.OuterJoins.Select(
+                join => new JoinClause(
+                    "INNER JOIN", new AliasExpression(join.Table, join.Alias), join.Restriction));
+            joinClauses.AddRange(outerJoins);
 
             var mainTableAliasExp = new AliasExpression(mainTable, mainTableAlias);
             var select = new SelectStatement(
                 columnExps, new FromClause(mainTableAliasExp), new WhereClause(whereExp));
-            select.JoinClauses = joinClauses;
+            select.JoinClauses = joinClauses.ToArray();
             select.DistinctClause = new DistinctClause(
                 new IdentifierExpression[] { new IdentifierExpression("_t0._id") });
 
@@ -84,9 +93,8 @@ namespace ObjectServer.Model
             return scope.Connection.QueryAsArray<long>(sql);
         }
 
-        private IExpression RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintBuilder parser)
+        private void RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintBuilderOld parser)
         {
-            IExpression ruleExp = ValueExpression.TrueExpression;
             //安全：加入访问规则限制
             if (!scope.Session.IsSystemUser) //系统用户不检查访问规则
             {
@@ -95,16 +103,9 @@ namespace ObjectServer.Model
                 var groupExps = new List<IExpression>(ruleConstraints.Count);
                 foreach (var ruleGroup in ruleConstraints)
                 {
-                    var groupConstraint = parser.Push(ruleGroup);
-                    groupExps.Add(new BracketedExpression(groupConstraint));
-                }
-
-                if (groupExps.Count > 0)
-                {
-                    ruleExp = groupExps.JoinExpressions(ExpressionOperator.OrOperator);
+                    parser.Push(ruleGroup);
                 }
             }
-            return ruleExp;
         }
 
         private static OrderbyClause ConvertOrderExpression(OrderExpression[] order, string mainTableAlias)
