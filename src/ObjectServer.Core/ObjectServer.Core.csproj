@@ -162,8 +162,6 @@
     <Compile Include="Model\AbstractTableModelSearchImpl.cs" />
     <Compile Include="Model\AbstractTableModelDeleteImpl.cs" />
     <Compile Include="Model\ConstraintExpression.cs" />
-    <Compile Include="Model\ConstraintBuilder.cs" />
-    <Compile Include="Model\Sql\SelectBuilder.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
     <Compile Include="Model\Fields\IField.cs" />
     <Compile Include="Model\Fields\IFieldCollection.cs" />
@@ -174,7 +172,6 @@
     <Compile Include="Model\ModelSecurityExtensions.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="Messaging\RpcHandler.cs" />
-    <Compile Include="Model\Sql\TableJoinInfo.cs" />
     <Compile Include="Model\ViewBuilder.cs" />
     <Compile Include="Model\ViewGenerator.cs" />
     <Compile Include="Data\DummySessionFactoryImplementor.cs" />
@@ -210,7 +207,6 @@
     <Compile Include="IExportedService.cs" />
     <Compile Include="IResource.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
-    <Compile Include="Model\ConstraintBuilderOld.cs" />
     <Compile Include="Model\NameGetter.cs" />
     <Compile Include="Model\Fields\FieldDefaultValueGetter.cs" />
     <Compile Include="Model\Fields\ManyToOneField.cs" />

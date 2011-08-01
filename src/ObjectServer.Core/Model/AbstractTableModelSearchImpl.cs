@@ -85,6 +85,7 @@ namespace ObjectServer.Model
             return result;
         }
 
+        /*
         private void RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintBuilderOld parser)
         {
             //安全：加入访问规则限制
@@ -99,6 +100,7 @@ namespace ObjectServer.Model
                 }
             }
         }
+        */
 
         private static OrderbyClause ConvertOrderExpression(OrderExpression[] order, string mainTableAlias)
         {
