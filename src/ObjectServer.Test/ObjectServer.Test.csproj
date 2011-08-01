@@ -156,7 +156,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\Sql\" />
     <Folder Include="Runtime\" />
   </ItemGroup>
   <ItemGroup>

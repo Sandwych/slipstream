@@ -15,6 +15,7 @@ namespace ObjectServer.Sql
     {
         private readonly List<TableJoinInfo> outerJoins = new List<TableJoinInfo>();
         private readonly List<TableJoinInfo> innerJoins = new List<TableJoinInfo>();
+        private readonly List<SqlString> fromJoins = new List<SqlString>();
         private readonly List<SqlString> whereRestrictions = new List<SqlString>();
         private readonly List<object> values = new List<object>();
         private readonly List<OrderExpression> orders = new List<OrderExpression>();
@@ -48,6 +49,9 @@ namespace ObjectServer.Sql
 
             this.serviceScope = scope;
             this.rootModel = rootModel;
+
+            var rootFormClause = new SqlString(this.rootModel.TableName, " ", MainTableAlias);
+            this.fromJoins.Add(rootFormClause);
         }
 
         public ConstraintTranslator(IServiceScope scope, string rootModelName)
@@ -64,6 +68,12 @@ namespace ObjectServer.Sql
         public void SetOrders(IEnumerable<OrderExpression> oes)
         {
             this.orders.AddRange(oes);
+        }
+
+        private string GenerateNextAlias()
+        {
+            this.joinCount++;
+            return "_t" + this.joinCount.ToString();
         }
 
         public TableJoinInfo SetOuterJoin(string table, string field)
@@ -83,9 +93,7 @@ namespace ObjectServer.Sql
 
             if (existed == null)
             {
-
-                this.joinCount++;
-                string alias = "_t" + this.joinCount.ToString();
+                string alias = this.GenerateNextAlias();
                 var tj = new TableJoinInfo(table, alias, fkColumn, AbstractModel.IDFieldName);
                 this.outerJoins.Add(tj);
                 return tj;
@@ -113,9 +121,7 @@ namespace ObjectServer.Sql
 
             if (existed == null)
             {
-
-                this.joinCount++;
-                string alias = "_t" + this.joinCount.ToString();
+                string alias = this.GenerateNextAlias();
                 var tj = new TableJoinInfo(table, alias, fkColumn, AbstractModel.IDFieldName);
                 this.innerJoins.Add(tj);
                 return tj;
@@ -145,7 +151,21 @@ namespace ObjectServer.Sql
             qs.AddSelectFragmentString(columnsFragment);
             qs.Distinct = true;
 
-            var fromClause = new SqlString(" ", this.rootModel.TableName, " ", MainTableAlias);
+            var fromClauseBuilder = new SqlStringBuilder();
+            for (int i = 0; i < this.fromJoins.Count; i++)
+            {
+                if (this.fromJoins.Count > 1 && i > 0)
+                {
+                    fromClauseBuilder.Add(", ");
+                }
+                else
+                {
+                    fromClauseBuilder.Add(" ");
+                }
+                fromClauseBuilder.Add(this.fromJoins[i]);
+                fromClauseBuilder.Add(" ");
+            }
+            var fromClause = fromClauseBuilder.ToSqlString();
             qs.JoinFragment.AddJoins(fromClause, SqlString.Empty);
 
             foreach (var innerJoin in this.innerJoins)
@@ -188,6 +208,7 @@ namespace ObjectServer.Sql
 
             var fieldParts = constraint.Field.Split('.');
 
+            var leafPart = fieldParts.Last();
             var lastModel = this.rootModel;
             var lastTableAlias = MainTableAlias;
             foreach (var fieldPart in fieldParts)
@@ -206,7 +227,7 @@ namespace ObjectServer.Sql
                 }
 
                 //处理连接字段
-                if (field.Type == FieldType.ManyToOne)
+                if (field.Type == FieldType.ManyToOne && fieldPart != leafPart)
                 {
                     IModel relatedModel = (IModel)this.serviceScope.GetResource(field.Relation);
                     if (field.IsRequired)
@@ -223,14 +244,94 @@ namespace ObjectServer.Sql
                 else //否则则为叶子节点 
                 {
                     //TODO 处理 childof 运算符
-                    var column = lastTableAlias + '.' + field.Name;
-                    var whereExp = new SqlString(
-                        column, " ", constraint.Operator, " ", Parameter.WithIndex(this.parameterIndex));
-                    this.parameterIndex++;
-                    this.whereRestrictions.Add(whereExp);
-                    this.values.Add(constraint.Value);
+                    this.ProcessLeafNode(constraint, lastTableAlias, field);
                 }
             }
+        }
+
+        private void ProcessLeafNode(ConstraintExpression constraint, string lastTableAlias, IField field)
+        {
+            switch (constraint.Operator)
+            {
+                case "=":
+                case ">":
+                case ">=":
+                case "<":
+                case "<=":
+                case "!=":
+                case "like":
+                case "!like":
+                    this.ProcessSimpleLeafNode(constraint, lastTableAlias, field);
+                    break;
+
+                case "childof":
+                    this.ProcessChildOfNode(constraint, lastTableAlias, field);
+                    break;
+
+                case "!childof":
+                    throw new NotImplementedException();
+
+                //case "in":
+                //case "!in":
+
+                default:
+                    throw new NotSupportedException();
+            }
+
+        }
+
+        private void ProcessSimpleLeafNode(ConstraintExpression constraint, string lastTableAlias, IField field)
+        {
+            var column = lastTableAlias + '.' + field.Name;
+            var whereExp = new SqlString(
+                column, " ", constraint.Operator, " ", Parameter.WithIndex(this.parameterIndex));
+            this.parameterIndex++;
+            this.whereRestrictions.Add(whereExp);
+            this.values.Add(constraint.Value);
+        }
+
+        private void ProcessChildOfNode(ConstraintExpression constraint, string lastTableAlias, IField field)
+        {
+            /* 生成的 SQL 形如：
+             * SELECT mainTable._id 
+             * FROM mainTable, category _category_parent_0, category AS _category_child_0
+             * WHERE _category_child_0._id = mainTable.field AND
+             *     _category_parent_0._id = {value} AND
+             *     _category_child_0._left > _category_parent_0._left AND
+             *     _category_child_0._left < _category_parent_0._right AND ...
+                    * */
+            if (field.Type != FieldType.ManyToOne)
+            {
+                throw new NotSupportedException();
+            }
+
+            var joinModel = (IModel)this.serviceScope.GetResource(field.Relation);
+
+            //添加 child 连接
+            var childTableAlias = this.SetInnerJoin(joinModel.TableName, field.Name);
+
+            //添加 Parent 连接
+            var parentTableAlias = this.GenerateNextAlias();
+            this.fromJoins.Add(new SqlString(joinModel.TableName, " ", parentTableAlias));
+
+            var whereExp = new SqlString(
+                childTableAlias.Alias + "." + AbstractTableModel.LeftFieldName,
+                ">",
+                parentTableAlias + "." + AbstractTableModel.LeftFieldName);
+            this.whereRestrictions.Add(whereExp);
+
+            whereExp = new SqlString(
+                childTableAlias.Alias + "." + AbstractTableModel.LeftFieldName,
+                "<",
+                parentTableAlias + "." + AbstractTableModel.RightFieldName);
+            this.whereRestrictions.Add(whereExp);
+
+            whereExp = new SqlString(
+                parentTableAlias + "." + AbstractModel.IDFieldName,
+                "=",
+                Parameter.Placeholder);
+            this.whereRestrictions.Add(whereExp);
+            this.values.Add(constraint.Value);
         }
 
         private bool IsInheritedField(IModel mainModel, string field)
