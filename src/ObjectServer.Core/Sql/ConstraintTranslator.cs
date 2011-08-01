@@ -13,6 +13,9 @@ namespace ObjectServer.Sql
 {
     internal class ConstraintTranslator
     {
+        private static readonly string[] s_treeParentFields = new string[] { 
+                AbstractTableModel.LeftFieldName, AbstractTableModel.RightFieldName };
+
         private readonly List<TableJoinInfo> outerJoins = new List<TableJoinInfo>();
         private readonly List<TableJoinInfo> innerJoins = new List<TableJoinInfo>();
         private readonly List<SqlString> fromJoins = new List<SqlString>();
@@ -244,12 +247,13 @@ namespace ObjectServer.Sql
                 else //否则则为叶子节点 
                 {
                     //TODO 处理 childof 运算符
-                    this.ProcessLeafNode(constraint, lastTableAlias, field);
+                    this.ProcessLeafNode(constraint, lastTableAlias, lastModel, field);
                 }
             }
         }
 
-        private void ProcessLeafNode(ConstraintExpression constraint, string lastTableAlias, IField field)
+        private void ProcessLeafNode(
+            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
         {
             switch (constraint.Operator)
             {
@@ -259,20 +263,26 @@ namespace ObjectServer.Sql
                 case "<":
                 case "<=":
                 case "!=":
+                    this.ProcessSimpleLeafNode(constraint, lastTableAlias, model, field);
+                    break;
+
                 case "like":
                 case "!like":
-                    this.ProcessSimpleLeafNode(constraint, lastTableAlias, field);
+                    this.ProcessLikeAndNotLikeNode(constraint, lastTableAlias, model, field);
+                    break;
+
+                case "in":
+                case "!in":
+                    this.ProcessInAndNotInNode(constraint, lastTableAlias, model, field);
                     break;
 
                 case "childof":
-                    this.ProcessChildOfNode(constraint, lastTableAlias, field);
+                    this.ProcessChildOfNode(constraint, lastTableAlias, model, field);
                     break;
 
                 case "!childof":
                     throw new NotImplementedException();
 
-                //case "in":
-                //case "!in":
 
                 default:
                     throw new NotSupportedException();
@@ -280,7 +290,8 @@ namespace ObjectServer.Sql
 
         }
 
-        private void ProcessSimpleLeafNode(ConstraintExpression constraint, string lastTableAlias, IField field)
+        private void ProcessSimpleLeafNode(
+            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
         {
             var column = lastTableAlias + '.' + field.Name;
             var whereExp = new SqlString(
@@ -290,7 +301,47 @@ namespace ObjectServer.Sql
             this.values.Add(constraint.Value);
         }
 
-        private void ProcessChildOfNode(ConstraintExpression constraint, string lastTableAlias, IField field)
+        private void ProcessLikeAndNotLikeNode(
+            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
+        {
+            var opr = constraint.Operator == "like" ? "like" : "not like";
+            var column = lastTableAlias + '.' + field.Name;
+            var whereExp = new SqlString(
+                column, " ", opr, " ", Parameter.WithIndex(this.parameterIndex));
+            this.parameterIndex++;
+            this.whereRestrictions.Add(whereExp);
+            this.values.Add(constraint.Value);
+        }
+
+        private void ProcessInAndNotInNode(
+            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
+        {
+            var opr = constraint.Operator == "in" ? "in" : "not in";
+            var inValues = (ICollection<object>)constraint.Value;
+
+            var expBuilder = new SqlStringBuilder();
+            expBuilder.Add(lastTableAlias + '.' + field.Name);
+            expBuilder.Add(" ");
+            expBuilder.Add(opr);
+            expBuilder.Add("(");
+
+            for (int i = 0; i < inValues.Count; i++)
+            {
+                if (inValues.Count > 1 && i != 0)
+                {
+                    expBuilder.Add(",");
+                }
+                this.parameterIndex++;
+                expBuilder.AddParameter();
+            }
+            expBuilder.Add(")");
+
+            this.whereRestrictions.Add(expBuilder.ToSqlString());
+            this.values.AddRange(inValues);
+        }
+
+        private void ProcessChildOfNode(
+            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
         {
             /* 生成的 SQL 形如：
              * SELECT mainTable._id 
@@ -300,38 +351,54 @@ namespace ObjectServer.Sql
              *     _category_child_0._left > _category_parent_0._left AND
              *     _category_child_0._left < _category_parent_0._right AND ...
                     * */
-            if (field.Type != FieldType.ManyToOne)
+            IModel joinModel = null;
+            if (field.Name == AbstractModel.IDFieldName)
             {
-                throw new NotSupportedException();
+                joinModel = model;
             }
+            else
+            {
+                if (field.Type != FieldType.ManyToOne)
+                {
+                    throw new NotSupportedException();
+                }
 
-            var joinModel = (IModel)this.serviceScope.GetResource(field.Relation);
+                joinModel = (IModel)this.serviceScope.GetResource(field.Relation);
+            }
 
             //添加 child 连接
             var childTableAlias = this.SetInnerJoin(joinModel.TableName, field.Name);
 
-            //添加 Parent 连接
-            var parentTableAlias = this.GenerateNextAlias();
-            this.fromJoins.Add(new SqlString(joinModel.TableName, " ", parentTableAlias));
+            //直接做一次查询
+            var parent = this.ReadSingleTreeModel(constraint, joinModel);
 
+            var parentLeft = parent[AbstractTableModel.LeftFieldName].ToString();
+            var parentRight = parent[AbstractTableModel.RightFieldName].ToString();
+
+            //添加 Parent 连接
             var whereExp = new SqlString(
                 childTableAlias.Alias + "." + AbstractTableModel.LeftFieldName,
                 ">",
-                parentTableAlias + "." + AbstractTableModel.LeftFieldName);
+                parentLeft);
             this.whereRestrictions.Add(whereExp);
 
             whereExp = new SqlString(
                 childTableAlias.Alias + "." + AbstractTableModel.LeftFieldName,
                 "<",
-                parentTableAlias + "." + AbstractTableModel.RightFieldName);
+                parentRight);
             this.whereRestrictions.Add(whereExp);
+        }
 
-            whereExp = new SqlString(
-                parentTableAlias + "." + AbstractModel.IDFieldName,
-                "=",
-                Parameter.Placeholder);
-            this.whereRestrictions.Add(whereExp);
-            this.values.Add(constraint.Value);
+        private Dictionary<string, object> ReadSingleTreeModel(ConstraintExpression constraint, IModel joinModel)
+        {
+            var parentConstraints = new object[]{
+                new object[] { "_id", "=", constraint.Value }
+            };
+            var parentIDs = new long[] { (long)constraint.Value };
+            var parents = joinModel.ReadInternal(this.serviceScope, parentIDs, s_treeParentFields);
+            Debug.Assert(parents.Length == 1); //TODO 改成异常
+            var parent = parents[0];
+            return parent;
         }
 
         private bool IsInheritedField(IModel mainModel, string field)

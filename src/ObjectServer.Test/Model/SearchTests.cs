@@ -88,6 +88,14 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
+        public void Test_constraints_notlike_operator()
+        {
+            var constraints = new object[][] { new object[] { "name", "!like", "%.%" } };
+            var ids = this.Service.SearchModel(this.SessionId, "core.model", constraints);
+            Assert.AreEqual(0, ids.Length);
+        }
+
+        [Test]
         public void Test_constraints_in_operator()
         {
             var constraints = new object[][] { 

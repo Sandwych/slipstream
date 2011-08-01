@@ -60,36 +60,5 @@ namespace ObjectServer.Sql.Test
             }
 
         }
-
-        [Test]
-        public void Test_childof_constraints()
-        {
-            var constraints = new ConstraintExpression[] {
-                new ConstraintExpression("login", "=", "root"),
-                new ConstraintExpression("organization", "childof", 2),
-            };
-
-            var sql1 = new SqlString(
-                "select distinct _t0._id from core_user _t0",
-                " left outer join core_organization _t1 on _t0.organization=_t1._id",
-                " where  (_t0.login=?) ");
-            using (var scope = new ServiceScope("objectserver", "system"))
-            {
-                var cb = new ConstraintTranslator(scope, "core.user");
-
-                foreach (var c in constraints)
-                {
-                    cb.Add(c);
-                }
-
-                var sqlStr = cb.ToSqlString();
-                Assert.AreEqual(
-                    sql1.ToString().Replace(" ", ""),
-                    sqlStr.ToString().Replace(" ", ""));
-            }
-
-        }
-
-
     }
 }
