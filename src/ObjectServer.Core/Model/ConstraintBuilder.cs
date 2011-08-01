@@ -46,9 +46,8 @@ namespace ObjectServer.Model
         }
 
         public ConstraintBuilder(IServiceScope scope, string model, SelectBuilder selectBuilder)
-
         {
-           
+
         }
 
         public void Add(ConstraintExpression constraint)
@@ -79,8 +78,7 @@ namespace ObjectServer.Model
                 }
 
                 //处理连接字段
-                //TODO 处理reference/property 类型字段
-                if (field.Type == FieldType.Reference || field.Type == FieldType.ManyToOne)
+                if (field.Type == FieldType.ManyToOne)
                 {
                     IModel relatedModel = (IModel)this.serviceScope.GetResource(field.Relation);
                     if (field.IsRequired)
@@ -96,7 +94,7 @@ namespace ObjectServer.Model
                 }
                 else //否则则为叶子节点 
                 {
-                    //TODO 处理 childof 运算符
+                    //TODO 处理 childof 运算符，处理 in 运算符
                     var whereExp = new BinaryExpression(
                         lastTableAlias + '.' + fieldName, constraint.Operator, constraint.Value);
                     selectBuilder.SetWhereRestriction(whereExp);

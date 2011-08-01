@@ -18,6 +18,6 @@ namespace ObjectServer.Data
         void DeleteDatabase(string dbName);
 
         Dialect Dialect { get; }
-        IDriver Driver { get; }
+        DriverBase Driver { get; }
     }
 }

@@ -62,13 +62,9 @@ namespace ObjectServer.Model
                     querySql, new SqlString(offset.ToString()), new SqlString(limit.ToString()));
             }
 
-            using (var sqlCommand = DataProvider.Driver.GenerateCommand(
-                CommandType.Text, querySql, new SqlType[] { }))
+            using (var sqlCommand = scope.Connection.CreateCommand(querySql))
             {
-                sqlCommand.Connection = scope.Connection.DBConnection;
-                var sql = sqlCommand.CommandText;
-                PrepareNamedParameters(translator, sqlCommand);
-
+                sqlCommand.PrepareNamedParameters(translator.Values);
                 var result = QueryIDs(sqlCommand);
                 return result.ToArray();
             }
@@ -87,21 +83,6 @@ namespace ObjectServer.Model
                 }
             }
             return result;
-        }
-
-        private static void PrepareNamedParameters(ConstraintTranslator translator, IDbCommand sqlCommand)
-        {
-            Debug.Assert(translator != null);
-            Debug.Assert(sqlCommand != null);
-
-            for (int i = 0; i < translator.Values.Length; i++)
-            {
-                var value = translator.Values[i];
-                var param = sqlCommand.CreateParameter();
-                param.ParameterName = "p" + i.ToString();
-                param.Value = value;
-                sqlCommand.Parameters.Add(param);
-            }
         }
 
         private void RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintBuilderOld parser)

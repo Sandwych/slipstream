@@ -33,5 +33,7 @@ namespace ObjectServer.Data
         long NextSerial(string sequenceName);
         bool IsValidDatabase();
         void LockTable(string tableName);
+
+        IDbCommand CreateCommand(NHibernate.SqlCommand.SqlString sql);
     }
 }

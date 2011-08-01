@@ -297,5 +297,13 @@ namespace ObjectServer.Data
         {
             throw new NotImplementedException();
         }
+
+        public IDbCommand CreateCommand(NHibernate.SqlCommand.SqlString sql)
+        {
+            var sqlCommand = DataProvider.Driver.GenerateCommand(
+                CommandType.Text, sql, new NHibernate.SqlTypes.SqlType[] { });
+            sqlCommand.Connection = this.DBConnection;
+            return sqlCommand;
+        }
     }
 }

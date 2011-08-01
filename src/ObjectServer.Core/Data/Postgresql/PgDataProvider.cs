@@ -11,7 +11,7 @@ namespace ObjectServer.Data.Postgresql
     internal class PgDataProvider : IDataProvider
     {
         private static readonly Dialect s_dialect = new PostgreSQL82Dialect();
-        private static readonly IDriver s_driver = new NpgsqlDriver();
+        private static readonly DriverBase s_driver = new NpgsqlDriver();
 
         #region IDataProvider 成员
 
@@ -108,7 +108,7 @@ SELECT datname FROM pg_database
             get { return s_dialect; }
         }
 
-        public IDriver Driver
+        public DriverBase Driver
         {
             get { return s_driver; }
         }

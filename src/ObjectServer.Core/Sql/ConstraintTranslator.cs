@@ -193,7 +193,6 @@ namespace ObjectServer.Sql
             foreach (var fieldPart in fieldParts)
             {
                 var field = lastModel.Fields[fieldPart];
-                var fieldName = field.Name;
 
                 //处理继承字段
                 if (IsInheritedField(lastModel, fieldPart))
@@ -203,21 +202,20 @@ namespace ObjectServer.Sql
                         .Where(i1 => i1.BaseModel == baseField.Model.Name)
                         .Select(i2 => i2.RelatedField).Single();
                     var baseTableJoin = this.SetInnerJoin(baseField.Model.TableName, relatedField);
-                    fieldName = baseTableJoin.Alias + '.' + field.Name;
+                    lastTableAlias = baseTableJoin.Alias;
                 }
 
                 //处理连接字段
-                //TODO 处理reference/property 类型字段
-                if (field.Type == FieldType.Reference || field.Type == FieldType.ManyToOne)
+                if (field.Type == FieldType.ManyToOne)
                 {
                     IModel relatedModel = (IModel)this.serviceScope.GetResource(field.Relation);
                     if (field.IsRequired)
                     {
-                        lastTableAlias = this.SetInnerJoin(relatedModel.TableName, fieldName).Alias;
+                        lastTableAlias = this.SetInnerJoin(relatedModel.TableName, field.Name).Alias;
                     }
                     else
                     {
-                        lastTableAlias = this.SetOuterJoin(relatedModel.TableName, fieldName).Alias;
+                        lastTableAlias = this.SetOuterJoin(relatedModel.TableName, field.Name).Alias;
                     }
 
                     lastModel = relatedModel;
@@ -225,7 +223,7 @@ namespace ObjectServer.Sql
                 else //否则则为叶子节点 
                 {
                     //TODO 处理 childof 运算符
-                    var column = lastTableAlias + '.' + fieldName;
+                    var column = lastTableAlias + '.' + field.Name;
                     var whereExp = new SqlString(
                         column, " ", constraint.Operator, " ", Parameter.WithIndex(this.parameterIndex));
                     this.parameterIndex++;
@@ -233,7 +231,6 @@ namespace ObjectServer.Sql
                     this.values.Add(constraint.Value);
                 }
             }
-
         }
 
         private bool IsInheritedField(IModel mainModel, string field)

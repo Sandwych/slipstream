@@ -81,7 +81,7 @@ namespace ObjectServer.Data
             }
         }
 
-        public static NHibernate.Driver.IDriver Driver
+        public static NHibernate.Driver.DriverBase Driver
         {
             get
             {
