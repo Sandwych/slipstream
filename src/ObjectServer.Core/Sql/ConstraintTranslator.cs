@@ -7,19 +7,23 @@ using System.Diagnostics;
 
 using NHibernate.SqlCommand;
 
+using ObjectServer.Data;
 using ObjectServer.Model;
 
 namespace ObjectServer.Sql
 {
     internal class ConstraintTranslator
     {
+        private static readonly string s_trueSql =
+            ' ' + DataProvider.Dialect.ToBooleanValueString(true) + ' ';
+
         private static readonly string[] s_treeParentFields = new string[] { 
                 AbstractTableModel.LeftFieldName, AbstractTableModel.RightFieldName };
 
         private readonly List<TableJoinInfo> outerJoins = new List<TableJoinInfo>();
         private readonly List<TableJoinInfo> innerJoins = new List<TableJoinInfo>();
         private readonly List<SqlString> fromJoins = new List<SqlString>();
-        private readonly List<SqlString> whereRestrictions = new List<SqlString>();
+        private readonly SqlStringBuilder whereRestrictions = new SqlStringBuilder();
         private readonly List<object> values = new List<object>();
         private readonly List<OrderExpression> orders = new List<OrderExpression>();
         private int joinCount = 0;
@@ -135,15 +139,26 @@ namespace ObjectServer.Sql
             }
         }
 
-        public void SetWhereRestriction(SqlString whereRestriction)
+        public void AddWhereFragment(SqlString whereFragment)
         {
-            //TODO 检查重复的约束
-            if (whereRestrictions == null)
+            if (whereFragment == null)
             {
-                throw new ArgumentNullException("whereRestriction");
+                throw new ArgumentNullException("whereFragment");
             }
 
-            this.whereRestrictions.Add(whereRestriction);
+            this.whereRestrictions.Add(" ");
+            this.whereRestrictions.Add(whereFragment);
+            this.whereRestrictions.Add(" ");
+        }
+
+        public void AddWhereFragment(string whereFragment)
+        {
+            if (string.IsNullOrEmpty(whereFragment))
+            {
+                throw new ArgumentNullException("whereFragment");
+            }
+
+            this.whereRestrictions.Add(whereFragment);
         }
 
         public SqlString ToSqlString()
@@ -152,7 +167,7 @@ namespace ObjectServer.Sql
 
             var columnsFragment = new SqlString(MainTableAlias + '.' + AbstractModel.IDFieldName);
             qs.AddSelectFragmentString(columnsFragment);
-            qs.Distinct = true;
+            qs.Distinct = false;
 
             var fromClauseBuilder = new SqlStringBuilder();
             for (int i = 0; i < this.fromJoins.Count; i++)
@@ -189,7 +204,7 @@ namespace ObjectServer.Sql
 
             if (this.whereRestrictions.Count > 0)
             {
-                var whereTokens = new SqlString[] { this.whereRestrictions.JoinByAnd() };
+                var whereTokens = new SqlString[] { this.whereRestrictions.ToSqlString() };
                 qs.SetWhereTokens((ICollection)whereTokens);
             }
 
@@ -202,7 +217,59 @@ namespace ObjectServer.Sql
             return qs.ToQuerySqlString();
         }
 
-        public void Add(ConstraintExpression constraint)
+        /// <summary>
+        /// 每组之间使用 OR 连接，一组中的元素之间使用 AND 连接
+        /// </summary>
+        /// <param name="ruleConstraints"></param>
+        public void AddGroupedConstraints(IEnumerable<ConstraintExpression[]> ruleConstraints)
+        {
+            if (ruleConstraints.Count() > 0)
+            {
+                this.AddWhereFragment("(");
+                var orNeeded = false;
+                foreach (var constraints in ruleConstraints)
+                {
+                    if (orNeeded)
+                    {
+                        this.AddWhereFragment(" or ");
+                    }
+                    orNeeded = true;
+
+                    this.AddConstraints(constraints);
+                }
+                this.AddWhereFragment(")");
+            }
+            else
+            {
+                this.AddWhereFragment(s_trueSql);
+            }
+        }
+
+        public void AddConstraints(IEnumerable<ConstraintExpression> constraints)
+        {
+            if (constraints.Count() > 0)
+            {
+                this.AddWhereFragment("(");
+                var andNeeded = false;
+                foreach (var c in constraints)
+                {
+                    if (andNeeded)
+                    {
+                        this.AddWhereFragment(" and ");
+                    }
+                    andNeeded = true;
+                    this.AddConstraint(c);
+                }
+
+                this.AddWhereFragment(")");
+            }
+            else
+            {
+                this.AddWhereFragment(s_trueSql);
+            }
+        }
+
+        private void AddConstraint(ConstraintExpression constraint)
         {
             if (constraint == null)
             {
@@ -294,11 +361,22 @@ namespace ObjectServer.Sql
             ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
         {
             var column = lastTableAlias + '.' + field.Name;
-            var whereExp = new SqlString(
-                column, " ", constraint.Operator, " ", Parameter.WithIndex(this.parameterIndex));
-            this.parameterIndex++;
-            this.whereRestrictions.Add(whereExp);
-            this.values.Add(constraint.Value);
+
+            if (constraint.Operator == "=" && constraint.Value.IsNull())
+            {
+                var whereExp = new SqlString(column, " is null");
+                this.AddWhereFragment(whereExp);
+            }
+            else
+            {
+                var whereExp = new SqlString(
+                    column, " ", constraint.Operator, " ", Parameter.WithIndex(this.parameterIndex));
+                this.parameterIndex++;
+                this.AddWhereFragment(whereExp);
+                this.values.Add(constraint.Value);
+
+            }
+
         }
 
         private void ProcessLikeAndNotLikeNode(
@@ -309,7 +387,7 @@ namespace ObjectServer.Sql
             var whereExp = new SqlString(
                 column, " ", opr, " ", Parameter.WithIndex(this.parameterIndex));
             this.parameterIndex++;
-            this.whereRestrictions.Add(whereExp);
+            this.AddWhereFragment(whereExp);
             this.values.Add(constraint.Value);
         }
 
@@ -336,7 +414,7 @@ namespace ObjectServer.Sql
             }
             expBuilder.Add(")");
 
-            this.whereRestrictions.Add(expBuilder.ToSqlString());
+            this.AddWhereFragment(expBuilder.ToSqlString());
             this.values.AddRange(inValues);
         }
 
@@ -376,17 +454,17 @@ namespace ObjectServer.Sql
             var parentRight = parent[AbstractTableModel.RightFieldName].ToString();
 
             //添加 Parent 连接
-            var whereExp = new SqlString(
+            var leftExp = new SqlString(
                 childTableAlias.Alias + "." + AbstractTableModel.LeftFieldName,
                 ">",
                 parentLeft);
-            this.whereRestrictions.Add(whereExp);
 
-            whereExp = new SqlString(
+            var rightExp = new SqlString(
                 childTableAlias.Alias + "." + AbstractTableModel.LeftFieldName,
                 "<",
                 parentRight);
-            this.whereRestrictions.Add(whereExp);
+
+            this.AddWhereFragment(new SqlString(leftExp, " and ", rightExp));
         }
 
         private Dictionary<string, object> ReadSingleTreeModel(ConstraintExpression constraint, IModel joinModel)
@@ -425,6 +503,5 @@ namespace ObjectServer.Sql
                 return false;
             }
         }
-
     }
 }

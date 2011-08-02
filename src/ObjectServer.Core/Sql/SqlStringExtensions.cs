@@ -9,11 +9,16 @@ namespace ObjectServer.Sql
 {
     public static class SqlStringExtensions
     {
-        public static SqlString JoinByAnd(this IEnumerable<SqlString> items)
+        public static SqlString JoinBy(this IEnumerable<SqlString> items, string junction)
         {
             if (items == null)
             {
                 throw new ArgumentNullException("items");
+            }
+
+            if (string.IsNullOrEmpty(junction))
+            {
+                throw new ArgumentNullException("junction");
             }
 
             var sb = new SqlStringBuilder();
@@ -26,7 +31,9 @@ namespace ObjectServer.Sql
                 }
                 else
                 {
-                    sb.Add(" and ");
+                    sb.Add(" ");
+                    sb.Add(junction);
+                    sb.Add(" ");
                 }
 
                 sb.Add("(");
@@ -36,5 +43,16 @@ namespace ObjectServer.Sql
 
             return sb.ToSqlString();
         }
+
+        public static SqlString JoinByAnd(this IEnumerable<SqlString> items)
+        {
+            return items.JoinBy("and");
+        }
+
+        public static SqlString JoinByOr(this IEnumerable<SqlString> items)
+        {
+            return items.JoinBy("and");
+        }
+
     }
 }

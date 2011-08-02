@@ -18,8 +18,9 @@ namespace ObjectServer.Core
     [Resource]
     public sealed class RuleModel : AbstractTableModel
     {
-        //为了让 VS 复制 IronRuby.Libraries
+        //为了让 VS 复制 IronRuby.Libraries.dll 
         private static readonly Type _rubyHashOpsType = typeof(IronRuby.Builtins.HashOps);
+
         private static ScriptRuntime s_runtime = Ruby.CreateRuntime();
         private static ScriptEngine s_engine = Ruby.GetEngine(s_runtime);
 

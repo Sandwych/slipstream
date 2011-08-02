@@ -21,7 +21,9 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        private static readonly ConstraintExpression[] EmptyDomain = { };
+        private static readonly List<ConstraintExpression[]> EmptyRules =
+            new List<ConstraintExpression[]>();
+        private static readonly ConstraintExpression[] EmptyConstraints = { };
 
         public override long[] SearchInternal(
             IServiceScope scope, object[] constraints = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
@@ -39,13 +41,20 @@ namespace ObjectServer.Model
             var translator = new ConstraintTranslator(scope, this);
 
             //处理查询约束
+            IEnumerable<ConstraintExpression> userConstraints = null;
             if (constraints != null)
             {
-                foreach (var c in constraints)
-                {
-                    translator.Add(new ConstraintExpression(c));
-                }
+                userConstraints = constraints.Select(o => new ConstraintExpression(o));
             }
+            else
+            {
+                userConstraints = EmptyConstraints;
+            }
+            translator.AddConstraints(userConstraints);
+            translator.AddWhereFragment(new SqlString(" and "));
+
+            //处理 Rule 约束
+            this.GenerateReadingRuleConstraints(scope, translator);
 
             //处理排序
             if (order != null)
@@ -83,6 +92,23 @@ namespace ObjectServer.Model
                 }
             }
             return result;
+        }
+
+        private void GenerateReadingRuleConstraints(IServiceScope scope, ConstraintTranslator translator)
+        {
+            Debug.Assert(scope != null);
+            Debug.Assert(translator != null);
+
+            //系统用户不检查访问规则
+            if (scope.Session.IsSystemUser)
+            {
+                translator.AddGroupedConstraints(EmptyRules);
+            }
+            else
+            {
+                var ruleConstraints = RuleModel.GetRuleConstraints(scope, this.Name, "read");
+                translator.AddGroupedConstraints(ruleConstraints);
+            }
         }
 
         /*
