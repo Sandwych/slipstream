@@ -142,7 +142,7 @@ namespace ObjectServer.Model
                 if (records.Length == 0)
                 {
                     //TODO 使用合适的异常
-                    throw new ResourceNotFoundException("找不到记录", this.Name);
+                    throw new RecordNotFoundException("Cannot found hierarchy record(s)", this.Name);
                 }
 
                 //判断父节点是否是叶子节点

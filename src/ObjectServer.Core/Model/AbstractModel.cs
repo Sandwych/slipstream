@@ -162,11 +162,12 @@ namespace ObjectServer.Model
             var sql = @"
 insert into core_field(module, model, name, relation, label, type, help) 
     values(?,?,?,?,?,?,?)";
+            var sqlInsert = SqlString.Parse(sql);
             var fieldsToAppend = this.Fields.Keys.Except(dbFieldsNames);
             foreach (var fieldName in fieldsToAppend)
             {
                 var field = this.Fields[fieldName];
-                db.Connection.Execute(SqlString.Parse(sql),
+                db.Connection.Execute(sqlInsert,
                     this.Module, modelId.Value, fieldName, field.Relation, field.Label, field.Type.ToString(), "");
             }
 
@@ -228,7 +229,7 @@ insert into core_field(module, model, name, relation, label, type, help)
                         "relation=", Parameter.Placeholder, ",",
                         "label=", Parameter.Placeholder, ",",
                         "help=", Parameter.Placeholder,
-                        "where _id=", Parameter.Placeholder);
+                        " where _id=", Parameter.Placeholder);
                 db.Connection.Execute(
                     sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
 

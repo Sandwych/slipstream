@@ -72,25 +72,6 @@ namespace ObjectServer.Data
 
         #region Query methods
 
-        public virtual object QueryValue(string commandText, params object[] args)
-        {
-            if (string.IsNullOrEmpty(commandText))
-            {
-                throw new ArgumentNullException("commandText");
-            }
-
-            this.EnsureConnectionOpened();
-
-            Logger.Debug(() => "SQL: " + commandText);
-
-            using (var cmd = PrepareCommand(commandText))
-            {
-                PrepareCommandParameters(cmd, args);
-                var result = cmd.ExecuteScalar();
-                return result;
-            }
-        }
-
         public virtual object QueryValue(SqlString commandText, params object[] args)
         {
             if (commandText == null)
@@ -308,8 +289,18 @@ namespace ObjectServer.Data
         public abstract void Create(string dbName);
         public abstract void Initialize();
         public abstract ITableContext CreateTableContext(string tableName);
-        public abstract long NextSerial(string sequenceName);
         public abstract void LockTable(string tableName);
+
+        public virtual long NextSerial(string sequenceName)
+        {
+            if (string.IsNullOrEmpty(sequenceName))
+            {
+                throw new ArgumentNullException("sequenceName");
+            }
+
+            var sql = new SqlString(DataProvider.Dialect.GetSequenceNextValString(sequenceName));
+            return (long)this.QueryValue(sql);
+        }
 
         public virtual bool IsValidDatabase()
         {

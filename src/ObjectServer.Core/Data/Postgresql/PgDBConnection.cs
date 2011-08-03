@@ -46,27 +46,13 @@ namespace ObjectServer.Data.Postgresql
             EnsureConnectionOpened();
 
             var dbUser = Platform.Configuration.DBUser;
-            var sql = @"
-                SELECT datname FROM pg_database  
-                    WHERE datdba = (SELECT DISTINCT usesysid FROM pg_user WHERE usename=@0) 
-                        AND datname NOT IN ('template0', 'template1', 'postgres')  
-	                ORDER BY datname ASC;";
+            var sql = SqlString.Parse(@"
+                select datname from pg_database  
+                    where datdba = (select distinct usesysid from pg_user where usename=?) 
+                        and datname not in ('template0', 'template1', 'postgres')  
+	                order by datname asc;");
 
-            Logger.Info(() => (sql));
-
-            using (var cmd = this.PrepareCommand(sql))
-            {
-                PrepareCommandParameters(cmd, dbUser);
-                var result = new List<string>();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        result.Add(reader.GetString(0));
-                    }
-                }
-                return result.ToArray();
-            }
+            return this.QueryAsArray<string>(sql, dbUser);
         }
 
 
@@ -79,18 +65,14 @@ namespace ObjectServer.Data.Postgresql
 
             EnsureConnectionOpened();
 
-            var sql = string.Format(
-                @"CREATE DATABASE ""{0}"" TEMPLATE template0 ENCODING 'unicode'",
-                dbName);
+            var sqlBuilder = new SqlStringBuilder();
+            sqlBuilder.Add("create database ");
+            sqlBuilder.Add(DataProvider.Dialect.QuoteForSchemaName(dbName));
+            sqlBuilder.Add(" template template0 encoding 'unicode' ");
 
-            Logger.Debug(() => (sql));
+            var sql = sqlBuilder.ToSqlString();
 
-            var cmd = this.DBConnection.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
-
-
-
+            this.Execute(sql);
         }
 
         public override void Initialize()
@@ -135,18 +117,6 @@ select distinct count(table_name)
             }
 
             return new PgTableContext(this, tableName);
-        }
-
-        public override long NextSerial(string sequenceName)
-        {
-            if (string.IsNullOrEmpty(sequenceName))
-            {
-                throw new ArgumentNullException("sequenceName");
-            }
-
-            var seqSql = "SELECT nextval(@0)";
-            var serial = (long)this.QueryValue(seqSql, sequenceName);
-            return serial;
         }
 
         public override void LockTable(string tableName)

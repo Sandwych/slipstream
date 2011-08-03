@@ -81,14 +81,13 @@ namespace ObjectServer.Core
                 DataProvider.Dialect.QuoteForColumnName(CreatedTimeFieldName), ",",
                 DataProvider.Dialect.QuoteForColumnName("salt"),
                 ") values(",
-                Parameter.Placeholder,
-                Parameter.Placeholder,
-                Parameter.Placeholder,
-                Parameter.Placeholder,
-                Parameter.Placeholder,
-                Parameter.Placeholder,
-                Parameter.Placeholder,
-                ")");
+                Parameter.Placeholder, ",",
+                Parameter.Placeholder, ",",
+                Parameter.Placeholder, ",",
+                Parameter.Placeholder, ",",
+                Parameter.Placeholder, ",",
+                Parameter.Placeholder, ",",
+                Parameter.Placeholder, ")");
 
             //创建 root 用户
             var rootPassword = Platform.Configuration.RootPassword;

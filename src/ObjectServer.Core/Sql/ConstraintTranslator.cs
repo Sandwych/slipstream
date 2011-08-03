@@ -474,7 +474,12 @@ namespace ObjectServer.Sql
             };
             var parentIDs = new long[] { (long)constraint.Value };
             var parents = joinModel.ReadInternal(this.serviceScope, parentIDs, s_treeParentFields);
-            Debug.Assert(parents.Length == 1); //TODO 改成异常
+            if (parents.Length != 1)
+            {
+                var msg = string.Format(
+                    "Cannot found the record with ID=[{0}]", constraint.Value.ToString());
+                throw new RecordNotFoundException(msg, joinModel.Name);
+            }
             var parent = parents[0];
             return parent;
         }
