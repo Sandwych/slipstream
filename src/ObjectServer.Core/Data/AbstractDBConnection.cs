@@ -91,9 +91,9 @@ namespace ObjectServer.Data
             }
         }
 
-        public virtual int Execute(string commandText, params object[] args)
+        public virtual object QueryValue(SqlString commandText, params object[] args)
         {
-            if (string.IsNullOrEmpty(commandText))
+            if (commandText == null)
             {
                 throw new ArgumentNullException("commandText");
             }
@@ -102,10 +102,28 @@ namespace ObjectServer.Data
 
             Logger.Debug(() => "SQL: " + commandText);
 
-            using (var command = PrepareCommand(commandText))
+            using (var command = this.CreateCommand(commandText))
             {
-                PrepareCommandParameters(command, args);
-                EnsureConnectionOpened();
+                PrepareNamedParameters(command, args);
+                var result = command.ExecuteScalar();
+                return result;
+            }
+        }
+
+        public virtual int Execute(SqlString commandText, params object[] args)
+        {
+            if (commandText == null)
+            {
+                throw new ArgumentNullException("commandText");
+            }
+
+            this.EnsureConnectionOpened();
+
+            Logger.Debug(() => "SQL: " + commandText);
+
+            using (var command = this.CreateCommand(commandText))
+            {
+                PrepareNamedParameters(command, args);
                 var result = command.ExecuteNonQuery();
                 return result;
             }

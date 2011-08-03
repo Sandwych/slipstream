@@ -22,13 +22,12 @@ namespace ObjectServer.Data
         DbConnection DBConnection { get; }
         string DatabaseName { get; }
                 
-        object QueryValue(string commandText, params object[] args);
+        object QueryValue(SqlString commandText, params object[] args);
         DataTable QueryAsDataTable(SqlString commandText, params object[] args);
         Dictionary<string, object>[] QueryAsDictionary(SqlString commandText, params object[] args);
         dynamic[] QueryAsDynamic(SqlString commandText, params object[] args);
         T[] QueryAsArray<T>(SqlString commandText, params object[] args);
-
-        int Execute(string commandText, params object[] args);
+        int Execute(SqlString commandText, params object[] args);
 
         ITableContext CreateTableContext(string tableName);
 
@@ -36,6 +35,6 @@ namespace ObjectServer.Data
         bool IsValidDatabase();
         void LockTable(string tableName);
 
-        IDbCommand CreateCommand(NHibernate.SqlCommand.SqlString sql);
+        IDbCommand CreateCommand(SqlString sql);
     }
 }

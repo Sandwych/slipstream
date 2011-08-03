@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Runtime;
 using ObjectServer.Data;
 using ObjectServer.Core;
@@ -25,7 +27,7 @@ namespace ObjectServer
         private readonly List<Assembly> allAssembly = new List<Assembly>();
         private static readonly Module s_coreModule;
         private readonly List<IResource> resources = new List<IResource>();
-        
+
         private static readonly string[] s_coreDataFiles = new string[] 
         {
             //TODO 下面的初始化顺序很重要，底层的放在前，高层的放在后
@@ -287,7 +289,7 @@ namespace ObjectServer
                 state = "activated";
             }
 
-            var insertSql = "insert into core_module(name, state, info) values(@0, @1, @2)";
+            var insertSql = SqlString.Parse("insert into core_module(name, state, info) values(?, ?, ?)");
             db.Execute(insertSql, this.Name, state, this.Label);
         }
 

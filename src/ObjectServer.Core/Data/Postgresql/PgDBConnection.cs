@@ -5,6 +5,8 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 
+using NHibernate.SqlCommand;
+
 using Npgsql;
 
 namespace ObjectServer.Data.Postgresql
@@ -104,7 +106,7 @@ namespace ObjectServer.Data.Postgresql
                 {
                     if (!string.IsNullOrEmpty(l) && l.Trim().Length > 0)
                     {
-                        this.Execute(l);
+                        this.Execute(SqlString.Parse(l));
                     }
                 }
             }
@@ -115,11 +117,11 @@ namespace ObjectServer.Data.Postgresql
         public override bool IsInitialized()
         {
             var sql = @"
-SELECT DISTINCT COUNT(""table_name"") 
-    FROM ""information_schema"".""tables"" 
-    WHERE ""table_name"" IN ('core_module', 'core_model', 'core_field')
+select distinct count(table_name) 
+    from information_schema.tables 
+    where table_name in ('core_module', 'core_model', 'core_field')
 ";
-            var rowCount = (long)this.QueryValue(sql);
+            var rowCount = (long)this.QueryValue(SqlString.Parse(sql));
             return rowCount == 3;
         }
 
@@ -154,9 +156,7 @@ SELECT DISTINCT COUNT(""table_name"")
                 throw new ArgumentNullException("tableName");
             }
 
-            var sql = string.Format(
-                "LOCK \"{0}\"", tableName);
-
+            var sql = new SqlString("lock ", DataProvider.Dialect.QuoteForTableName(tableName));
             this.Execute(sql);
         }
 

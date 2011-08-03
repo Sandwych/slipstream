@@ -5,6 +5,8 @@ using System.Text;
 using System.Diagnostics;
 using System.Security.Cryptography;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Model;
 using ObjectServer.Utility;
 using ObjectServer.Data;
@@ -47,7 +49,12 @@ namespace ObjectServer.Core
 
         private static bool UserExists(IDBProfile db, string login)
         {
-            var sql = "SELECT COUNT(*) FROM core_user WHERE \"login\" = @0";
+            var sql = new SqlString(
+                "select count(*) from ",
+                DataProvider.Dialect.QuoteForTableName("core_user"),
+                "where ",
+                DataProvider.Dialect.QuoteForColumnName("login"), "=", Parameter.Placeholder);
+
             var rowCount = db.Connection.QueryValue(sql, login);
             var isRootUserExisted = rowCount.IsNull() || (long)rowCount <= 0;
             return isRootUserExisted;
@@ -57,10 +64,31 @@ namespace ObjectServer.Core
         {
             Debug.Assert(conn != null);
 
-            var sql = @"
-INSERT INTO core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
-    VALUES(@0, @1, @2, @3, @4, @5, @6)
-";
+            /*
+                    insert into core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
+                    values(?,?,?,?,?,?,?)
+             */
+
+            var sql = new SqlString(
+                "insert into ",
+                DataProvider.Dialect.QuoteForTableName("core_user"),
+                "(",
+                DataProvider.Dialect.QuoteForColumnName(VersionFieldName), ",",
+                DataProvider.Dialect.QuoteForColumnName("name"), ",",
+                DataProvider.Dialect.QuoteForColumnName("login"), ",",
+                DataProvider.Dialect.QuoteForColumnName("password"), ",",
+                DataProvider.Dialect.QuoteForColumnName("admin"), ",",
+                DataProvider.Dialect.QuoteForColumnName(CreatedTimeFieldName), ",",
+                DataProvider.Dialect.QuoteForColumnName("salt"),
+                ") values(",
+                Parameter.Placeholder,
+                Parameter.Placeholder,
+                Parameter.Placeholder,
+                Parameter.Placeholder,
+                Parameter.Placeholder,
+                Parameter.Placeholder,
+                Parameter.Placeholder,
+                ")");
 
             //创建 root 用户
             var rootPassword = Platform.Configuration.RootPassword;

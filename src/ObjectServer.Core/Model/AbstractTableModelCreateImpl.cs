@@ -161,7 +161,16 @@ namespace ObjectServer.Model
             }
             else //没有就查找一个可用的
             {
-                var sql = string.Format("SELECT MAX(_right) FROM \"{0}\" WHERE _left >= 0", this.TableName);
+                //"SELECT MAX(_right) FROM <TableName> WHERE _left >= 0"
+                var sql = new SqlString(
+                    "select max(",
+                    DataProvider.Dialect.QuoteForColumnName(RightFieldName),
+                    ") from ",
+                    DataProvider.Dialect.QuoteForTableName(this.TableName),
+                    " where ",
+                    DataProvider.Dialect.QuoteForColumnName(LeftFieldName),
+                    ">=0");
+
                 var value = conn.QueryValue(sql);
                 if (!value.IsNull())
                 {
@@ -174,16 +183,16 @@ namespace ObjectServer.Model
             }
 
             var sqlUpdate1 = string.Format(
-                "UPDATE \"{0}\" SET _right = _right + 2 WHERE _right > @0", this.TableName);
+                "update \"{0}\" set _right = _right + 2 where _right>?", this.TableName);
             var sqlUpdate2 = string.Format(
-                "UPDATE \"{0}\" SET _left = _left + 2 WHERE _left > @0", this.TableName);
+                "update \"{0}\" set _left = _left + 2 where _left>?", this.TableName);
             var sqlUpdate3 = string.Format(
-                "UPDATE \"{0}\" SET _left = @0, _right = @1 WHERE (\"_id\" = @2) ", this.TableName);
+                "update \"{0}\" set _left=?, _right=? where (_id=?) ", this.TableName);
 
             //conn.LockTable(this.TableName); //TODO 这里需要锁定表，防止其它连接修改
-            conn.Execute(sqlUpdate1, rhsValue);
-            conn.Execute(sqlUpdate2, rhsValue);
-            conn.Execute(sqlUpdate3, rhsValue + 1, rhsValue + 2, id);
+            conn.Execute(SqlString.Parse(sqlUpdate1), rhsValue);
+            conn.Execute(SqlString.Parse(sqlUpdate2), rhsValue);
+            conn.Execute(SqlString.Parse(sqlUpdate3), rhsValue + 1, rhsValue + 2, id);
         }
 
         private long CreateSelf(IServiceScope ctx, IDictionary<string, object> values)
@@ -196,34 +205,36 @@ namespace ObjectServer.Model
             }
 
             var allColumnNames = values.Keys.Where(f => this.Fields[f].IsColumn());
-
             var colValues = new object[allColumnNames.Count()];
-            var sbColumns = new StringBuilder();
-            var sbArgs = new StringBuilder();
+
+            // "insert into <tableName> (_id, cols... ) values (<id>, ?, ?, ?... );",
+            var sqlBuilder = new SqlStringBuilder();
+            sqlBuilder.Add("insert into ");
+            sqlBuilder.Add(DataProvider.Dialect.QuoteForTableName(this.TableName));
+            sqlBuilder.Add("(");
+            sqlBuilder.Add(DataProvider.Dialect.QuoteForColumnName(IDFieldName));
+
             var index = 0;
             foreach (var f in allColumnNames)
             {
-                sbColumns.Append(", ");
-                sbArgs.Append(", ");
-
                 colValues[index] = values[f];
-
-                sbArgs.Append("@" + index.ToString());
-                sbColumns.Append('\"');
-                sbColumns.Append(f);
-                sbColumns.Append('\"');
+                sqlBuilder.Add(",");
+                sqlBuilder.Add(DataProvider.Dialect.QuoteForColumnName(f));
                 index++;
             }
 
-            var columnNames = sbColumns.ToString();
-            var args = sbArgs.ToString();
+            sqlBuilder.Add(") values (");
+            sqlBuilder.Add(serial.ToString());
 
-            var sql = string.Format(
-              "INSERT INTO \"{0}\" (\"_id\" {1}) VALUES ( {2} {3} );",
-              this.TableName,
-              columnNames,
-              serial,
-              args);
+            for (int i = 0; i < allColumnNames.Count(); i++)
+            {
+                sqlBuilder.Add(",");
+                sqlBuilder.Add(Parameter.Placeholder);
+            }
+
+            sqlBuilder.Add(")");
+
+            var sql = sqlBuilder.ToSqlString();
 
             var rows = ctx.Connection.Execute(sql, colValues);
             if (rows != 1)

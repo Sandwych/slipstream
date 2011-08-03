@@ -34,8 +34,8 @@ namespace ObjectServer.Core
         internal static void Create(
             IDBConnection conn, string module, string model, string key, long resId)
         {
-            var sql =
-                "INSERT INTO core_model_data(name, module, model, ref_id) VALUES(@0, @1, @2, @3)";
+            var sql = SqlString.Parse(
+                "insert into core_model_data(name, module, model, ref_id) values(?,?,?,?)");
             var rows = conn.Execute(sql, key, module, model, resId);
             if (rows != 1)
             {
@@ -81,7 +81,7 @@ namespace ObjectServer.Core
                 throw new ArgumentNullException("conn");
             }
 
-            var sql = "UPDATE core_model_data SET ref_id = @0 WHERE model = @1 AND name = @2";
+            var sql = SqlString.Parse("update core_model_data set ref_id=? where model=? and name=?");
             var rowCount = conn.Execute(sql, refId, model, key);
 
             if (rowCount != 1)

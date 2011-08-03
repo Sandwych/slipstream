@@ -101,7 +101,11 @@ namespace ObjectServer
             var cfg = Platform.Configuration;
             this.LookupAllModules(cfg.ModulePath);
 
-            var sql = "SELECT COUNT(*) FROM \"core_module\" WHERE \"name\" = @0";
+            var sql = new SqlString(
+                "select count(*) from ",
+                DataProvider.Dialect.QuoteForTableName("core_module"),
+                " where ",
+                DataProvider.Dialect.QuoteForColumnName("name"), "=", Parameter.Placeholder);
 
             foreach (var m in allModules)
             {
@@ -157,10 +161,10 @@ namespace ObjectServer
 
             var ids = unloadedModuleIds.ToCommaList();
             var sql2 = string.Format(
-                "UPDATE \"core_module\" SET \"state\" = 'deactivated' WHERE \"_id\" IN ({0})",
+                "update core_module set state = 'deactivated' where _id IN ({0})",
                 ids);
 
-            db.Execute(sql2);
+            db.Execute(SqlString.Parse(sql2));
         }
 
     }

@@ -73,11 +73,11 @@ namespace ObjectServer.Data.Postgresql
             }
 
             //检查连接
-            var sql = @"
-    SELECT COALESCE(COUNT(table_name), 0)
-        FROM information_schema.tables 
-        WHERE table_type = 'BASE TABLE' AND table_schema = 'public' AND table_name = @0
-";
+            var sql = new SqlString(
+                "select coalesce(count(table_name), 0) ",
+                "from information_schema.tables ",
+                "where table_type='BASE TABLE' and table_schema='public' and table_name=",
+                Parameter.Placeholder);
 
             var n = (long)db.QueryValue(sql, tableName);
             return n > 0;
@@ -101,15 +101,22 @@ namespace ObjectServer.Data.Postgresql
             }
 
             tableName = tableName.SqlEscape();
-            var sql = string.Format(
-                @"CREATE TABLE ""{0}"" (""_id"" BIGSERIAL NOT NULL, PRIMARY KEY(""_id"")) WITHOUT OIDS",
-                tableName.SqlEscape());
+            var sql = new SqlString(
+                "create table ",
+                DataProvider.Dialect.QuoteForTableName(tableName),
+                " (",
+                DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName),
+                " bigserial not null, primary key(",
+                DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName),
+                " )) without oids");
+
             db.Execute(sql);
 
             label = label.SqlEscape();
-            sql = string.Format(
-                @"COMMENT ON TABLE ""{0}"" IS '{1}';",
-                tableName, label);
+            sql = new SqlString("comment on table ",
+                DataProvider.Dialect.QuoteForTableName(tableName),
+                " is '", label.Replace("'", "''"), "'");
+
             db.Execute(sql);
         }
 
@@ -126,18 +133,18 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sqlType = PgSqlTypeConverter.GetSqlType(field);
-            var notNull = field.IsRequired ? "NOT NULL" : "";
+            var notNull = field.IsRequired ? "not null" : "";
 
             var sql = string.Format(
-                @"ALTER TABLE ""{0}"" ADD COLUMN ""{1}"" {2} {3}",
+                @"alter table ""{0}"" add column ""{1}"" {2} {3}",
                 this.Name, field.Name, sqlType, notNull);
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
 
             //添加注释
             sql = string.Format(
-                "COMMENT ON COLUMN \"{0}\".\"{1}\" IS '{2}'",
+                "comment on column \"{0}\".\"{1}\" IS '{2}'",
                 this.Name, field.Name, field.Label);
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
 
             if (field.IsUnique)
             {
@@ -162,9 +169,9 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sql = string.Format(
-                "ALTER TABLE \"{0}\" DROP COLUMN \"{1}\"",
+                "alter table \"{0}\" drop column \"{1}\"",
                 this.Name, columnName);
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
         }
 
         public void AlterColumnNullable(IDBConnection db, string columnName, bool nullable)
@@ -184,11 +191,11 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
-            var action = nullable ? "DROP NOT NULL" : "SET NOT NULL";
+            var action = nullable ? "drop not null" : "set not null";
             var sql = string.Format(
-                "ALTER TABLE \"{0}\" ALTER COLUMN \"{1}\" {2}",
+                "alter table \"{0}\" alter column \"{1}\" {2}",
                 this.Name, columnName, action);
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
         }
 
         public void AlterColumnType(IDBConnection db, string columnName, string sqlType)
@@ -209,9 +216,9 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sql = string.Format(
-                "ALTER TABLE \"{0}\" ALTER \"{1}\" TYPE {2}",
+                "alter table \"{0}\" alter \"{1}\" type {2}",
                 this.Name, columnName, sqlType);
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
         }
 
         public bool ColumnExists(string columnName)
@@ -299,9 +306,9 @@ namespace ObjectServer.Data.Postgresql
             Debug.Assert(!string.IsNullOrEmpty(constraintName));
             Debug.Assert(!string.IsNullOrEmpty(constraint));
 
-            var sql = "ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" {2}";
+            var sql = "alter table \"{0}\" add constraint \"{1}\" {2}";
             sql = string.Format(sql, this.Name, constraintName, constraint);
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
         }
 
         public void DeleteConstraint(IDBConnection db, string constraintName)
@@ -316,9 +323,9 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sql = string.Format(
-                "ALTER TABLE \"{0}\" DROP CONSTRAINT \"{1}\"",
+                "alter table \"{0}\" drop constraint \"{1}\"",
                 this.Name, constraintName);
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
         }
 
 
@@ -334,11 +341,11 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentNullException("constraintName");
             }
 
-            var sql = @"
-SELECT COALESCE(COUNT(constraint_name), 0)
-    FROM information_schema.table_constraints
-    WHERE table_catalog = @0 AND constraint_schema = 'public' AND constraint_name = @1
-";
+            var sql = SqlString.Parse(@"
+select coalesce(count(constraint_name), 0)
+    from information_schema.table_constraints
+    where table_catalog=? and constraint_schema = 'public' and constraint_name=?");
+
             var n = (long)db.QueryValue(sql, db.DatabaseName, constraintName);
             return n > 0;
         }
@@ -365,10 +372,10 @@ SELECT COALESCE(COUNT(constraint_name), 0)
             var onDelete = onDeleteMapping[act];
             var fkName = this.GenerateFkName(columnName);
             var sql = string.Format(
-                "ALTER TABLE \"{0}\" ADD CONSTRAINT \"{1}\" FOREIGN KEY (\"{2}\") REFERENCES \"{3}\" ON DELETE {4}",
+                "alter table \"{0}\" add constraint \"{1}\" foreign key (\"{2}\") references \"{3}\" on delete {4}",
                 this.Name, fkName, columnName, refTable, onDelete);
 
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
         }
 
 
@@ -406,11 +413,11 @@ SELECT COALESCE(COUNT(constraint_name), 0)
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
-            var sql = @"
-SELECT COALESCE(COUNT(constraint_name), 0)
-    FROM information_schema.key_column_usage 
-    WHERE constraint_schema = 'public' AND table_name = @0 AND column_name = @1
-";
+            var sql = SqlString.Parse(@"
+select coalesce(count(constraint_name), 0)
+    from information_schema.key_column_usage 
+    where constraint_schema='public' and table_name=? and column_name=?
+");
             var n = (long)db.QueryValue(sql, this.Name, columnName);
             return n > 0;
         }

@@ -10,9 +10,6 @@ namespace ObjectServer.Data
 {
     public class DummyISessionFactoryImplementor : ISessionFactoryImplementor
     {
-        private static readonly NHibernate.Dialect.Dialect s_dialect = new NHibernate.Dialect.PostgreSQL82Dialect();
-
-
         public NHibernate.Connection.IConnectionProvider ConnectionProvider
         {
             get { throw new NotImplementedException(); }
@@ -25,7 +22,7 @@ namespace ObjectServer.Data
 
         public NHibernate.Dialect.Dialect Dialect
         {
-            get { return s_dialect; }
+            get { return DataProvider.Dialect; }
         }
 
         public NHibernate.Proxy.IEntityNotFoundDelegate EntityNotFoundDelegate

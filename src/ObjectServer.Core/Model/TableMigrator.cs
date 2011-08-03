@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Data;
 
 namespace ObjectServer.Model
@@ -168,8 +170,8 @@ namespace ObjectServer.Model
             {
                 var defaultValue = field.DefaultProc(this.context);
                 var sql = string.Format(
-                    "UPDATE \"{0}\" SET \"{1}\"=@0", table.Name, field.Name);
-                this.db.Connection.Execute(sql, defaultValue);
+                    "update \"{0}\" set \"{1}\"=?", table.Name, field.Name);
+                this.db.Connection.Execute(SqlString.Parse(sql), defaultValue);
                 table.AlterColumnNullable(this.db.Connection, field.Name, false);
             }
             else
@@ -181,8 +183,8 @@ namespace ObjectServer.Model
 
         private bool TableHasRow(string tableName)
         {
-            var sql = string.Format(
-                "SELECT COUNT(*) FROM \"{0}\"", tableName);
+            var sql = new SqlString("select count(*) from ",
+                DataProvider.Dialect.QuoteForTableName(tableName));                
             var rowCount = (long)this.db.Connection.QueryValue(sql);
             return rowCount > 0;
         }

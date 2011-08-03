@@ -85,9 +85,14 @@ namespace ObjectServer.Model
             Debug.Assert(ids != null);
             Debug.Assert(tableModel != null);
 
-            var sql = string.Format(
-                "DELETE FROM \"{0}\" WHERE \"_id\" IN ({1})",
-                tableModel.TableName, ids.ToCommaList());
+            var sql = new SqlString(
+                "delete from ",
+                DataProvider.Dialect.QuoteForTableName(tableModel.TableName),
+                " where ",
+                DataProvider.Dialect.QuoteForColumnName(IDFieldName),
+                " in (",
+                ids.ToCommaList(),
+                ")");
 
             var rowCount = scope.Connection.Execute(sql);
             if (rowCount != ids.Count())

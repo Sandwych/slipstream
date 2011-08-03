@@ -77,18 +77,15 @@ namespace ObjectServer.Model
 
             //检查字段
             var columns = new List<IBinaryExpression>(record.Count);
-            int i = 0;
             var args = new List<object>(record.Count);
             foreach (var field in updatableColumnFields)
             {
                 var exp = new BinaryExpression(
                     new IdentifierExpression(field),
                     ExpressionOperator.EqualOperator,
-                    new ParameterExpression("@" + i.ToString()));
+                    new ParameterExpression("?"));
                 columns.Add(exp);
                 args.Add(record[field]);
-
-                ++i;
             }
 
             var whereExp = new BinaryExpression(
@@ -105,7 +102,7 @@ namespace ObjectServer.Model
 
             var sql = updateStatement.ToString();
 
-            var rowsAffected = scope.Connection.Execute(sql, args.ToArray());
+            var rowsAffected = scope.Connection.Execute(SqlString.Parse(sql), args.ToArray());
 
             //检查更新结果
             if (rowsAffected != 1)

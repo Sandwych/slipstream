@@ -161,21 +161,22 @@ namespace ObjectServer.Model
             //先插入代码定义了，但数据库不存在的            
             var sql = @"
 INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""label"", ""type"", ""help"") 
-    VALUES(@0, @1, @2, @3, @4, @5, @6)";
+    VALUES(?,?,?,?,?,?,?)";
             var fieldsToAppend = this.Fields.Keys.Except(dbFieldsNames);
             foreach (var fieldName in fieldsToAppend)
             {
                 var field = this.Fields[fieldName];
-                db.Connection.Execute(sql,
+                db.Connection.Execute(SqlString.Parse(sql),
                     this.Module, modelId.Value, fieldName, field.Relation, field.Label, field.Type.ToString(), "");
             }
 
             //删除数据库存在，但代码未定义的
             var fieldsToDelete = dbFieldsNames.Except(this.Fields.Keys);
-            sql = @"DELETE FROM ""core_field"" WHERE ""name""=@0 AND ""module""=@1 AND ""model""=@2";
+            sql = @"delete from core_field where name=? and module=? and model=?";
+            var sqlDelete = SqlString.Parse(sql);
             foreach (var f in fieldsToDelete)
             {
-                db.Connection.Execute(sql, f, this.Module, modelId.Value);
+                db.Connection.Execute(sqlDelete, f, this.Module, modelId.Value);
             }
 
             //更新现存的（交集）
@@ -215,18 +216,35 @@ INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""labe
                 fieldType != metaFieldType ||
                 fieldHelp != metaField.Help)
             {
+                /*
+                 * 
+                UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, 
+                ""help""=@3  WHERE ""_id""=@4";
+                */
                 var sql =
-@"
-UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2, 
-    ""help""=@3  WHERE ""_id""=@4";
-                db.Connection.Execute(sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
+                    new SqlString(
+                        "update core_field set ",
+                        "type=", Parameter.Placeholder, ",",
+                        "relation=", Parameter.Placeholder, ",",
+                        "label=", Parameter.Placeholder, ",",
+                        "help=", Parameter.Placeholder,
+                        "where _id=", Parameter.Placeholder);
+                db.Connection.Execute(
+                    sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
 
             }
         }
 
         private long? FindExistedModelInDb(IDBProfile db)
         {
-            var sql = "SELECT MAX(\"_id\") FROM core_model WHERE name=@0";
+            //var sql = "SELECT MAX(\"_id\") FROM core_model WHERE name=@0";
+            var sql = new SqlString(
+                "select max(",
+                DataProvider.Dialect.QuoteForColumnName(IDFieldName),
+                ") from ",
+                DataProvider.Dialect.QuoteForTableName("core_model"),
+                " where ",
+                DataProvider.Dialect.QuoteForColumnName("name"), "=", Parameter.Placeholder);
             var o = db.Connection.QueryValue(sql, this.Name);
             if (o.IsNull())
             {
@@ -240,17 +258,29 @@ UPDATE ""core_field"" SET ""type""=@0, ""relation""=@1, ""label""=@2,
 
         private void CreateModel(IDBProfile db)
         {
-            var rowCount = db.Connection.Execute(
-                "INSERT INTO \"core_model\"(\"name\", \"module\", \"label\") VALUES(@0, @1, @2);",
-                this.Name, this.Module, this.Label);
+            var sql = new SqlString(
+                "insert into core_model(name, module, label) values(",
+                Parameter.Placeholder, ",",
+                Parameter.Placeholder, ",",
+                Parameter.Placeholder, ")");
+            var rowCount = db.Connection.Execute(sql, this.Name, this.Module, this.Label);
 
             if (rowCount != 1)
             {
                 throw new DataException("Failed to insert record of table core_model");
             }
 
-            var modelId = (long)db.Connection.QueryValue(
-                "SELECT MAX(_id) FROM core_model WHERE name = @0 AND module = @1", this.Name, this.Module);
+            sql = new SqlString(
+                "select max(",
+                DataProvider.Dialect.QuoteForColumnName(IDFieldName),
+                ") from ",
+                DataProvider.Dialect.QuoteForTableName("core_model"),
+                " where ",
+                DataProvider.Dialect.QuoteForColumnName("name"), "=", Parameter.Placeholder,
+                " and ",
+                DataProvider.Dialect.QuoteForColumnName("module"), "=", Parameter.Placeholder);
+
+            var modelId = (long)db.Connection.QueryValue(sql, this.Name, this.Module);
 
             //插入一笔到 core_model_data 方便以后导入时引用
             var key = "model_" + this.Name.Replace('.', '_');
