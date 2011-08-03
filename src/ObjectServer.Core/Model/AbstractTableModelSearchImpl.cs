@@ -71,27 +71,7 @@ namespace ObjectServer.Model
                     querySql, new SqlString(offset.ToString()), new SqlString(limit.ToString()));
             }
 
-            using (var sqlCommand = scope.Connection.CreateCommand(querySql))
-            {
-                sqlCommand.PrepareNamedParameters(translator.Values);
-                var result = QueryIDs(sqlCommand);
-                return result.ToArray();
-            }
-        }
-
-        private static List<long> QueryIDs(IDbCommand sqlCommand)
-        {
-            Debug.Assert(sqlCommand != null);
-
-            var result = new List<long>();
-            using (var reader = sqlCommand.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    result.Add((long)reader[0]);
-                }
-            }
-            return result;
+            return scope.Connection.QueryAsArray<long>(querySql, translator.Values);
         }
 
         private void GenerateReadingRuleConstraints(IServiceScope scope, ConstraintTranslator translator)

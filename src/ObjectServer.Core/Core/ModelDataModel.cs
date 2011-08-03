@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Model;
 using ObjectServer.Runtime;
 using ObjectServer.Data;
@@ -59,9 +61,10 @@ namespace ObjectServer.Core
                 throw new ArgumentNullException("model");
             }
 
-            var sql = 
-                @"SELECT ref_id FROM core_model_data 
-                    WHERE model = @0 AND name = @1";
+            var sql = new SqlString(
+                "select ref_id FROM core_model_data ",
+                "where model=", Parameter.Placeholder,
+                " and name=", Parameter.Placeholder);
             var rows = conn.QueryAsArray<long>(sql, model, key);
             if (rows.Length == 0)
             {

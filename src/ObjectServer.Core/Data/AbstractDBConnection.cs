@@ -124,7 +124,7 @@ namespace ObjectServer.Data
 
             using (var command = this.CreateCommand(commandText))
             {
-                command.PrepareNamedParameters(args);
+                PrepareNamedParameters(command, args);
                 using (var reader = command.ExecuteReader())
                 {
                     var tb = new DataTable();
@@ -167,7 +167,7 @@ namespace ObjectServer.Data
 
             using (var command = this.CreateCommand(commandText))
             {
-                command.PrepareNamedParameters(args);
+                PrepareNamedParameters(command, args);
 
                 var rows = new List<Dictionary<string, object>>();
 
@@ -202,9 +202,9 @@ namespace ObjectServer.Data
         }
 
 
-        public virtual T[] QueryAsArray<T>(string commandText, params object[] args)
+        public virtual T[] QueryAsArray<T>(SqlString commandText, params object[] args)
         {
-            if (string.IsNullOrEmpty(commandText))
+            if (commandText == null)
             {
                 throw new ArgumentNullException("commandText");
             }
@@ -213,9 +213,9 @@ namespace ObjectServer.Data
 
             Logger.Debug(() => ("SQL: " + commandText));
 
-            using (var command = PrepareCommand(commandText))
+            using (var command = this.CreateCommand(commandText))
             {
-                PrepareCommandParameters(command, args);
+                PrepareNamedParameters(command, args);
                 using (var reader = command.ExecuteReader())
                 {
                     var result = new List<T>();
@@ -298,12 +298,27 @@ namespace ObjectServer.Data
             throw new NotImplementedException();
         }
 
-        public IDbCommand CreateCommand(NHibernate.SqlCommand.SqlString sql)
+        public IDbCommand CreateCommand(SqlString sql)
         {
             var sqlCommand = DataProvider.Driver.GenerateCommand(
                 CommandType.Text, sql, new NHibernate.SqlTypes.SqlType[] { });
             sqlCommand.Connection = this.DBConnection;
             return sqlCommand;
+        }
+
+        private static void PrepareNamedParameters(IDbCommand sqlCommand, object[] args)
+        {
+            Debug.Assert(args != null);
+            Debug.Assert(sqlCommand != null);
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                var value = args[i];
+                var param = sqlCommand.CreateParameter();
+                param.ParameterName = 'p' + i.ToString();
+                param.Value = value;
+                sqlCommand.Parameters.Add(param);
+            }
         }
     }
 }

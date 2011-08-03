@@ -8,6 +8,7 @@ using System.Data;
 using System.Reflection;
 using System.Dynamic;
 
+using NHibernate.SqlCommand;
 
 using ObjectServer.Data;
 using ObjectServer.Utility;
@@ -210,7 +211,7 @@ SELECT  hc.*
 FROM    ""{0}"" hp
 JOIN    ""{0}"" hc
 ON      hc._left BETWEEN hp._left AND hp._right
-WHERE   hp._id = @0 AND hc._id <> @0
+WHERE   hp._id = ? AND hc._id <> ?
         AND
         (
         SELECT  COUNT(hn._id)
@@ -220,7 +221,7 @@ WHERE   hp._id = @0 AND hc._id <> @0
         ) <= 2
 ";
             var sql = string.Format(sqlFmt, this.TableName);
-            var ids = conn.QueryAsArray<long>(sql, parentID).Select(o => (long)o);
+            var ids = conn.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
 
             return ids.ToArray();
         }
@@ -229,13 +230,13 @@ WHERE   hp._id = @0 AND hc._id <> @0
         {
             var sqlFmt =
 @"
-SELECT  hc.*
-FROM    ""{0}"" hp
-JOIN    ""{0}"" hc ON hc._left BETWEEN hp._left AND hp._right
-WHERE   hp._id = @0 AND hc._id <> @0
+select  hc.*
+from    {0} hp
+join    {0} hc ON hc._left between hp._left and hp._right
+where   hp._id=? and hc._id<>?
 ";
-            var sql = string.Format(sqlFmt, this.TableName);
-            var ids = conn.QueryAsArray<long>(sql, parentID).Select(o => (long)o);
+            var sql = string.Format(sqlFmt, DataProvider.Dialect.QuoteForTableName(this.TableName));
+            var ids = conn.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
             return ids.ToArray();
         }
 

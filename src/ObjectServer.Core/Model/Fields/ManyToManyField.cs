@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NHibernate.SqlCommand;
+
+using ObjectServer.Data;
 using ObjectServer.Utility;
 
 namespace ObjectServer.Model
@@ -40,9 +43,14 @@ namespace ObjectServer.Model
             {
                 var selfId = (long)rec[AbstractModel.IDFieldName];
                 //中间表没有记录，返回空
-                var sql = string.Format(
-                    "SELECT \"{0}\" FROM \"{1}\" WHERE \"{2}\" = @0",
-                    this.RelatedField, relationModel.TableName, this.OriginField);
+                var sql = new SqlString(
+                    "select ",
+                    DataProvider.Dialect.QuoteForColumnName(this.RelatedField),
+                    " from ",
+                    DataProvider.Dialect.QuoteForTableName(relationModel.TableName),
+                    " where ",
+                    DataProvider.Dialect.QuoteForColumnName(this.OriginField),
+                    "=", Parameter.Placeholder);
                 var targetIds = ctx.Connection.QueryAsArray<object>(sql, selfId);
                 result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }

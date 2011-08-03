@@ -26,7 +26,7 @@ namespace ObjectServer.Data
         DataTable QueryAsDataTable(SqlString commandText, params object[] args);
         Dictionary<string, object>[] QueryAsDictionary(SqlString commandText, params object[] args);
         dynamic[] QueryAsDynamic(SqlString commandText, params object[] args);
-        T[] QueryAsArray<T>(string commandText, params object[] args);
+        T[] QueryAsArray<T>(SqlString commandText, params object[] args);
 
         int Execute(string commandText, params object[] args);
 

@@ -119,7 +119,6 @@
     <Compile Include="Data\AbstractDBConnection.cs" />
     <Compile Include="Data\DatabaseType.cs" />
     <Compile Include="Data\DataProvider.cs" />
-    <Compile Include="Data\DbCommandExtensions.cs" />
     <Compile Include="Data\DynamicRecord.cs" />
     <Compile Include="Data\IDBConnection.cs" />
     <Compile Include="Data\IDataProvider.cs" />
