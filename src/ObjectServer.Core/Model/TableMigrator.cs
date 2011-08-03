@@ -165,13 +165,16 @@ namespace ObjectServer.Model
 
         private void SetColumnNotNullable(ITableContext table, IField field, bool hasRow)
         {
+            var dialect = DataProvider.Dialect;
             //先看有没有行，有行要先设置默认值，如果没有默认值就报错了
             if (hasRow && field.DefaultProc != null)
             {
                 var defaultValue = field.DefaultProc(this.context);
-                var sql = string.Format(
-                    "update \"{0}\" set \"{1}\"=?", table.Name, field.Name);
-                this.db.Connection.Execute(SqlString.Parse(sql), defaultValue);
+                var sql = new SqlString("update ",
+                    dialect.QuoteForTableName(table.Name),
+                    " set ",
+                    dialect.QuoteForColumnName(field.Name), "=", Parameter.Placeholder);
+                this.db.Connection.Execute(sql, defaultValue);
                 table.AlterColumnNullable(this.db.Connection, field.Name, false);
             }
             else
@@ -184,7 +187,7 @@ namespace ObjectServer.Model
         private bool TableHasRow(string tableName)
         {
             var sql = new SqlString("select count(*) from ",
-                DataProvider.Dialect.QuoteForTableName(tableName));                
+                DataProvider.Dialect.QuoteForTableName(tableName));
             var rowCount = (long)this.db.Connection.QueryValue(sql);
             return rowCount > 0;
         }

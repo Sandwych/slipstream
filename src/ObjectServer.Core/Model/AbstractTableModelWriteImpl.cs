@@ -12,7 +12,6 @@ using NHibernate.SqlCommand;
 
 using ObjectServer.Data;
 using ObjectServer.Utility;
-using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
@@ -75,34 +74,38 @@ namespace ObjectServer.Model
                 f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly).ToArray();
             this.ConvertFieldToColumn(scope, record, updatableColumnFields);
 
-            //检查字段
-            var columns = new List<IBinaryExpression>(record.Count);
-            var args = new List<object>(record.Count);
+            var sqlBuilder = new SqlStringBuilder();
+            sqlBuilder.Add("update ");
+            sqlBuilder.Add(DataProvider.Dialect.QuoteForTableName(this.TableName));
+            sqlBuilder.Add(" set ");
+
+            var args = new object[updatableColumnFields.Count()];
+            var argIndex = 0;
+            var commaNeeded = false;
             foreach (var field in updatableColumnFields)
             {
-                var exp = new BinaryExpression(
-                    new IdentifierExpression(field),
-                    ExpressionOperator.EqualOperator,
-                    new ParameterExpression("?"));
-                columns.Add(exp);
-                args.Add(record[field]);
+                if (commaNeeded)
+                {
+                    sqlBuilder.Add(",");
+                }
+                commaNeeded = true;
+                args[argIndex] = record[field];
+                argIndex++;
+
+                sqlBuilder.Add(DataProvider.Dialect.QuoteForColumnName(field));
+                sqlBuilder.Add("=");
+                sqlBuilder.Add(Parameter.Placeholder);
             }
 
-            var whereExp = new BinaryExpression(
-                new AliasExpression(IDFieldName),
-                ExpressionOperator.EqualOperator,
-                new ValueExpression(id));
+            sqlBuilder.Add(" where ");
+            sqlBuilder.Add(DataProvider.Dialect.QuoteForColumnName(IDFieldName));
+            sqlBuilder.Add("=");
+            sqlBuilder.Add(id.ToString());
+            sqlBuilder.Add(" and ");
+            sqlBuilder.Add(GetVersionExpression(record));
 
-            whereExp = ProcessVersionExpression(record, whereExp);
-
-            var updateStatement = new UpdateStatement(
-                new AliasExpression(this.TableName),
-                new SetClause(columns),
-                new WhereClause(whereExp));
-
-            var sql = updateStatement.ToString();
-
-            var rowsAffected = scope.Connection.Execute(SqlString.Parse(sql), args.ToArray());
+            var sql = sqlBuilder.ToSqlString();
+            var rowsAffected = scope.Connection.Execute(sql, args);
 
             //检查更新结果
             if (rowsAffected != 1)
@@ -200,26 +203,28 @@ namespace ObjectServer.Model
             }
         }
 
-        private static BinaryExpression ProcessVersionExpression(IDictionary<string, object> record, BinaryExpression whereExp)
+        private static SqlString GetVersionExpression(IDictionary<string, object> record)
         {
             //如果存在 _version 字段就加入版本检查条件
             //TODO: 是否强制要求客户端必须送来 _version 字段？
+
+            SqlString verExp = null;
             if (record.ContainsKey(VersionFieldName))
             {
                 var version = (long)record[VersionFieldName];
-                var verExp = new BinaryExpression(
-                    new AliasExpression(VersionFieldName),
-                    ExpressionOperator.EqualOperator,
-                    new ValueExpression(version)); //现存数据库的版本必须比用户提供的版本相同
-                whereExp = new BinaryExpression(
-                    whereExp,
-                    ExpressionOperator.AndOperator,
-                    verExp);
+                verExp = new SqlString(
+                    DataProvider.Dialect.QuoteForColumnName(VersionFieldName),
+                    "=",
+                    version.ToString()); //现存数据库的版本必须比用户提供的版本相同
 
                 //版本号也必须更新
                 record[VersionFieldName] = version + 1;
             }
-            return whereExp;
+            else
+            {
+                verExp = new SqlString(DataProvider.Dialect.ToBooleanValueString(true));
+            }
+            return verExp;
         }
     }
 }
