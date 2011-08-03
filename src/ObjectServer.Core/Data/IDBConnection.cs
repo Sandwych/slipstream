@@ -19,7 +19,6 @@ namespace ObjectServer.Data
 
         bool IsInitialized();
 
-        DbConnection DBConnection { get; }
         string DatabaseName { get; }
                 
         object QueryValue(SqlString commandText, params object[] args);

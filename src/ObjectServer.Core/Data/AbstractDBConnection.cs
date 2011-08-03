@@ -59,16 +59,12 @@ namespace ObjectServer.Data
 
             Logger.Debug(() => "SQL: " + sql);
 
-            var cmd = this.DBConnection.CreateCommand();
+            var cmd = this.conn.CreateCommand();
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
         }
 
-
-        public DbConnection DBConnection { get { return this.conn; } }
-
         public string DatabaseName { get; protected set; }
-
 
         #region Query methods
 
@@ -311,7 +307,7 @@ namespace ObjectServer.Data
         {
             var sqlCommand = DataProvider.Driver.GenerateCommand(
                 CommandType.Text, sql, new NHibernate.SqlTypes.SqlType[] { });
-            sqlCommand.Connection = this.DBConnection;
+            sqlCommand.Connection = this.conn;
             return sqlCommand;
         }
 

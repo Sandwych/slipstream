@@ -63,19 +63,16 @@ select datname from pg_database
                 throw new ArgumentNullException("dbName");
             }
 
-            var sql = string.Format(
-                @"CREATE DATABASE ""{0}"" TEMPLATE template0 ENCODING 'unicode'",
-                dbName);
+            var sql = new SqlString(
+                "create database ",
+                DataProvider.Dialect.QuoteForSchemaName(dbName),
+                " template template0 encoding 'unicode'");
 
-            using (var ctx = new PgDBConnection())
+            using (var conn = new PgDBConnection())
             {
-                ctx.Open();
-
-                var cmd = ctx.DBConnection.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.ExecuteNonQuery();
-
-                ctx.Close();
+                conn.Open();
+                conn.Execute(sql);
+                conn.Close();
             }
 
         }
@@ -89,19 +86,15 @@ select datname from pg_database
                 throw new ArgumentNullException("dbName");
             }
 
-            using (var ctx = new PgDBConnection())
+            var sql = new SqlString(
+                  "drop database ",
+                  DataProvider.Dialect.QuoteForSchemaName(dbName));
+
+            using (var conn = new PgDBConnection())
             {
-
-                var sql = string.Format(
-                    "DROP DATABASE \"{0}\"", dbName);
-
-                Logger.Debug(() => "SQL: " + sql);
-
-                var cmd = ctx.DBConnection.CreateCommand();
-                cmd.CommandText = sql;
-                cmd.ExecuteNonQuery();
-
-                ctx.Close();
+                conn.Open();
+                conn.Execute(sql);
+                conn.Close();
             }
         }
 
