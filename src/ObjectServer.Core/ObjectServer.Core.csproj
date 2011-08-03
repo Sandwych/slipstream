@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ObjectServer</RootNamespace>
-    <AssemblyName>os-core</AssemblyName>
+    <AssemblyName>ObjectServer.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -298,9 +298,6 @@
     <EmbeddedResource Include="Core\Data\Views.xml" />
     <EmbeddedResource Include="Core\Data\InitData.xml" />
     <EmbeddedResource Include="Core\Data\Security.xml" />
-    <Content Include="libzmq.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
