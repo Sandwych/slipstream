@@ -8,9 +8,10 @@ using System.Data;
 using System.Reflection;
 using System.Dynamic;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Data;
 using ObjectServer.Utility;
-using ObjectServer.SqlTree;
 
 namespace ObjectServer.Model
 {
@@ -64,17 +65,42 @@ namespace ObjectServer.Model
 
             columnFields = columnFields.Union(this.Inheritances.Select(i => i.RelatedField));
 
-            var whereExp = new BinaryExpression(
-                new IdentifierExpression(IDFieldName),
-                ExpressionOperator.InOperator,
-                new ExpressionGroup(ids));
+            var selectStmt = new SqlStringBuilder();
+            selectStmt.Add("select ");
 
-            var select = new SqlTree.SelectStatement();
-            select.Expression = new AliasExpressionList(columnFields);
-            select.FromClause = new FromClause(new string[] { this.TableName });
-            select.WhereClause = new WhereClause(whereExp);
+            bool commaNeeded = false;
+            foreach (var col in columnFields)
+            {
+                if(commaNeeded)
+                {
+                    selectStmt.Add(",");        
+                }
+                commaNeeded = true;
 
-            var sql = select.ToString();
+                var quotedColumn = DataProvider.Dialect.QuoteForColumnName(col);
+                selectStmt.Add(quotedColumn);
+            }
+
+            selectStmt.Add(" from ");
+            selectStmt.Add(this.TableName);
+            var idColumn = DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName);
+            selectStmt.Add(" where " + idColumn + " in (");
+
+            commaNeeded = false;
+            foreach (var id in ids)
+            {
+                if (commaNeeded)
+                {
+                    selectStmt.Add(",");
+                }
+                commaNeeded = true;
+
+                selectStmt.Add(id.ToString());
+            }
+
+            selectStmt.Add(")");
+
+            var sql = selectStmt.ToSqlString().ToString();
 
             //先查找表里的简单字段数据
             var records = scope.Connection.QueryAsDictionary(sql);

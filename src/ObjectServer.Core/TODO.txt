@@ -72,3 +72,5 @@
 * 给 BrowsableRecord 添加 IComparable
 
 * 给 SQLTree 添加 DISTINCT 
+
+* 把 SQLTree 全部换成 SqlStringBuilder 等
