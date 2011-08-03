@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NHibernate.SqlCommand;
 using NUnit.Framework;
 
 using ObjectServer.Data;
@@ -19,8 +20,8 @@ namespace ObjectServer.Data.Test
             using (var db = DataProvider.CreateDataContext("objectserver"))
             {
                 db.Open();
-
-                var rows = db.QueryAsDictionary("SELECT _id, name FROM core_model WHERE name = @0", "core.model");
+                var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
+                var rows = db.QueryAsDictionary(sql, "core.model");
                 Assert.NotNull(rows);
                 Assert.AreEqual(1, rows.Length);
                 Assert.AreEqual("core.model", rows[0]["name"]);
@@ -34,7 +35,8 @@ namespace ObjectServer.Data.Test
             {
                 db.Open();
 
-                var dt = db.QueryAsDataTable("SELECT _id, name FROM core_model WHERE name = @0", "core.model");
+                var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
+                var dt = db.QueryAsDataTable(sql, "core.model");
                 Assert.NotNull(dt);
 
                 Assert.AreEqual(2, dt.Columns.Count);
@@ -53,7 +55,8 @@ namespace ObjectServer.Data.Test
             {
                 db.Open();
 
-                var records = db.QueryAsDynamic("SELECT _id, name FROM core_model WHERE name = @0", "core.model");
+                var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
+                var records = db.QueryAsDynamic(sql, "core.model");
                 Assert.NotNull(records);
 
                 Assert.AreEqual(1, records.Length);

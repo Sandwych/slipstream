@@ -8,6 +8,8 @@ using System.Data;
 using System.Reflection;
 using System.Dynamic;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Data;
 using ObjectServer.Utility;
 using ObjectServer.SqlTree;
@@ -125,9 +127,17 @@ namespace ObjectServer.Model
             if (record.ContainsKey(ParentFieldName))
             {
                 var parentID = (long)record[ParentFieldName];
-                var sql = string.Format(
-                    "SELECT _left, _right FROM \"{0}\" WHERE \"_id\" = @0",
-                    this.TableName);
+                var sql = new SqlString(
+                    "select ",
+                    DataProvider.Dialect.QuoteForColumnName(AbstractTableModel.LeftFieldName),
+                    ",",
+                    DataProvider.Dialect.QuoteForColumnName(AbstractTableModel.RightFieldName),
+                    " from ",
+                    DataProvider.Dialect.QuoteForTableName(this.TableName),
+                    " where ",
+                    DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName),
+                    "=",
+                    Parameter.Placeholder);
 
                 var records = conn.QueryAsDictionary(sql, parentID);
                 if (records.Length == 0)

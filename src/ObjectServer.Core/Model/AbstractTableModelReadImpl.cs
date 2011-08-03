@@ -100,7 +100,7 @@ namespace ObjectServer.Model
 
             selectStmt.Add(")");
 
-            var sql = selectStmt.ToSqlString().ToString();
+            var sql = selectStmt.ToSqlString();
 
             //先查找表里的简单字段数据
             var records = scope.Connection.QueryAsDictionary(sql);

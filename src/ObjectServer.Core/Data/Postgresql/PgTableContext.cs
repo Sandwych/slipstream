@@ -6,6 +6,8 @@ using System.Data;
 using System.Reflection;
 using System.Diagnostics;
 
+using NHibernate.SqlCommand;
+
 #if MONO
 using Mono.Npgsql;
 #else
@@ -264,12 +266,12 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentOutOfRangeException("tableName");
             }
 
-            var sql = @"
-SELECT column_name, data_type, is_nullable, character_maximum_length
-    FROM information_schema.columns
-    WHERE table_name = @0
-    ORDER BY ordinal_position;
-";
+            var sql = new SqlString(
+            "select column_name, data_type, is_nullable, character_maximum_length ",
+            "from information_schema.columns ",
+            "where table_name=", Parameter.Placeholder, " ",
+            "order by ordinal_position");
+
             var records = db.QueryAsDictionary(sql, tableName);
             this.columns.Clear();
             foreach (var r in records)

@@ -7,6 +7,8 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Model;
 using ObjectServer.Runtime;
 using ObjectServer.Data;
@@ -117,8 +119,12 @@ namespace ObjectServer
         {
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的
-            var sql = "SELECT \"_id\", \"name\" FROM \"core_module\" WHERE \"state\" = 'activated'";
-            var modules = ctx.Connection.QueryAsDictionary(sql);
+            //SQL: select _id, name from core_module where state='activated'
+            //TODO 加上引号
+            var sql = new SqlString(
+                " select _id, name from core_module where state=", Parameter.Placeholder);
+
+            var modules = ctx.Connection.QueryAsDictionary(sql, "activated");
 
             var unloadModules = new List<long>();
             foreach (var m in modules)

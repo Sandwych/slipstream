@@ -8,6 +8,8 @@ using System.Data;
 using System.Reflection;
 using System.Dynamic;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Data;
 using ObjectServer.Utility;
 using ObjectServer.SqlTree;
@@ -34,10 +36,17 @@ namespace ObjectServer.Model
             //处理版本字段与基类继承
             if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0)
             {
-                var sql1 = string.Format(
-                    "SELECT * FROM \"{0}\" WHERE \"_id\" = {1}",
-                    this.TableName, id);
-                var existedRecord = scope.Connection.QueryAsDictionary(sql1)[0];
+                /*
+                select * from <TableName> where _id=?
+                */
+                var sql1 = new SqlString("select * from ",
+                    DataProvider.Dialect.QuoteForTableName(this.TableName),
+                    " where ",
+                    DataProvider.Dialect.QuoteForColumnName(IDFieldName),
+                    "=",
+                    Parameter.Placeholder);
+
+                var existedRecord = scope.Connection.QueryAsDictionary(sql1, id)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 

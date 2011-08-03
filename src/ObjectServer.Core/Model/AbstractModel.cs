@@ -4,6 +4,8 @@ using System.Linq;
 using System.Diagnostics;
 using System.Data;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Sql;
 using ObjectServer.Data;
 
@@ -151,14 +153,13 @@ namespace ObjectServer.Model
         private void SyncFields(IDBProfile db, long? modelId)
         {
             //同步代码定义的字段与数据库 core_model_field 表里记录的字段信息
-            var sql = @"
-SELECT * FROM ""core_field""  WHERE ""module""=@0 AND ""model""=@1
-";
-            var dbFields = db.Connection.QueryAsDictionary(sql, this.Module, modelId.Value);
+            var sqlQuery = SqlString.Parse("SELECT * FROM core_field  WHERE module=? AND model=?");
+
+            var dbFields = db.Connection.QueryAsDictionary(sqlQuery, this.Module, modelId.Value);
             var dbFieldsNames = (from f in dbFields select (string)f["name"]).ToArray();
 
             //先插入代码定义了，但数据库不存在的            
-            sql = @"
+            var sql = @"
 INSERT INTO ""core_field""(""module"", ""model"", ""name"", ""relation"", ""label"", ""type"", ""help"") 
     VALUES(@0, @1, @2, @3, @4, @5, @6)";
             var fieldsToAppend = this.Fields.Keys.Except(dbFieldsNames);

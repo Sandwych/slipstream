@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Model;
 
 namespace ObjectServer.Core
@@ -41,13 +43,13 @@ namespace ObjectServer.Core
         public Dictionary<string, object>[]
             FindByModelAndUserId(IServiceScope scope, string model, long userId)
         {
-            var sql = @"
+            var sql = SqlString.Parse(@"
 SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
     FROM core_model_access ma
-    INNER JOIN core_model m ON m._id = ma.model
-    INNER JOIN core_user_group_rel ugr ON ugr.gid = ma.group
-    WHERE (ugr.uid = @0) AND (m.name = @1)
-";
+    INNER JOIN core_model m ON m._id=ma.model
+    INNER JOIN core_user_group_rel ugr ON ugr.gid=ma.group
+    WHERE (ugr.uid=?) AND (m.name=?)
+");
             var result = scope.Connection.QueryAsDictionary(sql, userId, model);
 
             return result;

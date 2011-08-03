@@ -8,6 +8,8 @@ using System.Data;
 using System.Reflection;
 using System.Dynamic;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Data;
 using ObjectServer.Utility;
 using ObjectServer.SqlTree;
@@ -38,10 +40,15 @@ namespace ObjectServer.Model
             Dictionary<string, object>[] existedRecords = null;
             if (this.Inheritances.Count > 0)
             {
-                var sql = string.Format(
-                    "SELECT * FROM \"{0}\" WHERE \"_id\" IN ({1})",
-                    this.TableName,
-                    ids.ToCommaList());
+                var sql = new SqlString(
+                    "select * from ",
+                    DataProvider.Dialect.QuoteForTableName(this.TableName),
+                    " where ",
+                    DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName),
+                    " in (",
+                    ids.ToCommaList(),
+                    ")");
+
                 existedRecords = scope.Connection.QueryAsDictionary(sql);
             }
 

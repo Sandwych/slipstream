@@ -6,6 +6,8 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Model;
 
 namespace ObjectServer.Data
@@ -109,20 +111,20 @@ namespace ObjectServer.Data
             }
         }
 
-        public virtual DataTable QueryAsDataTable(string commandText, params object[] args)
+        public virtual DataTable QueryAsDataTable(SqlString commandText, params object[] args)
         {
-            if (string.IsNullOrEmpty(commandText))
+            if (commandText == null)
             {
                 throw new ArgumentNullException("commandText");
             }
 
             this.EnsureConnectionOpened();
 
-            Logger.Debug(() => ("SQL: " + commandText));
+            Logger.Debug(() => ("SQL: " + commandText.ToString()));
 
-            using (var command = PrepareCommand(commandText))
+            using (var command = this.CreateCommand(commandText))
             {
-                PrepareCommandParameters(command, args);
+                command.PrepareNamedParameters(args);
                 using (var reader = command.ExecuteReader())
                 {
                     var tb = new DataTable();
@@ -148,13 +150,13 @@ namespace ObjectServer.Data
                     return tb;
                 }
             }
+
         }
 
-
         public virtual Dictionary<string, object>[] QueryAsDictionary(
-            string commandText, params object[] args)
+            SqlString commandText, params object[] args)
         {
-            if (string.IsNullOrEmpty(commandText))
+            if (commandText == null)
             {
                 throw new ArgumentNullException("commandText");
             }
@@ -163,12 +165,10 @@ namespace ObjectServer.Data
 
             Logger.Debug(() => "SQL: " + commandText);
 
-            using (var command = PrepareCommand(commandText))
+            using (var command = this.CreateCommand(commandText))
             {
-                if (args != null && args.Length > 0)
-                {
-                    PrepareCommandParameters(command, args);
-                }
+                command.PrepareNamedParameters(args);
+
                 var rows = new List<Dictionary<string, object>>();
 
                 using (var reader = command.ExecuteReader())
@@ -189,9 +189,9 @@ namespace ObjectServer.Data
             }
         }
 
-        public virtual dynamic[] QueryAsDynamic(string commandText, params object[] args)
+        public virtual dynamic[] QueryAsDynamic(SqlString commandText, params object[] args)
         {
-            if (string.IsNullOrEmpty(commandText))
+            if (commandText == null)
             {
                 throw new ArgumentNullException("commandText");
             }

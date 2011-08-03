@@ -7,6 +7,8 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using NHibernate.SqlCommand;
+
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using IronRuby;
@@ -59,16 +61,15 @@ namespace ObjectServer.Core
             Debug.Assert(action == "read" || action == "write" || action == "delete" || action == "create");
 
             //TODO 缓存
+            var sql = new SqlString(
+                "SELECT DISTINCT r._id, r.name, r.constraints FROM core_rule r ",
+                "INNER JOIN core_model m ON (r.model=m._id) ",
+                "WHERE m.name=", Parameter.Placeholder,
+                    " AND r.on_", action, " AND (r.global OR (r._id IN ",
+                    "(SELECT rg.rid  FROM core_rule_group_rel rg ",
+                        "INNER JOIN core_user_group_rel ug ON (rg.gid=ug.gid) ",
+                        "WHERE ug.uid=", Parameter.Placeholder, " )))");
 
-            var sql = @"
-SELECT DISTINCT r._id, r.name, r.constraints FROM core_rule r
-	INNER JOIN core_model m ON (r.model = m._id)
-	WHERE m.name = @0 AND r.on_{0}
-    AND (r.global OR (r._id IN 
-        (SELECT rg.rid  FROM core_rule_group_rel rg 
-            INNER JOIN core_user_group_rel ug ON (rg.gid = ug.gid) 
-            WHERE ug.uid = @1)))";
-            sql = string.Format(sql, action);
             var result = scope.Connection.QueryAsDataTable(
                 sql, modelName, scope.Session.UserId);
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NHibernate.SqlCommand;
+
 using NHibernate.Dialect;
 using NHibernate.Driver;
 
@@ -38,12 +40,12 @@ namespace ObjectServer.Data.Postgresql
 
 
                 var dbUser = Platform.Configuration.DBUser;
-                var sql = @"
-SELECT datname FROM pg_database  
-    WHERE datdba = (SELECT DISTINCT usesysid FROM pg_user WHERE usename=@0) 
-        AND datname NOT IN ('template0', 'template1', 'postgres')  
-    ORDER BY datname ASC
-";
+                var sql = SqlString.Parse(@"
+select datname from pg_database  
+    where datdba = (select distinct usesysid from pg_user where usename=?) 
+        and datname not in ('template0', 'template1', 'postgres')  
+    order by datname asc
+");
 
                 var result = ctx.QueryAsDictionary(sql, dbUser);
 

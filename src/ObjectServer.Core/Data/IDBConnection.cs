@@ -5,6 +5,8 @@ using System.Text;
 using System.Data;
 using System.Data.Common;
 
+using NHibernate.SqlCommand;
+
 namespace ObjectServer.Data
 {
     public interface IDBConnection : IDisposable
@@ -21,9 +23,9 @@ namespace ObjectServer.Data
         string DatabaseName { get; }
                 
         object QueryValue(string commandText, params object[] args);
-        DataTable QueryAsDataTable(string commandText, params object[] args);
-        Dictionary<string, object>[] QueryAsDictionary(string commandText, params object[] args);
-        dynamic[] QueryAsDynamic(string commandText, params object[] args);
+        DataTable QueryAsDataTable(SqlString commandText, params object[] args);
+        Dictionary<string, object>[] QueryAsDictionary(SqlString commandText, params object[] args);
+        dynamic[] QueryAsDynamic(SqlString commandText, params object[] args);
         T[] QueryAsArray<T>(string commandText, params object[] args);
 
         int Execute(string commandText, params object[] args);
