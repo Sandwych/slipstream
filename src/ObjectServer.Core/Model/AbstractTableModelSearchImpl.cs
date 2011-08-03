@@ -14,7 +14,6 @@ using NHibernate.SqlTypes;
 using ObjectServer.Core;
 using ObjectServer.Data;
 using ObjectServer.Utility;
-using ObjectServer.SqlTree;
 using ObjectServer.Sql;
 
 namespace ObjectServer.Model
@@ -90,39 +89,6 @@ namespace ObjectServer.Model
                 translator.AddGroupedConstraints(ruleConstraints);
             }
         }
-
-        /*
-        private void RuleConstraintsToSqlExpression(IServiceScope scope, ConstraintBuilderOld parser)
-        {
-            //安全：加入访问规则限制
-            if (!scope.Session.IsSystemUser) //系统用户不检查访问规则
-            {
-                //每组之间使用 OR 连接，一组中的元素之间使用 AND 连接
-                var ruleConstraints = RuleModel.GetRuleConstraints(scope, this.Name, "read");
-                var groupExps = new List<IExpression>(ruleConstraints.Count);
-                foreach (var ruleGroup in ruleConstraints)
-                {
-                    parser.Push(ruleGroup);
-                }
-            }
-        }
-        */
-
-        private static OrderbyClause ConvertOrderExpression(OrderExpression[] order, string mainTableAlias)
-        {
-            OrderbyClause orderbyClause = null;
-            if (order != null && order.Length > 0)
-            {
-                var orderbyItems = order.Select(
-                    o => new OrderbyItem(mainTableAlias + "." + o.Field, o.Order.ToUpperString()));
-                orderbyClause = new OrderbyClause(orderbyItems);
-            }
-            else
-            {
-                orderbyClause = new OrderbyClause(mainTableAlias + "." + IDFieldName, "ASC");
-            }
-            return orderbyClause;
-        }
-
+    
     }
 }

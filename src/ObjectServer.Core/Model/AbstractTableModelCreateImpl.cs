@@ -12,7 +12,6 @@ using NHibernate.SqlCommand;
 
 using ObjectServer.Data;
 using ObjectServer.Utility;
-using ObjectServer.SqlTree;
 using ObjectServer.Core;
 
 namespace ObjectServer.Model
