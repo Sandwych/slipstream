@@ -7,13 +7,17 @@ using Newtonsoft.Json;
 
 namespace ObjectServer.Model
 {
+    /// <summary>
+    /// 用于表示三元组形式的约束表达式： (field,"=", value)
+    /// </summary>
     [Serializable]
     [JsonArray(false)]
     public class ConstraintExpression
     {
-        public ConstraintExpression()
+        private static readonly HashSet<string> Operators = new HashSet<string>()
         {
-        }
+             "=", "!=", ">", ">=", "<", "<=", "in", "!in",  "like", "!like", "childof", "!childof"
+        };
 
         public ConstraintExpression(object o)
         {
@@ -24,8 +28,28 @@ namespace ObjectServer.Model
 
             var arr = (object[])o;
 
-            this.Field = (string)arr[0];
-            this.Operator = (string)arr[1];
+            if (arr.Length != 3)
+            {
+                throw new ArgumentOutOfRangeException("o");
+            }
+
+            var field = (string)arr[0];
+            var opr = (string)arr[1];
+
+            if (string.IsNullOrEmpty(field))
+            {
+                throw new ArgumentNullException("field");
+            }
+
+            if (string.IsNullOrEmpty(opr))
+            {
+                throw new ArgumentNullException("opr");
+            }
+
+            VerifyOperatorAndValue(opr, arr[2]);
+
+            this.Field = field;
+            this.Operator = opr;
             this.Value = arr[2];
         }
 
@@ -36,38 +60,34 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("field");
             }
 
-            //TODO 检查是否是合法的 opr
             if (string.IsNullOrEmpty(opr))
             {
                 throw new ArgumentNullException("opr");
             }
+
+            VerifyOperatorAndValue(opr, value);
 
             this.Field = field;
             this.Operator = opr;
             this.Value = value;
         }
 
+        private static void VerifyOperatorAndValue(string opr, object value)
+        {
+            if (!Operators.Contains(opr))
+            {
+                var msg = String.Format("Not supported operator: [{0}]", opr);
+                throw new NotSupportedException(msg);
+            }
+        }
+
         [JsonProperty("field")]
-        public string Field { get; set; }
+        public string Field { get; private set; }
 
         [JsonProperty("operator")]
-        public string Operator { get; set; }
+        public string Operator { get; private set; }
 
         [JsonProperty("value")]
-        public object Value { get; set; }
-
-        public static ConstraintExpression FromTuple(object[] constraint)
-        {
-            if (constraint == null)
-            {
-                throw new ArgumentNullException("tuple");
-            }
-            if (constraint.Length != 3)
-            {
-                throw new ArgumentException("tuple");
-            }
-
-            return new ConstraintExpression((string)constraint[0], (string)constraint[1], constraint[2]);
-        }
+        public object Value { get; private set; }
     }
 }

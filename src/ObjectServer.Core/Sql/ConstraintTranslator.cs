@@ -32,12 +32,6 @@ namespace ObjectServer.Sql
 
         public object[] Values { get { return this.values.ToArray(); } }
 
-        public static readonly string[] Operators = new string[]
-        {
-            "=", "!=", ">", ">=", "<", "<=", "in", "!in", 
-            "like", "!like", "childof", "!childof"
-        };
-
         public const string MainTableAlias = "_t0";
 
         IModel rootModel;
