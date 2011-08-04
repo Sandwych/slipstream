@@ -87,7 +87,7 @@ namespace ObjectServer.Model
 
             if (model == null)
             {
-                throw new InvalidDataException("We need a fucking 'model' attribute");
+                throw new DataException("We need a fucking 'model' attribute");
             }
 
             var record = new Dictionary<string, object>();
@@ -207,7 +207,7 @@ namespace ObjectServer.Model
                 case FieldType.Reference:
                     if (string.IsNullOrEmpty(refKey))
                     {
-                        throw new InvalidDataException(
+                        throw new DataException(
                             "Reference field must have 'ref-key' and 'ref-model' attributes");
                     }
                     var recordId = ModelDataModel.TryLookupResourceId(
@@ -216,7 +216,7 @@ namespace ObjectServer.Model
                     {
                         var msg = string.Format(
                             "Cannot found model for reference field: {0}:{1}", refModel, refKey);
-                        throw new InvalidDataException(msg);
+                        throw new DataException(msg);
                     }
                     fieldValue = new object[] { refModel, recordId };
                     break;
@@ -224,13 +224,13 @@ namespace ObjectServer.Model
                 case FieldType.ManyToOne:
                     if (string.IsNullOrEmpty(refKey))
                     {
-                        throw new InvalidDataException("Many-to-one field must have a 'ref-key' attribute");
+                        throw new DataException("Many-to-one field must have a 'ref-key' attribute");
                     }
                     fieldValue = ModelDataModel.TryLookupResourceId(
                         this.context.Connection, metaField.Relation, refKey);
                     if (fieldValue == null)
                     {
-                        throw new InvalidDataException("Cannot found model for ref-key: " + refKey);
+                        throw new DataException("Cannot found model for ref-key: " + refKey);
                     }
                     break;
 
