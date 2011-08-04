@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public sealed class DatabaseNotFoundException : Exception
+    public sealed class DatabaseNotFoundException : ResourceException
     {
         public DatabaseNotFoundException(string msg, string dbName)
             : base(msg)

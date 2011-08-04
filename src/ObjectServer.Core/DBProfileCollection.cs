@@ -8,6 +8,7 @@ using System.Transactions;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
+using ObjectServer.Exceptions;
 using ObjectServer.Data;
 using ObjectServer.Core;
 

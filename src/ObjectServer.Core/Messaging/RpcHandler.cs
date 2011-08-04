@@ -6,9 +6,10 @@ using System.Reflection;
 
 using ZMQ;
 using ZMQ.ZMQExt;
-
-using ObjectServer.Json;
 using Newtonsoft.Json;
+
+using ObjectServer.Exceptions;
+using ObjectServer.Json;
 
 namespace ObjectServer
 {

@@ -5,10 +5,10 @@ using System.Text;
 
 using ObjectServer.Model;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public class ValidationException : Exception
+    public class ValidationException : DataException
     {
         public ValidationException(string msg)
             : base(msg)

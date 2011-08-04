@@ -6,19 +6,22 @@ using System.Runtime.Serialization;
 
 namespace ObjectServer.Exceptions
 {
+
     /// <summary>
-    /// 表示系统中发生的致命错误
+    /// 跟数据库查询相关的异常
     /// </summary>
-    public abstract class FatalException : Exception
+    [Serializable]
+    public class DataException : ApplicationException
     {
-        public FatalException(string msg, Exception innerExp)
-            : base(msg, innerExp)
+        public DataException(string msg)
+            : base(msg)
         {
         }
 
-        protected FatalException(SerializationInfo info, StreamingContext context)
+        protected DataException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
+
     }
 }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public sealed class BadServiceMethodException : Exception
+    public sealed class BadServiceMethodException : ResourceException
     {
         public BadServiceMethodException(string msg, string objName, string methodName) :
             base(msg)

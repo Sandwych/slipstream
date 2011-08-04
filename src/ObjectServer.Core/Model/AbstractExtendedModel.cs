@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
+using ObjectServer.Exceptions;
 using ObjectServer.Sql;
 
 namespace ObjectServer.Model

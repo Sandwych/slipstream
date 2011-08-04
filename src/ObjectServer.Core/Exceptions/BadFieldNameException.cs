@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer.Model
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public sealed class BadFieldNameException : Exception
+    public sealed class BadFieldNameException : ResourceException
     {
         public BadFieldNameException(string msg, string fieldName) :
             base(msg)

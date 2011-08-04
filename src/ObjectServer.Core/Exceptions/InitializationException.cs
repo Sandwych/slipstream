@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     /// <summary>
     /// 框架初始化异常

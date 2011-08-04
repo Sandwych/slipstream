@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public class UserDoesNotExistException : System.Security.SecurityException
+    public class UserDoesNotExistException : DataException
     {
         public UserDoesNotExistException(string msg, string login)
             : base(msg)

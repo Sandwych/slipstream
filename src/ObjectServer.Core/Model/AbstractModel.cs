@@ -6,6 +6,7 @@ using System.Data;
 
 using NHibernate.SqlCommand;
 
+using ObjectServer.Exceptions;
 using ObjectServer.Sql;
 using ObjectServer.Data;
 
@@ -268,7 +269,7 @@ insert into core_field(module, model, name, relation, label, type, help)
 
             if (rowCount != 1)
             {
-                throw new DataException("Failed to insert record of table core_model");
+                throw new ObjectServer.Exceptions.DataException("Failed to insert record of table core_model");
             }
 
             sql = new SqlString(

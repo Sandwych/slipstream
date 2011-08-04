@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Dynamic;
 using System.Diagnostics;
 
+using ObjectServer.Exceptions;
 using ObjectServer.Data;
 
 namespace ObjectServer

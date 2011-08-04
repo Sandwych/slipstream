@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public class ConcurrencyException : Exception
+    public class ConcurrencyException : DataException
     {
         public ConcurrencyException(string msg)
             : base(msg)

@@ -134,6 +134,8 @@
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\RuleGroupModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
+    <Compile Include="Exceptions\DataException.cs" />
+    <Compile Include="Exceptions\ResourceException.cs" />
     <Compile Include="Sql\OrderExpression.cs" />
     <Compile Include="Sql\ConstraintTranslator.cs" />
     <Compile Include="Sql\SortDirection.cs" />

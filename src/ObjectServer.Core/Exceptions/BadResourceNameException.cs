@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public sealed class BadResourceNameException : Exception
+    public sealed class BadResourceNameException : ResourceException
     {
         public BadResourceNameException(string msg, string objName) :
             base(msg)

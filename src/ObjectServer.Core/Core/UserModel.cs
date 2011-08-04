@@ -10,6 +10,7 @@ using NHibernate.SqlCommand;
 using ObjectServer.Model;
 using ObjectServer.Utility;
 using ObjectServer.Data;
+using ObjectServer.Exceptions;
 
 namespace ObjectServer.Core
 {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public sealed class RecordNotFoundException : Exception
+    public sealed class RecordNotFoundException : DataException
     {
         public RecordNotFoundException(string msg, string resourceName)
             : base(msg)

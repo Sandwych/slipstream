@@ -8,6 +8,7 @@ using System.Data;
 using System.Reflection;
 using System.Dynamic;
 
+using ObjectServer.Exceptions;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Data;
@@ -238,8 +239,8 @@ namespace ObjectServer.Model
             var rows = ctx.Connection.Execute(sql, colValues);
             if (rows != 1)
             {
-                Logger.Error(() => string.Format("Failed to insert row, SQL: {0}", sql));
-                throw new DataException();
+                var msg = string.Format("Failed to insert row, SQL: {0}", sql);
+                throw new ObjectServer.Exceptions.DataException(msg);
             }
 
             return serial;

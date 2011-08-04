@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ObjectServer
+namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public sealed class ModuleNotFoundException : Exception
+    public sealed class ModuleNotFoundException : ResourceException
     {
         public ModuleNotFoundException(string msg, string moduleName)
             : base(msg)

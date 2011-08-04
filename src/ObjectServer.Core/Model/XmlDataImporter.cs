@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
+using ObjectServer.Exceptions;
 using ObjectServer.Core;
 
 namespace ObjectServer.Model

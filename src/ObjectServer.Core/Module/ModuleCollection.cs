@@ -9,6 +9,7 @@ using System.Diagnostics;
 
 using NHibernate.SqlCommand;
 
+using ObjectServer.Exceptions;
 using ObjectServer.Model;
 using ObjectServer.Runtime;
 using ObjectServer.Data;
