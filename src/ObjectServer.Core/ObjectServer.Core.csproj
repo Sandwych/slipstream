@@ -94,6 +94,7 @@
     </Reference>
     <Reference Include="System.Runtime.Remoting">
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions">
     </Reference>
     <Reference Include="System.Xml.Linq">

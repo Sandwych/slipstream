@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace ObjectServer.Sql
 {
     public enum SortDirection
     {
+        [EnumMember(Value = "asc")]
         Asc,
+        [EnumMember(Value = "desc")]
         Desc
     }
 
@@ -20,14 +23,14 @@ namespace ObjectServer.Sql
                 throw new ArgumentNullException("value");
             }
 
-            value = value.ToUpperInvariant();
+            value = value.ToLowerInvariant();
 
             switch (value)
             {
-                case "ASC":
+                case "asc":
                     return SortDirection.Asc;
 
-                case "DESC":
+                case "desc":
                     return SortDirection.Desc;
 
                 default:
