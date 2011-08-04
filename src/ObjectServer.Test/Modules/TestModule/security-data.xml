@@ -17,6 +17,12 @@
     <field name="name">Salesmen</field>
   </record>
 
+  <record model="core.user" key="user_testuser">
+    <field name="login">testuser</field>
+    <field name="password">testuser</field>
+    <field name="name">Test User</field>
+  </record>
+
   <record model="core.user" key="user_user1">
     <field name="login">user1</field>
     <field name="name">User1</field>
@@ -29,6 +35,17 @@
     <field name="name">User2</field>
     <field name="organization" ref-key="org_sales_dept2" />
     <field name="password">user2</field>
+  </record>
+
+  <record model="core.user" key="user_user3">
+    <field name="login">user3</field>
+    <field name="name">User3</field>
+    <field name="password">user3</field>
+  </record>
+
+  <record model="core.user_group" key="ug_testuser">
+    <field name="gid" ref-key="group_user" />
+    <field name="uid" ref-key="user_testuser" />
   </record>
 
   <record model="core.user_group" key="ug_user1_salesmen">

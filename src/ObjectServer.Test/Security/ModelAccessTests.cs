@@ -11,23 +11,40 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class ModelAccessTests : LocalTestCase
     {
-        [Ignore]
+        [Test]
         public void ExpectAccessDenied()
         {
-            //添加普通用户组用户 testuser
-            dynamic testUser = new ExpandoObject();
-            testUser.name = "testuser";
-            testUser.login = "testuser";
-            testUser.password = "testuser";
-            testUser.admin = false;
-            this.Service.CreateModel(this.SessionId, "core.user", testUser);
-            
-
             var service = ObjectServer.Platform.ExportedService;
             var sessionId = service.LogOn("objectserver", "testuser", "testuser");
 
             using (var scope = new ServiceScope(sessionId))
             {
+                var userModel = (ObjectServer.Model.IModel)scope.GetResource("core.user");
+
+                Assert.DoesNotThrow(() =>
+                {
+                    var ids = userModel.SearchInternal(scope);
+                    Assert.True(ids.Length > 0);
+                    userModel.ReadInternal(scope, ids);
+                });
+
+                Assert.Throws<UnauthorizedAccessException>(() =>
+                {
+                    dynamic record = new ExpandoObject();
+                    userModel.CreateInternal(scope, record);
+                });
+
+                Assert.Throws<UnauthorizedAccessException>(() =>
+                {
+                    dynamic record = new ExpandoObject();
+                    userModel.WriteInternal(scope, 1, record);
+                });
+
+                Assert.Throws<UnauthorizedAccessException>(() =>
+                {
+                    userModel.DeleteInternal(scope, new long[] { 1 });
+                });
+
             }
 
             service.LogOff(sessionId);
