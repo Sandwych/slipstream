@@ -12,7 +12,7 @@ using ObjectServer.Sql;
 namespace ObjectServer.Sql.Test
 {
     [TestFixture]
-    public sealed class ConstraintTranslatorTests
+    public sealed class ConstraintTranslatorTests : LocalTestCase
     {
         [TestFixtureSetUp]
         public void TestFixtureSetup()
@@ -38,24 +38,23 @@ namespace ObjectServer.Sql.Test
                 "where  ( _t0.login = ?  and  _t1.name = ?  and  _t1.code = ? ) ",
                 "order by  _t0.login ASC,  _t0.name ASC");
 
-            using (var scope = new ServiceScope("objectserver", "system"))
-            {
-                var cb = new ConstraintTranslator(scope, "core.user");
-                cb.AddConstraints(constraints);
-                cb.SetOrder(new OrderExpression("login", SortDirection.Asc));
-                cb.SetOrder(new OrderExpression("name", SortDirection.Asc));
+            var cb = new ConstraintTranslator(this.ServiceScope, "core.user");
+            cb.AddConstraints(constraints);
+            cb.SetOrder(new OrderExpression("login", SortDirection.Asc));
+            cb.SetOrder(new OrderExpression("name", SortDirection.Asc));
 
-                var sqlStr = cb.ToSqlString();
-                Assert.AreEqual(
-                    sql1.ToString().Replace(" ", ""),
-                    sqlStr.ToString().Replace(" ", ""));
+            var sqlStr = cb.ToSqlString();
+            Assert.AreEqual(
+                sql1.ToString().Replace(" ", ""),
+                sqlStr.ToString().Replace(" ", ""));
 
-                Assert.AreEqual(cb.Values.Length, 3);
-                Assert.AreEqual(cb.Values[0], "root");
-                Assert.AreEqual(cb.Values[1], "org1");
-                Assert.AreEqual(cb.Values[2], "orgcode1");
-            }
+            Assert.AreEqual(cb.Values.Length, 3);
+            Assert.AreEqual(cb.Values[0], "root");
+            Assert.AreEqual(cb.Values[1], "org1");
+            Assert.AreEqual(cb.Values[2], "orgcode1");
 
         }
+
+        //TODO 添加层次表的单元测试
     }
 }
