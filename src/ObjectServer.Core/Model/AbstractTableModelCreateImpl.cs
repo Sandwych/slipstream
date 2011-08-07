@@ -210,9 +210,9 @@ namespace ObjectServer.Model
             // "insert into <tableName> (_id, cols... ) values (<id>, ?, ?, ?... );",
             var sqlBuilder = new SqlStringBuilder();
             sqlBuilder.Add("insert into ");
-            sqlBuilder.Add(DataProvider.Dialect.QuoteForTableName(this.TableName));
+            sqlBuilder.Add(quotedTableName);
             sqlBuilder.Add("(");
-            sqlBuilder.Add(DataProvider.Dialect.QuoteForColumnName(IDFieldName));
+            sqlBuilder.Add(QuotedIdColumn);
 
             var index = 0;
             foreach (var f in allColumnNames)

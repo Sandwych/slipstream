@@ -42,7 +42,7 @@ namespace ObjectServer.Model
                 var sql1 = new SqlString("select * from ",
                     DataProvider.Dialect.QuoteForTableName(this.TableName),
                     " where ",
-                    DataProvider.Dialect.QuoteForColumnName(IDFieldName),
+                    QuotedIdColumn,
                     "=",
                     Parameter.Placeholder);
 
@@ -99,7 +99,7 @@ namespace ObjectServer.Model
             }
 
             sqlBuilder.Add(" where ");
-            sqlBuilder.Add(DataProvider.Dialect.QuoteForColumnName(IDFieldName));
+            sqlBuilder.Add(QuotedIdColumn);
             sqlBuilder.Add("=");
             sqlBuilder.Add(id.ToString());
             sqlBuilder.Add(" and ");

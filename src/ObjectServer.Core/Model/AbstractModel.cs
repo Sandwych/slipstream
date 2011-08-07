@@ -24,6 +24,8 @@ namespace ObjectServer.Model
 
         private readonly IFieldCollection fields;
 
+        public static readonly string QuotedIdColumn = 
+            DataProvider.Dialect.QuoteForColumnName(IDFieldName);
 
         protected AbstractModel(string name)
             : base(name)
@@ -242,7 +244,7 @@ insert into core_field(module, model, name, relation, label, type, help)
             //var sql = "SELECT MAX(\"_id\") FROM core_model WHERE name=@0";
             var sql = new SqlString(
                 "select max(",
-                DataProvider.Dialect.QuoteForColumnName(IDFieldName),
+                QuotedIdColumn,
                 ") from ",
                 DataProvider.Dialect.QuoteForTableName("core_model"),
                 " where ",
@@ -274,7 +276,7 @@ insert into core_field(module, model, name, relation, label, type, help)
 
             sql = new SqlString(
                 "select max(",
-                DataProvider.Dialect.QuoteForColumnName(IDFieldName),
+                QuotedIdColumn,
                 ") from ",
                 DataProvider.Dialect.QuoteForTableName("core_model"),
                 " where ",

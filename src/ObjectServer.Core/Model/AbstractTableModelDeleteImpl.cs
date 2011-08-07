@@ -88,7 +88,7 @@ namespace ObjectServer.Model
                 "delete from ",
                 DataProvider.Dialect.QuoteForTableName(tableModel.TableName),
                 " where ",
-                DataProvider.Dialect.QuoteForColumnName(IDFieldName),
+                QuotedIdColumn,
                 " in (",
                 ids.ToCommaList(),
                 ")");

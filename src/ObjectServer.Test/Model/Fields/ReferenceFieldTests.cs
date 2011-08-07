@@ -13,8 +13,13 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class ReferenceFieldTests : LocalTestCase
     {
+        public void PrepareTestingData()
+        {
+        }
+
+
         [Test]
-        public void Test_reference_field()
+        public void Test_CRUD_reference_field()
         {
             this.ClearTestModelTable();
             this.ClearMasterAndChildTable();
