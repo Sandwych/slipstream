@@ -44,7 +44,7 @@ namespace ObjectServer.Core
             var isRootUserExisted = UserExists(db, RootUserName);
             if (isRootUserExisted)
             {
-                this.CreateRootUser(db.Connection);
+                this.CreateRootUser(db.DBContext);
             }
         }
 
@@ -56,12 +56,12 @@ namespace ObjectServer.Core
                 "where ",
                 DataProvider.Dialect.QuoteForColumnName("login"), "=", Parameter.Placeholder);
 
-            var rowCount = db.Connection.QueryValue(sql, login);
+            var rowCount = db.DBContext.QueryValue(sql, login);
             var isRootUserExisted = rowCount.IsNull() || (long)rowCount <= 0;
             return isRootUserExisted;
         }
 
-        private void CreateRootUser(IDBConnection conn)
+        private void CreateRootUser(IDBContext conn)
         {
             Debug.Assert(conn != null);
 

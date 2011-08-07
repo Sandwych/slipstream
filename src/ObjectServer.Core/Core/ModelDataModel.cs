@@ -41,9 +41,9 @@ namespace ObjectServer.Core
         }
 
         internal static void Create(
-            IDBConnection conn, string module, string model, string key, long resId)
+            IDBContext dbctx, string module, string model, string key, long resId)
         {
-            var rows = conn.Execute(SqlToCreate, key, module, model, resId);
+            var rows = dbctx.Execute(SqlToCreate, key, module, model, resId);
             if (rows != 1)
             {
                 throw new System.Data.DataException(
@@ -51,7 +51,7 @@ namespace ObjectServer.Core
             }
         }
 
-        internal static long? TryLookupResourceId(IDBConnection conn, string model, string key)
+        internal static long? TryLookupResourceId(IDBContext conn, string model, string key)
         {
             if (conn == null)
             {
@@ -77,14 +77,14 @@ namespace ObjectServer.Core
             return (long)rows[0];
         }
 
-        internal static void UpdateResourceId(IDBConnection conn, string model, string key, long refId)
+        internal static void UpdateResourceId(IDBContext dbctx, string model, string key, long refId)
         {
-            if (conn == null)
+            if (dbctx == null)
             {
                 throw new ArgumentNullException("conn");
             }
 
-            var rowCount = conn.Execute(SqlToUpdate, refId, model, key);
+            var rowCount = dbctx.Execute(SqlToUpdate, refId, model, key);
 
             if (rowCount != 1)
             {

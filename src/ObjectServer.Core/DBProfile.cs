@@ -28,17 +28,17 @@ namespace ObjectServer
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
-            this.Connection = DataProvider.CreateDataContext(dbName);
+            this.DBContext = DataProvider.CreateDataContext(dbName);
 
             this.EnsureInitialization();
         }
 
-        public DBProfile(IDBConnection conn, IResourceContainer resources)
+        public DBProfile(IDBContext dbctx, IResourceContainer resources)
         {
-            Debug.Assert(conn != null);
+            Debug.Assert(dbctx != null);
             Debug.Assert(resources != null);
 
-            this.Connection = conn;
+            this.DBContext = dbctx;
             this.Resources = resources;
 
             this.EnsureInitialization();
@@ -47,9 +47,9 @@ namespace ObjectServer
         private void EnsureInitialization()
         {
             //如果数据库是一个新建的空数据库，那么我们就需要先初始化此数据库为一个 ObjectServer 账套数据库
-            if (!this.Connection.IsInitialized())
+            if (!this.DBContext.IsInitialized())
             {
-                this.Connection.Initialize();
+                this.DBContext.Initialize();
             }
         }
 
@@ -58,7 +58,7 @@ namespace ObjectServer
             this.Dispose(false);
         }
 
-        public IDBConnection Connection { get; private set; }
+        public IDBContext DBContext { get; private set; }
 
         public IResourceContainer Resources { get; private set; }
 
@@ -76,7 +76,7 @@ namespace ObjectServer
                 //这里处理托管对象
             }
 
-            this.Connection.Dispose();
+            this.DBContext.Dispose();
         }
 
         #endregion

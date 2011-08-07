@@ -37,9 +37,9 @@ namespace ObjectServer.Model
         {
             Debug.Assert(this.db != null);
 
-            var table = this.db.Connection.CreateTableContext(this.model.TableName);
+            var table = this.db.DBContext.CreateTableContext(this.model.TableName);
 
-            if (!table.TableExists(db.Connection, this.model.TableName))
+            if (!table.TableExists(db.DBContext, this.model.TableName))
             {
                 this.CreateTable(table);
             }
@@ -51,19 +51,19 @@ namespace ObjectServer.Model
 
         private void CreateTable(ITableContext table)
         {
-            table.CreateTable(db.Connection, this.model.TableName, this.model.Label);
+            table.CreateTable(db.DBContext, this.model.TableName, this.model.Label);
 
             var storableColumns = this.model.GetAllStorableFields();
 
             foreach (var f in storableColumns)
             {
-                table.AddColumn(db.Connection, f);
+                table.AddColumn(db.DBContext, f);
 
                 if (f.Type == FieldType.ManyToOne)
                 {
                     var resources = this.db as IResourceContainer; //dyanmic workaround
                     var refModel = (IModel)resources.GetResource(f.Relation);
-                    table.AddFK(db.Connection, f.Name, refModel.TableName, OnDeleteAction.SetNull);
+                    table.AddFK(db.DBContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
                 }
             }
 
@@ -98,7 +98,7 @@ namespace ObjectServer.Model
                 {
                     if (!table.ColumnExists(field.Name))
                     {
-                        table.AddColumn(this.db.Connection, field);
+                        table.AddColumn(this.db.DBContext, field);
                     }
                     else
                     {
@@ -120,7 +120,7 @@ namespace ObjectServer.Model
                 {
                     if (!c.Nullable && columnsToDelete.Contains(c.Name))
                     {
-                        table.AlterColumnNullable(this.db.Connection, c.Name, true);
+                        table.AlterColumnNullable(this.db.DBContext, c.Name, true);
                     }
                 }
             }
@@ -128,7 +128,7 @@ namespace ObjectServer.Model
             {
                 foreach (var c in columnsToDelete)
                 {
-                    table.DeleteColumn(this.db.Connection, c);
+                    table.DeleteColumn(this.db.DBContext, c);
                 }
             }
 
@@ -144,7 +144,7 @@ namespace ObjectServer.Model
             {
                 //TODO:转换成可移植数据库类型    
                 var sqlType = string.Format("VARCHAR({0})", field.Size);
-                table.AlterColumnType(this.db.Connection, field.Name, sqlType);
+                table.AlterColumnType(this.db.DBContext, field.Name, sqlType);
             }
 
 
@@ -160,7 +160,7 @@ namespace ObjectServer.Model
 
         private void SetColumnNullable(ITableContext table, IField field)
         {
-            table.AlterColumnNullable(this.db.Connection, field.Name, true);
+            table.AlterColumnNullable(this.db.DBContext, field.Name, true);
         }
 
         private void SetColumnNotNullable(ITableContext table, IField field, bool hasRow)
@@ -174,8 +174,8 @@ namespace ObjectServer.Model
                     dialect.QuoteForTableName(table.Name),
                     " set ",
                     dialect.QuoteForColumnName(field.Name), "=", Parameter.Placeholder);
-                this.db.Connection.Execute(sql, defaultValue);
-                table.AlterColumnNullable(this.db.Connection, field.Name, false);
+                this.db.DBContext.Execute(sql, defaultValue);
+                table.AlterColumnNullable(this.db.DBContext, field.Name, false);
             }
             else
             {
@@ -188,7 +188,7 @@ namespace ObjectServer.Model
         {
             var sql = new SqlString("select count(*) from ",
                 DataProvider.Dialect.QuoteForTableName(tableName));
-            var rowCount = (long)this.db.Connection.QueryValue(sql);
+            var rowCount = (long)this.db.DBContext.QueryValue(sql);
             return rowCount > 0;
         }
 

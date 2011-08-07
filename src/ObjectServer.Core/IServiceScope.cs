@@ -12,6 +12,6 @@ namespace ObjectServer
         Session Session { get; }
 
         IResource GetResource(string resName);
-        IDBConnection Connection { get; }
+        IDBContext DBContext { get; }
     }
 }

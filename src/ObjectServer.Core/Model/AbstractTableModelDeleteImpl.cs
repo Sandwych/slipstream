@@ -48,7 +48,7 @@ namespace ObjectServer.Model
                     ids.ToCommaList(),
                     ")");
 
-                existedRecords = scope.Connection.QueryAsDictionary(sql);
+                existedRecords = scope.DBContext.QueryAsDictionary(sql);
             }
 
             DoDelete(scope, ids, this);
@@ -93,7 +93,7 @@ namespace ObjectServer.Model
                 ids.ToCommaList(),
                 ")");
 
-            var rowCount = scope.Connection.Execute(sql);
+            var rowCount = scope.DBContext.Execute(sql);
             if (rowCount != ids.Count())
             {
                 var msg = string.Format("Failed to delete model '{0}'", tableModel.Name);

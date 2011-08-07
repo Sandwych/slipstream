@@ -17,24 +17,24 @@ namespace ObjectServer.Data.Postgresql
 
         #region IDataProvider 成员
 
-        public IDBConnection CreateDataContext()
+        public IDBContext CreateDataContext()
         {
-            return new PgDBConnection();
+            return new PgDBContext();
         }
 
-        public IDBConnection CreateDataContext(string dbName)
+        public IDBContext CreateDataContext(string dbName)
         {
             if (string.IsNullOrEmpty(dbName))
             {
                 throw new ArgumentNullException("dbName");
             }
 
-            return new PgDBConnection(dbName);
+            return new PgDBContext(dbName);
         }
 
         public string[] ListDatabases()
         {
-            using (var ctx = new PgDBConnection())
+            using (var ctx = new PgDBContext())
             {
                 ctx.Open();
 
@@ -68,7 +68,7 @@ select datname from pg_database
                 DataProvider.Dialect.QuoteForSchemaName(dbName),
                 " template template0 encoding 'unicode'");
 
-            using (var conn = new PgDBConnection())
+            using (var conn = new PgDBContext())
             {
                 conn.Open();
                 conn.Execute(sql);
@@ -90,7 +90,7 @@ select datname from pg_database
                   "drop database ",
                   DataProvider.Dialect.QuoteForSchemaName(dbName));
 
-            using (var conn = new PgDBConnection())
+            using (var conn = new PgDBContext())
             {
                 conn.Open();
                 conn.Execute(sql);

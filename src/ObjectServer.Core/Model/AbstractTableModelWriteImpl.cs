@@ -46,7 +46,7 @@ namespace ObjectServer.Model
                     "=",
                     Parameter.Placeholder);
 
-                var existedRecord = scope.Connection.QueryAsDictionary(sql1, id)[0];
+                var existedRecord = scope.DBContext.QueryAsDictionary(sql1, id)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
@@ -106,7 +106,7 @@ namespace ObjectServer.Model
             sqlBuilder.Add(GetVersionExpression(record));
 
             var sql = sqlBuilder.ToSqlString();
-            var rowsAffected = scope.Connection.Execute(sql, args);
+            var rowsAffected = scope.DBContext.Execute(sql, args);
 
             //检查更新结果
             if (rowsAffected != 1)

@@ -52,7 +52,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
             FindByModelAndUserId(IServiceScope scope, string model, long userId)
         {
             var sql = SqlToQuery;
-            var result = scope.Connection.QueryAsDictionary(sql, userId, model);
+            var result = scope.DBContext.QueryAsDictionary(sql, userId, model);
 
             return result;
         }

@@ -70,7 +70,7 @@ namespace ObjectServer.Core
                         "INNER JOIN core_user_group_rel ug ON (rg.gid=ug.gid) ",
                         "WHERE ug.uid=", Parameter.Placeholder, " )))");
 
-            var result = scope.Connection.QueryAsDataTable(
+            var result = scope.DBContext.QueryAsDataTable(
                 sql, modelName, scope.Session.UserId);
 
             var scriptScope = CreateScriptScope(scope);

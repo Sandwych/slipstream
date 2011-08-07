@@ -12,17 +12,17 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Data
 {
-    internal abstract class AbstractDBConnection : IDBConnection
+    internal abstract class AbstractDBContext : IDBContext
     {
         protected DbConnection conn;
         private bool opened;
 
-        public AbstractDBConnection()
+        public AbstractDBContext()
         {
             this.opened = false;
         }
 
-        ~AbstractDBConnection()
+        ~AbstractDBContext()
         {
             this.Dispose(false);
         }
@@ -250,6 +250,7 @@ namespace ObjectServer.Data
         protected DbCommand PrepareCommand(string commandText)
         {
             Debug.Assert(!string.IsNullOrEmpty(commandText));
+            Debug.Assert(this.opened);
 
             var command = this.conn.CreateCommand();
             command.CommandText = commandText;

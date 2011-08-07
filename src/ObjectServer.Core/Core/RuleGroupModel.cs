@@ -26,11 +26,11 @@ namespace ObjectServer.Core
         {
             base.Load(db);
 
-            var tableCtx = db.Connection.CreateTableContext(this.TableName);
+            var tableCtx = db.DBContext.CreateTableContext(this.TableName);
 
-            if (!tableCtx.ConstraintExists(db.Connection, UniqueConstraintName))
+            if (!tableCtx.ConstraintExists(db.DBContext, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(db.Connection, UniqueConstraintName, "UNIQUE(gid, rid)");
+                tableCtx.AddConstraint(db.DBContext, UniqueConstraintName, "UNIQUE(gid, rid)");
             }
         }
     }

@@ -24,7 +24,7 @@ namespace ObjectServer
             using (var ctx = new ServiceScope(dbName, "system"))
             using (var tx = new TransactionScope())
             {
-                ctx.Connection.Open();
+                ctx.DBContext.Open();
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
@@ -49,7 +49,7 @@ namespace ObjectServer
             using (var ctx = new ServiceScope(sessionId))
             using (var tx = new TransactionScope())
             {
-                ctx.Connection.Open();
+                ctx.DBContext.Open();
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 userModel.LogOut(ctx, sessionId);

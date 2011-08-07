@@ -281,7 +281,7 @@ namespace ObjectServer
             return module;
         }
 
-        public void AddToDatabase(IDBConnection db)
+        public void AddToDatabase(IDBContext db)
         {
             var state = "deactivated";
             if (this.AutoLoad)

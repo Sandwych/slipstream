@@ -51,7 +51,7 @@ namespace ObjectServer.Model
                     " where ",
                     DataProvider.Dialect.QuoteForColumnName(this.OriginField),
                     "=", Parameter.Placeholder);
-                var targetIds = ctx.Connection.QueryAsArray<object>(sql, selfId);
+                var targetIds = ctx.DBContext.QueryAsArray<object>(sql, selfId);
                 result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }
 

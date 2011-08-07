@@ -37,7 +37,7 @@ namespace ObjectServer
 
             this.ownDb = true;
             this.DBProfile = Platform.DBProfiles.TryGetDBProfile(session);
-            this.Connection.Open();
+            this.DBContext.Open();
         }
 
         /// <summary>
@@ -53,22 +53,22 @@ namespace ObjectServer
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
             this.DBProfile = Platform.DBProfiles.TryGetDBProfile(this.Session);
-            this.Connection.Open();
+            this.DBContext.Open();
         }
 
         internal ServiceScope(IDBProfile db)
         {
             Debug.Assert(db != null);
-            Debug.Assert(db.Connection != null);
+            Debug.Assert(db.DBContext != null);
 
             Logger.Debug(() =>
                 string.Format("ContextScope is opening for DatabaseContext"));
 
-            this.Session = new Session(db.Connection.DatabaseName, "system", 0);
+            this.Session = new Session(db.DBContext.DatabaseName, "system", 0);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = false;
             this.DBProfile = db;
-            this.Connection.Open();
+            this.DBContext.Open();
         }
 
         public IResource GetResource(string resName)
@@ -81,12 +81,12 @@ namespace ObjectServer
             return this.DBProfile.GetResource(resName);
         }
 
-        public IDBConnection Connection
+        public IDBContext DBContext
         {
             get
             {
                 Debug.Assert(this.DBProfile != null);
-                return this.DBProfile.Connection;
+                return this.DBProfile.DBContext;
             }
         }
 
@@ -101,7 +101,7 @@ namespace ObjectServer
         {
             if (this.ownDb)
             {
-                this.Connection.Close();
+                this.DBContext.Close();
             }
 
             Logger.Debug(() => "ScopeContext closed");

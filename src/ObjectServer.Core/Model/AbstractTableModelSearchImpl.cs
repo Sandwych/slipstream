@@ -70,7 +70,7 @@ namespace ObjectServer.Model
                     querySql, new SqlString(offset.ToString()), new SqlString(limit.ToString()));
             }
 
-            return scope.Connection.QueryAsArray<long>(querySql, translator.Values);
+            return scope.DBContext.QueryAsArray<long>(querySql, translator.Values);
         }
 
         private void GenerateReadingRuleConstraints(IServiceScope scope, ConstraintTranslator translator)

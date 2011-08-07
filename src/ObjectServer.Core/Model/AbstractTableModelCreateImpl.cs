@@ -71,7 +71,7 @@ namespace ObjectServer.Model
 
             if (this.Hierarchy)
             {
-                this.PostcreateHierarchy(scope.Connection, selfId, record);
+                this.PostcreateHierarchy(scope.DBContext, selfId, record);
             }
 
             this.PostcreateManyToManyFields(scope, selfId, record);
@@ -119,7 +119,7 @@ namespace ObjectServer.Model
         }
 
         private void PostcreateHierarchy(
-            IDBConnection conn, long id, Dictionary<string, object> record)
+            IDBContext conn, long id, Dictionary<string, object> record)
         {
             //处理层次表
             long rhsValue = 0;
@@ -197,7 +197,7 @@ namespace ObjectServer.Model
 
         private long CreateSelf(IServiceScope ctx, IDictionary<string, object> values)
         {
-            var serial = ctx.Connection.NextSerial(this.SequenceName);
+            var serial = ctx.DBContext.NextSerial(this.SequenceName);
 
             if (this.ContainsField(VersionFieldName))
             {
@@ -236,7 +236,7 @@ namespace ObjectServer.Model
 
             var sql = sqlBuilder.ToSqlString();
 
-            var rows = ctx.Connection.Execute(sql, colValues);
+            var rows = ctx.DBContext.Execute(sql, colValues);
             if (rows != 1)
             {
                 var msg = string.Format("Failed to insert row, SQL: {0}", sql);

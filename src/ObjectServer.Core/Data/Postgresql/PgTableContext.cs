@@ -32,7 +32,7 @@ namespace ObjectServer.Data.Postgresql
                 { OnDeleteAction.Restrict, "RESTRICT" },
             };
 
-        public PgTableContext(IDBConnection db, string tableName)
+        public PgTableContext(IDBContext db, string tableName)
         {
             if (db == null)
             {
@@ -55,7 +55,7 @@ namespace ObjectServer.Data.Postgresql
 
         public string Name { get; private set; }
 
-        public bool TableExists(IDBConnection db, string tableName)
+        public bool TableExists(IDBContext db, string tableName)
         {
             if (db == null)
             {
@@ -83,7 +83,7 @@ namespace ObjectServer.Data.Postgresql
             return n > 0;
         }
 
-        public void CreateTable(IDBConnection db, string tableName, string label)
+        public void CreateTable(IDBContext db, string tableName, string label)
         {
             if (db == null)
             {
@@ -120,7 +120,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(sql);
         }
 
-        public void AddColumn(IDBConnection db, IField field)
+        public void AddColumn(IDBContext db, IField field)
         {
             if (db == null)
             {
@@ -152,7 +152,7 @@ namespace ObjectServer.Data.Postgresql
             }
         }
 
-        public void DeleteColumn(IDBConnection db, string columnName)
+        public void DeleteColumn(IDBContext db, string columnName)
         {
             if (db == null)
             {
@@ -174,7 +174,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void AlterColumnNullable(IDBConnection db, string columnName, bool nullable)
+        public void AlterColumnNullable(IDBContext db, string columnName, bool nullable)
         {
             if (db == null)
             {
@@ -198,7 +198,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void AlterColumnType(IDBConnection db, string columnName, string sqlType)
+        public void AlterColumnType(IDBContext db, string columnName, string sqlType)
         {
             if (db == null)
             {
@@ -258,7 +258,7 @@ namespace ObjectServer.Data.Postgresql
             return this.columns.Values.ToArray();
         }
 
-        private void LoadColumns(IDBConnection db, string tableName)
+        private void LoadColumns(IDBContext db, string tableName)
         {
             if (db == null)
             {
@@ -289,7 +289,7 @@ namespace ObjectServer.Data.Postgresql
 
         }
 
-        private void AddUniqueConstraint(IDBConnection db, string column)
+        private void AddUniqueConstraint(IDBContext db, string column)
         {
             Debug.Assert(db != null);
             Debug.Assert(!string.IsNullOrEmpty(column));
@@ -300,7 +300,7 @@ namespace ObjectServer.Data.Postgresql
         }
 
 
-        public void AddConstraint(IDBConnection db, string constraintName, string constraint)
+        public void AddConstraint(IDBContext db, string constraintName, string constraint)
         {
             Debug.Assert(db != null);
             Debug.Assert(!string.IsNullOrEmpty(constraintName));
@@ -311,7 +311,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void DeleteConstraint(IDBConnection db, string constraintName)
+        public void DeleteConstraint(IDBContext db, string constraintName)
         {
             if (db == null)
             {
@@ -329,7 +329,7 @@ namespace ObjectServer.Data.Postgresql
         }
 
 
-        public bool ConstraintExists(IDBConnection db, string constraintName)
+        public bool ConstraintExists(IDBContext db, string constraintName)
         {
             //TODO ESCAPE SQL
             if (db == null)
@@ -350,7 +350,7 @@ select coalesce(count(constraint_name), 0)
             return n > 0;
         }
 
-        public void AddFK(IDBConnection db, string columnName, string refTable, OnDeleteAction act)
+        public void AddFK(IDBContext db, string columnName, string refTable, OnDeleteAction act)
         {
             if (db == null)
             {
@@ -379,7 +379,7 @@ select coalesce(count(constraint_name), 0)
         }
 
 
-        public void DeleteFK(IDBConnection db, string columnName)
+        public void DeleteFK(IDBContext db, string columnName)
         {
             if (db == null)
             {
@@ -398,7 +398,7 @@ select coalesce(count(constraint_name), 0)
             this.DeleteConstraint(db, fkName);
         }
 
-        public bool FKExists(IDBConnection db, string columnName)
+        public bool FKExists(IDBContext db, string columnName)
         {
             if (db == null)
             {

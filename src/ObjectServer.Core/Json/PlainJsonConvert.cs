@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 
 using Newtonsoft.Json;
 
@@ -25,6 +26,11 @@ namespace ObjectServer.Json
 
         public static object Parse(string json)
         {
+            if (string.IsNullOrEmpty(json))
+            {
+                throw new ArgumentNullException("json");
+            }
+
             using (var ss = new StringReader(json))
             {
                 return Parse(ss);
@@ -33,6 +39,11 @@ namespace ObjectServer.Json
 
         public static object Parse(TextReader tr)
         {
+            if (tr == null)
+            {
+                throw new ArgumentNullException("tr");
+            }
+
             using (var jreader = new JsonTextReader(tr))
             {
                 return ParseInternal(jreader);
@@ -41,6 +52,11 @@ namespace ObjectServer.Json
 
         public static object Parse(Stream ins)
         {
+            if (ins == null)
+            {
+                throw new ArgumentNullException("ins");
+            }
+
             using (var tr = new StreamReader(ins, Encoding.UTF8))
             {
                 return Parse(tr);
@@ -49,6 +65,11 @@ namespace ObjectServer.Json
 
         public static object Parse(byte[] utf8Buffer)
         {
+            if (utf8Buffer == null)
+            {
+                throw new ArgumentNullException("utf8Buffer");
+            }
+
             using (var ms = new MemoryStream(utf8Buffer, false))
             {
                 return Parse(ms);
@@ -57,12 +78,16 @@ namespace ObjectServer.Json
 
         private static object ParseInternal(JsonReader reader)
         {
+            Debug.Assert(reader != null);
+
             reader.Read();
             return ReadToken(reader);
         }
 
         private static object ReadToken(JsonReader reader)
         {
+            Debug.Assert(reader != null);
+
             object result = null;
 
             switch (reader.TokenType)
@@ -106,6 +131,8 @@ namespace ObjectServer.Json
 
         private static void SkipComment(JsonReader reader)
         {
+            Debug.Assert(reader != null);
+
             while (reader.Read() && reader.TokenType != JsonToken.Comment)
             {
                 //do nothing
@@ -115,6 +142,8 @@ namespace ObjectServer.Json
 
         private static Dictionary<string, object> ReadObject(JsonReader reader)
         {
+            Debug.Assert(reader != null);
+
             Dictionary<string, object> propBag = new Dictionary<string, object>();
 
             while (reader.Read() && reader.TokenType != JsonToken.EndObject)
@@ -134,6 +163,8 @@ namespace ObjectServer.Json
 
         private static object[] ReadArray(JsonReader reader)
         {
+            Debug.Assert(reader != null);
+
             var list = new List<object>();
 
             while (reader.Read() && reader.TokenType != JsonToken.EndArray)

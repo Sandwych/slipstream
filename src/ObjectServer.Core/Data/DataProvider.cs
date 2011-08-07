@@ -21,7 +21,7 @@ namespace ObjectServer.Data
         };
 
 
-        public static IDBConnection CreateDataContext(string dbName)
+        public static IDBContext CreateDataContext(string dbName)
         {
             if (dbName == null)
             {
@@ -33,7 +33,7 @@ namespace ObjectServer.Data
             return dataProvider.CreateDataContext(dbName);
         }
 
-        public static IDBConnection CreateDataContext()
+        public static IDBContext CreateDataContext()
         {
             var dbType = dbTypeMapping[Platform.Configuration.DbType];
             var dataProvider = dataProviders[dbType];

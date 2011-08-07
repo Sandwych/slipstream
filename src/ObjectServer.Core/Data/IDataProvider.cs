@@ -10,8 +10,8 @@ namespace ObjectServer.Data
 {
     internal interface IDataProvider
     {
-        IDBConnection CreateDataContext();
-        IDBConnection CreateDataContext(string dbName);
+        IDBContext CreateDataContext();
+        IDBContext CreateDataContext(string dbName);
 
         string[] ListDatabases();
         void CreateDatabase(string dbName);

@@ -9,6 +9,6 @@ namespace ObjectServer
 {
     public interface IDBProfile : IDisposable, IResourceContainer
     {
-        IDBConnection Connection { get; }
+        IDBContext DBContext { get; }
     }
 }

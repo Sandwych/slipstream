@@ -177,7 +177,7 @@ namespace ObjectServer.Model
                     var result = new Dictionary<long, object>(ids.Length);
                     foreach (var id in ids)
                     {
-                        var children = this.GetChildrenIDs(scope.Connection, id);
+                        var children = this.GetChildrenIDs(scope.DBContext, id);
                         result.Add(id, children);
                     }
                     return result;
@@ -191,7 +191,7 @@ namespace ObjectServer.Model
                     var result = new Dictionary<long, object>(ids.Length);
                     foreach (var id in ids)
                     {
-                        var children = this.GetDescendantIDs(scope.Connection, id);
+                        var children = this.GetDescendantIDs(scope.DBContext, id);
                         result.Add(id, children);
                     }
                     return result;
@@ -205,7 +205,7 @@ namespace ObjectServer.Model
         /// <param name="conn"></param>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        private long[] GetChildrenIDs(IDBConnection conn, long parentID)
+        private long[] GetChildrenIDs(IDBContext conn, long parentID)
         {
             var sqlFmt =
 @"
@@ -228,7 +228,7 @@ WHERE   hp._id = ? AND hc._id <> ?
             return ids.ToArray();
         }
 
-        private long[] GetDescendantIDs(IDBConnection conn, long parentID)
+        private long[] GetDescendantIDs(IDBContext conn, long parentID)
         {
             var sqlFmt =
 @"

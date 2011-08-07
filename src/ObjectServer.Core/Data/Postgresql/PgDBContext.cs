@@ -11,7 +11,7 @@ using Npgsql;
 
 namespace ObjectServer.Data.Postgresql
 {
-    internal sealed class PgDBConnection : AbstractDBConnection, IDBConnection
+    internal sealed class PgDBContext : AbstractDBContext, IDBContext
     {
         private const string INITDB = "ObjectServer.Data.Postgresql.initdb.sql";
         private readonly static SqlString SqlToListDBs = SqlString.Parse(@"
@@ -21,7 +21,7 @@ namespace ObjectServer.Data.Postgresql
 	                order by datname asc;");
 
 
-        public PgDBConnection(string dbName)
+        public PgDBContext(string dbName)
         {
             if (string.IsNullOrEmpty(dbName))
             {
@@ -40,7 +40,7 @@ namespace ObjectServer.Data.Postgresql
             this.DatabaseName = dbName;
         }
 
-        public PgDBConnection()
+        public PgDBContext()
             : this("template1")
         {
         }

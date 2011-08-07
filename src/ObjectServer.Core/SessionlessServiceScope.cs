@@ -45,12 +45,12 @@ namespace ObjectServer
             return this.DBProfile.GetResource(resName);
         }
 
-        public IDBConnection Connection
+        public IDBContext DBContext
         {
             get
             {
                 Debug.Assert(this.DBProfile != null);
-                return this.DBProfile.Connection;
+                return this.DBProfile.DBContext;
             }
         }
     }

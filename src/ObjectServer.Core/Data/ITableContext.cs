@@ -11,23 +11,23 @@ namespace ObjectServer.Data
     {
         string Name { get; }
 
-        void AddColumn(IDBConnection db, IField field);
-        void DeleteColumn(IDBConnection db, string columnName);
-        void AlterColumnNullable(IDBConnection db, string columnName, bool nullable);
-        void AlterColumnType(IDBConnection db, string columnName, string sqlType);
+        void AddColumn(IDBContext db, IField field);
+        void DeleteColumn(IDBContext db, string columnName);
+        void AlterColumnNullable(IDBContext db, string columnName, bool nullable);
+        void AlterColumnType(IDBContext db, string columnName, string sqlType);
         bool ColumnExists(string columnName);
         IColumnMetadata GetColumn(string columnName);
         IColumnMetadata[] GetAllColumns();
 
-        bool TableExists(IDBConnection db, string tableName);
-        void CreateTable(IDBConnection db, string tableName, string label);
+        bool TableExists(IDBContext db, string tableName);
+        void CreateTable(IDBContext db, string tableName, string label);
 
-        void AddConstraint(IDBConnection db, string constraintName, string constraint);
-        void DeleteConstraint(IDBConnection db, string constraintName);
-        bool ConstraintExists(IDBConnection db, string constraintName);
+        void AddConstraint(IDBContext db, string constraintName, string constraint);
+        void DeleteConstraint(IDBContext db, string constraintName);
+        bool ConstraintExists(IDBContext db, string constraintName);
 
-        void AddFK(IDBConnection db, string columnName, string refTable, OnDeleteAction refAct);
-        void DeleteFK(IDBConnection db, string columnName);
-        bool FKExists(IDBConnection db, string columnName);
+        void AddFK(IDBContext db, string columnName, string refTable, OnDeleteAction refAct);
+        void DeleteFK(IDBContext db, string columnName);
+        bool FKExists(IDBContext db, string columnName);
     }
 }

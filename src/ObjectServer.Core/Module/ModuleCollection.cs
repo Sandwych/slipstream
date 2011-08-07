@@ -97,7 +97,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void UpdateModuleList(IDBConnection db)
+        public void UpdateModuleList(IDBContext db)
         {
             var cfg = Platform.Configuration;
             this.LookupAllModules(cfg.ModulePath);
@@ -129,7 +129,7 @@ namespace ObjectServer
             var sql = new SqlString(
                 " select _id, name from core_module where state=", Parameter.Placeholder);
 
-            var modules = ctx.Connection.QueryAsDictionary(sql, "activated");
+            var modules = ctx.DBContext.QueryAsDictionary(sql, "activated");
 
             var unloadModules = new List<long>();
             foreach (var m in modules)
@@ -150,12 +150,12 @@ namespace ObjectServer
 
             if (unloadModules.Count > 0)
             {
-                DeactivateModules(ctx.Connection, unloadModules);
+                DeactivateModules(ctx.DBContext, unloadModules);
             }
         }
 
 
-        private static void DeactivateModules(IDBConnection db, IEnumerable<long> unloadedModuleIds)
+        private static void DeactivateModules(IDBContext db, IEnumerable<long> unloadedModuleIds)
         {
             Debug.Assert(unloadedModuleIds.Count() > 0);
             Debug.Assert(db != null);

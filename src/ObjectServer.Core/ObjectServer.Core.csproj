@@ -117,16 +117,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\AbstractDBConnection.cs" />
+    <Compile Include="Data\AbstractDBContext.cs" />
     <Compile Include="Data\DatabaseType.cs" />
     <Compile Include="Data\DataProvider.cs" />
     <Compile Include="Data\DynamicRecord.cs" />
-    <Compile Include="Data\IDBConnection.cs" />
+    <Compile Include="Data\IDBContext.cs" />
     <Compile Include="Data\IDataProvider.cs" />
     <Compile Include="Data\ITableContext.cs" />
     <Compile Include="Data\IColumnMetadata.cs" />
     <Compile Include="Data\Postgresql\PgColumnMetadata.cs" />
-    <Compile Include="Data\Postgresql\PgDBConnection.cs" />
+    <Compile Include="Data\Postgresql\PgDBContext.cs" />
     <Compile Include="Data\Postgresql\PgDataProvider.cs" />
     <Compile Include="Data\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Data\Postgresql\PgTableContext.cs" />

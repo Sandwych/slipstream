@@ -158,7 +158,7 @@ namespace ObjectServer.Model
             //同步代码定义的字段与数据库 core_model_field 表里记录的字段信息
             var sqlQuery = SqlString.Parse("select * from core_field where module=? and model=?");
 
-            var dbFields = db.Connection.QueryAsDictionary(sqlQuery, this.Module, modelId.Value);
+            var dbFields = db.DBContext.QueryAsDictionary(sqlQuery, this.Module, modelId.Value);
             var dbFieldsNames = (from f in dbFields select (string)f["name"]).ToArray();
 
             //先插入代码定义了，但数据库不存在的            
@@ -170,7 +170,7 @@ insert into core_field(module, model, name, relation, label, type, help)
             foreach (var fieldName in fieldsToAppend)
             {
                 var field = this.Fields[fieldName];
-                db.Connection.Execute(sqlInsert,
+                db.DBContext.Execute(sqlInsert,
                     this.Module, modelId.Value, fieldName, field.Relation, field.Label, field.Type.ToString(), "");
             }
 
@@ -180,7 +180,7 @@ insert into core_field(module, model, name, relation, label, type, help)
             var sqlDelete = SqlString.Parse(sql);
             foreach (var f in fieldsToDelete)
             {
-                db.Connection.Execute(sqlDelete, f, this.Module, modelId.Value);
+                db.DBContext.Execute(sqlDelete, f, this.Module, modelId.Value);
             }
 
             //更新现存的（交集）
@@ -233,7 +233,7 @@ insert into core_field(module, model, name, relation, label, type, help)
                         "label=", Parameter.Placeholder, ",",
                         "help=", Parameter.Placeholder,
                         " where _id=", Parameter.Placeholder);
-                db.Connection.Execute(
+                db.DBContext.Execute(
                     sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
 
             }
@@ -249,7 +249,7 @@ insert into core_field(module, model, name, relation, label, type, help)
                 DataProvider.Dialect.QuoteForTableName("core_model"),
                 " where ",
                 DataProvider.Dialect.QuoteForColumnName("name"), "=", Parameter.Placeholder);
-            var o = db.Connection.QueryValue(sql, this.Name);
+            var o = db.DBContext.QueryValue(sql, this.Name);
             if (o.IsNull())
             {
                 return null;
@@ -267,7 +267,7 @@ insert into core_field(module, model, name, relation, label, type, help)
                 Parameter.Placeholder, ",",
                 Parameter.Placeholder, ",",
                 Parameter.Placeholder, ")");
-            var rowCount = db.Connection.Execute(sql, this.Name, this.Module, this.Label);
+            var rowCount = db.DBContext.Execute(sql, this.Name, this.Module, this.Label);
 
             if (rowCount != 1)
             {
@@ -284,11 +284,11 @@ insert into core_field(module, model, name, relation, label, type, help)
                 " and ",
                 DataProvider.Dialect.QuoteForColumnName("module"), "=", Parameter.Placeholder);
 
-            var modelId = (long)db.Connection.QueryValue(sql, this.Name, this.Module);
+            var modelId = (long)db.DBContext.QueryValue(sql, this.Name, this.Module);
 
             //插入一笔到 core_model_data 方便以后导入时引用
             var key = "model_" + this.Name.Replace('.', '_');
-            Core.ModelDataModel.Create(db.Connection, this.Module, Core.ModelModel.ModelName, key, modelId);
+            Core.ModelDataModel.Create(db.DBContext, this.Module, Core.ModelModel.ModelName, key, modelId);
         }
 
         /// <summary>
