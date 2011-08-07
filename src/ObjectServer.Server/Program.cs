@@ -13,11 +13,10 @@ namespace ObjectServer.Server
         /// </summary>
         static void Main()
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[] 
-			{ 
+            var ServicesToRun = new ServiceBase[]  { 
 				new ObjectServerService() 
 			};
+
             ServiceBase.Run(ServicesToRun);
         }
     }

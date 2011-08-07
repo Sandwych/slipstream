@@ -17,6 +17,14 @@ namespace ObjectServer.Core
     {
         public const string ModelName = "core.model_access";
 
+        private static readonly SqlString SqlToQuery = SqlString.Parse(@"
+SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
+    FROM core_model_access ma
+    INNER JOIN core_model m ON m._id=ma.model
+    INNER JOIN core_user_group_rel ugr ON ugr.gid=ma.group
+    WHERE (ugr.uid=?) AND (m.name=?)
+");
+
         public ModelAccessModel()
             : base(ModelName)
         {
@@ -43,13 +51,7 @@ namespace ObjectServer.Core
         public Dictionary<string, object>[]
             FindByModelAndUserId(IServiceScope scope, string model, long userId)
         {
-            var sql = SqlString.Parse(@"
-SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
-    FROM core_model_access ma
-    INNER JOIN core_model m ON m._id=ma.model
-    INNER JOIN core_user_group_rel ugr ON ugr.gid=ma.group
-    WHERE (ugr.uid=?) AND (m.name=?)
-");
+            var sql = SqlToQuery;
             var result = scope.Connection.QueryAsDictionary(sql, userId, model);
 
             return result;

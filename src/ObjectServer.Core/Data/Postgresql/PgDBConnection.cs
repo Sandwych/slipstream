@@ -14,6 +14,12 @@ namespace ObjectServer.Data.Postgresql
     internal sealed class PgDBConnection : AbstractDBConnection, IDBConnection
     {
         private const string INITDB = "ObjectServer.Data.Postgresql.initdb.sql";
+        private readonly static SqlString SqlToListDBs = SqlString.Parse(@"
+                select datname from pg_database  
+                    where datdba = (select distinct usesysid from pg_user where usename=?) 
+                        and datname not in ('template0', 'template1', 'postgres')  
+	                order by datname asc;");
+
 
         public PgDBConnection(string dbName)
         {
@@ -46,13 +52,8 @@ namespace ObjectServer.Data.Postgresql
             EnsureConnectionOpened();
 
             var dbUser = Platform.Configuration.DBUser;
-            var sql = SqlString.Parse(@"
-                select datname from pg_database  
-                    where datdba = (select distinct usesysid from pg_user where usename=?) 
-                        and datname not in ('template0', 'template1', 'postgres')  
-	                order by datname asc;");
 
-            return this.QueryAsArray<string>(sql, dbUser);
+            return this.QueryAsArray<string>(SqlToListDBs, dbUser);
         }
 
 
@@ -98,12 +99,12 @@ namespace ObjectServer.Data.Postgresql
 
         public override bool IsInitialized()
         {
-            var sql = @"
+            var sql = SqlString.Parse(@"
 select distinct count(table_name) 
     from information_schema.tables 
     where table_name in ('core_module', 'core_model', 'core_field')
-";
-            var rowCount = (long)this.QueryValue(SqlString.Parse(sql));
+");
+            var rowCount = (long)this.QueryValue(sql);
             return rowCount == 3;
         }
 

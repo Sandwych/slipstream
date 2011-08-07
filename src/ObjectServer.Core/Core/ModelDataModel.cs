@@ -19,6 +19,15 @@ namespace ObjectServer.Core
     {
         public const string ModelName = "core.model_data";
 
+        private readonly static SqlString SqlToUpdate = SqlString.Parse(
+            "update core_model_data set ref_id=? where model=? and name=?");
+
+        private readonly static SqlString SqlToCreate = SqlString.Parse(
+            "insert into core_model_data(name, module, model, ref_id) values(?,?,?,?)");
+
+        private readonly static SqlString SqlToLookupResourceId = SqlString.Parse(
+            "select ref_id FROM core_model_data where model=? and name= ?");
+
         public ModelDataModel()
             : base(ModelName)
         {
@@ -34,9 +43,7 @@ namespace ObjectServer.Core
         internal static void Create(
             IDBConnection conn, string module, string model, string key, long resId)
         {
-            var sql = SqlString.Parse(
-                "insert into core_model_data(name, module, model, ref_id) values(?,?,?,?)");
-            var rows = conn.Execute(sql, key, module, model, resId);
+            var rows = conn.Execute(SqlToCreate, key, module, model, resId);
             if (rows != 1)
             {
                 throw new System.Data.DataException(
@@ -61,11 +68,7 @@ namespace ObjectServer.Core
                 throw new ArgumentNullException("model");
             }
 
-            var sql = new SqlString(
-                "select ref_id FROM core_model_data ",
-                "where model=", Parameter.Placeholder,
-                " and name=", Parameter.Placeholder);
-            var rows = conn.QueryAsArray<long>(sql, model, key);
+            var rows = conn.QueryAsArray<long>(SqlToLookupResourceId, model, key);
             if (rows.Length == 0)
             {
                 return null;
@@ -81,8 +84,7 @@ namespace ObjectServer.Core
                 throw new ArgumentNullException("conn");
             }
 
-            var sql = SqlString.Parse("update core_model_data set ref_id=? where model=? and name=?");
-            var rowCount = conn.Execute(sql, refId, model, key);
+            var rowCount = conn.Execute(SqlToUpdate, refId, model, key);
 
             if (rowCount != 1)
             {

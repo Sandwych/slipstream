@@ -39,6 +39,7 @@ namespace ObjectServer.Model
         };
 
         private string tableName = null;
+        private string quotedTableName = null;
 
         public override bool CanCreate { get; protected set; }
         public override bool CanRead { get; protected set; }
@@ -69,6 +70,7 @@ namespace ObjectServer.Model
                 }
 
                 this.tableName = value;
+                this.quotedTableName = DataProvider.Dialect.QuoteForTableName(value);
                 this.SequenceName = value + "_" + IDFieldName + "_seq";
             }
         }
@@ -115,6 +117,7 @@ namespace ObjectServer.Model
                     "I strongly suggest you to add the 'name' field into Model '{0}'",
                     this.Name));
             }
+
 
             if (this.AutoMigration)
             {
@@ -234,7 +237,7 @@ from    {0} hp
 join    {0} hc ON hc._left between hp._left and hp._right
 where   hp._id=? and hc._id<>?
 ";
-            var sql = string.Format(sqlFmt, DataProvider.Dialect.QuoteForTableName(this.TableName));
+            var sql = string.Format(sqlFmt, this.quotedTableName );
             var ids = conn.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
             return ids.ToArray();
         }
