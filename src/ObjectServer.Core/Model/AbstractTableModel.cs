@@ -202,10 +202,10 @@ namespace ObjectServer.Model
         /// <summary>
         /// 层次表获取某指定记录的直系子记录的 IDs
         /// </summary>
-        /// <param name="conn"></param>
+        /// <param name="dbctx"></param>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        private long[] GetChildrenIDs(IDBContext conn, long parentID)
+        private long[] GetChildrenIDs(IDBContext dbctx, long parentID)
         {
             var sqlFmt =
 @"
@@ -223,12 +223,12 @@ WHERE   hp._id = ? AND hc._id <> ?
         ) <= 2
 ";
             var sql = string.Format(sqlFmt, this.TableName);
-            var ids = conn.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
+            var ids = dbctx.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
 
             return ids.ToArray();
         }
 
-        private long[] GetDescendantIDs(IDBContext conn, long parentID)
+        private long[] GetDescendantIDs(IDBContext dbctx, long parentID)
         {
             var sqlFmt =
 @"
@@ -238,7 +238,7 @@ join    {0} hc ON hc._left between hp._left and hp._right
 where   hp._id=? and hc._id<>?
 ";
             var sql = string.Format(sqlFmt, this.quotedTableName );
-            var ids = conn.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
+            var ids = dbctx.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
             return ids.ToArray();
         }
 

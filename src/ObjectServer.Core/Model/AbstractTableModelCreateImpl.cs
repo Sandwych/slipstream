@@ -119,7 +119,7 @@ namespace ObjectServer.Model
         }
 
         private void PostcreateHierarchy(
-            IDBContext conn, long id, Dictionary<string, object> record)
+            IDBContext dbctx, long id, Dictionary<string, object> record)
         {
             //处理层次表
             long rhsValue = 0;
@@ -139,7 +139,7 @@ namespace ObjectServer.Model
                     "=",
                     Parameter.Placeholder);
 
-                var records = conn.QueryAsDictionary(sql, parentID);
+                var records = dbctx.QueryAsDictionary(sql, parentID);
                 if (records.Length == 0)
                 {
                     //TODO 使用合适的异常
@@ -171,7 +171,7 @@ namespace ObjectServer.Model
                     DataProvider.Dialect.QuoteForColumnName(LeftFieldName),
                     ">=0");
 
-                var value = conn.QueryValue(sql);
+                var value = dbctx.QueryValue(sql);
                 if (!value.IsNull())
                 {
                     rhsValue = (long)value;
@@ -189,10 +189,10 @@ namespace ObjectServer.Model
             var sqlUpdate3 = string.Format(
                 "update \"{0}\" set _left=?, _right=? where (_id=?) ", this.TableName);
 
-            //conn.LockTable(this.TableName); //TODO 这里需要锁定表，防止其它连接修改
-            conn.Execute(SqlString.Parse(sqlUpdate1), rhsValue);
-            conn.Execute(SqlString.Parse(sqlUpdate2), rhsValue);
-            conn.Execute(SqlString.Parse(sqlUpdate3), rhsValue + 1, rhsValue + 2, id);
+            //dbctx.LockTable(this.TableName); //TODO 这里需要锁定表，防止其它连接修改
+            dbctx.Execute(SqlString.Parse(sqlUpdate1), rhsValue);
+            dbctx.Execute(SqlString.Parse(sqlUpdate2), rhsValue);
+            dbctx.Execute(SqlString.Parse(sqlUpdate3), rhsValue + 1, rhsValue + 2, id);
         }
 
         private long CreateSelf(IServiceScope ctx, IDictionary<string, object> values)
