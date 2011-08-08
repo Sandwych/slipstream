@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Diagnostics;
 
 using ZMQ;
 using ZMQ.ZMQExt;
@@ -104,6 +105,8 @@ namespace ObjectServer
 
         private static byte[] DispatchJsonRpc(byte[] json)
         {
+            Debug.Assert(json != null);
+
             var jreq = (Dictionary<string, object>)PlainJsonConvert.Parse(json);
             //TODO 检查 jreq 格式
 

@@ -19,6 +19,11 @@ namespace ObjectServer.Model
         public AbstractExtendedModel(string name)
             : base(name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
             this.fields = new FieldCollection(this);
         }
 

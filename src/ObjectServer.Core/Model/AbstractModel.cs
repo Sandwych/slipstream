@@ -47,6 +47,11 @@ namespace ObjectServer.Model
         /// <param name="db"></param>
         public override void Load(IDBProfile db)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+
             base.Load(db);
 
             this.InitializeInheritances(db);
@@ -81,6 +86,7 @@ namespace ObjectServer.Model
         /// <param name="db"></param>
         private void InitializeInheritances(IDBProfile db)
         {
+            Debug.Assert(db != null);
             //验证继承声明
             //这里可以安全地访问 many-to-one 指向的 ResourceContainer 里的对象，因为依赖排序的原因
             //被指向的对象肯定已经更早注册了
@@ -138,6 +144,7 @@ namespace ObjectServer.Model
         /// <param name="db"></param>
         private void SyncModel(IDBProfile db)
         {
+            Debug.Assert(db != null);
 
             //检测此模型是否存在于数据库 core_model 表
             var modelId = this.FindExistedModelInDb(db);
@@ -148,7 +155,7 @@ namespace ObjectServer.Model
                 modelId = this.FindExistedModelInDb(db);
             }
 
-            this.SyncFields(db, modelId);
+            this.SyncFields(db, modelId.Value);
         }
 
         /// <summary>
@@ -156,12 +163,14 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="db"></param>
         /// <param name="modelId"></param>
-        private void SyncFields(IDBProfile db, long? modelId)
+        private void SyncFields(IDBProfile db, long modelId)
         {
+            Debug.Assert(db != null);
+
             //同步代码定义的字段与数据库 core_model_field 表里记录的字段信息
             var sqlQuery = SqlString.Parse("select * from core_field where module=? and model=?");
 
-            var dbFields = db.DBContext.QueryAsDictionary(sqlQuery, this.Module, modelId.Value);
+            var dbFields = db.DBContext.QueryAsDictionary(sqlQuery, this.Module, modelId);
             var dbFieldsNames = (from f in dbFields select (string)f["name"]).ToArray();
 
             //先插入代码定义了，但数据库不存在的            
@@ -174,7 +183,7 @@ insert into core_field(module, model, name, relation, label, type, help)
             {
                 var field = this.Fields[fieldName];
                 db.DBContext.Execute(sqlInsert,
-                    this.Module, modelId.Value, fieldName, field.Relation, field.Label, field.Type.ToString(), "");
+                    this.Module, modelId, fieldName, field.Relation, field.Label, field.Type.ToString(), "");
             }
 
             //删除数据库存在，但代码未定义的
@@ -183,7 +192,7 @@ insert into core_field(module, model, name, relation, label, type, help)
             var sqlDelete = SqlString.Parse(sql);
             foreach (var f in fieldsToDelete)
             {
-                db.DBContext.Execute(sqlDelete, f, this.Module, modelId.Value);
+                db.DBContext.Execute(sqlDelete, f, this.Module, modelId);
             }
 
             //更新现存的（交集）
@@ -209,6 +218,9 @@ insert into core_field(module, model, name, relation, label, type, help)
         /// <returns></returns>
         private void SyncSingleField(IDBProfile db, Dictionary<string, object> dbField, string fieldName)
         {
+            Debug.Assert(db != null);
+            Debug.Assert(dbField != null);
+            Debug.Assert(!string.IsNullOrEmpty(fieldName));
 
             var fieldLabel = dbField["label"].IsNull() ? null : (string)dbField["label"];
             var fieldRelation = dbField["relation"].IsNull() ? null : (string)dbField["relation"];
@@ -244,6 +256,8 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         private long? FindExistedModelInDb(IDBProfile db)
         {
+            Debug.Assert(db != null);
+
             //var sql = "SELECT MAX(\"_id\") FROM core_model WHERE name=@0";
             var sql = new SqlString(
                 "select max(",
@@ -265,6 +279,8 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         private void CreateModel(IDBProfile db)
         {
+            Debug.Assert(db != null);
+
             var sql = new SqlString(
                 "insert into core_model(name, module, label) values(",
                 Parameter.Placeholder, ",",
@@ -319,6 +335,7 @@ insert into core_field(module, model, name, relation, label, type, help)
         protected void VerifyFields(IEnumerable<string> fields)
         {
             Debug.Assert(fields != null);
+
             var notExistedFields =
                 fields.Count(fn => !this.fields.ContainsKey(fn));
             if (notExistedFields > 0)
@@ -329,6 +346,11 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         public bool ContainsField(string fieldName)
         {
+            if (string.IsNullOrEmpty(fieldName))
+            {
+                throw new ArgumentNullException("fieldName");
+            }
+
             return this.Fields.ContainsKey(fieldName);
         }
 
@@ -339,6 +361,11 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         public override void MergeFrom(IResource res)
         {
+            if (res == null)
+            {
+                throw new ArgumentNullException("res");
+            }
+
             base.MergeFrom(res);
 
             var model = res as IModel;
