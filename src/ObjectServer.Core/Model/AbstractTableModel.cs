@@ -15,6 +15,9 @@ using ObjectServer.Utility;
 
 namespace ObjectServer.Model
 {
+    /// <summary>
+    /// 基于关系数据库表的实体类基类
+    /// </summary>
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public const string LeftFieldName = "_left";
@@ -285,7 +288,6 @@ where   hp._id=? and hc._id<>?
 
         private void AuditLog(IServiceScope ctx, long id, string msg)
         {
-
             var logRecord = new Dictionary<string, object>()
                 {
                     { "user", ctx.Session.UserId },
@@ -295,7 +297,6 @@ where   hp._id=? and hc._id<>?
                 };
             var res = (IModel)ctx.GetResource(Core.AuditLogModel.ModelName);
             res.CreateInternal(ctx, logRecord);
-
         }
 
         public static string ToColumnList<T>(IEnumerable<T> items)

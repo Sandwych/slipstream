@@ -5,6 +5,7 @@ using System.Text;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Diagnostics;
 
 using Microsoft.CSharp;
 
@@ -16,6 +17,11 @@ namespace ObjectServer.Runtime
 
         public Assembly CompileFromFile(IEnumerable<string> sourceFiles)
         {
+            if (sourceFiles == null)
+            {
+                throw new ArgumentNullException("sourceFiles");
+            }
+
             using (var provider = CreateCodeProvider())
             {
                 var options = CreateCompilerParameters();
@@ -66,6 +72,8 @@ namespace ObjectServer.Runtime
 
         private static void LogErrors(CompilerErrorCollection errors)
         {
+            Debug.Assert(errors != null);
+               
             foreach (CompilerError error in errors)
             {
                 var msg = string.Format("{0}({1},{2}): {3}",

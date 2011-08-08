@@ -18,6 +18,21 @@ namespace ObjectServer.Utility
             Func<TEle, IList<TId>> getDependIdProc)
             where TId : IEquatable<TId>
         {
+            if (items == null)
+            {
+                throw new ArgumentNullException("items");
+            }
+
+            if (getIdProc == null)
+            {
+                throw new ArgumentNullException("getIdProc");
+            }
+
+            if (getDependIdProc == null)
+            {
+                throw new ArgumentNullException("getDependIdProc");
+            }
+
             var g = new TopologicalSorter(items.Count);
             var indexes = new Dictionary<TId, int>(items.Count);
 

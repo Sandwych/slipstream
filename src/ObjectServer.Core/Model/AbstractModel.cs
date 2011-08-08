@@ -12,6 +12,9 @@ using ObjectServer.Data;
 
 namespace ObjectServer.Model
 {
+    /// <summary>
+    /// 实体类基类
+    /// </summary>
     public abstract class AbstractModel : AbstractResource, IModel
     {
         public const string IDFieldName = "_id";

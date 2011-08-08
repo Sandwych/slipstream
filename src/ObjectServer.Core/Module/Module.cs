@@ -94,8 +94,13 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(IServiceScope ctx)
+        public void Load(IServiceScope scope)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+
             Logger.Info(() => string.Format("Loading module: '{0}'", this.Name));
 
             this.resources.Clear();
@@ -103,7 +108,7 @@ namespace ObjectServer
             if (this.Name == "core")
             {
 #if DEBUG //调试模式不捕获异常，以便于调试
-                this.LoadCoreModule(ctx);
+                this.LoadCoreModule(scope);
 #else
                 try
                 {
@@ -119,14 +124,16 @@ namespace ObjectServer
             }
             else
             {
-                this.LoadAdditionalModule(ctx);
+                this.LoadAdditionalModule(scope);
             }
         }
 
-        private void LoadAdditionalModule(IServiceScope ctx)
+        private void LoadAdditionalModule(IServiceScope scope)
         {
+            Debug.Assert(scope != null);
+
             Logger.Info(() => "Loading precompiled assemblies...");
-            var dbProfile = Platform.DBProfiles.TryGetDBProfile(ctx.Session);
+            var dbProfile = Platform.DBProfiles.TryGetDBProfile(scope.Session);
 
             if (this.Dlls != null)
             {
@@ -142,7 +149,7 @@ namespace ObjectServer
 
             if (this.DataFiles != null)
             {
-                this.LoadData(ctx);
+                this.LoadData(scope);
             }
 
             this.State = ModuleStatus.Activated;
@@ -150,9 +157,11 @@ namespace ObjectServer
         }
 
 
-        private void LoadCoreModule(IServiceScope ctx)
+        private void LoadCoreModule(IServiceScope scope)
         {
-            var dbProfile = Platform.DBProfiles.TryGetDBProfile(ctx.Session);
+            Debug.Assert(scope != null);
+
+            var dbProfile = Platform.DBProfiles.TryGetDBProfile(scope.Session);
 
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(dbProfile, a);
@@ -160,7 +169,7 @@ namespace ObjectServer
             dbProfile.InitializeAllResources();
 
             Logger.Info(() => "Importing core data...");
-            var importer = new Model.XmlDataImporter(ctx, this.Name);
+            var importer = new Model.XmlDataImporter(scope, this.Name);
             foreach (var resPath in s_coreDataFiles)
             {
                 using (var resStream = a.GetManifestResourceStream(resPath))
@@ -173,11 +182,13 @@ namespace ObjectServer
         }
 
 
-        private void LoadData(IServiceScope ctx)
+        private void LoadData(IServiceScope scope)
         {
+            Debug.Assert(scope != null);
+
             Logger.Info(() => "Importing data...");
 
-            var importer = new Model.XmlDataImporter(ctx, this.Name);
+            var importer = new Model.XmlDataImporter(scope, this.Name);
             foreach (var dataFile in this.DataFiles)
             {
                 var dataFilePath = System.IO.Path.Combine(this.Path, dataFile);
@@ -187,6 +198,7 @@ namespace ObjectServer
 
         private void LoadDynamicAssembly(IResourceContainer resContainer, IResourceContainer resources)
         {
+            Debug.Assert(resContainer != null);
             Debug.Assert(resources != null);
 
             var a = CompileSourceFiles(this.Path);
@@ -281,8 +293,13 @@ namespace ObjectServer
             return module;
         }
 
-        public void AddToDatabase(IDBContext db)
+        public void AddToDatabase(IDBContext dbctx)
         {
+            if (dbctx == null)
+            {
+                throw new ArgumentNullException("dbctx");
+            }
+
             var state = "deactivated";
             if (this.AutoLoad)
             {
@@ -290,7 +307,7 @@ namespace ObjectServer
             }
 
             var insertSql = SqlString.Parse("insert into core_module(name, state, info) values(?, ?, ?)");
-            db.Execute(insertSql, this.Name, state, this.Label);
+            dbctx.Execute(insertSql, this.Name, state, this.Label);
         }
 
         public static Module CoreModule { get { return s_coreModule; } }

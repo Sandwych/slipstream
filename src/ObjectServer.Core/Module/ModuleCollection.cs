@@ -39,6 +39,11 @@ namespace ObjectServer
 
         public void Initialize(Config cfg)
         {
+            if (cfg == null)
+            {
+                throw new ArgumentNullException("cfg");
+            }
+
             this.LookupAllModules(cfg.ModulePath);
         }
 
@@ -47,12 +52,22 @@ namespace ObjectServer
 
         public bool Contains(string moduleName)
         {
+            if (string.IsNullOrEmpty(moduleName))
+            {
+                throw new ArgumentNullException("moduleName");
+            }
+
             return this.allModules.Exists(m => m.Name == moduleName);
         }
 
 
         public Module GetModule(string moduleName)
         {
+            if (string.IsNullOrEmpty(moduleName))
+            {
+                throw new ArgumentNullException("moduleName");
+            }
+
             Module result = this.allModules.SingleOrDefault(m => m.Name == moduleName);
             if (result == null)
             {
@@ -68,6 +83,11 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void LookupAllModules(string modulePath)
         {
+            if (string.IsNullOrEmpty(modulePath))
+            {
+                throw new ArgumentNullException("modulePath");
+            }
+
             var modules = new List<Module>();
             modules.Add(Module.CoreModule);
 
@@ -97,8 +117,13 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void UpdateModuleList(IDBContext db)
+        public void UpdateModuleList(IDBContext dbctx)
         {
+            if (dbctx == null)
+            {
+                throw new ArgumentNullException("dbctx");
+            }
+
             var cfg = Platform.Configuration;
             this.LookupAllModules(cfg.ModulePath);
 
@@ -110,26 +135,29 @@ namespace ObjectServer
 
             foreach (var m in allModules)
             {
-                var count = (long)db.QueryValue(sql, m.Name);
+                var count = (long)dbctx.QueryValue(sql, m.Name);
                 if (count == 0)
                 {
-                    m.AddToDatabase(db);
+                    m.AddToDatabase(dbctx);
                 }
             }
         }
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadActivatedModules(IServiceScope ctx)
+        public void LoadActivatedModules(IServiceScope scope)
         {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
             //加载的策略是：
             //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的
             //SQL: select _id, name from core_module where state='activated'
-            //TODO 加上引号
             var sql = new SqlString(
                 " select _id, name from core_module where state=", Parameter.Placeholder);
 
-            var modules = ctx.DBContext.QueryAsDictionary(sql, "activated");
+            var modules = scope.DBContext.QueryAsDictionary(sql, "activated");
 
             var unloadModules = new List<long>();
             foreach (var m in modules)
@@ -138,7 +166,7 @@ namespace ObjectServer
                 var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
                 if (module != null)
                 {
-                        module.Load(ctx);
+                        module.Load(scope);
                 }
                 else
                 {
@@ -150,7 +178,7 @@ namespace ObjectServer
 
             if (unloadModules.Count > 0)
             {
-                DeactivateModules(ctx.DBContext, unloadModules);
+                DeactivateModules(scope.DBContext, unloadModules);
             }
         }
 
@@ -162,7 +190,7 @@ namespace ObjectServer
 
             var ids = unloadedModuleIds.ToCommaList();
             var sql2 = string.Format(
-                "update core_module set state = 'deactivated' where _id IN ({0})",
+                "update core_module set state = 'deactivated' where _id in ({0})",
                 ids);
 
             db.Execute(SqlString.Parse(sql2));

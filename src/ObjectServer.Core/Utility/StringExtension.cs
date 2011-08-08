@@ -10,6 +10,11 @@ namespace ObjectServer.Utility
     {
         public static string SqlEscape(this string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException("value");
+            }
+
             return value.Replace("'", "''");
         }
     }
