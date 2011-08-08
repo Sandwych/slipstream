@@ -9,6 +9,9 @@ using ObjectServer.Sql;
 
 namespace ObjectServer.Model
 {
+    /// <summary>
+    /// 单表继承的子类表基类
+    /// </summary>
     public abstract class AbstractExtendedModel : AbstractResource, IModel
     {
         private readonly IFieldCollection fields;

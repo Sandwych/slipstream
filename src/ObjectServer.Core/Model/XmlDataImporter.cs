@@ -167,7 +167,7 @@ namespace ObjectServer.Model
             if (!model.Fields.ContainsKey(fieldName))
             {
                 var msg = string.Format("Cannot found field: [{0}]", fieldName);
-                throw new BadFieldNameException(msg, fieldName);
+                throw new ArgumentOutOfRangeException(msg);
             }
 
             IField metaField = model.Fields[fieldName];

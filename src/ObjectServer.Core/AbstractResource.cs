@@ -33,7 +33,7 @@ namespace ObjectServer
             {
                 var msg = string.Format("Invalid service object name: '{0}'", name);
                 Logger.Error(() => msg);
-                throw new BadResourceNameException(msg, name);
+                throw new ResourceException(msg);
             }
 
             this.Name = name;

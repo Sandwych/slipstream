@@ -190,7 +190,6 @@
     <Compile Include="DBProfile.cs" />
     <Compile Include="Exceptions\ConcurrencyException.cs" />
     <Compile Include="Exceptions\ResourceNotFoundException.cs" />
-    <Compile Include="Exceptions\BadResourceNameException.cs" />
     <Compile Include="Exceptions\MigrationException.cs" />
     <Compile Include="Exceptions\UserDoesNotExistException.cs" />
     <Compile Include="Exceptions\BadServiceMethodException.cs" />
@@ -205,7 +204,6 @@
     <Compile Include="Model\Fields\EnumerationField.cs" />
     <Compile Include="NamingRule.cs" />
     <Compile Include="Sessions\ISessionStoreProvider.cs" />
-    <Compile Include="Exceptions\BadFieldNameException.cs" />
     <Compile Include="IExportedService.cs" />
     <Compile Include="IResource.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />

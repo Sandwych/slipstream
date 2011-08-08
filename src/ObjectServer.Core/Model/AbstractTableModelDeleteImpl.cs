@@ -86,7 +86,7 @@ namespace ObjectServer.Model
 
             var sql = new SqlString(
                 "delete from ",
-                DataProvider.Dialect.QuoteForTableName(tableModel.TableName),
+                tableModel.quotedTableName,
                 " where ",
                 QuotedIdColumn,
                 " in (",
