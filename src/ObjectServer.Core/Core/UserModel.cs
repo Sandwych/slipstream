@@ -30,7 +30,7 @@ namespace ObjectServer.Core
             Fields.Chars("login").SetLabel("User Name").SetSize(64).Required().Unique();
             Fields.Chars("password").SetLabel("Password").SetSize(64).Required();
             Fields.Chars("salt").SetLabel("Salt").SetSize(64).Required();
-            Fields.Boolean("admin").SetLabel("Administrator?").Required().DefaultValueGetter(r => false);
+            Fields.Boolean("admin").SetLabel("Administrator?").Required().SetDefaultValueGetter(r => false);
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
             Fields.ManyToMany("groups", "core.user_group", "uid", "gid").SetLabel("Groups");
             Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");

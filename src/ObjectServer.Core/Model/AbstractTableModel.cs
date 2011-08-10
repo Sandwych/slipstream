@@ -136,18 +136,18 @@ namespace ObjectServer.Model
             if (this.AutoMigration)
             {
                 Fields.DateTime(CreatedTimeFieldName).SetLabel("Created")
-                    .NotRequired().DefaultValueGetter(ctx => DateTime.Now).Readonly();
+                    .NotRequired().SetDefaultValueGetter(ctx => DateTime.Now).Readonly();
 
                 Fields.DateTime(ModifiedTimeFieldName).SetLabel("Last Modified")
-                    .NotRequired().DefaultValueGetter(ctx => DBNull.Value);
+                    .NotRequired().SetDefaultValueGetter(ctx => DBNull.Value);
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
-                    .DefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
                 Fields.ManyToOne(ModifiedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired()
-                    .DefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
                 if (this.Hierarchy)
                 {
@@ -163,10 +163,10 @@ namespace ObjectServer.Model
             Debug.Assert(!this.Fields.ContainsKey(RightFieldName));
 
             Fields.BigInteger(LeftFieldName).SetLabel("Left Value")
-                .Required().DefaultValueGetter(ctx => -1);
+                .Required().SetDefaultValueGetter(ctx => -1);
 
             Fields.BigInteger(RightFieldName).SetLabel("Right Value")
-                .Required().DefaultValueGetter(ctx => -1);
+                .Required().SetDefaultValueGetter(ctx => -1);
 
             //这里通过 SQL 查询返回
             Fields.ManyToOne(ParentFieldName, this.Name)
@@ -174,7 +174,7 @@ namespace ObjectServer.Model
 
             Fields.OneToMany(ChildrenFieldName, this.Name, ParentFieldName)
                 .SetLabel("Children")
-                .ValueGetter((scope, ids) =>
+                .SetValueGetter((scope, ids) =>
                 {
                     var result = new Dictionary<long, object>(ids.Length);
                     foreach (var id in ids)
@@ -188,7 +188,7 @@ namespace ObjectServer.Model
 
             Fields.OneToMany(DescendantsFieldName, this.Name, ParentFieldName)
                 .SetLabel("Descendants")
-                .ValueGetter((scope, ids) =>
+                .SetValueGetter((scope, ids) =>
                 {
                     var result = new Dictionary<long, object>(ids.Length);
                     foreach (var id in ids)

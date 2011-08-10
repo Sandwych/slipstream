@@ -39,7 +39,6 @@ namespace ObjectServer.Model
 
             var record = ClearUserRecord(userRecord);
 
-
             //处理用户没有给的默认值
             this.AddDefaultValues(scope, record);
 

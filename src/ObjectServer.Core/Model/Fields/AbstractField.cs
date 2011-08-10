@@ -214,7 +214,7 @@ namespace ObjectServer.Model
             return this;
         }
 
-        public IField ValueGetter(FieldValueGetter fieldGetter)
+        public IField SetValueGetter(FieldValueGetter fieldGetter)
         {
             if (fieldGetter == null)
             {
@@ -225,7 +225,7 @@ namespace ObjectServer.Model
             return this;
         }
 
-        public IField DefaultValueGetter(FieldDefaultValueGetter defaultProc)
+        public IField SetDefaultValueGetter(FieldDefaultValueGetter defaultProc)
         {
             if (defaultProc == null)
             {

@@ -32,13 +32,13 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
             Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
             Fields.Chars("name").SetLabel("Name");
             Fields.Boolean("allow_create").SetLabel("Allow Creation")
-                .Required().DefaultValueGetter(s => true);
+                .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("allow_read").SetLabel("Allow Reading")
-                .Required().DefaultValueGetter(s => true);
+                .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("allow_write").SetLabel("Allow Writing")
-                .Required().DefaultValueGetter(s => true);
+                .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("allow_delete").SetLabel("Allrow Deletion")
-                .Required().DefaultValueGetter(s => true);
+                .Required().SetDefaultValueGetter(s => true);
         }
 
         /// <summary>

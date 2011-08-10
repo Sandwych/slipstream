@@ -32,15 +32,15 @@ namespace ObjectServer.Core
             Fields.Chars("name").SetLabel("Name").Required();
             Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
             Fields.Boolean("global").SetLabel("Global")
-                .Required().DefaultValueGetter(s => true);
+                .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("on_create").SetLabel("Apply for Creation")
-               .Required().DefaultValueGetter(s => true);
+               .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("on_read").SetLabel("Apply for Reading")
-                .Required().DefaultValueGetter(s => true);
+                .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("on_write").SetLabel("Apply for Writing")
-                .Required().DefaultValueGetter(s => true);
+                .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("on_delete").SetLabel("Apply for Deleting")
-                .Required().DefaultValueGetter(s => true);
+                .Required().SetDefaultValueGetter(s => true);
             Fields.ManyToMany("groups", "core.user_group", "rid", "gid").SetLabel("Groups");
             Fields.Chars("constraints").Required().SetLabel("Constraint Domain");
         }

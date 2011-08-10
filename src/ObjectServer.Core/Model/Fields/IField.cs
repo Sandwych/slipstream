@@ -24,8 +24,8 @@ namespace ObjectServer.Model
         IField SetLabel(string label);
         IField Required();
         IField NotRequired();
-        IField ValueGetter(FieldValueGetter fieldGetter);
-        IField DefaultValueGetter(FieldDefaultValueGetter defaultProc);
+        IField SetValueGetter(FieldValueGetter fieldGetter);
+        IField SetDefaultValueGetter(FieldDefaultValueGetter defaultProc);
         IField SetSize(int size);
         IField SetHelp(string help);
         IField Readonly();

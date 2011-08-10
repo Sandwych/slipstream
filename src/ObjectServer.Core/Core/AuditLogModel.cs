@@ -21,7 +21,7 @@ namespace ObjectServer.Core
         {
             Fields.ManyToOne("user", "core.user").SetLabel("User");
             Fields.Boolean("marked").SetLabel("Marked As Read")
-                .Required().DefaultValueGetter(ctx => false);
+                .Required().SetDefaultValueGetter(ctx => false);
             Fields.Chars("resource").SetLabel("Resource Name").SetSize(64).Required();
             Fields.BigInteger("resource_id").SetLabel("Resource ID").Required();
             Fields.Chars("description").SetLabel("Description")
