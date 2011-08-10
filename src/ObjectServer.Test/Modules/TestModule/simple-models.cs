@@ -124,4 +124,16 @@ namespace ObjectServer.Test
         }
     }
 
+
+    [Resource]
+    public sealed class ValidatorModel : AbstractTableModel
+    {
+        public ValidatorModel()
+            : base("test.validator")
+        {
+            Fields.Chars("required_field").SetLabel("Required Field").Required();
+            Fields.Chars("readonly_field").SetLabel("Readonly Field").Readonly();
+        }
+    }
+
 }
