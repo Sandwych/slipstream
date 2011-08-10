@@ -135,7 +135,6 @@ namespace ObjectServer.Model
             //只有非继承的模型才添加内置字段
             if (this.AutoMigration)
             {
-
                 Fields.DateTime(CreatedTimeFieldName).SetLabel("Created")
                     .NotRequired().DefaultValueGetter(ctx => DateTime.Now).Readonly();
 
@@ -321,6 +320,12 @@ where   hp._id=? and hc._id<>?
         }
 
 
+        /// <summary>
+        /// 从用户提供的 record 里去掉系统只读的字段
+        /// 本来用户不应该指定更新这些字段的，但是我们宽大为怀，饶恕这些无耻客户端的罪孽
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
         private static Dictionary<string, object> ClearUserRecord(IDictionary<string, object> record)
         {
             Debug.Assert(record != null);

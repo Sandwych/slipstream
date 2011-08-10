@@ -58,17 +58,7 @@ namespace ObjectServer.Model
             //先写入 many-to-many 字段
             this.PrewriteManyToManyFields(scope, id, record, allFields);
 
-            //处理最近更新用户与最近更新时间字段            
-            if (this.ContainsField(ModifiedTimeFieldName))
-            {
-                record[ModifiedTimeFieldName] = DateTime.Now;
-            }
-            if (this.ContainsField(ModifiedUserFieldName) &&
-                scope.Session != null &&
-                scope.Session.UserId > 0)
-            {
-                record[ModifiedUserFieldName] = scope.Session.UserId;
-            }
+            this.SetModificationInfo(scope, record);
 
             //所有可更新的字段
             var updatableColumnFields = allFields.Where(
@@ -116,10 +106,24 @@ namespace ObjectServer.Model
                 throw new ConcurrencyException(msg);
             }
 
-
             if (this.LogWriting)
             {
                 AuditLog(scope, (long)id, this.Label + " updated");
+            }
+        }
+
+        private void SetModificationInfo(IServiceScope scope, Dictionary<string, object> record)
+        {
+            //处理最近更新用户与最近更新时间字段            
+            if (this.ContainsField(ModifiedTimeFieldName))
+            {
+                record[ModifiedTimeFieldName] = DateTime.Now;
+            }
+            if (this.ContainsField(ModifiedUserFieldName) &&
+                scope.Session != null &&
+                scope.Session.UserId > 0)
+            {
+                record[ModifiedUserFieldName] = scope.Session.UserId;
             }
         }
 

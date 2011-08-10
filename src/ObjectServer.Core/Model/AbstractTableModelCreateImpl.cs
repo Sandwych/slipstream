@@ -39,6 +39,7 @@ namespace ObjectServer.Model
 
             var record = ClearUserRecord(userRecord);
 
+
             //处理用户没有给的默认值
             this.AddDefaultValues(scope, record);
 
@@ -61,11 +62,12 @@ namespace ObjectServer.Model
                 record[i.RelatedField] = baseId;
             }
 
+            this.VerifyFields(record.Keys);
+            //校验用户提供的值是否满足字段约束
+            this.ValidateRecordForCreation(record);
 
             //转换用户给的字段值到数据库原始类型
             this.ConvertFieldToColumn(scope, record, record.Keys.ToArray());
-
-            this.VerifyFields(record.Keys);
 
             var selfId = this.CreateSelf(scope, record);
 
