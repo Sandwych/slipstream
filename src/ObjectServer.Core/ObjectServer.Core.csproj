@@ -281,6 +281,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Report\" />
+    <Folder Include="Wizard\" />
     <Folder Include="Workflow\" />
   </ItemGroup>
   <ItemGroup>
