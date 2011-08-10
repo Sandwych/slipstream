@@ -96,7 +96,6 @@
     <Compile Include="Model\ModelValidatorTests.cs" />
     <Compile Include="Sql\ConstraintTranslatorTests.cs" />
     <Compile Include="Model\HierarchyTests.cs" />
-    <Compile Include="Sql\SelectBuilderTests.cs" />
     <Compile Include="Modules\TestModule\tree-models.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
