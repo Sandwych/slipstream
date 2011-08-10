@@ -37,33 +37,33 @@ namespace ObjectServer.Utility
             var indexes = new Dictionary<TId, int>(items.Count);
 
             //add vertices
-            for (int i = 0; i < items.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
                 indexes[getIdProc(items[i])] = g.AddVertex(i);
             }
 
             //add edges
-            for (int i = 0; i < items.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
                 if (getDependIdProc(items[i]) != null)
                 {
-                    for (int j = 0; j < getDependIdProc(items[i]).Count; j++)
+                    for (var j = 0; j < getDependIdProc(items[i]).Count; j++)
                     {
                         g.AddEdge(i, indexes[getDependIdProc(items[i])[j]]);
                     }
                 }
             }
 
-            int[] sortedIndices = g.Sort();
-            TEle[] sortedItems = new TEle[items.Count];
-            for (int i = 0; i < items.Count; i++)
+            var sortedIndices = g.Sort();
+            var sortedItems = new TEle[items.Count];
+            for (var i = 0; i < items.Count; i++)
             {
                 var sortedIndex = sortedIndices[i];
                 sortedItems[i] = items[sortedIndex];
             }
 
             //反转
-            for (int i = 0; i < items.Count; i++)
+            for (var i = 0; i < items.Count; i++)
             {
                 items[items.Count - i - 1] = sortedItems[i];
             }
