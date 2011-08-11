@@ -37,7 +37,6 @@ namespace ObjectServer.Http
 
             //TODO: 看一下为什么只能用 TCP 的
             this.rpcReqUrl = rpcHostUrl;
-            this.rpcReqUrl = "tcp://127.0.0.1:5555";
             this.zsocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
         }
 

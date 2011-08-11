@@ -146,7 +146,7 @@ namespace ObjectServer
 
             if (cfg.Debug)
             {
-                rootLogger.Level = log4net.Core.Level.All;
+                rootLogger.Level = log4net.Core.Level.Debug;
             }
             else
             {
