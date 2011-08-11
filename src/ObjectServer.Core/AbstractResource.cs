@@ -67,7 +67,7 @@ namespace ObjectServer
         /// <param name="args"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public override bool TryInvokeMember(System.Dynamic.InvokeMemberBinder binder, object[] args, out object result)
+        public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             result = null;
             IService service;
@@ -119,7 +119,7 @@ namespace ObjectServer
                 || !mi.IsPublic)
             {
                 var msg = string.Format(
-                    "The method '{1}' of resource {0} must have an IContext parameter at second position.",
+                    "The method [{1}] of resource [{0}] must have an IContext parameter at second position.",
                     this.Name, mi.Name);
                 Logger.Error(() => msg);
                 throw new BadServiceMethodException(msg, this.Name, mi.Name);

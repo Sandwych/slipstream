@@ -28,6 +28,11 @@ namespace ObjectServer
         /// <param name="dg"></param>
         public static void Info(Func<string> dg)
         {
+            if (dg == null)
+            {
+                throw new ArgumentNullException("dg");
+            }
+
             var log = GetLogger();
             if (log.IsInfoEnabled)
             {
@@ -37,6 +42,11 @@ namespace ObjectServer
 
         public static void Debug(Func<string> dg)
         {
+            if (dg == null)
+            {
+                throw new ArgumentNullException("dg");
+            }
+
             var log = GetLogger();
             if (log.IsDebugEnabled)
             {
@@ -46,6 +56,11 @@ namespace ObjectServer
 
         public static void Error(Func<string> dg)
         {
+            if(dg == null)
+            {
+                throw new ArgumentNullException("dg");
+            }
+
             var log = GetLogger();
             if (log.IsErrorEnabled)
             {
@@ -55,6 +70,11 @@ namespace ObjectServer
 
         public static void Warn(Func<string> dg)
         {
+            if (dg == null)
+            {
+                throw new ArgumentNullException("dg");
+            }
+
             var log = GetLogger();
             if (log.IsWarnEnabled)
             {
@@ -64,6 +84,11 @@ namespace ObjectServer
 
         public static void Fatal(Func<string> dg)
         {
+            if (dg == null)
+            {
+                throw new ArgumentNullException("dg");
+            }
+
             var log = GetLogger();
             if (log.IsFatalEnabled)
             {
@@ -73,6 +98,16 @@ namespace ObjectServer
 
         public static void Error(string msg, Exception ex)
         {
+            if (string.IsNullOrEmpty(msg))
+            {
+                throw new ArgumentNullException("msg");
+            }
+
+            if (ex == null)
+            {
+                throw new ArgumentNullException("ex");
+            }
+
             var log = GetLogger();
             if (log.IsErrorEnabled)
             {
@@ -91,6 +126,11 @@ namespace ObjectServer
 
         public static void Configurate(Config cfg)
         {
+            if (cfg == null)
+            {
+                throw new ArgumentNullException("cfg");
+            }
+            
             IAppender appender;
             var layout = new PatternLayout(StaticSettings.LogPattern);
 
