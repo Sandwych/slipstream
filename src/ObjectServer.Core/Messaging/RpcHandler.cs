@@ -87,12 +87,12 @@ namespace ObjectServer
 
             string rpcHandlerUrl = Platform.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
-            Logger.Info(() => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
+            LoggerProvider.Info(() => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
 
             using (var receiver = new ZMQ.Socket(ZMQ.SocketType.REP))
             {
                 receiver.Connect(rpcHandlerUrl);
-                Logger.Debug(() => string.Format("RpcHandler Thread/Process[{0}] connected to URL[{1}]", id, rpcHandlerUrl));
+                LoggerProvider.Debug(() => string.Format("RpcHandler Thread/Process[{0}] connected to URL[{1}]", id, rpcHandlerUrl));
                 while (true)
                 {
                     //TODO 优化，避免转换
@@ -119,7 +119,7 @@ namespace ObjectServer
 
             var args = (object[])jreq[JsonRpcProtocol.Params];
 
-            Logger.Debug(() =>
+            LoggerProvider.Debug(() =>
                 string.Format("JSON-RPC: method=[{0}], params=[{1}]", methodName, args));
 
             //TODO: 处理安全问题及日志异常等
@@ -138,13 +138,13 @@ namespace ObjectServer
             }
             catch (FatalException fex)
             {
-                Logger.Fatal("系统发生了致命错误", fex);
+                LoggerProvider.Fatal("系统发生了致命错误", fex);
                 throw fex; //接着抛出异常，让系统结束运行
             }
             catch (System.Exception ex)
             {
                 error = JsonRpcError.ServerInternalError;
-                Logger.Error("RPCHandler Error", ex);
+                LoggerProvider.Error("RPCHandler Error", ex);
             }
 
             var jresponse = new JsonRpcResponse()

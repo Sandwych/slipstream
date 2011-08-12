@@ -33,6 +33,7 @@ namespace ObjectServer
                 "ObjectServer", "log");
             this.LogPath = "";
             this.LogLevel = "debug";
+            this.LoggingSql = false;
 
             this.RpcHandlerMax = 5; //默认5个工人
             this.RpcHandlerUrl = "inproc://rpc-handlers";
@@ -84,6 +85,9 @@ namespace ObjectServer
 
         [XmlElement("log-level")]
         public string LogLevel { get; set; }
+
+        [XmlElement("logging-sql")]
+        public bool LoggingSql { get; set; }
 
         [XmlElement("session-timeout")]
         public TimeSpan SessionTimeout { get; set; }

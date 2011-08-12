@@ -101,7 +101,7 @@ namespace ObjectServer
             catch (Exception ex)
             {
                 var msg = "Failed to initialize framework!";
-                Logger.Fatal(msg, ex);
+                LoggerProvider.Fatal(msg, ex);
                 throw new InitializationException(msg, ex);
             }
         }
@@ -113,10 +113,12 @@ namespace ObjectServer
                 throw new ArgumentNullException("cfg");
             }
 
+            LoggerProvider.Info(() => "Initializing the ObjectServer Platform...");
+
             //日志子系统必须最先初始化
             ConfigurateLogger(cfg);
 
-            Logger.Info(() => "Initializing Session Storage Subsystem...");
+            LoggerProvider.Info(() => "Initializing Session Storage Subsystem...");
             string sessionProviderType = cfg.SessionProvider;
             if (string.IsNullOrEmpty(sessionProviderType))
             {
@@ -125,19 +127,19 @@ namespace ObjectServer
             s_instance.sessionStore.Initialize(sessionProviderType);
 
             //查找所有模块并加载模块元信息
-            Logger.Info(() => "Initializing Module Management Subsystem...");
+            LoggerProvider.Info(() => "Initializing Module Management Subsystem...");
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
                 s_instance.modules.Initialize(cfg);
             }
 
-            Logger.Info(() => "Initializing Database Instances...");
+            LoggerProvider.Info(() => "Initializing Database Instances...");
             s_instance.databaseProfiles.Initialize(cfg);
 
             s_instance.config = cfg;
             s_instance.initialized = true;
 
-            Logger.Info(() => "System initialized.");
+            LoggerProvider.Info(() => "System initialized.");
         }
 
         public static void Shutdown()
@@ -184,7 +186,7 @@ namespace ObjectServer
 
         private static void ConfigurateLogger(Config cfg)
         {
-            Logger.Configurate(cfg);
+            LoggerProvider.Configurate(cfg);
         }
 
 

@@ -67,7 +67,7 @@ namespace ObjectServer.Http
             {
                 requestBody.Connect(new BufferedConsumer(bufferedBody =>
                 {
-                    Logger.Debug(() =>
+                    LoggerProvider.Debug(() =>
                     {
                         var reqStr = Encoding.UTF8.GetString(bufferedBody);
                         return string.Format("客户端请求的 JSON=[{0}]", reqStr);
@@ -75,7 +75,7 @@ namespace ObjectServer.Http
 
                     var jresponse = this.CallJsonRpc(bufferedBody);
 
-                    Logger.Debug(() =>
+                    LoggerProvider.Debug(() =>
                     {
                         var repStr = Encoding.UTF8.GetString(jresponse);
                         return string.Format("RPC 返回的 JSON=[{0}]", repStr);

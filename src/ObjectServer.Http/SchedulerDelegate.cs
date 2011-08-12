@@ -16,7 +16,7 @@ namespace ObjectServer.Http
         {
             // TODO 完善错误处理
             // 这里容易出错的地方应该就是 ZMQ 了
-            Logger.Error("Error on scheduler.", e);
+            LoggerProvider.Error("Error on scheduler.", e);
         }
 
         public void OnStop(IScheduler scheduler)

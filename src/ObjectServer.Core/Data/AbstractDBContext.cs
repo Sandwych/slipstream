@@ -57,7 +57,10 @@ namespace ObjectServer.Data
             var sql = string.Format(
                 "DROP DATABASE \"{0}\"", dbName);
 
-            Logger.Debug(() => "SQL: " + sql);
+            if (Platform.Configuration.LoggingSql)
+            {
+                LoggerProvider.Debug(() => "SQL: " + sql);
+            }
 
             var cmd = this.conn.CreateCommand();
             cmd.CommandText = sql;
@@ -77,7 +80,10 @@ namespace ObjectServer.Data
 
             this.EnsureConnectionOpened();
 
-            Logger.Debug(() => "SQL: " + commandText);
+            if (Platform.Configuration.LoggingSql)
+            {
+                LoggerProvider.Debug(() => "SQL: " + commandText);
+            }
 
             using (var command = this.CreateCommand(commandText))
             {
@@ -96,7 +102,10 @@ namespace ObjectServer.Data
 
             this.EnsureConnectionOpened();
 
-            Logger.Debug(() => "SQL: " + commandText);
+            if (Platform.Configuration.LoggingSql)
+            {
+                LoggerProvider.Debug(() => "SQL: " + commandText);
+            }
 
             using (var command = this.CreateCommand(commandText))
             {
@@ -115,7 +124,10 @@ namespace ObjectServer.Data
 
             this.EnsureConnectionOpened();
 
-            Logger.Debug(() => ("SQL: " + commandText.ToString()));
+            if (Platform.Configuration.LoggingSql)
+            {
+                LoggerProvider.Debug(() => ("SQL: " + commandText.ToString()));
+            }
 
             using (var command = this.CreateCommand(commandText))
             {
@@ -158,7 +170,10 @@ namespace ObjectServer.Data
 
             EnsureConnectionOpened();
 
-            Logger.Debug(() => "SQL: " + commandText);
+            if (Platform.Configuration.LoggingSql)
+            {
+                LoggerProvider.Debug(() => "SQL: " + commandText);
+            }
 
             using (var command = this.CreateCommand(commandText))
             {
@@ -206,7 +221,10 @@ namespace ObjectServer.Data
 
             this.EnsureConnectionOpened();
 
-            Logger.Debug(() => ("SQL: " + commandText));
+            if (Platform.Configuration.LoggingSql)
+            {
+                LoggerProvider.Debug(() => ("SQL: " + commandText));
+            }
 
             using (var command = this.CreateCommand(commandText))
             {

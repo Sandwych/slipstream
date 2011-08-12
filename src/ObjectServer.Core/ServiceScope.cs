@@ -29,7 +29,7 @@ namespace ObjectServer
                 throw new UnauthorizedAccessException("Not logged!");
             }
 
-            Logger.Debug(() =>
+            LoggerProvider.Debug(() =>
                 string.Format("ContextScope is opening for sessionId: [{0}]", sessionId));
 
             this.Session = session;
@@ -46,7 +46,7 @@ namespace ObjectServer
         /// <param name="dbName"></param>
         internal ServiceScope(string dbName, string login)
         {
-            Logger.Debug(() =>
+            LoggerProvider.Debug(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
 
             this.Session = new Session(dbName, login, 0);
@@ -61,7 +61,7 @@ namespace ObjectServer
             Debug.Assert(db != null);
             Debug.Assert(db.DBContext != null);
 
-            Logger.Debug(() =>
+            LoggerProvider.Debug(() =>
                 string.Format("ContextScope is opening for DatabaseContext"));
 
             this.Session = new Session(db.DBContext.DatabaseName, "system", 0);
@@ -104,7 +104,7 @@ namespace ObjectServer
                 this.DBContext.Close();
             }
 
-            Logger.Debug(() => "ScopeContext closed");
+            LoggerProvider.Debug(() => "ScopeContext closed");
         }
 
         #endregion

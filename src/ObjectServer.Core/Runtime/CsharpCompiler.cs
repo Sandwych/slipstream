@@ -84,11 +84,11 @@ namespace ObjectServer.Runtime
 
                 if (error.IsWarning)
                 {
-                    Logger.Warn(() => error.ToString());
+                    LoggerProvider.Warn(() => error.ToString());
                 }
                 else
                 {
-                    Logger.Error(() => error.ToString());
+                    LoggerProvider.Error(() => error.ToString());
                 }
             }
         }

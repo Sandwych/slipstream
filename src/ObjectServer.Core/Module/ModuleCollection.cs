@@ -71,7 +71,7 @@ namespace ObjectServer
             Module result = this.allModules.SingleOrDefault(m => m.Name == moduleName);
             if (result == null)
             {
-                var msg = string.Format("Cannot found module: '{0}'", moduleName);
+                var msg = string.Format("Cannot found module: [{0}]", moduleName);
                 throw new ModuleNotFoundException(msg, moduleName);
             }
             else
@@ -107,7 +107,7 @@ namespace ObjectServer
                 module.Path = moduleDir;
                 modules.Add(module);
 
-                Logger.Info(() => string.Format("Found module: [{0}], Path='{1}'",
+                LoggerProvider.Info(() => string.Format("Found module: [{0}], Path=[{1}]",
                         module.Name, module.Path));
             }
 
@@ -171,7 +171,7 @@ namespace ObjectServer
                 else
                 {
                     unloadModules.Add((long)m[AbstractModel.IDFieldName]);
-                    Logger.Warn(() => string.Format(
+                    LoggerProvider.Warn(() => string.Format(
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
             }

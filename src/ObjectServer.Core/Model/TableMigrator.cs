@@ -179,7 +179,7 @@ namespace ObjectServer.Model
             }
             else
             {
-                Logger.Warn(() => string.Format(
+                LoggerProvider.Warn(() => string.Format(
                     "unable alter table '{0}' column '{1}' to not nullable", table.Name, field.Name));
             }
         }
