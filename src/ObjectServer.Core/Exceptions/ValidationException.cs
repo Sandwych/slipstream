@@ -11,13 +11,13 @@ namespace ObjectServer.Exceptions
     [Serializable]
     public class ValidationException : DataException
     {
-        public ValidationException(string msg, IEnumerable<FieldValidationInfo> fieldsMsg)
+        public ValidationException(string msg, IDictionary<string, string> fieldsMsg)
             : base(msg)
         {
             Debug.Assert(fieldsMsg != null);
-            this.Fields =  fieldsMsg.ToArray();
+            this.Fields = fieldsMsg;
         }
 
-        public FieldValidationInfo[] Fields { get; private set; }
+        public IDictionary<string, string> Fields { get; private set; }
     }
 }

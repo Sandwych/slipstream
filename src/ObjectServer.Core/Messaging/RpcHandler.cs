@@ -132,6 +132,10 @@ namespace ObjectServer
             {
                 error = JsonRpcError.RpcArgumentError;
             }
+            catch (ValidationException vex)
+            {
+                error = new JsonRpcError(JsonRpcError.ValidationError.Code, "数据验证错误", vex.Fields);
+            }
             catch (FatalException fex)
             {
                 Logger.Fatal("系统发生了致命错误", fex);

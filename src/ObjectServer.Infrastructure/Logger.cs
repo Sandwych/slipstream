@@ -56,7 +56,7 @@ namespace ObjectServer
 
         public static void Error(Func<string> dg)
         {
-            if(dg == null)
+            if (dg == null)
             {
                 throw new ArgumentNullException("dg");
             }
@@ -130,7 +130,7 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("cfg");
             }
-            
+
             IAppender appender;
             var layout = new PatternLayout(StaticSettings.LogPattern);
 
@@ -141,10 +141,16 @@ namespace ObjectServer
                     Layout = layout,
                 };
 
-                var debugColorMapping = new ColoredConsoleAppender.LevelColors()
+                var errorColorMapping = new ColoredConsoleAppender.LevelColors()
                 {
                     Level = Level.Error,
                     ForeColor = ColoredConsoleAppender.Colors.Red,
+                };
+
+                var debugColorMapping = new ColoredConsoleAppender.LevelColors()
+                {
+                    Level = Level.Debug,
+                    ForeColor = ColoredConsoleAppender.Colors.White,
                 };
 
                 var fatalColorMapping = new ColoredConsoleAppender.LevelColors()
@@ -153,8 +159,16 @@ namespace ObjectServer
                     ForeColor = ColoredConsoleAppender.Colors.Red,
                 };
 
-                consoleAppender.AddMapping(debugColorMapping);
+                var warnColorMapping = new ColoredConsoleAppender.LevelColors()
+                {
+                    Level = Level.Fatal,
+                    ForeColor = ColoredConsoleAppender.Colors.Yellow,
+                };
+
+                consoleAppender.AddMapping(errorColorMapping);
                 consoleAppender.AddMapping(fatalColorMapping);
+                consoleAppender.AddMapping(debugColorMapping);
+                consoleAppender.AddMapping(warnColorMapping);
 
                 appender = consoleAppender;
             }
@@ -177,9 +191,6 @@ namespace ObjectServer
                 appender = fileAppender;
             }
 
-
-            log4net.Config.BasicConfigurator.Configure(appender);
-
             var hierarchy =
                 (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
             var rootLogger = hierarchy.Root;
@@ -192,6 +203,12 @@ namespace ObjectServer
             {
                 rootLogger.Level = log4net.Core.Level.Info;
             }
+
+            log4net.Config.BasicConfigurator.Configure(hierarchy, appender);
+
+            System.Diagnostics.Debug.Assert(rootLogger.IsEnabledFor(Level.Debug));
+            System.Diagnostics.Debug.Assert(hierarchy.Configured);
+
         }
     }
 }

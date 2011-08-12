@@ -20,7 +20,7 @@ namespace ObjectServer.Model
             Debug.Assert(model != null);
             Debug.Assert(record != null);
 
-            var badFields = new List<FieldValidationInfo>();
+            var badFields = new Dictionary<string, string>();
             foreach (var pair in model.Fields)
             {
                 var field = pair.Value;
@@ -32,13 +32,14 @@ namespace ObjectServer.Model
                 else if (field.IsRequired
                     && field.DefaultProc == null
                     && field.Getter == null
+                    && record.ContainsKey(field.Name)
                     && record[field.Name].IsNull())
                 {
-                    badFields.Add(new FieldValidationInfo(field.Name, "字段不能为空"));
+                    badFields.Add(field.Name, "字段不能为空");
                 }
                 else if (field.IsReadonly && record.ContainsKey(field.Name))
                 {
-                    badFields.Add(new FieldValidationInfo(field.Name, "不能创建只读字段"));
+                    badFields.Add(field.Name, "不能创建只读字段");
                 }
             }
 
@@ -54,7 +55,7 @@ namespace ObjectServer.Model
             Debug.Assert(model != null);
             Debug.Assert(record != null);
 
-            var badFields = new List<FieldValidationInfo>();
+            var badFields = new Dictionary<string, string>();
             foreach (var fieldName in record.Keys)
             {
                 var field = model.Fields[fieldName];
@@ -65,11 +66,11 @@ namespace ObjectServer.Model
                 }
                 else if (field.IsRequired && field.DefaultProc == null && record[field.Name].IsNull())
                 {
-                    badFields.Add(new FieldValidationInfo(field.Name, "字段不能为空"));
+                    badFields.Add(field.Name, "字段不能为空");
                 }
                 else if (field.IsReadonly && record.ContainsKey(field.Name))
                 {
-                    badFields.Add(new FieldValidationInfo(field.Name, "不能修改只读字段"));
+                    badFields.Add(field.Name, "不能修改只读字段");
                 }
             }
 

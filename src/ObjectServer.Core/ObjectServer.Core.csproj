@@ -137,7 +137,6 @@
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />
-    <Compile Include="FieldValidationInfo.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Sql\OrderExpression.cs" />
     <Compile Include="Sql\ConstraintTranslator.cs" />

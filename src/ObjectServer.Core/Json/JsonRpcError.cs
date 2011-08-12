@@ -12,10 +12,9 @@ namespace ObjectServer.Json
     {
         public JsonRpcError()
         {
-            this.Name = "JSONRPCError";
         }
 
-        public JsonRpcError(string code, string message)
+        public JsonRpcError(string code, string message, object data = null)
         {
             if (string.IsNullOrEmpty(code))
             {
@@ -29,10 +28,11 @@ namespace ObjectServer.Json
 
             this.Code = code;
             this.Message = message;
+            this.Data = data;
         }
 
-        [JsonProperty("name", Required = Required.Always)]
-        public string Name { get; private set; }
+        [JsonProperty("data", Required = Required.Default)]
+        public object Data { get; private set; }
 
         [JsonProperty("code", Required = Required.Always)]
         public string Code { get; private set; }
@@ -45,7 +45,7 @@ namespace ObjectServer.Json
         public static readonly JsonRpcError ServerFatalError =
             new JsonRpcError("9999", "服务器程序发生了致命错误，请与系统管理员联系");
 
-        public static readonly JsonRpcError ServerInternalError = 
+        public static readonly JsonRpcError ServerInternalError =
             new JsonRpcError("0001", "服务器发生内部错误，请与系统管理员联系");
 
         public static readonly JsonRpcError ServerDatabaseError =
@@ -60,5 +60,7 @@ namespace ObjectServer.Json
         public static readonly JsonRpcError AccessDeniedError =
             new JsonRpcError("0005", "权限不足，访问被禁止");
 
+        public static readonly JsonRpcError ValidationError =
+            new JsonRpcError("0006", "验证错误");
     }
 }

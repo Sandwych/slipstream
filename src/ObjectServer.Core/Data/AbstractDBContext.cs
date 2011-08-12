@@ -309,6 +309,7 @@ namespace ObjectServer.Data
             var sqlCommand = DataProvider.Driver.GenerateCommand(
                 CommandType.Text, sql, new NHibernate.SqlTypes.SqlType[] { });
             sqlCommand.Connection = this.conn;
+
             return sqlCommand;
         }
 
