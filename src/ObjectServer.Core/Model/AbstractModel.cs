@@ -467,19 +467,20 @@ insert into core_field(module, model, name, relation, label, type, help)
         #region IModel Members
 
         public abstract string TableName { get; protected set; }
-        public abstract bool Hierarchy { get; protected set; }
-        public abstract bool CanCreate { get; protected set; }
-        public abstract bool CanRead { get; protected set; }
-        public abstract bool CanWrite { get; protected set; }
-        public abstract bool CanDelete { get; protected set; }
+        public virtual bool Hierarchy { get; protected set; }
+        public virtual bool CanCreate { get; protected set; }
+        public virtual bool CanRead { get; protected set; }
+        public virtual bool CanWrite { get; protected set; }
+        public virtual bool CanDelete { get; protected set; }
 
         public bool AutoMigration { get; protected set; }
 
-        public abstract bool LogCreation { get; protected set; }
-        public abstract bool LogWriting { get; protected set; }
+        public virtual bool LogCreation { get; protected set; }
+        public virtual bool LogWriting { get; protected set; }
 
 
-        public abstract NameGetter NameGetter { get; protected set; }
+        public virtual NameGetter NameGetter { get; protected set; }
+
         public abstract long CountInternal(IServiceScope scope, object[] constraints = null);
         public abstract long[] SearchInternal(
             IServiceScope scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);

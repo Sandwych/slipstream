@@ -44,19 +44,7 @@ namespace ObjectServer.Model
         private string tableName = null;
         private string quotedTableName = null;
 
-        public override bool CanCreate { get; protected set; }
-        public override bool CanRead { get; protected set; }
-        public override bool CanWrite { get; protected set; }
-        public override bool CanDelete { get; protected set; }
-
-        public override bool LogCreation { get; protected set; }
-        public override bool LogWriting { get; protected set; }
-
-        public override bool Hierarchy { get; protected set; }
-
         public override bool DatabaseRequired { get { return true; } }
-
-        public override NameGetter NameGetter { get; protected set; }
 
         public override string TableName
         {
