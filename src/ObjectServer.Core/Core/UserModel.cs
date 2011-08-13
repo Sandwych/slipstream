@@ -65,6 +65,8 @@ namespace ObjectServer.Core
         {
             Debug.Assert(conn != null);
 
+            LoggerProvider.PlatformLogger.Info("Creating the Root user...");
+
             /*
                     insert into core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
                     values(?,?,?,?,?,?,?)
@@ -107,6 +109,8 @@ namespace ObjectServer.Core
             conn.Execute(
                 sql, row[VersionFieldName], row["name"], row["login"], row["password"],
                 row["admin"], row["_created_time"], row["salt"]);
+
+            LoggerProvider.PlatformLogger.Info("Root user has been created.");
         }
 
 
@@ -151,7 +155,6 @@ namespace ObjectServer.Core
         public override long CreateInternal(IServiceScope scope, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
-
             return base.CreateInternal(scope, values2);
         }
 

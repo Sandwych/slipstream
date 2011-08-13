@@ -107,7 +107,7 @@ namespace ObjectServer
                 module.Path = moduleDir;
                 modules.Add(module);
 
-                LoggerProvider.Info(() => string.Format("Found module: [{0}], Path=[{1}]",
+                LoggerProvider.PlatformLogger.Info(() => string.Format("Found module: [{0}], Path=[{1}]",
                         module.Name, module.Path));
             }
 
@@ -171,7 +171,7 @@ namespace ObjectServer
                 else
                 {
                     unloadModules.Add((long)m[AbstractModel.IDFieldName]);
-                    LoggerProvider.Warn(() => string.Format(
+                    LoggerProvider.PlatformLogger.Warn(() => string.Format(
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
             }

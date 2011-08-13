@@ -59,7 +59,7 @@ namespace ObjectServer.Data
 
             if (Platform.Configuration.LoggingSql)
             {
-                LoggerProvider.Debug(() => "SQL: " + sql);
+                LoggerProvider.PlatformLogger.Debug(() => "SQL: " + sql);
             }
 
             var cmd = this.conn.CreateCommand();
@@ -82,7 +82,7 @@ namespace ObjectServer.Data
 
             if (Platform.Configuration.LoggingSql)
             {
-                LoggerProvider.Debug(() => "SQL: " + commandText);
+                LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
             }
 
             using (var command = this.CreateCommand(commandText))
@@ -104,7 +104,7 @@ namespace ObjectServer.Data
 
             if (Platform.Configuration.LoggingSql)
             {
-                LoggerProvider.Debug(() => "SQL: " + commandText);
+                LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
             }
 
             using (var command = this.CreateCommand(commandText))
@@ -126,7 +126,7 @@ namespace ObjectServer.Data
 
             if (Platform.Configuration.LoggingSql)
             {
-                LoggerProvider.Debug(() => ("SQL: " + commandText.ToString()));
+                LoggerProvider.PlatformLogger.Debug(() => ("SQL: " + commandText.ToString()));
             }
 
             using (var command = this.CreateCommand(commandText))
@@ -172,7 +172,7 @@ namespace ObjectServer.Data
 
             if (Platform.Configuration.LoggingSql)
             {
-                LoggerProvider.Debug(() => "SQL: " + commandText);
+                LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
             }
 
             using (var command = this.CreateCommand(commandText))
@@ -223,7 +223,7 @@ namespace ObjectServer.Data
 
             if (Platform.Configuration.LoggingSql)
             {
-                LoggerProvider.Debug(() => ("SQL: " + commandText));
+                LoggerProvider.PlatformLogger.Debug(() => ("SQL: " + commandText));
             }
 
             using (var command = this.CreateCommand(commandText))

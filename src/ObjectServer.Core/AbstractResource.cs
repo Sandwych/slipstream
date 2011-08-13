@@ -23,7 +23,7 @@ namespace ObjectServer
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
 
-            LoggerProvider.Info(() => string.Format("Registering Resource: [{0}]", name));
+            LoggerProvider.PlatformLogger.Info(() => string.Format("Registering Resource: [{0}]", name));
             this.SetName(name);
             this.RegisterAllServiceMethods(this.GetType());
         }
@@ -33,7 +33,7 @@ namespace ObjectServer
             if (!NamingRule.IsValidResourceName(name))
             {
                 var msg = string.Format("Invalid service object name: '{0}'", name);
-                LoggerProvider.Error(() => msg);
+                LoggerProvider.PlatformLogger.Error(() => msg);
                 throw new ResourceException(msg);
             }
 
@@ -110,7 +110,7 @@ namespace ObjectServer
                 var msg = string.Format(
                     "Service method '{1}' of resource '{0}' must be a static method",
                     this.Name, mi.Name);
-                LoggerProvider.Error(() => msg);
+                LoggerProvider.PlatformLogger.Error(() => msg);
                 throw new BadServiceMethodException(msg, this.Name, mi.Name);
             }
 
@@ -122,7 +122,7 @@ namespace ObjectServer
                 var msg = string.Format(
                     "The method [{1}] of resource [{0}] must have an IContext parameter at second position.",
                     this.Name, mi.Name);
-                LoggerProvider.Error(() => msg);
+                LoggerProvider.PlatformLogger.Error(() => msg);
                 throw new BadServiceMethodException(msg, this.Name, mi.Name);
             }
         }

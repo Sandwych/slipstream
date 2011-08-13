@@ -12,123 +12,45 @@ using log4net.Core;
 
 namespace ObjectServer
 {
-    public static class LoggerProvider
+    public sealed class LoggerProvider
     {
-        private static log4net.ILog GetLogger()
+        public const string PlatformLoggerName = "platform";
+        public const string BizLoggerName = "biz";
+        public const string GatewayLoggerName = "gateway";
+
+        public static readonly Dictionary<string, Level> LogLevelMapping =
+            new Dictionary<string, Level>()
+            {
+                { "all", Level.All },
+                { "debug", Level.Debug },
+                { "info", Level.Info },
+                { "warn", Level.Warn },
+                { "error", Level.Error },
+                { "fatal", Level.Fatal },
+            };
+
+        private readonly static LoggerProvider s_instance = new LoggerProvider();
+        private readonly Log4netLogger platformLogger;
+        private readonly Log4netLogger bizLogger;
+        private readonly Log4netLogger gatewayLogger;
+
+        public LoggerProvider()
         {
-            var stack = new StackTrace();
-            var frame = stack.GetFrame(2);
-            return log4net.LogManager.GetLogger(frame.GetMethod().DeclaringType);
-        }
+            var platformLog = LogManager.GetLogger(PlatformLoggerName);
+            this.platformLogger = new Log4netLogger(platformLog);
 
-        /// <summary>
-        /// 为什么这里这些方法的参数都是函数？
-        /// 因为如果需要记录日志，那么拼接日志字符串是代价很高的操作，如果不需要记录日志我们应该避免这样的开销
-        /// </summary>
-        /// <param name="dg"></param>
-        public static void Info(Func<string> dg)
-        {
-            if (dg == null)
-            {
-                throw new ArgumentNullException("dg");
-            }
+            var bizLog = LogManager.GetLogger(BizLoggerName);
+            this.bizLogger = new Log4netLogger(bizLog);
 
-            var log = GetLogger();
-            if (log.IsInfoEnabled)
-            {
-                log.Info(dg());
-            }
-        }
-
-        public static void Debug(Func<string> dg)
-        {
-            if (dg == null)
-            {
-                throw new ArgumentNullException("dg");
-            }
-
-            var log = GetLogger();
-            if (log.IsDebugEnabled)
-            {
-                log.Debug(dg());
-            }
-        }
-
-        public static void Error(Func<string> dg)
-        {
-            if (dg == null)
-            {
-                throw new ArgumentNullException("dg");
-            }
-
-            var log = GetLogger();
-            if (log.IsErrorEnabled)
-            {
-                log.Error(dg());
-            }
-        }
-
-        public static void Warn(Func<string> dg)
-        {
-            if (dg == null)
-            {
-                throw new ArgumentNullException("dg");
-            }
-
-            var log = GetLogger();
-            if (log.IsWarnEnabled)
-            {
-                log.Warn(dg());
-            }
-        }
-
-        public static void Fatal(Func<string> dg)
-        {
-            if (dg == null)
-            {
-                throw new ArgumentNullException("dg");
-            }
-
-            var log = GetLogger();
-            if (log.IsFatalEnabled)
-            {
-                log.Fatal(dg());
-            }
-        }
-
-        public static void Error(string msg, Exception ex)
-        {
-            if (string.IsNullOrEmpty(msg))
-            {
-                throw new ArgumentNullException("msg");
-            }
-
-            if (ex == null)
-            {
-                throw new ArgumentNullException("ex");
-            }
-
-            var log = GetLogger();
-            if (log.IsErrorEnabled)
-            {
-                log.Error(msg, ex);
-            }
-        }
-
-        public static void Fatal(string msg, Exception ex)
-        {
-            var log = GetLogger();
-            if (log.IsFatalEnabled)
-            {
-                log.Fatal(msg, ex);
-            }
+            var gatewayLog = LogManager.GetLogger(GatewayLoggerName);
+            this.gatewayLogger = new Log4netLogger(gatewayLog);
         }
 
         public static ObjectServer.ILogger PlatformLogger
         {
             get
             {
-                throw new NotImplementedException();
+                return s_instance.platformLogger;
             }
         }
 
@@ -136,7 +58,15 @@ namespace ObjectServer
         {
             get
             {
-                throw new NotImplementedException();
+                return s_instance.bizLogger;
+            }
+        }
+
+        public static ObjectServer.ILogger GatewayLogger
+        {
+            get
+            {
+                return s_instance.gatewayLogger;
             }
         }
 
@@ -149,32 +79,49 @@ namespace ObjectServer
 
             var layout = new PatternLayout(StaticSettings.LogPattern);
 
-            if (!string.IsNullOrEmpty(cfg.LogPath))
-            {
-                var logPath = Path.Combine(cfg.LogPath, StaticSettings.LogFileName);
-                var mainFileAppender = CreateRollingFileAppender(layout, logPath);
-
-                log4net.Config.BasicConfigurator.Configure(mainFileAppender);
-            }
+            CreateFileAppenders(cfg, layout);
 
             var hierarchy = (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
 
             if (cfg.Debug)
             {
-                hierarchy.Root.Level = log4net.Core.Level.Debug;
                 var traceAppender = CreateTraceAppender(layout);
                 hierarchy.Root.AddAppender(traceAppender);
             }
-            else
-            {
-                hierarchy.Root.Level = log4net.Core.Level.Info;
-            }
+
+            var rootLevel = LogLevelMapping[cfg.LogLevel.ToLowerInvariant()];
+            hierarchy.Root.Level = rootLevel;
 
             hierarchy.Configured = true;
+        }
 
-            /*
-            TurnOnLogging();
-             */
+        private static void CreateFileAppenders(Config cfg, PatternLayout layout)
+        {
+            //创建文件 Appenders
+            if (!string.IsNullOrEmpty(cfg.LogPath))
+            {
+                var logDir = Environment.ExpandEnvironmentVariables(cfg.LogPath);
+
+                if (!Directory.Exists(logDir))
+                {
+                    Directory.CreateDirectory(logDir);
+                }
+
+                //创建平台 appender
+                var platformLogFilePath = Path.Combine(logDir, StaticSettings.PlatformLogFileName);
+                var platformFileAppender = CreateRollingFileAppender(layout, platformLogFilePath);
+                AddAppender(PlatformLoggerName, platformFileAppender);
+
+                //创建网关 appender
+                var gatewayLogFilePath = Path.Combine(logDir, StaticSettings.GatewayLogFileName);
+                var gatewayFileAppender = CreateRollingFileAppender(layout, gatewayLogFilePath);
+                AddAppender(GatewayLoggerName, gatewayFileAppender);
+
+                //创建业务 appender
+                var bizLogFilePath = Path.Combine(logDir, StaticSettings.BizLogFileName);
+                var bizFileAppender = CreateRollingFileAppender(layout, bizLogFilePath);
+                AddAppender(BizLoggerName, bizFileAppender);
+            }
         }
 
         private static void AddAppender(string loggerName, IAppender appender)
@@ -202,11 +149,6 @@ namespace ObjectServer
 
         private static IAppender CreateRollingFileAppender(PatternLayout layout, string logPath)
         {
-            if (!System.IO.Directory.Exists(logPath))
-            {
-                throw new DirectoryNotFoundException(logPath);
-            }
-
             var fileAppender = new log4net.Appender.RollingFileAppender()
             {
                 File = logPath,

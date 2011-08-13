@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="Log4netLogger.cs" />
     <Compile Include="LoggerProvider.cs" />
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

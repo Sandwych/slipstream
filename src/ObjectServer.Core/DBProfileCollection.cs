@@ -46,7 +46,7 @@ namespace ObjectServer
             Debug.Assert(session != null);
 
             var dbName = session.Database;
-            LoggerProvider.Info(() => string.Format("Registering object-pool of database: [{0}]", dbName));
+            LoggerProvider.PlatformLogger.Info(() => string.Format("Registering object-pool of database: [{0}]", dbName));
 
             var dbNames = DataProvider.ListDatabases();
             if (!dbNames.Contains(dbName))
@@ -70,7 +70,7 @@ namespace ObjectServer
             Debug.Assert(db != null);
 
             //加载其它模块
-            LoggerProvider.Info(() => "Loading additional modules...");
+            LoggerProvider.PlatformLogger.Info(() => "Loading additional modules...");
             using (var ctx = new InternalServiceScope(db, session))
             {
                 Platform.Modules.UpdateModuleList(db.DBContext);

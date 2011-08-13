@@ -35,7 +35,7 @@ namespace ObjectServer
             var workersUrl = this.RpcHandlerUrl;
             var hostUrl = this.RpcHostUrl;
 
-            LoggerProvider.Info(() => string.Format(
+            LoggerProvider.PlatformLogger.Info(() => string.Format(
                 "正在启动应用服务器 RPC 处理器线程：远程调用主机 URL=[{0}]，RPC 处理器数量 URL=[{1}]",
                 hostUrl, workersUrl));
 

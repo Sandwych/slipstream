@@ -101,7 +101,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("scope");
             }
 
-            LoggerProvider.Info(() => string.Format("Loading module: [{0}]", this.Name));
+            LoggerProvider.PlatformLogger.Info(() => string.Format("Loading module: [{0}]", this.Name));
 
             this.resources.Clear();
 
@@ -132,7 +132,7 @@ namespace ObjectServer
         {
             Debug.Assert(scope != null);
 
-            LoggerProvider.Info(() => "Loading precompiled assemblies...");
+            LoggerProvider.PlatformLogger.Info(() => "Loading precompiled assemblies...");
             var dbProfile = Platform.DBProfiles.TryGetDBProfile(scope.Session);
 
             if (this.Dlls != null)
@@ -153,7 +153,7 @@ namespace ObjectServer
             }
 
             this.State = ModuleStatus.Activated;
-            LoggerProvider.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
+            LoggerProvider.PlatformLogger.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
         }
 
 
@@ -168,13 +168,13 @@ namespace ObjectServer
 
             dbProfile.InitializeAllResources();
 
-            LoggerProvider.Info(() => "Importing data for the Core Module...");
+            LoggerProvider.PlatformLogger.Info(() => "Importing data for the Core Module...");
             var importer = new Model.XmlDataImporter(scope, this.Name);
             foreach (var resPath in s_coreDataFiles)
             {
                 using (var resStream = a.GetManifestResourceStream(resPath))
                 {
-                    LoggerProvider.Info(() => "Importing data file: [" + resPath + "]");
+                    LoggerProvider.PlatformLogger.Info(() => "Importing data file: [" + resPath + "]");
                     importer.Import(resStream);
                     resStream.Close();
                 }
@@ -186,13 +186,13 @@ namespace ObjectServer
         {
             Debug.Assert(scope != null);
 
-            LoggerProvider.Info(() => "Importing data...");
+            LoggerProvider.PlatformLogger.Info(() => "Importing data...");
 
             var importer = new Model.XmlDataImporter(scope, this.Name);
             foreach (var dataFile in this.DataFiles)
             {
                 var dataFilePath = System.IO.Path.Combine(this.Path, dataFile);
-                LoggerProvider.Info(() => "Importing data file: [" + dataFilePath + "]");
+                LoggerProvider.PlatformLogger.Info(() => "Importing data file: [" + dataFilePath + "]");
                 importer.Import(dataFilePath);
             }
         }
@@ -212,7 +212,7 @@ namespace ObjectServer
             Debug.Assert(resContainer != null);
             Debug.Assert(assembly != null);
 
-            LoggerProvider.Info(() => string.Format(
+            LoggerProvider.PlatformLogger.Info(() => string.Format(
                 "开始注册 DLL 中包含的资源：[{0}]...", assembly.FullName));
 
             var types = GetStaticModelsFromAssembly(assembly);
@@ -317,7 +317,7 @@ namespace ObjectServer
         {
             Debug.Assert(!string.IsNullOrEmpty(moduleDir));
 
-            LoggerProvider.Info(() => string.Format(
+            LoggerProvider.PlatformLogger.Info(String.Format(
                 "Compiling source files of the module [{0}]...", this.Name));
 
             var sourceFiles = new List<string>();
@@ -328,9 +328,13 @@ namespace ObjectServer
 
             //编译模块程序并注册所有对象
             var compiler = CompilerProvider.GetCompiler(this.SourceLanguage);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             var a = compiler.CompileFromFile(sourceFiles);
-
-            LoggerProvider.Info(() => string.Format(
+            stopwatch.Stop();
+            var time = stopwatch.Elapsed;
+            LoggerProvider.PlatformLogger.Info(String.Format("Elapsed time: [{0}]", time));
+            LoggerProvider.PlatformLogger.Info(String.Format(
                 "The module [{0}] has been compiled successfully.", this.Name));
             return a;
         }

@@ -24,14 +24,14 @@ namespace ObjectServer
             this.DBPort = 5432;
             this.DBUser = "objectserver";
             this.DBPassword = "objectserver";
-            this.Debug = true;
 
             this.SessionTimeout = new TimeSpan(0, 20, 0);
 
+            this.Debug = true;
             var defaultLogPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "ObjectServer", "log");
-            this.LogPath = "";
+            this.LogPath = "d:\\logtest";
             this.LogLevel = "debug";
             this.LoggingSql = false;
 

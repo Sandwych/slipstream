@@ -120,7 +120,7 @@ namespace ObjectServer
             else
             {
                 var msg = string.Format("Cannot found resource: [{0}]", resName);
-                LoggerProvider.Error(() => msg);
+                LoggerProvider.PlatformLogger.Error(() => msg);
 
                 throw new ResourceNotFoundException(msg, resName);
             }

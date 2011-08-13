@@ -12,7 +12,9 @@ namespace ObjectServer
 
         public const string ModuleMetaDataFileName = "module.xml";
 
-        public const string LogFileName = "objectserver.log";
+        public const string PlatformLogFileName = "platform.log";
+        public const string BizLogFileName = "biz.log";
+        public const string GatewayLogFileName = "gateway.log";
 
         public const string LogPattern =
             "[%date %-5level]: %message%newline";
