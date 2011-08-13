@@ -138,6 +138,21 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(ascIds.Last(), descIds.First());
         }
 
+        [Test]
+        public void Test_simple_count()
+        {
+            var ids = this.Service.SearchModel(this.SessionId, "core.model", null, null, 0, 0);
+            var count = this.Service.CountModel(this.SessionId, "core.model", null);
+            Assert.AreEqual(ids.Length, count);
+
+            var constraints = new object[][] {
+                new object[] { "name", "like", "core.%" },
+            };
+            ids = this.Service.SearchModel(this.SessionId, "core.model", constraints, null, 0, 0);
+            count = this.Service.CountModel(this.SessionId, "core.model", constraints);
+            Assert.AreEqual(ids.Length, count);
+        }
+
 
         [Test]
         public void Test_many_to_one_field_constraints()

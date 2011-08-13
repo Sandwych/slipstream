@@ -134,6 +134,11 @@ namespace ObjectServer
             return (long)Execute(sessionId, modelName, "Create", new object[] { propertyBag });
         }
 
+        public long CountModel(string sessionId, string modelName, object[] constraints)
+        {
+            return (long)Execute(sessionId, modelName, "Count", new object[] { constraints });
+        }
+
         public long[] SearchModel(string sessionId, string modelName, object[] constraints, object[] order, long offset, long limit)
         {
             return (long[])Execute(sessionId, modelName, "Search", new object[] { constraints, order, offset, limit });

@@ -55,7 +55,8 @@ namespace ObjectServer
             IService service;
             if (!this.services.TryGetValue(name, out service))
             {
-                throw new ArgumentOutOfRangeException("name");
+                var msg = String.Format("Cannot found service: [{0}]", name);
+                throw new ArgumentOutOfRangeException("name", msg);
             }
 
             return service;

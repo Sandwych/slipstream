@@ -66,6 +66,7 @@ namespace ObjectServer.Model
         private void RegisterInternalServiceMethods()
         {
             var selfType = typeof(AbstractModel);
+            this.RegisterServiceMethod(selfType.GetMethod("Count"));
             this.RegisterServiceMethod(selfType.GetMethod("Search"));
             this.RegisterServiceMethod(selfType.GetMethod("Create"));
             this.RegisterServiceMethod(selfType.GetMethod("Read"));
@@ -382,6 +383,14 @@ insert into core_field(module, model, name, relation, label, type, help)
 
 
         #region Service Methods
+
+        [ServiceMethod]
+        public static long Count(IModel model, IServiceScope scope, object[] constraints = null)
+        {
+            EnsureServiceMethodArgs(model, scope);
+
+            return model.CountInternal(scope, constraints);
+        }
 
         [ServiceMethod]
         public static long[] Search(
