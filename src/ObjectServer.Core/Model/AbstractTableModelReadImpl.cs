@@ -25,15 +25,7 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("ctx");
             }
 
-            if (!this.CanRead)
-            {
-                throw new NotSupportedException();
-            }
-
-            if (!scope.CanReadModel(scope.Session.UserId, this.Name))
-            {
-                throw new UnauthorizedAccessException("Access denied");
-            }
+            this.VerifyReadPermission(scope);
 
             if (ids == null || ids.Count() == 0)
             {

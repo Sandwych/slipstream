@@ -27,15 +27,12 @@ namespace ObjectServer.Model
         public override long[] SearchInternal(
             IServiceScope scope, object[] constraints = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
         {
-            if (!this.CanRead)
+            if (scope == null)
             {
-                throw new NotSupportedException();
+                throw new ArgumentNullException("scope");
             }
 
-            if (!scope.CanReadModel(scope.Session.UserId, this.Name))
-            {
-                throw new UnauthorizedAccessException("Access denied");
-            }
+            this.VerifyReadPermission(scope);
 
             var translator = new ConstraintTranslator(scope, this);
 
@@ -61,7 +58,6 @@ namespace ObjectServer.Model
                 translator.SetOrders(order);
             }
 
-            //TODO 处理 Rules
             var querySql = translator.ToSqlString();
 
             if (limit > 0) //处理数量限制
@@ -72,6 +68,39 @@ namespace ObjectServer.Model
 
             return scope.DBContext.QueryAsArray<long>(querySql, translator.Values);
         }
+
+        public override long CountInternal(IServiceScope scope, object[] constraints = null)
+        {
+            if (scope == null)
+            {
+                throw new ArgumentNullException("scope");
+            }
+
+            this.VerifyReadPermission(scope);
+
+            var translator = new ConstraintTranslator(scope, this);
+
+            //处理查询约束
+            IEnumerable<ConstraintExpression> userConstraints = null;
+            if (constraints != null)
+            {
+                userConstraints = constraints.Select(o => new ConstraintExpression(o));
+            }
+            else
+            {
+                userConstraints = EmptyConstraints;
+            }
+            translator.AddConstraints(userConstraints);
+            translator.AddWhereFragment(new SqlString(" and "));
+
+            //处理 Rule 约束
+            this.GenerateReadingRuleConstraints(scope, translator);
+
+            var querySql = translator.ToSqlString(true);
+
+            return (long)scope.DBContext.QueryValue(querySql, translator.Values);
+        }
+
 
         private void GenerateReadingRuleConstraints(IServiceScope scope, ConstraintTranslator translator)
         {
@@ -89,6 +118,6 @@ namespace ObjectServer.Model
                 translator.AddGroupedConstraints(ruleConstraints);
             }
         }
-    
+
     }
 }

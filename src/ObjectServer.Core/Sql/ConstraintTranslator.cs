@@ -156,11 +156,19 @@ namespace ObjectServer.Sql
             this.whereRestrictions.Add(whereFragment);
         }
 
-        public SqlString ToSqlString()
+        public SqlString ToSqlString(bool isCount = false)
         {
             var qs = new QuerySelect(Data.DataProvider.Dialect);
 
-            var columnsFragment = new SqlString(MainTableAlias + '.' + AbstractModel.IDFieldName);
+            SqlString columnsFragment = null;
+            if (isCount)
+            {
+                columnsFragment = new SqlString("count(", MainTableAlias + '.' + AbstractModel.IDFieldName, ")");
+            }
+            else
+            {
+                columnsFragment = new SqlString(MainTableAlias + '.' + AbstractModel.IDFieldName);
+            }
             qs.AddSelectFragmentString(columnsFragment);
             qs.Distinct = false;
 
@@ -203,10 +211,13 @@ namespace ObjectServer.Sql
                 qs.SetWhereTokens((ICollection)whereTokens);
             }
 
-            foreach (var o in this.orders)
+            if (!isCount)
             {
-                var orderBySql = ' ' + MainTableAlias + '.' + o.Field + ' ' + o.Order.ToUpperString();
-                qs.AddOrderBy(orderBySql);
+                foreach (var o in this.orders)
+                {
+                    var orderBySql = ' ' + MainTableAlias + '.' + o.Field + ' ' + o.Order.ToUpperString();
+                    qs.AddOrderBy(orderBySql);
+                }
             }
 
             return qs.ToQuerySqlString();

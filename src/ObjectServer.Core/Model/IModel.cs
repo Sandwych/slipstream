@@ -12,6 +12,7 @@ namespace ObjectServer.Model
     {
         IField[] GetAllStorableFields();
 
+        long CountInternal(IServiceScope ctx, object[] constraints = null);
         long[] SearchInternal(IServiceScope ctx, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
         long CreateInternal(IServiceScope ctx, IDictionary<string, object> propertyBag);
         void WriteInternal(IServiceScope ctx, long id, IDictionary<string, object> record);

@@ -118,6 +118,12 @@ namespace ObjectServer.Model
             get { throw new NotSupportedException(); }
         }
 
+        public long CountInternal(
+            IServiceScope ctx, object[] constraints = null)
+        {
+            throw new NotSupportedException();
+        }
+
         public long[] SearchInternal(
             IServiceScope ctx, object[] constraints = null,
             OrderExpression[] orders = null, long offset = 0, long limit = 0)

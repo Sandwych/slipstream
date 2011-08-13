@@ -27,7 +27,7 @@ namespace ObjectServer.Model
 
         private readonly IFieldCollection fields;
 
-        public static readonly string QuotedIdColumn = 
+        public static readonly string QuotedIdColumn =
             DataProvider.Dialect.QuoteForColumnName(IDFieldName);
 
         protected AbstractModel(string name)
@@ -480,6 +480,7 @@ insert into core_field(module, model, name, relation, label, type, help)
 
 
         public abstract NameGetter NameGetter { get; protected set; }
+        public abstract long CountInternal(IServiceScope scope, object[] constraints = null);
         public abstract long[] SearchInternal(
             IServiceScope scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(

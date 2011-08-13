@@ -238,7 +238,7 @@ from    {0} hp
 join    {0} hc ON hc._left between hp._left and hp._right
 where   hp._id=? and hc._id<>?
 ";
-            var sql = string.Format(sqlFmt, this.quotedTableName );
+            var sql = string.Format(sqlFmt, this.quotedTableName);
             var ids = dbctx.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
             return ids.ToArray();
         }
@@ -331,6 +331,23 @@ where   hp._id=? and hc._id<>?
 
             return record.Where(p => !SystemReadonlyFields.Contains(p.Key))
                 .ToDictionary(p => p.Key, p => p.Value);
+        }
+
+        /// <summary>
+        /// 检查模型的可读权限
+        /// </summary>
+        /// <param name="scope"></param>
+        private void VerifyReadPermission(IServiceScope scope)
+        {
+            if (!this.CanRead)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!scope.CanReadModel(scope.Session.UserId, this.Name))
+            {
+                throw new UnauthorizedAccessException("Access denied");
+            }
         }
 
     }
