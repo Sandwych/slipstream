@@ -97,6 +97,18 @@ namespace ObjectServer.Client
             });
         }
 
+        public void CountModel(
+            string objectName, object[][] constraints, Action<long> resultCallback)
+        {
+            Debug.Assert(this.Logged);
+
+            var args = new object[] { constraints };
+            this.Execute(objectName, "Count", args, n =>
+            {
+                resultCallback((long)n);
+            });
+        }
+
         public void SearchModel(
             string objectName, object[][] constraints, object[][] order, long offset, long limit, Action<long[]> resultCallback)
         {
@@ -124,18 +136,6 @@ namespace ObjectServer.Client
             });
         }
 
-        public void WriteModel(
-            string objectName, long id, IDictionary<string, object> fields, Action resultCallback)
-        {
-            Debug.Assert(this.Logged);
-
-            var args = new object[] { id, fields };
-            this.Execute(objectName, "Write", args, o =>
-            {
-                resultCallback();
-            });
-        }
-
         public void CreateModel(
             string objectName, IDictionary<string, object> fields, Action<long> resultCallback)
         {
@@ -148,6 +148,29 @@ namespace ObjectServer.Client
             });
         }
 
+        public void WriteModel(
+            string objectName, long id, IDictionary<string, object> fields, Action resultCallback)
+        {
+            Debug.Assert(this.Logged);
+
+            var args = new object[] { id, fields };
+            this.Execute(objectName, "Write", args, o =>
+            {
+                resultCallback();
+            });
+        }
+
+        public void DeleteModel(
+            string objectName, long[] ids, Action resultCallback)
+        {
+            Debug.Assert(this.Logged);
+
+            var args = new object[] { ids };
+            this.Execute(objectName, "Delete", args, n =>
+            {
+                resultCallback();
+            });
+        }
 
         public void ReadAllMenus(Action<MenuModel[]> resultCallback)
         {
