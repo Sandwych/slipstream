@@ -106,8 +106,9 @@ namespace ObjectServer.Model
 
         public abstract bool IsColumn();
 
-        public void Verify()
+        public virtual void VerifyDefinition()
         {
+            //基础的验证
             if (this.DefaultProc != null && this.Getter != null)
             {
                 throw new ArgumentException("Function field cannot have the DefaultProc property");
@@ -131,7 +132,6 @@ namespace ObjectServer.Model
         {
             if (this.IsFunctional)
             {
-                //TODO: 这里思考一下
                 return value;
             }
             else

@@ -20,6 +20,23 @@ namespace ObjectServer.Test
             Fields.ManyToOne("user", "core.user").SetValueGetter(GetUser);
             Fields.Integer("field1").Required();
             Fields.Integer("field2").Required();
+            Fields.Integer("sum_field").SetValueGetter(GetSum).Readonly();
+        }
+
+        private Dictionary<long, object> GetSum(IServiceScope ctx, IEnumerable<long> ids)
+        {
+            var fields = new string[] { "field1", "field2" };
+            var records = this.ReadInternal(ctx, ids.ToArray(), fields);
+            var result = new Dictionary<long, object>(ids.Count());
+            foreach (var record in records)
+            {
+                var id = (long)record[AbstractModel.IDFieldName];
+                var field1 = (int)record["field1"];
+                var field2 = (int)record["field2"];
+                result[id] = field1 + field2;
+            }
+
+            return result;
         }
 
         private Dictionary<long, object> GetUser(IServiceScope ctx, IEnumerable<long> ids)
@@ -31,7 +48,7 @@ namespace ObjectServer.Test
             var result = new Dictionary<long, object>();
             foreach (var id in ids)
             {
-                result[(long)id] = new object[2] { rootId, "root" };
+                result[id] = new object[2] { rootId, "root" };
             }
 
             return result;

@@ -25,7 +25,7 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
-            if (ids == null || ids.Count() == 0)
+            if (ids == null)
             {
                 throw new ArgumentNullException("ids");
             }
@@ -33,6 +33,11 @@ namespace ObjectServer.Model
             if (!scope.CanDeleteModel(scope.Session.UserId, this.Name))
             {
                 throw new UnauthorizedAccessException("Access denied");
+            }
+
+            if (ids.Length == 0)
+            {
+                return;
             }
 
             //继承的删除策略很简单：先删除本尊，再删除各个基类表
@@ -66,7 +71,8 @@ namespace ObjectServer.Model
                 {
                     var baseIds = from r in existedRecords
                                   let f = r[inheritInfo.RelatedField]
-                                  where !f.IsNull() select (long)f;
+                                  where !f.IsNull()
+                                  select (long)f;
 
                     if (baseIds.Count() > 0)
                     {

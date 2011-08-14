@@ -64,12 +64,29 @@ namespace ObjectServer.Sql
 
         public void SetOrder(OrderExpression oe)
         {
-            this.orders.Add(oe);
+            if (oe == null)
+            {
+                throw new ArgumentNullException("oe");
+            }
+
+            var field = this.rootModel.Fields[oe.Field];
+            if (field.IsColumn())
+            {
+                this.orders.Add(oe);
+            }
         }
 
         public void SetOrders(IEnumerable<OrderExpression> oes)
         {
-            this.orders.AddRange(oes);
+            if (oes == null)
+            {
+                throw new ArgumentNullException("oes");
+            }
+
+            foreach (var oe in oes)
+            {
+                this.SetOrder(oe);
+            }
         }
 
         private string GenerateNextAlias()
@@ -291,43 +308,58 @@ namespace ObjectServer.Sql
             {
                 var field = lastModel.Fields[fieldPart];
 
-                //处理继承字段
-                if (IsInheritedField(lastModel, fieldPart))
-                {
-                    var baseField = ((InheritedField)field).BaseField;
-                    var relatedField = lastModel.Inheritances
-                        .Where(i1 => i1.BaseModel == baseField.Model.Name)
-                        .Select(i2 => i2.RelatedField).Single();
-                    var baseTableJoin = this.SetInnerJoin(baseField.Model.TableName, relatedField);
-                    lastTableAlias = baseTableJoin.Alias;
-                }
+                lastTableAlias = this.ProcessInheritedFieldPart(lastModel, lastTableAlias, fieldPart, field);
 
                 //处理连接字段
                 if (field.Type == FieldType.ManyToOne && fieldPart != leafPart)
                 {
                     IModel relatedModel = (IModel)this.serviceScope.GetResource(field.Relation);
-                    if (field.IsRequired)
-                    {
-                        lastTableAlias = this.SetInnerJoin(relatedModel.TableName, field.Name).Alias;
-                    }
-                    else
-                    {
-                        lastTableAlias = this.SetOuterJoin(relatedModel.TableName, field.Name).Alias;
-                    }
-
+                    lastTableAlias = this.JoinTableByFieldPart(lastTableAlias, field, relatedModel);
                     lastModel = relatedModel;
                 }
                 else //否则则为叶子节点 
                 {
-                    //TODO 处理 childof 运算符
                     this.ProcessLeafNode(constraint, lastTableAlias, lastModel, field);
                 }
             }
         }
 
+        private string JoinTableByFieldPart(string lastTableAlias, IField field, IModel relatedModel)
+        {
+            if (field.IsRequired)
+            {
+                lastTableAlias = this.SetInnerJoin(relatedModel.TableName, field.Name).Alias;
+            }
+            else
+            {
+                lastTableAlias = this.SetOuterJoin(relatedModel.TableName, field.Name).Alias;
+            }
+            return lastTableAlias;
+        }
+
+        private string ProcessInheritedFieldPart(IModel lastModel, string lastTableAlias, string fieldPart, IField field)
+        {
+            //处理继承字段
+            if (IsInheritedField(lastModel, fieldPart))
+            {
+                var baseField = ((InheritedField)field).BaseField;
+                var relatedField = lastModel.Inheritances
+                    .Where(i1 => i1.BaseModel == baseField.Model.Name)
+                    .Select(i2 => i2.RelatedField).Single();
+                var baseTableJoin = this.SetInnerJoin(baseField.Model.TableName, relatedField);
+                lastTableAlias = baseTableJoin.Alias;
+            }
+            return lastTableAlias;
+        }
+
         private void ProcessLeafNode(
             ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
         {
+            if (field.IsFunctional)
+            {
+                throw new NotSupportedException();
+            }
+
             switch (constraint.Operator)
             {
                 case "=":

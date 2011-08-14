@@ -64,7 +64,7 @@ namespace ObjectServer.Model
 
             foreach (var pair in this.Fields)
             {
-                pair.Value.Verify();
+                pair.Value.VerifyDefinition();
             }
         }
 
