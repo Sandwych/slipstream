@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Dynamic;
 
 using NUnit.Framework;
 
@@ -17,10 +18,10 @@ namespace ObjectServer.Model.Test
         {
             var rootDomain = new object[][] { new object[] { "login", "=", "root" } };
             var rootId = this.Service.SearchModel(this.SessionId, "core.user", rootDomain, null, 0, 0)[0];
-            var record = new Dictionary<string, object>()
-            {
-                { "name", "test1" },
-            };
+            dynamic record = new ExpandoObject();
+            record.name = "test1";
+            record.field1 = 1;
+            record.field2 = 2;
 
             var id = this.Service.CreateModel(
                 this.SessionId, "test.functional_field_object", record);

@@ -106,7 +106,7 @@ namespace ObjectServer.Model
 
         public abstract bool IsColumn();
 
-        public void Validate()
+        public void Verify()
         {
             if (this.DefaultProc != null && this.Getter != null)
             {

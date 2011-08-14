@@ -28,7 +28,7 @@ namespace ObjectServer.Model.Test
                 ModelValidator.ValidateRecordForCreation(model, record);
             });
 
-            Assert.AreEqual(2, vex.Fields.Count);
+            Assert.AreEqual(1, vex.Fields.Count);
         }
     }
 }

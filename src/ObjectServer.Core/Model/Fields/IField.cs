@@ -10,7 +10,7 @@ namespace ObjectServer.Model
         FieldValueGetter Getter { get; set; }
         FieldDefaultValueGetter DefaultProc { get; set; }
 
-        void Validate();
+        void Verify();
 
         Dictionary<long, object> GetFieldValues(
             IServiceScope scope, ICollection<Dictionary<string, object>> records);

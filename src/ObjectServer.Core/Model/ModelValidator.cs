@@ -37,10 +37,6 @@ namespace ObjectServer.Model
                 {
                     badFields.Add(field.Name, "字段不能为空");
                 }
-                else if (field.IsReadonly && record.ContainsKey(field.Name))
-                {
-                    badFields.Add(field.Name, "不能创建只读字段");
-                }
             }
 
             if (badFields.Count > 0)

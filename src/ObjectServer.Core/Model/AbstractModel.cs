@@ -55,8 +55,17 @@ namespace ObjectServer.Model
             base.Load(db);
 
             this.InitializeInheritances(db);
-
+            this.VerifyFields();
             this.SyncModel(db);
+        }
+
+        private void VerifyFields()
+        {
+
+            foreach (var pair in this.Fields)
+            {
+                pair.Value.Verify();
+            }
         }
 
 
@@ -332,18 +341,6 @@ insert into core_field(module, model, name, relation, label, type, help)
         }
 
         public IFieldCollection Fields { get { return this.fields; } }
-
-        protected void VerifyFields(IEnumerable<string> fields)
-        {
-            Debug.Assert(fields != null);
-
-            var notExistedFields =
-                fields.Count(fn => !this.fields.ContainsKey(fn));
-            if (notExistedFields > 0)
-            {
-                throw new ArgumentException("Bad field name", "fields");
-            }
-        }
 
         public bool ContainsField(string fieldName)
         {

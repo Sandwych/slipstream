@@ -18,6 +18,8 @@ namespace ObjectServer.Test
         {
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
             Fields.ManyToOne("user", "core.user").SetValueGetter(GetUser);
+            Fields.Integer("field1").Required();
+            Fields.Integer("field2").Required();
         }
 
         private Dictionary<long, object> GetUser(IServiceScope ctx, IEnumerable<long> ids)
