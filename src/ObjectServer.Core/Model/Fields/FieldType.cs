@@ -11,6 +11,8 @@ namespace ObjectServer.Model
         BigInteger,
         Float,
         DateTime,
+        Date,
+        Time,
         Boolean,
         Decimal,
         Chars,
