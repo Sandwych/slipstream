@@ -14,7 +14,7 @@ namespace ObjectServer.Data
 {
     internal abstract class AbstractDBContext : IDBContext
     {
-        protected DbConnection conn;
+        protected IDbConnection conn;
         private bool opened;
 
         public AbstractDBContext()
@@ -265,7 +265,7 @@ namespace ObjectServer.Data
 
 
 
-        protected DbCommand PrepareCommand(string commandText)
+        protected IDbCommand PrepareCommand(string commandText)
         {
             Debug.Assert(!string.IsNullOrEmpty(commandText));
             Debug.Assert(this.opened);

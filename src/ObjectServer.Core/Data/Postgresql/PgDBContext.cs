@@ -7,12 +7,12 @@ using System.IO;
 
 using NHibernate.SqlCommand;
 
-using Npgsql;
-
 namespace ObjectServer.Data.Postgresql
 {
     internal sealed class PgDBContext : AbstractDBContext, IDBContext
     {
+        private readonly static Type pgt = typeof(Npgsql.NpgsqlCommand);
+
         private const string INITDB = "ObjectServer.Data.Postgresql.initdb.sql";
         private readonly static SqlString SqlToListDBs = SqlString.Parse(@"
                 select datname from pg_database  
@@ -36,7 +36,10 @@ namespace ObjectServer.Data.Postgresql
               "User ID={1};" +
               "Password={2};",
               cfg.DBHost, cfg.DBUser, cfg.DBPassword, dbName);
-            this.conn = new NpgsqlConnection(connectionString);
+            var dbc = DataProvider.Driver.CreateConnection();
+            dbc.ConnectionString = connectionString;
+            //this.conn = new NpgsqlConnection(connectionString);
+            this.conn = dbc;
             this.DatabaseName = dbName;
         }
 

@@ -42,7 +42,12 @@ namespace ObjectServer.Data
 
             var func = mapping[field.Type];
 
-            return func(field);
+            var sqlTypeStr = func(field);
+            if (field.IsRequired)
+            {
+                sqlTypeStr = sqlTypeStr + ' ' + "not null";
+            }
+            return sqlTypeStr;
         }
     }
 }

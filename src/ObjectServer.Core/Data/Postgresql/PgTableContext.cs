@@ -8,12 +8,6 @@ using System.Diagnostics;
 
 using NHibernate.SqlCommand;
 
-#if MONO
-using Mono.Npgsql;
-#else
-using Npgsql;
-#endif //MONO
-
 using ObjectServer.Model;
 using ObjectServer.Utility;
 
@@ -101,21 +95,24 @@ namespace ObjectServer.Data.Postgresql
             }
 
             tableName = tableName.SqlEscape();
-            var sql = new SqlString(
-                "create table ",
-                DataProvider.Dialect.QuoteForTableName(tableName),
-                " (",
-                DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName),
-                " bigserial not null, primary key(",
-                DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName),
-                " )) without oids");
+            var sb = new SqlStringBuilder();
+            sb.Add("create table ");
+            sb.Add(DataProvider.Dialect.QuoteForTableName(tableName));
+            sb.Add("(");
+            sb.Add("_id");
+            sb.Add(" ");
+            sb.Add("bigserial not null, ");
+            sb.Add("primary key(");
+            sb.Add("_id");
+            sb.Add(")) without oids");
 
+            var sql = sb.ToSqlString();
             db.Execute(sql);
 
             label = label.SqlEscape();
             sql = new SqlString("comment on table ",
                 DataProvider.Dialect.QuoteForTableName(tableName),
-                " is '", label.Replace("'", "''"), "'");
+                " is '", label.SqlEscape(), "'");
 
             db.Execute(sql);
         }
@@ -133,22 +130,33 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sqlType = PgSqlTypeConverter.GetSqlType(field);
-            var notNull = field.IsRequired ? "not null" : "";
+            var sql = new SqlString("alter table ",
+                DataProvider.Dialect.QuoteForTableName(this.Name),
+                " add column ",
+                DataProvider.Dialect.QuoteForColumnName(field.Name), " ", sqlType);
 
-            var sql = string.Format(
-                @"alter table ""{0}"" add column ""{1}"" {2} {3}",
-                this.Name, field.Name, sqlType, notNull);
-            db.Execute(SqlString.Parse(sql));
+            db.Execute(sql);
 
-            //添加注释
-            sql = string.Format(
-                "comment on column \"{0}\".\"{1}\" IS '{2}'",
-                this.Name, field.Name, field.Label);
-            db.Execute(SqlString.Parse(sql));
+            this.SetColumnComment(db, field);
 
             if (field.IsUnique)
             {
                 this.AddUniqueConstraint(db, field.Name);
+            }
+        }
+
+        private void SetColumnComment(IDBContext db, IField field)
+        {
+            if (!string.IsNullOrEmpty(field.Label))
+            {
+                //添加注释
+                var commentSql = new SqlString(
+                     "comment on column ",
+                     DataProvider.Dialect.QuoteForTableName(this.Name),
+                     ".",
+                     DataProvider.Dialect.QuoteForColumnName(field.Name),
+                     " is '", field.Label.SqlEscape(), "'");
+                db.Execute(commentSql);
             }
         }
 
