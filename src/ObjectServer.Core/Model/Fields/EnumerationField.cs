@@ -10,6 +10,7 @@ namespace ObjectServer.Model
     {
         private Dictionary<string, string> options = new Dictionary<string, string>();
 
+        public const int MaxSize = 60;
         public const int DefaultSize = 16;
 
         public EnumerationField(IModel model, string name, IDictionary<string, string> options)
@@ -27,6 +28,11 @@ namespace ObjectServer.Model
 
             foreach (var p in options)
             {
+                if (string.IsNullOrEmpty(p.Key) || string.IsNullOrEmpty(p.Value))
+                {
+                    throw new ArgumentOutOfRangeException("options");
+                }
+
                 this.options.Add(p.Key, p.Value);
             }
 
@@ -112,6 +118,20 @@ namespace ObjectServer.Model
             set
             {
                 throw new NotSupportedException();
+            }
+        }
+
+        public override void VerifyDefinition()
+        {
+            base.VerifyDefinition();
+
+            //检查用户提供的枚举选项
+            foreach (var p in this.options)
+            {
+                if (string.IsNullOrEmpty(p.Key) || p.Key.Length > MaxSize || string.IsNullOrEmpty(p.Value))
+                {
+                    throw new ArgumentException("Bad enumeration options");
+                }
             }
         }
     }

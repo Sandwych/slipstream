@@ -95,9 +95,11 @@ namespace ObjectServer.Model.Test
 
             dynamic data = new ExpandoObject();
             //1
+            //
             //2
             //|....3
-            //     |....5
+            //      |....5
+            //
             //|....4
             //插入4个根节点，1，2作为根节点，3,4是2的子节点，5 是3的子节点
             data.root1 = new ExpandoObject();
