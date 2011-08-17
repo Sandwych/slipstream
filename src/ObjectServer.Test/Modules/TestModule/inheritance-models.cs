@@ -43,26 +43,26 @@ namespace ObjectServer.Test
     ////////////////////// 测试多表继承的表 /////////////////
 
     [Resource]
-    public sealed class TestUserModel : AbstractTableModel
+    public sealed class TestAnimalModel : AbstractTableModel
     {
-        public TestUserModel()
-            : base("test.user")
+        public TestAnimalModel()
+            : base("test.animal")
         {
             Fields.Chars("name").SetLabel("Name");
         }
     }
 
     [Resource]
-    public sealed class TestAdminUserModel : AbstractTableModel
+    public sealed class TestDogModel : AbstractTableModel
     {
-        public TestAdminUserModel()
-            : base("test.admin_user")
+        public TestDogModel()
+            : base("test.dog")
         {
-            Inherit("test.user", "user");
+            Inherit("test.animal", "animal");
 
-            Fields.ManyToOne("user", "test.user").Required().OnDelete(OnDeleteAction.Cascade)
-                .SetLabel("Base User Model");
-            Fields.Chars("admin_info").SetLabel("Administration Info");
+            Fields.ManyToOne("animal", "test.dog").Required().OnDelete(OnDeleteAction.Cascade)
+                .SetLabel("Base Animal Model");
+            Fields.Chars("dogfood").SetLabel("Favorite Dogfood");
         }
     }
 

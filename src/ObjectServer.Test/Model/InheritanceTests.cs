@@ -13,6 +13,27 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class InheritanceTests : LocalTestCase
     {
+        private const string InitName = "animal_name";
+        private const string InitDogfood = "bone";
+
+        private long PrepareTestingData()
+        {
+            dynamic dog = new ExpandoObject();
+            dog.name = InitName;
+            dog.dogfood = InitDogfood;
+
+            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+
+            return dogModel.CreateInternal(this.ServiceScope, dog);
+        }
+
+        [SetUp]
+        public void ClearData()
+        {
+            this.ClearModel(this.ServiceScope, "test.dog");
+            this.ClearModel(this.ServiceScope, "test.animal");
+        }
+
         [Test]
         public void Test_single_table()
         {
@@ -35,127 +56,110 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_create()
         {
-            this.ClearMultiTable();
+            this.ClearData();
 
-            dynamic adminUserRecord = new ExpandoObject();
-            adminUserRecord.name = "admin_user_name";
-            adminUserRecord.admin_info = "admin_user_info";
+            dynamic dog = new ExpandoObject();
+            dog.name = "oldblue";
+            dog.dogfood = "pear";
 
-            var adminUserModel = (IModel)this.ServiceScope
-                .GetResource("test.admin_user");
+            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
             long id = -1;
             Assert.DoesNotThrow(() =>
             {
-                id = adminUserModel.CreateInternal(this.ServiceScope, adminUserRecord);
+                id = dogModel.CreateInternal(this.ServiceScope, dog);
             });
-            var ids = adminUserModel.SearchInternal(this.ServiceScope);
+            var ids = dogModel.SearchInternal(this.ServiceScope);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id, ids[0]);
+            Assert.AreEqual(1, this.Service.CountModel(this.SessionId, "test.animal"));
         }
 
         [Test]
         public void Test_multitable_creation_and_reading()
         {
-            var adminUserModel = (IModel)this.ServiceScope
-                .GetResource("test.admin_user");
-            this.ClearMultiTable();
-            var id = this.AddMultiTableTestData();
+            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            this.ClearData();
+            var id = this.PrepareTestingData();
             Assert.That(id > 0);
 
-            var adminUser = adminUserModel.ReadInternal(this.ServiceScope, new long[] { id })[0];
-            Assert.AreEqual("admin_user_name", (string)adminUser["name"]);
-            Assert.AreEqual("admin_user_info", (string)adminUser["admin_info"]);
+            var dog = dogModel.ReadInternal(this.ServiceScope, new long[] { id })[0];
+            Assert.AreEqual(InitName, (string)dog["name"]);
+            Assert.AreEqual(InitDogfood, (string)dog["dogfood"]);
         }
 
         [Test]
         public void Test_multitable_creation_and_browsing()
         {
-            var adminUserModel = (IModel)this.ServiceScope
-                .GetResource("test.admin_user");
-            this.ClearMultiTable();
-            var id = this.AddMultiTableTestData();
+            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            this.ClearData();
+            var id = this.PrepareTestingData();
             Assert.That(id > 0);
 
-            var adminUser = adminUserModel.Browse(this.ServiceScope, id);
-            Assert.AreEqual("admin_user_name", adminUser.name);
-            Assert.AreEqual("admin_user_info", adminUser.admin_info);
+            var dog = dogModel.Browse(this.ServiceScope, id);
+            Assert.AreEqual(InitName, dog.name);
+            Assert.AreEqual(InitDogfood, dog.dogfood);
         }
 
 
         [Test]
         public void Test_multitable_deletion()
         {
-            var adminUserModel = (IModel)this.ServiceScope
-                .GetResource("test.admin_user");
-            this.ClearMultiTable();
-            var id = this.AddMultiTableTestData();
+            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            this.ClearData();
+            var id = this.PrepareTestingData();
             Assert.That(id > 0);
             Assert.DoesNotThrow(() =>
             {
-                adminUserModel.DeleteInternal(this.ServiceScope, new long[] { id });
+                dogModel.DeleteInternal(this.ServiceScope, new long[] { id });
             });
-
+            Assert.AreEqual(0, this.Service.CountModel(this.SessionId, "test.animal"));
+            Assert.AreEqual(0, this.Service.CountModel(this.SessionId, "test.dog"));
         }
 
         [Test]
         public void Test_multitable_writing()
         {
-            var adminUserModel = (IModel)this.ServiceScope
-                .GetResource("test.admin_user");
-            this.ClearMultiTable();
-            var id = this.AddMultiTableTestData();
+            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            this.ClearData();
+            var id = this.PrepareTestingData();
             Assert.That(id > 0);
 
             dynamic fieldValues = new ExpandoObject();
-            fieldValues.name = "changed_base_name";
-            fieldValues.admin_info = "changed_admin_info";
+            fieldValues.name = "oldyellow";
+            fieldValues.dogfood = "apple";
 
             Assert.DoesNotThrow(() =>
                 {
-                    adminUserModel.WriteInternal(this.ServiceScope, id, fieldValues);
+                    dogModel.WriteInternal(this.ServiceScope, id, fieldValues);
                 });
 
-            var adminUserRecord = adminUserModel.ReadInternal(this.ServiceScope, new long[] { id })[0];
+            var dog = dogModel.ReadInternal(this.ServiceScope, new long[] { id })[0];
 
-            Assert.AreEqual("changed_base_name", (string)adminUserRecord["name"]);
-            Assert.AreEqual("changed_admin_info", (string)adminUserRecord["admin_info"]);
+            Assert.AreEqual("oldyellow", (string)dog["name"]);
+            Assert.AreEqual("apple", (string)dog["dogfood"]);
         }
 
         [Test]
         public void Test_multitable_searching()
         {
-            var adminUserModel = (IModel)this.ServiceScope
-                .GetResource("test.admin_user");
-            this.ClearMultiTable();
-            var id = this.AddMultiTableTestData();
+            var animalModel = (IModel)this.ServiceScope.GetResource("test.animal");
+            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+
+            this.ClearData();
+            var id = this.PrepareTestingData();
+
             Assert.That(id > 0);
 
             var constraints = new object[][]
             { 
-                new object[] { "name", "=", "admin_user_name" } 
+                new object[] { "name", "=", InitName } 
             };
 
-            var ids = adminUserModel.SearchInternal(this.ServiceScope, constraints);
+            var animalIds = animalModel.SearchInternal(this.ServiceScope, constraints);
+            var dogIds = dogModel.SearchInternal(this.ServiceScope, constraints);
 
-            Assert.AreEqual(1, ids.Length);
-        }
-
-        private long AddMultiTableTestData()
-        {
-            dynamic adminUserRecord = new ExpandoObject();
-            adminUserRecord.name = "admin_user_name";
-            adminUserRecord.admin_info = "admin_user_info";
-
-            var adminUserModel = (IModel)this.ServiceScope
-                .GetResource("test.admin_user");
-
-            return adminUserModel.CreateInternal(this.ServiceScope, adminUserRecord);
-        }
-
-        private void ClearMultiTable()
-        {
-            this.ClearModel(this.ServiceScope, "test.admin_user");
-            this.ClearModel(this.ServiceScope, "test.user");
+            Assert.AreEqual(1, animalIds.Length);
+            Assert.AreEqual(1, dogIds.Length);
         }
 
     }
