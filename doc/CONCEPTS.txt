@@ -4,7 +4,7 @@ Service Method（服务方法）：可通过 RPC 远程调用的方法，如果是 CLR 类的话使用 Ser
 
 Resource（资源）：一个能够对外提供 RPC 服务的对象，可以包含多个 Service Methods，并实现 IResource 接口
 
-Model（模型）：Resource 的子类，能够拥有字段，并可以支持 Search、Read、Write、Create、Delete 5种操作原语
+Model（模型）：Resource 的子类，能够拥有字段，并可以支持 Search、Count、Read、Write、Create、Delete 6种操作原语
 
 SingletonModel（单体模型）：Model 的子类，支持 Read 与 Write 两种操作原语
 
