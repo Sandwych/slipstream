@@ -107,7 +107,7 @@ namespace ObjectServer
                 module.Path = moduleDir;
                 modules.Add(module);
 
-                LoggerProvider.PlatformLogger.Info(() => string.Format("Found module: [{0}], Path=[{1}]",
+                LoggerProvider.PlatformLogger.Info(() => string.Format("Found additional module: [{0}], Path=[{1}]",
                         module.Name, module.Path));
             }
 

@@ -94,6 +94,8 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentOutOfRangeException("tableName");
             }
 
+            LoggerProvider.PlatformLogger.Info(String.Format("Creating Table [{0}]...", tableName));
+
             tableName = tableName.SqlEscape();
             var sb = new SqlStringBuilder();
             sb.Add("create table ");

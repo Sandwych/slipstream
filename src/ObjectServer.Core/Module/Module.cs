@@ -213,7 +213,7 @@ namespace ObjectServer
             Debug.Assert(assembly != null);
 
             LoggerProvider.PlatformLogger.Info(() => string.Format(
-                "开始注册 DLL 中包含的资源：[{0}]...", assembly.FullName));
+                "Registering all resources in DLL[{0}]...", assembly.FullName));
 
             var types = GetStaticModelsFromAssembly(assembly);
 

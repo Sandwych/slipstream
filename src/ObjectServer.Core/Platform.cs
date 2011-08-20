@@ -116,7 +116,7 @@ namespace ObjectServer
             //日志子系统必须最先初始化
             ConfigurateLogger(cfg);
 
-            LoggerProvider.PlatformLogger.Info(() => "Initializing Session Storage Subsystem...");
+            LoggerProvider.PlatformLogger.Info(() => "Initializing the Session Storage Subsystem...");
             string sessionProviderType = cfg.SessionProvider;
             if (string.IsNullOrEmpty(sessionProviderType))
             {
@@ -125,19 +125,19 @@ namespace ObjectServer
             s_instance.sessionStore.Initialize(sessionProviderType);
 
             //查找所有模块并加载模块元信息
-            LoggerProvider.PlatformLogger.Info(() => "Initializing Module Management Subsystem...");
+            LoggerProvider.PlatformLogger.Info(() => "Initializing the Module Management Subsystem...");
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
                 s_instance.modules.Initialize(cfg);
             }
 
-            LoggerProvider.PlatformLogger.Info(() => "Initializing Database Instances...");
+            LoggerProvider.PlatformLogger.Info(() => "Initializing the database profile...");
             s_instance.databaseProfiles.Initialize(cfg);
 
             s_instance.config = cfg;
             s_instance.initialized = true;
 
-            LoggerProvider.PlatformLogger.Info(() => "System initialized.");
+            LoggerProvider.PlatformLogger.Info(() => "The ObjectServer Platform is ready to load the Core Module...");
         }
 
         public static void Shutdown()

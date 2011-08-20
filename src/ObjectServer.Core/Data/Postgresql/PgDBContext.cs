@@ -69,6 +69,8 @@ namespace ObjectServer.Data.Postgresql
 
             EnsureConnectionOpened();
 
+            LoggerProvider.PlatformLogger.Info(String.Format("Creating Database [{0}]...", dbName));
+
             var sqlBuilder = new SqlStringBuilder();
             sqlBuilder.Add("create database ");
             sqlBuilder.Add(DataProvider.Dialect.QuoteForSchemaName(dbName));
@@ -77,10 +79,14 @@ namespace ObjectServer.Data.Postgresql
             var sql = sqlBuilder.ToSqlString();
 
             this.Execute(sql);
+
+            LoggerProvider.PlatformLogger.Info(String.Format("Database [{0}] has been created.", dbName));
         }
 
         public override void Initialize()
         {
+            LoggerProvider.PlatformLogger.Info("Executing the database initialization script [{0}]...");
+
             //执行初始化数据库脚本
             var assembly = Assembly.GetExecutingAssembly();
             using (var resStream = assembly.GetManifestResourceStream(INITDB))
@@ -88,16 +94,17 @@ namespace ObjectServer.Data.Postgresql
             {
                 var text = sr.ReadToEnd();
                 var lines = text.Split(';');
-                foreach (var l in lines)
+                foreach (var line in lines)
                 {
-                    if (!string.IsNullOrEmpty(l) && l.Trim().Length > 0)
+                    if (!string.IsNullOrEmpty(line) && line.Trim().Length > 0)
                     {
-                        this.Execute(SqlString.Parse(l));
+                        this.Execute(SqlString.Parse(line));
                     }
                 }
             }
 
             //创建数据库只执行到这里，安装核心模块是外部的事情
+            LoggerProvider.PlatformLogger.Info("The database scheme has been initialized.");
         }
 
         public override bool IsInitialized()
