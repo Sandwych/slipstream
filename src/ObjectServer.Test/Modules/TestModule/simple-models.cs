@@ -136,4 +136,16 @@ namespace ObjectServer.Test
         }
     }
 
+    [Resource]
+    public sealed class PersonModel : AbstractTableModel
+    {
+        public PersonModel()
+            : base("test.person")
+        {
+            Fields.Chars("name").Required();
+            Fields.Enumeration("gender", new Dictionary<string, string>() { 
+                { "male", "Male" }, { "female", "Female" }, { "unknown", "Unknown" } });
+        }
+    }
+
 }
