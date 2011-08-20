@@ -34,8 +34,8 @@ namespace ObjectServer.Model
             IDFieldName,
             CreatedTimeFieldName,
             CreatedUserFieldName,
-            ModifiedTimeFieldName,
-            ModifiedUserFieldName,
+            UpdatedTimeFieldName,
+            UpdatedUserFieldName,
             VersionFieldName,
             LeftFieldName,
             RightFieldName,
@@ -125,14 +125,14 @@ namespace ObjectServer.Model
                 Fields.DateTime(CreatedTimeFieldName).SetLabel("Created")
                     .NotRequired().SetDefaultValueGetter(ctx => DateTime.Now).Readonly();
 
-                Fields.DateTime(ModifiedTimeFieldName).SetLabel("Last Modified")
+                Fields.DateTime(UpdatedTimeFieldName).SetLabel("Last Modified")
                     .NotRequired().SetDefaultValueGetter(ctx => DBNull.Value);
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
                     .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
-                Fields.ManyToOne(ModifiedUserFieldName, "core.user").SetLabel("Creator")
+                Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired()
                     .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 

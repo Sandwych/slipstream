@@ -20,9 +20,9 @@ namespace ObjectServer.Model
         public const string IDFieldName = "_id";
         public const string VersionFieldName = "_version";
         public const string CreatedTimeFieldName = "_created_time";
-        public const string ModifiedTimeFieldName = "_modified_time";
+        public const string UpdatedTimeFieldName = "_updated_time";
         public const string CreatedUserFieldName = "_created_user";
-        public const string ModifiedUserFieldName = "_modified_user";
+        public const string UpdatedUserFieldName = "_updated_user";
         public const string ActiveFieldName = "_active";
 
         private readonly IFieldCollection fields;

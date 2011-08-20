@@ -115,15 +115,15 @@ namespace ObjectServer.Model
         private void SetModificationInfo(IServiceScope scope, Dictionary<string, object> record)
         {
             //处理最近更新用户与最近更新时间字段            
-            if (this.ContainsField(ModifiedTimeFieldName))
+            if (this.ContainsField(UpdatedTimeFieldName))
             {
-                record[ModifiedTimeFieldName] = DateTime.Now;
+                record[UpdatedTimeFieldName] = DateTime.Now;
             }
-            if (this.ContainsField(ModifiedUserFieldName) &&
+            if (this.ContainsField(UpdatedUserFieldName) &&
                 scope.Session != null &&
                 scope.Session.UserId > 0)
             {
-                record[ModifiedUserFieldName] = scope.Session.UserId;
+                record[UpdatedUserFieldName] = scope.Session.UserId;
             }
         }
 
