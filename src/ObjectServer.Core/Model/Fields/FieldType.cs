@@ -7,6 +7,7 @@ namespace ObjectServer.Model
 {
     public enum FieldType
     {
+        ID,
         Integer,
         BigInteger,
         Float,

@@ -14,9 +14,10 @@ namespace ObjectServer.Data
         {
         }
 
-        private static readonly Dictionary<FieldType, Func<IField, string>> mapping =
-            new Dictionary<FieldType, Func<IField, string>>()
+        private static readonly Dictionary<FieldType, Func<IFieldDescriptor, string>> mapping =
+            new Dictionary<FieldType, Func<IFieldDescriptor, string>>()
             {
+                { FieldType.ID, f => "bigserial not null primary key" },
                 { FieldType.Boolean, f => "boolean" },
                 { FieldType.Integer, f => "int4"  },
                 { FieldType.BigInteger, f => "int8"  },
@@ -33,7 +34,7 @@ namespace ObjectServer.Data
                 { FieldType.Reference, f => "varchar(128)" },
             };
 
-        public static string GetSqlType(IField field)
+        public static string GetSqlType(IFieldDescriptor field)
         {
             if (field == null)
             {

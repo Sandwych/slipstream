@@ -87,7 +87,9 @@ namespace ObjectServer.Model
         {
             Debug.Assert(!this.Fields.ContainsKey(IDFieldName));
 
-            Fields.BigInteger(IDFieldName).SetLabel("ID").Required();
+            var idField = new ScalarField(this, IDFieldName, FieldType.ID)
+                .Required().Readonly();
+            this.fields.Add(IDFieldName, idField);
         }
 
         /// <summary>

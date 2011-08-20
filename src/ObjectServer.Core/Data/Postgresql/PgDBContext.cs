@@ -85,7 +85,8 @@ namespace ObjectServer.Data.Postgresql
 
         public override void Initialize()
         {
-            LoggerProvider.PlatformLogger.Info("Executing the database initialization script [{0}]...");
+            LoggerProvider.PlatformLogger.Info(
+                String.Format("Executing the database initialization script [{0}]...", INITDB));
 
             //执行初始化数据库脚本
             var assembly = Assembly.GetExecutingAssembly();

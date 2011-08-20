@@ -51,26 +51,27 @@ namespace ObjectServer.Model
 
         private void CreateTable(ITableContext table)
         {
-            table.CreateTable(db.DBContext, this.model.TableName, this.model.Label);
+            table.CreateTable(db.DBContext, this.model, this.model.Name);
 
-            var storableColumns = this.model.GetAllStorableFields();
-
-            foreach (var f in storableColumns)
-            {
-                table.AddColumn(db.DBContext, f);
-
-                if (f.Type == FieldType.ManyToOne)
-                {
-                    var resources = this.db as IResourceContainer; //dyanmic workaround
-                    var refModel = (IModel)resources.GetResource(f.Relation);
-                    table.AddFK(db.DBContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
-                }
-            }
+            CreateForeignKeys(table, this.model.Fields.Values);
 
             //为 _left 和 _right 添加索引
             if (this.model.Hierarchy)
             {
                 //TODO 添加索引
+            }
+        }
+
+        private void CreateForeignKeys(ITableContext table, IEnumerable<IField> fields)
+        {
+            foreach (var f in fields)
+            {
+                if (f.IsColumn() && f.Type == FieldType.ManyToOne)
+                {
+                    var resources = this.db as IResourceContainer; //dyanmic workaround
+                    var refModel = (IModel)resources.GetResource(f.Relation);
+                    table.AddFK(db.DBContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
+                }
             }
         }
 

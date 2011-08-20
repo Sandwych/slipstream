@@ -77,6 +77,52 @@ namespace ObjectServer.Data.Postgresql
             return n > 0;
         }
 
+        public void CreateTable(IDBContext db, IModelDescriptor model, string label)
+        {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            var tableName = model.TableName.SqlEscape();
+
+            LoggerProvider.PlatformLogger.Info(String.Format("Creating Table [{0}]...", tableName));
+
+            var fieldsWithoutId = model.Fields.Values.Where(f => f.IsColumn());
+
+            var sb = new SqlStringBuilder();
+            sb.Add("create table ");
+            sb.Add(DataProvider.Dialect.QuoteForTableName(tableName));
+            sb.Add("(");
+
+            var commaNeeded = false;
+            foreach (var f in fieldsWithoutId)
+            {
+                if (commaNeeded)
+                {
+                    sb.Add(", ");
+                }
+                commaNeeded = true;
+
+                sb.Add(DataProvider.Dialect.QuoteForColumnName(f.Name));
+                sb.Add(" ");
+                var sqlType = PgSqlTypeConverter.GetSqlType(f);
+                sb.Add(sqlType);
+            }
+
+            sb.Add(") without oids");
+
+            var sql = sb.ToSqlString();
+            db.Execute(sql);
+
+            SetTableComment(db, tableName, label);
+        }
+
         public void CreateTable(IDBContext db, string tableName, string label)
         {
             if (db == null)
@@ -111,15 +157,23 @@ namespace ObjectServer.Data.Postgresql
             var sql = sb.ToSqlString();
             db.Execute(sql);
 
-            label = label.SqlEscape();
-            sql = new SqlString("comment on table ",
-                DataProvider.Dialect.QuoteForTableName(tableName),
-                " is '", label.SqlEscape(), "'");
-
-            db.Execute(sql);
+            SetTableComment(db, tableName, label);
         }
 
-        public void AddColumn(IDBContext db, IField field)
+        private static void SetTableComment(IDBContext db, string tableName, string label)
+        {
+            if (!String.IsNullOrEmpty(label))
+            {
+                label = label.SqlEscape();
+                var sql = new SqlString("comment on table ",
+                    DataProvider.Dialect.QuoteForTableName(tableName),
+                    " is '", label.SqlEscape(), "'");
+
+                db.Execute(sql);
+            }
+        }
+
+        public void AddColumn(IDBContext db, IFieldDescriptor field)
         {
             if (db == null)
             {
@@ -147,7 +201,7 @@ namespace ObjectServer.Data.Postgresql
             }
         }
 
-        private void SetColumnComment(IDBContext db, IField field)
+        private void SetColumnComment(IDBContext db, IFieldDescriptor field)
         {
             if (!string.IsNullOrEmpty(field.Label))
             {

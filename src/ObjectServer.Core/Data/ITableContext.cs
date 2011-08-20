@@ -11,7 +11,7 @@ namespace ObjectServer.Data
     {
         string Name { get; }
 
-        void AddColumn(IDBContext db, IField field);
+        void AddColumn(IDBContext db, IFieldDescriptor field);
         void DeleteColumn(IDBContext db, string columnName);
         void AlterColumnNullable(IDBContext db, string columnName, bool nullable);
         void AlterColumnType(IDBContext db, string columnName, string sqlType);
@@ -21,6 +21,7 @@ namespace ObjectServer.Data
 
         bool TableExists(IDBContext db, string tableName);
         void CreateTable(IDBContext db, string tableName, string label);
+        void CreateTable(IDBContext db, IModelDescriptor model, string label);
 
         void AddConstraint(IDBContext db, string constraintName, string constraint);
         void DeleteConstraint(IDBContext db, string constraintName);

@@ -12,6 +12,7 @@ namespace ObjectServer.Model
         private static readonly HashSet<FieldType> ScalarFieldTypes =
             new HashSet<FieldType>()
             {
+                FieldType.ID,
                 FieldType.Integer,
                 FieldType.BigInteger,
                 FieldType.Float,
@@ -56,7 +57,7 @@ namespace ObjectServer.Model
 
         public override bool IsScalar
         {
-            get { return false; }
+            get { return true; }
         }
 
         public override ObjectServer.Model.OnDeleteAction OnDeleteAction

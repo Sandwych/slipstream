@@ -213,7 +213,7 @@ namespace ObjectServer
             Debug.Assert(assembly != null);
 
             LoggerProvider.PlatformLogger.Info(() => string.Format(
-                "Registering all resources in DLL[{0}]...", assembly.FullName));
+                "Registering all resources in DLL[{0}], Path=[{1}]...", assembly.FullName, assembly.Location));
 
             var types = GetStaticModelsFromAssembly(assembly);
 
