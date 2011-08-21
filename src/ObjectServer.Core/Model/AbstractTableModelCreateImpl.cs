@@ -40,7 +40,7 @@ namespace ObjectServer.Model
             var record = ClearUserRecord(userRecord);
 
             //处理用户没有给的默认值
-            this.AddDefaultValues(scope, record);
+            this.AddDefaultValuesForCreation(scope, record);
 
             //插入被继承的表记录
             foreach (var i in this.Inheritances)
@@ -251,7 +251,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValues(IServiceScope ctx, IDictionary<string, object> propertyBag)
+        private void AddDefaultValuesForCreation(IServiceScope ctx, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
                 this.Fields.Values.Where(
@@ -260,6 +260,30 @@ namespace ObjectServer.Model
             foreach (var df in defaultFields)
             {
                 propertyBag[df.Name] = df.DefaultProc(ctx);
+            }
+
+            if (this.Fields.ContainsKey(UpdatedTimeFieldName))
+            {
+                if (this.Fields.ContainsKey(CreatedTimeFieldName))
+                {
+                    propertyBag[UpdatedTimeFieldName] = propertyBag[CreatedTimeFieldName];
+                }
+                else
+                {
+                    propertyBag[UpdatedTimeFieldName] = DateTime.Now;
+                }
+            }
+
+            if (this.Fields.ContainsKey(UpdatedUserFieldName))
+            {
+                if (this.Fields.ContainsKey(CreatedUserFieldName))
+                {
+                    propertyBag[UpdatedUserFieldName] = propertyBag[CreatedUserFieldName];
+                }
+                else if(!ctx.Session.IsSystemUser)
+                {
+                    propertyBag[UpdatedUserFieldName] = ctx.Session.UserId;
+                }
             }
         }
     }

@@ -126,13 +126,13 @@ namespace ObjectServer.Model
                     .NotRequired().SetDefaultValueGetter(ctx => DateTime.Now).Readonly();
 
                 Fields.DateTime(UpdatedTimeFieldName).SetLabel("Last Modified")
-                    .NotRequired().SetDefaultValueGetter(ctx => DBNull.Value);
+                    .NotRequired().SetDefaultValueGetter(ctx => DateTime.Now);
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
                     .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 
-                Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Creator")
+                Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Modifier")
                     .NotRequired()
                     .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
 

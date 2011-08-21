@@ -14,7 +14,7 @@ namespace ObjectServer.Model.Test
 {
 
     [TestFixture]
-    public class TableModelTest : LocalTestCase
+    public class TableModelTests : LocalTestCase
     {
         [Test]
         public void Simple_fields_crud()
@@ -129,28 +129,5 @@ namespace ObjectServer.Model.Test
             Assert.True(record["name"].IsNull());
         }
 
-
-        [Test]
-        public void test_binary_field()
-        {
-            this.ClearTestModelTable();
-            dynamic testModel = this.ServiceScope.GetResource("test.test_model");
-            var fieldData = new byte[] { 33, 44, 55, 66, 77 };
-            var record = new Dictionary<string, object>()
-                {
-                    { "name", "name1" },
-                    { "address", "address1" },
-                    { "binary_field", fieldData },
-                };
-            var id = (long)testModel.Create(this.ServiceScope, record);
-
-            record = testModel.Read(this.ServiceScope, new object[] { id }, null)[0];
-
-            var field = record["binary_field"] as byte[];
-            Assert.NotNull(field);
-            Assert.AreEqual(5, field.Length);
-            Assert.AreEqual(fieldData[0], field[0]);
-            Assert.AreEqual(fieldData[4], field[4]);
-        }
     }
 }

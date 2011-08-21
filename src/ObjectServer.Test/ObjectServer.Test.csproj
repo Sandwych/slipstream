@@ -93,6 +93,7 @@
     <Compile Include="Core\UserTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
+    <Compile Include="Model\Fields\BinaryFieldTests.cs" />
     <Compile Include="Model\ModelValidatorTests.cs" />
     <Compile Include="Sql\ConstraintTranslatorTests.cs" />
     <Compile Include="Model\HierarchyTests.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Model\InheritanceTests.cs" />
     <Compile Include="Model\Fields\FunctionalFieldTests.cs" />
     <Compile Include="Model\SearchTests.cs" />
-    <Compile Include="Model\TableModelTest.cs" />
+    <Compile Include="Model\TableModelTests.cs" />
     <EmbeddedResource Include="XmlFiles\reference-field-data.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

@@ -1,24 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data>
 
-  <record model="test.test_model" key="test_model1">
-    <field name="name">name1</field>
-    <field name="address">address1</field>
-    <field name="float_field">11.0</field>
-  </record>
-
-  <record model="test.test_model" key="test_model2">
-    <field name="name">name2</field>
-    <field name="address">address2</field>
-    <field name="float_field">22.0</field>
-  </record>
-
-  <record model="test.test_model" key="test_model3">
-    <field name="name">name3</field>
-    <field name="address">address3</field>
-    <field name="float_field">33.0</field>
-  </record>
-
   <!-- Sales Orders -->
 
   <record model="test.sales_order" key="test_sales_order1">
