@@ -73,5 +73,6 @@ namespace ObjectServer.Model.Test
             dynamic test1 = testModel.Browse(this.ServiceScope, testId1);
             Assert.AreEqual("master1", test1.reference_field.name);
         }
+
     }
 }
