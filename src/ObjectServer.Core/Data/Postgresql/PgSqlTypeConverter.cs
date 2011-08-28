@@ -43,12 +43,20 @@ namespace ObjectServer.Data
 
             var func = mapping[field.Type];
 
-            var sqlTypeStr = func(field);
+            var sb = new StringBuilder();
+            sb.Append(func(field));
             if (field.IsRequired)
             {
-                sqlTypeStr = sqlTypeStr + ' ' + "not null";
+                sb.Append(' ');
+                sb.Append("not null");
             }
-            return sqlTypeStr;
+
+            if (field.IsUnique)
+            {
+                sb.Append(' ');
+                sb.Append("unique");
+            }
+            return sb.ToString();
         }
     }
 }
