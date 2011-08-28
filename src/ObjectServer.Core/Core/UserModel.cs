@@ -65,7 +65,7 @@ namespace ObjectServer.Core
         {
             Debug.Assert(conn != null);
 
-            LoggerProvider.PlatformLogger.Info("Creating the Root user...");
+            LoggerProvider.BizLogger.Info("Creating the Root user...");
 
             /*
                     insert into core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
@@ -110,7 +110,7 @@ namespace ObjectServer.Core
                 sql, row[VersionFieldName], row["name"], row["login"], row["password"],
                 row["admin"], row["_created_time"], row["salt"]);
 
-            LoggerProvider.PlatformLogger.Info("Root user has been created.");
+            LoggerProvider.BizLogger.Info("Root user has been created.");
         }
 
 
