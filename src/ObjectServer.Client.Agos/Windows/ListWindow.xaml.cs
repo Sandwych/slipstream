@@ -26,6 +26,8 @@ namespace ObjectServer.Client.Agos.Windows
             {"Chars", typeof(DataGridTextColumn)},
             {"Boolean", typeof(DataGridCheckBoxColumn)},
             {"DateTime", typeof(DataGridTextColumn)},
+            {"ManyToOne", typeof(DataGridTextColumn)},
+            {"Enumeration", typeof(DataGridTextColumn)},
 
             /*
             {"selection", typeof(DataGridTextColumn)},

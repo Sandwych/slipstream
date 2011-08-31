@@ -6,10 +6,17 @@
     <field name="ordinal">9999</field>
   </record>
 
+  <record model="core.menu" key="menu_admin_security">
+    <field name="name">Security</field>
+    <field name="parent" ref-key="menu_admin_root" />
+    <field name="ordinal">9999</field>
+  </record>
+
   <record model="core.menu" key="menu_admin_module">
     <field name="parent" ref-key="menu_admin_root" />
     <field name="name">Module Management</field>
     <field name="ordinal">0</field>
+    <field name="action" ref-model="core.action_window" ref-key="module_menu_action" />
   </record>
 
   <record model="core.menu" key="menu_admin_base">
@@ -20,17 +27,31 @@
 
   <record model="core.menu" key="menu_base_model">
     <field name="parent" ref-key="menu_admin_base" />
-    <field name="name">Model Management</field>
+    <field name="name">Models</field>
     <field name="ordinal">0</field>
+    <field name="action" ref-model="core.action_window" ref-key="model_menu_action" />
   </record>
 
-  <record model="core.menu" key="menu_base_user">
-    <field name="parent" ref-key="menu_admin_base" />
-    <field name="name">User Management</field>
+  <record model="core.menu" key="menu_admin_group">
+    <field name="parent" ref-key="menu_admin_security" />
+    <field name="name">User Group Management</field>
     <field name="ordinal">0</field>
+    <field name="action" ref-model="core.action_window" ref-key="group_menu_action" />
+  </record>
+
+  <record model="core.menu" key="menu_admin_user">
+    <field name="parent" ref-key="menu_admin_security" />
+    <field name="name">User Management</field>
+    <field name="ordinal">1</field>
     <field name="action" ref-model="core.action_window" ref-key="user_menu_action" />
   </record>
    
+  <record model="core.menu" key="menu_admin_menu">
+    <field name="parent" ref-key="menu_admin_base" />
+    <field name="name">Menu Management</field>
+    <field name="ordinal">1</field>
+    <field name="action" ref-model="core.action_window" ref-key="menu_menu_action" />
+  </record>
 
 </data>
 

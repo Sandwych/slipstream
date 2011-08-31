@@ -1,6 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data noupdate="true">
 
+  <!-- Modules's View -->
+  <record model="core.view" key="module_tree_view">
+    <field name="name">Modules</field>
+    <field name="model">core.module</field>
+    <field name="kind">list</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <tree label="Modules">
+        <field name="name" where="basic" />
+        <field name="state" where="basic" />
+        <field name="demo" where="basic" />
+        <field name="author" where="advanced" />
+        <field name="url" where="advanced" />
+        <field name="latest_version" where="advanced" />
+        <field name="shortdesc" where="advanced" />
+        <field name="license" where="advanced" />
+      </tree>
+      ]]>
+    </field>
+  </record>
+
+  <record  model="core.action_window" key="module_menu_action">
+    <field name="name">Modules</field>
+    <field name="type">core.action_window</field>
+    <field name="view" ref-key="module_tree_view" />
+    <field name="model">core.module</field>  
+  </record>
+
+  <!-- User's View -->
+  
   <record model="core.view" key="user_tree_view">
     <field name="name">Users</field>
     <field name="model">core.user</field>
@@ -38,7 +68,73 @@
     <field name="model">core.user</field>  
   </record>
 
+  <!-- Model's View -->
+  <record model="core.view" key="model_tree_view">
+    <field name="name">Models</field>
+    <field name="model">core.model</field>
+    <field name="kind">list</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <tree label="Models">
+        <field name="name" where="basic" />
+        <field name="label" where="basic" />
+        <field name="module" where="basic" />
+      </tree>
+      ]]>
+    </field>
+  </record>
 
+  <record  model="core.action_window" key="model_menu_action">
+    <field name="name">Models</field>
+    <field name="type">core.action_window</field>
+    <field name="view" ref-key="model_tree_view" />
+    <field name="model">core.model</field>  
+  </record>
 
+  <!-- User Group's View -->
+  <record model="core.view" key="group_tree_view">
+    <field name="name">User Groups</field>
+    <field name="model">core.group</field>
+    <field name="kind">list</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <tree label="User Groups">
+        <field name="name" where="basic" />
+      </tree>
+      ]]>
+    </field>
+  </record>
+
+  <record  model="core.action_window" key="group_menu_action">
+    <field name="name">Groups</field>
+    <field name="type">core.action_window</field>
+    <field name="view" ref-key="group_tree_view" />
+    <field name="model">core.group</field>  
+  </record>
+
+  <!-- Menu's View -->
+  <record model="core.view" key="menu_tree_view">
+    <field name="name">Menus</field>
+    <field name="model">core.model</field>
+    <field name="kind">list</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <tree label="Menus">
+        <field name="name" where="basic" />
+        <field name="ordinal" where="basic" />
+        <field name="parent" where="basic" />
+        <field name="active" where="basic" />
+      </tree>
+      ]]>
+    </field>
+  </record>
+
+  <record  model="core.action_window" key="menu_menu_action">
+    <field name="name">Menus</field>
+    <field name="type">core.action_window</field>
+    <field name="view" ref-key="menu_tree_view" />
+    <field name="model">core.menu</field>  
+  </record>
+  
 </data>
 

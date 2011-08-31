@@ -26,17 +26,14 @@ CREATE INDEX index_core_field_name ON core_field ("name");
 
 CREATE TABLE core_module (
     _id BIGSERIAL NOT NULL,  
-    website VARCHAR(256),
     "name" VARCHAR(128) NOT NULL UNIQUE,
+    "state" VARCHAR(16) NOT NULL,
+    demo BOOLEAN DEFAULT FALSE,
     author VARCHAR(128),
     url VARCHAR(128),
-    "state" VARCHAR(16) NOT NULL,
     latest_version VARCHAR(64),
     shortdesc VARCHAR(256),
-    "certificate" VARCHAR(64),
     info TEXT,
-    demo BOOLEAN DEFAULT FALSE,
-    web BOOLEAN DEFAULT FALSE,
     license VARCHAR(32),
     PRIMARY KEY(_id)
 );
