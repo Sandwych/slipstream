@@ -91,11 +91,11 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Load(IDBProfile db)
+        public override void Initialize(IDBProfile db, bool update)
         {
             this.AddInternalFields();
 
-            base.Load(db);
+            base.Initialize(db, update);
 
             if (this.NameGetter == null)
             {
@@ -109,7 +109,7 @@ namespace ObjectServer.Model
                     this.Name));
             }
 
-            if (this.AutoMigration)
+            if (update && this.AutoMigration)
             {
                 new TableMigrator(db, this).Migrate();
             }

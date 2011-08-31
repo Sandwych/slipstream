@@ -45,18 +45,22 @@ namespace ObjectServer.Model
         /// 此函数要允许多次调用
         /// </summary>
         /// <param name="db"></param>
-        public override void Load(IDBProfile db)
+        public override void Initialize(IDBProfile db, bool update)
         {
             if (db == null)
             {
                 throw new ArgumentNullException("db");
             }
 
-            base.Load(db);
+            base.Initialize(db, update);
 
             this.InitializeInheritances(db);
             this.VerifyFields();
-            this.SyncModel(db);
+
+            if (update)
+            {
+                this.SyncModel(db);
+            }
         }
 
         private void VerifyFields()

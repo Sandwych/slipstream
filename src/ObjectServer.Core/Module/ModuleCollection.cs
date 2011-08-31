@@ -127,16 +127,12 @@ namespace ObjectServer
             var cfg = Platform.Configuration;
             this.LookupAllModules(cfg.ModulePath);
 
-            var sql = new SqlString(
-                "select count(*) from ",
-                DataProvider.Dialect.QuoteForTableName("core_module"),
-                " where ",
-                DataProvider.Dialect.QuoteForColumnName("name"), "=", Parameter.Placeholder);
+            var sql = new SqlString("select name from core_module");
+            var moduleNames = new HashSet<string>(dbctx.QueryAsArray<string>(sql));
 
             foreach (var m in allModules)
             {
-                var count = (long)dbctx.QueryValue(sql, m.Name);
-                if (count == 0)
+                if (!moduleNames.Contains(m.Name))
                 {
                     m.AddToDatabase(dbctx);
                 }
@@ -145,55 +141,68 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadActivatedModules(IServiceScope scope)
+        public void LoadModules(IServiceScope scope)
         {
             if (scope == null)
             {
                 throw new ArgumentNullException("scope");
             }
             //加载的策略是：
-            //只加载存在于文件系统，且数据库中设置为 state = 'activated' 的
+            //1. 加载状态为 "installed" 的模块
+            //2. 加载状态为 "to-install" 的模块
             //SQL: select _id, name from core_module where state='activated'
-            var sql = new SqlString(
-                " select _id, name from core_module where state=", Parameter.Placeholder);
 
-            var modules = scope.DBContext.QueryAsDictionary(sql, "activated");
+            //加载已安装的模块
+            var sql = new SqlString("select _id, name, state from core_module");
 
-            var unloadModules = new List<long>();
+            var modules = scope.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
+
             foreach (var m in modules)
             {
                 var moduleName = (string)m["name"];
                 var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
+                var moduleId = (long)m[AbstractModel.IDFieldName];
                 if (module != null)
                 {
-                        module.Load(scope);
+                    var state = (string)m["state"];
+                    if (state == ModuleModel.States.Installed)
+                    {
+                        module.Load(scope, false);
+                    }
+                    else if (state == ModuleModel.States.ToInstall
+                        || state == ModuleModel.States.ToUpgrade)
+                    {
+                        module.Load(scope, true);
+                        this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Installed);
+                    }
+                    else if (state == ModuleModel.States.ToUninstall)
+                    {
+                        this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
                 else
                 {
-                    unloadModules.Add((long)m[AbstractModel.IDFieldName]);
+                    this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Uninstalled);
                     LoggerProvider.PlatformLogger.Warn(() => string.Format(
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
             }
 
-            if (unloadModules.Count > 0)
-            {
-                DeactivateModules(scope.DBContext, unloadModules);
-            }
         }
 
-
-        private static void DeactivateModules(IDBContext db, IEnumerable<long> unloadedModuleIds)
+        private void UpdateModuleState(IDBContext db, long moduleID, string state)
         {
-            Debug.Assert(unloadedModuleIds.Count() > 0);
+            Debug.Assert(moduleID > 0);
             Debug.Assert(db != null);
+            Debug.Assert(!string.IsNullOrEmpty(state));
 
-            var ids = unloadedModuleIds.ToCommaList();
-            var sql2 = string.Format(
-                "update core_module set state = 'deactivated' where _id in ({0})",
-                ids);
-
-            db.Execute(SqlString.Parse(sql2));
+            var sql = new SqlString("update core_module set state=", Parameter.Placeholder,
+                " where _id=", Parameter.Placeholder);
+            db.Execute(sql, state, moduleID);
         }
 
     }

@@ -219,7 +219,6 @@
     <Compile Include="Model\OnDeleteAction.cs" />
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
-    <Compile Include="Module\ModuleStatus.cs" />
     <Compile Include="Runtime\CompileException.cs" />
     <Compile Include="Sessions\Session.cs" />
     <Compile Include="Sessions\SessionStore.cs" />

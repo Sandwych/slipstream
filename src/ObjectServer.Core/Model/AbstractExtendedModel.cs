@@ -27,7 +27,7 @@ namespace ObjectServer.Model
             this.fields = new FieldCollection(this);
         }
 
-        public override void Load(IDBProfile db)
+        public override void Initialize(IDBProfile db, bool update)
         {
             if (db == null)
             {
@@ -41,7 +41,7 @@ namespace ObjectServer.Model
             }
 
             var baseModel = db.GetResource(this.Name);
-            baseModel.Load(db);
+            baseModel.Initialize(db, update);
         }
 
         public ICollection<InheritanceInfo> Inheritances

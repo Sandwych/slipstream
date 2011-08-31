@@ -36,13 +36,13 @@ namespace ObjectServer.Core
             Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
         }
 
-        public override void Load(IDBProfile db)
+        public override void Initialize(IDBProfile db, bool update)
         {
-            base.Load(db);
+            base.Initialize(db, update);
 
             //检测是否有 root 用户
             var isRootUserExisted = UserExists(db, RootUserName);
-            if (isRootUserExisted)
+            if (update && isRootUserExisted)
             {
                 this.CreateRootUser(db.DBContext);
             }

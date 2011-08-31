@@ -54,9 +54,17 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("dbName");
             }
 
+            var msg = String.Format("Creating Database: [{0}]...", dbName);
+            LoggerProvider.PlatformLogger.Info(msg);
+
             var dbType = dbTypeMapping[Platform.Configuration.DbType];
             var dataProvider = dataProviders[dbType];
             dataProvider.CreateDatabase(dbName);
+            using (var ctx = dataProvider.CreateDataContext(dbName))
+            {
+                LoggerProvider.PlatformLogger.Info("Initializing Database...");
+                ctx.Initialize();
+            }
         }
 
         public static void DeleteDatabase(string dbName)
@@ -65,6 +73,9 @@ namespace ObjectServer.Data
             {
                 throw new ArgumentNullException("dbName");
             }
+
+            var msg = String.Format("Deleting Database: [{0}]...", dbName);
+            LoggerProvider.PlatformLogger.Info(msg);
 
             var dbType = dbTypeMapping[Platform.Configuration.DbType];
             var dataProvider = dataProviders[dbType];

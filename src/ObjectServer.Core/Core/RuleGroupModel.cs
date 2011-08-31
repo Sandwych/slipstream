@@ -22,13 +22,13 @@ namespace ObjectServer.Core
 
         }
 
-        public override void Load(IDBProfile db)
+        public override void Initialize(IDBProfile db, bool update)
         {
-            base.Load(db);
+            base.Initialize(db, update);
 
             var tableCtx = db.DBContext.CreateTableContext(this.TableName);
 
-            if (!tableCtx.ConstraintExists(db.DBContext, UniqueConstraintName))
+            if (update && !tableCtx.ConstraintExists(db.DBContext, UniqueConstraintName))
             {
                 tableCtx.AddConstraint(db.DBContext, UniqueConstraintName, "UNIQUE(gid, rid)");
             }

@@ -18,7 +18,7 @@ namespace ObjectServer
     internal class DBProfile : IDBProfile
     {
         private IDictionary<string, IResource> resources = new Dictionary<string, IResource>();
-        private HashSet<string> loadedResources = new HashSet<string>();
+        private HashSet<string> initializedResources = new HashSet<string>();
 
         /// <summary>
         /// 初始化一个数据库环境
@@ -46,10 +46,10 @@ namespace ObjectServer
 
         private void EnsureInitialization()
         {
-            //如果数据库是一个新建的空数据库，那么我们就需要先初始化此数据库为一个 ObjectServer 账套数据库
             if (!this.DBContext.IsInitialized())
             {
-                this.DBContext.Initialize();
+                throw new DatabaseNotFoundException(
+                    "Uninitialized database", this.DBContext.DatabaseName);
             }
         }
 
@@ -138,11 +138,36 @@ namespace ObjectServer
 
         #endregion
 
+        public string DatabaseName { get; private set; }
+
+        public void InitializeAllResources(bool update)
+        {
+            var allRes = new List<IResource>(this.resources.Values);
+            ResourceDependencySort(allRes);
+
+            foreach (var res in allRes)
+            {
+                this.InitializeResource(res, update);
+            }
+        }
+
+        private void InitializeResource(IResource res, bool update)
+        {
+            Debug.Assert(res != null);
+
+            if (!this.initializedResources.Contains(res.Name))
+            {
+                res.Initialize(this, update);
+                this.initializedResources.Add(res.Name);
+            }
+        }
+
+
         private static void ResourceDependencySort(IList<IResource> resList)
         {
             Debug.Assert(resList != null);
 
-            var objDepends = new Dictionary<string, string[]>();
+            var objDepends = new Dictionary<string, string[]>(resList.Count);
             foreach (var res in resList)
             {
                 objDepends.Add(res.Name, res.GetReferencedObjects());
@@ -150,30 +175,5 @@ namespace ObjectServer
 
             resList.DependencySort(m => m.Name, m => objDepends[m.Name]);
         }
-
-        public string DatabaseName { get; private set; }
-
-        public void InitializeAllResources()
-        {
-            var allRes = new List<IResource>(this.resources.Values);
-            ResourceDependencySort(allRes);
-
-            foreach (var res in allRes)
-            {
-                LoadResource(res);
-            }
-        }
-
-        private void LoadResource(IResource res)
-        {
-            Debug.Assert(res != null);
-
-            if (!this.loadedResources.Contains(res.Name))
-            {
-                res.Load(this);
-                this.loadedResources.Add(res.Name);
-            }
-        }
-
     }
 }

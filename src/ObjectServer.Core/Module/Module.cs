@@ -42,7 +42,6 @@ namespace ObjectServer
             s_coreModule = new Module()
             {
                 Name = StaticSettings.CoreModuleName,
-                State = ModuleStatus.Activated,
                 Depends = new string[] { },
                 AutoLoad = true,
             };
@@ -53,7 +52,6 @@ namespace ObjectServer
             //设置属性默认值
             this.Depends = new string[] { };
             this.Dlls = new string[] { };
-            this.State = ModuleStatus.Deactivated;
         }
 
         #region Serializable Fields
@@ -94,7 +92,7 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(IServiceScope scope)
+        public void Load(IServiceScope scope, bool update)
         {
             if (scope == null)
             {
@@ -108,7 +106,7 @@ namespace ObjectServer
             if (this.Name == "core")
             {
 #if DEBUG //调试模式不捕获异常，以便于调试
-                this.LoadCoreModule(scope);
+                this.LoadCoreModule(scope, update);
 #else
                 try
                 {
@@ -124,11 +122,11 @@ namespace ObjectServer
             }
             else
             {
-                this.LoadAdditionalModule(scope);
+                this.LoadAdditionalModule(scope, update);
             }
         }
 
-        private void LoadAdditionalModule(IServiceScope scope)
+        private void LoadAdditionalModule(IServiceScope scope, bool update)
         {
             Debug.Assert(scope != null);
 
@@ -145,19 +143,18 @@ namespace ObjectServer
                 this.LoadDynamicAssembly(dbProfile, dbProfile);
             }
 
-            dbProfile.InitializeAllResources();
+            dbProfile.InitializeAllResources(update);
 
-            if (this.DataFiles != null)
+            if (update && this.DataFiles != null)
             {
-                this.LoadData(scope);
+                this.LoadModuleData(scope);
             }
 
-            this.State = ModuleStatus.Activated;
             LoggerProvider.PlatformLogger.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
         }
 
 
-        private void LoadCoreModule(IServiceScope scope)
+        private void LoadCoreModule(IServiceScope scope, bool update)
         {
             Debug.Assert(scope != null);
 
@@ -166,23 +163,26 @@ namespace ObjectServer
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(dbProfile, a);
 
-            dbProfile.InitializeAllResources();
+            dbProfile.InitializeAllResources(update);
 
-            LoggerProvider.PlatformLogger.Info(() => "Importing data for the Core Module...");
-            var importer = new Model.XmlDataImporter(scope, this.Name);
-            foreach (var resPath in s_coreDataFiles)
+            if (update)
             {
-                using (var resStream = a.GetManifestResourceStream(resPath))
+                LoggerProvider.PlatformLogger.Info(() => "Importing data for the Core Module...");
+                var importer = new Model.XmlDataImporter(scope, this.Name);
+                foreach (var resPath in s_coreDataFiles)
                 {
-                    LoggerProvider.PlatformLogger.Info(() => "Importing data file: [" + resPath + "]");
-                    importer.Import(resStream);
-                    resStream.Close();
+                    using (var resStream = a.GetManifestResourceStream(resPath))
+                    {
+                        LoggerProvider.PlatformLogger.Info(() => "Importing data file: [" + resPath + "]");
+                        importer.Import(resStream);
+                        resStream.Close();
+                    }
                 }
             }
         }
 
 
-        private void LoadData(IServiceScope scope)
+        private void LoadModuleData(IServiceScope scope)
         {
             Debug.Assert(scope != null);
 
@@ -261,9 +261,6 @@ namespace ObjectServer
         [XmlIgnore]
         public string Path { get; set; }
 
-        [XmlIgnore]
-        public ModuleStatus State { get; set; }
-
         public static Module Deserialize(string moduleFilePath)
         {
             if (string.IsNullOrEmpty(moduleFilePath))
@@ -301,10 +298,10 @@ namespace ObjectServer
                 throw new ArgumentNullException("dbctx");
             }
 
-            var state = "deactivated";
+            var state = ModuleModel.States.Uninstalled;
             if (this.AutoLoad)
             {
-                state = "activated";
+                state = ModuleModel.States.ToInstall;
             }
 
             var insertSql = SqlString.Parse("insert into core_module(name, state, info) values(?, ?, ?)");

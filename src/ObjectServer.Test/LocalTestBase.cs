@@ -22,6 +22,14 @@ namespace ObjectServer
             var service = Platform.ExportedService;
             this.Service = service;
 
+            var dbs = Platform.ExportedService.ListDatabases();
+            if (!dbs.Contains("objectserver"))
+            {
+                Platform.ExportedService.CreateDatabase(
+                    ObjectServer.Utility.Sha.ToSha("root"), "objectserver", "root");
+            }
+
+
             this.SessionId = this.Service.LogOn("objectserver", "root", "root");
 
             this.ActiveTestModule();
@@ -36,7 +44,7 @@ namespace ObjectServer
                 var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
                 var ids = moduleModel.SearchInternal(scope, constraints);
                 dynamic fields = new ExpandoObject();
-                fields.state = "activated";
+                fields.state = "installed";
                 moduleModel.WriteInternal(scope, ids[0], fields);
             }
         }

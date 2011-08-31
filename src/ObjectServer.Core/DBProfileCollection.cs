@@ -61,20 +61,20 @@ namespace ObjectServer
                 this.dbProfiles.Add(dbName.Trim(), db);
             }
 
-            this.LoadAdditionalModules(session, db);
+            this.LoadModules(session, db);
         }
 
-        private void LoadAdditionalModules(Session session, DBProfile db)
+        private void LoadModules(Session session, DBProfile db)
         {
             Debug.Assert(session != null);
             Debug.Assert(db != null);
 
             //加载其它模块
-            LoggerProvider.PlatformLogger.Info(() => "Loading additional modules...");
+            LoggerProvider.PlatformLogger.Info(() => "Loading modules...");
             using (var ctx = new InternalServiceScope(db, session))
             {
                 Platform.Modules.UpdateModuleList(db.DBContext);
-                Platform.Modules.LoadActivatedModules(ctx);
+                Platform.Modules.LoadModules(ctx);
             }
         }
 
