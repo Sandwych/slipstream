@@ -33,17 +33,6 @@
             <controls:GridSplitter Grid.Column="1" VerticalAlignment="Stretch"
                                    HorizontalAlignment="Center" Width="4" />
             <controls:TabControl Grid.Column="2" Margin="2,0,2,0" Padding="15,15,15,15" x:Name="TabContainer" BorderThickness="1,1,1,1" >
-                <controls:TabItem Header="Table1">
-                    <sdk:DataGrid>
-                        <sdk:DataGrid.Columns>
-                            <sdk:DataGridCheckBoxColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="Auto" Header="选择" />
-                            <sdk:DataGridTextColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="Auto" Header="Col2" />
-                            <sdk:DataGridTextColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="Auto" Header="Col3"/>
-                            <sdk:DataGridTextColumn CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="Auto"  Header="Col4"/>
-                        </sdk:DataGrid.Columns>
-                    </sdk:DataGrid>
-                </controls:TabItem>
-                <controls:TabItem Header="Table2" />
             </controls:TabControl>
 
         </Grid>

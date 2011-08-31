@@ -52,7 +52,7 @@ namespace ObjectServer.Client.Agos.Views
             {
                 this.listDatabases.ItemsSource = dbs;
 
-                if (dbs.Length > 1)
+                if (dbs.Length >= 1)
                 {
                     this.listDatabases.SelectedIndex = 0;
                 }
