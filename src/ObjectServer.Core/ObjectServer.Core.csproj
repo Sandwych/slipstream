@@ -228,7 +228,7 @@
     <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Module\Module.cs" />
     <Compile Include="ServiceDispatcher.cs" />
-    <Compile Include="Platform.cs" />
+    <Compile Include="Environment.cs" />
     <Compile Include="DBProfileCollection.cs" />
     <Compile Include="Core\UserModel.cs" />
     <Compile Include="IServiceScope.cs" />

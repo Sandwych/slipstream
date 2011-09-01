@@ -63,7 +63,7 @@ namespace ObjectServer.Runtime
             options.ReferencedAssemblies.Add(infrastructureAssembly.Location);
             options.GenerateInMemory = true;
             options.GenerateExecutable = false;
-            options.IncludeDebugInformation = Platform.Configuration.Debug;
+            options.IncludeDebugInformation = Environment.Configuration.Debug;
 
             return options;
         }

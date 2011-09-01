@@ -131,7 +131,7 @@ namespace ObjectServer
             Debug.Assert(scope != null);
 
             LoggerProvider.PlatformLogger.Info(() => "Loading precompiled assemblies...");
-            var dbProfile = Platform.DBProfiles.TryGetDBProfile(scope.Session);
+            var dbProfile = Environment.DBProfiles.TryGetDBProfile(scope.Session);
 
             if (this.Dlls != null)
             {
@@ -158,7 +158,7 @@ namespace ObjectServer
         {
             Debug.Assert(scope != null);
 
-            var dbProfile = Platform.DBProfiles.TryGetDBProfile(scope.Session);
+            var dbProfile = Environment.DBProfiles.TryGetDBProfile(scope.Session);
 
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(dbProfile, a);

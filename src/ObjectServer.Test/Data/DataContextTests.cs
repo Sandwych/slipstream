@@ -68,8 +68,8 @@ namespace ObjectServer.Data.Test
         public void Create_and_delete_database()
         {
             var dbName = "oo_testdb";
-            Platform.Initialize();
-            var hash = Platform.Configuration.RootPassword.ToSha();
+            Environment.Initialize();
+            var hash = Environment.Configuration.RootPassword.ToSha();
 
             var service = ServiceDispatcher.CreateDispatcher();
             service.CreateDatabase(hash, dbName, "admin");

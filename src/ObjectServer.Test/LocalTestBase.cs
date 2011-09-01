@@ -19,18 +19,18 @@ namespace ObjectServer
             var cfg = new Config();
             cfg.DbName = TestingDatabaseName;
 
-            if (!Platform.Initialized)
+            if (!Environment.Initialized)
             {
-                Platform.Initialize(cfg);
+                Environment.Initialize(cfg);
             }
 
-            var service = Platform.ExportedService;
+            var service = Environment.ExportedService;
             this.Service = service;
 
-            var dbs = Platform.ExportedService.ListDatabases();
+            var dbs = Environment.ExportedService.ListDatabases();
             if (!dbs.Contains(TestingDatabaseName))
             {
-                Platform.ExportedService.CreateDatabase(
+                Environment.ExportedService.CreateDatabase(
                     ObjectServer.Utility.Sha.ToSha("root"), TestingDatabaseName, "root");
             }
 
@@ -57,7 +57,7 @@ namespace ObjectServer
         [TestFixtureTearDown]
         public virtual void DisposeFramework()
         {
-            var service = Platform.ExportedService;
+            var service = Environment.ExportedService;
             ClearTestUsers(service);
 
             service.LogOff(this.SessionId);

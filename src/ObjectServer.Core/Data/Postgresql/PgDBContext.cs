@@ -28,7 +28,7 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentNullException("dbName");
             }
 
-            var cfg = Platform.Configuration;
+            var cfg = Environment.Configuration;
             string connectionString = string.Format(
               "Server={0};" +
               "Database={3};" +
@@ -54,7 +54,7 @@ namespace ObjectServer.Data.Postgresql
         {
             EnsureConnectionOpened();
 
-            var dbUser = Platform.Configuration.DBUser;
+            var dbUser = Environment.Configuration.DBUser;
 
             return this.QueryAsArray<string>(SqlToListDBs, dbUser);
         }

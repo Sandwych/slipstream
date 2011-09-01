@@ -17,9 +17,9 @@ namespace ObjectServer.Sql.Test
         [TestFixtureSetUp]
         public void TestFixtureSetup()
         {
-            if (!Platform.Initialized)
+            if (!Environment.Initialized)
             {
-                Platform.Initialize();
+                Environment.Initialize();
             }
         }
 

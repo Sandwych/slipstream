@@ -39,7 +39,7 @@ namespace ObjectServer.Data.Postgresql
                 ctx.Open();
 
 
-                var dbUser = Platform.Configuration.DBUser;
+                var dbUser = Environment.Configuration.DBUser;
                 var sql = SqlString.Parse(@"
 select datname from pg_database  
     where datdba = (select distinct usesysid from pg_user where usename=?) 

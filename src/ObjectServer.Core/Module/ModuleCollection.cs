@@ -124,7 +124,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("dbctx");
             }
 
-            var cfg = Platform.Configuration;
+            var cfg = Environment.Configuration;
             this.LookupAllModules(cfg.ModulePath);
 
             var sql = new SqlString("select name from core_module");

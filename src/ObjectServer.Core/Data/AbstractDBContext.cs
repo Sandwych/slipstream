@@ -57,7 +57,7 @@ namespace ObjectServer.Data
             var sql = string.Format(
                 "DROP DATABASE \"{0}\"", dbName);
 
-            if (Platform.Configuration.LoggingSql)
+            if (Environment.Configuration.LoggingSql)
             {
                 LoggerProvider.PlatformLogger.Debug(() => "SQL: " + sql);
             }
@@ -80,7 +80,7 @@ namespace ObjectServer.Data
 
             this.EnsureConnectionOpened();
 
-            if (Platform.Configuration.LoggingSql)
+            if (Environment.Configuration.LoggingSql)
             {
                 LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
             }
@@ -102,7 +102,7 @@ namespace ObjectServer.Data
 
             this.EnsureConnectionOpened();
 
-            if (Platform.Configuration.LoggingSql)
+            if (Environment.Configuration.LoggingSql)
             {
                 LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
             }
@@ -124,7 +124,7 @@ namespace ObjectServer.Data
 
             this.EnsureConnectionOpened();
 
-            if (Platform.Configuration.LoggingSql)
+            if (Environment.Configuration.LoggingSql)
             {
                 LoggerProvider.PlatformLogger.Debug(() => ("SQL: " + commandText.ToString()));
             }
@@ -170,7 +170,7 @@ namespace ObjectServer.Data
 
             EnsureConnectionOpened();
 
-            if (Platform.Configuration.LoggingSql)
+            if (Environment.Configuration.LoggingSql)
             {
                 LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
             }
@@ -221,7 +221,7 @@ namespace ObjectServer.Data
 
             this.EnsureConnectionOpened();
 
-            if (Platform.Configuration.LoggingSql)
+            if (Environment.Configuration.LoggingSql)
             {
                 LoggerProvider.PlatformLogger.Debug(() => ("SQL: " + commandText));
             }

@@ -93,7 +93,7 @@ namespace ObjectServer.Core
                 Parameter.Placeholder, ")");
 
             //创建 root 用户
-            var rootPassword = Platform.Configuration.RootPassword;
+            var rootPassword = Environment.Configuration.RootPassword;
             var user = new Dictionary<string, object>()
                     {
                         { "name", "Root User" },
@@ -229,7 +229,7 @@ namespace ObjectServer.Core
             else
             {
                 var uid = (long)user[IDFieldName];
-                Platform.SessionStore.RemoveSessionsByUser(database, uid);
+                Environment.SessionStore.RemoveSessionsByUser(database, uid);
             }
 
             return result;
@@ -238,7 +238,7 @@ namespace ObjectServer.Core
 
         public void LogOut(IServiceScope scope, string sessionId)
         {
-            Platform.SessionStore.Remove(sessionId);
+            Environment.SessionStore.Remove(sessionId);
         }
 
         [ServiceMethod]
@@ -266,7 +266,7 @@ namespace ObjectServer.Core
             var uid = (long)userFields[IDFieldName];
             var session = new Session(dbName, login, uid);
 
-            var sessStore = Platform.SessionStore;
+            var sessStore = Environment.SessionStore;
             sessStore.RemoveSessionsByUser(dbName, uid);
             sessStore.PutSession(session);
             return session;

@@ -73,8 +73,8 @@ namespace ObjectServer
             LoggerProvider.PlatformLogger.Info(() => "Loading modules...");
             using (var ctx = new InternalServiceScope(db, session))
             {
-                Platform.Modules.UpdateModuleList(db.DBContext);
-                Platform.Modules.LoadModules(ctx);
+                Environment.Modules.UpdateModuleList(db.DBContext);
+                Environment.Modules.LoadModules(ctx);
             }
         }
 

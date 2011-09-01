@@ -50,11 +50,11 @@ namespace ObjectServer
         {
             get
             {
-                if (!Platform.Initialized)
+                if (!Environment.Initialized)
                 {
                     throw new InvalidOperationException("Framework uninitialized");
                 }
-                var timeout = Platform.Configuration.SessionTimeout;
+                var timeout = Environment.Configuration.SessionTimeout;
                 return this.LastActivityTime + timeout;
             }
         }

@@ -20,7 +20,7 @@ namespace ObjectServer
     public static class RpcHandler
     {
         private static Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
-        private static IExportedService s_service = Platform.ExportedService;
+        private static IExportedService s_service = Environment.ExportedService;
 
         static RpcHandler()
         {
@@ -80,12 +80,12 @@ namespace ObjectServer
 
         public static void Start()
         {
-            if (!Platform.Initialized)
+            if (!Environment.Initialized)
             {
                 throw new InvalidOperationException("无法启动 PRC-Handler 工人线程，请先初始化框架");
             }
 
-            string rpcHandlerUrl = Platform.Configuration.RpcHandlerUrl;
+            string rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
             LoggerProvider.PlatformLogger.Info(() => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
 

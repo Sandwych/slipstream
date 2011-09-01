@@ -35,8 +35,8 @@ namespace ObjectServer
                 }
 
                 //用新 session 替换老 session
-                Platform.SessionStore.PutSession(session);
-                Platform.SessionStore.Remove(ctx.Session.Id);
+                Environment.SessionStore.PutSession(session);
+                Environment.SessionStore.Remove(ctx.Session.Id);
 
                 tx.Complete();
                 return session.Id.ToString();
@@ -111,13 +111,13 @@ namespace ObjectServer
         {
             VerifyRootPassword(rootPasswordHash);
 
-            Platform.DBProfiles.RemoveDB(dbName); //删除数据库上下文
+            Environment.DBProfiles.RemoveDB(dbName); //删除数据库上下文
             DataProvider.DeleteDatabase(dbName); //删除实际数据库
         }
 
         private static void VerifyRootPassword(string rootPasswordHash)
         {
-            var cfgRootPasswordHash = Platform.Configuration.RootPassword.ToSha();
+            var cfgRootPasswordHash = Environment.Configuration.RootPassword.ToSha();
             if (rootPasswordHash != cfgRootPasswordHash)
             {
                 throw new UnauthorizedAccessException("Invalid password of root user");

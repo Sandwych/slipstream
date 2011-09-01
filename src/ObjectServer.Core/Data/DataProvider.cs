@@ -8,18 +8,37 @@ namespace ObjectServer.Data
     //重构此类
     public static class DataProvider
     {
-        private static readonly Dictionary<DatabaseType, IDataProvider> dataProviders
-            = new Dictionary<DatabaseType, IDataProvider>()
+        private static object dataProviderLock = new object();
+        private static readonly IDataProvider concreteDataProvider;
+
+        private static readonly Dictionary<string, Type>
+            dbTypeMapping = new Dictionary<string, Type>()
         {
-            { DatabaseType.Postgresql, new Postgresql.PgDataProvider() },
+            { "postgres", typeof(Postgresql.PgDataProvider) },
         };
 
-        private static readonly Dictionary<string, Data.DatabaseType>
-            dbTypeMapping = new Dictionary<string, DatabaseType>()
+        static DataProvider()
         {
-            { "postgres", Data.DatabaseType.Postgresql },
-        };
+            LoggerProvider.PlatformLogger.Info("Initializing DataProvider...");
 
+            var dbTypeName = Environment.Configuration.DbType;
+
+            if (!dbTypeMapping.ContainsKey(dbTypeName))
+            {
+                var msg = String.Format("Unsupported database type: [{0}]", dbTypeName);
+                throw new NotSupportedException(msg);
+            }
+
+            var providerType = dbTypeMapping[dbTypeName];
+
+            LoggerProvider.PlatformLogger.Info(
+                String.Format("Concrete DataProvider: [{0}]", providerType.FullName));
+
+            lock (dataProviderLock)
+            {
+                concreteDataProvider = Activator.CreateInstance(providerType) as IDataProvider;
+            }
+        }
 
         public static IDBContext CreateDataContext(string dbName)
         {
@@ -28,23 +47,17 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("dbName");
             }
 
-            var dbType = dbTypeMapping[Platform.Configuration.DbType];
-            var dataProvider = dataProviders[dbType];
-            return dataProvider.CreateDataContext(dbName);
+            return concreteDataProvider.CreateDataContext(dbName);
         }
 
         public static IDBContext CreateDataContext()
         {
-            var dbType = dbTypeMapping[Platform.Configuration.DbType];
-            var dataProvider = dataProviders[dbType];
-            return dataProvider.CreateDataContext();
+            return concreteDataProvider.CreateDataContext();
         }
 
         public static string[] ListDatabases()
         {
-            var dbType = dbTypeMapping[Platform.Configuration.DbType];
-            var dataProvider = dataProviders[dbType];
-            return dataProvider.ListDatabases();
+            return concreteDataProvider.ListDatabases();
         }
 
         public static void CreateDatabase(string dbName)
@@ -57,10 +70,8 @@ namespace ObjectServer.Data
             var msg = String.Format("Creating Database: [{0}]...", dbName);
             LoggerProvider.PlatformLogger.Info(msg);
 
-            var dbType = dbTypeMapping[Platform.Configuration.DbType];
-            var dataProvider = dataProviders[dbType];
-            dataProvider.CreateDatabase(dbName);
-            using (var ctx = dataProvider.CreateDataContext(dbName))
+            concreteDataProvider.CreateDatabase(dbName);
+            using (var ctx = concreteDataProvider.CreateDataContext(dbName))
             {
                 LoggerProvider.PlatformLogger.Info("Initializing Database...");
                 ctx.Initialize();
@@ -77,18 +88,14 @@ namespace ObjectServer.Data
             var msg = String.Format("Deleting Database: [{0}]...", dbName);
             LoggerProvider.PlatformLogger.Info(msg);
 
-            var dbType = dbTypeMapping[Platform.Configuration.DbType];
-            var dataProvider = dataProviders[dbType];
-            dataProvider.DeleteDatabase(dbName);
+            concreteDataProvider.DeleteDatabase(dbName);
         }
 
         public static NHibernate.Dialect.Dialect Dialect
         {
             get
             {
-                var dbType = dbTypeMapping[Platform.Configuration.DbType];
-                var dataProvider = dataProviders[dbType];
-                return dataProvider.Dialect;
+                return concreteDataProvider.Dialect;
             }
         }
 
@@ -96,9 +103,7 @@ namespace ObjectServer.Data
         {
             get
             {
-                var dbType = dbTypeMapping[Platform.Configuration.DbType];
-                var dataProvider = dataProviders[dbType];
-                return dataProvider.Driver;
+                return concreteDataProvider.Driver;
             }
         }
 
