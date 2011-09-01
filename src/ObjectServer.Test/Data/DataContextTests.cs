@@ -17,7 +17,7 @@ namespace ObjectServer.Data.Test
         [Test]
         public void Query_as_dictionary()
         {
-            using (var db = DataProvider.CreateDataContext("objectserver"))
+            using (var db = DataProvider.CreateDataContext(TestingDatabaseName))
             {
                 db.Open();
                 var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
@@ -31,7 +31,7 @@ namespace ObjectServer.Data.Test
         [Test]
         public void Query_as_datatable()
         {
-            using (var db = DataProvider.CreateDataContext("objectserver"))
+            using (var db = DataProvider.CreateDataContext(TestingDatabaseName))
             {
                 db.Open();
 
@@ -51,7 +51,7 @@ namespace ObjectServer.Data.Test
         [Test]
         public void Query_as_dynamic()
         {
-            using (var db = DataProvider.CreateDataContext("objectserver"))
+            using (var db = DataProvider.CreateDataContext(TestingDatabaseName))
             {
                 db.Open();
 

@@ -13,7 +13,7 @@ using ObjectServer.Json;
 
 namespace ObjectServer
 {
-    public abstract class WebTestBase
+    public abstract class RpcTestBase
     {
         [TestFixtureSetUp()]
         public virtual void InitFramework()

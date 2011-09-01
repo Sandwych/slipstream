@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace ObjectServer.Test.Web
 {
     [Ignore]
-    public class JsonSerializedCallingTests : WebTestBase
+    public class JsonSerializedCallingTests : RpcTestBase
     {
         [Ignore]
         public void Test_json_serialized_CRUD()

@@ -11,26 +11,31 @@ namespace ObjectServer
 {
     public abstract class LocalTestCase
     {
+        public const string TestingDatabaseName = "objectserver";
+
         [TestFixtureSetUp()]
         public virtual void InitFramework()
         {
+            var cfg = new Config();
+            cfg.DbName = TestingDatabaseName;
+
             if (!Platform.Initialized)
             {
-                Platform.Initialize();
+                Platform.Initialize(cfg);
             }
 
             var service = Platform.ExportedService;
             this.Service = service;
 
             var dbs = Platform.ExportedService.ListDatabases();
-            if (!dbs.Contains("objectserver"))
+            if (!dbs.Contains(TestingDatabaseName))
             {
                 Platform.ExportedService.CreateDatabase(
-                    ObjectServer.Utility.Sha.ToSha("root"), "objectserver", "root");
+                    ObjectServer.Utility.Sha.ToSha("root"), TestingDatabaseName, "root");
             }
 
 
-            this.SessionId = this.Service.LogOn("objectserver", "root", "root");
+            this.SessionId = this.Service.LogOn(TestingDatabaseName, "root", "root");
 
             this.ActiveTestModule();
         }
@@ -44,7 +49,7 @@ namespace ObjectServer
                 var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
                 var ids = moduleModel.SearchInternal(scope, constraints);
                 dynamic fields = new ExpandoObject();
-                fields.state = "installed";
+                fields.state = Core.ModuleModel.States.Installed;
                 moduleModel.WriteInternal(scope, ids[0], fields);
             }
         }

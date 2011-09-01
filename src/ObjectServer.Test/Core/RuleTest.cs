@@ -27,7 +27,7 @@ namespace ObjectServer.Core.Test
 
         private void AssertSearchingOfSalesOrder(string login, string password, string[] expectedOrderNames)
         {
-            var sid = this.Service.LogOn("objectserver", login, password);
+            var sid = this.Service.LogOn(TestingDatabaseName, login, password);
             var ruleModel = (RuleModel)this.ServiceScope.GetResource("core.rule");
             var salesOrderModel = (IModel)this.ServiceScope.GetResource("test.sales_order");
 

@@ -15,7 +15,7 @@ namespace ObjectServer.Model.Test
         public void ExpectAccessDenied()
         {
             var service = ObjectServer.Platform.ExportedService;
-            var sessionId = service.LogOn("objectserver", "testuser", "testuser");
+            var sessionId = service.LogOn(TestingDatabaseName, "testuser", "testuser");
 
             using (var scope = new ServiceScope(sessionId))
             {
