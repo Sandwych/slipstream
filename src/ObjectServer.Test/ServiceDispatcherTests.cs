@@ -87,5 +87,23 @@ namespace ObjectServer.Test
             Assert.AreEqual(x + y, (int)result);
         }
 
+        [Test]
+        public void Test_create_and_delete_database()
+        {
+            var dbName = "os-testdb";
+            var adminPassword = "root";
+            var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(Environment.Configuration.RootPassword);
+
+            Assert.DoesNotThrow(() =>
+            {
+                this.Service.CreateDatabase(hashedRootPassword, dbName, adminPassword);
+            });
+
+            Assert.DoesNotThrow(() =>
+            {
+                this.Service.DeleteDatabase(hashedRootPassword, dbName);
+            });
+        }
+
     }
 }

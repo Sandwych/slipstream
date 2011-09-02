@@ -36,16 +36,29 @@ namespace ObjectServer
             Debug.Assert(cfg != null);
 
             this.config = cfg;
+
+            var dbs = DataProvider.ListDatabases();
+            foreach (var dbName in dbs)
+            {
+                if (!this.dbProfiles.ContainsKey(dbName))
+                {
+                    LoadDB(dbName);
+                }
+            }
+
+            LoggerProvider.EnvironmentLogger.Info("All databases has been loaded.");
         }
 
         #endregion
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        internal void LoadDatabase(Session session)
+        public void LoadDB(string dbName)
         {
-            Debug.Assert(session != null);
+            Debug.Assert(!string.IsNullOrEmpty(dbName));
 
-            var dbName = session.Database;
+            var msg = String.Format("Initializing DBProfile: [{0}]".PadRight(80, '='), dbName);
+            LoggerProvider.EnvironmentLogger.Info(msg);
+
             LoggerProvider.EnvironmentLogger.Info(() => string.Format("Registering object-pool of database: [{0}]", dbName));
 
             var dbNames = DataProvider.ListDatabases();
@@ -61,7 +74,8 @@ namespace ObjectServer
                 this.dbProfiles.Add(dbName.Trim(), db);
             }
 
-            this.LoadModules(session, db);
+            var sysSession = new Session(dbName);
+            this.LoadModules(sysSession, db);
         }
 
         private void LoadModules(Session session, DBProfile db)
@@ -76,18 +90,6 @@ namespace ObjectServer
                 Environment.Modules.UpdateModuleList(db.DBContext);
                 Environment.Modules.LoadModules(ctx);
             }
-        }
-
-        public DBProfile TryGetDBProfile(Session session)
-        {
-            Debug.Assert(session != null);
-
-            if (!this.dbProfiles.ContainsKey(session.Database))
-            {
-                this.LoadDatabase(session);
-            }
-
-            return this.dbProfiles[session.Database];
         }
 
         public DBProfile GetDBProfile(string dbName)
@@ -109,8 +111,8 @@ namespace ObjectServer
             //比如两个客户端，一个正在操作数据库，另一个要删除数据库
 
             var db = this.dbProfiles[dbName];
-            db.DBContext.Close();
             this.dbProfiles.Remove(dbName);
+            db.DBContext.Close();
         }
 
         #region IDisposable 成员

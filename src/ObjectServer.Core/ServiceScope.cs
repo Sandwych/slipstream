@@ -36,7 +36,7 @@ namespace ObjectServer
             this.SessionStore.Pulse(session.Id);
 
             this.ownDb = true;
-            this.DBProfile = Environment.DBProfiles.TryGetDBProfile(session);
+            this.DBProfile = Environment.DBProfiles.GetDBProfile(session.Database);
             this.DBContext.Open();
         }
 
@@ -44,19 +44,23 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        internal ServiceScope(string dbName, string login)
+        public ServiceScope(string dbName, string login)
         {
             LoggerProvider.EnvironmentLogger.Debug(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
 
-            this.Session = new Session(dbName, login, 0);
+            this.Session = new Session(dbName);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = true;
-            this.DBProfile = Environment.DBProfiles.TryGetDBProfile(this.Session);
+            this.DBProfile = Environment.DBProfiles.GetDBProfile(this.Session.Database);
             this.DBContext.Open();
         }
 
-        internal ServiceScope(IDBProfile db)
+        /// <summary>
+        /// 构造一个使用 'system' 用户登录的 ServiceScope
+        /// </summary>
+        /// <param name="db"></param>
+        public ServiceScope(IDBProfile db)
         {
             Debug.Assert(db != null);
             Debug.Assert(db.DBContext != null);
@@ -64,7 +68,7 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Debug(() =>
                 string.Format("ContextScope is opening for DatabaseContext"));
 
-            this.Session = new Session(db.DBContext.DatabaseName, "system", 0);
+            this.Session = new Session(db.DBContext.DatabaseName);
             this.SessionStore.PutSession(this.Session);
             this.ownDb = false;
             this.DBProfile = db;

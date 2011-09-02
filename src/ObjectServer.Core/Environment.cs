@@ -113,6 +113,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("cfg");
             }
 
+
             //日志子系统必须最先初始化
             ConfigurateLogger(cfg);
             LoggerProvider.EnvironmentLogger.Info("The Logging Subsystem has been initialized");
@@ -132,11 +133,12 @@ namespace ObjectServer
                 s_instance.modules.Initialize(cfg);
             }
 
-            LoggerProvider.EnvironmentLogger.Info(() => "Initializing the database profile...");
-            s_instance.databaseProfiles.Initialize(cfg);
-
             s_instance.config = cfg;
             s_instance.initialized = true;
+            LoggerProvider.EnvironmentLogger.Info(() => "The environment has been initialized.");
+
+            LoggerProvider.EnvironmentLogger.Info(() => "Initializing databases...");
+            s_instance.databaseProfiles.Initialize(cfg);
 
             LoggerProvider.EnvironmentLogger.Info(() => "The ObjectServer Platform is ready to load the Core Module...");
         }

@@ -12,6 +12,8 @@ namespace ObjectServer
     public sealed class Session
     {
         public const int IdLength = 16;
+        public const string SystemUserName = "system";
+        public const long SystemUserId = 0;
 
         public Session()
         {
@@ -34,9 +36,37 @@ namespace ObjectServer
         public Session(string dbName, string login, long userId)
             : this()
         {
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
+            if (string.IsNullOrEmpty(login))
+            {
+                throw new ArgumentNullException("login");
+            }
+
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException("userId");
+            }
+
             this.Database = dbName;
             this.Login = login;
             this.UserId = userId;
+        }
+
+        public Session(string dbName)
+            : this()
+        {
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
+            this.Database = dbName;
+            this.Login = SystemUserName;
+            this.UserId = SystemUserId;
         }
 
         public string Id { get; set; }

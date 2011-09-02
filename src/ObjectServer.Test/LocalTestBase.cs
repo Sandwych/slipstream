@@ -30,8 +30,9 @@ namespace ObjectServer
             var dbs = Environment.ExportedService.ListDatabases();
             if (!dbs.Contains(TestingDatabaseName))
             {
-                Environment.ExportedService.CreateDatabase(
-                    ObjectServer.Utility.Sha.ToSha("root"), TestingDatabaseName, "root");
+                var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(
+                    Environment.Configuration.RootPassword);
+                Environment.ExportedService.CreateDatabase(hashedRootPassword, TestingDatabaseName, "root");
             }
 
 
