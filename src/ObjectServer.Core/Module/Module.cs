@@ -99,7 +99,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("scope");
             }
 
-            LoggerProvider.PlatformLogger.Info(() => string.Format("Loading module: [{0}]", this.Name));
+            LoggerProvider.EnvironmentLogger.Info(() => string.Format("Loading module: [{0}]", this.Name));
 
             this.resources.Clear();
 
@@ -130,7 +130,7 @@ namespace ObjectServer
         {
             Debug.Assert(scope != null);
 
-            LoggerProvider.PlatformLogger.Info(() => "Loading precompiled assemblies...");
+            LoggerProvider.EnvironmentLogger.Info(() => "Loading precompiled assemblies...");
             var dbProfile = Environment.DBProfiles.TryGetDBProfile(scope.Session);
 
             if (this.Dlls != null)
@@ -150,7 +150,7 @@ namespace ObjectServer
                 this.LoadModuleData(scope);
             }
 
-            LoggerProvider.PlatformLogger.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
+            LoggerProvider.EnvironmentLogger.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
         }
 
 
@@ -167,13 +167,13 @@ namespace ObjectServer
 
             if (update)
             {
-                LoggerProvider.PlatformLogger.Info(() => "Importing data for the Core Module...");
+                LoggerProvider.EnvironmentLogger.Info(() => "Importing data for the Core Module...");
                 var importer = new Model.XmlDataImporter(scope, this.Name);
                 foreach (var resPath in s_coreDataFiles)
                 {
                     using (var resStream = a.GetManifestResourceStream(resPath))
                     {
-                        LoggerProvider.PlatformLogger.Info(() => "Importing data file: [" + resPath + "]");
+                        LoggerProvider.EnvironmentLogger.Info(() => "Importing data file: [" + resPath + "]");
                         importer.Import(resStream);
                         resStream.Close();
                     }
@@ -186,13 +186,13 @@ namespace ObjectServer
         {
             Debug.Assert(scope != null);
 
-            LoggerProvider.PlatformLogger.Info(() => "Importing data...");
+            LoggerProvider.EnvironmentLogger.Info(() => "Importing data...");
 
             var importer = new Model.XmlDataImporter(scope, this.Name);
             foreach (var dataFile in this.DataFiles)
             {
                 var dataFilePath = System.IO.Path.Combine(this.Path, dataFile);
-                LoggerProvider.PlatformLogger.Info(() => "Importing data file: [" + dataFilePath + "]");
+                LoggerProvider.EnvironmentLogger.Info(() => "Importing data file: [" + dataFilePath + "]");
                 importer.Import(dataFilePath);
             }
         }
@@ -212,7 +212,7 @@ namespace ObjectServer
             Debug.Assert(resContainer != null);
             Debug.Assert(assembly != null);
 
-            LoggerProvider.PlatformLogger.Info(() => string.Format(
+            LoggerProvider.EnvironmentLogger.Info(() => string.Format(
                 "Registering all resources in DLL[{0}], Path=[{1}]...", assembly.FullName, assembly.Location));
 
             var types = GetStaticModelsFromAssembly(assembly);
@@ -314,7 +314,7 @@ namespace ObjectServer
         {
             Debug.Assert(!string.IsNullOrEmpty(moduleDir));
 
-            LoggerProvider.PlatformLogger.Info(String.Format(
+            LoggerProvider.EnvironmentLogger.Info(String.Format(
                 "Compiling source files of the module [{0}]...", this.Name));
 
             var sourceFiles = new List<string>();
@@ -330,8 +330,8 @@ namespace ObjectServer
             var a = compiler.CompileFromFile(sourceFiles);
             stopwatch.Stop();
             var time = stopwatch.Elapsed;
-            LoggerProvider.PlatformLogger.Info(String.Format("Elapsed time: [{0}]", time));
-            LoggerProvider.PlatformLogger.Info(String.Format(
+            LoggerProvider.EnvironmentLogger.Info(String.Format("Elapsed time: [{0}]", time));
+            LoggerProvider.EnvironmentLogger.Info(String.Format(
                 "The module [{0}] has been compiled successfully.", this.Name));
             return a;
         }

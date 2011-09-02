@@ -14,7 +14,7 @@ namespace ObjectServer
 {
     public sealed class LoggerProvider
     {
-        public const string PlatformLoggerName = "platform";
+        public const string EnvironmentLoggerName = "environment";
         public const string BizLoggerName = "biz";
         public const string GatewayLoggerName = "gateway";
 
@@ -30,14 +30,14 @@ namespace ObjectServer
             };
 
         private readonly static LoggerProvider s_instance = new LoggerProvider();
-        private readonly Log4netLogger platformLogger;
+        private readonly Log4netLogger envLogger;
         private readonly Log4netLogger bizLogger;
         private readonly Log4netLogger gatewayLogger;
 
         public LoggerProvider()
         {
-            var platformLog = LogManager.GetLogger(PlatformLoggerName);
-            this.platformLogger = new Log4netLogger(platformLog);
+            var platformLog = LogManager.GetLogger(EnvironmentLoggerName);
+            this.envLogger = new Log4netLogger(platformLog);
 
             var bizLog = LogManager.GetLogger(BizLoggerName);
             this.bizLogger = new Log4netLogger(bizLog);
@@ -46,11 +46,11 @@ namespace ObjectServer
             this.gatewayLogger = new Log4netLogger(gatewayLog);
         }
 
-        public static ObjectServer.ILogger PlatformLogger
+        public static ObjectServer.ILogger EnvironmentLogger
         {
             get
             {
-                return s_instance.platformLogger;
+                return s_instance.envLogger;
             }
         }
 
@@ -110,7 +110,7 @@ namespace ObjectServer
                 //创建平台 appender
                 var platformLogFilePath = Path.Combine(logDir, StaticSettings.PlatformLogFileName);
                 var platformFileAppender = CreateRollingFileAppender(layout, platformLogFilePath);
-                AddAppender(PlatformLoggerName, platformFileAppender);
+                AddAppender(EnvironmentLoggerName, platformFileAppender);
 
                 //创建网关 appender
                 var gatewayLogFilePath = Path.Combine(logDir, StaticSettings.GatewayLogFileName);

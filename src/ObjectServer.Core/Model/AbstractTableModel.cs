@@ -56,7 +56,7 @@ namespace ObjectServer.Model
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    LoggerProvider.PlatformLogger.Error(() => "Table name cannot be empty");
+                    LoggerProvider.EnvironmentLogger.Error(() => "Table name cannot be empty");
                     throw new ArgumentNullException("value");
                 }
 
@@ -104,7 +104,7 @@ namespace ObjectServer.Model
 
             if (!this.Fields.ContainsKey("name"))
             {
-                LoggerProvider.PlatformLogger.Warn(() => string.Format(
+                LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
                     "I strongly suggest you to add the 'name' field into Model '{0}'",
                     this.Name));
             }

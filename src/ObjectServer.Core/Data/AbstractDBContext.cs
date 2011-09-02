@@ -59,7 +59,7 @@ namespace ObjectServer.Data
 
             if (Environment.Configuration.LoggingSql)
             {
-                LoggerProvider.PlatformLogger.Debug(() => "SQL: " + sql);
+                LoggerProvider.EnvironmentLogger.Debug(() => "SQL: " + sql);
             }
 
             var cmd = this.conn.CreateCommand();
@@ -82,7 +82,7 @@ namespace ObjectServer.Data
 
             if (Environment.Configuration.LoggingSql)
             {
-                LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
+                LoggerProvider.EnvironmentLogger.Debug(() => "SQL: " + commandText);
             }
 
             using (var command = this.CreateCommand(commandText))
@@ -104,7 +104,7 @@ namespace ObjectServer.Data
 
             if (Environment.Configuration.LoggingSql)
             {
-                LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
+                LoggerProvider.EnvironmentLogger.Debug(() => "SQL: " + commandText);
             }
 
             using (var command = this.CreateCommand(commandText))
@@ -126,7 +126,7 @@ namespace ObjectServer.Data
 
             if (Environment.Configuration.LoggingSql)
             {
-                LoggerProvider.PlatformLogger.Debug(() => ("SQL: " + commandText.ToString()));
+                LoggerProvider.EnvironmentLogger.Debug(() => ("SQL: " + commandText.ToString()));
             }
 
             using (var command = this.CreateCommand(commandText))
@@ -172,7 +172,7 @@ namespace ObjectServer.Data
 
             if (Environment.Configuration.LoggingSql)
             {
-                LoggerProvider.PlatformLogger.Debug(() => "SQL: " + commandText);
+                LoggerProvider.EnvironmentLogger.Debug(() => "SQL: " + commandText);
             }
 
             using (var command = this.CreateCommand(commandText))
@@ -223,7 +223,7 @@ namespace ObjectServer.Data
 
             if (Environment.Configuration.LoggingSql)
             {
-                LoggerProvider.PlatformLogger.Debug(() => ("SQL: " + commandText));
+                LoggerProvider.EnvironmentLogger.Debug(() => ("SQL: " + commandText));
             }
 
             using (var command = this.CreateCommand(commandText))

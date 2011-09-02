@@ -19,7 +19,7 @@ namespace ObjectServer.Data
 
         static DataProvider()
         {
-            LoggerProvider.PlatformLogger.Info("Initializing DataProvider...");
+            LoggerProvider.EnvironmentLogger.Info("Initializing DataProvider...");
 
             var dbTypeName = Environment.Configuration.DbType;
 
@@ -31,7 +31,7 @@ namespace ObjectServer.Data
 
             var providerType = dbTypeMapping[dbTypeName];
 
-            LoggerProvider.PlatformLogger.Info(
+            LoggerProvider.EnvironmentLogger.Info(
                 String.Format("Concrete DataProvider: [{0}]", providerType.FullName));
 
             lock (dataProviderLock)
@@ -68,12 +68,12 @@ namespace ObjectServer.Data
             }
 
             var msg = String.Format("Creating Database: [{0}]...", dbName);
-            LoggerProvider.PlatformLogger.Info(msg);
+            LoggerProvider.EnvironmentLogger.Info(msg);
 
             concreteDataProvider.CreateDatabase(dbName);
             using (var ctx = concreteDataProvider.CreateDataContext(dbName))
             {
-                LoggerProvider.PlatformLogger.Info("Initializing Database...");
+                LoggerProvider.EnvironmentLogger.Info("Initializing Database...");
                 ctx.Initialize();
             }
         }
@@ -86,7 +86,7 @@ namespace ObjectServer.Data
             }
 
             var msg = String.Format("Deleting Database: [{0}]...", dbName);
-            LoggerProvider.PlatformLogger.Info(msg);
+            LoggerProvider.EnvironmentLogger.Info(msg);
 
             concreteDataProvider.DeleteDatabase(dbName);
         }

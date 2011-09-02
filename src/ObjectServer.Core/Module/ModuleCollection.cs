@@ -107,7 +107,7 @@ namespace ObjectServer
                 module.Path = moduleDir;
                 modules.Add(module);
 
-                LoggerProvider.PlatformLogger.Info(() => string.Format("Found additional module: [{0}], Path=[{1}]",
+                LoggerProvider.EnvironmentLogger.Info(() => string.Format("Found additional module: [{0}], Path=[{1}]",
                         module.Name, module.Path));
             }
 
@@ -187,7 +187,7 @@ namespace ObjectServer
                 else
                 {
                     this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Uninstalled);
-                    LoggerProvider.PlatformLogger.Warn(() => string.Format(
+                    LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
             }

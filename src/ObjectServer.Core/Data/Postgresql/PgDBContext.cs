@@ -69,7 +69,7 @@ namespace ObjectServer.Data.Postgresql
 
             EnsureConnectionOpened();
 
-            LoggerProvider.PlatformLogger.Info(String.Format("Creating Database [{0}]...", dbName));
+            LoggerProvider.EnvironmentLogger.Info(String.Format("Creating Database [{0}]...", dbName));
 
             var sqlBuilder = new SqlStringBuilder();
             sqlBuilder.Add("create database ");
@@ -80,12 +80,12 @@ namespace ObjectServer.Data.Postgresql
 
             this.Execute(sql);
 
-            LoggerProvider.PlatformLogger.Info(String.Format("Database [{0}] has been created.", dbName));
+            LoggerProvider.EnvironmentLogger.Info(String.Format("Database [{0}] has been created.", dbName));
         }
 
         public override void Initialize()
         {
-            LoggerProvider.PlatformLogger.Info(
+            LoggerProvider.EnvironmentLogger.Info(
                 String.Format("Executing the database initialization script [{0}]...", INITDB));
 
             //执行初始化数据库脚本
@@ -105,7 +105,7 @@ namespace ObjectServer.Data.Postgresql
             }
 
             //创建数据库只执行到这里，安装核心模块是外部的事情
-            LoggerProvider.PlatformLogger.Info("The database scheme has been initialized.");
+            LoggerProvider.EnvironmentLogger.Info("The database scheme has been initialized.");
         }
 
         public override bool IsInitialized()

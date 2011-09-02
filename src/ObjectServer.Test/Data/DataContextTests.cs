@@ -64,6 +64,23 @@ namespace ObjectServer.Data.Test
             }
         }
 
+
+        [Test]
+        public void Query_as_array()
+        {
+            using (var db = DataProvider.CreateDataContext(TestingDatabaseName))
+            {
+                db.Open();
+
+                var sql = SqlString.Parse("SELECT name FROM core_model WHERE name=?");
+                var names = db.QueryAsArray<string>(sql, "core.model");
+
+                Assert.NotNull(names);
+                Assert.AreEqual(1, names.Length);
+                Assert.AreEqual("core.model", names[0]);
+            }
+        }
+
         [Ignore]
         public void Create_and_delete_database()
         {
