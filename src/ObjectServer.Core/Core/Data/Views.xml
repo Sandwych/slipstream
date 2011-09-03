@@ -91,25 +91,25 @@
     <field name="model">core.model</field>  
   </record>
 
-  <!-- User Group's View -->
-  <record model="core.view" key="group_tree_view">
-    <field name="name">User Groups</field>
-    <field name="model">core.group</field>
+  <!-- User Role's View -->
+  <record model="core.view" key="role_tree_view">
+    <field name="name">User Roles</field>
+    <field name="model">core.role</field>
     <field name="kind">list</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
-      <tree label="User Groups">
+      <tree label="User Roles">
         <field name="name" where="basic" />
       </tree>
       ]]>
     </field>
   </record>
 
-  <record  model="core.action_window" key="group_menu_action">
-    <field name="name">Groups</field>
+  <record  model="core.action_window" key="role_menu_action">
+    <field name="name">Roles</field>
     <field name="type">core.action_window</field>
-    <field name="view" ref-key="group_tree_view" />
-    <field name="model">core.group</field>  
+    <field name="view" ref-key="role_tree_view" />
+    <field name="model">core.role</field>  
   </record>
 
   <!-- Menu's View -->

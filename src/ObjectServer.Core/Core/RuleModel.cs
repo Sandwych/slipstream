@@ -41,7 +41,7 @@ namespace ObjectServer.Core
                 .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("on_delete").SetLabel("Apply for Deleting")
                 .Required().SetDefaultValueGetter(s => true);
-            Fields.ManyToMany("groups", "core.user_group", "rid", "gid").SetLabel("Groups");
+            Fields.ManyToMany("roles", "core.user_role", "rule", "role").SetLabel("Roles");
             Fields.Chars("constraints").Required().SetLabel("Constraint Domain");
         }
 
@@ -66,9 +66,9 @@ namespace ObjectServer.Core
                 "INNER JOIN core_model m ON (r.model=m._id) ",
                 "WHERE m.name=", Parameter.Placeholder,
                     " AND r.on_", action, " AND (r.global OR (r._id IN ",
-                    "(SELECT rg.rid  FROM core_rule_group_rel rg ",
-                        "INNER JOIN core_user_group_rel ug ON (rg.gid=ug.gid) ",
-                        "WHERE ug.uid=", Parameter.Placeholder, " )))");
+                    "(SELECT rr.rule FROM core_rule_role_rel rr ",
+                        "INNER JOIN core_user_role_rel ur ON (rr.role = ur.role) ",
+                        "WHERE ur.user =", Parameter.Placeholder, " )))");
 
             var result = scope.DBContext.QueryAsDataTable(
                 sql, modelName, scope.Session.UserId);

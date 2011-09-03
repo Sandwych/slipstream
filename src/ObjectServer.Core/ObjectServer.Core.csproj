@@ -133,7 +133,7 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
-    <Compile Include="Core\RuleGroupModel.cs" />
+    <Compile Include="Core\RuleRoleModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />
@@ -152,7 +152,7 @@
     <Compile Include="Core\OrganizationModel.cs" />
     <Compile Include="Core\PropertyModel.cs" />
     <Compile Include="Core\WindowActionModel.cs" />
-    <Compile Include="Core\UserGroupModel.cs" />
+    <Compile Include="Core\UserRoleModel.cs" />
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
     <Compile Include="IService.cs" />
@@ -181,7 +181,7 @@
     <Compile Include="SessionlessServiceScope.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardActionModel.cs" />
-    <Compile Include="Core\GroupModel.cs" />
+    <Compile Include="Core\RoleModel.cs" />
     <Compile Include="Core\ActionModel.cs" />
     <Compile Include="Core\RuleModel.cs" />
     <Compile Include="Core\ViewModel.cs" />

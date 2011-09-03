@@ -8,18 +8,17 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class RuleGroupModel : AbstractTableModel
+    public sealed class RuleRoleModel : AbstractTableModel
     {
-        private const string UniqueConstraintName = "unique_rule_group_rel";
+        private const string UniqueConstraintName = "unique_rule_role_rel";
 
-        public RuleGroupModel()
-            : base("core.rule_group")
+        public RuleRoleModel()
+            : base("core.rule_role")
         {
-            this.TableName = "core_rule_group_rel";
+            this.TableName = "core_rule_role_rel";
 
-            Fields.ManyToOne("rid", "core.rule").SetLabel("Rule").Required();
-            Fields.ManyToOne("gid", "core.group").SetLabel("Group").Required();
-
+            Fields.ManyToOne("role", "core.role").SetLabel("Role").Required();
+            Fields.ManyToOne("rule", "core.rule").SetLabel("Rule").Required();
         }
 
         public override void Initialize(IDBProfile db, bool update)
@@ -30,7 +29,7 @@ namespace ObjectServer.Core
 
             if (update && !tableCtx.ConstraintExists(db.DBContext, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(db.DBContext, UniqueConstraintName, "UNIQUE(gid, rid)");
+                tableCtx.AddConstraint(db.DBContext, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
             }
         }
     }

@@ -11,17 +11,17 @@ using ObjectServer.Data;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class UserGroupModel : AbstractTableModel
+    public sealed class UserRoleModel : AbstractTableModel
     {
-        private const string UniqueConstraintName = "unique_core_user_group";
+        private const string UniqueConstraintName = "unique_core_user_role";
 
-        public UserGroupModel()
-            : base("core.user_group")
+        public UserRoleModel()
+            : base("core.user_role")
         {
-            this.TableName = "core_user_group_rel";
+            this.TableName = "core_user_role_rel";
 
-            Fields.ManyToOne("uid", "core.user").SetLabel("User").Required();
-            Fields.ManyToOne("gid", "core.group").SetLabel("Group").Required();
+            Fields.ManyToOne("user", "core.user").SetLabel("User").Required();
+            Fields.ManyToOne("role", "core.role").SetLabel("Role").Required();
 
         }
 
@@ -33,7 +33,7 @@ namespace ObjectServer.Core
 
             if (update && !tableCtx.ConstraintExists(db.DBContext, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(db.DBContext, UniqueConstraintName, "UNIQUE(gid, uid)");
+                tableCtx.AddConstraint(db.DBContext, UniqueConstraintName, "UNIQUE(\"user\", \"role\")");
             }
         }
     }

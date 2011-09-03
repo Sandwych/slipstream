@@ -32,11 +32,11 @@
     <field name="action" ref-model="core.action_window" ref-key="model_menu_action" />
   </record>
 
-  <record model="core.menu" key="menu_admin_group">
+  <record model="core.menu" key="menu_admin_role">
     <field name="parent" ref-key="menu_admin_security" />
-    <field name="name">User Group Management</field>
+    <field name="name">Role Management</field>
     <field name="ordinal">0</field>
-    <field name="action" ref-model="core.action_window" ref-key="group_menu_action" />
+    <field name="action" ref-model="core.action_window" ref-key="role_menu_action" />
   </record>
 
   <record model="core.menu" key="menu_admin_user">

@@ -2,11 +2,11 @@
 <data noupdate="true">
 
   <!-- 安全设定 -->
-  <record model="core.group" key="group_user">
+  <record model="core.role" key="role_user">
     <field name="name">Normal User</field>
   </record>
 
-  <record model="core.group" key="group_admin">
+  <record model="core.role" key="role_admin">
     <field name="name">Administrators</field>
   </record>
 
@@ -14,7 +14,7 @@
   <!-- 普通用户有权限可以读取系统中的所有 core model -->
   <record model="core.model_access" key="access_core_model">
     <field name="model" ref-key="model_core_model" />
-    <field name="group" ref-key="group_user" />
+    <field name="role" ref-key="role_user" />
     <field name="allow_create">false</field>
     <field name="allow_read">true</field>
     <field name="allow_write">false</field>
@@ -23,7 +23,7 @@
 
   <record model="core.model_access"  key="access_core_field">
     <field name="model" ref-key="model_core_field" />
-    <field name="group" ref-key="group_user" />
+    <field name="role" ref-key="role_user" />
     <field name="allow_create">false</field>
     <field name="allow_read">true</field>
     <field name="allow_write">false</field>
@@ -32,7 +32,7 @@
 
   <record model="core.model_access" key="access_core_module">
     <field name="model" ref-key="model_core_module" />
-    <field name="group" ref-key="group_user" />
+    <field name="role" ref-key="role_user" />
     <field name="allow_create">false</field>
     <field name="allow_read">true</field>
     <field name="allow_write">false</field>
@@ -41,7 +41,7 @@
 
   <record model="core.model_access" key="access_core_model_data">
     <field name="model" ref-key="model_core_model_data" />
-    <field name="group" ref-key="group_user" />
+    <field name="role" ref-key="role_user" />
     <field name="allow_create">false</field>
     <field name="allow_read">false</field>
     <field name="allow_write">false</field>
@@ -50,7 +50,7 @@
 
   <record model="core.model_access" key="access_core_user">
     <field name="model" ref-key="model_core_user" />
-    <field name="group" ref-key="group_user" />
+    <field name="role" ref-key="role_user" />
     <field name="allow_create">false</field>
     <field name="allow_read">true</field>
     <field name="allow_write">false</field>
@@ -59,7 +59,7 @@
 
   <record model="core.model_access" key="access_core_organization">
     <field name="model" ref-key="model_core_organization" />
-    <field name="group" ref-key="group_user" />
+    <field name="role" ref-key="role_user" />
     <field name="allow_create">false</field>
     <field name="allow_read">true</field>
     <field name="allow_write">false</field>
@@ -68,7 +68,7 @@
 
   <record model="core.model_access" key="access_core_rule">
     <field name="model" ref-key="model_core_rule" />
-    <field name="group" ref-key="group_user" />
+    <field name="role" ref-key="role_user" />
     <field name="allow_create">false</field>
     <field name="allow_read">true</field>
     <field name="allow_write">false</field>

@@ -21,14 +21,14 @@ namespace ObjectServer.Core
 SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
     FROM core_model_access ma
     INNER JOIN core_model m ON m._id=ma.model
-    INNER JOIN core_user_group_rel ugr ON ugr.gid=ma.group
-    WHERE (ugr.uid=?) AND (m.name=?)
+    INNER JOIN core_user_role_rel urr ON urr.role=ma.role
+    WHERE (urr.user=?) AND (m.name=?)
 ");
 
         public ModelAccessModel()
             : base(ModelName)
         {
-            Fields.ManyToOne("group", "core.group").Required().SetLabel("User Group");
+            Fields.ManyToOne("role", "core.role").Required().SetLabel("Role");
             Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
             Fields.Chars("name").SetLabel("Name");
             Fields.Boolean("allow_create").SetLabel("Allow Creation")
