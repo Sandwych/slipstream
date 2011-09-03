@@ -19,15 +19,15 @@ namespace ObjectServer.Client.Agos.Windows
 {
     public partial class ListWindow : UserControl, IWindowAction
     {
-        private static Dictionary<string, Type> COLUMN_TYPE_MAPPING
-            = new Dictionary<string, Type>()
+        private static Dictionary<string, Tuple<Type, string>> COLUMN_TYPE_MAPPING
+            = new Dictionary<string, Tuple<Type, string>>()
         {
-            {"Integer", typeof(DataGridTextColumn)},
-            {"Chars", typeof(DataGridTextColumn)},
-            {"Boolean", typeof(DataGridCheckBoxColumn)},
-            {"DateTime", typeof(DataGridTextColumn)},
-            {"ManyToOne", typeof(DataGridTextColumn)},
-            {"Enumeration", typeof(DataGridTextColumn)},
+            {"Integer", new Tuple<Type, string>(typeof(DataGridTextColumn), "%") },
+            {"Chars", new Tuple<Type, string>(typeof(DataGridTextColumn), "%") },
+            {"Boolean", new Tuple<Type, string>(typeof(DataGridCheckBoxColumn), "%") },
+            {"DateTime", new Tuple<Type, string>(typeof(DataGridTextColumn), "%") },
+            {"ManyToOne", new Tuple<Type, string>(typeof(DataGridTextColumn), "%[1]") },
+            {"Enumeration", new Tuple<Type, string>(typeof(DataGridTextColumn), "%[1]") },
 
             /*
             {"selection", typeof(DataGridTextColumn)},
@@ -86,7 +86,6 @@ namespace ObjectServer.Client.Agos.Windows
                     //我们需要一个唯一的字符串型 ID
                     var typeid = Guid.NewGuid().ToString();
                     this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records, typeid, fields.ToArray());
-
                 });
             });
         }
@@ -114,12 +113,14 @@ namespace ObjectServer.Client.Agos.Windows
         private void AddColumn(string fieldName, string fieldType, string fieldLabel)
         {
             this.fields.Add(fieldName);
-            var col = Activator.CreateInstance(
-                COLUMN_TYPE_MAPPING[fieldType]) as DataGridBoundColumn;
+            var tuple = COLUMN_TYPE_MAPPING[fieldType];
+            var col = Activator.CreateInstance(tuple.Item1) as DataGridBoundColumn;
             col.Header = fieldLabel;
-            col.Binding = new System.Windows.Data.Binding(fieldName);
+            var path = tuple.Item2.Replace("%", fieldName);
+            col.Binding = new System.Windows.Data.Binding(path);
             this.gridList.Columns.Add(col);
 
         }
+
     }
 }

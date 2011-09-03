@@ -54,7 +54,16 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("records");
             }
 
-            return records.ExtractFieldValues(this.Name);
+            var result = new Dictionary<long, object>(records.Count);
+            foreach (var r in records)
+            {
+                var enumKey = (string)r[this.Name];
+                var id = (long)r[AbstractModel.IDFieldName];
+                var fieldValue = new string[] { enumKey, this.Options[enumKey] };
+                result.Add(id, fieldValue);
+            }
+
+            return result;
         }
 
         protected override object OnSetFieldValue(IServiceScope scope, object value)

@@ -62,13 +62,16 @@
             //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
             var actWin = new Windows.ListWindow();
 
-            actWin.Load(menu.Action.Item2);
+            var actionName = menu.Action.Item1;
 
             var tabPage = new TabItem();
             tabPage.DataContext = menu.Action;
-            tabPage.Content = actWin;            
+            tabPage.Content = actWin;
+            tabPage.Header = actionName;
             this.TabContainer.Items.Add(tabPage);
             this.TabContainer.SelectedItem = tabPage;
+
+            actWin.Load(menu.Action.Item2);
         }
 
 
