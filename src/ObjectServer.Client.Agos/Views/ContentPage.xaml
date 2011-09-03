@@ -24,12 +24,12 @@
             <Grid x:Name="NavigationGrid" >
 
                 <Border x:Name="BrandingBorder">
-                    <StackPanel x:Name="BrandingStackPanel">
+                    <StackPanel x:Name="BrandingStackPanel" Orientation="Horizontal">
                         <ContentControl/>
-                        <TextBlock x:Name="ApplicationNameTextBlock"
-                               Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"/>
-
-                        <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
+                        <TextBlock x:Name="ApplicationNameTextBlock" Foreground="White" FontSize="24" VerticalAlignment="Center"
+                            Margin="5,5,5,5"
+                            Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"/>
+                        <HyperlinkButton x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
                     </StackPanel>
                 </Border>
 
@@ -48,11 +48,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <controls:TreeView Name="Menu" Width="Auto" Grid.Column="0" SelectedItemChanged="Menu_SelectedItemChanged">
+            <controls:TreeView Name="Menu" Width="Auto" Grid.Column="0" SelectedItemChanged="Menu_SelectedItemChanged" Margin="5,5,5,5">
             </controls:TreeView>
-            <controls:GridSplitter Grid.Column="1" VerticalAlignment="Stretch"
-                                   HorizontalAlignment="Center" Width="4" />
-            <controls:TabControl Grid.Column="2" Margin="2,0,2,0" Padding="15,15,15,15" x:Name="TabContainer" BorderThickness="1,1,1,1" >
+            <controls:GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="0,5,0,5" Width="6" />
+            <controls:TabControl Grid.Column="2" Padding="15,15,15,15" x:Name="TabContainer" Margin="5,5,5,5"  >
             </controls:TabControl>
         </Grid>
         <Border x:Name="StatusBar" Margin="0,5,0,0" Grid.Row="3" Style="{StaticResource StatusBarStyle}">

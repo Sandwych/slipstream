@@ -9,12 +9,9 @@
   mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
 
 
-    <Grid x:Name="LayoutRoot" Background="#FFEEEEEE" >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
+    <Grid x:Name="LayoutRoot" >
 
-        <Border x:Name="ContentBorder" Grid.Row="1">
+        <Border x:Name="ContentBorder" >
             <navigation:Frame x:Name="ContentFrame" 
                   Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed">
                 <navigation:Frame.UriMapper>
@@ -27,7 +24,6 @@
                 </navigation:Frame.UriMapper>
             </navigation:Frame>
         </Border>
-
 
     </Grid>
 

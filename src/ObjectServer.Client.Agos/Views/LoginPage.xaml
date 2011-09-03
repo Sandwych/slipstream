@@ -23,7 +23,7 @@
                    Padding="0,10,10,10" Text="欢迎使用 ObjectServer Silverlight 客户端！" Margin="0,0,0,0" >
         </TextBlock>
         <Line Stroke="#FF336699" StrokeThickness="3" />
-        <Grid Height="Auto" HorizontalAlignment="Center" Name="grid1" VerticalAlignment="Center" 
+        <Grid HorizontalAlignment="Center" Name="grid1" VerticalAlignment="Center" 
                   Grid.Column="0" Grid.Row="1" Width="420" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="28" MinHeight="21" />
@@ -65,10 +65,10 @@
                        VerticalAlignment="Center" Height="22" HorizontalAlignment="Center" Foreground="#FF990000" />
 
             <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
-                        HorizontalAlignment="Right" Grid.ColumnSpan="1">
+                        HorizontalAlignment="Right">
                 <Button x:Name="buttonSignIn" Content="登录" Click="buttonSignIn_Click"  
-                      Width="75"  Height="25" Margin="5,0,5,0"  FontWeight="Bold"/>
-                <Button x:Name="ButtonDatabaseManagement" Content="数据库管理..." 
+                      MinWidth="75"  Height="25" Margin="5,0,5,0"  FontWeight="Bold" Padding="10,0,10,0"/>
+                <Button x:Name="ButtonDatabaseManagement" Content="数据库管理..." Padding="10,0,10,0"
                         Margin="5,0,0,0" MinWidth="75" Width="Auto" Height="25" Click="ButtonDatabaseManagement_Click" />
 
             </StackPanel>

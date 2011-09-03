@@ -124,7 +124,7 @@
     <value>Already registered?</value>
   </data>
   <data name="ApplicationName" xml:space="preserve">
-    <value>Agos</value>
+    <value>ObjectServer 客户端</value>
   </data>
   <data name="BackToLoginButton" xml:space="preserve">
     <value>Back to Login</value>

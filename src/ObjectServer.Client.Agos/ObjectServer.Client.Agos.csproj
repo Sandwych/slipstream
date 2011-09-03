@@ -65,6 +65,9 @@
     <Reference Include="System.ServiceModel.DomainServices.Client" />
     <Reference Include="System.ServiceModel.DomainServices.Client.Web" />
     <Reference Include="System.ServiceModel.Web.Extensions" />
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit">
+      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
     <Reference Include="System.Windows.Controls" />
@@ -82,9 +85,6 @@
     </Reference>
     <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Controls.Theming.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Theming.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Toolkit.dll</HintPath>
@@ -164,10 +164,34 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Assets\Styles.xaml">
+    <Resource Include="Assets\Styles.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Page Include="Assets\Themes\Windows7\brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Themes\Windows7\corestyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Themes\Windows7\fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Themes\Windows7\sdkstyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Themes\Windows7\styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Themes\Windows7\toolkitstyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MenuTree.xaml">
       <SubType>Designer</SubType>
@@ -234,7 +258,6 @@
     <None Include="Properties\OutOfBrowserSettings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\Themes\" />
     <Folder Include="Web\Resources\" />
   </ItemGroup>
   <ItemGroup>

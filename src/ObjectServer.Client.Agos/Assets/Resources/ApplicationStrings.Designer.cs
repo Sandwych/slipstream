@@ -79,7 +79,7 @@ namespace ObjectServer.Client.Agos {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Agos.
+        ///   Looks up a localized string similar to ObjectServer 客户端.
         /// </summary>
         public static string ApplicationName {
             get {
