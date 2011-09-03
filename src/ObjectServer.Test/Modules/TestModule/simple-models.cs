@@ -88,7 +88,7 @@ namespace ObjectServer.Test
 
                 if (field1.IsNull() || field2.IsNull())
                 {
-                    rows[id] = DBNull.Value;
+                    rows[id] = null;
                 }
                 else
                 {

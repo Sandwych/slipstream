@@ -130,11 +130,11 @@ namespace ObjectServer.Model
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
 
                 Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Modifier")
                     .NotRequired()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : DBNull.Value);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
 
                 if (this.Hierarchy)
                 {

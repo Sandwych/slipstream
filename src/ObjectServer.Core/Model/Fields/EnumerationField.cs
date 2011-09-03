@@ -57,10 +57,18 @@ namespace ObjectServer.Model
             var result = new Dictionary<long, object>(records.Count);
             foreach (var r in records)
             {
-                var enumKey = (string)r[this.Name];
                 var id = (long)r[AbstractModel.IDFieldName];
-                var fieldValue = new string[] { enumKey, this.Options[enumKey] };
-                result.Add(id, fieldValue);
+                var colValue = r[this.Name];
+                if (!colValue.IsNull())
+                {
+                    var enumKey = (string)colValue;
+                    var fieldValue = new string[] { enumKey, this.Options[enumKey] };
+                    result.Add(id, fieldValue);
+                }
+                else
+                {
+                    result.Add(id, null);
+                }
             }
 
             return result;

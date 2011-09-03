@@ -94,7 +94,7 @@ namespace ObjectServer.Model
                               select (long)r[AbstractModel.IDFieldName];
             foreach (var mid in nullRecords)
             {
-                result[mid] = DBNull.Value;
+                result[mid] = null;
             }
         }
 
