@@ -69,6 +69,7 @@
     <Compile Include="Model\ModelHelper.cs" />
     <Compile Include="ObjectServerClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sha.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

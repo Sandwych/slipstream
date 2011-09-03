@@ -12,11 +12,17 @@
     <UserControl.Resources>
         <local:LoginModel x:Key="LoginModelDataContext"/>
     </UserControl.Resources>
-    <StackPanel VerticalAlignment="Center">
-        <TextBlock Grid.Row="0" Grid.Column="0" TextAlignment="Center"  VerticalAlignment="Center"   Style="{StaticResource WelcomeText}"               
-                   Padding="10,10,10,10" Text="欢迎使用 ObjectServer Silverlight 客户端！" Margin="0,30,0,30" >
+    <StackPanel VerticalAlignment="Center" Height="auto" Width="450">
+        <StackPanel.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FFFFFFFF"/>
+                <GradientStop Color="#FFEEEEEE" Offset="1"/>
+            </LinearGradientBrush>
+        </StackPanel.Background>
+        <TextBlock Grid.Row="0" Grid.Column="0" TextAlignment="Left"  VerticalAlignment="Center"   Style="{StaticResource WelcomeText}"               
+                   Padding="0,10,10,10" Text="欢迎使用 ObjectServer Silverlight 客户端！" Margin="0,0,0,0" >
         </TextBlock>
-
+        <Line Stroke="#FF336699" StrokeThickness="3" />
         <Grid Height="Auto" HorizontalAlignment="Center" Name="grid1" VerticalAlignment="Center" 
                   Grid.Column="0" Grid.Row="1" Width="420" >
             <Grid.RowDefinitions>
@@ -63,9 +69,10 @@
                 <Button x:Name="buttonSignIn" Content="登录" Click="buttonSignIn_Click"  
                       Width="75"  Height="25" Margin="5,0,5,0"  FontWeight="Bold"/>
                 <Button x:Name="ButtonDatabaseManagement" Content="数据库管理..." 
-                        Margin="5,0,0,0" MinWidth="75" Width="Auto" Height="25" />
+                        Margin="5,0,0,0" MinWidth="75" Width="Auto" Height="25" Click="ButtonDatabaseManagement_Click" />
 
             </StackPanel>
         </Grid>
+
     </StackPanel>
 </navigation:Page>

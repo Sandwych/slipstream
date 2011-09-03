@@ -32,6 +32,7 @@ namespace ObjectServer
             s_methods.Add("logOff", selfType.GetMethod("LogOff"));
             s_methods.Add("getVersion", selfType.GetMethod("GetVersion"));
             s_methods.Add("listDatabases", selfType.GetMethod("ListDatabases"));
+            s_methods.Add("deleteDatabase", selfType.GetMethod("DeleteDatabase"));
             s_methods.Add("execute", selfType.GetMethod("Execute"));
         }
 
@@ -69,6 +70,11 @@ namespace ObjectServer
         public static string[] ListDatabases()
         {
             return s_service.ListDatabases();
+        }
+
+        public static void DeleteDatabase(string hashedRootPassword, string dbName)
+        {
+            s_service.DeleteDatabase(hashedRootPassword, dbName);
         }
 
         public static object Execute(string sessionId, string objectName, string method, object[] parameters)

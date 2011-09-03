@@ -40,6 +40,12 @@
             this.ContentFrame.Navigate(uri);
         }
 
+        public void NavigateToDatabasesPage()
+        {
+            var uri = new Uri("/Databases", UriKind.Relative);
+            this.ContentFrame.Navigate(uri);
+        }
+
         /// <summary>
         /// If an error occurs during navigation, show an error window
         /// </summary>
@@ -49,15 +55,6 @@
             ErrorWindow.CreateNew(e.Exception);
         }
 
-        private void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            var app = (App)Application.Current;
-            app.ClientService.LogOff(
-                () =>
-                {
-                    app.PrepareToLogin();
-                });
-        }
 
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

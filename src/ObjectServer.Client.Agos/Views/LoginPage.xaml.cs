@@ -115,5 +115,11 @@ namespace ObjectServer.Client.Agos.Views
             }
         }
 
+        private void ButtonDatabaseManagement_Click(object sender, RoutedEventArgs e)
+        {
+            var app = (App)Application.Current;
+            app.MainPage.NavigateToDatabasesPage();
+        }
+
     }
 }

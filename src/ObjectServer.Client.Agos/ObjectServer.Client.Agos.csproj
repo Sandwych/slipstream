@@ -133,6 +133,12 @@
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\WindowManager.cs" />
     <Compile Include="Utility\XamlLoader.cs" />
+    <Compile Include="Views\DatabaseDeletionDialog.xaml.cs">
+      <DependentUpon>DatabaseDeletionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DatabasesPage.xaml.cs">
+      <DependentUpon>DatabasesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
@@ -170,6 +176,14 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DatabaseDeletionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DatabasesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ErrorWindow.xaml">
       <SubType>Designer</SubType>

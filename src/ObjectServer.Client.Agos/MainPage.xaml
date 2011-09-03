@@ -9,9 +9,8 @@
   mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
 
 
-    <Grid x:Name="LayoutRoot" >
+    <Grid x:Name="LayoutRoot" Background="#FFEEEEEE" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="42" ></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -22,29 +21,13 @@
                     <uriMapper:UriMapper>
                         <uriMapper:UriMapping Uri="/Login" MappedUri="/Views/LoginPage.xaml"/>
                         <uriMapper:UriMapping Uri="/Content" MappedUri="/Views/ContentPage.xaml"/>
+                        <uriMapper:UriMapping Uri="/Databases" MappedUri="/Views/DatabasesPage.xaml"/>
                         <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/Views/{pageName}.xaml"/>
                     </uriMapper:UriMapper>
                 </navigation:Frame.UriMapper>
             </navigation:Frame>
         </Border>
 
-        <Border Grid.Row="0" Style="{StaticResource HeaderStyle}">
-            <Grid x:Name="NavigationGrid" >
-
-                <Border x:Name="BrandingBorder">
-                    <StackPanel x:Name="BrandingStackPanel">
-                        <ContentControl/>
-                        <TextBlock x:Name="ApplicationNameTextBlock"
-                               Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"/>
-
-                        <Button x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
-                    </StackPanel>
-                </Border>
-
-            </Grid>
-
-
-        </Border>
 
     </Grid>
 

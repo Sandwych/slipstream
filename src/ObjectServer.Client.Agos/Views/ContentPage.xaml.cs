@@ -134,5 +134,16 @@
             }
         }
 
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            var app = (App)Application.Current;
+            app.ClientService.LogOff(
+                () =>
+                {
+                    app.PrepareToLogin();
+                });
+        }
+
     }
 }

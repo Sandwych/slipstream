@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using ObjectServer.Client.Model;
+using ObjectServer.Utility;
 
 namespace ObjectServer.Client
 {
@@ -51,6 +52,16 @@ namespace ObjectServer.Client
                 }
 
                 resultCallback(result);
+            });
+        }
+
+        public void DeleteDatabase(string rootPassword, string dbName, Action resultCallback)
+        {
+            var hashedRootPassword = rootPassword.Trim().ToSha();
+            var args = new object[] { hashedRootPassword, dbName.Trim() };
+            this.jsonRpcClient.InvokeSync("deleteDatabase", args, o =>
+            {
+                resultCallback();
             });
         }
 

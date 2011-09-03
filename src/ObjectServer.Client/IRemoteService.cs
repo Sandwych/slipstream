@@ -11,6 +11,8 @@ namespace ObjectServer.Client
 
         void GetVersion(Action<Version> resultCallback);
         void ListDatabases(Action<string[]> resultCallback);
+        void DeleteDatabase(string rootPasswordHash, string dbName, Action resultCallback);
+
         void LogOn(
            string dbName, string userName, string password, Action<string> resultCallback);
         void LogOff(Action resultCallback);
