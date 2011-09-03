@@ -90,6 +90,7 @@ select datname from pg_database
                   "drop database ",
                   DataProvider.Dialect.QuoteForSchemaName(dbName));
 
+            Npgsql.NpgsqlConnection.ClearAllPools();
             using (var conn = new PgDBContext())
             {
                 conn.Open();

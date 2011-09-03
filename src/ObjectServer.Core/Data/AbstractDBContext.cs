@@ -45,28 +45,6 @@ namespace ObjectServer.Data
             }
         }
 
-        public void Delete(string dbName)
-        {
-            if (string.IsNullOrEmpty(dbName))
-            {
-                throw new ArgumentNullException("dbName");
-            }
-
-            this.EnsureConnectionOpened();
-
-            var sql = string.Format(
-                "DROP DATABASE \"{0}\"", dbName);
-
-            if (Environment.Configuration.LoggingSql)
-            {
-                LoggerProvider.EnvironmentLogger.Debug(() => "SQL: " + sql);
-            }
-
-            var cmd = this.conn.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.ExecuteNonQuery();
-        }
-
         public string DatabaseName { get; protected set; }
 
         #region Query methods
