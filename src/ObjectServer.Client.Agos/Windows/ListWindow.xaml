@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ObjectServer.Client.Agos.Windows.ListWindow"
+﻿<UserControl xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"  x:Class="ObjectServer.Client.Agos.Windows.ListWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,21 +12,29 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal"  Background="Transparent" x:Name="ToolBar" Margin="0,0,0,5">
+        <StackPanel Grid.Row="0" Orientation="Horizontal"  Background="Transparent" x:Name="ToolBar" Margin="5,5,5,5">
             <Button Content="新建" MinWidth="75" Height="25" />
             <Button Content="编辑" MinWidth="75" Height="25" />
             <Button Content="删除" MinWidth="75" Height="25" />
         </StackPanel>
-        <sdk:TabControl Grid.Row="1" Margin="2,0,2,0" Padding="15,15,15,15" x:Name="TabContainer" BorderThickness="1,1,1,1" >
-            <sdk:TabItem Header="搜索">
-
-            </sdk:TabItem>
-            <sdk:TabItem Header="高级搜索">
-
-            </sdk:TabItem>
-        </sdk:TabControl>
+        <toolkit:Expander Grid.Row="1" Margin="5">
+            <toolkit:Expander.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="高级搜索选项" FontSize="14"/>
+                </DataTemplate>
+            </toolkit:Expander.HeaderTemplate>
+            <toolkit:Expander.ContentTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="Test Content 1"/>
+                        <TextBlock Text="Test Content 2"/>
+                        <TextBlock Text="Test Content 3"/>
+                    </StackPanel>
+                </DataTemplate>
+            </toolkit:Expander.ContentTemplate>
+        </toolkit:Expander>
         <sdk:DataGrid x:Name="gridList" AutoGenerateColumns="False" Grid.Row="2" 
-                      HorizontalAlignment="Stretch"  Margin="5,5,5,5" VerticalAlignment="Stretch" >
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 
         </sdk:DataGrid>
     </Grid>

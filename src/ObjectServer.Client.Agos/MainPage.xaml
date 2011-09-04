@@ -9,7 +9,7 @@
   mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
 
 
-    <Grid x:Name="LayoutRoot" >
+    <Grid x:Name="LayoutRoot"  >
 
         <Border x:Name="ContentBorder" >
             <navigation:Frame x:Name="ContentFrame" 

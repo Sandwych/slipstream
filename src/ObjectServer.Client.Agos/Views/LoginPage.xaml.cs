@@ -74,10 +74,10 @@ namespace ObjectServer.Client.Agos.Views
 
         private void buttonSignIn_Click(object sender, RoutedEventArgs e)
         {
-            DoSignin();
+            Signin();
         }
 
-        private void DoSignin()
+        private void Signin()
         {
 
             var database = (string)this.listDatabases.SelectedValue;

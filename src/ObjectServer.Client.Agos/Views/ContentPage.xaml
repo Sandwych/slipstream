@@ -9,7 +9,7 @@
   Style="{StaticResource PageStyle}">
 
 
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Background="#F0F0F0">
         <Grid.RowDefinitions>
             <RowDefinition Height="48"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
@@ -50,11 +50,11 @@
             </Grid.ColumnDefinitions>
             <controls:TreeView Name="Menu" Width="Auto" Grid.Column="0" SelectedItemChanged="Menu_SelectedItemChanged" Margin="5,5,5,5">
             </controls:TreeView>
-            <controls:GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="0,5,0,5" Width="6" />
-            <controls:TabControl Grid.Column="2" Padding="15,15,15,15" x:Name="TabContainer" Margin="5,5,5,5"  >
+            <controls:GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="0,5,0,5" Width="6" BorderThickness="0" />
+            <controls:TabControl Grid.Column="2" Padding="0,0,0,0" x:Name="TabContainer" Margin="5,5,5,5" >
             </controls:TabControl>
         </Grid>
-        <Border x:Name="StatusBar" Margin="0,5,0,0" Grid.Row="3" Style="{StaticResource StatusBarStyle}">
+        <Border x:Name="StatusBar" Margin="0,0,0,0" Grid.Row="3" Style="{StaticResource StatusBarStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"></ColumnDefinition>

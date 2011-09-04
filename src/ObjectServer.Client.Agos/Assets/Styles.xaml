@@ -17,13 +17,8 @@
     <SolidColorBrush x:Key="HeaderBackgroundColorBrush" Color="#FF484848"/>
 
     <Style x:Key="WelcomeText" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="#FF666666" />
-        <Setter Property="FontSize" Value="20" />
-        <Setter Property="Effect">
-            <Setter.Value>
-                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="1" BlurRadius="3" Opacity="0.5" />
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Foreground" Value="#FF333333" />
+        <Setter Property="FontSize" Value="16" />
     </Style>
 
     <Style x:Key="HeaderStyle" TargetType="Border">
@@ -108,8 +103,8 @@
 
     <Style x:Key="StatusBarStyle" TargetType="Border">
         <Setter Property="Margin" Value="0,0,0,0"/>
-        <Setter Property="Height" Value="21"/>
-        <Setter Property="BorderThickness" Value="1,1,1,1"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="BorderThickness" Value="0,1,0,0"/>
         <Setter Property="BorderBrush" Value="#FF999999"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
