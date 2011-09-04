@@ -54,6 +54,20 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
+        public void Test_delete_nodes()
+        {
+            dynamic data = this.PrepareTestingData();
+            var model = (IModel)this.ServiceScope.GetResource("test.category");
+
+            model.DeleteInternal(this.ServiceScope, new long[] { data.id3 });
+
+            var ids = model.SearchInternal(this.ServiceScope);
+            Assert.AreEqual(3, ids.Length);
+
+            //TODO 检查 _left 和 _right
+        }
+
+        [Test]
         public void Test_childof()
         {
             dynamic data = this.PrepareTestingData();
