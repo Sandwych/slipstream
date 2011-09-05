@@ -56,12 +56,13 @@ namespace ObjectServer.Model
                 existedRecords = scope.DBContext.QueryAsDictionary(sql);
             }
 
-            DoDelete(scope, ids, this);
+            DeleteRows(scope, ids, this);
             this.ProcessBaseModelsDeletion(scope, existedRecords);
         }
 
         private void ProcessBaseModelsDeletion(IServiceScope scope, IEnumerable<Dictionary<string, object>> existedRecords)
         {
+            Debug.Assert(scope != null);
 
             if (this.Inheritances.Count > 0)
             {
@@ -78,26 +79,21 @@ namespace ObjectServer.Model
                     {
                         var baseModel = (AbstractTableModel)scope
                             .GetResource(inheritInfo.BaseModel);
-                        DoDelete(scope, baseIds, baseModel);
+                        DeleteRows(scope, baseIds, baseModel);
                     }
                 }
             }
         }
 
-        private static void DoDelete(IServiceScope scope, IEnumerable<long> ids, AbstractTableModel tableModel)
+        private static void DeleteRows(IServiceScope scope, IEnumerable<long> ids, AbstractTableModel tableModel)
         {
             Debug.Assert(scope != null);
             Debug.Assert(ids != null);
             Debug.Assert(tableModel != null);
 
             var sql = new SqlString(
-                "delete from ",
-                tableModel.quotedTableName,
-                " where ",
-                QuotedIdColumn,
-                " in (",
-                ids.ToCommaList(),
-                ")");
+                "delete from ", tableModel.quotedTableName,
+                " where ", QuotedIdColumn, " in (", ids.ToCommaList(), ")");
 
             var rowCount = scope.DBContext.Execute(sql);
             if (rowCount != ids.Count())
