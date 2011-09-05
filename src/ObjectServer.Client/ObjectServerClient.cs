@@ -89,7 +89,8 @@ namespace ObjectServer.Client
         {
             Debug.Assert(this.Logged);
 
-            this.jsonRpcClient.InvokeSync("logOff", null, o =>
+            var args = new object[] { this.SessionId };
+            this.jsonRpcClient.InvokeSync("logOff", args, o =>
             {
                 this.SessionId = null;
                 resultCallback();
