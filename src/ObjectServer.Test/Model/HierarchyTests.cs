@@ -14,6 +14,18 @@ namespace ObjectServer.Model.Test
     [TestFixture]
     public class HierarchyTests : LocalTestCase
     {
+        private static readonly string[] AssertNodeFields = { "name", "_left", "_right", "children", "descendants" };
+
+        private void AssertNode(long id, long left, long right)
+        {
+            var model = (IModel)this.ServiceScope.GetResource("test.category");
+            var records = model.ReadInternal(this.ServiceScope, new long[] { id }, AssertNodeFields);
+            Assert.AreEqual(1, records.Length);
+            var record = records[0];
+            Assert.AreEqual(left, (long)record["_left"]);
+            Assert.AreEqual(right, (long)record["_right"]);
+        }
+
         [Test]
         public void Test_create_nodes()
         {
@@ -23,9 +35,7 @@ namespace ObjectServer.Model.Test
             //确认 _left 与 _right 设置正确
             var fields = new string[] { "name", "_left", "_right", "children", "descendants" };
 
-            var record1 = model.ReadInternal(this.ServiceScope, new long[] { data.id1 }, fields)[0];
-            Assert.AreEqual((long)1, record1["_left"]);
-            Assert.AreEqual((long)2, record1["_right"]);
+            AssertNode(data.id1, 1, 2);
 
             var record2 = model.ReadInternal(this.ServiceScope, new long[] { data.id2 }, fields)[0];
             Assert.AreEqual((long)3, record2["_left"]);
@@ -39,18 +49,9 @@ namespace ObjectServer.Model.Test
             Array.Sort(descendants2);
             Assert.AreEqual(3, descendants2.Length);
 
-
-            var record3 = model.ReadInternal(this.ServiceScope, new long[] { data.id3 }, fields)[0];
-            Assert.AreEqual((long)4, record3["_left"]);
-            Assert.AreEqual((long)7, record3["_right"]);
-
-            var record4 = model.ReadInternal(this.ServiceScope, new long[] { data.id4 }, fields)[0];
-            Assert.AreEqual((long)8, record4["_left"]);
-            Assert.AreEqual((long)9, record4["_right"]);
-
-            var record5 = model.ReadInternal(this.ServiceScope, new long[] { data.id5 }, fields)[0];
-            Assert.AreEqual((long)5, record5["_left"]);
-            Assert.AreEqual((long)6, record5["_right"]);
+            AssertNode(data.id3, 4, 7);
+            AssertNode(data.id4, 8, 9);
+            AssertNode(data.id5, 5, 6);
         }
 
         [Test]
@@ -59,12 +60,16 @@ namespace ObjectServer.Model.Test
             dynamic data = this.PrepareTestingData();
             var model = (IModel)this.ServiceScope.GetResource("test.category");
 
-            model.DeleteInternal(this.ServiceScope, new long[] { data.id3 });
+            model.DeleteInternal(this.ServiceScope, new long[] { data.id3, data.id1 });
 
             var ids = model.SearchInternal(this.ServiceScope);
-            Assert.AreEqual(3, ids.Length);
+            Assert.AreEqual(2, ids.Length);
+            Array.Sort<long>(ids);
+            Assert.AreEqual(data.id2, ids[0]);
+            Assert.AreEqual(data.id4, ids[1]);
 
-            //TODO 检查 _left 和 _right
+            AssertNode(data.id2, 1, 4);
+            AssertNode(data.id4, 2, 3);
         }
 
         [Test]
@@ -73,7 +78,7 @@ namespace ObjectServer.Model.Test
             dynamic data = this.PrepareTestingData();
 
             var model = (IModel)this.ServiceScope.GetResource("test.category");
-         
+
             var domain1 = new object[][] 
             { 
                 new object[] { "_id", "childof", data.id2 }
