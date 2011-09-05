@@ -23,7 +23,7 @@ namespace ObjectServer.Http
 
         public HttpServer(string rpcHostUrl, int listenPort)
         {
-            LoggerProvider.GatewayLogger.Info("Starting HTTP Server...");
+            LoggerProvider.RpcLogger.Info("Starting HTTP Server...");
 
             if (string.IsNullOrEmpty(rpcHostUrl))
             {
@@ -38,7 +38,7 @@ namespace ObjectServer.Http
             this.httpEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
 
             this.rpcReqUrl = rpcHostUrl;
-            LoggerProvider.GatewayLogger.Info("Connecting to MQ: [" + this.rpcReqUrl + "]");
+            LoggerProvider.RpcLogger.Info("Connecting to MQ: [" + this.rpcReqUrl + "]");
             this.zsocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
         }
 
@@ -56,7 +56,7 @@ namespace ObjectServer.Http
 
             this.zsocket.Connect(this.rpcReqUrl);
 
-            LoggerProvider.GatewayLogger.Info("Initializing Kayak HTTP Server...");
+            LoggerProvider.RpcLogger.Info("Initializing Kayak HTTP Server...");
             var scheduler = new KayakScheduler(new SchedulerDelegate());
             scheduler.Post(() =>
             {
@@ -68,7 +68,7 @@ namespace ObjectServer.Http
 
             // runs scheduler on calling thread. this method will block until
             // someone calls Stop() on the scheduler.
-            LoggerProvider.GatewayLogger.Info("Starting Kayak HTTP Server...");
+            LoggerProvider.RpcLogger.Info("Starting Kayak HTTP Server...");
             scheduler.Start();
         }
 
@@ -76,7 +76,7 @@ namespace ObjectServer.Http
 
         public void Dispose()
         {
-            LoggerProvider.GatewayLogger.Info("Disposing MQ...");
+            LoggerProvider.RpcLogger.Info("Disposing MQ...");
             this.zsocket.Dispose();
             this.zsocket = null;
         }

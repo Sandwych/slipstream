@@ -16,7 +16,7 @@ namespace ObjectServer
     {
         public const string EnvironmentLoggerName = "environment";
         public const string BizLoggerName = "biz";
-        public const string GatewayLoggerName = "gateway";
+        public const string RpcLoggerName = "rpc";
 
         public static readonly Dictionary<string, Level> LogLevelMapping =
             new Dictionary<string, Level>()
@@ -32,7 +32,7 @@ namespace ObjectServer
         private readonly static LoggerProvider s_instance = new LoggerProvider();
         private readonly Log4netLogger envLogger;
         private readonly Log4netLogger bizLogger;
-        private readonly Log4netLogger gatewayLogger;
+        private readonly Log4netLogger rpcLogger;
 
         public LoggerProvider()
         {
@@ -42,8 +42,8 @@ namespace ObjectServer
             var bizLog = LogManager.GetLogger(BizLoggerName);
             this.bizLogger = new Log4netLogger(bizLog);
 
-            var gatewayLog = LogManager.GetLogger(GatewayLoggerName);
-            this.gatewayLogger = new Log4netLogger(gatewayLog);
+            var rpcLog = LogManager.GetLogger(RpcLoggerName);
+            this.rpcLogger = new Log4netLogger(rpcLog);
         }
 
         public static ObjectServer.ILogger EnvironmentLogger
@@ -62,11 +62,11 @@ namespace ObjectServer
             }
         }
 
-        public static ObjectServer.ILogger GatewayLogger
+        public static ObjectServer.ILogger RpcLogger
         {
             get
             {
-                return s_instance.gatewayLogger;
+                return s_instance.rpcLogger;
             }
         }
 
@@ -113,9 +113,9 @@ namespace ObjectServer
                 AddAppender(EnvironmentLoggerName, platformFileAppender);
 
                 //创建网关 appender
-                var gatewayLogFilePath = Path.Combine(logDir, StaticSettings.GatewayLogFileName);
+                var gatewayLogFilePath = Path.Combine(logDir, StaticSettings.RpcLogFileName);
                 var gatewayFileAppender = CreateRollingFileAppender(layout, gatewayLogFilePath);
-                AddAppender(GatewayLoggerName, gatewayFileAppender);
+                AddAppender(RpcLoggerName, gatewayFileAppender);
 
                 //创建业务 appender
                 var bizLogFilePath = Path.Combine(logDir, StaticSettings.BizLogFileName);

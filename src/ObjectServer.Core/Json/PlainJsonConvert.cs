@@ -13,14 +13,7 @@ namespace ObjectServer.Json
     {
         public static string Generate(object value)
         {
-            var debug = Environment.Configuration.Debug;
-            var fmt = Formatting.None;
-            if (debug)
-            {
-                fmt = Formatting.Indented;
-            }
-            var str = Newtonsoft.Json.JsonConvert.SerializeObject(value, fmt);
-
+            var str = Newtonsoft.Json.JsonConvert.SerializeObject(value,  Formatting.None);
             return str;
         }
 
