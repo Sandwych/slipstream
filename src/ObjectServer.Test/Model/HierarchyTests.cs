@@ -73,6 +73,22 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
+        public void Test_change_parent()
+        {
+            dynamic data = this.PrepareTestingData();
+            var model = (IModel)this.ServiceScope.GetResource("test.category");
+
+            //把node5 的父节点改成 node2
+            dynamic record = new ExpandoObject();
+            record.parent = data.id2;
+            model.WriteInternal(this.ServiceScope, data.id5, record);
+
+            var ids = model.SearchInternal(this.ServiceScope);
+            Assert.AreEqual(5, ids.Length);
+            //TODO 测试
+        }
+
+        [Test]
         public void Test_childof()
         {
             dynamic data = this.PrepareTestingData();

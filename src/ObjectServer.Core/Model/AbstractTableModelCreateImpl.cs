@@ -71,7 +71,7 @@ namespace ObjectServer.Model
 
             if (this.Hierarchy)
             {
-                this.PostcreateHierarchy(scope.DBContext, selfId, record);
+                this.PostCreateOrWriteHierarchy(scope.DBContext, selfId, record);
             }
 
             this.PostcreateManyToManyFields(scope, selfId, record);
@@ -118,12 +118,12 @@ namespace ObjectServer.Model
             }
         }
 
-        private void PostcreateHierarchy(
+        private void PostCreateOrWriteHierarchy(
             IDBContext dbctx, long id, Dictionary<string, object> record)
         {
             //处理层次表
             long rhsValue = 0;
-            //先检查是否给了 _parent 字段的值
+            //先检查是否给了 parent 字段的值
             if (record.ContainsKey(ParentFieldName))
             {
                 var parentID = (long)record[ParentFieldName];

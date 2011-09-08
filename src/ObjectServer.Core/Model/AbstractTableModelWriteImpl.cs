@@ -32,25 +32,32 @@ namespace ObjectServer.Model
             }
 
             var record = ClearUserRecord(userRecord);
+            var isParentChanged = false;
+            var oldParentID = (long)0;
+            Dictionary<string, object> existedRecord = null;
 
             //处理版本字段与基类继承
-            if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0)
+            if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0 || this.Hierarchy)
             {
                 /*
                 select * from <TableName> where _id=?
                 */
-                var sql1 = new SqlString("select * from ",
-                    DataProvider.Dialect.QuoteForTableName(this.TableName),
-                    " where ",
-                    QuotedIdColumn,
-                    "=",
-                    Parameter.Placeholder);
-
-                var existedRecord = scope.DBContext.QueryAsDictionary(sql1, id)[0];
+                var sqlSelectSelf = String.Format("select * from {0} where _id = ?", this.quotedTableName);
+                existedRecord = scope.DBContext.QueryAsDictionary(SqlString.Parse(sqlSelectSelf), id)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
                 this.PrewriteBaseModels(scope, record, existedRecord);
+
+                if (userRecord.ContainsKey(ParentFieldName))
+                {
+                    oldParentID = (long)existedRecord[ParentFieldName];
+                    var newParentId = (long)userRecord[ParentFieldName];
+                    if (newParentId != oldParentID)
+                    {
+                        isParentChanged = true;
+                    }
+                }
             }
 
             var allFields = record.Keys; //记录中的所有字段
@@ -104,6 +111,26 @@ namespace ObjectServer.Model
                 var msg = string.Format("不能更新 ['{0}', {1}]，因为其已经被其它用户更新",
                     this.TableName, id);
                 throw new ConcurrencyException(msg);
+            }
+
+            //更新层次结构
+            //1. 从树中逻辑上删除 id 指向的节点，但不删除具体的记录，只是调整 _left 与 _right
+            //2. 逻辑上添加该节点，调整 _left 与 _right
+            if (isParentChanged && Hierarchy)
+            {
+                var left = (long)existedRecord[LeftFieldName];
+                var right = (long)existedRecord[RightFieldName];
+                var width = right - left + 1;
+
+                var sql1 = String.Format("update {0} set _right = _right - {1} where _right > {2}",
+                        this.quotedTableName, width, right);
+                scope.DBContext.Execute(SqlString.Parse(sql1));
+
+                var sql2 = String.Format("update {0} set _left = _left - {1} where _left > {2}",
+                        this.quotedTableName, width, right);
+                scope.DBContext.Execute(SqlString.Parse(sql2));
+
+                this.PostCreateOrWriteHierarchy(scope.DBContext, id, existedRecord);
             }
 
             if (this.LogWriting)
@@ -180,7 +207,7 @@ namespace ObjectServer.Model
             foreach (var inheritInfo in this.Inheritances)
             {
                 var baseModel = (IModel)ctx.GetResource(inheritInfo.BaseModel);
-                var baseId = (long)existedRecord[inheritInfo.RelatedField];
+                var baseID = (long)existedRecord[inheritInfo.RelatedField];
 
                 //看用户提供的记录的字段是否涉及到基类
                 var baseFields = baseModel.Fields.Keys.Intersect(record.Keys);
@@ -188,7 +215,7 @@ namespace ObjectServer.Model
                 {
                     var baseRecord = record.Where(p => baseFields.Contains(p.Key))
                         .ToDictionary(p => p.Key, p => p.Value);
-                    baseModel.WriteInternal(ctx, baseId, baseRecord);
+                    baseModel.WriteInternal(ctx, baseID, baseRecord);
                 }
             }
         }

@@ -39,3 +39,5 @@
 * 给 BrowsableRecord 添加 IComparable
 
 * 字段要可以使用让客户定义来获取选项的方法，就是给 IField 加个 OptionsGetter
+
+* 模块的访问权限应该是在 RPC 检查，ReadInternal 这样的方法是不检查的
