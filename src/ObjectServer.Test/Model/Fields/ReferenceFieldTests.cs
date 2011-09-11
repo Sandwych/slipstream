@@ -27,28 +27,28 @@ namespace ObjectServer.Model.Test
             //创建 Master 与 Child 测试数据
             dynamic masterRecord1 = new ExpandoObject();
             masterRecord1.name = "master1";
-            var masterId1 = this.Service.CreateModel(this.SessionId, "test.master", masterRecord1);
+            var masterId1 = this.Service.Execute(this.SessionId, "test.master", "Create", masterRecord1);
 
             dynamic childRecord1 = new ExpandoObject();
             childRecord1.name = "child1";
-            var childId1 = this.Service.CreateModel(this.SessionId, "test.child", childRecord1);
+            var childId1 = this.Service.Execute(this.SessionId, "test.child", "Create", childRecord1);
 
             //创建测试数据 TestModel
             dynamic testRecord1 = new ExpandoObject();
             testRecord1.name = "test1";
             testRecord1.address = "address1";
             testRecord1.reference_field = new object[] { "test.master", masterId1 };
-            var testId1 = this.Service.CreateModel(this.SessionId, "test.test_model", testRecord1);
+            var testId1 = this.Service.Execute(this.SessionId, "test.test_model", "Create", testRecord1);
 
             dynamic testRecord2 = new ExpandoObject();
             testRecord2.name = "test2";
             testRecord2.address = "address2";
             testRecord2.reference_field = new object[] { "test.child", childId1 };
-            var testId2 = this.Service.CreateModel(this.SessionId, "test.test_model", testRecord2);
+            var testId2 = this.Service.Execute(this.SessionId, "test.test_model", "Create", testRecord2);
 
             var testIds = new object[] { testId1, testId2 };
             var fields = new object[] { "reference_field" };
-            var testRecords = this.Service.ReadModel(this.SessionId, "test.test_model", testIds, fields);
+            dynamic testRecords = this.Service.Execute(this.SessionId, "test.test_model", "Read", testIds, fields);
 
             Assert.AreEqual(2, testRecords.Length);
             Assert.IsInstanceOf(typeof(object[]), testRecords[0]["reference_field"]);

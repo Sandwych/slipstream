@@ -23,13 +23,13 @@ namespace ObjectServer.Model.Test
             data.record1.name = "test1";
             data.record1.field1 = 1;
             data.record1.field2 = 2;
-            data.record1_id = this.Service.CreateModel(this.SessionId, ModelName, data.record1);
+            data.record1_id = this.Service.Execute(this.SessionId, ModelName, "Create", data.record1);
 
             data.record2 = new ExpandoObject();
             data.record2.name = "test2";
             data.record2.field1 = 5;
             data.record2.field2 = 4;
-            data.record2_id = this.Service.CreateModel(this.SessionId, ModelName, data.record2);
+            data.record2_id = this.Service.Execute(this.SessionId, ModelName, "Create", data.record2);
 
             return data;
         }
@@ -37,23 +37,23 @@ namespace ObjectServer.Model.Test
         [SetUp]
         public void ClearTestData()
         {
-            var ids = this.Service.SearchModel(this.SessionId, ModelName);
-            this.Service.DeleteModel(
-                this.SessionId, ModelName, ids.Select(o => (object)o).ToArray());
+            long[] ids = (long[])this.Service.Execute(this.SessionId, ModelName, "Search");
+            var idsToDel = ids.Select(o => (object)o).ToArray();
+            this.Service.Execute(this.SessionId, ModelName, "Delete", idsToDel);
         }
 
         [Test]
         public void Test_function_many2one()
         {
             var constraints = new object[][] { new object[] { "login", "=", "root" } };
-            var rootId = this.Service.SearchModel(this.SessionId, "core.user", constraints, null, 0, 0)[0];
+            dynamic ids = this.Service.Execute(this.SessionId, "core.user", "Search", constraints, null, 0, 0);
 
             dynamic data = PrepareTestData();
 
-            var records = this.Service.ReadModel(this.SessionId, ModelName, new object[] { data.record1_id }, null);
+            dynamic records = this.Service.Execute(this.SessionId, ModelName, "Read", new object[] { data.record1_id }, null);
 
             var userField0 = (object[])records[0]["user"];
-            Assert.AreEqual(rootId, userField0[0]);
+            Assert.AreEqual(ids[0], userField0[0]);
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace ObjectServer.Model.Test
             var constraints = new object[][] { new object[] { "sum_field", "=", 9 } };
             dynamic data = PrepareTestData();
 
-            var n = this.Service.CountModel(this.SessionId, ModelName, constraints);
+            dynamic n = this.Service.Execute(this.SessionId, ModelName, "Count", constraints);
 
             Assert.AreEqual(1, n);
         }

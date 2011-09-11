@@ -73,7 +73,7 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
-        public void Test_change_parent()
+        public void Test_change_parent1()
         {
             dynamic data = this.PrepareTestingData();
             var model = (IModel)this.ServiceScope.GetResource("test.category");
@@ -85,7 +85,40 @@ namespace ObjectServer.Model.Test
 
             var ids = model.SearchInternal(this.ServiceScope);
             Assert.AreEqual(5, ids.Length);
-            //TODO 测试
+
+            var fields = new string[] { "_id", "_left", "_right", "name", "parent" };
+            var records = model.ReadInternal(this.ServiceScope, ids, fields);
+            var node5 = records.First(e => (string)e["name"] == "node5");
+            Assert.AreEqual(data.id2, ((object[])node5["parent"])[0]);
+            Assert.AreEqual((long)8, node5["_left"]);
+            Assert.AreEqual((long)9, node5["_right"]);
+        }
+
+        [Test]
+        public void Test_change_parent2()
+        {
+            dynamic data = this.PrepareTestingData();
+            var model = (IModel)this.ServiceScope.GetResource("test.category");
+
+            //把node3 的父节点改成 node1
+            dynamic record = new ExpandoObject();
+            record.parent = data.id1;
+            model.WriteInternal(this.ServiceScope, data.id3, record);
+
+            var ids = model.SearchInternal(this.ServiceScope);
+            Assert.AreEqual(5, ids.Length);
+
+            var fields = new string[] { "_id", "_left", "_right", "name", "parent" };
+            var records = model.ReadInternal(this.ServiceScope, ids, fields);
+            var node3 = records.First(e => (string)e["name"] == "node3");
+            Assert.AreEqual(data.id1, ((object[])node3["parent"])[0]);
+            Assert.AreEqual((long)2, node3["_left"]);
+            Assert.AreEqual((long)5, node3["_right"]);
+
+            var node5 = records.First(e => (string)e["name"] == "node5");
+            Assert.AreEqual(data.id1, ((object[])node5["parent"])[0]);
+            Assert.AreEqual((long)3, node5["_left"]);
+            Assert.AreEqual((long)4, node5["_right"]);
         }
 
         [Test]
@@ -137,29 +170,29 @@ namespace ObjectServer.Model.Test
             //
             //|....4
             //插入4个根节点，1，2作为根节点，3,4是2的子节点，5 是3的子节点
-            data.root1 = new ExpandoObject();
-            data.root1.name = "root1";
-            data.id1 = this.Service.CreateModel(this.SessionId, "test.category", data.root1);
+            data.node1 = new ExpandoObject();
+            data.node1.name = "node1";
+            data.id1 = this.Service.Execute(this.SessionId, "test.category", "Create", data.node1);
 
-            data.root2 = new ExpandoObject();
-            data.root2.name = "root2";
-            data.id2 = this.Service.CreateModel(this.SessionId, "test.category", data.root2);
+            data.node2 = new ExpandoObject();
+            data.node2.name = "node2";
+            data.id2 = this.Service.Execute(this.SessionId, "test.category", "Create", data.node2);
 
             //插入节点3的时候节点2还是叶子
-            data.root3 = new ExpandoObject();
-            data.root3.name = "root3";
-            data.root3.parent = data.id2;
-            data.id3 = this.Service.CreateModel(this.SessionId, "test.category", data.root3);
+            data.node3 = new ExpandoObject();
+            data.node3.name = "node3";
+            data.node3.parent = data.id2;
+            data.id3 = this.Service.Execute(this.SessionId, "test.category", "Create", data.node3);
 
-            data.root4 = new ExpandoObject();
-            data.root4.name = "root4";
-            data.root4.parent = data.id2;
-            data.id4 = this.Service.CreateModel(this.SessionId, "test.category", data.root4);
+            data.node4 = new ExpandoObject();
+            data.node4.name = "node4";
+            data.node4.parent = data.id2;
+            data.id4 = this.Service.Execute(this.SessionId, "test.category", "Create", data.node4);
 
-            data.root5 = new ExpandoObject();
-            data.root5.name = "root5";
-            data.root5.parent = data.id3;
-            data.id5 = this.Service.CreateModel(this.SessionId, "test.category", data.root5);
+            data.node5 = new ExpandoObject();
+            data.node5.name = "node5";
+            data.node5.parent = data.id3;
+            data.id5 = this.Service.Execute(this.SessionId, "test.category", "Create", data.node5);
 
             return data;
         }
