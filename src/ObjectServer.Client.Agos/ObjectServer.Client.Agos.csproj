@@ -132,27 +132,30 @@
     <Compile Include="Models\ListWindowModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\WindowManager.cs" />
+    <Compile Include="UI\DatabaseCreationDialog.xaml.cs">
+      <DependentUpon>DatabaseCreationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utility\XamlLoader.cs" />
-    <Compile Include="Views\DatabaseDeletionDialog.xaml.cs">
+    <Compile Include="UI\DatabaseDeletionDialog.xaml.cs">
       <DependentUpon>DatabaseDeletionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DatabasesPage.xaml.cs">
+    <Compile Include="UI\DatabasesPage.xaml.cs">
       <DependentUpon>DatabasesPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ErrorWindow.xaml.cs">
+    <Compile Include="UI\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\About.xaml.cs">
+    <Compile Include="UI\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ContentPage.xaml.cs">
+    <Compile Include="UI\ContentPage.xaml.cs">
       <DependentUpon>ContentPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\LoginPage.xaml.cs">
+    <Compile Include="UI\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ListWindow.xaml.cs">
@@ -181,10 +184,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Assets\Themes\Windows7\sdkstyles.xaml">
+    <None Include="Assets\Themes\Windows7\sdkstyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </None>
     <Page Include="Assets\Themes\Windows7\styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -201,23 +204,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DatabaseDeletionDialog.xaml">
+    <Page Include="UI\DatabaseCreationDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DatabasesPage.xaml">
+    <Page Include="UI\DatabaseDeletionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ErrorWindow.xaml">
+    <Page Include="UI\DatabasesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
-    <Page Include="Views\About.xaml">
+    <Page Include="UI\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
-    <Page Include="Views\ContentPage.xaml">
+    <Page Include="UI\ContentPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
@@ -225,7 +232,7 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\LoginPage.xaml">
+    <Page Include="UI\LoginPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

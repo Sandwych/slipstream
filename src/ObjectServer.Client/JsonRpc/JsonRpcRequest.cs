@@ -12,7 +12,7 @@ namespace ObjectServer.Client
     [JsonObject]
     public class JsonRpcRequest : IAsyncResult
     {
-        public JsonRpcRequest(JsonRpcCallComplete callCompleteProc, string method, params object[] args)
+        public JsonRpcRequest(JsonRpcCallCompleteCallback callCompleteProc, string method, params object[] args)
         {
             this.Method = method;
             this.Params = args;
@@ -40,7 +40,7 @@ namespace ObjectServer.Client
 
 
         private ManualResetEvent asyncWaitHandle = new ManualResetEvent(false);
-        private JsonRpcCallComplete JsonRpcCallCompleteHandler;
+        private JsonRpcCallCompleteCallback JsonRpcCallCompleteHandler;
 
         #region IAsyncResult Members
 
@@ -58,7 +58,7 @@ namespace ObjectServer.Client
 
         #endregion
 
-        public IAsyncResult Send(Uri uri, ResultCallbackHandler resultHandler)
+        public IAsyncResult Send(Uri uri, Action<object> resultHandler)
         {
             try
             {

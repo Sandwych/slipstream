@@ -33,7 +33,7 @@ namespace ObjectServer.Client
 
         public void GetVersion(Action<Version> resultCallback)
         {
-            this.jsonRpcClient.InvokeSync("getVersion", null, o =>
+            this.jsonRpcClient.SyncInvoke("getVersion", null, o =>
             {
                 var version = Version.Parse((string)o);
                 resultCallback(version);
@@ -42,7 +42,7 @@ namespace ObjectServer.Client
 
         public void ListDatabases(Action<string[]> resultCallback)
         {
-            this.jsonRpcClient.InvokeSync("listDatabases", null, o =>
+            this.jsonRpcClient.SyncInvoke("listDatabases", null, o =>
             {
                 object[] objs = (object[])o;
                 var result = new string[objs.Length];
@@ -59,7 +59,7 @@ namespace ObjectServer.Client
         {
             var hashedRootPassword = rootPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim() };
-            this.jsonRpcClient.InvokeSync("deleteDatabase", args, o =>
+            this.jsonRpcClient.SyncInvoke("deleteDatabase", args, o =>
             {
                 resultCallback();
             });
@@ -70,7 +70,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(!this.Logged);
 
-            this.jsonRpcClient.InvokeSync("logOn", new object[] { dbName, userName, password }, o =>
+            this.jsonRpcClient.SyncInvoke("logOn", new object[] { dbName, userName, password }, o =>
             {
                 //TODO  线程安全
                 var sid = (string)o;
@@ -90,7 +90,7 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.SessionId };
-            this.jsonRpcClient.InvokeSync("logOff", args, o =>
+            this.jsonRpcClient.SyncInvoke("logOff", args, o =>
             {
                 this.SessionId = null;
                 resultCallback();
@@ -103,7 +103,7 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.SessionId, objectName, method, parameters };
-            this.jsonRpcClient.InvokeSync("execute", args, o =>
+            this.jsonRpcClient.SyncInvoke("execute", args, o =>
             {
                 resultCallback(o);
             });
