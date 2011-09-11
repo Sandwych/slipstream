@@ -1,0 +1,17 @@
+﻿<navigation:Page x:Class="ObjectServer.Client.Agos.UI.DatabasesPage" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           d:DesignWidth="640" d:DesignHeight="480"
+           Title="DatabasesPage Page">
+    <Grid x:Name="LayoutRoot" Loaded="LayoutRoot_Loaded">
+        <ListBox Height="337" HorizontalAlignment="Left" Margin="42,57,0,0" Name="databases" VerticalAlignment="Top" Width="346" SelectionChanged="databases_SelectionChanged" />
+        <Button Content="新建..." Height="23" HorizontalAlignment="Left" Margin="405,57,0,0" Name="buttonNew" VerticalAlignment="Top" Width="75" Click="buttonNew_Click" />
+        <Button Content="删除..." Height="23" HorizontalAlignment="Left" Margin="405,86,0,0" Name="buttonDrop" VerticalAlignment="Top" Width="75" Click="buttonDrop_Click" />
+        <Button Content="取消" Height="23" HorizontalAlignment="Left" Margin="42,409,0,0" Name="buttonCancel" VerticalAlignment="Top" Width="75" Click="buttonCancel_Click" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="42,12,0,0" Name="textBlock1" Text="数据库管理" VerticalAlignment="Top" Width="586" />
+    </Grid>
+</navigation:Page>

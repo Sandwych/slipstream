@@ -1,0 +1,34 @@
+﻿<controls:ChildWindow x:Class="ObjectServer.Client.Agos.UI.DatabaseDeletionDialog"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+           Width="356" Height="195" 
+           Title="删除数据库" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" >
+    <Grid x:Name="LayoutRoot" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,0,0" Grid.Row="1" />
+        <Button x:Name="OKButton" Content="确定" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Left" Margin="176,12,0,0" Grid.Row="1" />
+        <Grid HorizontalAlignment="Left" Name="grid1" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock HorizontalAlignment="Left" Name="textBlock1" 
+                       Text="请注意：数据库一旦删除则不可恢复，其中的包含的数据将全部丢失！强烈建议您在删除数据库之前先进行备份。" 
+                       TextWrapping="Wrap" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" />
+            <sdk:Label Height="23" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="0" Name="label1" 
+                       VerticalAlignment="Center" Width="Auto" Content="服务器管理密码：" Margin="2,2,2,2" />
+            <PasswordBox Height="23" HorizontalAlignment="Left" Margin="2,2,2,2"
+                         Name="rootPassword" VerticalAlignment="Top" Width="150" Grid.Column="1" Grid.Row="2" />
+        </Grid>
+    </Grid>
+</controls:ChildWindow>
