@@ -114,6 +114,8 @@ namespace ObjectServer.Model
                     orderby r.Right descending  
                     select r;
 
+                scope.DBContext.LockTable(tableModel.TableName);
+
                 foreach (var record in parentRecords)
                 {
 

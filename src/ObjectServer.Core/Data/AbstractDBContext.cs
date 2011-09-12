@@ -300,6 +300,11 @@ namespace ObjectServer.Data
             throw new NotImplementedException();
         }
 
+        public virtual IDbTransaction BeginTransaction()
+        {
+            return conn.BeginTransaction();
+        }
+
         public IDbCommand CreateCommand(SqlString sql)
         {
             var sqlCommand = DataProvider.Driver.GenerateCommand(

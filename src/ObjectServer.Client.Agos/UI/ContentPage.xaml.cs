@@ -1,4 +1,4 @@
-﻿namespace ObjectServer.Client.Agos
+﻿namespace ObjectServer.Client.Agos.UI
 {
     using System;
     using System.Linq;

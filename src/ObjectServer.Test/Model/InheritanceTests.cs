@@ -30,8 +30,8 @@ namespace ObjectServer.Model.Test
         [SetUp]
         public void ClearData()
         {
-            this.ClearModel(this.ServiceScope, "test.dog");
-            this.ClearModel(this.ServiceScope, "test.animal");
+            this.ClearModel("test.dog");
+            this.ClearModel("test.animal");
         }
 
         [Test]

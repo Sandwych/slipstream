@@ -61,8 +61,9 @@ namespace ObjectServer
             return StaticSettings.Version.ToString();
         }
 
-        public object Execute(string sessionId, string resource, string method, params object[] parameters)
+        public object Execute(string sessionId, string resource, string method, params object[] args)
         {
+
             using (var scope = new ServiceScope(sessionId))
             {
                 dynamic res = scope.GetResource(resource);
@@ -70,27 +71,30 @@ namespace ObjectServer
 
                 if (res.DatabaseRequired)
                 {
-                    return ExecuteTransactional(res, scope, svc, parameters);
+                    return ExecuteTransactional(scope, res, svc, args);
                 }
                 else
                 {
-                    return svc.Invoke(res, scope, parameters);
+                    return svc.Invoke(res, scope, args);
                 }
             }
         }
 
-
-        private static object ExecuteTransactional(
-            IResource res, IServiceScope scope, IService svc, params object[] args)
+        private static object ExecuteTransactional(ServiceScope scope, dynamic res, dynamic svc, object[] args)
         {
-            using (var tx = new TransactionScope())
+            var tx = scope.DBContext.BeginTransaction();
+            try
             {
                 var result = svc.Invoke(res, scope, args);
-                tx.Complete();
+                tx.Commit();
                 return result;
             }
+            catch
+            {
+                tx.Rollback();
+                throw;
+            }
         }
-
 
         #region Database handling methods
 

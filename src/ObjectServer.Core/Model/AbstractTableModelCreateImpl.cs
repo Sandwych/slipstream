@@ -71,7 +71,7 @@ namespace ObjectServer.Model
 
             if (this.Hierarchy)
             {
-                this.PostCreateOrWriteHierarchy(scope.DBContext, selfId, record);
+                this.PostCreateHierarchy(scope.DBContext, selfId, record);
             }
 
             this.PostcreateManyToManyFields(scope, selfId, record);
@@ -118,7 +118,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void PostCreateOrWriteHierarchy(
+        private void PostCreateHierarchy(
             IDBContext dbctx, long id, Dictionary<string, object> record)
         {
             //处理层次表
@@ -182,16 +182,20 @@ namespace ObjectServer.Model
                 }
             }
 
+            //因为NestedSets 模型的关系，
+            //我们修改的不止一条记录，所以这里需要锁定表，防止其它连接修改数据库
+            dbctx.LockTable(this.TableName); 
+
             var sqlUpdate1 = string.Format(
                 "update \"{0}\" set _right = _right + 2 where _right>?", this.TableName);
+            dbctx.Execute(SqlString.Parse(sqlUpdate1), rhsValue);
+
             var sqlUpdate2 = string.Format(
                 "update \"{0}\" set _left = _left + 2 where _left>?", this.TableName);
+            dbctx.Execute(SqlString.Parse(sqlUpdate2), rhsValue);
+
             var sqlUpdate3 = string.Format(
                 "update \"{0}\" set _left=?, _right=? where (_id=?) ", this.TableName);
-
-            //dbctx.LockTable(this.TableName); //TODO 这里需要锁定表，防止其它连接修改
-            dbctx.Execute(SqlString.Parse(sqlUpdate1), rhsValue);
-            dbctx.Execute(SqlString.Parse(sqlUpdate2), rhsValue);
             dbctx.Execute(SqlString.Parse(sqlUpdate3), rhsValue + 1, rhsValue + 2, id);
         }
 

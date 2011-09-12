@@ -172,30 +172,30 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Page Include="Assets\Themes\Windows7\brushes.xaml">
+    <Resource Include="Assets\Themes\Windows7\brushes.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Assets\Themes\Windows7\corestyles.xaml">
+    </Resource>
+    <Resource Include="Assets\Themes\Windows7\corestyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Assets\Themes\Windows7\fonts.xaml">
+    </Resource>
+    <Resource Include="Assets\Themes\Windows7\fonts.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <None Include="Assets\Themes\Windows7\sdkstyles.xaml">
+    </Resource>
+    <Resource Include="Assets\Themes\Windows7\sdkstyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </None>
-    <Page Include="Assets\Themes\Windows7\styles.xaml">
+    </Resource>
+    <Resource Include="Assets\Themes\Windows7\styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Assets\Themes\Windows7\toolkitstyles.xaml">
+    </Resource>
+    <Resource Include="Assets\Themes\Windows7\toolkitstyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </Resource>
     <Page Include="Controls\MenuTree.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

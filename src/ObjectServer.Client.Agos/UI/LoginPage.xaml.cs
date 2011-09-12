@@ -16,7 +16,7 @@ using System.Threading;
 using ObjectServer.Client.Agos.Controls;
 using ObjectServer.Client.Agos.Models;
 
-namespace ObjectServer.Client.Agos.Views
+namespace ObjectServer.Client.Agos.UI
 {
     public partial class LoginPage : Page
     {

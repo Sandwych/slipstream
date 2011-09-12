@@ -419,16 +419,24 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            IModel model, IServiceScope scope, object[] clientIds, object[] fields = null)
+            IModel model, IServiceScope scope, dynamic clientIds, dynamic clientFields = null)
         {
             EnsureServiceMethodArgs(model, scope);
 
             string[] strFields = null;
-            if (fields != null)
+            if (clientFields != null)
             {
-                strFields = fields.Select(f => (string)f).ToArray();
+                strFields = new string[clientFields.Length];
+                for (int i = 0; i < strFields.Length; i++)
+                {
+                    strFields[i] = clientFields[i];
+                }
             }
-            var ids = clientIds.Select(id => (long)id).ToArray();
+            var ids = new long[clientIds.Length];
+            for (int i = 0; i < ids.Length; i++)
+            {
+                ids[i] = clientIds[i];
+            }
             return model.ReadInternal(scope, ids, strFields);
         }
 
@@ -450,13 +458,27 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         [ServiceMethod]
         public static void Delete(
-            IModel model, IServiceScope scope, object[] ids)
+            IModel model, IServiceScope scope, dynamic clientIDs)
         {
             EnsureServiceMethodArgs(model, scope);
-            var longIds = ids.Select(id => (long)id).ToArray();
-            model.DeleteInternal(scope, longIds);
-        }
 
+            long[] ids;
+
+            if (clientIDs is long)
+            {
+                ids = new long[] { clientIDs };
+            }
+            else
+            {
+                ids = new long[clientIDs.Length];
+                for (int i = 0; i < ids.Length; i++)
+                {
+                    ids[i] = clientIDs[i];
+                }
+            }
+
+            model.DeleteInternal(scope, ids);
+        }
 
 
         private static void EnsureServiceMethodArgs(IModel self, IServiceScope scope)

@@ -35,5 +35,6 @@ namespace ObjectServer.Data
         void LockTable(string tableName);
 
         IDbCommand CreateCommand(SqlString sql);
+        IDbTransaction BeginTransaction();
     }
 }

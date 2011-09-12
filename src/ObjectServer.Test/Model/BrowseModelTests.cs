@@ -18,7 +18,7 @@ namespace ObjectServer.Model.Test
             {
                 { "name", "master-obj" },
             };
-            var masterId = this.Service.Execute(this.SessionId, "test.master", "Create", masterPropBag);
+            var masterId = (long)this.Service.Execute(this.SessionId, "test.master", "Create", masterPropBag);
             var childPropBag = new Dictionary<string, object>()
             {
                 { "name", "child-obj" },
@@ -30,7 +30,7 @@ namespace ObjectServer.Model.Test
             dynamic dynamicChild = childModel.Browse(this.ServiceScope, childId);
             Assert.AreEqual("master-obj", dynamicChild.master.name);
 
-            dynamic masterModel = this.ServiceScope.GetResource("test.master");
+            IModel masterModel = (IModel)this.ServiceScope.GetResource("test.master");
             dynamic dynamicMaster = masterModel.Browse(this.ServiceScope, masterId);
             Assert.AreEqual(1, dynamicMaster.children.Length);
             Assert.AreEqual("child-obj", dynamicMaster.children[0].name);

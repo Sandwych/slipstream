@@ -119,9 +119,9 @@ namespace ObjectServer.Model.Test
             ClearAllModelData(model, "test.child");
             ClearAllModelData(model, "test.test_model");
 
-            ClearModel(this.ServiceScope, "test.child");
-            ClearModel(this.ServiceScope, "test.master");
-            ClearModel(this.ServiceScope, "test.test_model");
+            ClearModel("test.child");
+            ClearModel("test.master");
+            ClearModel("test.test_model");
         }
 
         private void ClearAllModelData(IModel model, string modelName)

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Configuration;
 
-namespace ObjectServer.TestServer
+namespace ObjectServer.DevServer
 {
     class Program
     {

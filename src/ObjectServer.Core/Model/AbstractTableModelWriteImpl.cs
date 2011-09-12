@@ -114,23 +114,104 @@ namespace ObjectServer.Model
             }
 
             //更新层次结构
-            //1. 从树中逻辑上删除 id 指向的节点，但不删除具体的记录，只是调整 _left 与 _right
-            //2. 逻辑上添加该节点，调整 _left 与 _right
+            //算法来自于：
+            //http://stackoverflow.com/questions/889527/mysql-move-node-in-nested-set
+            // 1.   Change positions of node ant all it's sub nodes into negative values, 
+            //      which are equal to current ones by module.
+            // 2.   Move all positions "up", which are more, that pos_right of current node.
+            // 3.   Move all positions "down", which are more, that pos_right of new parent node.
+            // 4.   Change positions of current node and all it's subnodes, 
+            //      so that it's now will be exactly "after" (or "down") of new parent node.
             if (isParentChanged && Hierarchy)
             {
-                var left = (long)existedRecord[LeftFieldName];
-                var right = (long)existedRecord[RightFieldName];
-                var width = right - left + 1;
+                var fields = new string[] { IDFieldName, LeftFieldName, RightFieldName };
+                var nodeLeft = (long)existedRecord[LeftFieldName];
+                var nodeRight = (long)existedRecord[RightFieldName];
+                var nodeWidth = nodeRight - nodeLeft + 1;
+                var newParentID = (long)userRecord[ParentFieldName];
+                var newParent = this.ReadInternal(scope, new long[] { newParentID }, fields)[0];
+                var newParentLeft = (long)newParent[LeftFieldName];
+                var newParentRight = (long)newParent[RightFieldName];
 
-                var sql1 = String.Format("update {0} set _right = _right - {1} where _right > {2}",
-                        this.quotedTableName, width, right);
-                scope.DBContext.Execute(SqlString.Parse(sql1));
+                scope.DBContext.LockTable(this.TableName);
 
-                var sql2 = String.Format("update {0} set _left = _left - {1} where _left > {2}",
-                        this.quotedTableName, width, right);
-                scope.DBContext.Execute(SqlString.Parse(sql2));
+                //# step 1: temporary "remove" moving node
+                //
+                //UPDATE `list_items`
+                //SET `pos_left` = 0-(`pos_left`), `pos_right` = 0-(`pos_right`)
+                //WHERE `pos_left` >= @node_pos_left AND `pos_right` <= @node_pos_right;
+                var sqlStr = String.Format(
+                    "update {0} set _left = 0 - _left, _right = 0 - _right " +
+                    "where _left >= {1} and _right <= {2}",
+                    this.quotedTableName, nodeLeft, nodeRight);
+                scope.DBContext.Execute(SqlString.Parse(sqlStr));
 
-                this.PostCreateOrWriteHierarchy(scope.DBContext, id, existedRecord);
+                //# step 2: decrease left and/or right position values of currently 'lower' items (and parents)
+                //
+                //UPDATE `list_items`
+                //SET `pos_left` = `pos_left` - @node_size
+                //WHERE `pos_left` > @node_pos_right;
+                //UPDATE `list_items`
+                //SET `pos_right` = `pos_right` - @node_size
+                //WHERE `pos_right` > @node_pos_right;
+                sqlStr = String.Format("update {0} set _left = _left - {1} where _left > {2}",
+                    this.quotedTableName, nodeWidth, nodeRight);
+                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+                sqlStr = String.Format("update {0} set _right = _right - {1} where _right > {2}",
+                    this.quotedTableName, nodeWidth, nodeRight);
+                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+
+                /* # step 3: increase left and/or right position values of future 'lower' items (and parents)
+                    UPDATE `list_items`
+                    SET `pos_left` = `pos_left` + @node_size
+                    WHERE `pos_left` >= IF(@parent_pos_right > @node_pos_right, 
+                        @parent_pos_right - @node_size, @parent_pos_right);
+                    UPDATE `list_items`
+                    SET `pos_right` = `pos_right` + @node_size
+                    WHERE `pos_right` >= IF(@parent_pos_right > @node_pos_right, 
+                        @parent_pos_right - @node_size, @parent_pos_right);
+                */
+
+                sqlStr = String.Format(
+                    "update {0} set _left = _left + {1} where _left >= " +
+                    "case when {2} > {3} then {4} - {5} else {6} end",
+                    this.quotedTableName, nodeWidth, newParentRight, 
+                    nodeRight, newParentRight, nodeWidth, newParentRight);
+                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+
+                sqlStr = String.Format(
+                    "update {0} set _right = _right + {1} where _right >= " +
+                    "case when {2} > {3} then {4} - {5} else {6} end",
+                    this.quotedTableName, nodeWidth, newParentRight, 
+                    nodeRight, newParentRight, nodeWidth, newParentRight);
+                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+                
+                /* # step 4: move node (ant it's subnodes) and update it's parent item id
+                    UPDATE `list_items`
+                    SET
+                        `pos_left` = 0-(`pos_left`)+
+                            IF(@parent_pos_right > @node_pos_right, 
+                                @parent_pos_right - @node_pos_right - 1, 
+                                @parent_pos_right - @node_pos_right - 1 + @node_size),
+                        `pos_right` = 0-(`pos_right`)+
+                            IF(@parent_pos_right > @node_pos_right, 
+                                @parent_pos_right - @node_pos_right - 1, 
+                                @parent_pos_right - @node_pos_right - 1 + @node_size)
+                    WHERE `pos_left` <= 0-@node_pos_left AND `pos_right` >= 0-@node_pos_right;
+                    UPDATE `list_items`
+                    SET `parent_item_id` = @parent_id
+                    WHERE `item_id` = @node_id;
+                */
+
+                sqlStr = String.Format(
+                    "update {0} set " +
+                    "_left = 0 - _left + case when {1} > {2} then {1} - {2} - 1 else {1} - {2} - 1 + {3} end, " +
+                    "_right = 0 - _right + case when {1} > {2} then {1} - {2} - 1 else {1} - {2} - 1 + {3} end " +
+                    "where _left <= 0 - {4} and _right >= 0 - {2} ",
+                    this.quotedTableName, newParentRight, nodeRight, nodeWidth, nodeLeft);
+                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+
+                //最后一步不需要执行了，之前已经更新过 parent
             }
 
             if (this.LogWriting)

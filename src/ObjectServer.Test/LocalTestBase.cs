@@ -101,32 +101,32 @@ namespace ObjectServer
         protected void ClearTestModelTable()
         {
             Debug.Assert(this.ServiceScope != null);
-            this.ClearModel(this.ServiceScope, "test.test_model");
+            this.ClearModel("test.test_model");
         }
 
 
         protected void ClearMasterAndChildTable()
         {
             Debug.Assert(this.ServiceScope != null);
-            this.ClearModel(this.ServiceScope, "test.child");
-            this.ClearModel(this.ServiceScope, "test.master");
+            this.ClearModel("test.child");
+            this.ClearModel("test.master");
         }
 
         protected void ClearManyToManyModels()
         {
             Debug.Assert(this.ServiceScope != null);
-            this.ClearModel(this.ServiceScope, "test.department_employee");
-            this.ClearModel(this.ServiceScope, "test.department");
-            this.ClearModel(this.ServiceScope, "test.employee");
+            this.ClearModel("test.department_employee");
+            this.ClearModel("test.department");
+            this.ClearModel("test.employee");
         }
 
-        protected void ClearModel(IServiceScope scope, string model)
+        protected void ClearModel(string model)
         {
-            dynamic res = scope.GetResource(model);
-            var ids = res.SearchInternal(scope);
+            var ids = (long[])this.Service.Execute(this.SessionId, model, "Search", null, null, 0, 0);
             if (ids.Length > 0)
             {
-                res.DeleteInternal(scope, ids);
+                var idsToDel = ids.Select(e => (object)e).ToArray();
+                this.Service.Execute(this.SessionId, model, "Delete", new object[] { idsToDel });
             }
 
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -19,15 +20,57 @@ namespace ObjectServer.Client.Agos.Windows
 {
     public partial class ListWindow : UserControl, IWindowAction
     {
-        private static Dictionary<string, Tuple<Type, string>> COLUMN_TYPE_MAPPING
-            = new Dictionary<string, Tuple<Type, string>>()
+        sealed class ManyToOneFieldConverter : IValueConverter
         {
-            {"Integer", new Tuple<Type, string>(typeof(DataGridTextColumn), "%") },
-            {"Chars", new Tuple<Type, string>(typeof(DataGridTextColumn), "%") },
-            {"Boolean", new Tuple<Type, string>(typeof(DataGridCheckBoxColumn), "%") },
-            {"DateTime", new Tuple<Type, string>(typeof(DataGridTextColumn), "%") },
-            {"ManyToOne", new Tuple<Type, string>(typeof(DataGridTextColumn), "%[1]") },
-            {"Enumeration", new Tuple<Type, string>(typeof(DataGridTextColumn), "%[1]") },
+            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                if (value != null)
+                {
+                    var objs = (object[])value;
+                    return objs[1];
+                }
+                else
+                {
+                    return value;
+                }
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        sealed class EnumFieldConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                if (value != null)
+                {
+                    var objs = (object[])value;
+                    return objs[1];
+                }
+                else
+                {
+                    return value;
+                }
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        private static Dictionary<string, Tuple<Type, IValueConverter>> COLUMN_TYPE_MAPPING
+            = new Dictionary<string, Tuple<Type, IValueConverter>>()
+        {
+            {"Integer", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"Chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"Boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
+            {"DateTime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"ManyToOne", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
+            {"Enumeration", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
 
             /*
             {"selection", typeof(DataGridTextColumn)},
@@ -116,8 +159,11 @@ namespace ObjectServer.Client.Agos.Windows
             var tuple = COLUMN_TYPE_MAPPING[fieldType];
             var col = Activator.CreateInstance(tuple.Item1) as DataGridBoundColumn;
             col.Header = fieldLabel;
-            var path = tuple.Item2.Replace("%", fieldName);
-            col.Binding = new System.Windows.Data.Binding(path);
+            col.Binding = new System.Windows.Data.Binding(fieldName);
+            if (tuple.Item2 != null)
+            {
+                col.Binding.Converter = tuple.Item2;
+            }
             this.gridList.Columns.Add(col);
 
         }

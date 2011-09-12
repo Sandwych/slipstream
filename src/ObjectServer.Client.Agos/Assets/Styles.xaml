@@ -14,7 +14,7 @@
 
     <!-- ******MAIN PAGE STYLES****** -->
 
-    <SolidColorBrush x:Key="HeaderBackgroundColorBrush" Color="#FF484848"/>
+    <SolidColorBrush x:Key="HeaderBackgroundColorBrush" Color="#FF336699"/>
 
     <Style x:Key="WelcomeText" TargetType="TextBlock">
         <Setter Property="Foreground" Value="#FF333333" />
@@ -116,7 +116,7 @@
     <!-- ******************************* -->
     <!-- Login Container Style -->
     <Style x:Key="ShortcutContainerStyle" TargetType="Border">
-        <Setter Property="Background" Value="#FF949290"/>
+        <Setter Property="Background" Value="#FFB4B2B0"/>
         <Setter Property="Margin" Value="0,0,0,0"/>
         <Setter Property="Height" Value="21"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
