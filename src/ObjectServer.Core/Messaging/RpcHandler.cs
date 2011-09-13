@@ -103,13 +103,13 @@ namespace ObjectServer
                 {
                     //TODO 优化，避免转换
                     var message = receiver.Recv();
-                    var result = DispatchJsonRpc(message);
+                    var result = DoJsonRpc(message);
                     receiver.Send(result);
                 }
             }
         }
 
-        private static byte[] DispatchJsonRpc(byte[] json)
+        private static byte[] DoJsonRpc(byte[] json)
         {
             Debug.Assert(json != null);
 
@@ -134,19 +134,21 @@ namespace ObjectServer
             {
                 result = method.Invoke(null, args);
             }
-            catch (ArgumentException)
-            {
-                error = JsonRpcError.RpcArgumentError;
-            }
-            catch (ValidationException vex)
-            {
-                error = new JsonRpcError(JsonRpcError.ValidationError.Code, "数据验证错误", vex.Fields);
-            }
             catch (FatalException fex)
             {
                 LoggerProvider.RpcLogger.Fatal("系统发生了致命错误", fex);
                 LoggerProvider.EnvironmentLogger.Fatal("系统发生了致命错误", fex);
                 throw fex; //接着抛出异常，让系统结束运行
+            }
+            catch (ArgumentException aex)
+            {
+                error = JsonRpcError.RpcArgumentError;
+                LoggerProvider.RpcLogger.Error("ArgumentException", aex);
+            }
+            catch (ValidationException vex)
+            {
+                error = JsonRpcError.ValidationError;
+                LoggerProvider.RpcLogger.Error("ValidationException", vex);
             }
             catch (System.Exception ex)
             {

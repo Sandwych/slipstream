@@ -35,8 +35,11 @@ namespace ObjectServer.DevServer
             Console.WriteLine("\n系统启动完毕，开始等待客户端请求。按[回车键]终止本程序");
             Console.ReadLine();
 
-            httpThread.Abort();
-            rpcThread.Abort();
+            Console.WriteLine("开始终止服务...");
+            httpThread.Join();
+            Console.WriteLine("HTTP 服务器线程已经停止");
+            rpcThread.Join();
+            Console.WriteLine("RPC 服务器线程已经停止");
 
             Console.WriteLine("服务器已经终止");
 
