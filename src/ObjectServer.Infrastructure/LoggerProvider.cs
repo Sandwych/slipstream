@@ -81,6 +81,11 @@ namespace ObjectServer
 
             CreateFileAppenders(cfg, layout);
 
+            if (cfg.LogToConsole)
+            {
+                CreateColoredConsoleAppenders(cfg, layout);
+            }
+
             var hierarchy = (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
 
             if (cfg.Debug)
@@ -93,6 +98,21 @@ namespace ObjectServer
             hierarchy.Root.Level = rootLevel;
 
             hierarchy.Configured = true;
+        }
+
+        private static void CreateColoredConsoleAppenders(Config cfg, PatternLayout layout)
+        {
+            //创建平台 appender
+            var platformFileAppender = CreateColoredConsoleAppender(layout);
+            AddAppender(EnvironmentLoggerName, platformFileAppender);
+
+            //创建网关 appender
+            var gatewayFileAppender = CreateColoredConsoleAppender(layout);
+            AddAppender(RpcLoggerName, gatewayFileAppender);
+
+            //创建业务 appender
+            var bizFileAppender = CreateColoredConsoleAppender(layout);
+            AddAppender(BizLoggerName, bizFileAppender);
         }
 
         private static void CreateFileAppenders(Config cfg, PatternLayout layout)

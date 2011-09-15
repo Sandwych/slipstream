@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.Diagnostics;
+using System.Threading;
 
 using Kayak;
 using Kayak.Http;
+
+using ObjectServer;
 
 namespace ObjectServer.Http
 {
@@ -16,14 +19,20 @@ namespace ObjectServer.Http
     /// </summary>
     public sealed class HttpServer : IDisposable
     {
-
+        private readonly ZMQ.Socket controllerSocket = new ZMQ.Socket(ZMQ.SocketType.SUB);
         private readonly string rpcReqUrl;
         private readonly IPEndPoint httpEndPoint;
-        private ZMQ.Socket zsocket;
+        private readonly ZMQ.Socket zsocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
+        private readonly KayakScheduler scheduler = new KayakScheduler(new SchedulerDelegate());
 
-        public HttpServer(string rpcHostUrl, int listenPort)
+        public HttpServer(string controllerUrl, string rpcHostUrl, int listenPort)
         {
             LoggerProvider.RpcLogger.Info("Starting HTTP Server...");
+
+            if (string.IsNullOrEmpty(controllerUrl))
+            {
+                throw new ArgumentNullException("controllerUrl");
+            }
 
             if (string.IsNullOrEmpty(rpcHostUrl))
             {
@@ -35,11 +44,13 @@ namespace ObjectServer.Http
                 throw new ArgumentOutOfRangeException("listenPort");
             }
 
+            controllerSocket.Connect(controllerUrl);
+            controllerSocket.Subscribe("STOP", Encoding.UTF8);
+
             this.httpEndPoint = new IPEndPoint(IPAddress.Any, listenPort);
 
             this.rpcReqUrl = rpcHostUrl;
             LoggerProvider.RpcLogger.Info("Connecting to MQ: [" + this.rpcReqUrl + "]");
-            this.zsocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
         }
 
         ~HttpServer()
@@ -56,8 +67,38 @@ namespace ObjectServer.Http
 
             this.zsocket.Connect(this.rpcReqUrl);
 
+            var threadProc = new ThreadStart(() =>
+            {
+                this.DoHttpServer();
+            });
+
+            var thread = new Thread(threadProc);
+            thread.Start();
+            this.WaitForStopCommand();
+            thread.Join();
+        }
+
+        private void WaitForStopCommand()
+        {
+
+            while (true)
+            {
+                var cmd = this.controllerSocket.Recv(Encoding.UTF8);
+
+                if (cmd == "STOP")
+                {
+                    LoggerProvider.RpcLogger.Info("'STOP' command received, try to stop the HTTP Server...");
+                    scheduler.Stop();
+                    break;
+                }
+            }
+
+            LoggerProvider.RpcLogger.Info("HTTP Server is stopped.");
+        }
+
+        private void DoHttpServer()
+        {
             LoggerProvider.RpcLogger.Info("Initializing Kayak HTTP Server...");
-            var scheduler = new KayakScheduler(new SchedulerDelegate());
             scheduler.Post(() =>
             {
                 KayakServer
@@ -78,7 +119,6 @@ namespace ObjectServer.Http
         {
             LoggerProvider.RpcLogger.Info("Disposing MQ...");
             this.zsocket.Dispose();
-            this.zsocket = null;
         }
 
         #endregion

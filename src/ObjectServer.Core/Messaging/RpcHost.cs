@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace ObjectServer
 {
@@ -36,15 +37,42 @@ namespace ObjectServer
             var hostUrl = this.RpcHostUrl;
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format(
-                "正在启动应用服务器 RPC 处理器线程：远程调用主机 URL=[{0}]，RPC 处理器数量 URL=[{1}]",
+                "Starting all RPC-Handler threads: RPC-Entrance URL=[{0}]，RPC-Hander URL=[{1}]",
                 hostUrl, workersUrl));
 
             //TODO 写个自己的 WorkerPool，允许跨进程，并且要受 Supervisor 的控制，能够体面终止
-            var pool =
-                new ZMQ.ZMQDevice.WorkerPool(
-                    hostUrl, workersUrl, RpcHandler.Start, (short)this.RpcHandlerMax);
+            using (var pool = new ZMQ.ZMQDevice.WorkerPool(hostUrl, workersUrl, RpcHandler.ProcessingLoop, (short)this.RpcHandlerMax))
+            {
+                Wait(pool);
+            }
+        }
 
-            Thread.Sleep(Timeout.Infinite);
+        private static void Wait(ZMQ.ZMQDevice.WorkerPool pool)
+        {
+            using (var subSocket = new ZMQ.Socket(ZMQ.SocketType.SUB))
+            {
+                var subAddress = Environment.Configuration.ControllerUrl;
+                subSocket.Connect(subAddress);
+                subSocket.Subscribe("STOP", Encoding.UTF8);
+                while (true)
+                {
+                    var cmd = subSocket.Recv(Encoding.UTF8);
+
+                    if (cmd == "STOP" && pool.IsRunning)
+                    {
+                        LoggerProvider.RpcLogger.Info("'STOP' command received, try to stop the WorkerPool...");
+                        pool.Stop();
+                        while (pool.IsRunning)
+                        {
+                            Thread.Sleep(100);
+                        }
+                        Debug.Assert(!pool.IsRunning);
+                        break;
+                    }
+                }
+
+                LoggerProvider.RpcLogger.Info("RPC Host is stopped.");
+            }
         }
     }
 }

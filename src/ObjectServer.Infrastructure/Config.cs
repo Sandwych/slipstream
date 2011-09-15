@@ -31,13 +31,15 @@ namespace ObjectServer
             var defaultLogPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "ObjectServer", "log");
-            this.LogPath = "d:\\logtest";
+            this.LogPath = defaultLogPath;
             this.LogLevel = "debug";
             this.LoggingSql = false;
+            this.LogToConsole = false;
 
             this.RpcHandlerMax = 5; //默认5个工人
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "inproc://rpc-entrance";
+            this.ControllerUrl = "inproc://controller";
             this.HttpListenPort = 9287;
 
             this.ModulePath = "Modules";
@@ -80,6 +82,9 @@ namespace ObjectServer
         [XmlElement("root-password", IsNullable = false)]
         public string RootPassword { get; set; }
 
+        [XmlElement("log-to-console")]
+        public bool LogToConsole { get; set; }
+
         [XmlElement("log-path")]
         public string LogPath { get; set; }
 
@@ -103,6 +108,9 @@ namespace ObjectServer
 
         [XmlElement("rpc-host-url")]
         public string RpcHostUrl { get; set; }
+
+        [XmlElement("controller-url")]
+        public string ControllerUrl { get; set; }
 
         [XmlElement("http-listen-port")]
         public int HttpListenPort { get; set; }
