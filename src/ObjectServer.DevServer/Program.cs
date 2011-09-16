@@ -11,14 +11,18 @@ namespace ObjectServer.DevServer
     {
         static int Main(string[] args)
         {
-            Console.WriteLine("ObjectServer.TestServer 测试用服务器\n");
+            Console.WriteLine("ObjectServer 开发服务器\n");
 
             Thread rpcThread;
             Thread httpThread;
+            var controller = new Messaging.Controller();
 
             try
             {
                 InitializeFramework();
+
+                controller = new Messaging.Controller();
+                controller.Start();
 
                 rpcThread = StartApplicationServer();
                 httpThread = StartHttpServer();
@@ -32,15 +36,16 @@ namespace ObjectServer.DevServer
                 return -1;
             }
 
-            Console.WriteLine("\n系统启动完毕，开始等待客户端请求。按[回车键]终止本程序");
-            Console.ReadLine();
+            Console.WriteLine("\n系统启动完毕，开始等待客户端请求...");
+            do
+            {
+                Console.WriteLine("按 'Q' 键终止服务");
+            } while (Char.ToUpperInvariant(Console.ReadKey(true).KeyChar) != 'Q');
 
-            Console.WriteLine("开始终止服务...");
-            httpThread.Join();
-            Console.WriteLine("HTTP 服务器线程已经停止");
-            rpcThread.Join();
-            Console.WriteLine("RPC 服务器线程已经停止");
+            Console.WriteLine("开始广播停止命令...");
+            controller.Broadcast("STOP");
 
+            controller.Dispose();
             Console.WriteLine("服务器已经终止");
 
             return 0;
@@ -69,6 +74,7 @@ namespace ObjectServer.DevServer
             var serverThread = new Thread(() =>
             {
                 using (var cs = new ObjectServer.Http.HttpServer(
+                    Environment.Configuration.ControllerUrl,
                     Environment.Configuration.RpcHostUrl,
                     Environment.Configuration.HttpListenPort))
                 {
@@ -96,7 +102,10 @@ namespace ObjectServer.DevServer
         {
             if (!Environment.Initialized)
             {
-                Environment.Initialize();
+                var cfg = new Config();
+                cfg.LogToConsole = true;
+
+                Environment.Initialize(cfg);
             }
         }
     }

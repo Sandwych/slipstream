@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading;
 
 using ZMQ;
 using ZMQ.ZMQExt;
@@ -21,6 +22,8 @@ namespace ObjectServer
     {
         private static Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
         private static IExportedService s_service = Environment.ExportedService;
+        private static bool running = false;
+        private static readonly object lockObj = new object();
 
         static RpcHandler()
         {
@@ -84,29 +87,74 @@ namespace ObjectServer
 
         #endregion
 
-        public static void Start()
+        public static void ProcessingLoop()
         {
             if (!Environment.Initialized)
             {
                 throw new InvalidOperationException("无法启动 PRC-Handler 工人线程，请先初始化框架");
             }
 
-            string rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
+            var controllerUrl = Environment.Configuration.ControllerUrl;
+            var rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
-            LoggerProvider.RpcLogger.Info(() => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
+            LoggerProvider.RpcLogger.Info(
+                () => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
 
+
+            using (var controller = new ZMQ.Socket(ZMQ.SocketType.SUB))
             using (var receiver = new ZMQ.Socket(ZMQ.SocketType.REP))
             {
+                controller.Connect(controllerUrl);
+                controller.Subscribe("STOP", Encoding.UTF8);
+                LoggerProvider.RpcLogger.Debug(
+                    () => string.Format("RpcHandler Thread/Process[{0}] connected to Controller URL[{1}]", id, controllerUrl));
+
                 receiver.Connect(rpcHandlerUrl);
-                LoggerProvider.RpcLogger.Debug(() => string.Format("RpcHandler Thread/Process[{0}] connected to URL[{1}]", id, rpcHandlerUrl));
-                while (true)
+                LoggerProvider.RpcLogger.Debug(
+                    () => string.Format("RpcHandler Thread/Process[{0}] connected to URL[{1}]", id, rpcHandlerUrl));
+
+                var items = new PollItem[2];
+                items[0] = controller.CreatePollItem(IOMultiPlex.POLLIN);
+                items[0].PollInHandler += new PollHandler(ControllerPollInHandler);
+
+                items[1] = receiver.CreatePollItem(IOMultiPlex.POLLIN);
+                items[1].PollInHandler += new PollHandler(ReceiverPollInHandler);
+
+                lock (lockObj)
                 {
-                    //TODO 优化，避免转换
-                    var message = receiver.Recv();
-                    var result = DoJsonRpc(message);
-                    receiver.Send(result);
+                    running = true;
+                }
+                //  Process messages from both sockets
+                while (running)
+                {
+                    Context.Poller(items, -1);
+                }
+
+                LoggerProvider.RpcLogger.Debug(
+                    () => string.Format("RpcHandler Thread/Process[{0}] is stopped", id));
+            }
+        }
+
+        private static void ControllerPollInHandler(Socket socket, IOMultiPlex revents)
+        {
+            var cmd = socket.Recv(Encoding.UTF8);
+
+            if (cmd == "STOP" && running)
+            {
+                LoggerProvider.RpcLogger.Info("'STOP' command received, try to stop all RPC-Handlers");
+                lock (lockObj)
+                {
+                    running = false;
                 }
             }
+        }
+
+        private static void ReceiverPollInHandler(Socket socket, IOMultiPlex revents)
+        {
+            //TODO 优化，避免转换
+            var message = socket.Recv();
+            var result = DoJsonRpc(message);
+            socket.Send(result);
         }
 
         private static byte[] DoJsonRpc(byte[] json)
