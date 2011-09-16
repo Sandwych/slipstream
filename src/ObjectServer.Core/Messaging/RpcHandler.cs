@@ -94,7 +94,7 @@ namespace ObjectServer
                 throw new InvalidOperationException("无法启动 PRC-Handler 工人线程，请先初始化框架");
             }
 
-            var controllerUrl = Environment.Configuration.ControllerUrl;
+            var controllerUrl = Environment.Configuration.CommanderUrl;
             var rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
             LoggerProvider.RpcLogger.Info(

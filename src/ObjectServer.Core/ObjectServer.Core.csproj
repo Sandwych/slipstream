@@ -137,7 +137,8 @@
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />
-    <Compile Include="Messaging\Controller.cs" />
+    <Compile Include="Messaging\AbstractWorker.cs" />
+    <Compile Include="Messaging\WorkerCommander.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Sql\OrderExpression.cs" />
     <Compile Include="Sql\ConstraintTranslator.cs" />
@@ -147,7 +148,7 @@
     <Compile Include="Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Json\JsonRpcError.cs" />
-    <Compile Include="Messaging\RpcHost.cs" />
+    <Compile Include="Messaging\RpcHostWorker.cs" />
     <Compile Include="Core\AttachmentModel.cs" />
     <Compile Include="Core\ModelAccessModel.cs" />
     <Compile Include="Core\OrganizationModel.cs" />

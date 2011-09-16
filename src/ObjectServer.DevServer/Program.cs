@@ -13,15 +13,15 @@ namespace ObjectServer.DevServer
         {
             Console.WriteLine("ObjectServer 开发服务器\n");
 
-            Thread rpcThread;
+            RpcHostWorker rpcThread;
             Thread httpThread;
-            var controller = new Messaging.Controller();
+            var controller = new Messaging.WorkerCommander();
 
             try
             {
                 InitializeFramework();
 
-                controller = new Messaging.Controller();
+                controller = new Messaging.WorkerCommander();
                 controller.Start();
 
                 rpcThread = StartApplicationServer();
@@ -52,19 +52,15 @@ namespace ObjectServer.DevServer
 
         }
 
-        private static Thread StartApplicationServer()
+        private static RpcHostWorker StartApplicationServer()
         {
             Console.WriteLine("应用服务器正在启动 ...");
 
-            var serverThread = new Thread(() =>
-            {
-                var cs = new RpcHost();
-                cs.Start();
-            });
-            serverThread.Start();
+            var rpcHostWorker = new RpcHostWorker();
+            rpcHostWorker.Start();
 
             Console.WriteLine("应用服务已经启动");
-            return serverThread;
+            return rpcHostWorker;
         }
 
         private static Thread StartHttpServer()
@@ -74,7 +70,7 @@ namespace ObjectServer.DevServer
             var serverThread = new Thread(() =>
             {
                 using (var cs = new ObjectServer.Http.HttpServer(
-                    Environment.Configuration.ControllerUrl,
+                    Environment.Configuration.CommanderUrl,
                     Environment.Configuration.RpcHostUrl,
                     Environment.Configuration.HttpListenPort))
                 {

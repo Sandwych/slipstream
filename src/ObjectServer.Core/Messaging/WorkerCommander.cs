@@ -8,14 +8,14 @@ using ZMQ;
 
 namespace ObjectServer.Messaging
 {
-    public sealed class Controller : IDisposable
+    public sealed class WorkerCommander : IDisposable
     {
         private readonly Socket socket = new Socket(SocketType.PUB);
         private bool started = false;
 
         public void Start()
         {
-            var address = Environment.Configuration.ControllerUrl;
+            var address = Environment.Configuration.CommanderUrl;
 
             this.socket.Bind(address);
             this.started = true;
