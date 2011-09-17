@@ -22,12 +22,6 @@
                 <Button Content="删除" MinWidth="75" Height="25" Name="buttonDelete" />
                 <Rectangle Width="15" />
                 <Button Content="查询" MinWidth="75" Height="25" Name="buttonQuery" Click="buttonQuery_Click" />
-                <Rectangle Width="15" />
-                <sdk:Label Content="开始序号："  VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                <TextBox Name="textOffset" Width="60" Text="0" VerticalAlignment="Center" />
-                <Rectangle Width="10" />
-                <sdk:Label Content="数量限制："  VerticalAlignment="Center" />
-                <TextBox Name="textLimit" Width="60" Text="500" VerticalAlignment="Center" />
             </StackPanel>
         </Border>
         <Rectangle Grid.Row="1" Height="1" Fill="#E0E0E0" ></Rectangle>
@@ -35,9 +29,9 @@
         <Border Grid.Row="2" Margin="0,0,0,0" Padding="5,5,5,5" Background="White">
 
             <StackPanel Orientation="Vertical" >
-                <TextBlock Text="查询条件" FontWeight="Bold" />
+                <TextBlock Grid.Column="0" Text="查询条件" FontWeight="Bold" VerticalAlignment="Center" />
 
-                <toolkit:Expander Margin="5">
+                <toolkit:Expander Name="expanderAdvancedConditions" Margin="5">
                     <toolkit:Expander.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="高级查询条件" FontSize="14"/>
@@ -49,6 +43,14 @@
                                 <TextBlock Text="Test Content 1"/>
                                 <TextBlock Text="Test Content 2"/>
                                 <TextBlock Text="Test Content 3"/>
+
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <sdk:Label Content="开始序号："  VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                                    <TextBox Name="textOffset" Width="60" Text="0" VerticalAlignment="Center" />
+                                    <Rectangle Width="10" />
+                                    <sdk:Label Content="数量限制："  VerticalAlignment="Center" />
+                                    <TextBox Name="textLimit" Width="60" Text="500" VerticalAlignment="Center" />
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </toolkit:Expander.ContentTemplate>

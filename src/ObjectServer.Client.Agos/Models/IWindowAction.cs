@@ -13,8 +13,6 @@ namespace ObjectServer.Client.Agos.Models
 {
     public interface IWindowAction
     {
-        void Load();
-
-        long ActionID { get; set; }
+        long ActionID { get; }
     }
 }

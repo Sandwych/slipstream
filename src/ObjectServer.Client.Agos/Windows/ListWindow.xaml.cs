@@ -72,19 +72,10 @@ namespace ObjectServer.Client.Agos.Windows
             {"DateTime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"ManyToOne", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
             {"Enumeration", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
-
-            /*
-            {"selection", typeof(DataGridTextColumn)},
-            {"Text", typeof(DataGridTextColumn)},
-            
-            {"datetime", typeof(DataGridTextColumn)},
-            {"date", typeof(DataGridTextColumn)},
-            {"float", typeof(DataGridTextColumn)},
-            {"reference", typeof(DataGridTextColumn)},
-            {"many2one", typeof(DataGridTextColumn)},
-             */
         };
 
+        private IDictionary<string, object> viewRecord;
+        private IDictionary<string, object> actionRecord;
         private readonly IList<string> fields = new List<string>();
         private string modelName;
 
@@ -95,44 +86,44 @@ namespace ObjectServer.Client.Agos.Windows
             InitializeComponent();
         }
 
-        #region IWindowAction Members
+        public ListWindow(long actionID)
+        {
+            this.ActionID = actionID;
 
-        public long ActionID { get; set; }
+            this.Init();
 
-        public void Load()
+            this.InitializeComponent();
+        }
+
+        private void Init()
         {
             var app = (App)Application.Current;
             var actionIds = new long[] { this.ActionID };
             app.ClientService.ReadModel("core.action_window", actionIds, null, actionRecords =>
             {
+                this.actionRecord = actionRecords[0];
                 var view = (object[])actionRecords[0]["view"];
                 var viewIds = new long[] { (long)view[0] };
                 app.ClientService.ReadModel("core.view", viewIds, null, viewRecords =>
                 {
-                    this.LoadInternal(actionRecords[0], viewRecords[0]);
+                    this.viewRecord = viewRecords[0];
+                    this.LoadInternal();
                 });
             });
         }
 
-        private void LoadInternal(IDictionary<string, object> actionRecord, IDictionary<string, object> viewRecord)
-        {
-            var app = (App)Application.Current;
+        #region IWindowAction Members
 
-            var layout = (string)viewRecord["layout"];
-            var layoutDoc = XDocument.Parse(layout);
-            this.modelName = (string)actionRecord["model"];
+        public long ActionID { get; private set; }
 
-            this.InitializeColumns(layoutDoc);
+        #endregion
 
-            this.LoadRecords();
-        }
-
-        private void LoadRecords()
+        private void LoadData()
         {
             var app = (App)Application.Current;
             //加载数据
-            var offset = long.Parse(this.textOffset.Text);
-            var limit = long.Parse(this.textLimit.Text);
+            var offset = 0;// long.Parse(this.textOffset.Text);
+            var limit = 500;// long.Parse(this.textLimit.Text);
 
             app.ClientService.SearchModel(this.modelName, null, null, offset, limit, ids =>
             {
@@ -143,6 +134,19 @@ namespace ObjectServer.Client.Agos.Windows
                     this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records, typeid, fields.ToArray());
                 });
             });
+        }
+
+        private void LoadInternal()
+        {
+            var app = (App)Application.Current;
+
+            var layout = (string)this.viewRecord["layout"];
+            var layoutDoc = XDocument.Parse(layout);
+            this.modelName = (string)this.actionRecord["model"];
+
+            this.InitializeColumns(layoutDoc);
+
+            this.LoadData();
         }
 
         private void InitializeColumns(XDocument layoutDoc)
@@ -162,7 +166,6 @@ namespace ObjectServer.Client.Agos.Windows
             });
         }
 
-        #endregion
 
         private void AddColumn(string fieldName, string fieldType, string fieldLabel)
         {
@@ -182,7 +185,7 @@ namespace ObjectServer.Client.Agos.Windows
         private void buttonQuery_Click(object sender, RoutedEventArgs e)
         {
             Debug.Assert(this.ActionID > 0);
-            this.LoadRecords();
+            this.LoadData();
         }
 
     }
