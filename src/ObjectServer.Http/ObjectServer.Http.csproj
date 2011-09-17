@@ -37,9 +37,6 @@
     <Reference Include="clrzmq-ext">
       <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
     </Reference>
-    <Reference Include="HttpMachine">
-      <HintPath>..\..\lib\Kayak\HttpMachine.dll</HintPath>
-    </Reference>
     <Reference Include="Kayak">
       <HintPath>..\..\lib\Kayak\Kayak.dll</HintPath>
     </Reference>
@@ -47,7 +44,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>

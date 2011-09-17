@@ -36,11 +36,6 @@ namespace ObjectServer.Http
         public void OnRequest(HttpRequestHead request, IDataProducer requestBody,
             IHttpResponseDelegate response)
         {
-            if (requestBody == null)
-            {
-                throw new ArgumentNullException("requestBody");
-            }
-
             if (response == null)
             {
                 throw new ArgumentNullException("response");
