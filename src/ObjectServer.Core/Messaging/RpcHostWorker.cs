@@ -74,7 +74,8 @@ namespace ObjectServer
                 if (cmd == "STOP" && pool.IsRunning)
                 {
 
-                    LoggerProvider.RpcLogger.Info("'STOP' command received, try to stop the WorkerPool...");
+                    LoggerProvider.EnvironmentLogger.Info(
+                        "'STOP' command received, try to stop the WorkerPool...");
                     StopWorkerPool(pool);
                     break;
                 }
@@ -83,11 +84,15 @@ namespace ObjectServer
 
         private static void StopWorkerPool(ZMQ.ZMQDevice.WorkerPool pool)
         {
+            Debug.Assert(pool != null);
             Debug.Assert(pool.IsRunning);
+
             pool.Stop();
+
+            //等待 WorkerPool 停止
             while (pool.IsRunning)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(20);
             }
 
             Debug.Assert(!pool.IsRunning);

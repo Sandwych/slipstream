@@ -13,18 +13,17 @@ namespace ObjectServer.Daemon
         {
             Console.WriteLine("ObjectServer 开发服务器\n");
 
-            RpcHostWorker rpcThread;
+            RpcHostWorker rpcHostWorker;
             Thread httpThread;
-            var controller = new Messaging.WorkerCommander();
+            var commander = new Messaging.WorkerCommander();
 
             try
             {
                 InitializeFramework();
 
-                controller = new Messaging.WorkerCommander();
-                controller.Start();
+                commander.Start();
 
-                rpcThread = StartApplicationServer();
+                rpcHostWorker = StartApplicationServer();
                 httpThread = StartHttpServer();
             }
             catch (Exception ex)
@@ -43,9 +42,9 @@ namespace ObjectServer.Daemon
             } while (Char.ToUpperInvariant(Console.ReadKey(true).KeyChar) != 'Q');
 
             Console.WriteLine("开始广播停止命令...");
-            controller.Broadcast("STOP");
+            commander.StopAll();
 
-            controller.Dispose();
+            commander.Dispose();
             Console.WriteLine("服务器已经终止");
 
             return 0;

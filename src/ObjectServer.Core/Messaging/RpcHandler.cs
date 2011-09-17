@@ -97,7 +97,7 @@ namespace ObjectServer
             var controllerUrl = Environment.Configuration.CommanderUrl;
             var rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
-            LoggerProvider.RpcLogger.Info(
+            LoggerProvider.EnvironmentLogger.Info(
                 () => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
 
 
@@ -106,12 +106,10 @@ namespace ObjectServer
             {
                 controller.Connect(controllerUrl);
                 controller.Subscribe("STOP", Encoding.UTF8);
-                LoggerProvider.RpcLogger.Debug(
-                    () => string.Format("RpcHandler Thread/Process[{0}] connected to Controller URL[{1}]", id, controllerUrl));
+                LoggerProvider.EnvironmentLogger.Debug(
+                    () => string.Format("RpcHandler Thread/Process[{0}] connected to Commander URL[{1}]", id, controllerUrl));
 
                 receiver.Connect(rpcHandlerUrl);
-                LoggerProvider.RpcLogger.Debug(
-                    () => string.Format("RpcHandler Thread/Process[{0}] connected to URL[{1}]", id, rpcHandlerUrl));
 
                 var items = new PollItem[2];
                 items[0] = controller.CreatePollItem(IOMultiPlex.POLLIN);
@@ -124,13 +122,14 @@ namespace ObjectServer
                 {
                     running = true;
                 }
+
                 //  Process messages from both sockets
                 while (running)
                 {
                     Context.Poller(items, -1);
                 }
 
-                LoggerProvider.RpcLogger.Debug(
+                LoggerProvider.EnvironmentLogger.Debug(
                     () => string.Format("RpcHandler Thread/Process[{0}] is stopped", id));
             }
         }
@@ -141,7 +140,7 @@ namespace ObjectServer
 
             if (cmd == "STOP" && running)
             {
-                LoggerProvider.RpcLogger.Info("'STOP' command received, try to stop all RPC-Handlers");
+                LoggerProvider.EnvironmentLogger.Info("The 'STOP' command received, try to stop all RPC-Handlers");
                 lock (lockObj)
                 {
                     running = false;
@@ -184,24 +183,23 @@ namespace ObjectServer
             }
             catch (FatalException fex)
             {
-                LoggerProvider.RpcLogger.Fatal("系统发生了致命错误", fex);
                 LoggerProvider.EnvironmentLogger.Fatal("系统发生了致命错误", fex);
                 throw fex; //接着抛出异常，让系统结束运行
             }
             catch (ArgumentException aex)
             {
                 error = JsonRpcError.RpcArgumentError;
-                LoggerProvider.RpcLogger.Error("ArgumentException", aex);
+                LoggerProvider.EnvironmentLogger.Error("ArgumentException", aex);
             }
             catch (ValidationException vex)
             {
                 error = JsonRpcError.ValidationError;
-                LoggerProvider.RpcLogger.Error("ValidationException", vex);
+                LoggerProvider.EnvironmentLogger.Error("ValidationException", vex);
             }
             catch (System.Exception ex)
             {
                 error = JsonRpcError.ServerInternalError;
-                LoggerProvider.RpcLogger.Error("RPCHandler Error", ex);
+                LoggerProvider.EnvironmentLogger.Error("RPCHandler Error", ex);
             }
 
             var jresponse = new JsonRpcResponse()

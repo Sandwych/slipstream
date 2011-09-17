@@ -21,12 +21,12 @@ namespace ObjectServer.Messaging
             this.started = true;
         }
 
-        public void Stop()
+        public void StopAll()
         {
-            if (started)
+            if (this.started)
             {
                 this.Broadcast("STOP");
-                this.socket.Dispose();
+                this.started = false;
             }
         }
 
@@ -39,13 +39,15 @@ namespace ObjectServer.Messaging
                 throw new ArgumentNullException("command");
             }
 
+            LoggerProvider.EnvironmentLogger.Debug(
+                () => String.Format("Broadcasting command: [{0}]", command));
+
             this.socket.Send(command, Encoding.UTF8);
         }
 
         public void Dispose()
         {
-
-            this.Stop();
+            this.StopAll();
         }
     }
 }
