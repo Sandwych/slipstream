@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.SilverlightCli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Client.Agos", "ObjectServer.Client.Agos\ObjectServer.Client.Agos.csproj", "{DB5364B7-F0EF-4FF0-98DB-FEF369B93933}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Server", "ObjectServer.Server\ObjectServer.Server.csproj", "{82ACCEA7-B454-46D8-B4F8-D475AE8722A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Win32Service", "ObjectServer.Server\ObjectServer.Win32Service.csproj", "{82ACCEA7-B454-46D8-B4F8-D475AE8722A0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{58A5735F-0E7F-4D76-B452-D6413A60932B}"
 EndProject

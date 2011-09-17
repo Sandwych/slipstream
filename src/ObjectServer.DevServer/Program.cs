@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Configuration;
 
-namespace ObjectServer.DevServer
+namespace ObjectServer.Daemon
 {
-    class Program
+    class DevServerProgram
     {
         static int Main(string[] args)
         {

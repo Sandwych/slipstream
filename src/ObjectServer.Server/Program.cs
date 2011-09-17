@@ -4,9 +4,9 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 
-namespace ObjectServer.Server
+namespace ObjectServer.Daemon
 {
-    static class Program
+    static class Win32ServiceProgram
     {
         /// <summary>
         /// The main entry point for the application.

@@ -8,8 +8,8 @@
     <ProjectGuid>{82ACCEA7-B454-46D8-B4F8-D475AE8722A0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectServer.Server</RootNamespace>
-    <AssemblyName>objsvc</AssemblyName>
+    <RootNamespace>ObjectServer.Daemon</RootNamespace>
+    <AssemblyName>ObjectServer.Win32Service</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
