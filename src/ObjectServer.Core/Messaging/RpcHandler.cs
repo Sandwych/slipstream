@@ -179,7 +179,12 @@ namespace ObjectServer
             //这里只捕获可控的异常
             try
             {
+                var startTime = Stopwatch.GetTimestamp();
                 result = method.Invoke(null, args);
+                var endTime = Stopwatch.GetTimestamp();
+                var costTime = endTime - startTime;
+                LoggerProvider.RpcLogger.Debug(
+                    () => String.Format("RPC cost time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
             }
             catch (FatalException fex)
             {

@@ -79,7 +79,7 @@ namespace ObjectServer.Client.Agos {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ObjectServer 客户端.
+        ///   Looks up a localized string similar to ObjectServer（双卡双待 OpenERP .NET 山寨威力加强版）.
         /// </summary>
         public static string ApplicationName {
             get {

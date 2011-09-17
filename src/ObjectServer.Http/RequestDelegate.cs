@@ -12,6 +12,8 @@ namespace ObjectServer.Http
 {
     internal class RequestDelegate : IHttpRequestDelegate
     {
+        private const string JsonRpcPath = "/jsonrpc";
+
         private readonly ZMQ.Socket sender;
 
         public const string CrossDomainText =
@@ -20,9 +22,25 @@ namespace ObjectServer.Http
             "<allow-access-from domain=\"*\" />" +
             "</cross-domain-policy>";
 
-        public static readonly byte[] CrossDomainContent = 
+        public static readonly byte[] CrossDomainContent =
             Encoding.UTF8.GetBytes(CrossDomainText);
-        public static readonly string CrossDomainContentLength = CrossDomainContent.Length.ToString();
+        public static readonly string CrossDomainContentLength =
+            CrossDomainContent.Length.ToString();
+
+        private static readonly HttpResponseHead CrossDomainResponseHead =
+            new HttpResponseHead()
+        {
+            Status = "200 OK",
+            Headers = new Dictionary<string, string>()
+            {
+                { "Content-Type", "text/xml" },
+                { "Content-Length", CrossDomainContentLength },
+            },
+        };
+
+        private static readonly IDataProducer CrossDoaminResponseBody =
+            new BufferedProducer(CrossDomainContent);
+
 
         public RequestDelegate(ZMQ.Socket zsocket)
         {
@@ -41,86 +59,97 @@ namespace ObjectServer.Http
                 throw new ArgumentNullException("response");
             }
 
-            HttpResponseHead headers;
-            IDataProducer body = null;
+            HttpResponseHead head;
 
             if (request.Uri == "/crossdomain.xml")
             {
-                headers = new HttpResponseHead()
-                {
-                    Status = "200 OK",
-                    Headers = new Dictionary<string, string>() 
-                    {
-                        { "Content-Type", "text/xml" },
-                        { "Content-Length", CrossDomainContentLength },
-                    }
-                };
-                body = new BufferedProducer(CrossDomainContent);
-                response.OnResponse(headers, body);
+                response.OnResponse(CrossDomainResponseHead, CrossDoaminResponseBody);
             }
-            else if (request.Uri == "/jsonrpc")
+            else if (request.Uri == JsonRpcPath)
             {
-                requestBody.Connect(new BufferedConsumer(bufferedBody =>
-                {
-                    LoggerProvider.RpcLogger.Debug(() =>
-                    {
-                        var reqStr = Encoding.UTF8.GetString(bufferedBody);
-                        return string.Format("客户端请求的 JSON=[{0}]", reqStr);
-                    });
-
-                    var jresponse = this.CallJsonRpc(bufferedBody);
-
-                    LoggerProvider.RpcLogger.Debug(() =>
-                    {
-                        var repStr = Encoding.UTF8.GetString(jresponse);
-                        return string.Format("RPC 返回的 JSON=[{0}]", repStr);
-                    });
-
-                    headers = new HttpResponseHead()
-                    {
-                        Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
-                        {
-                            { "Content-Type", "text/javascript" },
-                            { "Content-Length", jresponse.Length.ToString() },
-                            { "Connection", "close" }
-                        }
-                    };
-                    response.OnResponse(headers, new BufferedProducer(jresponse));
-                },
-                error =>
-                {
-                    // XXX
-                    // uh oh, what happens?
-                }));
+                head = this.HandleJsonRpcRequest(requestBody, response);
             }
             else
             {
-                var responseBody =
-                    "The resource you requested ('" + request.Uri + "') could not be found.";
-                headers = new HttpResponseHead()
-                {
-                    Status = "404 Not Found",
-                    Headers = new Dictionary<string, string>()
+                head = HandleUnknownRequest(ref request, response);
+            }
+
+        }
+
+        private static HttpResponseHead HandleUnknownRequest(ref HttpRequestHead request, IHttpResponseDelegate response)
+        {
+            HttpResponseHead head;
+            var responseBody =
+                "The resource you requested ('" + request.Uri + "') could not be found.";
+            head = new HttpResponseHead()
+            {
+                Status = "404 Not Found",
+                Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", responseBody.Length.ToString() }
                     }
+            };
+            var body404 = new BufferedProducer(responseBody);
+
+            response.OnResponse(head, body404);
+            return head;
+        }
+
+        private HttpResponseHead HandleJsonRpcRequest(IDataProducer requestBody, IHttpResponseDelegate response)
+        {
+            HttpResponseHead head = new HttpResponseHead();
+            requestBody.Connect(new BufferedConsumer(bufferedBody =>
+            {
+                LoggerProvider.RpcLogger.Debug(() =>
+                {
+                    var reqStr = Encoding.UTF8.GetString(bufferedBody);
+                    return string.Format("客户端请求的 JSON=[{0}]", reqStr);
+                });
+
+                var jresponse = this.CallJsonRpc(bufferedBody);
+
+                LoggerProvider.RpcLogger.Debug(() =>
+                {
+                    var repStr = Encoding.UTF8.GetString(jresponse);
+                    return string.Format("RPC 返回的 JSON=[{0}]", repStr);
+                });
+
+                head.Status = "200 OK";
+                head.Headers = new Dictionary<string, string>() 
+                {
+                    { "Content-Type", "text/javascript" },
+                    { "Content-Length", jresponse.Length.ToString() },
+                    { "Connection", "close" }
                 };
-                var body404 = new BufferedProducer(responseBody);
 
-                response.OnResponse(headers, body404);
-            }
+                response.OnResponse(head, new BufferedProducer(jresponse));
+            },
+            error =>
+            {
+                LoggerProvider.EnvironmentLogger.Error(error);
+                // XXX
+                // uh oh, what happens?
+            }));
 
+            return head;
         }
 
         private byte[] CallJsonRpc(byte[] jrequest)
         {
             Debug.Assert(jrequest != null);
 
-            //TODO Dispose
+            var startTime = Stopwatch.GetTimestamp();
+
             this.sender.Send(jrequest);
             var rep = this.sender.Recv();
+
+            var endTime = Stopwatch.GetTimestamp();
+            var costTime = endTime - startTime;
+
+            LoggerProvider.RpcLogger.Debug(
+                () => String.Format("ZMQ RPC cost time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
+
             return rep;
         }
     }

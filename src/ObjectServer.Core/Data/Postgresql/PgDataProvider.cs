@@ -34,7 +34,7 @@ namespace ObjectServer.Data.Postgresql
 
         public string[] ListDatabases()
         {
-            using (var ctx = new PgDBContext())
+            using (var ctx = this.CreateDataContext())
             {
                 ctx.Open();
 
@@ -91,7 +91,7 @@ select datname from pg_database
                   DataProvider.Dialect.QuoteForSchemaName(dbName));
 
             Npgsql.NpgsqlConnection.ClearAllPools();
-            using (var conn = new PgDBContext())
+            using (var conn = this.CreateDataContext())
             {
                 conn.Open();
                 conn.Execute(sql);

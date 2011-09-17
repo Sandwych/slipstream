@@ -12,6 +12,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
+using System.Diagnostics;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;
@@ -85,18 +86,23 @@ namespace ObjectServer.Client.Agos.Windows
         };
 
         private readonly IList<string> fields = new List<string>();
+        private string modelName;
 
         public ListWindow()
         {
+            this.ActionID = -1;
+
             InitializeComponent();
         }
 
         #region IWindowAction Members
 
-        public void Load(long actionId)
+        public long ActionID { get; set; }
+
+        public void Load()
         {
             var app = (App)Application.Current;
-            var actionIds = new long[] { actionId };
+            var actionIds = new long[] { this.ActionID };
             app.ClientService.ReadModel("core.action_window", actionIds, null, actionRecords =>
             {
                 var view = (object[])actionRecords[0]["view"];
@@ -114,17 +120,23 @@ namespace ObjectServer.Client.Agos.Windows
 
             var layout = (string)viewRecord["layout"];
             var layoutDoc = XDocument.Parse(layout);
-            var modelName = (string)actionRecord["model"];
+            this.modelName = (string)actionRecord["model"];
 
-            this.InitializeColumns(app, layoutDoc, modelName);
+            this.InitializeColumns(layoutDoc);
+
+            this.LoadRecords();
         }
 
-        private void LoadRecords(App app, string modelName)
+        private void LoadRecords()
         {
+            var app = (App)Application.Current;
             //加载数据
-            app.ClientService.SearchModel(modelName, null, null, 0, 80, ids =>
+            var offset = long.Parse(this.textOffset.Text);
+            var limit = long.Parse(this.textLimit.Text);
+
+            app.ClientService.SearchModel(this.modelName, null, null, offset, limit, ids =>
             {
-                app.ClientService.ReadModel(modelName, ids, this.fields, records =>
+                app.ClientService.ReadModel(this.modelName, ids, this.fields, records =>
                 {
                     //我们需要一个唯一的字符串型 ID
                     var typeid = Guid.NewGuid().ToString();
@@ -133,9 +145,10 @@ namespace ObjectServer.Client.Agos.Windows
             });
         }
 
-        private void InitializeColumns(App app, XDocument layoutDoc, string modelName)
+        private void InitializeColumns(XDocument layoutDoc)
         {
-            var args = new object[] { modelName };
+            var app = (App)Application.Current;
+            var args = new object[] { this.modelName };
             app.ClientService.Execute("core.model", "GetFields", args, result =>
             {
                 var fields = ((object[])result).Select(r => (Dictionary<string, object>)r);
@@ -146,8 +159,6 @@ namespace ObjectServer.Client.Agos.Windows
                     var metaField = fields.Single(i => (string)i["name"] == fieldName);
                     this.AddColumn(fieldName, (string)metaField["type"], (string)metaField["label"]);
                 }
-
-                this.LoadRecords(app, modelName);
             });
         }
 
@@ -166,6 +177,12 @@ namespace ObjectServer.Client.Agos.Windows
             }
             this.gridList.Columns.Add(col);
 
+        }
+
+        private void buttonQuery_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.Assert(this.ActionID > 0);
+            this.LoadRecords();
         }
 
     }

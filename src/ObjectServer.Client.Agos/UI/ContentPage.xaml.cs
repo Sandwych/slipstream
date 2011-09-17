@@ -70,7 +70,8 @@
             this.TabContainer.Items.Add(tabPage);
             this.TabContainer.SelectedItem = tabPage;
 
-            actWin.Load(menu.Action.Item2);
+            actWin.ActionID = menu.Action.Item2;
+            actWin.Load();
         }
 
 
