@@ -119,13 +119,13 @@ namespace ObjectServer.Model
         }
 
         public long CountInternal(
-            IServiceScope ctx, object[] constraints = null)
+            IServiceContext ctx, object[] constraints = null)
         {
             throw new NotSupportedException();
         }
 
         public long[] SearchInternal(
-            IServiceScope ctx, object[] constraints = null,
+            IServiceContext ctx, object[] constraints = null,
             OrderExpression[] orders = null, long offset = 0, long limit = 0)
         {
             throw new NotSupportedException();
@@ -133,29 +133,29 @@ namespace ObjectServer.Model
         }
 
         public long CreateInternal(
-            IServiceScope ctx, IDictionary<string, object> propertyBag)
+            IServiceContext ctx, IDictionary<string, object> propertyBag)
         {
             throw new NotSupportedException();
         }
 
         public void WriteInternal(
-            IServiceScope scope, long id, IDictionary<string, object> record)
+            IServiceContext scope, long id, IDictionary<string, object> record)
         {
             throw new NotSupportedException();
         }
 
         public Dictionary<string, object>[] ReadInternal(
-            IServiceScope scope, long[] ids, string[] fields = null)
+            IServiceContext scope, long[] ids, string[] fields = null)
         {
             throw new NotSupportedException();
         }
 
-        public void DeleteInternal(IServiceScope scope, long[] ids)
+        public void DeleteInternal(IServiceContext scope, long[] ids)
         {
             throw new NotSupportedException();
         }
 
-        public dynamic Browse(IServiceScope scope, long id)
+        public dynamic Browse(IServiceContext scope, long id)
         {
             throw new NotSupportedException();
         }

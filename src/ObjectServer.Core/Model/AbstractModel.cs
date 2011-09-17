@@ -388,7 +388,7 @@ insert into core_field(module, model, name, relation, label, type, help)
         #region Service Methods
 
         [ServiceMethod]
-        public static long Count(IModel model, IServiceScope scope, object[] constraints = null)
+        public static long Count(IModel model, IServiceContext scope, object[] constraints = null)
         {
             EnsureServiceMethodArgs(model, scope);
 
@@ -397,7 +397,7 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         [ServiceMethod]
         public static long[] Search(
-            IModel model, IServiceScope scope, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
+            IModel model, IServiceContext scope, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
         {
             EnsureServiceMethodArgs(model, scope);
 
@@ -419,7 +419,7 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            IModel model, IServiceScope scope, dynamic clientIds, dynamic clientFields = null)
+            IModel model, IServiceContext scope, dynamic clientIds, dynamic clientFields = null)
         {
             EnsureServiceMethodArgs(model, scope);
 
@@ -442,7 +442,7 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         [ServiceMethod]
         public static long Create(
-            IModel model, IServiceScope scope, IDictionary<string, object> propertyBag)
+            IModel model, IServiceContext scope, IDictionary<string, object> propertyBag)
         {
             EnsureServiceMethodArgs(model, scope);
             return model.CreateInternal(scope, propertyBag);
@@ -450,7 +450,7 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         [ServiceMethod]
         public static void Write(
-           IModel model, IServiceScope scope, object id, IDictionary<string, object> userRecord)
+           IModel model, IServiceContext scope, object id, IDictionary<string, object> userRecord)
         {
             EnsureServiceMethodArgs(model, scope);
             model.WriteInternal(scope, (long)id, userRecord);
@@ -458,7 +458,7 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         [ServiceMethod]
         public static void Delete(
-            IModel model, IServiceScope scope, dynamic clientIDs)
+            IModel model, IServiceContext scope, dynamic clientIDs)
         {
             EnsureServiceMethodArgs(model, scope);
 
@@ -481,7 +481,7 @@ insert into core_field(module, model, name, relation, label, type, help)
         }
 
 
-        private static void EnsureServiceMethodArgs(IModel self, IServiceScope scope)
+        private static void EnsureServiceMethodArgs(IModel self, IServiceContext scope)
         {
             if (self == null)
             {
@@ -515,17 +515,17 @@ insert into core_field(module, model, name, relation, label, type, help)
 
         public virtual NameGetter NameGetter { get; protected set; }
 
-        public abstract long CountInternal(IServiceScope scope, object[] constraints = null);
+        public abstract long CountInternal(IServiceContext scope, object[] constraints = null);
         public abstract long[] SearchInternal(
-            IServiceScope scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
+            IServiceContext scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(
-            IServiceScope scope, IDictionary<string, object> propertyBag);
+            IServiceContext scope, IDictionary<string, object> propertyBag);
         public abstract void WriteInternal(
-            IServiceScope scope, long id, IDictionary<string, object> record);
+            IServiceContext scope, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
-            IServiceScope scope, long[] ids, string[] requiredFields = null);
-        public abstract void DeleteInternal(IServiceScope scope, long[] ids);
-        public abstract dynamic Browse(IServiceScope scope, long id);
+            IServiceContext scope, long[] ids, string[] requiredFields = null);
+        public abstract void DeleteInternal(IServiceContext scope, long[] ids);
+        public abstract dynamic Browse(IServiceContext scope, long id);
 
         #endregion
     }

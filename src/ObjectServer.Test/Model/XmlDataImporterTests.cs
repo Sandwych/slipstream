@@ -22,35 +22,37 @@ namespace ObjectServer.Model.Test
             this.ClearTestModelTable();
 
             //删除所有记录
-            dynamic testObjectModel = this.ServiceScope.GetResource("test.test_model");
+            dynamic testObjectModel = this.ServiceContext.GetResource("test.test_model");
 
             var constraints = new object[][] { new object[] { "model", "=", "test.test_model" } };
 
             //第一遍更新，应该是插入3条，更新一条，总记录数 3 条
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(TestModelXmlResourcePath))
+            using (var ctx = new ServiceContext(this.SessionId))
             {
-                var importer = new XmlDataImporter(this.ServiceScope, "test");
+                var importer = new XmlDataImporter(ctx, "test");
 
                 importer.Import(xmlStream);
 
-                var ids = testObjectModel.SearchInternal(this.ServiceScope);
+                var ids = testObjectModel.SearchInternal(this.ServiceContext);
                 Assert.AreEqual(3, ids.Length);
 
                 var domain1 = new object[][] { new object[] { "name", "=", "name_changed" } };
-                ids = testObjectModel.SearchInternal(this.ServiceScope, domain1);
+                ids = testObjectModel.SearchInternal(this.ServiceContext, domain1);
                 Assert.AreEqual(1, ids.Length);
             }
 
             //再导入一遍，现在应该是更新3条，插入一条,因此 test_test_model 里的记录总数是4条
             using (var xmlStream = Assembly.GetExecutingAssembly()
              .GetManifestResourceStream(TestModelXmlResourcePath))
+            using (var ctx = new ServiceContext(this.SessionId))
             {
-                var importer = new XmlDataImporter(this.ServiceScope, "test");
+                var importer = new XmlDataImporter(ctx, "test");
                 importer.Import(xmlStream);
             }
 
-            var ids2 = testObjectModel.SearchInternal(this.ServiceScope);
+            var ids2 = testObjectModel.SearchInternal(this.ServiceContext);
             Assert.AreEqual(4, ids2.Length);
         }
 
@@ -62,22 +64,23 @@ namespace ObjectServer.Model.Test
             this.ClearAllModelData();
             //删除所有导入记录
 
-            dynamic childModel = this.ServiceScope.GetResource("test.child");
-            dynamic masterModel = this.ServiceScope.GetResource("test.master");
+            dynamic childModel = this.ServiceContext.GetResource("test.child");
+            dynamic masterModel = this.ServiceContext.GetResource("test.master");
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(MasterChildXmlResourcePath))
+            using (var ctx = new ServiceContext(this.SessionId))
             {
-                var importer = new XmlDataImporter(this.ServiceScope, "test");
+                var importer = new XmlDataImporter(ctx, "test");
 
                 importer.Import(xmlStream);
 
                 object[][] constraints;
 
                 constraints = new object[][] { new object[] { "name", "=", "master1" } };
-                var ids = masterModel.Search(this.ServiceScope, constraints, null, 0, 0);
+                var ids = masterModel.Search(this.ServiceContext, constraints, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
-                dynamic master1 = masterModel.Browse(this.ServiceScope, ids[0]);
+                dynamic master1 = masterModel.Browse(this.ServiceContext, ids[0]);
                 Assert.AreEqual(2, master1.children.Length);
             }
         }
@@ -90,30 +93,31 @@ namespace ObjectServer.Model.Test
             this.ClearAllModelData();
             //删除所有导入记录
 
-            dynamic testModel = this.ServiceScope.GetResource("test.test_model");
-            dynamic masterModel = this.ServiceScope.GetResource("test.master");
+            dynamic testModel = this.ServiceContext.GetResource("test.test_model");
+            dynamic masterModel = this.ServiceContext.GetResource("test.master");
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(ReferenceFieldXmlResourcePath))
+            using (var ctx = new ServiceContext(this.SessionId))
             {
-                var importer = new XmlDataImporter(this.ServiceScope, "test");
+                var importer = new XmlDataImporter(ctx, "test");
 
                 importer.Import(xmlStream);
 
-                var masterIds = masterModel.Search(this.ServiceScope, null, null, 0, 0);
+                var masterIds = masterModel.Search(this.ServiceContext, null, null, 0, 0);
                 Assert.AreEqual(1, masterIds.Length);
 
-                var testModelIds = testModel.Search(this.ServiceScope, null, null, 0, 0);
+                var testModelIds = testModel.Search(this.ServiceContext, null, null, 0, 0);
                 Assert.AreEqual(1, testModelIds.Length);
 
-                dynamic testModelRecord = testModel.Browse(this.ServiceScope, testModelIds[0]);
+                dynamic testModelRecord = testModel.Browse(this.ServiceContext, testModelIds[0]);
                 Assert.AreEqual("master1", testModelRecord.reference_field.name);
             }
         }
 
         private void ClearAllModelData()
         {
-            var model = (IModel)this.ServiceScope.GetResource("core.model_data");
+            var model = (IModel)this.ServiceContext.GetResource("core.model_data");
 
             ClearAllModelData(model, "test.master");
             ClearAllModelData(model, "test.child");
@@ -127,10 +131,10 @@ namespace ObjectServer.Model.Test
         private void ClearAllModelData(IModel model, string modelName)
         {
             var constraints = new object[][] { new object[] { "model", "=", modelName } };
-            var ids = model.SearchInternal(this.ServiceScope, constraints);
+            var ids = model.SearchInternal(this.ServiceContext, constraints);
             if (ids != null && ids.Length > 0)
             {
-                model.DeleteInternal(this.ServiceScope, ids);
+                model.DeleteInternal(this.ServiceContext, ids);
             }
         }
 

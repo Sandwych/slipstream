@@ -13,14 +13,14 @@ namespace ObjectServer
     /// <summary>
     /// 但凡是需要 RPC 的方法都需要用此 scope 包裹
     /// </summary>
-    internal sealed class ServiceScope : IServiceScope
+    internal sealed class ServiceContext : IServiceContext
     {
         private bool ownDb;
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public ServiceScope(string sessionId)
+        public ServiceContext(string sessionId)
         {
             var sessStore = Environment.SessionStore;
             var session = sessStore.GetSession(sessionId);
@@ -44,7 +44,7 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        public ServiceScope(string dbName, string login)
+        public ServiceContext(string dbName, string login)
         {
             LoggerProvider.EnvironmentLogger.Debug(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
@@ -60,7 +60,7 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="db"></param>
-        public ServiceScope(IDBProfile db)
+        public ServiceContext(IDBProfile db)
         {
             Debug.Assert(db != null);
             Debug.Assert(db.DBContext != null);
@@ -115,7 +115,7 @@ namespace ObjectServer
 
         #region IEquatable<IContext> 成员
 
-        public bool Equals(IServiceScope other)
+        public bool Equals(IServiceContext other)
         {
             return this.Session.Id == other.Session.Id;
         }

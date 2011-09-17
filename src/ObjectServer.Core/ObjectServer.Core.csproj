@@ -180,7 +180,6 @@
     <Compile Include="Model\ViewBuilder.cs" />
     <Compile Include="Model\ViewGenerator.cs" />
     <Compile Include="Data\DummySessionFactoryImplementor.cs" />
-    <Compile Include="SessionlessServiceScope.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardActionModel.cs" />
     <Compile Include="Core\RoleModel.cs" />
@@ -233,7 +232,7 @@
     <Compile Include="Environment.cs" />
     <Compile Include="DBProfileCollection.cs" />
     <Compile Include="Core\UserModel.cs" />
-    <Compile Include="IServiceScope.cs" />
+    <Compile Include="IServiceContext.cs" />
     <Compile Include="Core\FieldModel.cs" />
     <Compile Include="Core\ModelModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -241,9 +240,9 @@
     <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="ServiceMethodAttribute.cs" />
-    <Compile Include="ServiceScope.cs" />
+    <Compile Include="ServiceContext.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
-    <Compile Include="InternalServiceScope.cs" />
+    <Compile Include="InternalServiceContext.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\Sha.cs" />

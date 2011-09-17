@@ -22,9 +22,9 @@ namespace ObjectServer.Model.Test
             dog.name = InitName;
             dog.dogfood = InitDogfood;
 
-            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            var dogModel = (IModel)this.ServiceContext.GetResource("test.dog");
 
-            return dogModel.CreateInternal(this.ServiceScope, dog);
+            return dogModel.CreateInternal(this.ServiceContext, dog);
         }
 
         [SetUp]
@@ -37,7 +37,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_single_table()
         {
-            dynamic inheritedModel = this.ServiceScope.GetResource("test.single_table");
+            dynamic inheritedModel = this.ServiceContext.GetResource("test.single_table");
             Assert.True(inheritedModel.Fields.ContainsKey("age"));
 
             var propBag = new Dictionary<string, object>()
@@ -46,9 +46,9 @@ namespace ObjectServer.Model.Test
                     { "age", 44},
                 };
 
-            object id = inheritedModel.Create(this.ServiceScope, propBag);
+            object id = inheritedModel.Create(this.ServiceContext, propBag);
 
-            var record = inheritedModel.Read(this.ServiceScope, new object[] { id }, null)[0];
+            var record = inheritedModel.Read(this.ServiceContext, new object[] { id }, null)[0];
 
             Assert.AreEqual(33, record["age"]);
         }
@@ -62,13 +62,13 @@ namespace ObjectServer.Model.Test
             dog.name = "oldblue";
             dog.dogfood = "pear";
 
-            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            var dogModel = (IModel)this.ServiceContext.GetResource("test.dog");
             long id = -1;
             Assert.DoesNotThrow(() =>
             {
-                id = dogModel.CreateInternal(this.ServiceScope, dog);
+                id = dogModel.CreateInternal(this.ServiceContext, dog);
             });
-            var ids = dogModel.SearchInternal(this.ServiceScope);
+            var ids = dogModel.SearchInternal(this.ServiceContext);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id, ids[0]);
             Assert.AreEqual(1, this.Service.CountModel(this.SessionId, "test.animal"));
@@ -77,12 +77,12 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_creation_and_reading()
         {
-            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            var dogModel = (IModel)this.ServiceContext.GetResource("test.dog");
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
 
-            var dog = dogModel.ReadInternal(this.ServiceScope, new long[] { id })[0];
+            var dog = dogModel.ReadInternal(this.ServiceContext, new long[] { id })[0];
             Assert.AreEqual(InitName, (string)dog["name"]);
             Assert.AreEqual(InitDogfood, (string)dog["dogfood"]);
         }
@@ -90,12 +90,12 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_creation_and_browsing()
         {
-            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            var dogModel = (IModel)this.ServiceContext.GetResource("test.dog");
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
 
-            var dog = dogModel.Browse(this.ServiceScope, id);
+            var dog = dogModel.Browse(this.ServiceContext, id);
             Assert.AreEqual(InitName, dog.name);
             Assert.AreEqual(InitDogfood, dog.dogfood);
         }
@@ -104,13 +104,13 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_deletion()
         {
-            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            var dogModel = (IModel)this.ServiceContext.GetResource("test.dog");
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
             Assert.DoesNotThrow(() =>
             {
-                dogModel.DeleteInternal(this.ServiceScope, new long[] { id });
+                dogModel.DeleteInternal(this.ServiceContext, new long[] { id });
             });
             Assert.AreEqual(0, this.Service.CountModel(this.SessionId, "test.animal"));
             Assert.AreEqual(0, this.Service.CountModel(this.SessionId, "test.dog"));
@@ -119,7 +119,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_writing()
         {
-            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            var dogModel = (IModel)this.ServiceContext.GetResource("test.dog");
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
@@ -130,10 +130,10 @@ namespace ObjectServer.Model.Test
 
             Assert.DoesNotThrow(() =>
                 {
-                    dogModel.WriteInternal(this.ServiceScope, id, fieldValues);
+                    dogModel.WriteInternal(this.ServiceContext, id, fieldValues);
                 });
 
-            var dog = dogModel.ReadInternal(this.ServiceScope, new long[] { id })[0];
+            var dog = dogModel.ReadInternal(this.ServiceContext, new long[] { id })[0];
 
             Assert.AreEqual("oldyellow", (string)dog["name"]);
             Assert.AreEqual("apple", (string)dog["dogfood"]);
@@ -142,8 +142,8 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_multitable_searching()
         {
-            var animalModel = (IModel)this.ServiceScope.GetResource("test.animal");
-            var dogModel = (IModel)this.ServiceScope.GetResource("test.dog");
+            var animalModel = (IModel)this.ServiceContext.GetResource("test.animal");
+            var dogModel = (IModel)this.ServiceContext.GetResource("test.dog");
 
             this.ClearData();
             var id = this.PrepareTestingData();
@@ -155,8 +155,8 @@ namespace ObjectServer.Model.Test
                 new object[] { "name", "=", InitName } 
             };
 
-            var animalIds = animalModel.SearchInternal(this.ServiceScope, constraints);
-            var dogIds = dogModel.SearchInternal(this.ServiceScope, constraints);
+            var animalIds = animalModel.SearchInternal(this.ServiceContext, constraints);
+            var dogIds = dogModel.SearchInternal(this.ServiceContext, constraints);
 
             Assert.AreEqual(1, animalIds.Length);
             Assert.AreEqual(1, dogIds.Length);

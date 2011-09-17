@@ -10,11 +10,11 @@ using ObjectServer.Data;
 
 namespace ObjectServer.Model
 {
-    internal class TableMigrator
+    internal class TableMigrator : IDisposable
     {
         private IDBProfile db;
         private AbstractTableModel model;
-        private IServiceScope context;
+        private IServiceContext context;
 
         public TableMigrator(IDBProfile db, AbstractTableModel model)
         {
@@ -30,7 +30,7 @@ namespace ObjectServer.Model
 
             this.db = db;
             this.model = model;
-            this.context = new SessionlessServiceScope(db);
+            this.context = new ServiceContext(db);
         }
 
         public void Migrate()
@@ -193,5 +193,10 @@ namespace ObjectServer.Model
             return rowCount > 0;
         }
 
+
+        public void Dispose()
+        {
+            this.context.Dispose();
+        }
     }
 }

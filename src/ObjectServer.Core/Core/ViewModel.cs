@@ -31,7 +31,7 @@ namespace ObjectServer.Core
 
         [ServiceMethod]
         public static Dictionary<string, object> GetView(
-            IModel model, IServiceScope ctx, string modelName, string viewKind = "form", long? viewId = null)
+            IModel model, IServiceContext ctx, string modelName, string viewKind = "form", long? viewId = null)
         {
             if (model == null)
             {

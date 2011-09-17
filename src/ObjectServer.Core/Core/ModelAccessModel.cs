@@ -49,7 +49,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <param name="userId"></param>
         /// <returns></returns>
         public Dictionary<string, object>[]
-            FindByModelAndUserId(IServiceScope scope, string model, long userId)
+            FindByModelAndUserId(IServiceContext scope, string model, long userId)
         {
             var sql = SqlToQuery;
             var result = scope.DBContext.QueryAsDictionary(sql, userId, model);
@@ -63,7 +63,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <param name="scope"></param>
         /// <param name="userRecord"></param>
         /// <returns></returns>
-        public override long CreateInternal(IServiceScope scope, IDictionary<string, object> userRecord)
+        public override long CreateInternal(IServiceContext scope, IDictionary<string, object> userRecord)
         {
             return base.CreateInternal(scope, userRecord);
         }
@@ -74,7 +74,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <param name="scope"></param>
         /// <param name="id"></param>
         /// <param name="userRecord"></param>
-        public override void WriteInternal(IServiceScope scope, long id, IDictionary<string, object> userRecord)
+        public override void WriteInternal(IServiceContext scope, long id, IDictionary<string, object> userRecord)
         {
             base.WriteInternal(scope, id, userRecord);
         }

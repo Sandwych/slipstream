@@ -25,7 +25,7 @@ namespace ObjectServer.Model
         private static readonly ConstraintExpression[] EmptyConstraints = { };
 
         public override long[] SearchInternal(
-            IServiceScope scope, object[] constraints = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
+            IServiceContext scope, object[] constraints = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
         {
             if (scope == null)
             {
@@ -69,7 +69,7 @@ namespace ObjectServer.Model
             return scope.DBContext.QueryAsArray<long>(querySql, translator.Values);
         }
 
-        public override long CountInternal(IServiceScope scope, object[] constraints = null)
+        public override long CountInternal(IServiceContext scope, object[] constraints = null)
         {
             if (scope == null)
             {
@@ -102,7 +102,7 @@ namespace ObjectServer.Model
         }
 
 
-        private void GenerateReadingRuleConstraints(IServiceScope scope, ConstraintTranslator translator)
+        private void GenerateReadingRuleConstraints(IServiceContext scope, ConstraintTranslator translator)
         {
             Debug.Assert(scope != null);
             Debug.Assert(translator != null);

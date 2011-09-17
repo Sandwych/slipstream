@@ -8,29 +8,25 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    internal class SessionlessServiceScope : IServiceScope
+    internal class InternalServiceContext : IServiceContext
     {
-        public SessionlessServiceScope(IDBProfile db)
+        public InternalServiceContext(IDBProfile db, Session session)
         {
             Debug.Assert(db != null);
+            Debug.Assert(session != null);
             this.DBProfile = db;
+            this.Session = session;
         }
 
         private IDBProfile DBProfile { get; set; }
 
-        public Session Session
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
+        public Session Session { get; private set; }
 
         public void Dispose()
         {
         }
 
-        public bool Equals(IServiceScope other)
+        public bool Equals(IServiceContext other)
         {
             throw new NotSupportedException("Invalid Equals invocation");
         }

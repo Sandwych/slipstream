@@ -19,7 +19,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override void WriteInternal(
-            IServiceScope scope, long id, IDictionary<string, object> userRecord)
+            IServiceContext scope, long id, IDictionary<string, object> userRecord)
         {
             if (!this.CanWrite)
             {
@@ -220,7 +220,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void SetModificationInfo(IServiceScope scope, Dictionary<string, object> record)
+        private void SetModificationInfo(IServiceContext scope, Dictionary<string, object> record)
         {
             //处理最近更新用户与最近更新时间字段            
             if (this.ContainsField(UpdatedTimeFieldName))
@@ -236,7 +236,7 @@ namespace ObjectServer.Model
         }
 
         private void PrewriteManyToManyFields(
-            IServiceScope scope, long id, Dictionary<string, object> record, ICollection<string> allFields)
+            IServiceContext scope, long id, Dictionary<string, object> record, ICollection<string> allFields)
         {
             //过滤所有可以更新的 many2many 字段
             var writableManyToManyFields =
@@ -252,7 +252,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private static void PrewriteManyToManyField(IServiceScope scope, long id, Dictionary<string, object> record, IField f)
+        private static void PrewriteManyToManyField(IServiceContext scope, long id, Dictionary<string, object> record, IField f)
         {
             var relModel = (IModel)scope.GetResource(f.Relation);
             var constraints = new object[][]  
@@ -277,7 +277,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void PrewriteBaseModels(IServiceScope ctx, Dictionary<string, object> record, Dictionary<string, object> existedRecord)
+        private void PrewriteBaseModels(IServiceContext ctx, Dictionary<string, object> record, Dictionary<string, object> existedRecord)
         {
             //处理继承表的策略
             //继承表写入的策略是这样的：

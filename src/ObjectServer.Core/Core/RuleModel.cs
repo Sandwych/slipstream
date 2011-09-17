@@ -53,7 +53,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static IList<ConstraintExpression[]> GetRuleConstraints(IServiceScope scope, string modelName, string action)
+        internal static IList<ConstraintExpression[]> GetRuleConstraints(IServiceContext scope, string modelName, string action)
         {
             Debug.Assert(scope != null);
             Debug.Assert(!string.IsNullOrEmpty(modelName));
@@ -94,7 +94,7 @@ namespace ObjectServer.Core
             return constraintGroups;
         }
 
-        private static ScriptScope CreateScriptScope(IServiceScope scope)
+        private static ScriptScope CreateScriptScope(IServiceContext scope)
         {
             var userModel = (UserModel)scope.GetResource("core.user");
             dynamic user = userModel.Browse(scope, scope.Session.UserId);
@@ -113,7 +113,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static ConstraintExpression[] GetRuleConstraintsCached(IServiceScope scope, string modelName, string action)
+        internal static ConstraintExpression[] GetRuleConstraintsCached(IServiceContext scope, string modelName, string action)
         {
             throw new NotImplementedException();
         }

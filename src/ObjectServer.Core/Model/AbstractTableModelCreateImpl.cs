@@ -19,7 +19,7 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        public override long CreateInternal(IServiceScope scope, IDictionary<string, object> userRecord)
+        public override long CreateInternal(IServiceContext scope, IDictionary<string, object> userRecord)
         {
             if (!this.CanCreate)
             {
@@ -92,7 +92,7 @@ namespace ObjectServer.Model
         /// <param name="record"></param>
         /// <param name="id"></param>
         private void PostcreateManyToManyFields(
-            IServiceScope scope, long id, Dictionary<string, object> record)
+            IServiceContext scope, long id, Dictionary<string, object> record)
         {
 
             //处理 Many-to-many 字段
@@ -199,7 +199,7 @@ namespace ObjectServer.Model
             dbctx.Execute(SqlString.Parse(sqlUpdate3), rhsValue + 1, rhsValue + 2, id);
         }
 
-        private long CreateSelf(IServiceScope ctx, IDictionary<string, object> values)
+        private long CreateSelf(IServiceContext ctx, IDictionary<string, object> values)
         {
             var serial = ctx.DBContext.NextSerial(this.SequenceName);
 
@@ -255,7 +255,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValuesForCreation(IServiceScope ctx, IDictionary<string, object> propertyBag)
+        private void AddDefaultValuesForCreation(IServiceContext ctx, IDictionary<string, object> propertyBag)
         {
             var defaultFields =
                 this.Fields.Values.Where(

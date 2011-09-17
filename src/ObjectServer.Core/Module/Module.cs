@@ -92,7 +92,7 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(IServiceScope scope, bool update)
+        public void Load(IServiceContext scope, bool update)
         {
             if (scope == null)
             {
@@ -126,7 +126,7 @@ namespace ObjectServer
             }
         }
 
-        private void LoadAdditionalModule(IServiceScope scope, bool update)
+        private void LoadAdditionalModule(IServiceContext scope, bool update)
         {
             Debug.Assert(scope != null);
 
@@ -154,7 +154,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadCoreModule(IServiceScope scope, bool update)
+        private void LoadCoreModule(IServiceContext scope, bool update)
         {
             Debug.Assert(scope != null);
 
@@ -182,7 +182,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadModuleData(IServiceScope scope)
+        private void LoadModuleData(IServiceContext scope)
         {
             Debug.Assert(scope != null);
 

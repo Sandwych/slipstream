@@ -17,7 +17,7 @@ namespace ObjectServer.Model.Test
         public void test_write_and_read_binary_field()
         {
             this.ClearTestModelTable();
-            dynamic testModel = this.ServiceScope.GetResource("test.test_model");
+            dynamic testModel = this.ServiceContext.GetResource("test.test_model");
             var fieldData = new byte[] { 33, 44, 55, 66, 77 };
             var record = new Dictionary<string, object>()
                 {
@@ -25,9 +25,9 @@ namespace ObjectServer.Model.Test
                     { "address", "address1" },
                     { "binary_field", fieldData },
                 };
-            var id = (long)testModel.Create(this.ServiceScope, record);
+            var id = (long)testModel.Create(this.ServiceContext, record);
 
-            record = testModel.Read(this.ServiceScope, new object[] { id }, null)[0];
+            record = testModel.Read(this.ServiceContext, new object[] { id }, null)[0];
 
             var field = record["binary_field"] as byte[];
             Assert.NotNull(field);
@@ -40,7 +40,7 @@ namespace ObjectServer.Model.Test
         public void test_write_search_and_count_binary_field()
         {
             this.ClearTestModelTable();
-            dynamic testModel = this.ServiceScope.GetResource("test.test_model");
+            dynamic testModel = this.ServiceContext.GetResource("test.test_model");
             var fieldData1 = new byte[] { 33, 44, 55, 66, 77 };
             var fieldData2 = new byte[] { 44, 44, 55, 66, 77 };
 
@@ -48,13 +48,13 @@ namespace ObjectServer.Model.Test
             record1.name = "name1";
             record1.address = "address1";
             record1.binary_field = fieldData1;
-            var id1 = (long)testModel.Create(this.ServiceScope, record1);
+            var id1 = (long)testModel.Create(this.ServiceContext, record1);
 
             dynamic record2 = new ExpandoObject();
             record2.name = "name2";
             record2.address = "address2";
             record2.binary_field = fieldData2;
-            var id2 = (long)testModel.Create(this.ServiceScope, record2);
+            var id2 = (long)testModel.Create(this.ServiceContext, record2);
 
             var constraints = new object[][] {
                 new object[] { "binary_field", "=", fieldData1 },

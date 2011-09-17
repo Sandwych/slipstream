@@ -152,14 +152,14 @@ namespace ObjectServer.Core
         }
 
 
-        public override long CreateInternal(IServiceScope scope, IDictionary<string, object> values)
+        public override long CreateInternal(IServiceContext scope, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
             return base.CreateInternal(scope, values2);
         }
 
 
-        public override void WriteInternal(IServiceScope scope, long id, IDictionary<string, object> record)
+        public override void WriteInternal(IServiceContext scope, long id, IDictionary<string, object> record)
         {
             //更新用户记录业务是不能修改密码与 Salt 的
             var values2 = new Dictionary<string, object>(record);
@@ -179,7 +179,7 @@ namespace ObjectServer.Core
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IServiceScope scope, long[] ids, string[] fields)
+            IServiceContext scope, long[] ids, string[] fields)
         {
             var records = base.ReadInternal(scope, ids, fields);
 
@@ -202,7 +202,7 @@ namespace ObjectServer.Core
         }
 
 
-        public Session LogOn(IServiceScope scope,
+        public Session LogOn(IServiceContext scope,
             string database, string login, string password)
         {
             var constraints = new object[][] { new object[] { "login", "=", login } };
@@ -236,14 +236,14 @@ namespace ObjectServer.Core
         }
 
 
-        public void LogOut(IServiceScope scope, string sessionId)
+        public void LogOut(IServiceContext scope, string sessionId)
         {
             Environment.SessionStore.Remove(sessionId);
         }
 
         [ServiceMethod]
         public static void ChangePassword(
-            IModel model, IServiceScope scope, string newPassword)
+            IModel model, IServiceContext scope, string newPassword)
         {
             var record = new Dictionary<string, object>()
             {

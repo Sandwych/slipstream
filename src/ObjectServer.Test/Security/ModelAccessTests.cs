@@ -17,7 +17,7 @@ namespace ObjectServer.Model.Test
             var service = ObjectServer.Environment.ExportedService;
             var sessionId = service.LogOn(TestingDatabaseName, "testuser", "testuser");
 
-            using (var scope = new ServiceScope(sessionId))
+            using (var scope = new ServiceContext(sessionId))
             {
                 var userModel = (ObjectServer.Model.IModel)scope.GetResource("core.user");
 

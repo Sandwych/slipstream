@@ -141,7 +141,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadModules(IServiceScope scope)
+        public void LoadModules(IServiceContext scope)
         {
             if (scope == null)
             {

@@ -28,12 +28,12 @@ namespace ObjectServer.Core.Test
         private void AssertSearchingOfSalesOrder(string login, string password, string[] expectedOrderNames)
         {
             var sid = this.Service.LogOn(TestingDatabaseName, login, password);
-            var ruleModel = (RuleModel)this.ServiceScope.GetResource("core.rule");
-            var salesOrderModel = (IModel)this.ServiceScope.GetResource("test.sales_order");
+            var ruleModel = (RuleModel)this.ServiceContext.GetResource("core.rule");
+            var salesOrderModel = (IModel)this.ServiceContext.GetResource("test.sales_order");
 
             try
             {
-                using (var scope = new ServiceScope(sid))
+                using (var scope = new ServiceContext(sid))
                 {
                     var orders = new OrderExpression[] {
                         new OrderExpression("name", SortDirection.Asc) 

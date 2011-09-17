@@ -85,7 +85,7 @@ namespace ObjectServer
 
             //加载其它模块
             LoggerProvider.EnvironmentLogger.Info(() => "Loading modules...");
-            using (var ctx = new InternalServiceScope(db, session))
+            using (var ctx = new InternalServiceContext(db, session))
             {
                 Environment.Modules.UpdateModuleList(db.DBContext);
                 Environment.Modules.LoadModules(ctx);
