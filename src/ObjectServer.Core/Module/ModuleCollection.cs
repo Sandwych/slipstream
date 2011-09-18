@@ -179,6 +179,10 @@ namespace ObjectServer
                     {
                         this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Uninstalled);
                     }
+                    else if (state == ModuleModel.States.Uninstalled)
+                    {
+                        //do nothing
+                    }
                     else
                     {
                         throw new NotImplementedException();

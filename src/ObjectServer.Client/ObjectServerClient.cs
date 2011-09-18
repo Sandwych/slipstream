@@ -55,9 +55,20 @@ namespace ObjectServer.Client
             });
         }
 
-        public void DeleteDatabase(string rootPassword, string dbName, Action resultCallback)
+
+        public void CreateDatabase(string serverPassword, string dbName, string adminPassword, Action resultCallback)
         {
-            var hashedRootPassword = rootPassword.Trim().ToSha();
+            var hashedRootPassword = serverPassword.Trim().ToSha();
+            var args = new object[] { hashedRootPassword, dbName.Trim(), adminPassword.Trim() };
+            this.jsonRpcClient.SyncInvoke("createDatabase", args, o =>
+            {
+                resultCallback();
+            });
+        }
+
+        public void DeleteDatabase(string serverPassword, string dbName, Action resultCallback)
+        {
+            var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim() };
             this.jsonRpcClient.SyncInvoke("deleteDatabase", args, o =>
             {

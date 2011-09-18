@@ -35,6 +35,7 @@ namespace ObjectServer.Server
             s_methods.Add("logOff", selfType.GetMethod("LogOff"));
             s_methods.Add("getVersion", selfType.GetMethod("GetVersion"));
             s_methods.Add("listDatabases", selfType.GetMethod("ListDatabases"));
+            s_methods.Add("createDatabase", selfType.GetMethod("CreateDatabase"));
             s_methods.Add("deleteDatabase", selfType.GetMethod("DeleteDatabase"));
             s_methods.Add("execute", selfType.GetMethod("Execute"));
         }
@@ -73,6 +74,11 @@ namespace ObjectServer.Server
         public static string[] ListDatabases()
         {
             return s_service.ListDatabases();
+        }
+
+        public static void CreateDatabase(string hashedRootPassword, string dbName, string adminPassword)
+        {
+            s_service.CreateDatabase(hashedRootPassword, dbName, adminPassword);
         }
 
         public static void DeleteDatabase(string hashedRootPassword, string dbName)
@@ -167,6 +173,12 @@ namespace ObjectServer.Server
             var id = jreq[JsonRpcProtocol.Id];
             var methodName = (string)jreq[JsonRpcProtocol.Method];
             var method = s_methods[methodName];
+
+            if (method == null)
+            {
+                throw new InvalidOperationException("Invalid method: " + methodName);
+            }
+
             JsonRpcError error = null;
             object result = null;
 
