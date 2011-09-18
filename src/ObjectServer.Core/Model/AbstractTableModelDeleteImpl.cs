@@ -32,7 +32,7 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("ids");
             }
 
-            if (!scope.CanDeleteModel(scope.Session.UserId, this.Name))
+            if (!scope.CanDeleteModel(scope.Session.UserID, this.Name))
             {
                 throw new UnauthorizedAccessException("Access denied");
             }

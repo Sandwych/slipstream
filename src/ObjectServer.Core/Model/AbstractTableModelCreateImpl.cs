@@ -32,7 +32,7 @@ namespace ObjectServer.Model
                 throw new ArgumentException(msg, "propertyBag");
             }
 
-            if (!scope.CanCreateModel(scope.Session.UserId, this.Name))
+            if (!scope.CanCreateModel(scope.Session.UserID, this.Name))
             {
                 throw new UnauthorizedAccessException("Access denied");
             }
@@ -286,7 +286,7 @@ namespace ObjectServer.Model
                 }
                 else if(!ctx.Session.IsSystemUser)
                 {
-                    propertyBag[UpdatedUserFieldName] = ctx.Session.UserId;
+                    propertyBag[UpdatedUserFieldName] = ctx.Session.UserID;
                 }
             }
         }

@@ -227,7 +227,7 @@
     <Compile Include="ServiceMethodAttribute.cs" />
     <Compile Include="ServiceContext.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
-    <Compile Include="InternalServiceContext.cs" />
+    <Compile Include="SystemServiceContext.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />

@@ -15,7 +15,8 @@ namespace ObjectServer
     /// </summary>
     internal sealed class ServiceContext : IServiceContext
     {
-        private bool ownDb;
+        private bool disposed = false;
+
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
@@ -33,9 +34,8 @@ namespace ObjectServer
                 string.Format("ContextScope is opening for sessionId: [{0}]", sessionId));
 
             this.Session = session;
-            this.SessionStore.Pulse(session.Id);
+            this.SessionStore.Pulse(session.ID);
 
-            this.ownDb = true;
             this.DBProfile = Environment.DBProfiles.GetDBProfile(session.Database);
             this.DBContext.Open();
         }
@@ -51,7 +51,6 @@ namespace ObjectServer
 
             this.Session = new Session(dbName);
             this.SessionStore.PutSession(this.Session);
-            this.ownDb = true;
             this.DBProfile = Environment.DBProfiles.GetDBProfile(this.Session.Database);
             this.DBContext.Open();
         }
@@ -70,9 +69,13 @@ namespace ObjectServer
 
             this.Session = new Session(db.DBContext.DatabaseName);
             this.SessionStore.PutSession(this.Session);
-            this.ownDb = false;
             this.DBProfile = db;
             this.DBContext.Open();
+        }
+
+        ~ServiceContext()
+        {
+            this.Dispose(false);
         }
 
         public IResource GetResource(string resName)
@@ -82,6 +85,11 @@ namespace ObjectServer
                 throw new ArgumentNullException("resName");
             }
 
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("ServiceContext");
+            }
+
             return this.DBProfile.GetResource(resName);
         }
 
@@ -89,6 +97,11 @@ namespace ObjectServer
         {
             get
             {
+                if (this.disposed)
+                {
+                    throw new ObjectDisposedException("ServiceContext");
+                }
+
                 Debug.Assert(this.DBProfile != null);
                 return this.DBProfile.DBContext;
             }
@@ -101,14 +114,27 @@ namespace ObjectServer
 
         #region IDisposable 成员
 
+        private void Dispose(bool isDisposing)
+        {
+            if (!this.disposed)
+            {
+                if (isDisposing)
+                {
+                    //处置托管对象
+                }
+
+                //处置非托管对象
+                this.DBContext.Close();
+
+                this.disposed = true;
+                LoggerProvider.EnvironmentLogger.Debug(() => "ScopeContext closed");
+            }
+        }
+
         public void Dispose()
         {
-            if (this.ownDb)
-            {
-                this.DBContext.Close();
-            }
-
-            LoggerProvider.EnvironmentLogger.Debug(() => "ScopeContext closed");
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion
@@ -117,14 +143,14 @@ namespace ObjectServer
 
         public bool Equals(IServiceContext other)
         {
-            return this.Session.Id == other.Session.Id;
+            return this.Session.ID == other.Session.ID;
         }
 
         #endregion
 
         public override int GetHashCode()
         {
-            return this.Session.Id.GetHashCode();
+            return this.Session.ID.GetHashCode();
         }
 
         private SessionStore SessionStore

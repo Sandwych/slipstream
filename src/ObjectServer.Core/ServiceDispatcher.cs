@@ -11,7 +11,7 @@ using ObjectServer.Utility;
 
 namespace ObjectServer
 {
-    internal sealed class ServiceDispatcher : MarshalByRefObject, IExportedService
+    internal sealed class ServiceDispatcher : IExportedService
     {
         private ServiceDispatcher()
         {
@@ -34,10 +34,10 @@ namespace ObjectServer
 
                 //用新 session 替换老 session
                 Environment.SessionStore.PutSession(session);
-                Environment.SessionStore.Remove(ctx.Session.Id);
+                Environment.SessionStore.Remove(ctx.Session.ID);
 
                 tx.Complete();
-                return session.Id.ToString();
+                return session.ID.ToString();
             }
         }
 

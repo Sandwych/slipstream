@@ -8,22 +8,46 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    internal class InternalServiceContext : IServiceContext
+    internal class SystemServiceContext : IServiceContext
     {
-        public InternalServiceContext(IDBProfile db, Session session)
+        private bool disposed = false;
+
+        public SystemServiceContext(IDBProfile db)
         {
             Debug.Assert(db != null);
-            Debug.Assert(session != null);
             this.DBProfile = db;
-            this.Session = session;
+
+            this.Session = new Session(db.DBContext.DatabaseName);
+        }
+
+        ~SystemServiceContext()
+        {
+            this.Dispose(false);
         }
 
         private IDBProfile DBProfile { get; set; }
 
         public Session Session { get; private set; }
 
+        private void Dispose(bool isDisposing)
+        {
+            if (!this.disposed)
+            {
+                if (isDisposing)
+                {
+                    //处理托管资源
+                }
+
+                //处理非托管资源
+
+                this.disposed = true;
+            }
+        }
+
         public void Dispose()
         {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public bool Equals(IServiceContext other)
@@ -38,6 +62,11 @@ namespace ObjectServer
                 throw new ArgumentNullException("resName");
             }
 
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("disposed");
+            }
+
             return this.DBProfile.GetResource(resName);
         }
 
@@ -46,6 +75,10 @@ namespace ObjectServer
             get
             {
                 Debug.Assert(this.DBProfile != null);
+                if (this.disposed)
+                {
+                    throw new ObjectDisposedException("disposed");
+                }
                 return this.DBProfile.DBContext;
             }
         }

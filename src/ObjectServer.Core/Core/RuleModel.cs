@@ -71,7 +71,7 @@ namespace ObjectServer.Core
                         "WHERE ur.user =", Parameter.Placeholder, " )))");
 
             var result = scope.DBContext.QueryAsDataTable(
-                sql, modelName, scope.Session.UserId);
+                sql, modelName, scope.Session.UserID);
 
             var scriptScope = CreateScriptScope(scope);
 
@@ -97,7 +97,7 @@ namespace ObjectServer.Core
         private static ScriptScope CreateScriptScope(IServiceContext scope)
         {
             var userModel = (UserModel)scope.GetResource("core.user");
-            dynamic user = userModel.Browse(scope, scope.Session.UserId);
+            dynamic user = userModel.Browse(scope, scope.Session.UserID);
 
             var scriptScope = s_engine.CreateScope();
             scriptScope.SetVariable("user", user);

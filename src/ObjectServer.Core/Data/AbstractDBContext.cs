@@ -15,11 +15,11 @@ namespace ObjectServer.Data
     internal abstract class AbstractDBContext : IDBContext
     {
         protected IDbConnection conn;
-        private bool opened;
+        private bool opened = false;
+        private bool disposed = false;
 
         public AbstractDBContext()
         {
-            this.opened = false;
         }
 
         ~AbstractDBContext()
@@ -227,26 +227,33 @@ namespace ObjectServer.Data
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!this.disposed)
             {
-                this.conn.Close();
-            }
+                //释放非托管资源
+                if (disposing)
+                {
+                }
 
-            this.conn.Dispose();
+                //释放托管资源
+                this.Close();
+                this.conn.Dispose();
+
+                this.disposed = true;
+            }
         }
 
         #endregion
-
-
 
         protected IDbCommand PrepareCommand(string commandText)
         {
             Debug.Assert(!string.IsNullOrEmpty(commandText));
             Debug.Assert(this.opened);
+            Debug.Assert(!this.disposed);
 
             var command = this.conn.CreateCommand();
             command.CommandText = commandText;

@@ -6,12 +6,19 @@ using System.Diagnostics;
 
 using ZMQ;
 
-namespace ObjectServer.Messaging
+namespace ObjectServer.Server
 {
     public sealed class WorkerCommander : IDisposable
     {
         private readonly Socket socket = new Socket(SocketType.PUB);
         private bool started = false;
+        private bool disposed = false;
+
+
+        ~WorkerCommander()
+        {
+            this.Dispose(false);
+        }
 
         public void Start()
         {
@@ -45,9 +52,27 @@ namespace ObjectServer.Messaging
             this.socket.Send(command, Encoding.UTF8);
         }
 
+        private void Dispose(bool isDisposing)
+        {
+            if (!this.disposed)
+            {
+                if (isDisposing)
+                {
+                    //释放托管资源
+                }
+
+                //释放非托管资源
+                this.StopAll();
+                this.socket.Dispose();
+
+                this.disposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            this.StopAll();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

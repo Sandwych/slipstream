@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 
-using ObjectServer.Messaging;
-
-namespace ObjectServer
+namespace ObjectServer.Server
 {
     public sealed class RpcHostWorker : AbstractWorker
     {

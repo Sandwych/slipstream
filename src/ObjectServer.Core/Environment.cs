@@ -44,11 +44,15 @@ namespace ObjectServer
             {
                 if (disposing)
                 {
-                    this.databaseProfiles.Dispose();
+                    //处置托管资源
                 }
 
+                //处置非托管资源
+                this.databaseProfiles.Dispose();
+
+                disposed = true;
+                LoggerProvider.EnvironmentLogger.Info("The platform environment has been closed.");
             }
-            disposed = true;
         }
 
         public void Dispose()
@@ -94,6 +98,8 @@ namespace ObjectServer
 
         private void InitializeInternal(Config cfg)
         {
+            TryInitialize(cfg);
+            /*
             try
             {
                 TryInitialize(cfg);
@@ -104,6 +110,7 @@ namespace ObjectServer
                 LoggerProvider.EnvironmentLogger.Fatal(msg, ex);
                 throw new InitializationException(msg, ex);
             }
+            */
         }
 
         private static void TryInitialize(Config cfg)

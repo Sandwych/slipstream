@@ -15,6 +15,7 @@ namespace ObjectServer.Model
         private IDBProfile db;
         private AbstractTableModel model;
         private IServiceContext context;
+        private bool disposed = false;
 
         public TableMigrator(IDBProfile db, AbstractTableModel model)
         {
@@ -30,7 +31,7 @@ namespace ObjectServer.Model
 
             this.db = db;
             this.model = model;
-            this.context = new ServiceContext(db);
+            this.context = new SystemServiceContext(db);
         }
 
         public void Migrate()
@@ -194,9 +195,24 @@ namespace ObjectServer.Model
         }
 
 
+        private void Dispose(bool isDisposing)
+        {
+            if (!this.disposed)
+            {
+                if (isDisposing)
+                {
+                    //处置托管对象
+                }
+
+                this.context.Dispose();
+                this.disposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            this.context.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

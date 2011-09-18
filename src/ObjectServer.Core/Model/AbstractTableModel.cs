@@ -111,7 +111,10 @@ namespace ObjectServer.Model
 
             if (update && this.AutoMigration)
             {
-                new TableMigrator(db, this).Migrate();
+                using (var migrator = new TableMigrator(db, this))
+                {
+                    migrator.Migrate();
+                };
             }
         }
 
@@ -130,11 +133,11 @@ namespace ObjectServer.Model
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserID > 0 ? (object)ctx.Session.UserID : null);
 
                 Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Modifier")
                     .NotRequired()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserID > 0 ? (object)ctx.Session.UserID : null);
 
                 if (this.Hierarchy)
                 {
@@ -276,7 +279,7 @@ where   hp._id=? and hc._id<>?
         {
             var logRecord = new Dictionary<string, object>()
                 {
-                    { "user", ctx.Session.UserId },
+                    { "user", ctx.Session.UserID },
                     { "resource", this.Name },
                     { "resource_id", id },
                     { "description", msg }
@@ -332,7 +335,7 @@ where   hp._id=? and hc._id<>?
                 throw new NotSupportedException();
             }
 
-            if (!scope.CanReadModel(scope.Session.UserId, this.Name))
+            if (!scope.CanReadModel(scope.Session.UserID, this.Name))
             {
                 throw new UnauthorizedAccessException("Access denied");
             }

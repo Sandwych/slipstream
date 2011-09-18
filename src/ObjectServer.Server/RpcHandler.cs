@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 using ObjectServer.Exceptions;
 using ObjectServer.Json;
 
-namespace ObjectServer
+namespace ObjectServer.Server
 {
     /// <summary>
     /// 处理 JSON-RPC 的 分发器

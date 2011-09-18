@@ -62,10 +62,7 @@ namespace ObjectServer.Http
 
         ~HttpServer()
         {
-            if (!this.disposed)
-            {
-                this.Dispose();
-            }
+            this.Dispose(false);
         }
 
         public void Start()
@@ -129,14 +126,34 @@ namespace ObjectServer.Http
 
         #region IDisposable Members
 
+        private void Dispose(bool isDisposing)
+        {
+            if (!this.disposed)
+            {
+
+                LoggerProvider.EnvironmentLogger.Info("Disposing HTTP Server...");
+                if (isDisposing)
+                {
+                    //释放托管资源
+                }
+
+                //释放非托管资源
+
+                this.scheduler.Stop();
+
+                this.scheduler.Dispose();
+                this.rpcSocket.Dispose();
+                this.commandSocket.Dispose();
+
+                this.disposed = true;
+                LoggerProvider.EnvironmentLogger.Info("The HTTP Server has been closed.");
+            }
+        }
+
         public void Dispose()
         {
-            LoggerProvider.EnvironmentLogger.Info("Disposing HTTP Server...");
-
-            this.rpcSocket.Dispose();
-            this.commandSocket.Dispose();
-
-            LoggerProvider.EnvironmentLogger.Info("The HTTP Server has been closed.");
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion

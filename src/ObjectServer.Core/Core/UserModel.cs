@@ -250,7 +250,7 @@ namespace ObjectServer.Core
                 { "password", newPassword },
             };
             HashPassword(record);
-            model.WriteInternal(scope, scope.Session.UserId, record);
+            model.WriteInternal(scope, scope.Session.UserID, record);
         }
 
         public static Dictionary<string, object>[] GetAllModelAccessEntries(long userId)

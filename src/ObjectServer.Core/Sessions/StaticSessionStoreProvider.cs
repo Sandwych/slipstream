@@ -31,7 +31,7 @@ namespace ObjectServer
             }
 
             this.Sweep();
-            this.sessions[session.Id] = session;
+            this.sessions[session.ID] = session;
         }
 
 
@@ -50,8 +50,8 @@ namespace ObjectServer
 
             var sessions =
                 from p in this.sessions
-                where p.Value.Database == database && p.Value.UserId == uid
-                select p.Value.Id;
+                where p.Value.Database == database && p.Value.UserID == uid
+                select p.Value.ID;
 
             foreach (var s in sessions.ToList())
             {

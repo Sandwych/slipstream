@@ -5,7 +5,7 @@ using System.Text;
 
 using ZMQ;
 
-namespace ObjectServer.Messaging
+namespace ObjectServer.Server
 {
     public abstract class AbstractWorker
     {
