@@ -52,16 +52,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\castle-core\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="clrzmq">
-      <HintPath>..\..\lib\zmq\clrzmq.dll</HintPath>
-    </Reference>
-    <Reference Include="clrzmq-ext">
-      <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
-    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -131,14 +121,11 @@
     <Compile Include="Data\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Data\Postgresql\PgTableContext.cs" />
     <Compile Include="Caching\CachedMethodAttribute.cs" />
-    <Compile Include="Caching\MethodCachingInterceptor.cs" />
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\RuleRoleModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />
-    <Compile Include="Messaging\AbstractWorker.cs" />
-    <Compile Include="Messaging\WorkerCommander.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Sql\OrderExpression.cs" />
     <Compile Include="Sql\ConstraintTranslator.cs" />
@@ -148,7 +135,6 @@
     <Compile Include="Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Json\JsonRpcError.cs" />
-    <Compile Include="Messaging\RpcHostWorker.cs" />
     <Compile Include="Core\AttachmentModel.cs" />
     <Compile Include="Core\ModelAccessModel.cs" />
     <Compile Include="Core\OrganizationModel.cs" />
@@ -176,7 +162,6 @@
     <Compile Include="Model\InheritanceInfo.cs" />
     <Compile Include="Model\ModelSecurityExtensions.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
-    <Compile Include="Messaging\RpcHandler.cs" />
     <Compile Include="Model\ViewBuilder.cs" />
     <Compile Include="Model\ViewGenerator.cs" />
     <Compile Include="Data\DummySessionFactoryImplementor.cs" />
@@ -243,11 +228,6 @@
     <Compile Include="ServiceContext.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
     <Compile Include="InternalServiceContext.cs" />
-    <Compile Include="Utility\DependencySorter.cs" />
-    <Compile Include="Utility\EnumerableExtensions.cs" />
-    <Compile Include="Utility\Sha.cs" />
-    <Compile Include="Utility\StringExtension.cs" />
-    <Compile Include="Utility\TopologicalSorter.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />

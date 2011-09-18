@@ -4,7 +4,7 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 
-namespace ObjectServer.Daemon
+namespace ObjectServer.Server
 {
     static class Win32ServiceProgram
     {

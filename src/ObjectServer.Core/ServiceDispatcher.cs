@@ -5,8 +5,6 @@ using System.Text;
 using System.Transactions;
 using System.Reflection;
 
-using Castle.DynamicProxy;
-
 using ObjectServer.Data;
 using ObjectServer.Core;
 using ObjectServer.Utility;

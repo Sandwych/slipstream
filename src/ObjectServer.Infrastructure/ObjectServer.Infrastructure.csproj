@@ -50,6 +50,11 @@
     <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticSettings.cs" />
+    <Compile Include="Utility\DependencySorter.cs" />
+    <Compile Include="Utility\EnumerableExtensions.cs" />
+    <Compile Include="Utility\Sha.cs" />
+    <Compile Include="Utility\StringExtension.cs" />
+    <Compile Include="Utility\TopologicalSorter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logging.config">

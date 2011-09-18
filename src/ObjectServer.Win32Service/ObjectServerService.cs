@@ -10,7 +10,7 @@ using System.Threading;
 
 using ObjectServer;
 
-namespace ObjectServer.Daemon
+namespace ObjectServer.Server
 {
     public partial class ObjectServerService : ServiceBase
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Configuration;
 
-namespace ObjectServer.Daemon
+namespace ObjectServer.Server
 {
     class DevServerProgram
     {

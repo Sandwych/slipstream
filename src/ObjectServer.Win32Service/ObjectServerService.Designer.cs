@@ -1,4 +1,4 @@
-﻿namespace ObjectServer.Daemon
+﻿namespace ObjectServer.Server
 {
     partial class ObjectServerService
     {
