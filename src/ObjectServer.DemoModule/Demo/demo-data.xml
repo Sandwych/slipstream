@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<data>
+
+  <!-- 初始化演示数据 -->
+  
+  <record model="demo.employee" key="employee1">
+    <field name="name">Michael Scott</field>
+    <field name="address">Wall ST.</field>
+    <field name="salary">6000</field>
+  </record>
+
+  <record model="demo.employee" key="employee2">
+    <field name="name">Dwight Schrute</field>
+    <field name="address">Wall ST.</field>
+    <field name="salary">5000</field>
+  </record>
+
+  <record model="demo.employee" key="employee3">
+    <field name="name">Pam Beesly</field>
+    <field name="address">Wall ST.</field>
+    <field name="salary">3000</field>
+  </record>
+
+</data>
+

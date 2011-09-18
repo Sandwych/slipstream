@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<data noupdate="true">
+
+  <!-- 创建员工的列表视图 -->
+  <record model="core.view" key="employee_tree_view">
+    <field name="name">员工管理</field>
+    <field name="model">demo.employee</field>
+    <field name="kind">list</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <tree label="员工管理">
+        <field name="name" where="basic" />
+        <field name="address" where="basic" />
+        <field name="salary" where="basic" />
+      </tree>
+      ]]>
+    </field>
+  </record>
+
+  <!-- 创建点击菜单的动作 -->
+  <record  model="core.action_window" key="employee_menu_action">
+    <field name="name">员工管理</field>
+    <field name="type">core.action_window</field>
+    <field name="view" ref-key="employee_tree_view" />
+    <field name="model">demo.employee</field>
+  </record>
+
+  <!-- 创建一个菜单 -->
+  <record model="core.menu" key="menu_employees">
+    <field name="name">员工管理</field>
+    <field name="ordinal">0</field>
+    <field name="action" ref-model="core.action_window" ref-key="employee_menu_action" />
+  </record>
+
+
+</data>
+

@@ -67,6 +67,7 @@ namespace ObjectServer.Client.Agos.Windows
             = new Dictionary<string, Tuple<Type, IValueConverter>>()
         {
             {"Integer", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"Float", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
             {"DateTime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
