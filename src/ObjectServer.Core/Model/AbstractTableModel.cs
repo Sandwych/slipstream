@@ -111,7 +111,10 @@ namespace ObjectServer.Model
 
             if (update && this.AutoMigration)
             {
-                new TableMigrator(db, this).Migrate();
+                using (var migrator = new TableMigrator(db, this))
+                {
+                    migrator.Migrate();
+                };
             }
         }
 
@@ -130,11 +133,11 @@ namespace ObjectServer.Model
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserID > 0 ? (object)ctx.Session.UserID : null);
 
                 Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Modifier")
                     .NotRequired()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserID > 0 ? (object)ctx.Session.UserID : null);
 
                 if (this.Hierarchy)
                 {
@@ -232,7 +235,7 @@ where   hp._id=? and hc._id<>?
         }
 
         private void ConvertFieldToColumn(
-            IServiceScope ctx, Dictionary<string, object> record, string[] updatableColumnFields)
+            IServiceContext ctx, Dictionary<string, object> record, string[] updatableColumnFields)
         {
 
             foreach (var f in updatableColumnFields)
@@ -243,13 +246,13 @@ where   hp._id=? and hc._id<>?
             }
         }
 
-        public override dynamic Browse(IServiceScope ctx, long id)
+        public override dynamic Browse(IServiceContext ctx, long id)
         {
             return new BrowsableRecord(ctx, this, id);
         }
 
         private IDictionary<long, string> DefaultNameGetter(
-            IServiceScope ctx, long[] ids)
+            IServiceContext ctx, long[] ids)
         {
             var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))
@@ -272,11 +275,11 @@ where   hp._id=? and hc._id<>?
             return result;
         }
 
-        private void AuditLog(IServiceScope ctx, long id, string msg)
+        private void AuditLog(IServiceContext ctx, long id, string msg)
         {
             var logRecord = new Dictionary<string, object>()
                 {
-                    { "user", ctx.Session.UserId },
+                    { "user", ctx.Session.UserID },
                     { "resource", this.Name },
                     { "resource_id", id },
                     { "description", msg }
@@ -325,14 +328,14 @@ where   hp._id=? and hc._id<>?
         /// 检查模型的可读权限
         /// </summary>
         /// <param name="scope"></param>
-        private void VerifyReadPermission(IServiceScope scope)
+        private void VerifyReadPermission(IServiceContext scope)
         {
             if (!this.CanRead)
             {
                 throw new NotSupportedException();
             }
 
-            if (!scope.CanReadModel(scope.Session.UserId, this.Name))
+            if (!scope.CanReadModel(scope.Session.UserID, this.Name))
             {
                 throw new UnauthorizedAccessException("Access denied");
             }

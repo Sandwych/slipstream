@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 using ObjectServer.Exceptions;
 using ObjectServer.Json;
 
-namespace ObjectServer
+namespace ObjectServer.Server
 {
     /// <summary>
     /// 处理 JSON-RPC 的 分发器
@@ -35,6 +35,7 @@ namespace ObjectServer
             s_methods.Add("logOff", selfType.GetMethod("LogOff"));
             s_methods.Add("getVersion", selfType.GetMethod("GetVersion"));
             s_methods.Add("listDatabases", selfType.GetMethod("ListDatabases"));
+            s_methods.Add("createDatabase", selfType.GetMethod("CreateDatabase"));
             s_methods.Add("deleteDatabase", selfType.GetMethod("DeleteDatabase"));
             s_methods.Add("execute", selfType.GetMethod("Execute"));
         }
@@ -75,6 +76,11 @@ namespace ObjectServer
             return s_service.ListDatabases();
         }
 
+        public static void CreateDatabase(string hashedRootPassword, string dbName, string adminPassword)
+        {
+            s_service.CreateDatabase(hashedRootPassword, dbName, adminPassword);
+        }
+
         public static void DeleteDatabase(string hashedRootPassword, string dbName)
         {
             s_service.DeleteDatabase(hashedRootPassword, dbName);
@@ -94,10 +100,10 @@ namespace ObjectServer
                 throw new InvalidOperationException("无法启动 PRC-Handler 工人线程，请先初始化框架");
             }
 
-            var controllerUrl = Environment.Configuration.ControllerUrl;
+            var controllerUrl = Environment.Configuration.CommanderUrl;
             var rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
-            LoggerProvider.RpcLogger.Info(
+            LoggerProvider.EnvironmentLogger.Info(
                 () => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
 
 
@@ -106,12 +112,10 @@ namespace ObjectServer
             {
                 controller.Connect(controllerUrl);
                 controller.Subscribe("STOP", Encoding.UTF8);
-                LoggerProvider.RpcLogger.Debug(
-                    () => string.Format("RpcHandler Thread/Process[{0}] connected to Controller URL[{1}]", id, controllerUrl));
+                LoggerProvider.EnvironmentLogger.Debug(
+                    () => string.Format("RpcHandler Thread/Process[{0}] connected to Commander URL[{1}]", id, controllerUrl));
 
                 receiver.Connect(rpcHandlerUrl);
-                LoggerProvider.RpcLogger.Debug(
-                    () => string.Format("RpcHandler Thread/Process[{0}] connected to URL[{1}]", id, rpcHandlerUrl));
 
                 var items = new PollItem[2];
                 items[0] = controller.CreatePollItem(IOMultiPlex.POLLIN);
@@ -124,13 +128,14 @@ namespace ObjectServer
                 {
                     running = true;
                 }
+
                 //  Process messages from both sockets
                 while (running)
                 {
                     Context.Poller(items, -1);
                 }
 
-                LoggerProvider.RpcLogger.Debug(
+                LoggerProvider.EnvironmentLogger.Debug(
                     () => string.Format("RpcHandler Thread/Process[{0}] is stopped", id));
             }
         }
@@ -141,7 +146,7 @@ namespace ObjectServer
 
             if (cmd == "STOP" && running)
             {
-                LoggerProvider.RpcLogger.Info("'STOP' command received, try to stop all RPC-Handlers");
+                LoggerProvider.EnvironmentLogger.Info("The 'STOP' command received, try to stop all RPC-Handlers");
                 lock (lockObj)
                 {
                     running = false;
@@ -168,6 +173,12 @@ namespace ObjectServer
             var id = jreq[JsonRpcProtocol.Id];
             var methodName = (string)jreq[JsonRpcProtocol.Method];
             var method = s_methods[methodName];
+
+            if (method == null)
+            {
+                throw new InvalidOperationException("Invalid method: " + methodName);
+            }
+
             JsonRpcError error = null;
             object result = null;
 
@@ -180,28 +191,32 @@ namespace ObjectServer
             //这里只捕获可控的异常
             try
             {
+                var startTime = Stopwatch.GetTimestamp();
                 result = method.Invoke(null, args);
+                var endTime = Stopwatch.GetTimestamp();
+                var costTime = endTime - startTime;
+                LoggerProvider.RpcLogger.Debug(
+                    () => String.Format("RPC cost time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
             }
             catch (FatalException fex)
             {
-                LoggerProvider.RpcLogger.Fatal("系统发生了致命错误", fex);
                 LoggerProvider.EnvironmentLogger.Fatal("系统发生了致命错误", fex);
                 throw fex; //接着抛出异常，让系统结束运行
             }
             catch (ArgumentException aex)
             {
                 error = JsonRpcError.RpcArgumentError;
-                LoggerProvider.RpcLogger.Error("ArgumentException", aex);
+                LoggerProvider.EnvironmentLogger.Error("ArgumentException", aex);
             }
             catch (ValidationException vex)
             {
                 error = JsonRpcError.ValidationError;
-                LoggerProvider.RpcLogger.Error("ValidationException", vex);
+                LoggerProvider.EnvironmentLogger.Error("ValidationException", vex);
             }
             catch (System.Exception ex)
             {
                 error = JsonRpcError.ServerInternalError;
-                LoggerProvider.RpcLogger.Error("RPCHandler Error", ex);
+                LoggerProvider.EnvironmentLogger.Error("RPCHandler Error", ex);
             }
 
             var jresponse = new JsonRpcResponse()

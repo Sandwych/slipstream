@@ -44,7 +44,7 @@ namespace ObjectServer
         private void ActiveTestModule()
         {
             //激活 test 模块
-            using (var scope = new ServiceScope(this.SessionId))
+            using (var scope = new ServiceContext(this.SessionId))
             {
                 var constraints = new object[][] { new object[] { "name", "=", "test" } };
                 var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
@@ -79,42 +79,42 @@ namespace ObjectServer
 
         public IExportedService Service { get; private set; }
 
-        public IServiceScope ServiceScope { get; private set; }
+        public IServiceContext ServiceContext { get; private set; }
 
         [SetUp]
         public void BeforeTest()
         {
-            Debug.Assert(this.ServiceScope == null);
+            Debug.Assert(this.ServiceContext == null);
             Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
 
-            this.ServiceScope = new ServiceScope(this.SessionId);
+            this.ServiceContext = new ServiceContext(this.SessionId);
         }
 
         [TearDown]
         public void AfterTest()
         {
-            Debug.Assert(this.ServiceScope != null);
-            this.ServiceScope.Dispose();
-            this.ServiceScope = null;
+            Debug.Assert(this.ServiceContext != null);
+            this.ServiceContext.Dispose();
+            this.ServiceContext = null;
         }
 
         protected void ClearTestModelTable()
         {
-            Debug.Assert(this.ServiceScope != null);
+            Debug.Assert(this.ServiceContext != null);
             this.ClearModel("test.test_model");
         }
 
 
         protected void ClearMasterAndChildTable()
         {
-            Debug.Assert(this.ServiceScope != null);
+            Debug.Assert(this.ServiceContext != null);
             this.ClearModel("test.child");
             this.ClearModel("test.master");
         }
 
         protected void ClearManyToManyModels()
         {
-            Debug.Assert(this.ServiceScope != null);
+            Debug.Assert(this.ServiceContext != null);
             this.ClearModel("test.department_employee");
             this.ClearModel("test.department");
             this.ClearModel("test.employee");

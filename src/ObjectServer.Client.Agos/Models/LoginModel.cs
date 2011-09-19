@@ -14,6 +14,12 @@ namespace ObjectServer.Client.Agos.Models
 {
     public class LoginModel
     {
+        public LoginModel()
+        {
+            this.Login = "root";
+            this.Password = "root";
+        }
+
         private string address;
         [Display(Name = "服务器地址", Description = "服务器的 URI 地址")]
         [Required(ErrorMessage = "服务器地址必填")]
@@ -66,7 +72,14 @@ namespace ObjectServer.Client.Agos.Models
             get { return this.password; }
             set
             {
-                Validator.ValidateProperty(value, new ValidationContext(this, null, null) { MemberName = "Password" });
+
+                var vc = new ValidationContext(this, null, null)
+                {
+                    MemberName = "Password"
+                };
+
+                Validator.ValidateProperty(value, vc);
+
                 this.password = value;
             }
         }

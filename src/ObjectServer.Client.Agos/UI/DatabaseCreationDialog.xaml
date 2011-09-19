@@ -2,9 +2,15 @@
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
            xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+           xmlns:local="clr-namespace:ObjectServer.Client.Agos.Models"
            Width="359" Height="215" 
-           Title="创建数据库" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk">
-    <Grid x:Name="LayoutRoot" Margin="2">
+           Title="创建数据库" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" >
+
+    <controls:ChildWindow.Resources>
+        <local:LoginModel x:Key="DBCreationModelDataContext"/>
+    </controls:ChildWindow.Resources>
+
+    <Grid x:Name="LayoutRoot" Margin="2" Loaded="LayoutRoot_Loaded">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
@@ -28,13 +34,21 @@
             <sdk:Label Grid.Column="0" Grid.Row="0" Height="23" HorizontalAlignment="Left" Margin="2" Name="label0" VerticalAlignment="Center" Content="服务器：" />
             <TextBox Grid.Column="1" Grid.Row="0" Height="23" HorizontalAlignment="Left" Margin="2" Name="textServerUrl" VerticalAlignment="Center" Width="240"  Text="http://localhost:9628" IsEnabled="True" IsReadOnly="True" />
             <sdk:Label Grid.Column="0" Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="2" Name="label1" VerticalAlignment="Center" Content="服务器管理密码：" />
-            <PasswordBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="2,2,2,2" Name="passwordBox1" VerticalAlignment="Top" Width="240" />
-            <sdk:Label Grid.Column="0" Grid.Row="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="label2" VerticalAlignment="Center" Content="数据库名称：" />
-            <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="textDBName" VerticalAlignment="Top" Width="240" />
+            <PasswordBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="2,2,2,2" 
+                         Name="serverPassword" VerticalAlignment="Top" Width="240" 
+                         Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=ServerPassword, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}" DataContext="{Binding Source={StaticResource DBCreationModelDataContext}}" />
+            <sdk:Label Grid.Column="0" Grid.Row="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Content="数据库名称：" />
+            <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" 
+                     Name="textDBName" VerticalAlignment="Top" Width="240"
+                     Text="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=DBName, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}" DataContext="{Binding Source={StaticResource DBCreationModelDataContext}}" />
             <sdk:Label Grid.Column="0" Grid.Row="3" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="label3" VerticalAlignment="Center" Content="管理员密码：" />
-            <PasswordBox Grid.Column="1" Grid.Row="3" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="passwordAdmin" VerticalAlignment="Top" Width="240" />
+            <PasswordBox Grid.Column="1" Grid.Row="3" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" 
+                         Name="passwordAdmin" VerticalAlignment="Top" Width="240" 
+                         Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=AdminPassword, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}" DataContext="{Binding Source={StaticResource DBCreationModelDataContext}}" />
             <sdk:Label Grid.Column="0" Grid.Row="4" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="label4" VerticalAlignment="Center" Content="重复管理员密码：" />
-            <PasswordBox Grid.Column="1" Grid.Row="4" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="passwordConfirmation" VerticalAlignment="Top" Width="240" />
+            <PasswordBox Grid.Column="1" Grid.Row="4" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2"
+                         Name="passwordConfirmation" VerticalAlignment="Top" Width="240" 
+                         Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=AdminPasswordConfirmation, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}" DataContext="{Binding Source={StaticResource DBCreationModelDataContext}}" />
         </Grid>
     </Grid>
 </controls:ChildWindow>

@@ -22,6 +22,7 @@ namespace ObjectServer
         private Config config;
         private Dictionary<string, DBProfile> dbProfiles =
             new Dictionary<string, DBProfile>();
+        private bool disposed = false;
 
 
         ~DBProfileCollection()
@@ -74,18 +75,16 @@ namespace ObjectServer
                 this.dbProfiles.Add(dbName.Trim(), db);
             }
 
-            var sysSession = new Session(dbName);
-            this.LoadModules(sysSession, db);
+            this.LoadModules(db);
         }
 
-        private void LoadModules(Session session, DBProfile db)
+        private void LoadModules(DBProfile db)
         {
-            Debug.Assert(session != null);
             Debug.Assert(db != null);
 
             //加载其它模块
             LoggerProvider.EnvironmentLogger.Info(() => "Loading modules...");
-            using (var ctx = new InternalServiceScope(db, session))
+            using (var ctx = new SystemServiceContext(db))
             {
                 Environment.Modules.UpdateModuleList(db.DBContext);
                 Environment.Modules.LoadModules(ctx);
@@ -119,18 +118,26 @@ namespace ObjectServer
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             this.Dispose(true);
         }
 
-        public void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposed)
             {
-            }
+                if (disposing)
+                {
+                    //处置托管对象
+                }
 
-            foreach (var p in this.dbProfiles)
-            {
-                p.Value.Dispose();
+                //处置非托管对象
+                foreach (var p in this.dbProfiles)
+                {
+                    p.Value.Dispose();
+                }
+
+                this.disposed = true;
             }
         }
 

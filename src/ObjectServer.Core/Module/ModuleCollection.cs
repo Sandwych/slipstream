@@ -141,7 +141,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadModules(IServiceScope scope)
+        public void LoadModules(IServiceContext scope)
         {
             if (scope == null)
             {
@@ -178,6 +178,10 @@ namespace ObjectServer
                     else if (state == ModuleModel.States.ToUninstall)
                     {
                         this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                    }
+                    else if (state == ModuleModel.States.Uninstalled)
+                    {
+                        //do nothing
                     }
                     else
                     {

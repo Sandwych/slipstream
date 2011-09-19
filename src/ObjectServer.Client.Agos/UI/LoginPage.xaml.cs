@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using System.Windows.Navigation;
 using System.Collections;
 using System.Threading;
+using System.ComponentModel.DataAnnotations;
 
 using ObjectServer.Client.Agos.Controls;
 using ObjectServer.Client.Agos.Models;
@@ -35,11 +36,7 @@ namespace ObjectServer.Client.Agos.UI
 
         void LoginPage_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DataContext = new LoginModel()
-            {
-                Login = "root",
-                Password = "root",
-            };
+            this.DataContext = new LoginModel();
         }
 
         private void LoadDatabaseList()
@@ -79,6 +76,8 @@ namespace ObjectServer.Client.Agos.UI
 
         private void Signin()
         {
+
+            //var loginModel = (LoginModel)this.DataContext;
 
             var database = (string)this.listDatabases.SelectedValue;
             var login = this.textLogin.Text.Trim();

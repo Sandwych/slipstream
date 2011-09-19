@@ -12,9 +12,9 @@ namespace ObjectServer.Model
     {
         private IDictionary<string, object> record;
         private IModel metaModel;
-        private IServiceScope scope;
+        private IServiceContext scope;
 
-        public BrowsableRecord(IServiceScope scope, IModel metaModel, long id)
+        public BrowsableRecord(IServiceContext scope, IModel metaModel, long id)
         {
             if (scope == null)
             {
@@ -36,7 +36,7 @@ namespace ObjectServer.Model
             this.record = metaModel.ReadInternal(scope, new long[] { id }, null)[0];
         }
 
-        public BrowsableRecord(IServiceScope scope, IModel metaModel, IDictionary<string, object> record)
+        public BrowsableRecord(IServiceContext scope, IModel metaModel, IDictionary<string, object> record)
         {
             if (scope == null)
             {

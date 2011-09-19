@@ -58,19 +58,18 @@
 
         private void OpenActionTab(MenuModel menu)
         {
-            //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
-            var actWin = new Windows.ListWindow();
-
-            var actionName = menu.Action.Item1;
-
             var tabPage = new TabItem();
             tabPage.DataContext = menu.Action;
-            tabPage.Content = actWin;
-            tabPage.Header = actionName;
+            tabPage.Header = "ListView";
             this.TabContainer.Items.Add(tabPage);
             this.TabContainer.SelectedItem = tabPage;
 
-            actWin.Load(menu.Action.Item2);
+            //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
+            var actWin = new Windows.ListWindow(menu.Action.Item2);
+
+            var actionName = menu.Action.Item1;
+
+            tabPage.Content = actWin;
         }
 
 

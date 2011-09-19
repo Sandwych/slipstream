@@ -19,6 +19,7 @@ namespace ObjectServer
     {
         private IDictionary<string, IResource> resources = new Dictionary<string, IResource>();
         private HashSet<string> initializedResources = new HashSet<string>();
+        private bool disposed = false;
 
         /// <summary>
         /// 初始化一个数据库环境
@@ -67,16 +68,21 @@ namespace ObjectServer
         public void Dispose()
         {
             this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!this.disposed)
             {
-                //这里处理托管对象
-            }
+                if (disposing)
+                {
+                    //这里处理托管对象
+                }
 
-            this.DBContext.Dispose();
+                this.DBContext.Dispose();
+                this.disposed = true;
+            }
         }
 
         #endregion

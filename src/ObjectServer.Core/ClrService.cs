@@ -21,7 +21,7 @@ namespace ObjectServer
 
         #region IService Members
 
-        public object Invoke(IResource self, IServiceScope scope, params object[] parameters)
+        public object Invoke(IResource self, IServiceContext scope, params object[] parameters)
         {
             Debug.Assert(self != null);
             Debug.Assert(scope != null);

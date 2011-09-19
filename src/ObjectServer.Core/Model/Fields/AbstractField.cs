@@ -116,7 +116,7 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<long, object> GetFieldValues(
-            IServiceScope scope, ICollection<Dictionary<string, object>> records)
+            IServiceContext scope, ICollection<Dictionary<string, object>> records)
         {
             if (this.IsFunctional)
             {
@@ -128,7 +128,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public object SetFieldValue(IServiceScope scope, object value)
+        public object SetFieldValue(IServiceContext scope, object value)
         {
             if (this.IsFunctional)
             {
@@ -141,11 +141,11 @@ namespace ObjectServer.Model
         }
 
         protected abstract Dictionary<long, object> OnGetFieldValues(
-            IServiceScope scope, ICollection<Dictionary<string, object>> records);
+            IServiceContext scope, ICollection<Dictionary<string, object>> records);
 
-        protected abstract object OnSetFieldValue(IServiceScope scope, object value);
+        protected abstract object OnSetFieldValue(IServiceContext scope, object value);
 
-        public abstract object BrowseField(IServiceScope scope, IDictionary<string, object> record);
+        public abstract object BrowseField(IServiceContext scope, IDictionary<string, object> record);
 
         public bool IsProperty
         {
@@ -168,7 +168,7 @@ namespace ObjectServer.Model
         }
 
         private static Dictionary<long, object>
-            GetPropertyValues(IServiceScope session, IEnumerable<long> ids)
+            GetPropertyValues(IServiceContext session, IEnumerable<long> ids)
         {
             throw new NotImplementedException();
         }
@@ -176,7 +176,7 @@ namespace ObjectServer.Model
         #endregion
 
         private Dictionary<long, object> GetFieldValuesFunctional(
-            IServiceScope ctx, ICollection<Dictionary<string, object>> records)
+            IServiceContext ctx, ICollection<Dictionary<string, object>> records)
         {
             Debug.Assert(ctx != null);
             Debug.Assert(records != null);

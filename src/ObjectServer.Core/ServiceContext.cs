@@ -13,14 +13,15 @@ namespace ObjectServer
     /// <summary>
     /// 但凡是需要 RPC 的方法都需要用此 scope 包裹
     /// </summary>
-    internal sealed class ServiceScope : IServiceScope
+    internal sealed class ServiceContext : IServiceContext
     {
-        private bool ownDb;
+        private bool disposed = false;
+
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public ServiceScope(string sessionId)
+        public ServiceContext(string sessionId)
         {
             var sessStore = Environment.SessionStore;
             var session = sessStore.GetSession(sessionId);
@@ -33,9 +34,8 @@ namespace ObjectServer
                 string.Format("ContextScope is opening for sessionId: [{0}]", sessionId));
 
             this.Session = session;
-            this.SessionStore.Pulse(session.Id);
+            this.SessionStore.Pulse(session.ID);
 
-            this.ownDb = true;
             this.DBProfile = Environment.DBProfiles.GetDBProfile(session.Database);
             this.DBContext.Open();
         }
@@ -44,14 +44,13 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        public ServiceScope(string dbName, string login)
+        public ServiceContext(string dbName, string login)
         {
             LoggerProvider.EnvironmentLogger.Debug(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
 
             this.Session = new Session(dbName);
             this.SessionStore.PutSession(this.Session);
-            this.ownDb = true;
             this.DBProfile = Environment.DBProfiles.GetDBProfile(this.Session.Database);
             this.DBContext.Open();
         }
@@ -60,7 +59,7 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="db"></param>
-        public ServiceScope(IDBProfile db)
+        public ServiceContext(IDBProfile db)
         {
             Debug.Assert(db != null);
             Debug.Assert(db.DBContext != null);
@@ -70,9 +69,13 @@ namespace ObjectServer
 
             this.Session = new Session(db.DBContext.DatabaseName);
             this.SessionStore.PutSession(this.Session);
-            this.ownDb = false;
             this.DBProfile = db;
             this.DBContext.Open();
+        }
+
+        ~ServiceContext()
+        {
+            this.Dispose(false);
         }
 
         public IResource GetResource(string resName)
@@ -82,6 +85,11 @@ namespace ObjectServer
                 throw new ArgumentNullException("resName");
             }
 
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("ServiceContext");
+            }
+
             return this.DBProfile.GetResource(resName);
         }
 
@@ -89,6 +97,11 @@ namespace ObjectServer
         {
             get
             {
+                if (this.disposed)
+                {
+                    throw new ObjectDisposedException("ServiceContext");
+                }
+
                 Debug.Assert(this.DBProfile != null);
                 return this.DBProfile.DBContext;
             }
@@ -101,30 +114,43 @@ namespace ObjectServer
 
         #region IDisposable 成员
 
+        private void Dispose(bool isDisposing)
+        {
+            if (!this.disposed)
+            {
+                if (isDisposing)
+                {
+                    //处置托管对象
+                }
+
+                //处置非托管对象
+                this.DBContext.Close();
+
+                this.disposed = true;
+                LoggerProvider.EnvironmentLogger.Debug(() => "ScopeContext closed");
+            }
+        }
+
         public void Dispose()
         {
-            if (this.ownDb)
-            {
-                this.DBContext.Close();
-            }
-
-            LoggerProvider.EnvironmentLogger.Debug(() => "ScopeContext closed");
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion
 
         #region IEquatable<IContext> 成员
 
-        public bool Equals(IServiceScope other)
+        public bool Equals(IServiceContext other)
         {
-            return this.Session.Id == other.Session.Id;
+            return this.Session.ID == other.Session.ID;
         }
 
         #endregion
 
         public override int GetHashCode()
         {
-            return this.Session.Id.GetHashCode();
+            return this.Session.ID.GetHashCode();
         }
 
         private SessionStore SessionStore

@@ -53,8 +53,11 @@
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <form label="Users">
+        <label field="name" />
         <field name="name" />
+        <label field="login" />
         <field name="login" />
+        <label field="admin" />
         <field name="admin" />
       </form>
       ]]>

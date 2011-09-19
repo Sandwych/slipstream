@@ -92,9 +92,9 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(IServiceScope scope, bool update)
+        public void Load(IServiceContext ctx, bool update)
         {
-            if (scope == null)
+            if (ctx == null)
             {
                 throw new ArgumentNullException("scope");
             }
@@ -106,27 +106,27 @@ namespace ObjectServer
             if (this.Name == "core")
             {
 #if DEBUG //调试模式不捕获异常，以便于调试
-                this.LoadCoreModule(scope, update);
+                this.LoadCoreModule(ctx, update);
 #else
                 try
                 {
-                    this.LoadCoreModule(ctx);
+                    this.LoadCoreModule(ctx, update);
                 }
                 catch (Exception ex)
                 {
                     var msg = "Failed to load core module";
-                    Logger.Fatal(msg, ex);
-                    throw new InitializationException(msg, ex);
+                    LoggerProvider.EnvironmentLogger.Fatal(msg, ex);
+                    throw new Exceptions.InitializationException(msg, ex);
                 }
 #endif
             }
             else
             {
-                this.LoadAdditionalModule(scope, update);
+                this.LoadAdditionalModule(ctx, update);
             }
         }
 
-        private void LoadAdditionalModule(IServiceScope scope, bool update)
+        private void LoadAdditionalModule(IServiceContext scope, bool update)
         {
             Debug.Assert(scope != null);
 
@@ -154,7 +154,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadCoreModule(IServiceScope scope, bool update)
+        private void LoadCoreModule(IServiceContext scope, bool update)
         {
             Debug.Assert(scope != null);
 
@@ -182,7 +182,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadModuleData(IServiceScope scope)
+        private void LoadModuleData(IServiceContext scope)
         {
             Debug.Assert(scope != null);
 

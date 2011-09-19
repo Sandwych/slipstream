@@ -75,7 +75,7 @@ namespace ObjectServer
             IService service;
 
             Debug.Assert(args.Length > 0);
-            var scope = (IServiceScope)args[0];
+            var scope = (IServiceContext)args[0];
             var userArgs = new object[args.Length - 1];
             Array.Copy(args, 1, userArgs, 0, args.Length - 1);
 
@@ -117,7 +117,7 @@ namespace ObjectServer
 
             var parameters = mi.GetParameters();
             if (parameters.Length < 2
-                || parameters[1].ParameterType != typeof(IServiceScope)
+                || parameters[1].ParameterType != typeof(IServiceContext)
                 || !mi.IsPublic)
             {
                 var msg = string.Format(
@@ -186,12 +186,6 @@ namespace ObjectServer
                 throw new InvalidCastException(msg);
             }
             return obj;
-        }
-
-        internal static T CreateStaticObjectInstance<T>()
-            where T : class, IResource
-        {
-            return CreateStaticResourceInstance(typeof(T)) as T;
         }
 
         //以后要支持 DLR，增加  CreateDynamicObjectInstance

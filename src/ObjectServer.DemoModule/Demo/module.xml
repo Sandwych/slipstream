@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<module-metadata>
+  <name>demo</name>
+  <label>演示模块</label>
+  <description>
+    <![CDATA[
+      此模块演示一个最小化的 ObjectServer 业务模块应该怎么编写
+   ]]>
+  </description>
+  <auto-load>true</auto-load>
+  <source-language>csharp</source-language>
+  <sources>
+    <file>EmployeeModel.cs</file>
+  </sources>
+
+  <data-files>
+    <file>ui.xml</file>
+    <file>demo-data.xml</file>
+  </data-files>
+
+</module-metadata>

@@ -10,11 +10,12 @@ using ObjectServer.Data;
 
 namespace ObjectServer.Model
 {
-    internal class TableMigrator
+    internal class TableMigrator : IDisposable
     {
         private IDBProfile db;
         private AbstractTableModel model;
-        private IServiceScope context;
+        private IServiceContext context;
+        private bool disposed = false;
 
         public TableMigrator(IDBProfile db, AbstractTableModel model)
         {
@@ -30,7 +31,7 @@ namespace ObjectServer.Model
 
             this.db = db;
             this.model = model;
-            this.context = new SessionlessServiceScope(db);
+            this.context = new SystemServiceContext(db);
         }
 
         public void Migrate()
@@ -193,5 +194,25 @@ namespace ObjectServer.Model
             return rowCount > 0;
         }
 
+
+        private void Dispose(bool isDisposing)
+        {
+            if (!this.disposed)
+            {
+                if (isDisposing)
+                {
+                    //处置托管对象
+                }
+
+                this.context.Dispose();
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

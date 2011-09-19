@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ObjectServer.Server
 {
-    static class Program
+    static class Win32ServiceProgram
     {
         /// <summary>
         /// The main entry point for the application.

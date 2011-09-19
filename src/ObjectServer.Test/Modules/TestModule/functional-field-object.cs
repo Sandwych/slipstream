@@ -23,7 +23,7 @@ namespace ObjectServer.Test
             Fields.Integer("sum_field").SetValueGetter(GetSum).Readonly();
         }
 
-        private Dictionary<long, object> GetSum(IServiceScope ctx, IEnumerable<long> ids)
+        private Dictionary<long, object> GetSum(IServiceContext ctx, IEnumerable<long> ids)
         {
             var fields = new string[] { "field1", "field2" };
             var records = this.ReadInternal(ctx, ids.ToArray(), fields);
@@ -39,7 +39,7 @@ namespace ObjectServer.Test
             return result;
         }
 
-        private Dictionary<long, object> GetUser(IServiceScope ctx, IEnumerable<long> ids)
+        private Dictionary<long, object> GetUser(IServiceContext ctx, IEnumerable<long> ids)
         {
             var userModel = (IModel)ctx.GetResource("core.user");
             var constraints = new object[][] { new object[] { "login", "=", "root" } };

@@ -4,42 +4,63 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
-  mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480"  
+  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"  
   xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls" 
   Style="{StaticResource PageStyle}">
 
 
     <Grid x:Name="LayoutRoot" Background="#F0F0F0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="48"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="64"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" ></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Row="0" Style="{StaticResource HeaderStyle}">
-            <Grid x:Name="NavigationGrid" >
+        <Border Grid.Row="0" Style="{StaticResource HeaderStyle}" Margin="0,0,0,5">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="5" BlurRadius="5" Color="#666666" Direction="-90" />
+            </Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="HeaderLogo" Grid.Column="0" MinWidth="120" Background="#FFF0F0F0">
+                    <TextBlock>Logo Here</TextBlock>
+                </Border>
 
-                <Border x:Name="BrandingBorder">
-                    <StackPanel x:Name="BrandingStackPanel" Orientation="Horizontal">
-                        <ContentControl/>
-                        <TextBlock x:Name="ApplicationNameTextBlock" Foreground="White" FontSize="24" VerticalAlignment="Center"
-                            Margin="5,5,5,5"
-                            Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"/>
-                        <HyperlinkButton x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
+                <Border x:Name="BrandingBorder" Grid.Column="1">
+                    <StackPanel Orientation="Vertical" Name="BannerContainer">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ContentControl Grid.Column="0" />
+                            <TextBlock Grid.Column="1" x:Name="ApplicationNameTextBlock" FontSize="18" VerticalAlignment="Center"
+                            Margin="5,5,5,5" Foreground="White"
+                            Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"  />
+                            <HyperlinkButton Grid.Column="3" x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
+                        </Grid>
+                        <Rectangle Height="1" Fill="#FF336699" />
+                        <Border Height="25">
+                            
+                        </Border>
                     </StackPanel>
                 </Border>
 
             </Grid>
 
-
         </Border>
 
-        <Border x:Name="ShortcutContainer" Grid.Row="1" Style="{StaticResource ShortcutContainerStyle}"></Border>
-        <Grid x:Name="ContentGrid" Grid.Row="2">
+
+        <Grid x:Name="ContentGrid" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -54,7 +75,7 @@
             <controls:TabControl Grid.Column="2" Padding="0,0,0,0" x:Name="TabContainer" Margin="5,5,5,5" >
             </controls:TabControl>
         </Grid>
-        <Border x:Name="StatusBar" Margin="0,0,0,0" Grid.Row="3" Style="{StaticResource StatusBarStyle}">
+        <Border x:Name="StatusBar" Margin="0,0,0,0" Grid.Row="2" Style="{StaticResource StatusBarStyle}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"></ColumnDefinition>

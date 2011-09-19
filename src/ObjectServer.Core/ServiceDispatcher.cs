@@ -5,15 +5,13 @@ using System.Text;
 using System.Transactions;
 using System.Reflection;
 
-using Castle.DynamicProxy;
-
 using ObjectServer.Data;
 using ObjectServer.Core;
 using ObjectServer.Utility;
 
 namespace ObjectServer
 {
-    internal sealed class ServiceDispatcher : MarshalByRefObject, IExportedService
+    internal sealed class ServiceDispatcher : IExportedService
     {
         private ServiceDispatcher()
         {
@@ -21,7 +19,7 @@ namespace ObjectServer
 
         public string LogOn(string dbName, string username, string password)
         {
-            using (var ctx = new ServiceScope(dbName, "system"))
+            using (var ctx = new ServiceContext(dbName, "system"))
             using (var tx = new TransactionScope())
             {
                 ctx.DBContext.Open();
@@ -36,17 +34,17 @@ namespace ObjectServer
 
                 //用新 session 替换老 session
                 Environment.SessionStore.PutSession(session);
-                Environment.SessionStore.Remove(ctx.Session.Id);
+                Environment.SessionStore.Remove(ctx.Session.ID);
 
                 tx.Complete();
-                return session.Id.ToString();
+                return session.ID.ToString();
             }
         }
 
 
         public void LogOff(string sessionId)
         {
-            using (var ctx = new ServiceScope(sessionId))
+            using (var ctx = new ServiceContext(sessionId))
             using (var tx = new TransactionScope())
             {
                 ctx.DBContext.Open();
@@ -64,7 +62,7 @@ namespace ObjectServer
         public object Execute(string sessionId, string resource, string method, params object[] args)
         {
 
-            using (var scope = new ServiceScope(sessionId))
+            using (var scope = new ServiceContext(sessionId))
             {
                 dynamic res = scope.GetResource(resource);
                 var svc = res.GetService(method);
@@ -80,7 +78,7 @@ namespace ObjectServer
             }
         }
 
-        private static object ExecuteTransactional(ServiceScope scope, dynamic res, dynamic svc, object[] args)
+        private static object ExecuteTransactional(ServiceContext scope, dynamic res, dynamic svc, object[] args)
         {
             var tx = scope.DBContext.BeginTransaction();
             try

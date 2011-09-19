@@ -5,27 +5,28 @@ using System.Text;
 using System.Threading;
 using System.Configuration;
 
-namespace ObjectServer.DevServer
+namespace ObjectServer.Server
 {
-    class Program
+    class DevServerProgram
     {
+        private static void OnExit(object sender, EventArgs args)
+        {
+            Console.WriteLine("ObjectServer 开发服务器进程已经终止.");
+        }
+
         static int Main(string[] args)
         {
             Console.WriteLine("ObjectServer 开发服务器\n");
 
-            Thread rpcThread;
-            Thread httpThread;
-            var controller = new Messaging.Controller();
+            InitializeFramework();
+
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnExit);
 
             try
             {
-                InitializeFramework();
-
-                controller = new Messaging.Controller();
-                controller.Start();
-
-                rpcThread = StartApplicationServer();
-                httpThread = StartHttpServer();
+                var server = new ServerProcess();
+                server.Run();
+                return 0;
             }
             catch (Exception ex)
             {
@@ -35,56 +36,6 @@ namespace ObjectServer.DevServer
                 Console.ForegroundColor = oldColor;
                 return -1;
             }
-
-            Console.WriteLine("\n系统启动完毕，开始等待客户端请求...");
-            do
-            {
-                Console.WriteLine("按 'Q' 键终止服务");
-            } while (Char.ToUpperInvariant(Console.ReadKey(true).KeyChar) != 'Q');
-
-            Console.WriteLine("开始广播停止命令...");
-            controller.Broadcast("STOP");
-
-            controller.Dispose();
-            Console.WriteLine("服务器已经终止");
-
-            return 0;
-
-        }
-
-        private static Thread StartApplicationServer()
-        {
-            Console.WriteLine("应用服务器正在启动 ...");
-
-            var serverThread = new Thread(() =>
-            {
-                var cs = new RpcHost();
-                cs.Start();
-            });
-            serverThread.Start();
-
-            Console.WriteLine("应用服务已经启动");
-            return serverThread;
-        }
-
-        private static Thread StartHttpServer()
-        {
-            Console.WriteLine("HTTP 服务器正在启动 ...");
-
-            var serverThread = new Thread(() =>
-            {
-                using (var cs = new ObjectServer.Http.HttpServer(
-                    Environment.Configuration.ControllerUrl,
-                    Environment.Configuration.RpcHostUrl,
-                    Environment.Configuration.HttpListenPort))
-                {
-                    cs.Start();
-
-                }
-            });
-            serverThread.Start();
-            Console.WriteLine("HTTP 服务已经启动");
-            return serverThread;
         }
 
         private static void InitializeFramework()

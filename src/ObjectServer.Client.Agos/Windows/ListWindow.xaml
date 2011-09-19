@@ -4,36 +4,64 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300" d:DesignWidth="400" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk">
+    d:DesignHeight="600" d:DesignWidth="800" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk">
 
     <Grid x:Name="LayoutRoot" Background="White" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="35" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal"  Background="Transparent" x:Name="ToolBar" Margin="5,5,5,5">
-            <Button Content="新建" MinWidth="75" Height="25" />
-            <Button Content="编辑" MinWidth="75" Height="25" />
-            <Button Content="删除" MinWidth="75" Height="25" />
-        </StackPanel>
-        <toolkit:Expander Grid.Row="1" Margin="5">
-            <toolkit:Expander.HeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="高级搜索选项" FontSize="14"/>
-                </DataTemplate>
-            </toolkit:Expander.HeaderTemplate>
-            <toolkit:Expander.ContentTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="Test Content 1"/>
-                        <TextBlock Text="Test Content 2"/>
-                        <TextBlock Text="Test Content 3"/>
-                    </StackPanel>
-                </DataTemplate>
-            </toolkit:Expander.ContentTemplate>
-        </toolkit:Expander>
-        <sdk:DataGrid x:Name="gridList" AutoGenerateColumns="False" Grid.Row="2" 
+
+        <Border Grid.Row="0"  Padding="5,5,5,5" Margin="0,0,0,0" Background="White">
+            <StackPanel Orientation="Horizontal"  Background="Transparent" x:Name="ToolBar" >
+                <Button Content="新建" MinWidth="75" Height="25" />
+                <Button Content="编辑" MinWidth="75" Height="25" />
+                <Button Content="删除" MinWidth="75" Height="25" Name="buttonDelete" />
+                <Rectangle Width="15" />
+                <Button Content="查询" MinWidth="75" Height="25" Name="buttonQuery" Click="buttonQuery_Click" />
+            </StackPanel>
+        </Border>
+        <Rectangle Grid.Row="1" Height="1" Fill="#E0E0E0" ></Rectangle>
+
+        <Border Grid.Row="2" Margin="0,0,0,0" Padding="5,5,5,5" Background="White">
+
+            <StackPanel Orientation="Vertical" >
+                <TextBlock Grid.Column="0" Text="查询条件" FontWeight="Bold" VerticalAlignment="Center" />
+
+                <toolkit:Expander Name="expanderAdvancedConditions" Margin="5">
+                    <toolkit:Expander.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="高级查询条件" FontSize="14"/>
+                        </DataTemplate>
+                    </toolkit:Expander.HeaderTemplate>
+                    <toolkit:Expander.ContentTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="Test Content 1"/>
+                                <TextBlock Text="Test Content 2"/>
+                                <TextBlock Text="Test Content 3"/>
+
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <sdk:Label Content="开始序号："  VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                                    <TextBox Name="textOffset" Width="60" Text="0" VerticalAlignment="Center" />
+                                    <Rectangle Width="10" />
+                                    <sdk:Label Content="数量限制："  VerticalAlignment="Center" />
+                                    <TextBox Name="textLimit" Width="60" Text="500" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </toolkit:Expander.ContentTemplate>
+                </toolkit:Expander>
+
+            </StackPanel>
+        </Border>
+
+        <Rectangle Grid.Row="3" Height="1" Fill="#E0E0E0" ></Rectangle>
+
+        <sdk:DataGrid x:Name="gridList" AutoGenerateColumns="False" Grid.Row="4" 
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
 
         </sdk:DataGrid>

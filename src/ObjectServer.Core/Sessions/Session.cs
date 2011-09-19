@@ -11,29 +11,12 @@ namespace ObjectServer
     [Serializable]
     public sealed class Session
     {
-        public const int IdLength = 16;
+        public const int IDLength = 16;
         public const string SystemUserName = "system";
         public const long SystemUserId = 0;
 
-        public Session()
-        {
-            this.UserId = 0;
-            this.Id = GenerateSessionId();
-            this.StartTime = DateTime.Now;
-            this.LastActivityTime = this.StartTime;
-        }
 
-        private static string GenerateSessionId()
-        {
-            var bytes = new byte[IdLength];
-            using (var rng = RNGCryptoServiceProvider.Create())
-            {
-                rng.GetBytes(bytes);
-            }
-            return bytes.ToHex();
-        }
-
-        public Session(string dbName, string login, long userId)
+        public Session(string dbName, string login, long userID)
             : this()
         {
             if (string.IsNullOrEmpty(dbName))
@@ -46,14 +29,14 @@ namespace ObjectServer
                 throw new ArgumentNullException("login");
             }
 
-            if (userId <= 0)
+            if (userID <= 0)
             {
                 throw new ArgumentOutOfRangeException("userId");
             }
 
             this.Database = dbName;
             this.Login = login;
-            this.UserId = userId;
+            this.UserID = userID;
         }
 
         public Session(string dbName)
@@ -66,15 +49,33 @@ namespace ObjectServer
 
             this.Database = dbName;
             this.Login = SystemUserName;
-            this.UserId = SystemUserId;
+            this.UserID = SystemUserId;
         }
 
-        public string Id { get; set; }
+        private Session()
+        {
+            this.UserID = 0;
+            this.ID = GenerateSessionId();
+            this.StartTime = DateTime.Now;
+            this.LastActivityTime = this.StartTime;
+        }
+
+        private static string GenerateSessionId()
+        {
+            var bytes = new byte[IDLength];
+            using (var rng = RNGCryptoServiceProvider.Create())
+            {
+                rng.GetBytes(bytes);
+            }
+            return bytes.ToHex();
+        }
+
+        public string ID { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime LastActivityTime { get; set; }
         public string Database { get; set; }
         public string Login { get; set; }
-        public long UserId { get; set; }
+        public long UserID { get; set; }
 
         public DateTime Deadline
         {
@@ -101,7 +102,7 @@ namespace ObjectServer
         {
             get
             {
-                return this.UserId <= 0;
+                return this.UserID <= 0;
             }
         }
     }

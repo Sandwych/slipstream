@@ -49,7 +49,8 @@ namespace ObjectServer.Utility
                 {
                     for (var j = 0; j < getDependIdProc(items[i]).Count; j++)
                     {
-                        g.AddEdge(i, indexes[getDependIdProc(items[i])[j]]);
+                        var id = getDependIdProc(items[i])[j];
+                        g.AddEdge(i, indexes[id]);
                     }
                 }
             }

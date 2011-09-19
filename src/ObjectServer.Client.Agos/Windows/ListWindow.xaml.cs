@@ -12,6 +12,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
+using System.Diagnostics;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;
@@ -66,65 +67,68 @@ namespace ObjectServer.Client.Agos.Windows
             = new Dictionary<string, Tuple<Type, IValueConverter>>()
         {
             {"Integer", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"Float", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
             {"DateTime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"ManyToOne", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
             {"Enumeration", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
-
-            /*
-            {"selection", typeof(DataGridTextColumn)},
-            {"Text", typeof(DataGridTextColumn)},
-            
-            {"datetime", typeof(DataGridTextColumn)},
-            {"date", typeof(DataGridTextColumn)},
-            {"float", typeof(DataGridTextColumn)},
-            {"reference", typeof(DataGridTextColumn)},
-            {"many2one", typeof(DataGridTextColumn)},
-             */
         };
 
+        private IDictionary<string, object> viewRecord;
+        private IDictionary<string, object> actionRecord;
         private readonly IList<string> fields = new List<string>();
+        private string modelName;
 
         public ListWindow()
         {
+            this.ActionID = -1;
+
             InitializeComponent();
         }
 
-        #region IWindowAction Members
+        public ListWindow(long actionID)
+        {
+            this.ActionID = actionID;
 
-        public void Load(long actionId)
+            this.Init();
+
+            this.InitializeComponent();
+        }
+
+        private void Init()
         {
             var app = (App)Application.Current;
-            var actionIds = new long[] { actionId };
+            var actionIds = new long[] { this.ActionID };
             app.ClientService.ReadModel("core.action_window", actionIds, null, actionRecords =>
             {
+                this.actionRecord = actionRecords[0];
                 var view = (object[])actionRecords[0]["view"];
                 var viewIds = new long[] { (long)view[0] };
                 app.ClientService.ReadModel("core.view", viewIds, null, viewRecords =>
                 {
-                    this.LoadInternal(actionRecords[0], viewRecords[0]);
+                    this.viewRecord = viewRecords[0];
+                    this.LoadInternal();
                 });
             });
         }
 
-        private void LoadInternal(IDictionary<string, object> actionRecord, IDictionary<string, object> viewRecord)
+        #region IWindowAction Members
+
+        public long ActionID { get; private set; }
+
+        #endregion
+
+        private void LoadData()
         {
             var app = (App)Application.Current;
-
-            var layout = (string)viewRecord["layout"];
-            var layoutDoc = XDocument.Parse(layout);
-            var modelName = (string)actionRecord["model"];
-
-            this.InitializeColumns(app, layoutDoc, modelName);
-        }
-
-        private void LoadRecords(App app, string modelName)
-        {
             //加载数据
-            app.ClientService.SearchModel(modelName, null, null, 0, 80, ids =>
+            var offset = 0;// long.Parse(this.textOffset.Text);
+            var limit = 500;// long.Parse(this.textLimit.Text);
+
+            app.ClientService.SearchModel(this.modelName, null, null, offset, limit, ids =>
             {
-                app.ClientService.ReadModel(modelName, ids, this.fields, records =>
+                app.ClientService.ReadModel(this.modelName, ids, this.fields, records =>
                 {
                     //我们需要一个唯一的字符串型 ID
                     var typeid = Guid.NewGuid().ToString();
@@ -133,9 +137,23 @@ namespace ObjectServer.Client.Agos.Windows
             });
         }
 
-        private void InitializeColumns(App app, XDocument layoutDoc, string modelName)
+        private void LoadInternal()
         {
-            var args = new object[] { modelName };
+            var app = (App)Application.Current;
+
+            var layout = (string)this.viewRecord["layout"];
+            var layoutDoc = XDocument.Parse(layout);
+            this.modelName = (string)this.actionRecord["model"];
+
+            this.InitializeColumns(layoutDoc);
+
+            this.LoadData();
+        }
+
+        private void InitializeColumns(XDocument layoutDoc)
+        {
+            var app = (App)Application.Current;
+            var args = new object[] { this.modelName };
             app.ClientService.Execute("core.model", "GetFields", args, result =>
             {
                 var fields = ((object[])result).Select(r => (Dictionary<string, object>)r);
@@ -146,12 +164,9 @@ namespace ObjectServer.Client.Agos.Windows
                     var metaField = fields.Single(i => (string)i["name"] == fieldName);
                     this.AddColumn(fieldName, (string)metaField["type"], (string)metaField["label"]);
                 }
-
-                this.LoadRecords(app, modelName);
             });
         }
 
-        #endregion
 
         private void AddColumn(string fieldName, string fieldType, string fieldLabel)
         {
@@ -166,6 +181,12 @@ namespace ObjectServer.Client.Agos.Windows
             }
             this.gridList.Columns.Add(col);
 
+        }
+
+        private void buttonQuery_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.Assert(this.ActionID > 0);
+            this.LoadData();
         }
 
     }

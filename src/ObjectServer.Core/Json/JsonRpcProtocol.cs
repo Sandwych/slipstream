@@ -5,7 +5,7 @@ using System.Web;
 
 namespace ObjectServer.Json
 {
-    internal static class JsonRpcProtocol
+    public static class JsonRpcProtocol
     {
         public const string JsonContentType = "text/json";
         public const string Method = "method";

@@ -36,10 +36,10 @@ namespace ObjectServer
             this.LoggingSql = false;
             this.LogToConsole = false;
 
-            this.RpcHandlerMax = 5; //默认5个工人
+            this.RpcHandlerMax = Environment.ProcessorCount;
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "inproc://rpc-entrance";
-            this.ControllerUrl = "inproc://controller";
+            this.CommanderUrl = "inproc://controller";
             this.HttpListenPort = 9287;
 
             this.ModulePath = "Modules";
@@ -110,7 +110,7 @@ namespace ObjectServer
         public string RpcHostUrl { get; set; }
 
         [XmlElement("controller-url")]
-        public string ControllerUrl { get; set; }
+        public string CommanderUrl { get; set; }
 
         [XmlElement("http-listen-port")]
         public int HttpListenPort { get; set; }

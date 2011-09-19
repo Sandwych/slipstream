@@ -8,7 +8,7 @@
     <ProjectGuid>{77E560B0-09B9-4EA5-8983-6F3C5B9FD1C6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectServer.DevServer</RootNamespace>
+    <RootNamespace>ObjectServer.Server</RootNamespace>
     <AssemblyName>ObjectServer.DevServer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>ObjectServer.DevServer.Program</StartupObject>
+    <StartupObject>ObjectServer.Server.DevServerProgram</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerProcess.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ObjectServer.Core\ObjectServer.Core.csproj">
@@ -62,6 +63,10 @@
     <ProjectReference Include="..\ObjectServer.Infrastructure\ObjectServer.Infrastructure.csproj">
       <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
       <Name>ObjectServer.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectServer.Server\ObjectServer.Server.csproj">
+      <Project>{E4B0FE62-1C42-4CFE-ACF0-8C9FDFC81951}</Project>
+      <Name>ObjectServer.Server</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

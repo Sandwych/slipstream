@@ -16,7 +16,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IServiceScope ctx, ICollection<Dictionary<string, object>> records)
+           IServiceContext ctx, ICollection<Dictionary<string, object>> records)
         {
             if (ctx == null)
             {
@@ -51,12 +51,12 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override object OnSetFieldValue(IServiceScope scope, object value)
+        protected override object OnSetFieldValue(IServiceContext scope, object value)
         {
             throw new NotSupportedException();
         }
 
-        public override object BrowseField(IServiceScope scope, IDictionary<string, object> record)
+        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
         {
             if (scope == null)
             {

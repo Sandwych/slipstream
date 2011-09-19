@@ -18,7 +18,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override Dictionary<string, object>[] ReadInternal(
-                 IServiceScope scope, long[] ids, string[] requiredFields = null)
+                 IServiceContext scope, long[] ids, string[] requiredFields = null)
         {
             if (scope == null)
             {
@@ -105,7 +105,7 @@ namespace ObjectServer.Model
         }
 
         private void PostProcessFieldValues(
-            IServiceScope scope, IList<string> allFields, IList<Dictionary<string, object>> records)
+            IServiceContext scope, IList<string> allFields, IList<Dictionary<string, object>> records)
         {
             Debug.Assert(scope != null);
             Debug.Assert(allFields != null);
@@ -129,7 +129,7 @@ namespace ObjectServer.Model
         }
 
         private void ReadBaseModels(
-            IServiceScope scope, IList<string> allFields, Dictionary<string, object>[] records)
+            IServiceContext scope, IList<string> allFields, Dictionary<string, object>[] records)
         {
             Debug.Assert(scope != null);
             Debug.Assert(allFields != null);

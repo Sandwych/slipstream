@@ -12,10 +12,10 @@ namespace ObjectServer.Model
 {
     internal sealed class XmlDataImporter
     {
-        private IServiceScope context;
+        private IServiceContext context;
         private string currentModule;
 
-        public XmlDataImporter(IServiceScope ctx, string currentModule)
+        public XmlDataImporter(IServiceContext ctx, string currentModule)
         {
             this.context = ctx;
             this.currentModule = currentModule;

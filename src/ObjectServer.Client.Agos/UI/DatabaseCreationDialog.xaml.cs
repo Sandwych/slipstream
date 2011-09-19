@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
+using ObjectServer.Client.Agos.Models;
+
 namespace ObjectServer.Client.Agos.UI
 {
     public partial class DatabaseCreationDialog : ChildWindow
@@ -27,6 +29,11 @@ namespace ObjectServer.Client.Agos.UI
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+        }
+
+        private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = new DBCreationModel();
         }
     }
 }
