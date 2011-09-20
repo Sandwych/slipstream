@@ -23,7 +23,7 @@ namespace ObjectServer
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
 
-            LoggerProvider.EnvironmentLogger.Info(() => string.Format("Registering Resource: [{0}]", name));
+            LoggerProvider.EnvironmentLogger.Debug(() => string.Format("Registering Resource: [{0}]", name));
             this.SetName(name);
             this.RegisterAllServiceMethods(this.GetType());
         }
