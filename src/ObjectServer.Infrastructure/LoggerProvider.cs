@@ -199,16 +199,28 @@ namespace ObjectServer
                 Layout = layout,
             };
 
-            var errorColorMapping = new ColoredConsoleAppender.LevelColors()
-            {
-                Level = Level.Error,
-                ForeColor = ColoredConsoleAppender.Colors.Red,
-            };
-
             var debugColorMapping = new ColoredConsoleAppender.LevelColors()
             {
                 Level = Level.Debug,
                 ForeColor = ColoredConsoleAppender.Colors.White,
+            };
+
+            var infoColorMapping = new ColoredConsoleAppender.LevelColors()
+            {
+                Level = Level.Info,
+                ForeColor = ColoredConsoleAppender.Colors.White,
+            };
+
+            var warnColorMapping = new ColoredConsoleAppender.LevelColors()
+            {
+                Level = Level.Warn,
+                ForeColor = ColoredConsoleAppender.Colors.Yellow,
+            };
+
+            var errorColorMapping = new ColoredConsoleAppender.LevelColors()
+            {
+                Level = Level.Error,
+                ForeColor = ColoredConsoleAppender.Colors.Red,
             };
 
             var fatalColorMapping = new ColoredConsoleAppender.LevelColors()
@@ -217,16 +229,11 @@ namespace ObjectServer
                 ForeColor = ColoredConsoleAppender.Colors.Red,
             };
 
-            var warnColorMapping = new ColoredConsoleAppender.LevelColors()
-            {
-                Level = Level.Fatal,
-                ForeColor = ColoredConsoleAppender.Colors.Yellow,
-            };
-
+            cca.AddMapping(debugColorMapping);
+            cca.AddMapping(infoColorMapping);
+            cca.AddMapping(warnColorMapping);
             cca.AddMapping(errorColorMapping);
             cca.AddMapping(fatalColorMapping);
-            cca.AddMapping(debugColorMapping);
-            cca.AddMapping(warnColorMapping);
 
             cca.ActivateOptions();
             return cca;
