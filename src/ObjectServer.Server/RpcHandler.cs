@@ -103,8 +103,8 @@ namespace ObjectServer.Server
             var controllerUrl = Environment.Configuration.CommanderUrl;
             var rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
-            LoggerProvider.EnvironmentLogger.Info(
-                () => string.Format("Starting RpcHandler Thread/Process, ID=[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
+            LoggerProvider.EnvironmentLogger.Debug(
+                () => string.Format("Starting RpcHandler thread[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
 
 
             using (var controller = new ZMQ.Socket(ZMQ.SocketType.SUB))
@@ -113,7 +113,7 @@ namespace ObjectServer.Server
                 controller.Connect(controllerUrl);
                 controller.Subscribe("STOP", Encoding.UTF8);
                 LoggerProvider.EnvironmentLogger.Debug(
-                    () => string.Format("RpcHandler Thread/Process[{0}] connected to Commander URL[{1}]", id, controllerUrl));
+                    () => string.Format("RpcHandler thread[{0}] is connected to the Commander URL[{1}]", id, controllerUrl));
 
                 receiver.Connect(rpcHandlerUrl);
 
@@ -136,7 +136,7 @@ namespace ObjectServer.Server
                 }
 
                 LoggerProvider.EnvironmentLogger.Debug(
-                    () => string.Format("RpcHandler Thread/Process[{0}] is stopped", id));
+                    () => string.Format("The RpcHandler thread[{0}] is stopped", id));
             }
         }
 
@@ -146,7 +146,7 @@ namespace ObjectServer.Server
 
             if (cmd == "STOP" && running)
             {
-                LoggerProvider.EnvironmentLogger.Info("The 'STOP' command received, try to stop all RPC-Handlers");
+                LoggerProvider.EnvironmentLogger.Info("The [STOP] command received, try to stop all RPC-Handlers");
                 lock (lockObj)
                 {
                     running = false;
