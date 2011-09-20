@@ -77,6 +77,8 @@ namespace ObjectServer
                 throw new ArgumentNullException("cfg");
             }
 
+            EnsureLoggingPathExist(cfg);
+
             var layout = new PatternLayout(StaticSettings.LogPattern);
 
             CreateFileAppenders(cfg, layout);
@@ -100,6 +102,19 @@ namespace ObjectServer
             hierarchy.Configured = true;
         }
 
+        private static void EnsureLoggingPathExist(Config cfg)
+        {
+            if (!string.IsNullOrEmpty(cfg.LogPath))
+            {
+                var logDir = Environment.ExpandEnvironmentVariables(cfg.LogPath);
+
+                if (!Directory.Exists(logDir))
+                {
+                    Directory.CreateDirectory(logDir);
+                }
+            }
+        }
+
         private static void CreateColoredConsoleAppenders(Config cfg, PatternLayout layout)
         {
             //创建平台 appender
@@ -121,11 +136,6 @@ namespace ObjectServer
             if (!string.IsNullOrEmpty(cfg.LogPath))
             {
                 var logDir = Environment.ExpandEnvironmentVariables(cfg.LogPath);
-
-                if (!Directory.Exists(logDir))
-                {
-                    Directory.CreateDirectory(logDir);
-                }
 
                 //创建平台 appender
                 var platformLogFilePath = Path.Combine(logDir, StaticSettings.PlatformLogFileName);
