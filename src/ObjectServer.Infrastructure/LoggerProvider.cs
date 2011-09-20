@@ -103,16 +103,16 @@ namespace ObjectServer
         private static void CreateColoredConsoleAppenders(Config cfg, PatternLayout layout)
         {
             //创建平台 appender
-            var platformFileAppender = CreateColoredConsoleAppender(layout);
-            AddAppender(EnvironmentLoggerName, platformFileAppender);
+            var platformAppender = CreateColoredConsoleAppender(layout);
+            AddAppender(EnvironmentLoggerName, platformAppender);
 
             //创建网关 appender
-            var gatewayFileAppender = CreateColoredConsoleAppender(layout);
-            AddAppender(RpcLoggerName, gatewayFileAppender);
+            var rpcAppender = CreateColoredConsoleAppender(layout);
+            AddAppender(RpcLoggerName, rpcAppender);
 
             //创建业务 appender
-            var bizFileAppender = CreateColoredConsoleAppender(layout);
-            AddAppender(BizLoggerName, bizFileAppender);
+            var bizAppender = CreateColoredConsoleAppender(layout);
+            AddAppender(BizLoggerName, bizAppender);
         }
 
         private static void CreateFileAppenders(Config cfg, PatternLayout layout)
@@ -144,14 +144,21 @@ namespace ObjectServer
             }
         }
 
+        private static log4net.Repository.Hierarchy.Logger GetLogger(string loggerName)
+        {
+            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(loggerName));
+
+            var log = LogManager.GetLogger(loggerName);
+            var logger = (log4net.Repository.Hierarchy.Logger)log.Logger;
+            return logger;
+        }
+
         private static void AddAppender(string loggerName, IAppender appender)
         {
             System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(loggerName));
             System.Diagnostics.Debug.Assert(appender != null);
 
-            var log = LogManager.GetLogger(loggerName);
-            var l = (log4net.Repository.Hierarchy.Logger)log.Logger;
-            l.AddAppender(appender);
+            GetLogger(loggerName).AddAppender(appender);
         }
 
         private static void SetLevel(string loggerName, string levelName)
@@ -202,7 +209,7 @@ namespace ObjectServer
             var debugColorMapping = new ColoredConsoleAppender.LevelColors()
             {
                 Level = Level.Debug,
-                ForeColor = ColoredConsoleAppender.Colors.White,
+                ForeColor = ColoredConsoleAppender.Colors.Green,
             };
 
             var infoColorMapping = new ColoredConsoleAppender.LevelColors()
@@ -229,8 +236,8 @@ namespace ObjectServer
                 ForeColor = ColoredConsoleAppender.Colors.Red,
             };
 
-            cca.AddMapping(debugColorMapping);
             cca.AddMapping(infoColorMapping);
+            cca.AddMapping(debugColorMapping);
             cca.AddMapping(warnColorMapping);
             cca.AddMapping(errorColorMapping);
             cca.AddMapping(fatalColorMapping);
