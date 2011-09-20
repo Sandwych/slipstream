@@ -72,13 +72,14 @@ namespace ObjectServer.Client.Agos.UI
         void creationDlg_Closed(object sender, EventArgs e)
         {
             var dlg = (DatabaseCreationDialog)sender;
+            var model = (Models.DBCreationModel)dlg.DataContext;
 
             if (dlg.DialogResult == true)
             {
                 var app = (App)Application.Current;
                 app.IsBusy = true;
                 var client = new ObjectServerClient(new System.Uri(@"http://localhost:9287"));
-                client.CreateDatabase(dlg.serverPassword.Password, dlg.textDBName.Text, dlg.passwordAdmin.Password, () =>
+                client.CreateDatabase(model.ServerPassword, model.DBName, model.AdminPassword, () =>
                 {
                     this.LoadDatabaseList();
                     app.IsBusy = false;

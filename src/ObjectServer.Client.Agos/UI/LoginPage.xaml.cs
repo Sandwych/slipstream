@@ -77,23 +77,19 @@ namespace ObjectServer.Client.Agos.UI
         private void Signin()
         {
 
-            //var loginModel = (LoginModel)this.DataContext;
-
-            var database = (string)this.listDatabases.SelectedValue;
-            var login = this.textLogin.Text.Trim();
-            var password = this.textPassword.Password;
+            var loginModel = (LoginModel)this.DataContext;
 
             var app = (App)Application.Current;
             app.IsBusy = true;
 
             var client = new ObjectServerClient(new Uri(this.textServer.Text));
 
-            client.LogOn(database, login, password,
+            client.LogOn(loginModel.Database, loginModel.Login, loginModel.Password,
                 sid =>
                 {
                     if (string.IsNullOrEmpty(sid))
                     {
-                        this.textMessage.Text = "登录失败，请检查用户名与密码";
+                        this.textMessage.Text = "登录失败，请检查用户名与密码是否正确";
                     }
                     else
                     {

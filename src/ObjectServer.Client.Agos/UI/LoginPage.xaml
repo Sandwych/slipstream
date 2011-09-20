@@ -1,4 +1,4 @@
-﻿<navigation:Page x:Class="ObjectServer.Client.Agos.UI.LoginPage" 
+﻿<navigation:Page xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"  x:Class="ObjectServer.Client.Agos.UI.LoginPage" 
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,74 +6,71 @@
            xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
            mc:Ignorable="d"
            xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
-           xmlns:local="clr-namespace:ObjectServer.Client.Agos.Models"
            d:DesignWidth="640" d:DesignHeight="480"
            Title="登录" KeyDown="Page_KeyDown">
-    <UserControl.Resources>
-        <local:LoginModel x:Key="LoginModelDataContext"/>
-    </UserControl.Resources>
     <Grid Background="#F0F0F0">
 
-            <StackPanel VerticalAlignment="Center" Height="Auto" Width="420" Orientation="Vertical" >
-                <StackPanel.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#FFFFFFFF"/>
-                        <GradientStop Color="#FFEEEEEE" Offset="1"/>
-                    </LinearGradientBrush>
-                </StackPanel.Background>
+        <StackPanel VerticalAlignment="Center" Height="Auto" Width="420" Orientation="Vertical" >
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFFFFFFF"/>
+                    <GradientStop Color="#FFEEEEEE" Offset="1"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
 
             <StackPanel.Effect>
                 <DropShadowEffect ShadowDepth="5" BlurRadius="5" Color="#666666" />
             </StackPanel.Effect>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Margin="15,15,15,2" TextAlignment="Left"  VerticalAlignment="Center"   Style="{StaticResource WelcomeText}" Text="欢迎使用 ObjectServer Silverlight 客户端！" >
-                </TextBlock>
-                <Rectangle Width="Auto" Height="2" Margin="15,0,15,15" Fill="#999999" />
-                <Grid Name="grid1" Grid.Column="0" Grid.Row="1" Margin="15,0,15,15" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="28" MinHeight="21" />
-                        <RowDefinition Height="28" MinHeight="21" />
-                        <RowDefinition Height="28" MinHeight="21"/>
-                        <RowDefinition Height="28" MinHeight="21"/>
-                        <RowDefinition Height="40" MinHeight="21"/>
-                        <RowDefinition Height="Auto" MinHeight="30"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="48" />
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <dataInput:Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" 
+            <TextBlock Grid.Row="0" Grid.Column="0" Margin="15,15,15,2" TextAlignment="Left"  VerticalAlignment="Center"   Style="{StaticResource WelcomeText}" Text="欢迎使用 ObjectServer Silverlight 客户端！" >
+            </TextBlock>
+            <Rectangle Width="Auto" Height="2" Margin="15,0,15,15" Fill="#999999" />
+
+            <Grid Name="gridForm"  Margin="15,0,15,15" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28" MinHeight="21" />
+                    <RowDefinition Height="28" MinHeight="21" />
+                    <RowDefinition Height="28" MinHeight="21"/>
+                    <RowDefinition Height="28" MinHeight="21"/>
+                    <RowDefinition Height="40" MinHeight="21"/>
+                    <RowDefinition Height="Auto" MinHeight="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="48" />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <dataInput:Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" 
                              Target="{Binding ElementName=textServer}" Content="服务器" />
-                    <TextBox x:Name="textServer" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" 
-                     DataContext="{Binding Source={StaticResource LoginModelDataContext}}" 
+                <TextBox x:Name="textServer" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" 
                      Text="{Binding Path=Address, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=False}" />
 
-                    <dataInput:Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" 
+                <dataInput:Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" 
                              Target="{Binding ElementName=listDatabases}" Content="数据库" />
-                    <ComboBox x:Name="listDatabases" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
+                <ComboBox x:Name="listDatabases" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
                      SelectedValue="{Binding Path=Database, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=False}" 
                       ></ComboBox>
 
-                    <dataInput:Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Target="{Binding ElementName=textLogin}" Content="用户名" />
-                    <TextBox x:Name="textLogin" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center"
-                     Text="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=Login, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}" DataContext="{Binding Source={StaticResource LoginModelDataContext}}" />
+                <dataInput:Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Target="{Binding ElementName=textLogin}" Content="用户名" />
+                <TextBox x:Name="textLogin" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center"
+                     Text="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=Login, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}"  />
 
-                    <dataInput:Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Target="{Binding ElementName=textPassword}" Content="密码" />
-                    <PasswordBox x:Name="textPassword" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" />
+                <dataInput:Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Target="{Binding ElementName=textPassword}" Content="密码" />
+                <PasswordBox x:Name="textPassword" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=Password, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}" />
 
-                    <TextBlock x:Name="textMessage" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
+                <TextBlock x:Name="textMessage" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
                        VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#FF990000" />
 
-                    <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
+                <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
                         HorizontalAlignment="Right">
-                        <Button x:Name="buttonSignIn" Content="登录" Click="buttonSignIn_Click"  
+                    <Button x:Name="buttonSignIn" Content="登录" Click="buttonSignIn_Click"  
                       MinWidth="75"  Height="25" Margin="5,0,5,0"  FontWeight="Bold" Padding="10,0,10,0"/>
-                        <Button x:Name="ButtonDatabaseManagement" Content="数据库管理..." Padding="10,0,10,0"
+                    <Button x:Name="ButtonDatabaseManagement" Content="数据库管理..." Padding="10,0,10,0"
                         Margin="5,0,0,0" MinWidth="75" Width="Auto" Height="25" Click="ButtonDatabaseManagement_Click" />
 
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
+                </StackPanel>
+            </Grid>
+
+        </StackPanel>
 
     </Grid>
 </navigation:Page>

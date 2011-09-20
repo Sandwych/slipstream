@@ -36,7 +36,7 @@ namespace ObjectServer.Client.Agos.Models
         [Required(ErrorMessage = "数据库名必须填写")]
         public string DBName
         {
-            get { return this.serverPassword; }
+            get { return this.dbName; }
             set
             {
                 var vc = new ValidationContext(this, null, null)

@@ -31,7 +31,7 @@ namespace ObjectServer.Client.Agos.UI
             this.DialogResult = false;
         }
 
-        private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
+        private void ChildWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.DataContext = new DBCreationModel();
         }

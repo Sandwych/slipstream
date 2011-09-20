@@ -16,6 +16,7 @@ namespace ObjectServer.Client.Agos.Models
     {
         public LoginModel()
         {
+            this.Address = "http://localhost:9287/jsonrpc";
             this.Login = "root";
             this.Password = "root";
         }

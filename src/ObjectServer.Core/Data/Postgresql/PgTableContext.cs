@@ -91,7 +91,7 @@ namespace ObjectServer.Data.Postgresql
 
             var tableName = model.TableName.SqlEscape();
 
-            LoggerProvider.EnvironmentLogger.Info(String.Format("Creating Table [{0}]...", tableName));
+            LoggerProvider.EnvironmentLogger.Debug(String.Format("Creating Table [{0}]...", tableName));
 
             var fieldsWithoutId = model.Fields.Values.Where(f => f.IsColumn());
 
@@ -140,7 +140,7 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentOutOfRangeException("tableName");
             }
 
-            LoggerProvider.EnvironmentLogger.Info(String.Format("Creating Table [{0}]...", tableName));
+            LoggerProvider.EnvironmentLogger.Debug(String.Format("Creating Table [{0}]...", tableName));
 
             tableName = tableName.SqlEscape();
             var sb = new SqlStringBuilder();
