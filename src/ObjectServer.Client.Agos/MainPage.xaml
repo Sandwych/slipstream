@@ -19,7 +19,7 @@
                         <uriMapper:UriMapping Uri="/Login" MappedUri="/UI/LoginPage.xaml"/>
                         <uriMapper:UriMapping Uri="/Content" MappedUri="/UI/ContentPage.xaml"/>
                         <uriMapper:UriMapping Uri="/Databases" MappedUri="/UI/DatabasesPage.xaml"/>
-                        <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/UI/{pageName}.xaml"/>
+                        <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/UI/{pageName}Page.xaml"/>
                     </uriMapper:UriMapper>
                 </navigation:Frame.UriMapper>
             </navigation:Frame>

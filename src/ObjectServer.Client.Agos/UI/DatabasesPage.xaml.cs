@@ -51,9 +51,8 @@ namespace ObjectServer.Client.Agos.UI
 
         private void buttonNew_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new DatabaseCreationDialog();
-            dlg.Closed += this.creationDlg_Closed;
-            dlg.Show();
+            var app = (App)Application.Current;
+            app.MainPage.NavigateToByRelative("/DBCreation");
         }
 
         private void buttonDrop_Click(object sender, RoutedEventArgs e)
@@ -71,20 +70,7 @@ namespace ObjectServer.Client.Agos.UI
 
         void creationDlg_Closed(object sender, EventArgs e)
         {
-            var dlg = (DatabaseCreationDialog)sender;
-            var model = (Models.DBCreationModel)dlg.DataContext;
-
-            if (dlg.DialogResult == true)
-            {
-                var app = (App)Application.Current;
-                app.IsBusy = true;
-                var client = new ObjectServerClient(new System.Uri(@"http://localhost:9287"));
-                client.CreateDatabase(model.ServerPassword, model.DBName, model.AdminPassword, () =>
-                {
-                    this.LoadDatabaseList();
-                    app.IsBusy = false;
-                });
-            }
+           
         }
 
         void passwordDlg_Closed(object sender, EventArgs e)

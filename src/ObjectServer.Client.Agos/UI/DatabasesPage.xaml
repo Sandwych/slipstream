@@ -8,10 +8,10 @@
            d:DesignWidth="640" d:DesignHeight="480"
            Title="DatabasesPage Page">
     <Grid x:Name="LayoutRoot" Loaded="LayoutRoot_Loaded">
-        <ListBox Height="337" HorizontalAlignment="Left" Margin="42,57,0,0" Name="databases" VerticalAlignment="Top" Width="346" SelectionChanged="databases_SelectionChanged" />
-        <Button Content="新建..." Height="23" HorizontalAlignment="Left" Margin="405,57,0,0" Name="buttonNew" VerticalAlignment="Top" Width="75" Click="buttonNew_Click" />
-        <Button Content="删除..." Height="23" HorizontalAlignment="Left" Margin="405,86,0,0" Name="buttonDrop" VerticalAlignment="Top" Width="75" Click="buttonDrop_Click" />
-        <Button Content="取消" Height="23" HorizontalAlignment="Left" Margin="42,409,0,0" Name="buttonCancel" VerticalAlignment="Top" Width="75" Click="buttonCancel_Click" />
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="42,12,0,0" Name="textBlock1" Text="数据库管理" VerticalAlignment="Top" Width="586" />
+        <ListBox Height="337" HorizontalAlignment="Left" Margin="42,82,0,0" Name="databases" VerticalAlignment="Top" Width="346" SelectionChanged="databases_SelectionChanged" />
+        <Button Content="新建" Height="23" HorizontalAlignment="Left" Margin="123,434,0,0" Name="buttonNew" VerticalAlignment="Top" Width="75" Click="buttonNew_Click" />
+        <Button Content="删除" Height="23" HorizontalAlignment="Right" Margin="0,434,361,0" Name="buttonDrop" VerticalAlignment="Top" Width="75" Click="buttonDrop_Click" />
+        <Button Content="返回" Height="23" HorizontalAlignment="Left" Margin="42,434,0,0" Name="buttonCancel" VerticalAlignment="Top" Width="75" Click="buttonCancel_Click" />
+        <TextBlock Height="Auto" HorizontalAlignment="Left" Margin="42,12,0,0" Name="textBlock1" Text="数据库管理" VerticalAlignment="Top" Width="586" Foreground="#FF119EDA" FontSize="28" />
     </Grid>
 </navigation:Page>

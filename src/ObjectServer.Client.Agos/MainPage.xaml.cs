@@ -24,7 +24,27 @@
         /// </summary>
         private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
         {
-          
+
+        }
+
+        public void NavigateTo(Uri uri)
+        {
+            if (uri == null)
+            {
+                throw new ArgumentNullException("uri");
+            }
+
+            this.ContentFrame.Navigate(uri);
+        }
+
+        public void NavigateToByRelative(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            this.NavigateTo(new Uri(path, UriKind.Relative));
         }
 
         public void NavigateToContentPage()
@@ -59,7 +79,7 @@
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
 
-         
+
         }
     }
 }

@@ -113,7 +113,7 @@ namespace ObjectServer.Client.Agos.UI
         private void ButtonDatabaseManagement_Click(object sender, RoutedEventArgs e)
         {
             var app = (App)Application.Current;
-            app.MainPage.NavigateToDatabasesPage();
+            app.MainPage.NavigateToByRelative("/Databases");
         }
 
     }

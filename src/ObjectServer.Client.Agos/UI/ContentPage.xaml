@@ -48,7 +48,7 @@
                             Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"  />
                             <HyperlinkButton Grid.Column="3" x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
                         </Grid>
-                        <Rectangle Height="1" Fill="#FF336699" />
+                        <Rectangle Height="1" Fill="#FFF0F0F0" />
                         <Border Height="25">
                             
                         </Border>

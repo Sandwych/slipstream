@@ -133,8 +133,8 @@
     <Compile Include="Models\ListWindowModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\WindowManager.cs" />
-    <Compile Include="UI\DatabaseCreationDialog.xaml.cs">
-      <DependentUpon>DatabaseCreationDialog.xaml</DependentUpon>
+    <Compile Include="UI\DBCreationPage.xaml.cs">
+      <DependentUpon>DBCreationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility\XamlLoader.cs" />
     <Compile Include="UI\DatabaseDeletionDialog.xaml.cs">
@@ -205,15 +205,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\DatabaseCreationDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UI\DatabaseDeletionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\DatabasesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\DBCreationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
