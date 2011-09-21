@@ -69,6 +69,11 @@ namespace ObjectServer.Client
         private void ReceiveReturnValueCallback(object state)
         {
             var callResult = state as CallResult;
+            if (callResult.Response.Error != null)
+            {
+                throw new Exception(callResult.Response.Error.ToString());
+            }
+
             callResult.ResultCallback(callResult.Response.Result);
         }
 
