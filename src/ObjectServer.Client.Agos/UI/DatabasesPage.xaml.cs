@@ -38,11 +38,10 @@ namespace ObjectServer.Client.Agos.UI
 
         private void LoadDatabaseList()
         {
-            var client = new ObjectServerClient(new System.Uri(@"http://localhost:9287"));
-
             var app = (App)Application.Current;
+
             app.IsBusy = true;
-            client.ListDatabases(dbs =>
+            app.ClientService.ListDatabases(dbs =>
             {
                 this.databases.ItemsSource = dbs;
                 app.IsBusy = false;
@@ -89,8 +88,7 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
             app.IsBusy = true;
-            var client = new ObjectServerClient(new System.Uri(@"http://localhost:9287"));
-            client.DeleteDatabase(password, dbName, () =>
+            app.ClientService.DeleteDatabase(password, dbName, () =>
             {
                 this.LoadDatabaseList();
                 app.IsBusy = false;

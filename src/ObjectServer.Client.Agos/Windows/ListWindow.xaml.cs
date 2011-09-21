@@ -66,6 +66,7 @@ namespace ObjectServer.Client.Agos.Windows
         private static Dictionary<string, Tuple<Type, IValueConverter>> COLUMN_TYPE_MAPPING
             = new Dictionary<string, Tuple<Type, IValueConverter>>()
         {
+            {"ID", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Integer", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Float", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
@@ -158,6 +159,9 @@ namespace ObjectServer.Client.Agos.Windows
             {
                 var fields = ((object[])result).Select(r => (Dictionary<string, object>)r);
                 var viewFields = layoutDoc.Elements("tree").Elements();
+
+                this.AddColumn("_id", "ID", "ID", System.Windows.Visibility.Collapsed);
+
                 foreach (var f in viewFields)
                 {
                     var fieldName = f.Attribute("name").Value;
@@ -168,11 +172,13 @@ namespace ObjectServer.Client.Agos.Windows
         }
 
 
-        private void AddColumn(string fieldName, string fieldType, string fieldLabel)
+        private void AddColumn(
+            string fieldName, string fieldType, string fieldLabel, Visibility visibility = Visibility.Visible)
         {
             this.fields.Add(fieldName);
             var tuple = COLUMN_TYPE_MAPPING[fieldType];
             var col = Activator.CreateInstance(tuple.Item1) as DataGridBoundColumn;
+            col.Visibility = visibility;
             col.Header = fieldLabel;
             col.Binding = new System.Windows.Data.Binding(fieldName);
             if (tuple.Item2 != null)
@@ -187,6 +193,34 @@ namespace ObjectServer.Client.Agos.Windows
         {
             Debug.Assert(this.ActionID > 0);
             this.LoadData();
+        }
+
+        private void buttonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var sb = new System.Text.StringBuilder();
+            var ids = new List<long>();
+            foreach (dynamic item in this.gridList.SelectedItems)
+            {
+                var id = (long)item._id;
+                ids.Add(id);
+            }
+
+            var msg = String.Format("您确定要永久删除 {0} 条记录吗？", ids.Count);
+            var dlgResult = MessageBox.Show(msg, "删除确认", MessageBoxButton.OKCancel);
+
+            if (dlgResult == MessageBoxResult.OK)
+            {
+                //执行删除
+                var app = (App)Application.Current;
+                app.IsBusy = true;
+
+                var args = new object[] { ids };
+                app.ClientService.Execute(this.modelName, "Delete", args, result =>
+                {
+                    this.LoadData();
+                    app.IsBusy = false;
+                });
+            }
         }
 
     }

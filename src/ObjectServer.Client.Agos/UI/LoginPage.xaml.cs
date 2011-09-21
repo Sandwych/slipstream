@@ -25,11 +25,6 @@ namespace ObjectServer.Client.Agos.UI
         {
             InitializeComponent();
 
-            this.textServer.Text = @"http://localhost:9287";
-            this.textLogin.Text = "root";
-            this.textPassword.Password = "root";
-            this.LoadDatabaseList();
-
             this.Loaded += new RoutedEventHandler(LoginPage_Loaded);
         }
 
@@ -37,15 +32,21 @@ namespace ObjectServer.Client.Agos.UI
         void LoginPage_Loaded(object sender, RoutedEventArgs e)
         {
             this.DataContext = new LoginModel();
+            this.LoadDatabaseList();
         }
 
         private void LoadDatabaseList()
         {
-            var client = new ObjectServerClient(new System.Uri(this.textServer.Text));
-
             var app = (App)Application.Current;
+            var loginModel = (LoginModel)this.DataContext;
+
+            if (app.ClientService == null)
+            {
+                app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
+            }
+
             app.IsBusy = true;
-            client.ListDatabases(dbs =>
+            app.ClientService.ListDatabases(dbs =>
             {
                 this.listDatabases.ItemsSource = dbs;
 

@@ -19,7 +19,7 @@
             <StackPanel Orientation="Horizontal"  Background="Transparent" x:Name="ToolBar" >
                 <Button Content="新建" MinWidth="75" Height="25" />
                 <Button Content="编辑" MinWidth="75" Height="25" />
-                <Button Content="删除" MinWidth="75" Height="25" Name="buttonDelete" />
+                <Button Content="删除" MinWidth="75" Height="25" Name="buttonDelete" Click="buttonDelete_Click" />
                 <Rectangle Width="15" />
                 <Button Content="查询" MinWidth="75" Height="25" Name="buttonQuery" Click="buttonQuery_Click" />
             </StackPanel>
