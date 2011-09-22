@@ -125,7 +125,7 @@ namespace ObjectServer.Client.Agos.Windows
             var app = (App)Application.Current;
             //加载数据
             var offset = 0;// long.Parse(this.textOffset.Text);
-            var limit = 500;// long.Parse(this.textLimit.Text);
+            var limit = 2000;// long.Parse(this.textLimit.Text);
 
             app.ClientService.SearchModel(this.modelName, null, null, offset, limit, ids =>
             {

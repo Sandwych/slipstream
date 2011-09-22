@@ -157,7 +157,7 @@ namespace ObjectServer.Server
         private static void ReceiverPollInHandler(Socket socket, IOMultiPlex revents)
         {
             //TODO 优化，避免转换
-            var message = socket.Recv();
+            var message = socket.Recv(); 
             var result = DoJsonRpc(message);
             socket.Send(result);
         }

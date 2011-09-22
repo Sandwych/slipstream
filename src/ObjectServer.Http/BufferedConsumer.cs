@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.IO;
 
 using Kayak;
 using Kayak.Http;
@@ -20,6 +21,7 @@ namespace ObjectServer.Http
             this.resultCallback = resultCallback;
             this.errorCallback = errorCallback;
         }
+
         public bool OnData(ArraySegment<byte> data, Action continuation)
         {
             // since we're just buffering, ignore the continuation. 
@@ -28,6 +30,7 @@ namespace ObjectServer.Http
             buffer.Add(data);
             return false;
         }
+
         public void OnError(Exception error)
         {
             errorCallback(error);
@@ -41,13 +44,15 @@ namespace ObjectServer.Http
             // this step and make the result callback accept 
             // List<ArraySegment<byte>> or whatever) 
             // 
-            using (var ms = new System.IO.MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 foreach (var b in buffer)
                 {
                     ms.Write(b.Array, b.Offset, b.Count);
                 }
-                resultCallback(ms.ToArray());
+                var buf = ms.ToArray();
+                LoggerProvider.RpcLogger.Debug(() => String.Format("HTTP 收到内容长度=[{0}]", buf.Length));
+                resultCallback(buf);
             }
         }
     }

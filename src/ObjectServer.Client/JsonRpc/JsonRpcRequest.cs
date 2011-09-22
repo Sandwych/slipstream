@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.IO;
 using System.Text;
+using System.Diagnostics;
 
 using Newtonsoft.Json;
 
@@ -29,15 +30,6 @@ namespace ObjectServer.Client
         [JsonProperty("id")]
         public object Id { get; private set; }
 
-        public void SerializeTo(Stream output)
-        {
-            using (var sw = new StreamWriter(output, Encoding.UTF8))
-            {
-                sw.Write(JsonConvert.SerializeObject(this, Formatting.None));
-                sw.Close();
-            }
-        }
-
 
         private ManualResetEvent asyncWaitHandle = new ManualResetEvent(false);
         private JsonRpcCallCompleteCallback JsonRpcCallCompleteHandler;
@@ -60,35 +52,33 @@ namespace ObjectServer.Client
 
         public IAsyncResult Send(Uri uri, Action<object> resultHandler)
         {
-            try
-            {
-                var httpRequest = (HttpWebRequest)WebRequest.Create(uri);
-                httpRequest.Method = "POST";
-                httpRequest.ContentType = "text/json";
+            var httpRequest = (HttpWebRequest)WebRequest.Create(uri);
+            httpRequest.Method = "POST";
+            httpRequest.ContentType = "text/json";
 
-                var state = new RequestState(httpRequest, resultHandler);
-                httpRequest.BeginGetRequestStream(new AsyncCallback(RequestStreamResponse), state);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("Exception while processing execute request: " + e.Message);
-                throw e;
-            }
+            var state = new RequestState(httpRequest, resultHandler);
+            httpRequest.BeginGetRequestStream(new AsyncCallback(OnRequestReady), state);
+
             return this;
         }
 
-        void RequestStreamResponse(IAsyncResult result)
+        private void OnRequestReady(IAsyncResult result)
         {
+            Debug.Assert(result.IsCompleted);
+
             RequestState state = (RequestState)result.AsyncState;
-            using (var writeStream = state.HttpRequest.EndGetRequestStream(result))
+
+            using (var stream = state.HttpRequest.EndGetRequestStream(result))
+            using (var sw = new StreamWriter(stream, Encoding.UTF8))
             {
-                this.SerializeTo(writeStream);
-                writeStream.Close();
+                var json = JsonConvert.SerializeObject(this, Formatting.None);
+                sw.Write(json);
+                sw.Flush();
             }
-            state.HttpRequest.BeginGetResponse(new AsyncCallback(OnReceiveResponse), state);
+            state.HttpRequest.BeginGetResponse(new AsyncCallback(OnResponseReady), state);
         }
 
-        void OnReceiveResponse(IAsyncResult result)
+        private void OnResponseReady(IAsyncResult result)
         {
             RequestState state = result.AsyncState as RequestState;
             state.HttpResponse = (HttpWebResponse)state.HttpRequest.EndGetResponse(result);
@@ -96,7 +86,6 @@ namespace ObjectServer.Client
             using (var readStream = state.HttpResponse.GetResponseStream())
             {
                 state.JsonResponse = JsonRpcResponse.Deserialize(readStream);
-                readStream.Close();
             }
 
             AsyncState = state;
