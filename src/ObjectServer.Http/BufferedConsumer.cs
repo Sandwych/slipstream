@@ -46,13 +46,13 @@ namespace ObjectServer.Http
             // 
             using (var ms = new MemoryStream())
             {
-                foreach (var b in buffer)
+                foreach (var b in this.buffer)
                 {
                     ms.Write(b.Array, b.Offset, b.Count);
                 }
-                var buf = ms.ToArray();
-                LoggerProvider.RpcLogger.Debug(() => String.Format("HTTP 收到内容长度=[{0}]", buf.Length));
-                resultCallback(buf);
+
+                var fullBuf = ms.ToArray();
+                resultCallback(fullBuf);
             }
         }
     }
