@@ -157,7 +157,7 @@ namespace ObjectServer.Server
         private static void ReceiverPollInHandler(Socket socket, IOMultiPlex revents)
         {
             //TODO 优化，避免转换
-            var message = socket.Recv(); 
+            var message = socket.Recv();
             var result = DoJsonRpc(message);
             socket.Send(result);
         }
@@ -217,6 +217,7 @@ namespace ObjectServer.Server
             {
                 error = JsonRpcError.ServerInternalError;
                 LoggerProvider.EnvironmentLogger.Error("RPCHandler Error", ex);
+                throw ex; //未知异常，与致命异常同样处理，直接抛出，让系统结束运行
             }
 
             var jresponse = new JsonRpcResponse()
