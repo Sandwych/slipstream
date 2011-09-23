@@ -11,9 +11,9 @@ namespace ObjectServer.Http
 {
     internal class SchedulerDelegate : ISchedulerDelegate
     {
-        private HttpServer httpServer;
+        private KayakHttpServer httpServer;
 
-        public SchedulerDelegate(HttpServer hs)
+        public SchedulerDelegate(KayakHttpServer hs)
         {
             if (hs == null)
             {

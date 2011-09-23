@@ -42,15 +42,36 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\rx\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Anna\HttpServer.cs" />
+    <Compile Include="Anna\Observables\ObservableFromFile.cs" />
+    <Compile Include="Anna\Observers\UnhandledRouteObserver.cs" />
+    <Compile Include="Anna\Request\ArgumentsDynamic.cs" />
+    <Compile Include="Anna\Request\Request.cs" />
+    <Compile Include="Anna\Request\RequestContext.cs" />
+    <Compile Include="Anna\Responses\BinaryResponse.cs" />
+    <Compile Include="Anna\Responses\EmptyResponse.cs" />
+    <Compile Include="Anna\Responses\Response.cs" />
+    <Compile Include="Anna\Responses\StaticFileResponse.cs" />
+    <Compile Include="Anna\Responses\StringResponse.cs" />
+    <Compile Include="Anna\Util\CollectionExtensions.cs" />
+    <Compile Include="Anna\Util\StreamExtensions.cs" />
+    <Compile Include="Anna\Util\UriExtensions.cs" />
     <Compile Include="BufferedConsumer.cs" />
     <Compile Include="BufferedProducer.cs" />
-    <Compile Include="HttpServer.cs" />
+    <Compile Include="AnnaHttpServer.cs" />
+    <Compile Include="KayakHttpServer.cs" />
     <Compile Include="RequestDelegate.cs" />
     <Compile Include="SchedulerDelegate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -17,7 +17,7 @@ namespace ObjectServer.Http
     /// <summary>
     /// HTTP RPC 接口服务器
     /// </summary>
-    public sealed class HttpServer : IDisposable
+    public sealed class KayakHttpServer : IDisposable
     {
         private readonly ZMQ.Socket commandSocket = new ZMQ.Socket(ZMQ.SocketType.SUB);
         private readonly ZMQ.Socket rpcSocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
@@ -27,7 +27,7 @@ namespace ObjectServer.Http
         private bool disposed = false;
         private readonly Thread httpdThread;
 
-        public HttpServer(string controllerUrl, string rpcHostUrl, int listenPort)
+        public KayakHttpServer(string controllerUrl, string rpcHostUrl, int listenPort)
         {
             LoggerProvider.EnvironmentLogger.Info("Starting HTTP Server...");
 
@@ -60,7 +60,7 @@ namespace ObjectServer.Http
             this.httpdThread = new Thread(new ThreadStart(this.DoHttpServer));
         }
 
-        ~HttpServer()
+        ~KayakHttpServer()
         {
             this.Dispose(false);
         }

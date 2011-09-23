@@ -50,7 +50,7 @@ namespace ObjectServer.Server
 
             var serverThread = new Thread(() =>
             {
-                using (var cs = new ObjectServer.Http.HttpServer(
+                using (var cs = new ObjectServer.Http.AnnaHttpServer(
                     Environment.Configuration.CommanderUrl,
                     Environment.Configuration.RpcHostUrl,
                     Environment.Configuration.HttpListenPort))
