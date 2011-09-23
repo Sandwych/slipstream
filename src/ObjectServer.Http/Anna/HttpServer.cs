@@ -13,9 +13,10 @@ namespace Anna
     {
         private readonly HttpListener listener;
         private readonly IObservable<RequestContext> stream;
+        private bool disposed = false;
 
         //URI - METHOD
-        private readonly List<Tuple<string, string>> handledRoutes 
+        private readonly List<Tuple<string, string>> handledRoutes
             = new List<Tuple<string, string>>();
         private readonly IScheduler scheduler;
 
@@ -26,6 +27,11 @@ namespace Anna
             listener.Prefixes.Add(url);
             listener.Start();
             stream = ObservableHttpContext();
+        }
+
+        ~HttpServer()
+        {
+            this.Dispose(false);
         }
 
         private IObservable<RequestContext> ObservableHttpContext()
@@ -41,10 +47,27 @@ namespace Anna
             return observableHttpContext;
         }
 
+        private void Dispose(bool isDisposing)
+        {
+            if (!this.disposed)
+            {
+
+                if (isDisposing)
+                {
+                    //释放托管资源
+                }
+
+                //释放非托管资源
+                listener.Stop();
+
+                this.disposed = true;
+            }
+        }
 
         public void Dispose()
         {
-            listener.Stop();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public IObservable<RequestContext> GET(string uri)
@@ -92,15 +115,15 @@ namespace Anna
             handledRoutes.Add(new Tuple<string, string>(uri, method));
 
             var uriTemplate = new UriTemplate(uri);
-            return Observable.Create<RequestContext>(obs => 
-                stream.Subscribe(ctx => OnUriAndMethodHandler(ctx, method, uriTemplate, obs), 
+            return Observable.Create<RequestContext>(obs =>
+                stream.Subscribe(ctx => OnUriAndMethodHandler(ctx, method, uriTemplate, obs),
                                  obs.OnError, obs.OnCompleted));
         }
 
         private static void OnUriAndMethodHandler(
-                RequestContext ctx, 
-                string method, 
-                UriTemplate uriTemplate, 
+                RequestContext ctx,
+                string method,
+                UriTemplate uriTemplate,
                 IObserver<RequestContext> obs)
         {
             if (!string.IsNullOrEmpty(method) && ctx.Request.HttpMethod != method) return;

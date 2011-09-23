@@ -71,29 +71,33 @@ namespace ObjectServer.Http
 
             this.senderSocket.Connect(this.rpcReqUrl);
 
-            LoggerProvider.EnvironmentLogger.Info("Starting the HTTP Server...");
+            LoggerProvider.EnvironmentLogger.Info(
+                String.Format("Starting the HTTP Server[{0}]...", this.httpServerUrl));
+
             using (var httpd = new Anna.HttpServer(this.httpServerUrl))
             {
-                LoggerProvider.EnvironmentLogger.Debug(() => "Waiting The HTTP Server thread to stop...");
-
-                httpd.GET(CrossDomainPath).Subscribe(context =>
-                {
-                    context.Respond(CrossDomainText);
-                });
-
-                httpd.POST(JsonRpcPath).Subscribe(context =>
-                {
-                    var repData = this.HandleJsonRpcRequest(context.Request);
-                    var response = new Anna.Responses.BinaryResponse(repData);
-                    response.Headers["Content-Type"] = "text/javascript";
-                    context.Respond(response);
-                });
-
+                this.RegisterRequestHandlers(httpd);
 
                 this.WaitForStopCommand();
             }
 
             LoggerProvider.EnvironmentLogger.Info("The HTTP server is stopped.");
+        }
+
+        private void RegisterRequestHandlers(Anna.HttpServer httpd)
+        {
+            httpd.GET(CrossDomainPath).Subscribe(context =>
+            {
+                context.Respond(CrossDomainText);
+            });
+
+            httpd.POST(JsonRpcPath).Subscribe(context =>
+            {
+                var repData = this.HandleJsonRpcRequest(context.Request);
+                var response = new Anna.Responses.BinaryResponse(repData);
+                response.Headers["Content-Type"] = "text/javascript";
+                context.Respond(response);
+            });
         }
 
         private void WaitForStopCommand()
@@ -144,7 +148,6 @@ namespace ObjectServer.Http
 
             var endTime = Stopwatch.GetTimestamp();
             var costTime = endTime - startTime;
-
             LoggerProvider.RpcLogger.Debug(
                 () => String.Format("ZMQ RPC cost time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
 

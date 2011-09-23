@@ -37,9 +37,6 @@
     <Reference Include="clrzmq-ext">
       <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
     </Reference>
-    <Reference Include="Kayak">
-      <HintPath>..\..\lib\Kayak\Kayak.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -68,12 +65,7 @@
     <Compile Include="Anna\Util\CollectionExtensions.cs" />
     <Compile Include="Anna\Util\StreamExtensions.cs" />
     <Compile Include="Anna\Util\UriExtensions.cs" />
-    <Compile Include="BufferedConsumer.cs" />
-    <Compile Include="BufferedProducer.cs" />
     <Compile Include="AnnaHttpServer.cs" />
-    <Compile Include="KayakHttpServer.cs" />
-    <Compile Include="RequestDelegate.cs" />
-    <Compile Include="SchedulerDelegate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
