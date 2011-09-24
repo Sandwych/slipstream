@@ -188,12 +188,23 @@ namespace ObjectServer.Server
             LoggerProvider.RpcLogger.Debug(() =>
                 string.Format("JSON-RPC: method=[{0}], params=[{1}]", methodName, args));
 
-            //TODO: 处理安全问题及日志异常等
-            //这里只捕获可控的异常
             try
             {
                 var startTime = Stopwatch.GetTimestamp();
-                result = DirectInvoker.InvokeDirect(method, null, args);
+
+                try
+                {
+                    result = method.Invoke(null, args);
+                }
+                catch (TargetInvocationException tiex)
+                {
+                    throw tiex.InnerException;
+                }
+                catch
+                {
+                    throw;
+                }
+
                 var endTime = Stopwatch.GetTimestamp();
                 var costTime = endTime - startTime;
                 LoggerProvider.RpcLogger.Debug(

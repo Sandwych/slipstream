@@ -34,7 +34,18 @@ namespace ObjectServer
             args[1] = scope;
             parameters.CopyTo(args, 2);
 
-            return DirectInvoker.InvokeDirect(this.Method, null, args);
+            try
+            {
+                return this.Method.Invoke(null, args);
+            }
+            catch (TargetInvocationException tiex)
+            {
+                throw tiex.InnerException;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public IResource Resource { get; private set; }
