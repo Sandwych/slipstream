@@ -32,6 +32,22 @@ namespace ObjectServer
             return this.provider.GetSession(sessionId);
         }
 
+        public Session GetSession(string db, long userID)
+        {
+            Debug.Assert(this.provider != null);
+            if (string.IsNullOrEmpty(db))
+            {
+                throw new ArgumentNullException("db");
+            }
+
+            if (userID <= 0)
+            {
+                throw new ArgumentOutOfRangeException("userID");
+            }
+
+            return this.provider.GetSession(db, userID);
+        }
+
         public void PutSession(Session session)
         {
             Debug.Assert(this.provider != null);

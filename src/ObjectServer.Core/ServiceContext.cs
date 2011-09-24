@@ -27,7 +27,7 @@ namespace ObjectServer
             var session = sessStore.GetSession(sessionId);
             if (session == null || !session.IsActive)
             {
-                throw new UnauthorizedAccessException("Not logged!");
+                throw new ObjectServer.Exceptions.SecurityException("Not logged!");
             }
 
             LoggerProvider.EnvironmentLogger.Debug(() =>
@@ -124,7 +124,7 @@ namespace ObjectServer
                 }
 
                 //处置非托管对象
-                this.DBContext.Close();
+                this.DBProfile.DBContext.Close();
 
                 this.disposed = true;
                 LoggerProvider.EnvironmentLogger.Debug(() => "ScopeContext closed");

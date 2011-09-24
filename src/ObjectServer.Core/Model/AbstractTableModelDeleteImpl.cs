@@ -12,6 +12,7 @@ using NHibernate.SqlCommand;
 
 using ObjectServer.Data;
 using ObjectServer.Utility;
+using ObjectServer.Exceptions;
 
 namespace ObjectServer.Model
 {
@@ -34,7 +35,7 @@ namespace ObjectServer.Model
 
             if (!scope.CanDeleteModel(scope.Session.UserID, this.Name))
             {
-                throw new UnauthorizedAccessException("Access denied");
+                throw new SecurityException("Access denied");
             }
 
             if (ids.Length == 0)
@@ -150,7 +151,7 @@ namespace ObjectServer.Model
                 if (rowCount != ids.Count())
                 {
                     var msg = string.Format("Failed to delete model '{0}'", tableModel.Name);
-                    throw new DataException(msg);
+                    throw new ObjectServer.Exceptions.DataException(msg);
                 }
             }
         }

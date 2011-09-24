@@ -122,7 +122,7 @@ namespace ObjectServer
             var cfgRootPasswordHash = Environment.Configuration.RootPassword.ToSha();
             if (rootPasswordHash != cfgRootPasswordHash)
             {
-                throw new UnauthorizedAccessException("Invalid password of root user");
+                throw new ObjectServer.Exceptions.SecurityException("Invalid password of root user");
             }
         }
 

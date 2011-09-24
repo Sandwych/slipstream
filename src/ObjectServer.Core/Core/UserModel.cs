@@ -223,7 +223,7 @@ namespace ObjectServer.Core
             Session result = null;
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
-                var session = this.CreateSession(database, login, user);
+                var session = this.FetchOrCreateSession(database, login, user);
                 result = session;
             }
             else
@@ -259,17 +259,26 @@ namespace ObjectServer.Core
         }
 
 
-        private Session CreateSession(string dbName, string login, IDictionary<string, object> userFields)
+        private Session FetchOrCreateSession(
+            string dbName, string login, IDictionary<string, object> userFields)
         {
             Debug.Assert(userFields.ContainsKey("password"));
 
             var uid = (long)userFields[IDFieldName];
-            var session = new Session(dbName, login, uid);
 
             var sessStore = Environment.SessionStore;
-            sessStore.RemoveSessionsByUser(dbName, uid);
-            sessStore.PutSession(session);
-            return session;
+            var oldSession = sessStore.GetSession(dbName, uid);
+
+            if (oldSession == null)
+            {
+                var newSession = new Session(dbName, login, uid);
+                sessStore.PutSession(newSession);
+                return newSession;
+            }
+            else
+            {
+                return oldSession;
+            }
         }
 
         /// <summary>

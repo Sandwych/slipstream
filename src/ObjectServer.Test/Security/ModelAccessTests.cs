@@ -28,19 +28,19 @@ namespace ObjectServer.Model.Test
                     userModel.ReadInternal(scope, ids);
                 });
 
-                Assert.Throws<UnauthorizedAccessException>(() =>
+                Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
                     userModel.CreateInternal(scope, record);
                 });
 
-                Assert.Throws<UnauthorizedAccessException>(() =>
+                Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
                     userModel.WriteInternal(scope, 1, record);
                 });
 
-                Assert.Throws<UnauthorizedAccessException>(() =>
+                Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     userModel.DeleteInternal(scope, new long[] { 1 });
                 });

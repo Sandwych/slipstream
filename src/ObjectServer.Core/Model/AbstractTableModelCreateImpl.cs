@@ -34,7 +34,7 @@ namespace ObjectServer.Model
 
             if (!scope.CanCreateModel(scope.Session.UserID, this.Name))
             {
-                throw new UnauthorizedAccessException("Access denied");
+                throw new SecurityException("Access denied");
             }
 
             var record = ClearUserRecord(userRecord);

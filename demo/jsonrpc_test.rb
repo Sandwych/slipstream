@@ -129,7 +129,7 @@ for m in models
     puts m
 end
 
-TIMES = 50
+TIMES = 100
 puts "测试查询和读取上面的数据[#{TIMES}]次"
 time = Benchmark.measure do
   for i in 1..TIMES
@@ -142,7 +142,7 @@ puts
 puts "耗时（秒）："
 puts time
 
-proxy.logOff()
-
-proxy.close()
+#不注销不关闭，因为我们要做并发测试
+#proxy.logOff()
+#proxy.close()
 

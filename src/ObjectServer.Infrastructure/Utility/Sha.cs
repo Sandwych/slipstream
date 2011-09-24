@@ -19,10 +19,19 @@ namespace ObjectServer.Utility
                 throw new ArgumentNullException("value");
             }
 
+            return Encoding.ASCII.GetBytes(value).ToSha();
+        }
+
+        public static string ToSha(this byte[] buffer)
+        {
+            if (buffer == null || buffer.Length == 0)
+            {
+                throw new ArgumentNullException("buffer");
+            }
+
             using (var sha = System.Security.Cryptography.SHA1.Create())
             {
-                var bytes = Encoding.ASCII.GetBytes(value);                
-                var hash = sha.ComputeHash(bytes);
+                var hash = sha.ComputeHash(buffer);
                 return hash.ToHex();
             }
         }

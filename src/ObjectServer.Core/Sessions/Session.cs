@@ -67,7 +67,7 @@ namespace ObjectServer
             {
                 rng.GetBytes(bytes);
             }
-            return bytes.ToHex();
+            return bytes.ToSha();
         }
 
         public string ID { get; set; }

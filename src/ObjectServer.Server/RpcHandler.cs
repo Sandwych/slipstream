@@ -10,6 +10,7 @@ using ZMQ;
 using ZMQ.ZMQExt;
 using Newtonsoft.Json;
 
+using ObjectServer.Utility;
 using ObjectServer.Exceptions;
 using ObjectServer.Json;
 
@@ -192,7 +193,7 @@ namespace ObjectServer.Server
             try
             {
                 var startTime = Stopwatch.GetTimestamp();
-                result = method.Invoke(null, args);
+                result = DirectInvoker.InvokeDirect(method, null, args);
                 var endTime = Stopwatch.GetTimestamp();
                 var costTime = endTime - startTime;
                 LoggerProvider.RpcLogger.Debug(
@@ -212,6 +213,11 @@ namespace ObjectServer.Server
             {
                 error = JsonRpcError.ValidationError;
                 LoggerProvider.EnvironmentLogger.Error("ValidationException", vex);
+            }
+            catch (SecurityException sex)
+            {
+                error = JsonRpcError.LogginError;
+                LoggerProvider.EnvironmentLogger.Error("安全异常", sex);
             }
             catch (System.Exception ex)
             {

@@ -5,6 +5,8 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 
+using ObjectServer.Utility;
+
 namespace ObjectServer
 {
     internal class ClrService : IService
@@ -31,7 +33,8 @@ namespace ObjectServer
             args[0] = self;
             args[1] = scope;
             parameters.CopyTo(args, 2);
-            return this.Method.Invoke(self, args);
+
+            return DirectInvoker.InvokeDirect(this.Method, null, args);
         }
 
         public IResource Resource { get; private set; }

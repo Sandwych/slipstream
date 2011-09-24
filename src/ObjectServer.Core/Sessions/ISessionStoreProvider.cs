@@ -9,9 +9,11 @@ namespace ObjectServer
     {
         Session GetSession(string sessionId);
 
+        Session GetSession(string db, long userID);
+
         void PutSession(Session session);
 
-        void RemoveSessionsByUser(string database, long uid);
+        void RemoveSessionsByUser(string database, long userID);
 
         void Remove(string sessionId);
 

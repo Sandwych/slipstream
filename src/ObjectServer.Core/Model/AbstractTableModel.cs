@@ -10,6 +10,7 @@ using System.Dynamic;
 
 using NHibernate.SqlCommand;
 
+using ObjectServer.Exceptions;
 using ObjectServer.Data;
 using ObjectServer.Utility;
 
@@ -337,7 +338,7 @@ where   hp._id=? and hc._id<>?
 
             if (!scope.CanReadModel(scope.Session.UserID, this.Name))
             {
-                throw new UnauthorizedAccessException("Access denied");
+                throw new SecurityException("Access denied");
             }
         }
 

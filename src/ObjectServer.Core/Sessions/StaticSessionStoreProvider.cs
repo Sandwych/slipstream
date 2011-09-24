@@ -8,6 +8,9 @@ namespace ObjectServer
 {
     internal class StaticSessionStoreProvider : ISessionStoreProvider
     {
+        private int SweepInterval = 100;
+
+        private long sweepCounter = 0;
         Dictionary<string, Session> sessions = new Dictionary<string, Session>();
 
         #region ISessionStoreProvider 成员
@@ -19,7 +22,34 @@ namespace ObjectServer
                 throw new ArgumentNullException("sessionId");
             }
 
-            return this.sessions[sessionId];
+            Session s;
+            if (this.sessions.TryGetValue(sessionId, out s))
+            {
+                return s;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Session GetSession(string db, long userID)
+        {
+            if (string.IsNullOrEmpty(db))
+            {
+                throw new ArgumentNullException("sessionId");
+            }
+
+            if (userID <= 0)
+            {
+                throw new ArgumentOutOfRangeException("userID");
+            }
+
+            var sessions =
+                from p in this.sessions
+                where p.Value.Database == db && p.Value.UserID == userID
+                select p.Value;
+            return sessions.FirstOrDefault();
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -30,7 +60,12 @@ namespace ObjectServer
                 throw new ArgumentNullException("session");
             }
 
-            this.Sweep();
+            sweepCounter++;
+            if (sweepCounter % SweepInterval == 0)
+            {
+                this.Sweep();
+            }
+
             this.sessions[session.ID] = session;
         }
 
@@ -52,12 +87,9 @@ namespace ObjectServer
                 from p in this.sessions
                 where p.Value.Database == database && p.Value.UserID == uid
                 select p.Value.ID;
+            var sid = sessions.First();
 
-            foreach (var s in sessions.ToList())
-            {
-                this.sessions.Remove(s);
-            }
-
+            this.sessions.Remove(sid);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -89,13 +121,13 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void Sweep()
         {
-            var keys = this.sessions.Keys.ToArray();
-            foreach (var k in keys)
+            var sessionIDs = this.sessions.Keys.ToArray();
+            foreach (var sid in sessionIDs)
             {
-                var session = this.sessions[k];
+                var session = this.sessions[sid];
                 if (!session.IsActive)
                 {
-                    this.sessions.Remove(k);
+                    this.sessions.Remove(sid);
                 }
             }
         }

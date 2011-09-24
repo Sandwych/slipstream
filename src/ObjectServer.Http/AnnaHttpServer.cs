@@ -119,6 +119,15 @@ namespace ObjectServer.Http
 
         private byte[] HandleJsonRpcRequest(Anna.Request.Request req)
         {
+            //TODO 可修改的请求限制大小
+
+            const int MaxRequestSize = 1024 * 1024 * 4;
+
+            if (req.ContentLength > MaxRequestSize)
+            {
+                throw new System.Net.WebException("Too large request");
+            }
+
             byte[] reqData = new byte[req.ContentLength];
             using (var inStream = req.InputStream)
             {
