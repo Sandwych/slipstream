@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Server", "Obje
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.DemoModule", "ObjectServer.DemoModule\ObjectServer.DemoModule.csproj", "{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malt.Layout", "Malt.Layout\Malt.Layout.csproj", "{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,16 @@ Global
 		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|x86.ActiveCfg = Release|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +164,7 @@ Global
 		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B} = {98F2368B-28CC-46AF-989A-B57127819289}
 		{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D} = {C592BCB6-F941-4C5C-A109-03A40B3885FE}
 		{DB5364B7-F0EF-4FF0-98DB-FEF369B93933} = {C592BCB6-F941-4C5C-A109-03A40B3885FE}
+		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF} = {C592BCB6-F941-4C5C-A109-03A40B3885FE}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = ObjectServer.Test\ObjectServer.Test.csproj

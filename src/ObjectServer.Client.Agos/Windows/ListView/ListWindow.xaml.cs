@@ -81,13 +81,6 @@ namespace ObjectServer.Client.Agos.Windows
         private readonly IList<string> fields = new List<string>();
         private string modelName;
 
-        public ListWindow()
-        {
-            this.ActionID = -1;
-
-            InitializeComponent();
-        }
-
         public ListWindow(long actionID)
         {
             this.ActionID = actionID;
@@ -221,6 +214,22 @@ namespace ObjectServer.Client.Agos.Windows
                     app.IsBusy = false;
                 });
             }
+        }
+
+        private void buttonNew_Click(object sender, RoutedEventArgs e)
+        {
+            var formWindow = new FormView.FormWindow(this.ActionID);
+
+
+            var dlg = new FormView.FormDialog();
+
+            dlg.LayoutRoot.Children.Add(formWindow);
+            formWindow.SetValue(Grid.ColumnProperty, 0);
+            formWindow.SetValue(Grid.RowProperty, 0);
+
+            dlg.Show();
+            //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
+
         }
 
     }

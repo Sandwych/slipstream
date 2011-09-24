@@ -77,6 +77,20 @@ namespace ObjectServer.Model
             return field;
         }
 
+        public IField Date(string name)
+        {
+            var field = new ScalarField(this.model, name, FieldType.Date);
+            this.Add(name, field);
+            return field;
+        }
+
+        public IField Time(string name)
+        {
+            var field = new ScalarField(this.model, name, FieldType.Time);
+            this.Add(name, field);
+            return field;
+        }
+
         public IField ManyToOne(string name, string masterModel)
         {
             var field = new ManyToOneField(this.model, name, masterModel);

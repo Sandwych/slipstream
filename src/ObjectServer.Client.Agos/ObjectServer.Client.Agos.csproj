@@ -93,6 +93,7 @@
       <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.Toolkit.Internals.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Action.cs" />
@@ -159,7 +160,19 @@
     <Compile Include="UI\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ListWindow.xaml.cs">
+    <Compile Include="Windows\FieldLabel.cs" />
+    <Compile Include="Windows\FormView\BooleanFieldControl.cs" />
+    <Compile Include="Windows\FormView\FieldControlFactory.cs" />
+    <Compile Include="Windows\FormView\FormDialog.xaml.cs">
+      <DependentUpon>FormDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\FormView\FormViewParser.cs" />
+    <Compile Include="Windows\FormView\FormWindow.xaml.cs">
+      <DependentUpon>FormWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\FormView\GridLayoutPanelWidget.cs" />
+    <Compile Include="Windows\FormView\StringFieldControl.cs" />
+    <Compile Include="Windows\ListView\ListWindow.xaml.cs">
       <DependentUpon>ListWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -237,7 +250,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ListWindow.xaml">
+    <Page Include="Windows\FormView\FormDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\FormView\FormWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ListView\ListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,6 +290,10 @@
     <Folder Include="Web\Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Malt.Layout\Malt.Layout.csproj">
+      <Project>{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}</Project>
+      <Name>Malt.Layout</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObjectServer.Client\ObjectServer.SilverlightClient.csproj">
       <Project>{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}</Project>
       <Name>ObjectServer.SilverlightClient</Name>
