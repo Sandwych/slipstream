@@ -85,7 +85,7 @@ namespace ObjectServer
                 {
                     throw new InvalidOperationException("Framework uninitialized");
                 }
-                var timeout = Environment.Configuration.SessionTimeout;
+                var timeout = new TimeSpan(0, Environment.Configuration.SessionTimeoutMinutes, 0);
                 return this.LastActivityTime + timeout;
             }
         }

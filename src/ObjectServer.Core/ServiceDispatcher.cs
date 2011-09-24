@@ -37,6 +37,8 @@ namespace ObjectServer
                 Environment.SessionStore.Remove(ctx.Session.ID);
 
                 tx.Complete();
+
+           
                 return session.ID.ToString();
             }
         }
@@ -50,7 +52,7 @@ namespace ObjectServer
                 ctx.DBContext.Open();
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
-                userModel.LogOut(ctx, sessionId);
+                userModel.LogOff(ctx, sessionId);
             }
         }
 

@@ -12,7 +12,7 @@ namespace ObjectServer.Exceptions
     /// ResourceException 异常只应该在加载模块阶段抛出
     /// </summary>
     [Serializable]
-    public class ResourceException : ApplicationException
+    public class ResourceException : Exception
     {
         public ResourceException(string msg)
             : base(msg)

@@ -291,6 +291,11 @@ where   hp._id=? and hc._id<>?
 
         public static string ToColumnList<T>(IEnumerable<T> items)
         {
+            if (items == null)
+            {
+                throw new ArgumentNullException("items");
+            }
+
             var sb = new StringBuilder();
             var flag = true;
             foreach (var item in items)

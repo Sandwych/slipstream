@@ -143,6 +143,11 @@ namespace ObjectServer
 
         public bool Equals(IServiceContext other)
         {
+            if (other == null)
+            {
+                throw new ArgumentNullException("other");
+            }
+
             return this.Session.ID == other.Session.ID;
         }
 

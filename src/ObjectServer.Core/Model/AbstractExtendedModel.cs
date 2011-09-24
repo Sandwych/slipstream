@@ -16,7 +16,7 @@ namespace ObjectServer.Model
     {
         private readonly IFieldCollection fields;
 
-        public AbstractExtendedModel(string name)
+        protected AbstractExtendedModel(string name)
             : base(name)
         {
             if (string.IsNullOrEmpty(name))

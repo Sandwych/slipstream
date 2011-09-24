@@ -388,18 +388,19 @@ insert into core_field(module, model, name, relation, label, type, help)
         #region Service Methods
 
         [ServiceMethod]
-        public static long Count(IModel model, IServiceContext scope, object[] constraints = null)
+        public static long Count(
+            IModel model, IServiceContext ctx, object[] constraints = null)
         {
-            EnsureServiceMethodArgs(model, scope);
+            EnsureServiceMethodArgs(model, ctx);
 
-            return model.CountInternal(scope, constraints);
+            return model.CountInternal(ctx, constraints);
         }
 
         [ServiceMethod]
         public static long[] Search(
-            IModel model, IServiceContext scope, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
+            IModel model, IServiceContext ctx, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
         {
-            EnsureServiceMethodArgs(model, scope);
+            EnsureServiceMethodArgs(model, ctx);
 
             OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
 
@@ -414,14 +415,14 @@ insert into core_field(module, model, name, relation, label, type, help)
                 }
             }
 
-            return model.SearchInternal(scope, constraints, orderInfos, offset, limit);
+            return model.SearchInternal(ctx, constraints, orderInfos, offset, limit);
         }
 
         [ServiceMethod]
         public static Dictionary<string, object>[] Read(
-            IModel model, IServiceContext scope, dynamic clientIds, dynamic clientFields = null)
+            IModel model, IServiceContext ctx, dynamic clientIds, dynamic clientFields = null)
         {
-            EnsureServiceMethodArgs(model, scope);
+            EnsureServiceMethodArgs(model, ctx);
 
             string[] strFields = null;
             if (clientFields != null)
@@ -437,30 +438,30 @@ insert into core_field(module, model, name, relation, label, type, help)
             {
                 ids[i] = clientIds[i];
             }
-            return model.ReadInternal(scope, ids, strFields);
+            return model.ReadInternal(ctx, ids, strFields);
         }
 
         [ServiceMethod]
         public static long Create(
-            IModel model, IServiceContext scope, IDictionary<string, object> propertyBag)
+            IModel model, IServiceContext ctx, IDictionary<string, object> propertyBag)
         {
-            EnsureServiceMethodArgs(model, scope);
-            return model.CreateInternal(scope, propertyBag);
+            EnsureServiceMethodArgs(model, ctx);
+            return model.CreateInternal(ctx, propertyBag);
         }
 
         [ServiceMethod]
         public static void Write(
-           IModel model, IServiceContext scope, object id, IDictionary<string, object> userRecord)
+           IModel model, IServiceContext ctx, object id, IDictionary<string, object> userRecord)
         {
-            EnsureServiceMethodArgs(model, scope);
-            model.WriteInternal(scope, (long)id, userRecord);
+            EnsureServiceMethodArgs(model, ctx);
+            model.WriteInternal(ctx, (long)id, userRecord);
         }
 
         [ServiceMethod]
         public static void Delete(
-            IModel model, IServiceContext scope, dynamic clientIDs)
+            IModel model, IServiceContext ctx, dynamic clientIDs)
         {
-            EnsureServiceMethodArgs(model, scope);
+            EnsureServiceMethodArgs(model, ctx);
 
             long[] ids;
 
@@ -477,18 +478,18 @@ insert into core_field(module, model, name, relation, label, type, help)
                 }
             }
 
-            model.DeleteInternal(scope, ids);
+            model.DeleteInternal(ctx, ids);
         }
 
 
-        private static void EnsureServiceMethodArgs(IModel self, IServiceContext scope)
+        private static void EnsureServiceMethodArgs(IModel self, IServiceContext ctx)
         {
             if (self == null)
             {
                 throw new ArgumentNullException("self");
             }
 
-            if (scope == null)
+            if (ctx == null)
             {
                 throw new ArgumentNullException("scope");
             }

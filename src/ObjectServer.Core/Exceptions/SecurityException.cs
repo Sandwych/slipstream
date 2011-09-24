@@ -9,7 +9,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Exceptions
 {
     [Serializable]
-    public class SecurityException : ApplicationException
+    public class SecurityException : Exception
     {
         public SecurityException(string msg)
             : base(msg)

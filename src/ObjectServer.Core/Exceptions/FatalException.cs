@@ -11,7 +11,7 @@ namespace ObjectServer.Exceptions
     /// </summary>
     public abstract class FatalException : Exception
     {
-        public FatalException(string msg, Exception innerExp)
+        protected FatalException(string msg, Exception innerExp)
             : base(msg, innerExp)
         {
         }

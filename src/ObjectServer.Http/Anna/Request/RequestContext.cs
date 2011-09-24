@@ -37,28 +37,28 @@ namespace Anna.Request
 
         public virtual void Respond(Response response)
         {
-            
+
             foreach (var header in response.Headers.Where(r => r.Key != "Content-Type"))
             {
                 listenerResponse.AddHeader(header.Key, header.Value);
             }
-            
+
             listenerResponse.ContentType = response.Headers["Content-Type"];
             listenerResponse.StatusCode = response.StatusCode;
             response.WriteStream(listenerResponse.OutputStream)
                         .Subscribe(s =>
                         {
                             s.Close();
-                            s.Dispose();
                         }, e =>
                                {
                                    try
                                    {
                                        listenerResponse.StatusCode = 500;
                                        listenerResponse.OutputStream.Close();
-                                   }catch{} //swallow exceptions
-                               });    
-            
+                                   }
+                                   catch { } //swallow exceptions
+                               });
+
         }
     }
 }

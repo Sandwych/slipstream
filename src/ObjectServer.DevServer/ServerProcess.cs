@@ -53,7 +53,7 @@ namespace ObjectServer.Server
                 using (var cs = new ObjectServer.Http.AnnaHttpServer(
                     Environment.Configuration.CommanderUrl,
                     Environment.Configuration.RpcHostUrl,
-                    Environment.Configuration.HttpListenPort))
+                    Environment.Configuration.HttpListenUrl))
                 {
                     cs.Start();
 

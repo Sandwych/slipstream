@@ -19,14 +19,24 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override void WriteInternal(
-            IServiceContext scope, long id, IDictionary<string, object> userRecord)
+            IServiceContext ctx, long id, IDictionary<string, object> userRecord)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (userRecord == null || userRecord.Count == 0)
+            {
+                throw new ArgumentNullException("userRecord");
+            }
+
             if (!this.CanWrite)
             {
                 throw new NotSupportedException();
             }
 
-            if (!scope.CanWriteModel(scope.Session.UserID, this.Name))
+            if (!ctx.CanWriteModel(ctx.Session.UserID, this.Name))
             {
                 throw new SecurityException("Access denied");
             }
@@ -43,11 +53,11 @@ namespace ObjectServer.Model
                 select * from <TableName> where _id=?
                 */
                 var sqlSelectSelf = String.Format("select * from {0} where _id = ?", this.quotedTableName);
-                existedRecord = scope.DBContext.QueryAsDictionary(SqlString.Parse(sqlSelectSelf), id)[0];
+                existedRecord = ctx.DBContext.QueryAsDictionary(SqlString.Parse(sqlSelectSelf), id)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
-                this.PrewriteBaseModels(scope, record, existedRecord);
+                this.PrewriteBaseModels(ctx, record, existedRecord);
 
                 if (userRecord.ContainsKey(ParentFieldName))
                 {
@@ -63,14 +73,14 @@ namespace ObjectServer.Model
             var allFields = record.Keys; //记录中的所有字段
 
             //先写入 many-to-many 字段
-            this.PrewriteManyToManyFields(scope, id, record, allFields);
+            this.PrewriteManyToManyFields(ctx, id, record, allFields);
 
-            this.SetModificationInfo(scope, record);
+            this.SetModificationInfo(ctx, record);
 
             //所有可更新的字段
             var updatableColumnFields = allFields.Where(
                 f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly).ToArray();
-            this.ConvertFieldToColumn(scope, record, updatableColumnFields);
+            this.ConvertFieldToColumn(ctx, record, updatableColumnFields);
 
             var sqlBuilder = new SqlStringBuilder();
             sqlBuilder.Add("update ");
@@ -103,7 +113,7 @@ namespace ObjectServer.Model
             sqlBuilder.Add(GetVersionExpression(record));
 
             var sql = sqlBuilder.ToSqlString();
-            var rowsAffected = scope.DBContext.Execute(sql, args);
+            var rowsAffected = ctx.DBContext.Execute(sql, args);
 
             //检查更新结果
             if (rowsAffected != 1)
@@ -129,11 +139,11 @@ namespace ObjectServer.Model
                 var nodeRight = (long)existedRecord[RightFieldName];
                 var nodeWidth = nodeRight - nodeLeft + 1;
                 var newParentID = (long)userRecord[ParentFieldName];
-                var newParent = this.ReadInternal(scope, new long[] { newParentID }, fields)[0];
+                var newParent = this.ReadInternal(ctx, new long[] { newParentID }, fields)[0];
                 var newParentLeft = (long)newParent[LeftFieldName];
                 var newParentRight = (long)newParent[RightFieldName];
 
-                scope.DBContext.LockTable(this.TableName);
+                ctx.DBContext.LockTable(this.TableName);
 
                 //# step 1: temporary "remove" moving node
                 //
@@ -144,7 +154,7 @@ namespace ObjectServer.Model
                     "update {0} set _left = 0 - _left, _right = 0 - _right " +
                     "where _left >= {1} and _right <= {2}",
                     this.quotedTableName, nodeLeft, nodeRight);
-                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
 
                 //# step 2: decrease left and/or right position values of currently 'lower' items (and parents)
                 //
@@ -156,10 +166,10 @@ namespace ObjectServer.Model
                 //WHERE `pos_right` > @node_pos_right;
                 sqlStr = String.Format("update {0} set _left = _left - {1} where _left > {2}",
                     this.quotedTableName, nodeWidth, nodeRight);
-                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
                 sqlStr = String.Format("update {0} set _right = _right - {1} where _right > {2}",
                     this.quotedTableName, nodeWidth, nodeRight);
-                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
 
                 /* # step 3: increase left and/or right position values of future 'lower' items (and parents)
                     UPDATE `list_items`
@@ -175,17 +185,17 @@ namespace ObjectServer.Model
                 sqlStr = String.Format(
                     "update {0} set _left = _left + {1} where _left >= " +
                     "case when {2} > {3} then {4} - {5} else {6} end",
-                    this.quotedTableName, nodeWidth, newParentRight, 
+                    this.quotedTableName, nodeWidth, newParentRight,
                     nodeRight, newParentRight, nodeWidth, newParentRight);
-                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
 
                 sqlStr = String.Format(
                     "update {0} set _right = _right + {1} where _right >= " +
                     "case when {2} > {3} then {4} - {5} else {6} end",
-                    this.quotedTableName, nodeWidth, newParentRight, 
+                    this.quotedTableName, nodeWidth, newParentRight,
                     nodeRight, newParentRight, nodeWidth, newParentRight);
-                scope.DBContext.Execute(SqlString.Parse(sqlStr));
-                
+                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
+
                 /* # step 4: move node (ant it's subnodes) and update it's parent item id
                     UPDATE `list_items`
                     SET
@@ -209,14 +219,14 @@ namespace ObjectServer.Model
                     "_right = 0 - _right + case when {1} > {2} then {1} - {2} - 1 else {1} - {2} - 1 + {3} end " +
                     "where _left <= 0 - {4} and _right >= 0 - {2} ",
                     this.quotedTableName, newParentRight, nodeRight, nodeWidth, nodeLeft);
-                scope.DBContext.Execute(SqlString.Parse(sqlStr));
+                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
 
                 //最后一步不需要执行了，之前已经更新过 parent
             }
 
             if (this.LogWriting)
             {
-                AuditLog(scope, (long)id, this.Label + " updated");
+                AuditLog(ctx, (long)id, this.Label + " updated");
             }
         }
 

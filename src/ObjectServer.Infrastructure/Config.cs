@@ -25,22 +25,34 @@ namespace ObjectServer
             this.DBUser = "objectserver";
             this.DBPassword = "objectserver";
 
-            this.SessionTimeout = new TimeSpan(0, 20, 0);
+            this.SessionTimeoutMinutes = 20;
 
-            this.Debug = true;
             var defaultLogPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "ObjectServer", "log");
             this.LogPath = defaultLogPath;
+            this.LoggingSql = false;
+
+#if DEBUG
+            this.Debug = true;
             this.LogLevel = "debug";
+            this.LogToConsole = true;
+#else
+            this.Debug = false;
+            this.LogLevel = "info";
             this.LoggingSql = false;
             this.LogToConsole = false;
+#endif
 
+#if DEBUG
             this.RpcHandlerMax = Environment.ProcessorCount;
+#else
+            this.RpcHandlerMax = Environment.ProcessorCount * 4;
+#endif
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "inproc://rpc-entrance";
             this.CommanderUrl = "inproc://controller";
-            this.HttpListenPort = 9287;
+            this.HttpListenUrl = "http://localhost:9287/";
 
             this.ModulePath = "Modules";
             this.RootPassword = "root";
@@ -94,8 +106,8 @@ namespace ObjectServer
         [XmlElement("logging-sql")]
         public bool LoggingSql { get; set; }
 
-        [XmlElement("session-timeout")]
-        public TimeSpan SessionTimeout { get; set; }
+        [XmlElement("session-timeout-minutes")]
+        public int SessionTimeoutMinutes { get; set; }
 
         [XmlElement("session-provider", IsNullable = false)]
         public string SessionProvider { get; set; }
@@ -112,7 +124,7 @@ namespace ObjectServer
         [XmlElement("controller-url")]
         public string CommanderUrl { get; set; }
 
-        [XmlElement("http-listen-port")]
-        public int HttpListenPort { get; set; }
+        [XmlElement("http-listen-url")]
+        public string HttpListenUrl { get; set; }
     }
 }

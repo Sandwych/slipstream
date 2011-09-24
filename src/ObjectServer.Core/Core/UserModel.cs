@@ -225,9 +225,15 @@ namespace ObjectServer.Core
             {
                 var session = this.FetchOrCreateSession(database, login, user);
                 result = session;
+
+                LoggerProvider.EnvironmentLogger.Info(() =>
+                    String.Format("User[{0}.{1}] logged.", scope.DBContext.DatabaseName, login));
             }
             else
             {
+                LoggerProvider.EnvironmentLogger.Warn(() =>
+                    String.Format("Failed to log on user: [{0}.{1}]", scope.DBContext.DatabaseName, login));
+
                 var uid = (long)user[IDFieldName];
                 Environment.SessionStore.RemoveSessionsByUser(database, uid);
             }
@@ -236,21 +242,49 @@ namespace ObjectServer.Core
         }
 
 
-        public void LogOut(IServiceContext scope, string sessionId)
+        public void LogOff(IServiceContext scope, string sessionId)
         {
-            Environment.SessionStore.Remove(sessionId);
+            var session = Environment.SessionStore.GetSession(sessionId);
+
+            if (session != null)
+            {
+                Environment.SessionStore.Remove(sessionId);
+
+                LoggerProvider.EnvironmentLogger.Info(() =>
+                    String.Format("User[{0}.{1}] logged out.", session.Database, session.Login));
+            }
+            else
+            {
+                LoggerProvider.EnvironmentLogger.Warn(() =>
+                    String.Format("One connection try to log off a unexisted session: {0}", sessionId));
+            }
         }
 
         [ServiceMethod]
         public static void ChangePassword(
-            IModel model, IServiceContext scope, string newPassword)
+            IModel model, IServiceContext ctx, string newPassword)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (String.IsNullOrEmpty(newPassword))
+            {
+                throw new ArgumentNullException("newPassword");
+            }
+
             var record = new Dictionary<string, object>()
             {
                 { "password", newPassword },
             };
             HashPassword(record);
-            model.WriteInternal(scope, scope.Session.UserID, record);
+            model.WriteInternal(ctx, ctx.Session.UserID, record);
         }
 
         public static Dictionary<string, object>[] GetAllModelAccessEntries(long userId)

@@ -23,6 +23,11 @@ namespace ObjectServer.Core
 
         public override void Initialize(IDBProfile db, bool update)
         {
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+
             base.Initialize(db, update);
 
             var tableCtx = db.DBContext.CreateTableContext(this.TableName);

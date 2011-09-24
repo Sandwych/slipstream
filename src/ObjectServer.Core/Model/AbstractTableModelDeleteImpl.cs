@@ -21,8 +21,13 @@ namespace ObjectServer.Model
         private static readonly string[] HierarchyFields =
             new string[] { IDFieldName, LeftFieldName, RightFieldName };
 
-        public override void DeleteInternal(IServiceContext scope, long[] ids)
+        public override void DeleteInternal(IServiceContext ctx, long[] ids)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
             if (!this.CanDelete)
             {
                 throw new NotSupportedException();
@@ -33,7 +38,7 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("ids");
             }
 
-            if (!scope.CanDeleteModel(scope.Session.UserID, this.Name))
+            if (!ctx.CanDeleteModel(ctx.Session.UserID, this.Name))
             {
                 throw new SecurityException("Access denied");
             }
@@ -56,11 +61,11 @@ namespace ObjectServer.Model
                     ids.ToCommaList(),
                     ")");
 
-                existedRecords = scope.DBContext.QueryAsDictionary(sql);
+                existedRecords = ctx.DBContext.QueryAsDictionary(sql);
             }
 
-            DeleteRows(scope, ids, this);
-            this.ProcessBaseModelsDeletion(scope, existedRecords);
+            DeleteRows(ctx, ids, this);
+            this.ProcessBaseModelsDeletion(ctx, existedRecords);
         }
 
         private void ProcessBaseModelsDeletion(IServiceContext scope, IEnumerable<Dictionary<string, object>> existedRecords)

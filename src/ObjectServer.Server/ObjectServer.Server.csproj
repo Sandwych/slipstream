@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractWorker.cs" />
-    <Compile Include="RpcHandler.cs" />
+    <Compile Include="RpcDispatcher.cs" />
     <Compile Include="RpcHostWorker.cs" />
     <Compile Include="WorkerCommander.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

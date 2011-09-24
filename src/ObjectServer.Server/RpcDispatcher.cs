@@ -19,19 +19,20 @@ namespace ObjectServer.Server
     /// <summary>
     /// 处理 JSON-RPC 的 分发器
     /// </summary>
-    public static class RpcHandler
+    public static class RpcDispatcher
     {
-        private static Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
-        private static IExportedService s_service = Environment.ExportedService;
-        private static bool running = false;
+        private static readonly Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
+        private static readonly IExportedService s_service = Environment.ExportedService;
         private static readonly object lockObj = new object();
+        private static bool running = false;
 
-        static RpcHandler()
+        static RpcDispatcher()
         {
             //注册自己的所有方法
-            var selfType = typeof(RpcHandler);
+            var selfType = typeof(RpcDispatcher);
             s_methods.Add("system.echo", selfType.GetMethod("Echo"));
             s_methods.Add("system.listMethods", selfType.GetMethod("ListMethods"));
+
             s_methods.Add("logOn", selfType.GetMethod("LogOn"));
             s_methods.Add("logOff", selfType.GetMethod("LogOff"));
             s_methods.Add("getVersion", selfType.GetMethod("GetVersion"));

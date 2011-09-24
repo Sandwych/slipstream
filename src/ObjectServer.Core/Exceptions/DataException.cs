@@ -11,7 +11,7 @@ namespace ObjectServer.Exceptions
     /// 跟数据库查询相关的异常
     /// </summary>
     [Serializable]
-    public class DataException : ApplicationException
+    public class DataException : Exception
     {
         public DataException(string msg)
             : base(msg)

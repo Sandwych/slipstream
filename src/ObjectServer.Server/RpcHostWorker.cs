@@ -58,7 +58,7 @@ namespace ObjectServer.Server
                 hostUrl, workersUrl));
 
             using (var pool = new ZMQ.ZMQDevice.WorkerPool(
-                hostUrl, workersUrl, RpcHandler.ProcessingLoop, (short)this.RpcHandlerMax))
+                hostUrl, workersUrl, RpcDispatcher.ProcessingLoop, (short)this.RpcHandlerMax))
             {
                 this.WaitToStop(pool);
             }

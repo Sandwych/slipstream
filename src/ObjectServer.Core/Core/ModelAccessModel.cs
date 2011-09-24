@@ -44,15 +44,25 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <summary>
         /// TODO: 此方法每次 CRUD 的时候都会被调用用来检查 CRUD 权限，因此需要缓存
         /// </summary>
-        /// <param name="scope"></param>
+        /// <param name="ctx"></param>
         /// <param name="model"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
         public Dictionary<string, object>[]
-            FindByModelAndUserId(IServiceContext scope, string model, long userId)
+            FindByModelAndUserId(IServiceContext ctx, string model, long userID)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (string.IsNullOrEmpty(model))
+            {
+                throw new ArgumentNullException("model");
+            }
+
             var sql = SqlToQuery;
-            var result = scope.DBContext.QueryAsDictionary(sql, userId, model);
+            var result = ctx.DBContext.QueryAsDictionary(sql, userID, model);
 
             return result;
         }

@@ -28,11 +28,11 @@ namespace ObjectServer.Http
         private readonly ZMQ.Socket commandSocket = new ZMQ.Socket(ZMQ.SocketType.SUB);
         private readonly ZMQ.Socket senderSocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
         private readonly string rpcReqUrl;
-        private readonly string httpServerUrl;
+        private readonly string httpHostUrl;
 
         private bool disposed = false;
 
-        public AnnaHttpServer(string controllerUrl, string rpcHostUrl, int listenPort)
+        public AnnaHttpServer(string controllerUrl, string rpcHostUrl, string httpUrl)
         {
             LoggerProvider.EnvironmentLogger.Info("Starting HTTP Server...");
 
@@ -46,15 +46,21 @@ namespace ObjectServer.Http
                 throw new ArgumentNullException("rpcHostUrl");
             }
 
-            if (listenPort <= 0 || listenPort >= UInt16.MaxValue)
+            if (string.IsNullOrEmpty(httpUrl))
             {
-                throw new ArgumentOutOfRangeException("listenPort");
+                throw new ArgumentNullException("httpUrl");
             }
 
             commandSocket.Connect(controllerUrl);
             commandSocket.Subscribe("STOP", Encoding.UTF8);
 
-            this.httpServerUrl = String.Format("http://localhost:{0}/", listenPort);
+            if (!httpUrl.EndsWith("/"))
+            {
+                httpUrl += '/';
+            }
+
+            this.httpHostUrl = httpUrl;
+            LoggerProvider.EnvironmentLogger.Info(String.Format("HTTP Listen: [{0}]", httpUrl));
 
             this.rpcReqUrl = rpcHostUrl;
             LoggerProvider.EnvironmentLogger.Info("Connecting to MQ: [" + this.rpcReqUrl + "]");
@@ -72,9 +78,9 @@ namespace ObjectServer.Http
             this.senderSocket.Connect(this.rpcReqUrl);
 
             LoggerProvider.EnvironmentLogger.Info(
-                String.Format("Starting the HTTP Server[{0}]...", this.httpServerUrl));
+                String.Format("Starting the HTTP Server [{0}]...", this.httpHostUrl));
 
-            using (var httpd = new Anna.HttpServer(this.httpServerUrl))
+            using (var httpd = new Anna.HttpServer(this.httpHostUrl))
             {
                 this.RegisterRequestHandlers(httpd);
 
@@ -117,6 +123,12 @@ namespace ObjectServer.Http
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        /// <exception cref="System.Net.WebException" />
         private byte[] HandleJsonRpcRequest(Anna.Request.Request req)
         {
             //TODO 可修改的请求限制大小

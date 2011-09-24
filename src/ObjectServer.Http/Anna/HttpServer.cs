@@ -59,6 +59,7 @@ namespace Anna
 
                 //释放非托管资源
                 listener.Stop();
+                listener.Close();
 
                 this.disposed = true;
             }

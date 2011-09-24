@@ -60,7 +60,7 @@ namespace ObjectServer
             var msg = String.Format("Initializing DBProfile: [{0}]".PadRight(80, '='), dbName);
             LoggerProvider.EnvironmentLogger.Info(msg);
 
-            LoggerProvider.EnvironmentLogger.Info(() => string.Format("Registering object-pool of database: [{0}]", dbName));
+            LoggerProvider.EnvironmentLogger.Info(() => string.Format("Registering resources in database: [{0}]", dbName));
 
             var dbNames = DataProvider.ListDatabases();
             if (!dbNames.Contains(dbName))

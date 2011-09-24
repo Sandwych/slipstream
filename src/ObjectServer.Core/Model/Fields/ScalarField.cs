@@ -31,7 +31,7 @@ namespace ObjectServer.Model
             {
                 throw new ResourceException("提供的字段类型不是标量字段");
             }
-            
+
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
@@ -45,8 +45,13 @@ namespace ObjectServer.Model
             return value;
         }
 
-        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
+        public override object BrowseField(IServiceContext ctx, IDictionary<string, object> record)
         {
+            if (record == null || record.Count == 0)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             return record[this.Name];
         }
 
