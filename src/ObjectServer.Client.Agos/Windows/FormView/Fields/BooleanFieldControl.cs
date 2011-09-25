@@ -18,11 +18,14 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 {
     public class BooleanFieldControl : CheckBox, IFieldWidget
     {
-        public BooleanFieldControl(string fieldName)
+        private readonly IDictionary<string, object> metaField;
+
+        public BooleanFieldControl(object metaField)
         {
             this.DefaultStyleKey = typeof(CheckBox);
 
-            this.FieldName = fieldName;
+            this.metaField = (IDictionary<string, object>)metaField;
+            this.FieldName = (string)this.metaField["name"];
 
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;

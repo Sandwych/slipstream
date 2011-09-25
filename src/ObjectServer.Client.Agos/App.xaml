@@ -14,10 +14,12 @@
                     <app:ResourceWrapper x:Key="ResourceWrapper" />
                     <app:NotOperatorValueConverter x:Key="NotOperatorValueConverter" />
                 </ResourceDictionary>
+                <!--
                 <ResourceDictionary Source="Assets/Themes/Windows7/Styles.xaml"/>
                 <ResourceDictionary Source="Assets/Themes/Windows7/CoreStyles.xaml"/>
                 <ResourceDictionary Source="Assets/Themes/Windows7/SDKStyles.xaml"/>
                 <ResourceDictionary Source="Assets/Themes/Windows7/ToolkitStyles.xaml"/>
+                -->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 

@@ -18,10 +18,14 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 {
     public class OneToManyFieldControl : Grid, IFieldWidget
     {
+        private readonly IDictionary<string, object> metaField;
         private Border border;
 
-        public OneToManyFieldControl(string fieldName)
+        public OneToManyFieldControl(object metaField)
         {
+            this.metaField = (IDictionary<string, object>)metaField;
+            this.FieldName = (string)this.metaField["name"];
+
             this.MinHeight = 120;
 
             this.RowDefinitions.Add(
@@ -36,7 +40,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.border.BorderThickness = new Thickness(1);
             this.border.BorderBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x99, 0x99, 0x99));
 
-            this.FieldName = fieldName;
             this.Margin = new Thickness(5, 2, 5, 2);
         }
 

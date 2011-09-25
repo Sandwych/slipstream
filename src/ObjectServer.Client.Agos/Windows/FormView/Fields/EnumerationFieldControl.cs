@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -16,16 +17,23 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class EnumerationFieldControl : TextBox, IFieldWidget
+    public class EnumerationFieldControl : ComboBox, IFieldWidget
     {
-        public EnumerationFieldControl(string fieldName)
-        {
-            this.DefaultStyleKey = typeof(TextBox);
+        private readonly IDictionary<string, object> metaField;
 
-            this.FieldName = fieldName;
+        public EnumerationFieldControl(object metaField)
+        {
+            this.metaField = (IDictionary<string, object>)metaField;
+            this.FieldName = (string)this.metaField["name"];
+
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.Margin = new Thickness(5, 2, 5, 2);
+
+            var options = (IEnumerable)this.metaField["options"];
+            this.SelectedValuePath = "Key";
+            this.DisplayMemberPath = "Value";
+            this.ItemsSource = options;
         }
 
         public string FieldName { get; private set; }
@@ -34,18 +42,18 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         {
             get
             {
-                return this.Text;
+                return this.SelectedValue;
             }
             set
             {
                 var tuple = (object[])value;
-                this.Text = (string)tuple[0];
+                this.SelectedValue = (string)tuple[0];
             }
         }
 
         public void Empty()
         {
-            this.Text = String.Empty;
+            this.SelectedValue = null;
         }
     }
 }

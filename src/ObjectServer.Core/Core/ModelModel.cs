@@ -46,6 +46,9 @@ namespace ObjectServer.Core
             {
                 throw new ArgumentNullException("scope");
             }
+
+            var destModel = (AbstractModel)scope.GetResource(modelName);
+
             var modelDomain = new object[] { new object[] { "name", "=", modelName } };
             var modelIds = model.SearchInternal(scope, modelDomain);
 
@@ -55,6 +58,18 @@ namespace ObjectServer.Core
             var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
             var fieldIds = fieldModel.SearchInternal(scope, fieldDomain);
             var records = fieldModel.ReadInternal(scope, fieldIds);
+
+            var enumFields =
+                from r in records
+                let type = (string)r["type"]
+                where type == "Enumeration"
+                select r;
+
+            foreach (var f in enumFields)
+            {
+                var fieldName = (string)f["name"];
+                f["options"] = destModel.Fields[fieldName].Options;
+            }
 
             return records;
         }

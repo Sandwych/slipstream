@@ -18,9 +18,13 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 {
     public class IntegerFieldControl : UpDownBase<Int64?>, IFieldWidget
     {
-        public IntegerFieldControl(string fieldName)
+        private readonly IDictionary<string, object> metaField;
+
+        public IntegerFieldControl(object metaField)
         {
-            this.FieldName = fieldName;
+            this.metaField = (IDictionary<string, object>)metaField;
+            this.FieldName = (string)this.metaField["name"];
+
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.Margin = new Thickness(5, 2, 5, 2);

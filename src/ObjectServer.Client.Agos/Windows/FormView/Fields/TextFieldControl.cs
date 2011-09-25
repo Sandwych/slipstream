@@ -18,11 +18,15 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 {
     public class TextFieldControl : TextBox, IFieldWidget
     {
-        public TextFieldControl(string fieldName)
+        private readonly IDictionary<string, object> metaField;
+
+        public TextFieldControl(object metaField)
         {
             this.DefaultStyleKey = typeof(TextBox);
 
-            this.FieldName = fieldName;
+            this.metaField = (IDictionary<string, object>)metaField;
+            this.FieldName = (string)this.metaField["name"];
+
             this.AcceptsReturn = true;
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Top;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Top;

@@ -18,11 +18,15 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 {
     public class DateTimeFieldControl : Grid, IFieldWidget
     {
-        private DatePicker datePicker;
-        private TimeUpDown timeUpDown;
+        private readonly IDictionary<string, object> metaField;
+        private readonly DatePicker datePicker;
+        private readonly TimeUpDown timeUpDown;
 
-        public DateTimeFieldControl(string fieldName)
+        public DateTimeFieldControl(object metaField)
         {
+            this.metaField = (IDictionary<string, object>)metaField;
+            this.FieldName = (string)this.metaField["name"];
+
             var col1 = new ColumnDefinition() { Width = GridLength.Auto }; //new GridLength(50, GridUnitType.Star) };
             var col2 = new ColumnDefinition() { Width = GridLength.Auto }; //new GridLength(50, GridUnitType.Star) };
 
@@ -41,7 +45,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.timeUpDown.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.Children.Add(timeUpDown);
 
-            this.FieldName = fieldName;
             this.Margin = new Thickness(5, 2, 5, 2);
         }
 

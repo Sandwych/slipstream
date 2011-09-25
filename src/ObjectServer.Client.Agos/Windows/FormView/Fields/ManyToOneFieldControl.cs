@@ -18,11 +18,15 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 {
     public class ManyToOneFieldControl : TextBox, IFieldWidget
     {
-        public ManyToOneFieldControl(string fieldName)
+        private readonly IDictionary<string, object> metaField;
+
+        public ManyToOneFieldControl(object metaField)
         {
+            this.metaField = (IDictionary<string, object>)metaField;
+            this.FieldName = (string)this.metaField["name"];
+
             this.DefaultStyleKey = typeof(TextBox);
 
-            this.FieldName = fieldName;
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.Margin = new Thickness(5, 2, 5, 2);

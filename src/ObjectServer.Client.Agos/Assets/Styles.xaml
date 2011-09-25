@@ -372,7 +372,7 @@
     </Style>
 
     <!--FloatableWindow Style-->
-    <Style TargetType="fw:FloatableWindow">
+    <Style x:Key="FloatableWindowStyle" TargetType="fw:FloatableWindow">
         <Setter Property="Background" Value="#FFF0F0F0" />
         <Setter Property="IsTabStop" Value="false"/>
         <Setter Property="TabNavigation" Value="Cycle"/>

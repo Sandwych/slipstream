@@ -58,7 +58,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var fieldType = (string)metaField["type"];
 
             var t = fieldTypeMapping[fieldType];
-            var widget = (IFieldWidget)Activator.CreateInstance(t, field.Name);
+            var widget = (IFieldWidget)Activator.CreateInstance(t, metaField);
             this.createdFieldWidgets.Add(field.Name, widget);
             return widget;
         }
