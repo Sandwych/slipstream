@@ -37,6 +37,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private IDictionary<string, object>[] metaFields;
         private IDictionary<string, IFieldWidget> createdFieldWidgets =
             new Dictionary<string, IFieldWidget>();
+        private List<ILabelWidget> createdLabels = new List<ILabelWidget>();
 
         public FieldControlFactory(IDictionary<string, object>[] fields)
         {
@@ -69,9 +70,13 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public ILabelWidget CreateLabelWidget(Malt.Layout.Models.Label label)
         {
-            var labelWidget = new FieldLabel();
-            var metaField = this.metaFields.Where(i => (string)i["name"] == label.Field).Single();
-            labelWidget.Text = metaField["label"] as string;
+            var labelWidget = new FieldLabel(label.Field, label.Text);
+            if (!String.IsNullOrEmpty(label.Field))
+            {
+                var metaField = this.metaFields.Where(i => (string)i["name"] == label.Field).Single();
+                labelWidget.Text = metaField["label"] as string;
+            }
+            this.createdLabels.Add(labelWidget);
 
             return labelWidget;
         }
@@ -86,6 +91,22 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         public IDictionary<string, IFieldWidget> CreatedFieldWidgets
         {
             get { return this.createdFieldWidgets; }
+        }
+
+
+        public void BindLabels()
+        {
+            foreach (var label in this.createdLabels)
+            {
+                IFieldWidget field;
+                if (this.CreatedFieldWidgets.TryGetValue(label.Text, out field))
+                {
+                    var labelControl = (Label)label;
+                    var fieldControl = (FrameworkElement)field;
+
+                    labelControl.Target = fieldControl;
+                }
+            }
         }
     }
 }

@@ -94,6 +94,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var le = new Malt.Layout.LayoutEngine(factory);
             var layoutGrid = (UIElement)le.CreateLayoutTable(form);
             this.fieldWidgets = factory.CreatedFieldWidgets;
+            factory.BindLabels();
             this.Content = layoutGrid;
 
         }

@@ -13,10 +13,12 @@ namespace ObjectServer.Client.Agos.Windows
 {
     public class FieldLabel : Label, Malt.Layout.Widgets.ILabelWidget
     {
-        public FieldLabel()
+        public FieldLabel(string field = null, string text = null)
             : base()
         {
             this.Margin = new Thickness(5, 2, 5, 2);
+            this.Field = field;
+            this.Text = text;
         }
 
         public string Text
@@ -30,5 +32,8 @@ namespace ObjectServer.Client.Agos.Windows
                 base.Content = value;
             }
         }
+
+
+        public string Field { get; private set; }
     }
 }

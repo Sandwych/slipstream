@@ -33,5 +33,10 @@ namespace Malt.Layout
         IHorizontalLineWidget CreateHorizontalLineWidget(Models.HorizontalLine hl);
 
         IDictionary<string, IFieldWidget> CreatedFieldWidgets { get; }
+
+        /// <summary>
+        /// 把各个 Label 绑定到字段控件上
+        /// </summary>
+        void BindLabels();
     }
 }
