@@ -16,6 +16,7 @@ namespace ObjectServer.Client.Agos.Windows
         public FieldLabel()
             : base()
         {
+            this.Margin = new Thickness(5, 2, 5, 2);
         }
 
         public string Text

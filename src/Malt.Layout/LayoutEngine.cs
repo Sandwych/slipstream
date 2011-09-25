@@ -44,9 +44,11 @@ namespace Malt.Layout
                 var colSpan = ComputeColumnSpan(tablePanel.ColumnCount, placable, pos);
 
                 object widget = this.CreateWidget(placable);
-
-                tablePanel.SetCellWidget(widget, pos.Row, pos.Column);
-                tablePanel.SetColumnSpan(pos.Row, pos.Column, colSpan);
+                if (widget != null)
+                {
+                    tablePanel.SetCellWidget(widget, pos.Row, pos.Column);
+                    tablePanel.SetColumnSpan(pos.Row, pos.Column, colSpan);
+                }
 
                 pos.Column += colSpan;
                 if (pos.Column >= tablePanel.ColumnCount) //该转换下一行了
@@ -116,7 +118,8 @@ namespace Malt.Layout
             }
             else if (placable is HorizontalLine)
             {
-                widget = this.widgetFactory.CreateHorizontalLineWidget();
+                var hl = placable as HorizontalLine;
+                widget = this.widgetFactory.CreateHorizontalLineWidget(hl);
             }
             else if (placable is Field)
             {

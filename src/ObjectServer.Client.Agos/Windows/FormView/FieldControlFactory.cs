@@ -22,15 +22,25 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private readonly static IDictionary<String, Type> fieldTypeMapping =
             new Dictionary<String, Type>()
             {
-                { "Chars", typeof(StringFieldControl) },
+                { "Chars", typeof(CharsFieldControl) },
                 { "Boolean", typeof(BooleanFieldControl) },
+                { "Enumeration", typeof(EnumerationFieldControl) },
+                { "Text", typeof(TextFieldControl) },
+                { "Integer", typeof(IntegerFieldControl) },
+                { "ManyToOne", typeof(ManyToOneFieldControl) },
+                { "OneToMany", typeof(OneToManyFieldControl) },
+                { "ManyToMany", typeof(ManyToManyFieldControl) },
+                { "Reference", typeof(ReferenceFieldControl) },
+                { "DateTime", typeof(DateTimeFieldControl) },
             };
 
-        private IDictionary<string, object>[] fields;
+        private IDictionary<string, object>[] metaFields;
+        private IDictionary<string, IFieldWidget> createdFieldWidgets =
+            new Dictionary<string, IFieldWidget>();
 
         public FieldControlFactory(IDictionary<string, object>[] fields)
         {
-            this.fields = fields;
+            this.metaFields = fields;
         }
 
         /*
@@ -41,13 +51,14 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         */
 
 
-        public object CreateFieldWidget(Malt.Layout.Models.Field field)
+        public IFieldWidget CreateFieldWidget(Malt.Layout.Models.Field field)
         {
-            var metaField = this.fields.Where(i => (string)i["name"] == field.Name).Single();
+            var metaField = this.metaFields.Where(i => (string)i["name"] == field.Name).Single();
             var fieldType = (string)metaField["type"];
 
             var t = fieldTypeMapping[fieldType];
-            var widget = Activator.CreateInstance(t, field.Name) as IFieldWidget;
+            var widget = (IFieldWidget)Activator.CreateInstance(t, field.Name);
+            this.createdFieldWidgets.Add(field.Name, widget);
             return widget;
         }
 
@@ -59,15 +70,22 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         public ILabelWidget CreateLabelWidget(Malt.Layout.Models.Label label)
         {
             var labelWidget = new FieldLabel();
-            var metaField = this.fields.Where(i => (string)i["name"] == label.Field).Single();
+            var metaField = this.metaFields.Where(i => (string)i["name"] == label.Field).Single();
             labelWidget.Text = metaField["label"] as string;
 
             return labelWidget;
         }
 
-        public IHorizontalLineWidget CreateHorizontalLineWidget()
+        public IHorizontalLineWidget CreateHorizontalLineWidget(Malt.Layout.Models.HorizontalLine hl)
         {
-            throw new NotImplementedException();
+            var hlWidget = new HLine();
+            hlWidget.Text = hl.Text;
+            return hlWidget;
+        }
+
+        public IDictionary<string, IFieldWidget> CreatedFieldWidgets
+        {
+            get { return this.createdFieldWidgets; }
         }
     }
 }

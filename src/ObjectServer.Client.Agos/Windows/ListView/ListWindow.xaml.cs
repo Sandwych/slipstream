@@ -94,7 +94,8 @@ namespace ObjectServer.Client.Agos.Windows
         {
             var app = (App)Application.Current;
             var actionIds = new long[] { this.ActionID };
-            app.ClientService.ReadModel("core.action_window", actionIds, null, actionRecords =>
+            var fields = new string[] { "_id", "name", "view", "model", "views" };
+            app.ClientService.ReadModel("core.action_window", actionIds, fields, actionRecords =>
             {
                 this.actionRecord = actionRecords[0];
                 var view = (object[])actionRecords[0]["view"];
@@ -216,20 +217,26 @@ namespace ObjectServer.Client.Agos.Windows
             }
         }
 
-        private void buttonNew_Click(object sender, RoutedEventArgs e)
+        private void NewButton_Click(object sender, RoutedEventArgs e)
         {
-            var formWindow = new FormView.FormWindow(this.ActionID);
-
-
-            var dlg = new FormView.FormDialog();
-
-            dlg.LayoutRoot.Children.Add(formWindow);
-            formWindow.SetValue(Grid.ColumnProperty, 0);
-            formWindow.SetValue(Grid.RowProperty, 0);
-
-            dlg.Show();
+            var dlg = new FormView.FormDialog(this.modelName, -1, this.actionRecord);
+            dlg.ShowDialog();
             //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
 
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.gridList.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            dynamic item = this.gridList.SelectedItems[0];
+            var recordID = (long)item._id;
+
+            var dlg = new FormView.FormDialog(this.modelName, recordID, this.actionRecord);
+            dlg.ShowDialog();
         }
 
     }

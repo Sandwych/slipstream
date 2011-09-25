@@ -24,7 +24,7 @@ namespace ObjectServer.Core
             Fields.Chars("label").SetLabel("Label").SetSize(256);
             Fields.Text("info").SetLabel("Information");
             Fields.Chars("module").SetLabel("Module").SetSize(128).Required();
-            Fields.OneToMany("fields", "core.field", "module").SetLabel("Fields");
+            Fields.OneToMany("fields", "core.field", "model").SetLabel("Fields");
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace ObjectServer.Core
             var modelDomain = new object[] { new object[] { "name", "=", modelName } };
             var modelIds = model.SearchInternal(scope, modelDomain);
 
-            //TODO 检查 IDS 错误
+            //TODO 检查 IDS 错误，好好想一下要用数据库的字段信息还是用内存的字段信息
 
             var fieldModel = (IModel)scope.GetResource("core.field");
             var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };

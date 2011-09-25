@@ -12,7 +12,7 @@ namespace Malt.Layout
         /// <summary>
         /// 创建自定义控件
         /// </summary>
-        object CreateFieldWidget(Field field);
+        IFieldWidget CreateFieldWidget(Field field);
 
         /// <summary>
         /// 创建表格布局控件
@@ -30,7 +30,8 @@ namespace Malt.Layout
         /// 创建水平线控件
         /// </summary>
         /// <returns></returns>
-        IHorizontalLineWidget CreateHorizontalLineWidget();
-        
+        IHorizontalLineWidget CreateHorizontalLineWidget(Models.HorizontalLine hl);
+
+        IDictionary<string, IFieldWidget> CreatedFieldWidgets { get; }
     }
 }

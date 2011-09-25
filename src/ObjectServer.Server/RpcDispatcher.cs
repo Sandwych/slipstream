@@ -231,6 +231,11 @@ namespace ObjectServer.Server
                 error = JsonRpcError.LogginError;
                 LoggerProvider.EnvironmentLogger.Error("安全异常", sex);
             }
+            catch (RecordNotFoundException rnfex)
+            {
+                error = JsonRpcError.ResourceCannotFound;
+                LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", rnfex);
+            }
             catch (System.Exception ex)
             {
                 error = JsonRpcError.ServerInternalError;

@@ -52,6 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FloatableWindow, Version=2.0.5.0, Culture=neutral, PublicKeyToken=dd6e2c92abf74ba1, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Runtime.Serialization" />
@@ -110,9 +111,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FieldControls\CharsField.cs" />
-    <Compile Include="Controls\FieldControls\DateFieldControl.cs" />
-    <Compile Include="Controls\FieldControls\IFieldControl.cs" />
     <Compile Include="Controls\MenuTree.xaml.cs">
       <DependentUpon>MenuTree.xaml</DependentUpon>
     </Compile>
@@ -161,17 +159,26 @@
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\FieldLabel.cs" />
-    <Compile Include="Windows\FormView\BooleanFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\BooleanFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\HLine.cs" />
+    <Compile Include="Windows\FormView\Fields\ManyToManyFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\OneToManyFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\DateTimeFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\ReferenceFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\ManyToOneFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\IntegerFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\TextFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\EnumerationFieldControl.cs" />
     <Compile Include="Windows\FormView\FieldControlFactory.cs" />
     <Compile Include="Windows\FormView\FormDialog.xaml.cs">
       <DependentUpon>FormDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\FormView\FormViewParser.cs" />
-    <Compile Include="Windows\FormView\FormWindow.xaml.cs">
-      <DependentUpon>FormWindow.xaml</DependentUpon>
+    <Compile Include="Windows\FormView\FormView.xaml.cs">
+      <DependentUpon>FormView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\FormView\GridLayoutPanelWidget.cs" />
-    <Compile Include="Windows\FormView\StringFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\CharsFieldControl.cs" />
     <Compile Include="Windows\ListView\ListWindow.xaml.cs">
       <DependentUpon>ListWindow.xaml</DependentUpon>
     </Compile>
@@ -254,7 +261,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\FormView\FormWindow.xaml">
+    <Page Include="Windows\FormView\FormView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -298,6 +305,9 @@
       <Project>{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}</Project>
       <Name>ObjectServer.SilverlightClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FloatableWindow.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

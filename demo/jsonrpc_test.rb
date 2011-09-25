@@ -142,7 +142,6 @@ puts
 puts "耗时（秒）："
 puts time
 
-#不注销不关闭，因为我们要做并发测试
 #proxy.logOff()
 #proxy.close()
 

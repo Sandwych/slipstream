@@ -17,7 +17,7 @@ namespace ObjectServer.Model
 
         public void WriteFormStart()
         {
-            sbView.AppendLine("<form>");
+            sbView.AppendLine("<form col=\"4\" >");
         }
 
         public void WriteFormEnd()
@@ -35,17 +35,23 @@ namespace ObjectServer.Model
             sbView.AppendLine("</list>");
         }
 
-        public void WriteField(string field)
+        public void WriteField(string field, int colspan = 1)
         {
             Debug.Assert(!string.IsNullOrEmpty(field));
-            
-            sbView.AppendFormat("<field name=\"{0}\" />\n", field);
+
+            sbView.AppendFormat("<field name=\"{0}\" colspan=\"{1}\" />\n", field, colspan);
         }
 
-        public void WriteLabel(string text)
+        public void WriteFieldLabel(string field)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(field));
+            sbView.AppendFormat("<label field=\"{0}\" />\n", field);
+        }
+
+        public void WriteLabel(string text, int colspan = 1)
         {
             Debug.Assert(!string.IsNullOrEmpty(text));
-            sbView.AppendFormat("<label text=\"{0}\" />\n", text);
+            sbView.AppendFormat("<label text=\"{0}\" colspan=\"{1}\" />\n", text, colspan);
         }
 
         public void WriteGridStart(int cols = 2)
@@ -60,7 +66,19 @@ namespace ObjectServer.Model
 
         public void WriteNewLine()
         {
-            sbView.AppendLine("<newline/>");
+            sbView.AppendLine("<br/>");
+        }
+
+        public void WriteHLine(string str = null, int colspan = 4)
+        {
+            if (str != null)
+            {
+                sbView.AppendFormat("<hr text=\"{0}\" colspan=\"{1}\" />", str, colspan);
+            }
+            else
+            {
+                sbView.AppendFormat("<hr colspan=\"{0}\"/>", colspan);
+            }
         }
 
         public override string ToString()

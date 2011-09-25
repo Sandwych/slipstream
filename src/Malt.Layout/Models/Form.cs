@@ -10,9 +10,11 @@ namespace Malt.Layout.Models
     {
         public Form()
         {
-            this.ColumnCount = 6;
+            this.ColumnCount = 4;
             this.ColumnSpan = 1;
             this.RowSpan = 1;
+            this.Height = -1.0F;
+            this.Width = -1.0F;
         }
 
         #region IContainer 成员
@@ -36,18 +38,16 @@ namespace Malt.Layout.Models
         #region IPlacable 成员
 
         [XmlAttribute("rowspan")]
-        public int RowSpan
-        {
-            get;
-            set;
-        }
+        public int RowSpan { get; set; }
 
         [XmlAttribute("colspan")]
-        public int ColumnSpan
-        {
-            get;
-            set;
-        }
+        public int ColumnSpan { get; set; }
+
+        [XmlAttribute("height")]
+        public double Height { get; set; }
+
+        [XmlAttribute("width")]
+        public double Width { get; set; }
 
         [XmlIgnore]
         public IEnumerable<IPlacable> Children

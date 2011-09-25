@@ -12,11 +12,19 @@ using System.Windows.Shapes;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public partial class FormDialog : ChildWindow
+    public partial class FormDialog : FloatableWindow
     {
-        public FormDialog()
+        public FormDialog(string model, long recordID, IDictionary<string, object> action)
         {
+            var app = (App)App.Current;
+            this.ParentLayoutRoot = app.MainPage.LayoutRoot;
+
             InitializeComponent();
+
+            var formWindow = new FormView(model, recordID, action);
+            this.LayoutRoot.Children.Add(formWindow);
+            formWindow.SetValue(Grid.ColumnProperty, 0);
+            formWindow.SetValue(Grid.RowProperty, 0);
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)

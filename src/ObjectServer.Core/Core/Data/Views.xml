@@ -52,7 +52,7 @@
     <field name="kind">form</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
-      <form label="Users">
+      <form label="Users" width="640" height="400">
         <label field="name" />
         <field name="name" />
         <label field="login" />

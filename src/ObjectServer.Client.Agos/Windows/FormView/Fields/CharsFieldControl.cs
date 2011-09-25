@@ -16,16 +16,16 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class StringFieldControl : TextBox, IFieldWidget
+    public class CharsFieldControl : TextBox, IFieldWidget
     {
-        public StringFieldControl(string fieldName)
+        public CharsFieldControl(string fieldName)
         {
             this.DefaultStyleKey = typeof(TextBox);
 
             this.FieldName = fieldName;
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Margin = new Thickness(10, 2, 10, 2);
+            this.Margin = new Thickness(5, 2, 5, 2);
         }
 
         public string FieldName { get; private set; }
@@ -38,7 +38,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             }
             set
             {
-                this.Text = (String)value;
+                this.Text = value as string ?? string.Empty;
             }
         }
 

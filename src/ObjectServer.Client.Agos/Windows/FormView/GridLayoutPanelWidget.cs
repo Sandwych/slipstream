@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 using Malt.Layout;
 
@@ -65,21 +66,15 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             //初始化行样式
             //默认策略是：最后一行设为 100% 占满剩余空间，其他的行固定高度 27
-            for (int i = 0; i < this.RowCount - 1; i++)
+            for (int i = 0; i < this.RowCount; i++)
             {
                 var rowDef = new RowDefinition()
                 {
-                    Height = new GridLength(27, GridUnitType.Pixel)
+                    Height = GridLength.Auto // new GridLength(27, GridUnitType.Pixel)
                 };
 
                 this.RowDefinitions.Add(rowDef);
             }
-
-            var lastRowDef = new RowDefinition()
-            {
-                Height = new GridLength(100, GridUnitType.Star)
-            };
-            this.RowDefinitions.Add(lastRowDef);
         }
 
         public int ColumnCount
@@ -90,7 +85,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public void AddRow()
         {
-            base.RowDefinitions.Add(new RowDefinition());
+            base.RowDefinitions.Add(
+                new RowDefinition() { Height = GridLength.Auto });
         }
 
         public int RowCount
@@ -101,9 +97,23 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public void SetColumnSpan(int row, int col, int colspan)
         {
-            /*
-            throw new NotImplementedException();
-            */
+            FrameworkElement cell = null;
+
+            foreach (FrameworkElement d in this.Children)
+            {
+                if (Grid.GetRow(d) == row && Grid.GetColumn(d) == col)
+                {
+                    cell = d;
+                    break;
+                }
+            }
+
+            if (cell == null)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            cell.SetValue(Grid.ColumnSpanProperty, colspan);
         }
 
         public void SetRowSpan(int row, int col, int colspan)

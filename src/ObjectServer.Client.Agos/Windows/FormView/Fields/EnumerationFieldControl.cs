@@ -16,17 +16,16 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class BooleanFieldControl : CheckBox, IFieldWidget
+    public class EnumerationFieldControl : TextBox, IFieldWidget
     {
-        public BooleanFieldControl(string fieldName)
+        public EnumerationFieldControl(string fieldName)
         {
-            this.DefaultStyleKey = typeof(CheckBox);
+            this.DefaultStyleKey = typeof(TextBox);
 
             this.FieldName = fieldName;
-
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Margin = new Thickness(10, 2, 10, 2);
+            this.Margin = new Thickness(5, 2, 5, 2);
         }
 
         public string FieldName { get; private set; }
@@ -35,17 +34,18 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         {
             get
             {
-                return this.IsChecked;
+                return this.Text;
             }
             set
             {
-                this.IsChecked = (bool)value;
+                var tuple = (object[])value;
+                this.Text = (string)tuple[0];
             }
         }
 
         public void Empty()
         {
-            this.IsChecked = false;
+            this.Text = String.Empty;
         }
     }
 }

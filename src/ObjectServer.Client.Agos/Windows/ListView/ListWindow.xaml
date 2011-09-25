@@ -17,8 +17,8 @@
 
         <Border Grid.Row="0"  Padding="5,5,5,5" Margin="0,0,0,0" Background="White">
             <StackPanel Orientation="Horizontal"  Background="Transparent" x:Name="ToolBar" >
-                <Button Name="buttonNew" Content="新建" MinWidth="75" Height="25" Click="buttonNew_Click" />
-                <Button Content="编辑" MinWidth="75" Height="25" />
+                <Button Name="NewButton" Content="新建" MinWidth="75" Height="25" Click="NewButton_Click" />
+                <Button Name="EditButton" Content="编辑" MinWidth="75" Height="25" Click="EditButton_Click" />
                 <Button Content="删除" MinWidth="75" Height="25" Name="buttonDelete" Click="buttonDelete_Click" />
                 <Rectangle Width="15" />
                 <Button Content="查询" MinWidth="75" Height="25" Name="buttonQuery" Click="buttonQuery_Click" />
