@@ -84,10 +84,8 @@ namespace ObjectServer.Client.Agos.Windows
         public ListWindow(long actionID)
         {
             this.ActionID = actionID;
-
-            this.Init();
-
             this.InitializeComponent();
+            this.Init();
         }
 
         private void Init()
@@ -126,8 +124,7 @@ namespace ObjectServer.Client.Agos.Windows
                 app.ClientService.ReadModel(this.modelName, ids, this.fields, records =>
                 {
                     //我们需要一个唯一的字符串型 ID
-                    var typeid = Guid.NewGuid().ToString();
-                    this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records, typeid, fields.ToArray());
+                    this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records, this.modelName, fields.ToArray());
                 });
             });
         }

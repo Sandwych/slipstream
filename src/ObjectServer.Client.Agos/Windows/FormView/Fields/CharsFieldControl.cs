@@ -30,6 +30,12 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.Margin = new Thickness(5, 2, 5, 2);
+
+            if (!this.IsReadOnly && (bool)this.metaField["required"])
+            {
+                this.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0xff, 0xcc));
+            }
+
         }
 
         public string FieldName { get; private set; }

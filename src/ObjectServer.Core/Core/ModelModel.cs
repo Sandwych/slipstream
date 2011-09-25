@@ -20,7 +20,7 @@ namespace ObjectServer.Core
         {
             this.AutoMigration = false;
 
-            Fields.Chars("name").SetLabel("Name").SetSize(256).Required().Unique();
+            Fields.Chars("name").SetLabel("Name").SetSize(256).Required().Unique().Readonly();
             Fields.Chars("label").SetLabel("Label").SetSize(256);
             Fields.Text("info").SetLabel("Information");
             Fields.Chars("module").SetLabel("Module").SetSize(128).Required();
@@ -59,16 +59,20 @@ namespace ObjectServer.Core
             var fieldIds = fieldModel.SearchInternal(scope, fieldDomain);
             var records = fieldModel.ReadInternal(scope, fieldIds);
 
-            var enumFields =
-                from r in records
-                let type = (string)r["type"]
-                where type == "Enumeration"
-                select r;
-
-            foreach (var f in enumFields)
+            foreach (var r in records)
             {
-                var fieldName = (string)f["name"];
-                f["options"] = destModel.Fields[fieldName].Options;
+                var fieldName = (string)r["name"];
+                var field = destModel.Fields[fieldName];
+
+                if (field.Type == FieldType.Enumeration)
+                {
+                    r["options"] = field.Options;
+                }
+                else if (field.Type == FieldType.ManyToMany)
+                {
+                    r["related_field"] = field.RelatedField;
+                    r["origin_field"] = field.OriginField;
+                }
             }
 
             return records;

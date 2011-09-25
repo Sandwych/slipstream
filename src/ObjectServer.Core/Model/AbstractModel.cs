@@ -191,15 +191,16 @@ namespace ObjectServer.Model
 
             //先插入代码定义了，但数据库不存在的            
             var sql = @"
-insert into core_field(module, model, name, relation, label, type, help) 
-    values(?,?,?,?,?,?,?)";
+insert into core_field(module, model, name, required, readonly, relation, label, type, help) 
+    values(?,?,?,?,?,?,?,?,?)";
             var sqlInsert = SqlString.Parse(sql);
             var fieldsToAppend = this.Fields.Keys.Except(dbFieldsNames);
             foreach (var fieldName in fieldsToAppend)
             {
                 var field = this.Fields[fieldName];
                 db.DBContext.Execute(sqlInsert,
-                    this.Module, modelId, fieldName, field.Relation, field.Label, field.Type.ToString(), "");
+                    this.Module, modelId, fieldName, field.IsRequired, field.IsReadonly,
+                    field.Relation, field.Label, field.Type.ToString(), "");
             }
 
             //删除数据库存在，但代码未定义的
@@ -260,12 +261,15 @@ insert into core_field(module, model, name, relation, label, type, help)
                     new SqlString(
                         "update core_field set ",
                         "type=", Parameter.Placeholder, ",",
+                        "required=", Parameter.Placeholder, ",",
+                        "readonly=", Parameter.Placeholder, ",",
                         "relation=", Parameter.Placeholder, ",",
                         "label=", Parameter.Placeholder, ",",
                         "help=", Parameter.Placeholder,
                         " where _id=", Parameter.Placeholder);
                 db.DBContext.Execute(
-                    sql, metaFieldType, metaField.Relation, metaField.Label, metaField.Help, fieldId);
+                    sql, metaFieldType, metaField.IsRequired, metaField.IsReadonly,
+                    metaField.Relation, metaField.Label, metaField.Help, fieldId);
 
             }
         }

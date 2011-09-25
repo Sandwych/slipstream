@@ -20,11 +20,16 @@ namespace ObjectServer.Client.Agos.Windows.FormView
     {
         private readonly IDictionary<string, object> metaField;
         private readonly Border border;
+        private readonly DataGrid grid;
 
         public ManyToManyFieldControl(object metaField)
         {
+            var app = (App)Application.Current;
+
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
+
+            //载入数据
 
             this.MinHeight = 120;
 
@@ -40,6 +45,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.border.BorderThickness = new Thickness(1);
             this.border.BorderBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x99, 0x99, 0x99));
 
+            this.grid = new DataGrid();
+            this.grid.BorderThickness = new Thickness(0);
+            this.border.Child = this.grid;
+
+
             this.Margin = new Thickness(5, 2, 5, 2);
         }
 
@@ -53,6 +63,31 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             }
             set
             {
+                var app = (App)Application.Current;
+                var refIDs = (object[])value;
+
+                var relatedFieldName = (string)this.metaField["related_field"];
+                var getFieldsArgs = new object[] { (string)this.metaField["relation"] };
+                app.ClientService.Execute("core.model", "GetFields", getFieldsArgs, o =>
+                    {
+                        var fields = (object[])o;
+                        var relatedField =
+                            (from i in fields
+                             let f = (IDictionary<string, object>)i
+                             where (string)f["name"] == relatedFieldName
+                             select f).Single();
+                        var relatedModel = (string)relatedField["relation"];
+
+                        var args = new object[] { refIDs, null };
+                        app.ClientService.Execute(relatedModel, "Read", args, o2 =>
+                            {
+                                var objs = (object[])o2;
+                                var records = objs.Select(r => (Dictionary<string, object>)r).ToArray();
+                                this.grid.ItemsSource = DataSourceCreator.ToDataSource(
+                                    records, relatedModel, new string[] { "name" });
+                            });
+                    });
+
             }
         }
 

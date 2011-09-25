@@ -15,6 +15,8 @@ CREATE TABLE core_field (
     "module" VARCHAR NOT NULL,
     model BIGINT NOT NULL,
     "name" VARCHAR NOT NULL,
+    "required" BOOLEAN NOT NULL,
+    "readonly" BOOLEAN NOT NULL,
     relation VARCHAR,
     label VARCHAR,
     "type" VARCHAR NOT NULL,
