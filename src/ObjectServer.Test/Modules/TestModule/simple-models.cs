@@ -53,11 +53,11 @@ namespace ObjectServer.Test
             Fields.Boolean("boolean_field").SetLabel("Boolean Field").Required().SetDefaultValueGetter(s => true);
             Fields.Text("text_field").SetLabel("Text Field");
             Fields.Float("float_field").SetLabel("Float Field");
-            Fields.Money("money_field").SetLabel("Money Field");
+            Fields.Decimal("money_field").SetLabel("Decimal Field");
 
             Fields.Enumeration("enum_field",
                 new Dictionary<string, string>() { { "state1", "State 1" }, { "state2", "State2" } })
-                .SetLabel("Money Field");
+                .SetLabel("Enumeration Field");
 
             Fields.Binary("binary_field").SetLabel("Binary Field");
 

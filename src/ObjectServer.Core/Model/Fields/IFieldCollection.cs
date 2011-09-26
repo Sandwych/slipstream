@@ -10,7 +10,7 @@ namespace ObjectServer.Model
         IField Integer(string name);
         IField BigInteger(string name);
         IField Float(string name);
-        IField Money(string name);
+        IField Decimal(string name);
         IField Boolean(string name);
         IField DateTime(string name);
         IField Date(string name);

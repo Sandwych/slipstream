@@ -12,6 +12,7 @@
         <field name="name" where="basic" />
         <field name="address" where="basic" />
         <field name="salary" where="basic" />
+        <field name="birthdate" where="basic" />
       </tree>
       ]]>
     </field>

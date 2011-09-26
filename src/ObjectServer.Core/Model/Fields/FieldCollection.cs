@@ -35,7 +35,7 @@ namespace ObjectServer.Model
             return field;
         }
 
-        public IField Money(string name)
+        public IField Decimal(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Decimal);
             this.Add(name, field);

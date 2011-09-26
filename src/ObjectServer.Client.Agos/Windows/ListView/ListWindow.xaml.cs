@@ -69,6 +69,7 @@ namespace ObjectServer.Client.Agos.Windows
             {"ID", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Integer", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Float", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"Decimal", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
             {"DateTime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },

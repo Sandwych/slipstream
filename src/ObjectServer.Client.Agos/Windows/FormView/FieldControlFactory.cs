@@ -34,6 +34,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 { "DateTime", typeof(DateTimeFieldControl) },
                 { "Date", typeof(DateFieldControl) },
                 { "Float", typeof(FloatFieldControl) },
+                { "Decimal", typeof(DecimalFieldControl) },
             };
 
         private IDictionary<string, object>[] metaFields;
