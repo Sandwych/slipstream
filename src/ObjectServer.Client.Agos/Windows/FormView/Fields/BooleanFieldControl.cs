@@ -16,7 +16,7 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class BooleanFieldControl : CheckBox, IFieldWidget
+    public sealed class BooleanFieldControl : CheckBox, IFieldWidget
     {
         private readonly IDictionary<string, object> metaField;
 
@@ -29,7 +29,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Margin = new Thickness(5, 2, 5, 2);
         }
 
         public string FieldName { get; private set; }

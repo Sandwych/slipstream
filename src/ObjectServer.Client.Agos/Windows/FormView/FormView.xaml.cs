@@ -50,7 +50,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 new object[] { "model", "=", this.modelName },
             };
 
-
             app.ClientService.Execute("core.view", "GetView", new object[] { this.modelName, "form", null }, o =>
                 {
                     this.viewRecord = (IDictionary<string, object>)o;
@@ -67,7 +66,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                         }
                     });
                 });
-
         }
 
         private void LoadForm(IDictionary<string, object>[] metaFields)

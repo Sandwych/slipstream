@@ -31,12 +31,14 @@ namespace ObjectServer.Model.Test
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
+                    record.login = "login";
                     userModel.CreateInternal(scope, record);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
+                    record.login = "login";
                     userModel.WriteInternal(scope, 1, record);
                 });
 

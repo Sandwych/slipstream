@@ -30,7 +30,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Margin = new Thickness(5, 2, 5, 2);
 
             /*
             if ((bool)this.metaField["required"])

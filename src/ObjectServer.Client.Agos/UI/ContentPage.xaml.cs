@@ -60,12 +60,12 @@
         {
             var tabPage = new TabItem();
             tabPage.DataContext = menu.Action;
-            tabPage.Header = "ListView";
+            tabPage.Header = "ListWindow";
             this.TabContainer.Items.Add(tabPage);
             this.TabContainer.SelectedItem = tabPage;
 
             //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
-            var actWin = new Windows.ListWindow(menu.Action.Item2);
+            var actWin = new Windows.ListView.ListView(menu.Action.Item2);
 
             var actionName = menu.Action.Item1;
 

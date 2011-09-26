@@ -18,7 +18,7 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class ReferenceFieldControl : Grid, IFieldWidget
+    public sealed class ReferenceFieldControl : UserControl, IFieldWidget
     {
         private readonly ComboBox modelComboBox;
         private readonly TextBox nameTextBox;
@@ -31,35 +31,34 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
 
+            var layoutRoot = new Grid();
+            this.Content = layoutRoot;
             var col1 = new ColumnDefinition() { Width = new GridLength(40, GridUnitType.Star) };
             var col2 = new ColumnDefinition() { Width = new GridLength(60, GridUnitType.Star) };
             var col3 = new ColumnDefinition() { Width = GridLength.Auto, };
-            this.ColumnDefinitions.Add(col1);
-            this.ColumnDefinitions.Add(col2);
-            this.ColumnDefinitions.Add(col3);
+            layoutRoot.ColumnDefinitions.Add(col1);
+            layoutRoot.ColumnDefinitions.Add(col2);
+            layoutRoot.ColumnDefinitions.Add(col3);
 
             this.modelComboBox = new ComboBox();
             this.modelComboBox.SetValue(Grid.ColumnProperty, 0);
             this.modelComboBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.modelComboBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Children.Add(modelComboBox);
+            layoutRoot.Children.Add(modelComboBox);
 
             this.nameTextBox = new TextBox();
             this.nameTextBox.SetValue(Grid.ColumnProperty, 1);
             this.nameTextBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.nameTextBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Children.Add(nameTextBox);
+            layoutRoot.Children.Add(nameTextBox);
 
             this.selectButton = new Button();
             this.selectButton.SetValue(Grid.ColumnProperty, 2);
-            this.Children.Add(selectButton);
-
-            var icon = new BitmapImage(new Uri("/Assets/Icons/16x16/system-search.png"));
-            this.selectButton.Content = icon;
+            this.selectButton.Content = "...";
+            layoutRoot.Children.Add(selectButton);
 
             //this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             //this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Margin = new Thickness(5, 2, 5, 2);
 
             var options = (IEnumerable)this.metaField["options"];
             this.modelComboBox.SelectedValuePath = "Key";

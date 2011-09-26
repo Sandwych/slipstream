@@ -9,9 +9,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-namespace ObjectServer.Client.Agos.Windows
+namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class FieldLabel : Label, Malt.Layout.Widgets.ILabelWidget
+    public sealed class FieldLabel : Label, Malt.Layout.Widgets.ILabelWidget
     {
         public FieldLabel(string field = null, string text = null)
             : base()

@@ -32,6 +32,7 @@ namespace ObjectServer.Client.Agos.UI
         void LoginPage_Loaded(object sender, RoutedEventArgs e)
         {
             this.DataContext = new LoginModel();
+
             this.LoadDatabaseList();
         }
 

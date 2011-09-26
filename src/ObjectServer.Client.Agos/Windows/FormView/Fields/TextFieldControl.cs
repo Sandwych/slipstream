@@ -30,7 +30,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.AcceptsReturn = true;
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Top;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            this.Margin = new Thickness(5, 2, 5, 2);
             this.MinHeight = 120;
         }
 

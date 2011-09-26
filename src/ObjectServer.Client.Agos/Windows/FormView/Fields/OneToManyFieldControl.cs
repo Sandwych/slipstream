@@ -39,8 +39,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.border.SetValue(Grid.RowProperty, 0);
             this.border.BorderThickness = new Thickness(1);
             this.border.BorderBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x99, 0x99, 0x99));
-
-            this.Margin = new Thickness(5, 2, 5, 2);
         }
 
         public string FieldName { get; private set; }

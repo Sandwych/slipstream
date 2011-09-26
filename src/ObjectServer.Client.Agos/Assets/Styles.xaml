@@ -5,6 +5,7 @@
   xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
   xmlns:appControls="clr-namespace:ObjectServer.Client.Agos.Controls"
   xmlns:fw="clr-namespace:System.Windows.Controls;assembly=FloatableWindow"
+  xmlns:fields="clr-namespace:ObjectServer.Client.Agos.Windows.FormView"
   xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input">
 
     <ResourceDictionary.MergedDictionaries>
@@ -714,7 +715,46 @@
     </Style>
 
 
+    <!-- Form 控件样式 -->
+    <Style TargetType="fields:FieldLabel">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
 
+    <Style TargetType="fields:CharsFieldControl">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
 
+    <Style TargetType="fields:ReferenceFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+    <Style TargetType="fields:ManyToOneFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+    <Style TargetType="fields:BooleanFieldControl">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+    <Style TargetType="fields:IntegerFieldControl">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+    <Style TargetType="fields:EnumerationFieldControl">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+    <Style TargetType="fields:FloatFieldControl">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+    <Style TargetType="fields:HLine">
+        <Setter Property="Margin" Value="5,10,5,10" />
+    </Style>
 
 </ResourceDictionary>

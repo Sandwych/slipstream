@@ -48,9 +48,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.grid = new DataGrid();
             this.grid.BorderThickness = new Thickness(0);
             this.border.Child = this.grid;
-
-
-            this.Margin = new Thickness(5, 2, 5, 2);
         }
 
         public string FieldName { get; private set; }

@@ -16,7 +16,7 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class DateTimeFieldControl : Grid, IFieldWidget
+    public class DateTimeFieldControl : UserControl, IFieldWidget
     {
         private readonly IDictionary<string, object> metaField;
         private readonly DatePicker datePicker;
@@ -28,25 +28,26 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
 
+            var layoutRoot = new Grid();
+            this.Content = layoutRoot;
+
             var col1 = new ColumnDefinition() { Width = GridLength.Auto }; //new GridLength(50, GridUnitType.Star) };
             var col2 = new ColumnDefinition() { Width = GridLength.Auto }; //new GridLength(50, GridUnitType.Star) };
 
-            this.ColumnDefinitions.Add(col1);
-            this.ColumnDefinitions.Add(col2);
+            layoutRoot.ColumnDefinitions.Add(col1);
+            layoutRoot.ColumnDefinitions.Add(col2);
 
             this.datePicker = new DatePicker();
             this.datePicker.SetValue(Grid.ColumnProperty, 0);
             this.datePicker.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.datePicker.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Children.Add(datePicker);
+            layoutRoot.Children.Add(datePicker);
 
             this.timeUpDown = new TimeUpDown();
             this.timeUpDown.SetValue(Grid.ColumnProperty, 1);
             this.timeUpDown.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.timeUpDown.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Children.Add(timeUpDown);
-
-            this.Margin = new Thickness(5, 2, 5, 2);
+            layoutRoot.Children.Add(timeUpDown);
         }
 
         public string FieldName { get; private set; }

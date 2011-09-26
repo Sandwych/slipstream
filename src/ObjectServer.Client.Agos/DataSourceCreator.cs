@@ -76,7 +76,10 @@ namespace ObjectServer.Client.Agos
             Debug.Assert(!string.IsNullOrEmpty(typeSigniture));
 
             Type type;
-            return s_typeBySigniture.TryGetValue(typeSigniture, out type) ? type : null;
+            lock (s_typeBySigniture)
+            {
+                return s_typeBySigniture.TryGetValue(typeSigniture, out type) ? type : null;
+            }
         }
 
         private static Type GetValueType(object value)

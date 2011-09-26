@@ -118,6 +118,7 @@
     </Compile>
     <Compile Include="DataSourceCreator.cs" />
     <Compile Include="Models\DBCreationModel.cs" />
+    <Compile Include="Models\ListViewModel.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
     <Compile Include="Controls\VisualStates.cs" />
     <Compile Include="Helpers\DataBindingExtensions.cs" />
@@ -160,7 +161,7 @@
     <Compile Include="UI\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\FieldLabel.cs" />
+    <Compile Include="Windows\FormView\Fields\FieldLabel.cs" />
     <Compile Include="Windows\FormView\Fields\BooleanFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\DateFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\DecimalFieldControl.cs" />
@@ -184,6 +185,9 @@
     </Compile>
     <Compile Include="Windows\FormView\GridLayoutPanelWidget.cs" />
     <Compile Include="Windows\FormView\Fields\CharsFieldControl.cs" />
+    <Compile Include="Windows\ListView\ListView.xaml.cs">
+      <DependentUpon>ListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ListView\ListWindow.xaml.cs">
       <DependentUpon>ListWindow.xaml</DependentUpon>
     </Compile>
@@ -197,6 +201,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Windows\ListView\ListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Resource Include="Assets\Styles.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
@@ -274,7 +282,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ListView\ListWindow.xaml">
+    <Page Include="Windows\ListView\ListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -317,6 +325,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Icons\16x16\system-search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\16x16\user-trash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\16x16\edit-clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\16x16\accessories-text-editor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\16x16\go-next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\16x16\document-new.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

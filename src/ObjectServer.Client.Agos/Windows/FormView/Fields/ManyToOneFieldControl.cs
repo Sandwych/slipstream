@@ -16,20 +16,38 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class ManyToOneFieldControl : TextBox, IFieldWidget
+    public class ManyToOneFieldControl : UserControl, IFieldWidget
     {
         private readonly IDictionary<string, object> metaField;
 
+        private readonly Button selectButton;
+        private readonly TextBox nameTextBox;
+
         public ManyToOneFieldControl(object metaField)
         {
+            var layoutRoot = new Grid();
+            this.Content = layoutRoot;
+            var col1 = new ColumnDefinition() { Width = new GridLength(100, GridUnitType.Star) };
+            var col2 = new ColumnDefinition() { Width = GridLength.Auto, };
+            layoutRoot.ColumnDefinitions.Add(col1);
+            layoutRoot.ColumnDefinitions.Add(col2);
+
+            this.nameTextBox = new TextBox();
+            this.nameTextBox.SetValue(Grid.ColumnProperty, 0);
+            this.nameTextBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+            this.nameTextBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            layoutRoot.Children.Add(nameTextBox);
+
+            this.selectButton = new Button();
+            this.selectButton.SetValue(Grid.ColumnProperty, 1);
+            this.selectButton.Content = "...";
+            layoutRoot.Children.Add(selectButton);
+
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
 
-            this.DefaultStyleKey = typeof(TextBox);
-
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.Margin = new Thickness(5, 2, 5, 2);
         }
 
         public string FieldName { get; private set; }
@@ -38,21 +56,20 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         {
             get
             {
-                return this.Text;
+                return this.nameTextBox.Text;
             }
             set
             {
                 var tuple = value as object[];
                 if (tuple != null)
                 {
-                    this.Text = (string)tuple[1];
+                    this.nameTextBox.Text = (string)tuple[1];
                 }
             }
         }
 
         public void Empty()
         {
-            this.Text = String.Empty;
         }
     }
 }

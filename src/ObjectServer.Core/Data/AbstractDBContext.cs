@@ -309,11 +309,15 @@ namespace ObjectServer.Data
 
         public virtual IDbTransaction BeginTransaction()
         {
+            Debug.Assert(this.opened);
+
             return conn.BeginTransaction();
         }
 
         public IDbCommand CreateCommand(SqlString sql)
         {
+            Debug.Assert(this.opened);
+
             var sqlCommand = DataProvider.Driver.GenerateCommand(
                 CommandType.Text, sql, new NHibernate.SqlTypes.SqlType[] { });
             sqlCommand.Connection = this.conn;
