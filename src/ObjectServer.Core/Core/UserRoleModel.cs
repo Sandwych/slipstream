@@ -25,15 +25,15 @@ namespace ObjectServer.Core
 
         }
 
-        public override void Initialize(IDBProfile db, bool update)
+        public override void Initialize(IDBContext db, bool update)
         {
             base.Initialize(db, update);
 
-            var tableCtx = db.DBContext.CreateTableContext(this.TableName);
+            var tableCtx = db.CreateTableContext(this.TableName);
 
-            if (update && !tableCtx.ConstraintExists(db.DBContext, UniqueConstraintName))
+            if (update && !tableCtx.ConstraintExists(db, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(db.DBContext, UniqueConstraintName, "UNIQUE(\"user\", \"role\")");
+                tableCtx.AddConstraint(db, UniqueConstraintName, "UNIQUE(\"user\", \"role\")");
             }
         }
     }

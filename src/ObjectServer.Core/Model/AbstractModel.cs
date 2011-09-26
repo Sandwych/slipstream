@@ -45,15 +45,15 @@ namespace ObjectServer.Model
         /// 此函数要允许多次调用
         /// </summary>
         /// <param name="db"></param>
-        public override void Initialize(IDBProfile db, bool update)
+        public override void Initialize(IDBContext db, bool update)
         {
             if (db == null)
             {
                 throw new ArgumentNullException("db");
             }
 
-            base.Initialize(db, update);
 
+            base.Initialize(db, update);
             this.InitializeInheritances(db);
             this.VerifyFields();
 
@@ -100,15 +100,16 @@ namespace ObjectServer.Model
         /// 初始化继承设置
         /// </summary>
         /// <param name="db"></param>
-        private void InitializeInheritances(IDBProfile db)
+        private void InitializeInheritances(IDBContext db)
         {
-            Debug.Assert(db != null);
+            var resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
+
             //验证继承声明
             //这里可以安全地访问 many-to-one 指向的 ResourceContainer 里的对象，因为依赖排序的原因
             //被指向的对象肯定已经更早注册了
             foreach (var ii in this.Inheritances)
             {
-                if (!db.ContainsResource(ii.BaseModel))
+                if (!resources.ContainsResource(ii.BaseModel))
                 {
                     var msg = string.Format(
                         "Cannot found the base model '{0}' in inheritances", ii.BaseModel);
@@ -121,7 +122,7 @@ namespace ObjectServer.Model
                 }
 
                 //把“基类”模型的字段引用复制过来
-                var baseModel = (IModel)db.GetResource(ii.BaseModel);
+                var baseModel = (IModel)resources.GetResource(ii.BaseModel);
                 foreach (var baseField in baseModel.Fields)
                 {
                     if (!this.Fields.ContainsKey(baseField.Key))
@@ -158,7 +159,7 @@ namespace ObjectServer.Model
         /// 同步代码定义的模型到数据库
         /// </summary>
         /// <param name="db"></param>
-        private void SyncModel(IDBProfile db)
+        private void SyncModel(IDBContext db)
         {
             Debug.Assert(db != null);
 
@@ -179,14 +180,14 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="db"></param>
         /// <param name="modelId"></param>
-        private void SyncFields(IDBProfile db, long modelId)
+        private void SyncFields(IDBContext db, long modelId)
         {
             Debug.Assert(db != null);
 
             //同步代码定义的字段与数据库 core_model_field 表里记录的字段信息
             var sqlQuery = SqlString.Parse("select * from core_field where module=? and model=?");
 
-            var dbFields = db.DBContext.QueryAsDictionary(sqlQuery, this.Module, modelId);
+            var dbFields = db.QueryAsDictionary(sqlQuery, this.Module, modelId);
             var dbFieldsNames = (from f in dbFields select (string)f["name"]).ToArray();
 
             //先插入代码定义了，但数据库不存在的            
@@ -198,7 +199,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             foreach (var fieldName in fieldsToAppend)
             {
                 var field = this.Fields[fieldName];
-                db.DBContext.Execute(sqlInsert,
+                db.Execute(sqlInsert,
                     this.Module, modelId, fieldName, field.IsRequired, field.IsReadonly,
                     field.Relation, field.Label, field.Type.ToString(), "");
             }
@@ -209,7 +210,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             var sqlDelete = SqlString.Parse(sql);
             foreach (var f in fieldsToDelete)
             {
-                db.DBContext.Execute(sqlDelete, f, this.Module, modelId);
+                db.Execute(sqlDelete, f, this.Module, modelId);
             }
 
             //更新现存的（交集）
@@ -233,7 +234,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         /// <param name="dbField"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        private void SyncSingleField(IDBProfile db, Dictionary<string, object> dbField, string fieldName)
+        private void SyncSingleField(IDBContext db, Dictionary<string, object> dbField, string fieldName)
         {
             Debug.Assert(db != null);
             Debug.Assert(dbField != null);
@@ -267,14 +268,14 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                         "label=", Parameter.Placeholder, ",",
                         "help=", Parameter.Placeholder,
                         " where _id=", Parameter.Placeholder);
-                db.DBContext.Execute(
+                db.Execute(
                     sql, metaFieldType, metaField.IsRequired, metaField.IsReadonly,
                     metaField.Relation, metaField.Label, metaField.Help, fieldId);
 
             }
         }
 
-        private long? FindExistedModelInDb(IDBProfile db)
+        private long? FindExistedModelInDb(IDBContext db)
         {
             Debug.Assert(db != null);
 
@@ -286,7 +287,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 DataProvider.Dialect.QuoteForTableName("core_model"),
                 " where ",
                 DataProvider.Dialect.QuoteForColumnName("name"), "=", Parameter.Placeholder);
-            var o = db.DBContext.QueryValue(sql, this.Name);
+            var o = db.QueryValue(sql, this.Name);
             if (o.IsNull())
             {
                 return null;
@@ -297,7 +298,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             }
         }
 
-        private void CreateModel(IDBProfile db)
+        private void CreateModel(IDBContext db)
         {
             Debug.Assert(db != null);
 
@@ -306,7 +307,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 Parameter.Placeholder, ",",
                 Parameter.Placeholder, ",",
                 Parameter.Placeholder, ")");
-            var rowCount = db.DBContext.Execute(sql, this.Name, this.Module, this.Label);
+            var rowCount = db.Execute(sql, this.Name, this.Module, this.Label);
 
             if (rowCount != 1)
             {
@@ -323,11 +324,11 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 " and ",
                 DataProvider.Dialect.QuoteForColumnName("module"), "=", Parameter.Placeholder);
 
-            var modelId = (long)db.DBContext.QueryValue(sql, this.Name, this.Module);
+            var modelId = (long)db.QueryValue(sql, this.Name, this.Module);
 
             //插入一笔到 core_model_data 方便以后导入时引用
             var key = "model_" + this.Name.Replace('.', '_');
-            Core.ModelDataModel.Create(db.DBContext, this.Module, Core.ModelModel.ModelName, key, modelId);
+            Core.ModelDataModel.Create(db, this.Module, Core.ModelModel.ModelName, key, modelId);
         }
 
         /// <summary>

@@ -131,7 +131,7 @@ namespace ObjectServer
             Debug.Assert(scope != null);
 
             LoggerProvider.EnvironmentLogger.Info(() => "Loading precompiled assemblies...");
-            var dbProfile = Environment.DBProfiles.GetDBProfile(scope.Session.Database);
+            var dbProfile = Environment.DBProfiles.GetDBProfile(scope.Session.DBName);
 
             if (this.Dlls != null)
             {
@@ -143,7 +143,7 @@ namespace ObjectServer
                 this.LoadDynamicAssembly(dbProfile, dbProfile);
             }
 
-            dbProfile.InitializeAllResources(update);
+            dbProfile.InitializeAllResources(scope.DBContext, update);
 
             if (update && this.DataFiles != null)
             {
@@ -158,12 +158,12 @@ namespace ObjectServer
         {
             Debug.Assert(scope != null);
 
-            var dbProfile = Environment.DBProfiles.GetDBProfile(scope.Session.Database);
+            var dbProfile = Environment.DBProfiles.GetDBProfile(scope.Session.DBName);
 
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(dbProfile, a);
 
-            dbProfile.InitializeAllResources(update);
+            dbProfile.InitializeAllResources(scope.DBContext, update);
 
             if (update)
             {

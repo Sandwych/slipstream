@@ -143,7 +143,7 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Initialize(IDBProfile db, bool update)
+        public virtual void Initialize(IDBContext db, bool update)
         {
             if (db == null)
             {

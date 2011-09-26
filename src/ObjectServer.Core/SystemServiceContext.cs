@@ -11,21 +11,21 @@ namespace ObjectServer
     internal class SystemServiceContext : IServiceContext
     {
         private bool disposed = false;
+        private readonly IResourceContainer resources;
+        private readonly IDBContext db;
 
-        public SystemServiceContext(IDBProfile db)
+        public SystemServiceContext(IDBContext db)
         {
             Debug.Assert(db != null);
-            this.DBProfile = db;
-
-            this.Session = new Session(db.DBContext.DatabaseName);
+            this.db = db;
+            this.Session = new Session(db.DatabaseName);
+            this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
         }
 
         ~SystemServiceContext()
         {
             this.Dispose(false);
         }
-
-        private IDBProfile DBProfile { get; set; }
 
         public Session Session { get; private set; }
 
@@ -67,19 +67,19 @@ namespace ObjectServer
                 throw new ObjectDisposedException("disposed");
             }
 
-            return this.DBProfile.GetResource(resName);
+            return this.resources.GetResource(resName);
         }
 
         public IDBContext DBContext
         {
             get
             {
-                Debug.Assert(this.DBProfile != null);
+                Debug.Assert(this.db != null);
                 if (this.disposed)
                 {
                     throw new ObjectDisposedException("disposed");
                 }
-                return this.DBProfile.DBContext;
+                return this.db;
             }
         }
     }

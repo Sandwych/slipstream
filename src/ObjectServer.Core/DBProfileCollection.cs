@@ -75,10 +75,13 @@ namespace ObjectServer
                 this.dbProfiles.Add(dbName.Trim(), db);
             }
 
-            this.LoadModules(db);
+            using (var dbctx = DataProvider.CreateDataContext(dbName))
+            {
+                this.LoadModules(dbctx);
+            }
         }
 
-        private void LoadModules(DBProfile db)
+        private void LoadModules(IDBContext db)
         {
             Debug.Assert(db != null);
 
@@ -86,7 +89,7 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Info(() => "Loading modules...");
             using (var ctx = new SystemServiceContext(db))
             {
-                Environment.Modules.UpdateModuleList(db.DBContext);
+                Environment.Modules.UpdateModuleList(db);
                 Environment.Modules.LoadModules(ctx);
             }
         }
@@ -111,7 +114,6 @@ namespace ObjectServer
 
             var db = this.dbProfiles[dbName];
             this.dbProfiles.Remove(dbName);
-            db.DBContext.Close();
         }
 
         #region IDisposable 成员

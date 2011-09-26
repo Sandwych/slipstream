@@ -24,23 +24,19 @@ namespace ObjectServer.Model.Test
                 {
                     Assert.DoesNotThrow(() =>
                     {
-                        var sid = this.Service.LogOn("objectserver", "root", "root");
-
-                        //每个线程中读取10次
-                        const int ReadTimes = 10;
+                        //每个线程中读取5次
+                        const int ReadTimes = 5;
                         for (int i = 0; i < ReadTimes; i++)
                         {
-                            this.Service.Execute(sid, "core.module", "Read", ids, null);
+                            this.Service.Execute(this.SessionId, "core.module", "Read", ids, null);
                         }
-
-                        this.Service.LogOff(sid);
                     });
                 });
 
-            //启动十个线程并发测试
-            var n = 10;
+            //启动多个线程并发测试
+            const int ThreadCount = 50;
             var threads = new List<Thread>();
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < ThreadCount; i++)
             {
                 var t = new Thread(threadProc);
                 threads.Add(t);

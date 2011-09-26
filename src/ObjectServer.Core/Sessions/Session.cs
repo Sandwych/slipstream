@@ -34,7 +34,7 @@ namespace ObjectServer
                 throw new ArgumentOutOfRangeException("userId");
             }
 
-            this.Database = dbName;
+            this.DBName = dbName;
             this.Login = login;
             this.UserID = userID;
         }
@@ -47,7 +47,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("dbName");
             }
 
-            this.Database = dbName;
+            this.DBName = dbName;
             this.Login = SystemUserName;
             this.UserID = SystemUserId;
         }
@@ -73,7 +73,7 @@ namespace ObjectServer
         public string ID { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime LastActivityTime { get; set; }
-        public string Database { get; set; }
+        public string DBName { get; set; }
         public string Login { get; set; }
         public long UserID { get; set; }
 

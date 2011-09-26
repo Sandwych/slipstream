@@ -36,7 +36,7 @@ namespace ObjectServer.Core
             Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
         }
 
-        public override void Initialize(IDBProfile db, bool update)
+        public override void Initialize(IDBContext db, bool update)
         {
             base.Initialize(db, update);
 
@@ -44,11 +44,11 @@ namespace ObjectServer.Core
             var isRootUserExisted = UserExists(db, RootUserName);
             if (update && isRootUserExisted)
             {
-                this.CreateRootUser(db.DBContext);
+                this.CreateRootUser(db);
             }
         }
 
-        private static bool UserExists(IDBProfile db, string login)
+        private static bool UserExists(IDBContext db, string login)
         {
             var sql = new SqlString(
                 "select count(*) from ",
@@ -56,7 +56,7 @@ namespace ObjectServer.Core
                 "where ",
                 DataProvider.Dialect.QuoteForColumnName("login"), "=", Parameter.Placeholder);
 
-            var rowCount = db.DBContext.QueryValue(sql, login);
+            var rowCount = db.QueryValue(sql, login);
             var isRootUserExisted = rowCount.IsNull() || (long)rowCount <= 0;
             return isRootUserExisted;
         }
@@ -251,7 +251,7 @@ namespace ObjectServer.Core
                 Environment.SessionStore.Remove(sessionId);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged out.", session.Database, session.Login));
+                    String.Format("User[{0}.{1}] logged out.", session.DBName, session.Login));
             }
             else
             {

@@ -37,9 +37,9 @@ namespace ObjectServer.Model.Test
         [SetUp]
         public void ClearTestData()
         {
-            long[] ids = (long[])this.Service.Execute(this.SessionId, ModelName, "Search");
+            long[] ids = (long[])this.Service.Execute(this.SessionId, ModelName, "Search", null, null, 0, 0);
             var idsToDel = ids.Select(o => (object)o).ToArray();
-            this.Service.Execute(this.SessionId, ModelName, "Delete", idsToDel);
+            this.Service.Execute(this.SessionId, ModelName, "Delete", new object[] { idsToDel });
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace ObjectServer.Model.Test
             var constraints = new object[][] { new object[] { "sum_field", "=", 9 } };
             dynamic data = PrepareTestData();
 
-            dynamic n = this.Service.Execute(this.SessionId, ModelName, "Count", constraints);
+            dynamic n = this.Service.Execute(this.SessionId, ModelName, "Count", constraints, null, 0, 0);
 
             Assert.AreEqual(1, n);
         }

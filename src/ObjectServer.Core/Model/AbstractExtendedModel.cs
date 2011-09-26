@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
+using ObjectServer.Data;
 using ObjectServer.Exceptions;
 using ObjectServer.Sql;
 
@@ -27,20 +28,21 @@ namespace ObjectServer.Model
             this.fields = new FieldCollection(this);
         }
 
-        public override void Initialize(IDBProfile db, bool update)
+        public override void Initialize(IDBContext db, bool update)
         {
             if (db == null)
             {
                 throw new ArgumentNullException("db");
             }
 
-            if (!db.ContainsResource(this.Name))
+            var resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
+            if (!resources.ContainsResource(this.Name))
             {
                 var msg = string.Format("Cannot found model '{0}'", this.Name);
                 throw new ResourceNotFoundException(msg, this.Name);
             }
 
-            var baseModel = db.GetResource(this.Name);
+            var baseModel = resources.GetResource(this.Name);
             baseModel.Initialize(db, update);
         }
 

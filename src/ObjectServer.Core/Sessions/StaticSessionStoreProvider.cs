@@ -47,7 +47,7 @@ namespace ObjectServer
 
             var sessions =
                 from p in this.sessions
-                where p.Value.Database == db && p.Value.UserID == userID
+                where p.Value.DBName == db && p.Value.UserID == userID
                 select p.Value;
             return sessions.FirstOrDefault();
         }
@@ -85,7 +85,7 @@ namespace ObjectServer
 
             var sessions =
                 from p in this.sessions
-                where p.Value.Database == database && p.Value.UserID == uid
+                where p.Value.DBName == database && p.Value.UserID == uid
                 select p.Value.ID;
             var sid = sessions.First();
 

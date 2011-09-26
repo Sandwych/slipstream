@@ -29,37 +29,20 @@ namespace ObjectServer
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
-            this.DBContext = DataProvider.CreateDataContext(dbName);
-
-            this.EnsureInitialization();
         }
 
-        public DBProfile(IDBContext dbctx, IResourceContainer resources)
+        public DBProfile(IResourceContainer resources)
         {
-            Debug.Assert(dbctx != null);
             Debug.Assert(resources != null);
 
-            this.DBContext = dbctx;
             this.Resources = resources;
 
-            this.EnsureInitialization();
-        }
-
-        private void EnsureInitialization()
-        {
-            if (!this.DBContext.IsInitialized())
-            {
-                throw new DatabaseNotFoundException(
-                    "Uninitialized database", this.DBContext.DatabaseName);
-            }
         }
 
         ~DBProfile()
         {
             this.Dispose(false);
         }
-
-        public IDBContext DBContext { get; private set; }
 
         public IResourceContainer Resources { get; private set; }
 
@@ -80,7 +63,6 @@ namespace ObjectServer
                     //这里处理托管对象
                 }
 
-                this.DBContext.Dispose();
                 this.disposed = true;
             }
         }
@@ -146,24 +128,24 @@ namespace ObjectServer
 
         public string DatabaseName { get; private set; }
 
-        public void InitializeAllResources(bool update)
+        public void InitializeAllResources(IDBContext conn, bool update)
         {
             var allRes = new List<IResource>(this.resources.Values);
             ResourceDependencySort(allRes);
 
             foreach (var res in allRes)
             {
-                this.InitializeResource(res, update);
+                this.InitializeResource(conn, res, update);
             }
         }
 
-        private void InitializeResource(IResource res, bool update)
+        private void InitializeResource(IDBContext conn, IResource res, bool update)
         {
             Debug.Assert(res != null);
 
             if (!this.initializedResources.Contains(res.Name))
             {
-                res.Initialize(this, update);
+                res.Initialize(conn, update);
                 this.initializedResources.Add(res.Name);
             }
         }

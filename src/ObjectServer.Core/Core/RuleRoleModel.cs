@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using ObjectServer.Data;
 using ObjectServer.Model;
 
 namespace ObjectServer.Core
@@ -21,7 +22,7 @@ namespace ObjectServer.Core
             Fields.ManyToOne("rule", "core.rule").SetLabel("Rule").Required();
         }
 
-        public override void Initialize(IDBProfile db, bool update)
+        public override void Initialize(IDBContext db, bool update)
         {
             if (db == null)
             {
@@ -30,11 +31,11 @@ namespace ObjectServer.Core
 
             base.Initialize(db, update);
 
-            var tableCtx = db.DBContext.CreateTableContext(this.TableName);
+            var tableCtx = db.CreateTableContext(this.TableName);
 
-            if (update && !tableCtx.ConstraintExists(db.DBContext, UniqueConstraintName))
+            if (update && !tableCtx.ConstraintExists(db, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(db.DBContext, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
+                tableCtx.AddConstraint(db, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
             }
         }
     }

@@ -16,6 +16,7 @@ namespace ObjectServer
     internal sealed class ServiceContext : IServiceContext
     {
         private bool disposed = false;
+        private readonly IResourceContainer resources;
 
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
@@ -33,10 +34,12 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Debug(() =>
                 string.Format("ContextScope is opening for sessionId: [{0}]", sessionId));
 
+            this.resources = Environment.DBProfiles.GetDBProfile(session.DBName);
+
             this.Session = session;
             this.SessionStore.Pulse(session.ID);
 
-            this.DBProfile = Environment.DBProfiles.GetDBProfile(session.Database);
+            this.dbctx = DataProvider.CreateDataContext(session.DBName);
             this.DBContext.Open();
         }
 
@@ -49,9 +52,10 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Debug(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
 
+            this.resources = Environment.DBProfiles.GetDBProfile(dbName);
             this.Session = new Session(dbName);
             this.SessionStore.PutSession(this.Session);
-            this.DBProfile = Environment.DBProfiles.GetDBProfile(this.Session.Database);
+            this.dbctx = DataProvider.CreateDataContext(dbName);
             this.DBContext.Open();
         }
 
@@ -59,17 +63,17 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="db"></param>
-        public ServiceContext(IDBProfile db)
+        public ServiceContext(IDBContext db)
         {
             Debug.Assert(db != null);
-            Debug.Assert(db.DBContext != null);
 
             LoggerProvider.EnvironmentLogger.Debug(() =>
                 string.Format("ContextScope is opening for DatabaseContext"));
 
-            this.Session = new Session(db.DBContext.DatabaseName);
+            this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
+            this.Session = new Session(db.DatabaseName);
             this.SessionStore.PutSession(this.Session);
-            this.DBProfile = db;
+            this.dbctx = DataProvider.CreateDataContext(db.DatabaseName);
             this.DBContext.Open();
         }
 
@@ -90,9 +94,10 @@ namespace ObjectServer
                 throw new ObjectDisposedException("ServiceContext");
             }
 
-            return this.DBProfile.GetResource(resName);
+            return this.resources.GetResource(resName);
         }
 
+        private IDBContext dbctx;
         public IDBContext DBContext
         {
             get
@@ -102,12 +107,11 @@ namespace ObjectServer
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
-                Debug.Assert(this.DBProfile != null);
-                return this.DBProfile.DBContext;
+                Debug.Assert(this.dbctx != null);
+
+                return this.dbctx;
             }
         }
-
-        private IDBProfile DBProfile { get; set; }
 
         public Session Session { get; private set; }
 
@@ -124,7 +128,7 @@ namespace ObjectServer
                 }
 
                 //处置非托管对象
-                this.DBProfile.DBContext.Close();
+                this.DBContext.Close();
 
                 this.disposed = true;
                 LoggerProvider.EnvironmentLogger.Debug(() => "ScopeContext closed");
