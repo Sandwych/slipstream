@@ -21,6 +21,27 @@ namespace ObjectServer.Client.Agos.Windows
 {
     public partial class ListWindow : UserControl, IWindowAction
     {
+        sealed class DateFieldConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                if (value != null)
+                {
+                    var date = (DateTime)value;
+                    return date.ToShortDateString();
+                }
+                else
+                {
+                    return value;
+                }
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                throw new NotSupportedException();
+            }
+        }
+
         sealed class ManyToOneFieldConverter : IValueConverter
         {
             public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -73,6 +94,8 @@ namespace ObjectServer.Client.Agos.Windows
             {"Chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
             {"DateTime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"Date", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new DateFieldConverter()) },
+            {"Time", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"ManyToOne", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
             {"Enumeration", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
         };
