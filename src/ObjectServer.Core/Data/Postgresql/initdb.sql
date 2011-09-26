@@ -29,12 +29,12 @@ CREATE INDEX index_core_field_name ON core_field ("name");
 CREATE TABLE core_module (
     _id BIGSERIAL NOT NULL,  
     "name" VARCHAR(128) NOT NULL UNIQUE,
+    label VARCHAR(256),
     "state" VARCHAR(16) NOT NULL,
     demo BOOLEAN DEFAULT FALSE,
     author VARCHAR(128),
     url VARCHAR(128),
     latest_version VARCHAR(64),
-    shortdesc VARCHAR(256),
     info TEXT,
     license VARCHAR(32),
     PRIMARY KEY(_id)

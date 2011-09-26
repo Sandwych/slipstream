@@ -61,8 +61,8 @@ namespace ObjectServer
         [XmlElement("label")]
         public string Label { get; set; }
 
-        [XmlElement("description")]
-        public string Description { get; set; }
+        [XmlElement("info")]
+        public string Info { get; set; }
 
         [XmlArray("sources")]
         [XmlArrayItem("file")]
@@ -304,8 +304,8 @@ namespace ObjectServer
                 state = ModuleModel.States.ToInstall;
             }
 
-            var insertSql = SqlString.Parse("insert into core_module(name, state, info) values(?, ?, ?)");
-            dbctx.Execute(insertSql, this.Name, state, this.Label);
+            var insertSql = SqlString.Parse("insert into core_module(name, state, label, info) values(?, ?, ?, ?)");
+            dbctx.Execute(insertSql, this.Name, state, this.Label, this.Info);
         }
 
         public static Module CoreModule { get { return s_coreModule; } }

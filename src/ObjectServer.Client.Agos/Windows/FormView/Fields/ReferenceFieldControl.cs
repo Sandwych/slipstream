@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -29,8 +30,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
 
-            var col1 = new ColumnDefinition() { Width = GridLength.Auto, };
-            var col2 = new ColumnDefinition() { Width = new GridLength(100, GridUnitType.Star) };
+            var col1 = new ColumnDefinition() { Width = new GridLength(40, GridUnitType.Star) };
+            var col2 = new ColumnDefinition() { Width = new GridLength(60, GridUnitType.Star) };
             var col3 = new ColumnDefinition() { Width = GridLength.Auto, };
             this.ColumnDefinitions.Add(col1);
             this.ColumnDefinitions.Add(col2);
@@ -56,6 +57,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             //this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             //this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.Margin = new Thickness(5, 2, 5, 2);
+
+            var options = (IEnumerable)this.metaField["options"];
+            this.modelComboBox.SelectedValuePath = "Key";
+            this.modelComboBox.DisplayMemberPath = "Value";
+            this.modelComboBox.ItemsSource = options;
         }
 
         public string FieldName { get; private set; }
@@ -71,6 +77,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 var tuple = value as object[];
                 if (tuple != null)
                 {
+                    this.modelComboBox.SelectedValue = tuple[0];
                     this.nameTextBox.Text = (string)tuple[2];
                 }
             }

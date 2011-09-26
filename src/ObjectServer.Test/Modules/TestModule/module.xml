@@ -2,10 +2,10 @@
 <module-metadata>
   <name>test</name>
   <label>Module for unit test</label>
-  <description>
+  <info>
     <![CDATA[
    ]]>
-  </description>
+  </info>
   <auto-load>true</auto-load>
   <source-language>csharp</source-language>
   <sources>

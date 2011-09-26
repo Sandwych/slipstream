@@ -201,6 +201,8 @@ namespace ObjectServer.Model
                     break;
 
                 case FieldType.DateTime:
+                case FieldType.Date:
+                case FieldType.Time:
                     fieldValue = reader.ReadElementContentAsDateTime();
                     break;
 

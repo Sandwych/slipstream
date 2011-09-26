@@ -32,6 +32,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 { "ManyToMany", typeof(ManyToManyFieldControl) },
                 { "Reference", typeof(ReferenceFieldControl) },
                 { "DateTime", typeof(DateTimeFieldControl) },
+                { "Date", typeof(DateFieldControl) },
+                { "Float", typeof(FloatFieldControl) },
             };
 
         private IDictionary<string, object>[] metaFields;

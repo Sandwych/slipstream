@@ -37,6 +37,7 @@ namespace ObjectServer.Core
             this.AutoMigration = false;
 
             Fields.Chars("name").SetLabel("Name").Required().SetSize(128).Unique();
+            Fields.Chars("label").SetLabel("Short Description").SetSize(256);
             Fields.Enumeration("state", new Dictionary<string, string>()
             {
                 { States.Uninstalled, "Uninstalled" },
@@ -49,7 +50,6 @@ namespace ObjectServer.Core
             Fields.Chars("author").SetLabel("Author").SetSize(128);
             Fields.Chars("url").SetLabel("Web Site").SetSize(128);
             Fields.Chars("latest_version").SetLabel("Latest Version").SetSize(64);
-            Fields.Chars("shortdesc").SetLabel("Short Description").SetSize(256);
             Fields.Chars("license").SetLabel("License").SetSize(32);
             Fields.Text("info").SetLabel("Information");
         }

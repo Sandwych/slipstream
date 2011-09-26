@@ -13,6 +13,8 @@ namespace ObjectServer.Model
         IField Money(string name);
         IField Boolean(string name);
         IField DateTime(string name);
+        IField Date(string name);
+        IField Time(string name);
         IField Chars(string name);
         IField Text(string name);
         IField Binary(string name);

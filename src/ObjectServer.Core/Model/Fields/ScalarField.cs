@@ -17,6 +17,8 @@ namespace ObjectServer.Model
                 FieldType.BigInteger,
                 FieldType.Float,
                 FieldType.DateTime,
+                FieldType.Date,
+                FieldType.Time,
                 FieldType.Boolean,
                 FieldType.Decimal,
                 FieldType.Chars,

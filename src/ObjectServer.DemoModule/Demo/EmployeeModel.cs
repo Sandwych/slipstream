@@ -15,7 +15,8 @@ namespace ObjectServer.DemoModule
         {
             Fields.Chars("name").SetLabel("姓名").Required();
             Fields.Chars("address").SetLabel("地址");
-            Fields.Float("salary").BeProperty().SetLabel("月薪");
+            Fields.Float("salary").SetLabel("月薪");
+            Fields.Date("birthdate").SetLabel("出生日期");
         }
     }
 }

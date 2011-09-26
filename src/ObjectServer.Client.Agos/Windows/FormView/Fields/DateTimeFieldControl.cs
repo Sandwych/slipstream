@@ -23,6 +23,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private readonly TimeUpDown timeUpDown;
 
         public DateTimeFieldControl(object metaField)
+            : base()
         {
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];

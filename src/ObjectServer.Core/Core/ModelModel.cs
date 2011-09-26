@@ -64,7 +64,7 @@ namespace ObjectServer.Core
                 var fieldName = (string)r["name"];
                 var field = destModel.Fields[fieldName];
 
-                if (field.Type == FieldType.Enumeration)
+                if (field.Type == FieldType.Enumeration || field.Type == FieldType.Reference)
                 {
                     r["options"] = field.Options;
                 }
