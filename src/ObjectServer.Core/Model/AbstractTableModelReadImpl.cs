@@ -63,9 +63,9 @@ namespace ObjectServer.Model
             bool commaNeeded = false;
             foreach (var col in columnFields)
             {
-                if(commaNeeded)
+                if (commaNeeded)
                 {
-                    selectStmt.Add(",");        
+                    selectStmt.Add(",");
                 }
                 commaNeeded = true;
 
@@ -114,7 +114,9 @@ namespace ObjectServer.Model
             foreach (var fieldName in allFields)
             {
                 var f = this.Fields[fieldName];
-                if (f.Name == IDFieldName)
+                if (f.Name == IDFieldName
+                    || f.Name == LeftFieldName
+                    || f.Name == RightFieldName)
                 {
                     continue;
                 }

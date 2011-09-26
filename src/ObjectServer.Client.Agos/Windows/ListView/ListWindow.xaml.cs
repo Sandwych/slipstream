@@ -16,74 +16,12 @@ using System.Diagnostics;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;
+using ObjectServer.Client.Agos.Windows.ListView.ValueConverters;
 
 namespace ObjectServer.Client.Agos.Windows
 {
     public partial class ListWindow : UserControl, IWindowAction
     {
-        sealed class DateFieldConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                if (value != null)
-                {
-                    var date = (DateTime)value;
-                    return date.ToShortDateString();
-                }
-                else
-                {
-                    return value;
-                }
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        sealed class ManyToOneFieldConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                if (value != null)
-                {
-                    var objs = (object[])value;
-                    return objs[1];
-                }
-                else
-                {
-                    return value;
-                }
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        sealed class EnumFieldConverter : IValueConverter
-        {
-            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                if (value != null)
-                {
-                    var objs = (object[])value;
-                    return objs[1];
-                }
-                else
-                {
-                    return value;
-                }
-            }
-
-            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
         private static Dictionary<string, Tuple<Type, IValueConverter>> COLUMN_TYPE_MAPPING
             = new Dictionary<string, Tuple<Type, IValueConverter>>()
         {
@@ -92,10 +30,11 @@ namespace ObjectServer.Client.Agos.Windows
             {"Float", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Decimal", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"Text", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
             {"DateTime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
             {"Date", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new DateFieldConverter()) },
-            {"Time", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"Time", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new TimeFieldConverter()) },
             {"ManyToOne", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
             {"Enumeration", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
         };
@@ -109,7 +48,20 @@ namespace ObjectServer.Client.Agos.Windows
         {
             this.ActionID = actionID;
             this.InitializeComponent();
+
+            this.Loaded += new RoutedEventHandler(this.OnLoaded);
+
             this.Init();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs args)
+        {
+            this.Init();
+        }
+
+        public void Query()
+        {
+            this.LoadData();
         }
 
         private void Init()

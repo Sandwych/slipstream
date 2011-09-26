@@ -187,6 +187,10 @@
     <Compile Include="Windows\ListView\ListWindow.xaml.cs">
       <DependentUpon>ListWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ListView\ValueConverters\TimeFieldConverter.cs" />
+    <Compile Include="Windows\ListView\ValueConverters\DateFieldConverter.cs" />
+    <Compile Include="Windows\ListView\ValueConverters\EnumFieldConverter.cs" />
+    <Compile Include="Windows\ListView\ValueConverters\ManyToOneFieldConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -310,6 +314,9 @@
       <Project>{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}</Project>
       <Name>ObjectServer.SilverlightClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\16x16\system-search.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

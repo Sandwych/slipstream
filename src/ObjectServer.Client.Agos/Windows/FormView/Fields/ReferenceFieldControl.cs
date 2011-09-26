@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
@@ -51,8 +52,10 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.selectButton = new Button();
             this.selectButton.SetValue(Grid.ColumnProperty, 2);
-            this.selectButton.Content = "Select";
             this.Children.Add(selectButton);
+
+            var icon = new BitmapImage(new Uri("/Assets/Icons/16x16/system-search.png"));
+            this.selectButton.Content = icon;
 
             //this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             //this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
