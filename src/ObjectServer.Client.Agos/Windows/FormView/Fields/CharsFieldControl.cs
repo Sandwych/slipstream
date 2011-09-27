@@ -22,19 +22,17 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public CharsFieldControl(object metaField)
         {
-            this.metaField = (IDictionary<string, object>)metaField;
-            this.FieldName = (string)this.metaField["name"];
-
             this.DefaultStyleKey = typeof(TextBox);
+            this.metaField = (IDictionary<string, object>)metaField;
 
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
 
+            this.FieldName = (string)this.metaField["name"];
             if (!this.IsReadOnly && (bool)this.metaField["required"])
             {
                 this.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0xff, 0xcc));
             }
-
         }
 
         public string FieldName { get; private set; }
