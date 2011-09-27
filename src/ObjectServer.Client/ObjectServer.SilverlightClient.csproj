@@ -50,6 +50,9 @@
     <Reference Include="Newtonsoft.Json.Silverlight">
       <HintPath>..\..\lib\Json\Silverlight\Newtonsoft.Json.Silverlight.dll</HintPath>
     </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>..\..\lib\tasks\silverlight\System.Threading.Tasks.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -58,6 +61,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonRpc\WebRequestExtensions.cs" />
     <Compile Include="Threading\AsyncEnumerator.cs" />
     <Compile Include="Threading\InterlockedEx.cs" />
     <Compile Include="IRemoteService.cs" />

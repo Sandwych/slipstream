@@ -13,8 +13,6 @@ namespace ObjectServer.Client
 
     public class JsonRpcClient
     {
-        private SynchronizationContext syncCtx;
-
         public JsonRpcClient(Uri uri)
         {
             this.Uri = uri;
@@ -31,23 +29,42 @@ namespace ObjectServer.Client
         /// <returns></returns>
         public void Invoke(string method, object[] args, Action<object> resultCallback)
         {
+            this.Invoke(method, args, (o, e) => resultCallback(o));
+        }
+
+        public void Invoke(string method, object[] args, Action<object, Exception> resultCallback)
+        {
             var jreq = new JsonRpcRequest(method, args);
-            this.syncCtx = SynchronizationContext.Current;
+            var syncCtx = SynchronizationContext.Current;
             jreq.PostAsync(this.Uri, (jrep, e) =>
             {
-                this.syncCtx.Post(state =>
+                syncCtx.Post(state =>
                 {
-                    resultCallback(jrep.Result);
+                    if (jrep != null)
+                    {
+                        resultCallback(jrep.Result, e);
+                    }
+                    else
+                    {
+                        resultCallback(null, e);
+                    }
                 }, null);
             });
         }
 
-        public void InvokeAsync(string method, object[] args, Action<object> resultCallback)
+        public void InvokeAsync(string method, object[] args, Action<object, Exception> resultCallback)
         {
             var jreq = new JsonRpcRequest(method, args);
             jreq.PostAsync(this.Uri, (jrep, e) =>
             {
-                resultCallback(jrep.Result);
+                if (jrep != null)
+                {
+                    resultCallback(jrep.Result, e);
+                }
+                else
+                {
+                    resultCallback(null, e);
+                }
             });
         }
 

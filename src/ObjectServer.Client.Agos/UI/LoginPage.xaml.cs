@@ -47,16 +47,26 @@ namespace ObjectServer.Client.Agos.UI
             }
 
             app.IsBusy = true;
-            app.ClientService.ListDatabases(dbs =>
+            app.ClientService.ListDatabases((dbs, error) =>
             {
-                this.listDatabases.ItemsSource = dbs;
+                app.IsBusy = false;
 
+                if (error != null)
+                {
+                    if (error is System.Security.SecurityException)
+                    {
+                        ErrorWindow.CreateNew(
+                            "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
+                            StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+                    }
+                    return;
+                }
+
+                this.listDatabases.ItemsSource = dbs;
                 if (dbs.Length >= 1)
                 {
                     this.listDatabases.SelectedIndex = 0;
                 }
-
-                app.IsBusy = false;
             });
         }
 

@@ -10,7 +10,7 @@ namespace ObjectServer.Client
     {
 
         void GetVersion(Action<Version> resultCallback);
-        void ListDatabases(Action<string[]> resultCallback);
+        void ListDatabases(Action<string[], Exception> resultCallback);
         void CreateDatabase(string serverPasswordHash, string dbName, string adminPassword, Action resultCallback);
         void DeleteDatabase(string serverPasswordHash, string dbName, Action resultCallback);
 

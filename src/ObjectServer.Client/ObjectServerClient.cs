@@ -40,10 +40,16 @@ namespace ObjectServer.Client
             });
         }
 
-        public void ListDatabases(Action<string[]> resultCallback)
+        public void ListDatabases(Action<string[], Exception> resultCallback)
         {
-            this.jsonRpcClient.Invoke("listDatabases", null, o =>
+            this.jsonRpcClient.Invoke("listDatabases", null, (o, error) =>
             {
+                if (error != null)
+                {
+                    resultCallback(null, error);
+                    return;
+                }
+
                 object[] objs = (object[])o;
                 var result = new string[objs.Length];
                 for (int i = 0; i < result.Length; i++)
@@ -51,7 +57,7 @@ namespace ObjectServer.Client
                     result[i] = (string)objs[i];
                 }
 
-                resultCallback(result);
+                resultCallback(result, error);
             });
         }
 

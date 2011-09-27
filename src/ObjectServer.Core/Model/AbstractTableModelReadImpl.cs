@@ -25,6 +25,18 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("ctx");
             }
 
+            if (ids == null)
+            {
+                throw new ArgumentNullException("ids");
+            }
+
+            if (ids.Length == 0)
+            {
+                return new Dictionary<string, object>[] { };
+            }
+
+            //检查列是否有重复的
+
             this.VerifyReadPermission(scope);
 
             if (ids == null || ids.Count() == 0)
@@ -40,8 +52,17 @@ namespace ObjectServer.Model
             }
             else
             {
-                //检查是否有不存在的列
-                var userFields = requiredFields.Select(o => (string)o);
+                //TODO 检查是否有不存在的列
+
+                var userFields = requiredFields.Select(o => (string)o).ToArray();
+                //检查重复的列
+                var distinctedFields = userFields.Distinct();
+
+                if (userFields.Length != distinctedFields.Count())
+                {
+                    throw new ArgumentException("包含重复的字段名", "requiredFields");
+                }
+
                 allFields = userFields.ToList();
             }
 

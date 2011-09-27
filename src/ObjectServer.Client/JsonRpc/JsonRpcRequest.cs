@@ -5,10 +5,12 @@ using System.IO;
 using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
 using ObjectServer.Threading;
+using ObjectServer.Client.JsonRpc;
 
 namespace ObjectServer.Client
 {
@@ -47,11 +49,54 @@ namespace ObjectServer.Client
             try
             {
                 var ae = new AsyncEnumerator();
-                ae.Execute(this.GetPostEnumerator(uri, ae, resultCallback));
+                ae.BeginExecute(this.GetPostEnumerator(uri, ae, resultCallback), ar =>
+                {
+                    ae.EndExecute(ar);
+                });
             }
-            catch (Exception ex)
+            catch (System.Security.SecurityException ex)
             {
                 resultCallback(null, ex);
+            }
+        }
+
+        public Task<JsonRpcResponse> PostAsync(Uri uri)
+        {
+            if (uri == null)
+            {
+                throw new ArgumentNullException("uri");
+            }
+
+            var webReq = WebRequest.CreateHttp(uri);
+            webReq.Method = "POST";
+            webReq.ContentType = "text/json";
+
+            var tcs = new TaskCompletionSource<JsonRpcResponse>();
+            webReq.GetRequestStreamAsync().ContinueWith(t =>
+           {
+               var reqStream = t.Result;
+               this.SerializeTo(reqStream);
+
+               webReq.GetReponseAsync().ContinueWith(ca2 =>
+               {
+                   using (var repStream = ca2.Result.GetResponseStream())
+                   {
+                       var jsonRep = JsonRpcResponse.Deserialize(repStream);
+                       tcs.SetResult(jsonRep);
+                   }
+               });
+           });
+
+            return tcs.Task;
+        }
+
+        private void SerializeTo(Stream reqStream)
+        {
+            using (var sw = new StreamWriter(reqStream, Encoding.UTF8))
+            {
+                var json = JsonConvert.SerializeObject(this, Formatting.None);
+                sw.Write(json);
+                sw.Flush();
             }
         }
 
