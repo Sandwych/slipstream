@@ -16,9 +16,9 @@ namespace ObjectServer.Client
         public HttpWebRequest HttpRequest { get; private set; }
         public HttpWebResponse HttpResponse { get; set; }
         public JsonRpcResponse JsonResponse { get; set; }
-        public Action<object> ResultHandler { get; private set; }
+        public Action<object, Exception> ResultHandler { get; private set; }
 
-        public RequestState(HttpWebRequest httpRequest, Action<object> rh)
+        public RequestState(HttpWebRequest httpRequest, Action<object, Exception> rh)
         {
             this.HttpRequest = httpRequest;
             this.ResultHandler = rh;

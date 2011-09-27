@@ -4,21 +4,23 @@ using System.Threading;
 using System.IO;
 using System.Text;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 using Newtonsoft.Json;
+
+using ObjectServer.Threading;
 
 namespace ObjectServer.Client
 {
 
     [JsonObject]
-    public class JsonRpcRequest : IAsyncResult
+    public class JsonRpcRequest
     {
-        public JsonRpcRequest(JsonRpcCallCompleteCallback callCompleteProc, string method, params object[] args)
+        public JsonRpcRequest(string method, params object[] args)
         {
             this.Method = method;
             this.Params = args;
             this.Id = Guid.NewGuid().ToString();
-            this.JsonRpcCallCompleteHandler = callCompleteProc;
         }
 
         [JsonProperty("method")]
@@ -30,70 +32,65 @@ namespace ObjectServer.Client
         [JsonProperty("id")]
         public object Id { get; private set; }
 
-
-        private ManualResetEvent asyncWaitHandle = new ManualResetEvent(false);
-        private JsonRpcCallCompleteCallback JsonRpcCallCompleteHandler;
-
-        #region IAsyncResult Members
-
-        [JsonIgnore]
-        public object AsyncState { get; private set; }
-
-        [JsonIgnore]
-        public WaitHandle AsyncWaitHandle { get { return this.asyncWaitHandle; } }
-
-        [JsonIgnore]
-        public bool CompletedSynchronously { get { return false; } }
-
-        [JsonIgnore]
-        public bool IsCompleted { get; private set; }
-
-        #endregion
-
-        public IAsyncResult Send(Uri uri, Action<object> resultHandler)
+        public void PostAsync(Uri uri, Action<JsonRpcResponse, Exception> resultCallback)
         {
-            var httpRequest = (HttpWebRequest)WebRequest.Create(uri);
-            httpRequest.Method = "POST";
-            httpRequest.ContentType = "text/json";
+            if (uri == null)
+            {
+                throw new ArgumentNullException("uri");
+            }
 
-            var state = new RequestState(httpRequest, resultHandler);
-            httpRequest.BeginGetRequestStream(new AsyncCallback(OnRequestReady), state);
+            if (resultCallback == null)
+            {
+                throw new ArgumentNullException("resultCallback");
+            }
 
-            return this;
+            try
+            {
+                var ae = new AsyncEnumerator();
+                ae.Execute(this.GetPostEnumerator(uri, ae, resultCallback));
+            }
+            catch (Exception ex)
+            {
+                resultCallback(null, ex);
+            }
         }
 
-        private void OnRequestReady(IAsyncResult result)
+        private IEnumerator<int> GetPostEnumerator(
+            Uri uri, AsyncEnumerator ae, Action<JsonRpcResponse, Exception> resultCallback)
         {
-            Debug.Assert(result.IsCompleted);
+            var webReq = (HttpWebRequest)WebRequest.Create(uri);
+            webReq.Method = "POST";
+            webReq.ContentType = "text/json";
+            webReq.BeginGetRequestStream(ae.End(), null);
 
-            RequestState state = (RequestState)result.AsyncState;
+            yield return 1;
 
-            using (var stream = state.HttpRequest.EndGetRequestStream(result))
-            using (var sw = new StreamWriter(stream, Encoding.UTF8))
+            using (var reqStream = webReq.EndGetRequestStream(ae.DequeueAsyncResult()))
+            using (var sw = new StreamWriter(reqStream, Encoding.UTF8))
             {
                 var json = JsonConvert.SerializeObject(this, Formatting.None);
                 sw.Write(json);
                 sw.Flush();
             }
-            state.HttpRequest.BeginGetResponse(new AsyncCallback(OnResponseReady), state);
-        }
 
-        private void OnResponseReady(IAsyncResult result)
-        {
-            RequestState state = result.AsyncState as RequestState;
-            state.HttpResponse = (HttpWebResponse)state.HttpRequest.EndGetResponse(result);
+            webReq.BeginGetResponse(ae.End(), null);
 
-            using (var readStream = state.HttpResponse.GetResponseStream())
+            yield return 1;
+
+            try
             {
-                state.JsonResponse = JsonRpcResponse.Deserialize(readStream);
+                using (var webRep = webReq.EndGetResponse(ae.DequeueAsyncResult()))
+                using (var repStream = webRep.GetResponseStream())
+                {
+                    var jsonRep = JsonRpcResponse.Deserialize(repStream);
+                    resultCallback(jsonRep, null);
+                }
             }
-
-            AsyncState = state;
-
-            this.JsonRpcCallCompleteHandler(state.JsonResponse, state.ResultHandler);
-
-            IsCompleted = true;
-            asyncWaitHandle.Set();
+            catch (Exception ex)
+            {
+                resultCallback(null, ex);
+                yield break;
+            }
         }
 
     }

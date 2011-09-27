@@ -33,7 +33,7 @@ namespace ObjectServer.Client
 
         public void GetVersion(Action<Version> resultCallback)
         {
-            this.jsonRpcClient.SyncInvoke("getVersion", null, o =>
+            this.jsonRpcClient.Invoke("getVersion", null, o =>
             {
                 var version = Version.Parse((string)o);
                 resultCallback(version);
@@ -42,7 +42,7 @@ namespace ObjectServer.Client
 
         public void ListDatabases(Action<string[]> resultCallback)
         {
-            this.jsonRpcClient.SyncInvoke("listDatabases", null, o =>
+            this.jsonRpcClient.Invoke("listDatabases", null, o =>
             {
                 object[] objs = (object[])o;
                 var result = new string[objs.Length];
@@ -60,7 +60,7 @@ namespace ObjectServer.Client
         {
             var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim(), adminPassword.Trim() };
-            this.jsonRpcClient.SyncInvoke("createDatabase", args, o =>
+            this.jsonRpcClient.Invoke("createDatabase", args, o =>
             {
                 resultCallback();
             });
@@ -70,7 +70,7 @@ namespace ObjectServer.Client
         {
             var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim() };
-            this.jsonRpcClient.SyncInvoke("deleteDatabase", args, o =>
+            this.jsonRpcClient.Invoke("deleteDatabase", args, o =>
             {
                 resultCallback();
             });
@@ -81,7 +81,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(!this.Logged);
 
-            this.jsonRpcClient.SyncInvoke("logOn", new object[] { dbName, userName, password }, o =>
+            this.jsonRpcClient.Invoke("logOn", new object[] { dbName, userName, password }, o =>
             {
                 //TODO  线程安全
                 var sid = (string)o;
@@ -101,7 +101,7 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.SessionId };
-            this.jsonRpcClient.SyncInvoke("logOff", args, o =>
+            this.jsonRpcClient.Invoke("logOff", args, o =>
             {
                 this.SessionId = null;
                 resultCallback();
@@ -114,7 +114,7 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.SessionId, objectName, method, parameters };
-            this.jsonRpcClient.SyncInvoke("execute", args, o =>
+            this.jsonRpcClient.Invoke("execute", args, o =>
             {
                 resultCallback(o);
             });

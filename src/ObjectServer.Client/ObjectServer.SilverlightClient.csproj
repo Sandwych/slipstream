@@ -58,12 +58,13 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Threading\AsyncEnumerator.cs" />
+    <Compile Include="Threading\InterlockedEx.cs" />
     <Compile Include="IRemoteService.cs" />
     <Compile Include="JsonRpc\JsonRpcClient.cs" />
     <Compile Include="JsonRpc\JsonRpcRequest.cs" />
     <Compile Include="JsonRpc\JsonRpcResponse.cs" />
     <Compile Include="JsonRpc\PlainJsonConvert.cs" />
-    <Compile Include="JsonRpc\RequestState.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\MenuModel.cs" />
     <Compile Include="Model\ModelHelper.cs" />

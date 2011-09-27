@@ -9,22 +9,10 @@ using Newtonsoft.Json;
 
 namespace ObjectServer.Client
 {
-    public delegate void JsonRpcCallCompleteCallback(JsonRpcResponse response, Action<object> resultHandler);
+    public delegate void JsonRpcCallCompleteCallback(JsonRpcResponse response, Action<object, Exception> resultHandler);
 
     public class JsonRpcClient
     {
-        class CallResult
-        {
-            public JsonRpcResponse Response { get; private set; }
-            public Action<object> ResultCallback { get; private set; }
-
-            public CallResult(JsonRpcResponse response, Action<object> resultCallback)
-            {
-                this.Response = response;
-                this.ResultCallback = resultCallback;
-            }
-        }
-
         private SynchronizationContext syncCtx;
 
         public JsonRpcClient(Uri uri)
@@ -41,40 +29,26 @@ namespace ObjectServer.Client
         /// <param name="args"></param>
         /// <param name="resultCallback"></param>
         /// <returns></returns>
-        public IAsyncResult SyncInvoke(string method, object[] args, Action<object> resultCallback)
+        public void Invoke(string method, object[] args, Action<object> resultCallback)
         {
-            var jreq = new JsonRpcRequest(this.SyncCallCompleteCallback, method, args);
+            var jreq = new JsonRpcRequest(method, args);
             this.syncCtx = SynchronizationContext.Current;
-            return jreq.Send(this.Uri, resultCallback);
-        }
-
-        public IAsyncResult AsyncInvoke(string method, object[] args, Action<object> resultCallback)
-        {
-            var jreq = new JsonRpcRequest(this.AsyncCallCompleteCallback, method, args);
-            return jreq.Send(this.Uri, resultCallback);
-        }
-
-        private void SyncCallCompleteCallback(JsonRpcResponse response, Action<object> resultCallback)
-        {
-            var callResult = new CallResult(response, resultCallback);
-            this.syncCtx.Post(this.ReceiveReturnValueCallback, callResult);
-        }
-
-        private void AsyncCallCompleteCallback(JsonRpcResponse response, Action<object> resultCallback)
-        {
-            var callResult = new CallResult(response, resultCallback);
-            this.ReceiveReturnValueCallback(callResult);
-        }
-
-        private void ReceiveReturnValueCallback(object state)
-        {
-            var callResult = state as CallResult;
-            if (callResult.Response.Error != null)
+            jreq.PostAsync(this.Uri, (jrep, e) =>
             {
-                throw new Exception(callResult.Response.Error.ToString());
-            }
+                this.syncCtx.Post(state =>
+                {
+                    resultCallback(jrep.Result);
+                }, null);
+            });
+        }
 
-            callResult.ResultCallback(callResult.Response.Result);
+        public void InvokeAsync(string method, object[] args, Action<object> resultCallback)
+        {
+            var jreq = new JsonRpcRequest(method, args);
+            jreq.PostAsync(this.Uri, (jrep, e) =>
+            {
+                resultCallback(jrep.Result);
+            });
         }
 
 
