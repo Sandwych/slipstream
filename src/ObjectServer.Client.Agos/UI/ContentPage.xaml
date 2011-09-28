@@ -9,7 +9,7 @@
   Style="{StaticResource PageStyle}">
 
 
-    <Grid x:Name="LayoutRoot" Background="#F0F0F0">
+    <Grid x:Name="LayoutRoot" Background="#FFD9D4CC">
         <Grid.RowDefinitions>
             <RowDefinition Height="64"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -48,9 +48,9 @@
                             Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"  />
                             <HyperlinkButton Grid.Column="3" x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
                         </Grid>
-                        <Rectangle Height="1" Fill="#FFF0F0F0" />
+                        <Rectangle Height="1" Fill="#FFD9D4CC" />
                         <Border Height="25">
-                            
+
                         </Border>
                     </StackPanel>
                 </Border>
@@ -60,7 +60,7 @@
         </Border>
 
 
-        <Grid x:Name="ContentGrid" Grid.Row="1">
+        <Grid x:Name="ContentGrid" Grid.Row="1" Background="{StaticResource SolidControlColor}">
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -72,7 +72,7 @@
             <controls:TreeView Name="Menu" Width="Auto" Grid.Column="0" SelectedItemChanged="Menu_SelectedItemChanged" Margin="5,5,5,5" BorderBrush="#FF999999">
             </controls:TreeView>
             <controls:GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="0,5,0,5" Width="6" BorderThickness="0" />
-            <controls:TabControl Grid.Column="2" Padding="0,0,0,0" x:Name="TabContainer" Margin="5,5,5,5" BorderBrush="#FF999999">
+            <controls:TabControl Grid.Column="2" Padding="0,0,0,0" x:Name="TabContainer" Margin="5,5,5,5" BorderBrush="#FF999999" Background="{StaticResource SolidControlColor}">
             </controls:TabControl>
         </Grid>
         <Border x:Name="StatusBar" Margin="0,0,0,0" Grid.Row="2" Style="{StaticResource StatusBarStyle}">

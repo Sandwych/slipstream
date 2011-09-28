@@ -22,9 +22,12 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             InitializeComponent();
 
             var formWindow = new FormView(model, recordID, action);
+            this.ScrollContent.Content = formWindow;
+            /*
             this.LayoutRoot.Children.Add(formWindow);
             formWindow.SetValue(Grid.ColumnProperty, 0);
             formWindow.SetValue(Grid.RowProperty, 0);
+            */
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)

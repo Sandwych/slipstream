@@ -16,6 +16,121 @@
 
     <!-- ******MAIN PAGE STYLES****** -->
 
+    <Style TargetType="appControls:TransitionFrame">
+        <Setter Property="IsTabStop"
+                Value="False" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="appControls:TransitionFrame">
+                    <Border HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="PresentationStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Transition">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="PreviousContentPresentationSite"
+                                                                       Storyboard.TargetProperty="(UIElement.Visibility)">
+                                            <DiscreteObjectKeyFrame KeyTime="00:00:00">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                            <DiscreteObjectKeyFrame KeyTime="00:00:01.300">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Collapsed</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="CurrentContentPresentationSite"
+                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00"
+                                                                  Value="0" />
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.300"
+                                                                  Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="CurrentContentPresentationSite"
+                                                                       Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00"
+                                                                  Value="100" />
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.300"
+                                                                  Value="0" />
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="PreviousContentPresentationSite"
+                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00"
+                                                                  Value="1" />
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.300"
+                                                                  Value="0" />
+                                        </DoubleAnimationUsingKeyFrames>
+
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="PreviousContentPresentationSite"
+                                                                       Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00"
+                                                                  Value="0" />
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.300"
+                                                                  Value="-100" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid>
+                            <ContentPresenter x:Name="PreviousContentPresentationSite"
+                                              Content="{x:Null}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform />
+                                        <SkewTransform />
+                                        <RotateTransform />
+                                        <TranslateTransform />
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                            <ContentPresenter x:Name="CurrentContentPresentationSite"
+                                              Content="{x:Null}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform />
+                                        <SkewTransform />
+                                        <RotateTransform />
+                                        <TranslateTransform />
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="WelcomeText" TargetType="TextBlock">
         <Setter Property="Foreground" Value="#FF333333" />
         <Setter Property="FontSize" Value="14" />
@@ -34,8 +149,25 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ToolbarStyle" TargetType="Border">
+        <Setter Property="Padding" Value="5,5,5,5" />
+        <Setter Property="Margin" Value="0,5,0,0" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="#FFB8B3A9" Offset="0"/>
+                        <GradientStop Color="#FFA9A298" Offset="1"/>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- **************************** -->
     <!-- Primary Color Brushes -->
+    <SolidColorBrush x:Key="SolidControlColor" Color="#FFD9D4CC"/>
+    <SolidColorBrush x:Key="SolidBackgroundColor" Color="#FF302E2C"/>
     <SolidColorBrush x:Key="NavigationBackgroundColorBrush" Color="#FF484848"/>
     <SolidColorBrush x:Key="NavigationForegroundColorBrush" Color="#FFFFFFFF"/>
     <SolidColorBrush x:Key="HighLightColorBrush" Color="#FF0097FC"/>
@@ -374,7 +506,7 @@
 
     <!--FloatableWindow Style-->
     <Style x:Key="FloatableWindowStyle" TargetType="fw:FloatableWindow">
-        <Setter Property="Background" Value="#FFF0F0F0" />
+        <Setter Property="Background" Value="#FFD9D4CC" />
         <Setter Property="IsTabStop" Value="false"/>
         <Setter Property="TabNavigation" Value="Cycle"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>

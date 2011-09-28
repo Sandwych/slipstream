@@ -40,10 +40,8 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
 
-            app.IsBusy = true;
             app.ClientService.ListDatabases((dbs, error) =>
             {
-                app.IsBusy = false;
 
                 if (error != null)
                 {
@@ -106,7 +104,6 @@ namespace ObjectServer.Client.Agos.UI
                 app.IsBusy = false;
             });
         }
-
 
     }
 }

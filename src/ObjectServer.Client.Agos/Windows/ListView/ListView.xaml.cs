@@ -48,18 +48,13 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             : this()
         {
             this.ActionID = actionID;
+
+            this.Init();
         }
 
         public ListView()
         {
             this.InitializeComponent();
-
-            this.Loaded += new RoutedEventHandler(this.OnLoaded);
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs args)
-        {
-            this.Init();
         }
 
         public void Query()

@@ -6,51 +6,59 @@
            mc:Ignorable="d"
            xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
            xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
-           d:DesignWidth="640" d:DesignHeight="480"
-           Title="DBCreationPage Page" Loaded="Page_Loaded">
-    <StackPanel x:Name="LayoutRoot" Margin="0" HorizontalAlignment="Center" >
+           d:DesignWidth="640" d:DesignHeight="480" 
+           Title="DBCreationPage Page" Loaded="Page_Loaded" >
+    <Grid Background="{StaticResource SolidControlColor}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <TextBlock Height="Auto" HorizontalAlignment="Left" Margin="0,32,0,64" Name="textBlock1" Text="创建数据库" VerticalAlignment="Top" Width="586" Foreground="#FF119EDA" FontSize="28" />
+        <StackPanel x:Name="LayoutRoot" Grid.Column="1" Margin="0" >
+
+            <TextBlock Height="Auto" HorizontalAlignment="Left" Margin="0,32,0,64" Name="textBlock1" Text="创建数据库" VerticalAlignment="Top" Foreground="{StaticResource SolidBackgroundColor}" FontSize="28" />
 
 
-        <Grid Height="139" HorizontalAlignment="Left" Name="grid1" VerticalAlignment="Top" Margin="0,0,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <sdk:Label Grid.Column="0" Grid.Row="0" Height="23" HorizontalAlignment="Left" Margin="2" Name="label0" VerticalAlignment="Center" Content="服务器：" />
-            <TextBox Grid.Column="1" Grid.Row="0" Height="23" HorizontalAlignment="Left" Margin="2" Name="textServerUrl" VerticalAlignment="Center" Width="240"  Text="http://localhost:9628" IsEnabled="True" IsReadOnly="True" />
-            <sdk:Label Grid.Column="0" Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="2" Name="label1" VerticalAlignment="Center" Content="服务器管理密码：" />
-            <PasswordBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="2,2,2,2" 
+            <Grid Height="139" HorizontalAlignment="Left" Name="grid1" VerticalAlignment="Top" Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <sdk:Label Grid.Column="0" Grid.Row="0" Height="23" HorizontalAlignment="Left" Margin="2" Name="label0" VerticalAlignment="Center" Content="服务器：" />
+                <TextBox Grid.Column="1" Grid.Row="0" Height="23" HorizontalAlignment="Left" Margin="2" Name="textServerUrl" VerticalAlignment="Center" Width="240"  Text="http://localhost:9628" IsEnabled="True" IsReadOnly="True" />
+                <sdk:Label Grid.Column="0" Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="2" Name="label1" VerticalAlignment="Center" Content="服务器管理密码：" />
+                <PasswordBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="2,2,2,2" 
                          Name="serverPassword" VerticalAlignment="Top" Width="240" 
                          Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=ServerPassword, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}"  />
-            <sdk:Label Grid.Column="0" Grid.Row="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Content="数据库名称：" />
-            <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" 
+                <sdk:Label Grid.Column="0" Grid.Row="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Content="数据库名称：" />
+                <TextBox Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" 
                      Name="textDBName" VerticalAlignment="Top" Width="240"
                      Text="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=DBName, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}"  />
-            <sdk:Label Grid.Column="0" Grid.Row="3" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="label3" VerticalAlignment="Center" Content="管理员密码：" />
-            <PasswordBox Grid.Column="1" Grid.Row="3" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" 
+                <sdk:Label Grid.Column="0" Grid.Row="3" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="label3" VerticalAlignment="Center" Content="管理员密码：" />
+                <PasswordBox Grid.Column="1" Grid.Row="3" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" 
                          Name="passwordAdmin" VerticalAlignment="Top" Width="240" 
                          Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=AdminPassword, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}"  />
-            <sdk:Label Grid.Column="0" Grid.Row="4" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="label4" VerticalAlignment="Center" Content="重复管理员密码：" />
-            <PasswordBox Grid.Column="1" Grid.Row="4" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2"
+                <sdk:Label Grid.Column="0" Grid.Row="4" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2" Name="label4" VerticalAlignment="Center" Content="重复管理员密码：" />
+                <PasswordBox Grid.Column="1" Grid.Row="4" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="2,2,2,2"
                          Name="passwordConfirmation" VerticalAlignment="Top" Width="240" 
                          Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=AdminPasswordConfirmation, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}"  />
-        </Grid>
+            </Grid>
 
-        <StackPanel Orientation="Horizontal" Margin="0,48,0,0">
-            <Button x:Name="CancelButton" Content="返回" Width="75"  
+            <StackPanel Orientation="Horizontal" Margin="0,48,0,0">
+                <Button x:Name="CancelButton" Content="返回" Width="75"  
                     Height="23" HorizontalAlignment="Right" Grid.Row="1" Margin="5" Click="CancelButton_Click" />
-            <Button x:Name="OKButton" Content="确定" Width="75"  
+                <Button x:Name="OKButton" Content="确定" Width="75"  
                     Height="23" HorizontalAlignment="Right" Grid.Row="1" Margin="5" Click="OKButton_Click" />
+            </StackPanel>
         </StackPanel>
-    </StackPanel>
+    </Grid>
 </navigation:Page>

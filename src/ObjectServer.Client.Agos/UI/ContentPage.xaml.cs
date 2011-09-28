@@ -33,12 +33,10 @@
             this.Title = ApplicationStrings.HomePageTitle;
             this.TextUserName.Text = app.ClientService.LoggedUserName;
             this.TextServerUri.Text = app.ClientService.ServerAddress.ToString();
-            app.IsBusy = true;
 
             app.ClientService.ReadAllMenus(menus =>
             {
                 this.LoadMenus(menus);
-                app.IsBusy = false;
             });
         }
 

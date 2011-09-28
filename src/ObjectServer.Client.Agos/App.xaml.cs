@@ -13,6 +13,8 @@
     /// </summary>
     public partial class App : Application
     {
+        private readonly static object globalBusyLock = new object();
+
         private BusyIndicator busyIndicator;
         private ObjectServerClient clientService;
 
@@ -39,8 +41,22 @@
 
         public bool IsBusy
         {
-            get { return this.busyIndicator.IsBusy; }
-            set { this.busyIndicator.IsBusy = value; }
+            get
+            {
+                return this.busyIndicator.IsBusy;
+            }
+            set
+            {
+                if (value && this.busyIndicator.IsBusy)
+                {
+                    return;
+                }
+
+                lock (globalBusyLock)
+                {
+                    this.busyIndicator.IsBusy = value;
+                }
+            }
         }
 
         public MainPage MainPage

@@ -8,18 +8,14 @@
            xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
            d:DesignWidth="640" d:DesignHeight="480"
            Title="登录" KeyDown="Page_KeyDown">
-    <Grid Background="#F0F0F0">
+    <Grid Background="#FF32302E">
 
-        <StackPanel VerticalAlignment="Center" Height="Auto" Width="420" Orientation="Vertical" >
-            <StackPanel.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFFFFFFF"/>
-                    <GradientStop Color="#FFEEEEEE" Offset="1"/>
-                </LinearGradientBrush>
+        <StackPanel VerticalAlignment="Center" Height="Auto" Width="420" Orientation="Vertical"  >
+            <StackPanel.Background>#FFD9D4CC
             </StackPanel.Background>
 
             <StackPanel.Effect>
-                <DropShadowEffect ShadowDepth="5" BlurRadius="5" Color="#666666" />
+                <DropShadowEffect ShadowDepth="5" BlurRadius="5" Color="Black" />
             </StackPanel.Effect>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Margin="15,15,15,2" TextAlignment="Left"  VerticalAlignment="Center"   Style="{StaticResource WelcomeText}" Text="欢迎使用 ObjectServer Silverlight 客户端！" >

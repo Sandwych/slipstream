@@ -1,7 +1,7 @@
-<OutOfBrowserSettings ShortName="Agos" EnableGPUAcceleration="False" ShowInstallMenuItem="True">
+<OutOfBrowserSettings ShortName="Agos" EnableGPUAcceleration="True" ShowInstallMenuItem="True">
   <OutOfBrowserSettings.Blurb>ObjectServer.Client.Agos Application on your desktop; at home, at work or on the go.</OutOfBrowserSettings.Blurb>
   <OutOfBrowserSettings.WindowSettings>
-    <WindowSettings Title="Agos - Silverlight Client for ObjectServer" Height="768" Width="1024" />
+    <WindowSettings Title="Agos - Silverlight Client for ObjectServer" Height="768" Width="1024" WindowStyle="BorderlessRoundCornersWindow" />
   </OutOfBrowserSettings.WindowSettings>
   <OutOfBrowserSettings.SecuritySettings>
     <SecuritySettings ElevatedPermissions="NotRequired" />

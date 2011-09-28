@@ -117,6 +117,7 @@
     <Compile Include="Controls\MenuTree.xaml.cs">
       <DependentUpon>MenuTree.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TransitionFrame.cs" />
     <Compile Include="DataSourceCreator.cs" />
     <Compile Include="Models\DBCreationModel.cs" />
     <Compile Include="Models\ListViewModel.cs" />

@@ -24,6 +24,7 @@ namespace ObjectServer.Client.Agos.UI
         public LoginPage()
         {
             InitializeComponent();
+            this.buttonSignIn.IsEnabled = false;
 
             this.Loaded += new RoutedEventHandler(LoginPage_Loaded);
         }
@@ -46,7 +47,6 @@ namespace ObjectServer.Client.Agos.UI
                 app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
             }
 
-            app.IsBusy = true;
             var sc = SynchronizationContext.Current;
             try
             {
@@ -60,9 +60,9 @@ namespace ObjectServer.Client.Agos.UI
                         this.listDatabases.ItemsSource = dbs;
                         if (dbs.Length >= 1)
                         {
+                            this.buttonSignIn.IsEnabled = true;
                             this.listDatabases.SelectedIndex = 0;
                         }
-                        app.IsBusy = false;
                     }, null);
                 });
             }
@@ -82,10 +82,8 @@ namespace ObjectServer.Client.Agos.UI
                 app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
             }
 
-            app.IsBusy = true;
             app.ClientService.ListDatabases((dbs, error) =>
             {
-                app.IsBusy = false;
 
                 if (error != null)
                 {
@@ -101,6 +99,7 @@ namespace ObjectServer.Client.Agos.UI
                 this.listDatabases.ItemsSource = dbs;
                 if (dbs.Length >= 1)
                 {
+                    this.buttonSignIn.IsEnabled = true;
                     this.listDatabases.SelectedIndex = 0;
                 }
             });
@@ -128,7 +127,6 @@ namespace ObjectServer.Client.Agos.UI
             var loginModel = (LoginModel)this.DataContext;
 
             var app = (App)Application.Current;
-            app.IsBusy = true;
 
             var client = new ObjectServerClient(new Uri(this.textServer.Text));
 
@@ -144,8 +142,6 @@ namespace ObjectServer.Client.Agos.UI
                         app.ClientService = client;
                         app.MainPage.NavigateToContentPage();
                     }
-
-                    app.IsBusy = false;
                 });
 
         }
