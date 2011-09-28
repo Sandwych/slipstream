@@ -4,6 +4,7 @@ using System.Threading;
 using System.Dynamic;
 using System.Text;
 using System.IO;
+using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -36,7 +37,7 @@ namespace ObjectServer.Client
         {
             var jreq = new JsonRpcRequest(method, args);
             var syncCtx = SynchronizationContext.Current;
-            jreq.PostAsync(this.Uri, (jrep, e) =>
+            jreq.Post(this.Uri, (jrep, e) =>
             {
                 syncCtx.Post(state =>
                 {
@@ -55,7 +56,7 @@ namespace ObjectServer.Client
         public void InvokeAsync(string method, object[] args, Action<object, Exception> resultCallback)
         {
             var jreq = new JsonRpcRequest(method, args);
-            jreq.PostAsync(this.Uri, (jrep, e) =>
+            jreq.Post(this.Uri, (jrep, e) =>
             {
                 if (jrep != null)
                 {
@@ -68,6 +69,27 @@ namespace ObjectServer.Client
             });
         }
 
+        public Task<object> InvokeAsync(string method, object[] args)
+        {
+            var jreq = new JsonRpcRequest(method, args);
+            var tcs = new TaskCompletionSource<object>();
+            jreq.PostAsync(this.Uri).ContinueWith(jrep =>
+            {
+                var error = jrep.Result.Error;
+                if (error != null)
+                {
+                    var ex = new JsonRpcException("调用JSON-RPC 失败", error);
+                    tcs.SetException(ex);
+                }
+                tcs.SetResult(jrep.Result.Result);
+            });
+            return tcs.Task;
+        }
+
+        public Task<dynamic> InvokeDyanmicAsync(string method, object[] args)
+        {
+            return this.InvokeAsync(method, args);
+        }
 
     }
 }

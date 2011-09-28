@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using ObjectServer.Client.Model;
 
@@ -11,6 +12,7 @@ namespace ObjectServer.Client
 
         void GetVersion(Action<Version> resultCallback);
         void ListDatabases(Action<string[], Exception> resultCallback);
+        Task<string[]> ListDatabasesAsync();
         void CreateDatabase(string serverPasswordHash, string dbName, string adminPassword, Action resultCallback);
         void DeleteDatabase(string serverPasswordHash, string dbName, Action resultCallback);
 

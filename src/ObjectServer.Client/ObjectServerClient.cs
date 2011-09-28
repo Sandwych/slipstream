@@ -4,6 +4,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using ObjectServer.Client.Model;
 using ObjectServer.Utility;
@@ -59,6 +60,23 @@ namespace ObjectServer.Client
 
                 resultCallback(result, error);
             });
+        }
+
+        public Task<string[]> ListDatabasesAsync()
+        {
+            var tcs = new TaskCompletionSource<string[]>();
+            this.jsonRpcClient.InvokeDyanmicAsync("listDatabases", null)
+                .ContinueWith(tk =>
+                {
+                    var result = new string[tk.Result.Length];
+                    for (int i = 0; i < tk.Result.Length; i++)
+                    {
+                        result[i] = (string)tk.Result[i];
+                    }
+                    tcs.SetResult(result);
+                });
+
+            return tcs.Task;
         }
 
 

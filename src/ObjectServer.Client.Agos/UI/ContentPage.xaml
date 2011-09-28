@@ -21,7 +21,7 @@
 
         <Border Grid.Row="0" Style="{StaticResource HeaderStyle}" Margin="0,0,0,5">
             <Border.Effect>
-                <DropShadowEffect ShadowDepth="5" BlurRadius="5" Color="#666666" Direction="-90" />
+                <DropShadowEffect ShadowDepth="2" BlurRadius="3" Color="#666666" Direction="-90" />
             </Border.Effect>
             <Grid>
                 <Grid.ColumnDefinitions>

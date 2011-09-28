@@ -36,6 +36,42 @@ namespace ObjectServer.Client.Agos.UI
             this.LoadDatabaseList();
         }
 
+        private void LoadDatabaseListAsync()
+        {
+            var app = (App)Application.Current;
+            var loginModel = (LoginModel)this.DataContext;
+
+            if (app.ClientService == null)
+            {
+                app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
+            }
+
+            app.IsBusy = true;
+            var sc = SynchronizationContext.Current;
+            try
+            {
+                var task = app.ClientService.ListDatabasesAsync();
+
+                task.ContinueWith(t =>
+                {
+                    sc.Send(delegate
+                    {
+                        var dbs = t.Result;
+                        this.listDatabases.ItemsSource = dbs;
+                        if (dbs.Length >= 1)
+                        {
+                            this.listDatabases.SelectedIndex = 0;
+                        }
+                        app.IsBusy = false;
+                    }, null);
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         private void LoadDatabaseList()
         {
             var app = (App)Application.Current;

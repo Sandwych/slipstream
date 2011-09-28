@@ -15,8 +15,22 @@ namespace ObjectServer.Client.JsonRpc
                 throw new ArgumentNullException("request");
             }
 
-            return Task.Factory.FromAsync<WebResponse>(
-                request.BeginGetResponse, request.EndGetResponse, null);
+            var tcs = new TaskCompletionSource<WebResponse>();
+
+            request.BeginGetResponse(ar =>
+            {
+                try
+                {
+                    var rep = request.EndGetResponse(ar);
+                    tcs.SetResult(rep);
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            }, null);
+
+            return tcs.Task;
         }
 
         public static Task<Stream> GetRequestStreamAsync(this WebRequest request)
@@ -26,8 +40,23 @@ namespace ObjectServer.Client.JsonRpc
                 throw new ArgumentNullException("request");
             }
 
-            return Task.Factory.FromAsync<Stream>(
-                request.BeginGetRequestStream, request.EndGetRequestStream, null);
+            var tcs = new TaskCompletionSource<Stream>();
+
+            request.BeginGetRequestStream(ar =>
+            {
+                try
+                {
+                    var stream = request.EndGetRequestStream(ar);
+                    tcs.SetResult(stream);
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+            }, null);
+
+            return tcs.Task;
+
         }
     }
 }

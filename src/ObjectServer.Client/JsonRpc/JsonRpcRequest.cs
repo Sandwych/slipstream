@@ -34,7 +34,7 @@ namespace ObjectServer.Client
         [JsonProperty("id")]
         public object Id { get; private set; }
 
-        public void PostAsync(Uri uri, Action<JsonRpcResponse, Exception> resultCallback)
+        public void Post(Uri uri, Action<JsonRpcResponse, Exception> resultCallback)
         {
             if (uri == null)
             {
@@ -79,10 +79,17 @@ namespace ObjectServer.Client
 
                webReq.GetReponseAsync().ContinueWith(ca2 =>
                {
-                   using (var repStream = ca2.Result.GetResponseStream())
+                   try
                    {
-                       var jsonRep = JsonRpcResponse.Deserialize(repStream);
-                       tcs.SetResult(jsonRep);
+                       using (var repStream = ca2.Result.GetResponseStream())
+                       {
+                           var jsonRep = JsonRpcResponse.Deserialize(repStream);
+                           tcs.SetResult(jsonRep);
+                       }
+                   }
+                   catch (Exception ex) //TODO 特化异常
+                   {
+                       tcs.SetException(ex);
                    }
                });
            });

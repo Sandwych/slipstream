@@ -26,8 +26,8 @@
             <Setter.Value>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="#FF003366" Offset="0"/>
-                        <GradientStop Color="#FF336699" Offset="1"/>
+                        <GradientStop Color="#FFB8B3A9" Offset="1"/>
+                        <GradientStop Color="#FF6D6861" Offset="0"/>
                     </LinearGradientBrush.GradientStops>
                 </LinearGradientBrush>
             </Setter.Value>
