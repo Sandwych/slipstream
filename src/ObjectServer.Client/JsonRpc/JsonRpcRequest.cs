@@ -34,7 +34,7 @@ namespace ObjectServer.Client
         [JsonProperty("id")]
         public object Id { get; private set; }
 
-        public void Post(Uri uri, Action<JsonRpcResponse, Exception> resultCallback)
+        public void BeginPost(Uri uri, Action<JsonRpcResponse, Exception> resultCallback)
         {
             if (uri == null)
             {

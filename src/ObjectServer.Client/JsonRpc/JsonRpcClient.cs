@@ -37,7 +37,7 @@ namespace ObjectServer.Client
         {
             var jreq = new JsonRpcRequest(method, args);
             var syncCtx = SynchronizationContext.Current;
-            jreq.Post(this.Uri, (jrep, e) =>
+            jreq.BeginPost(this.Uri, (jrep, e) =>
             {
                 syncCtx.Post(state =>
                 {
@@ -56,7 +56,7 @@ namespace ObjectServer.Client
         public void InvokeAsync(string method, object[] args, Action<object, Exception> resultCallback)
         {
             var jreq = new JsonRpcRequest(method, args);
-            jreq.Post(this.Uri, (jrep, e) =>
+            jreq.BeginPost(this.Uri, (jrep, e) =>
             {
                 if (jrep != null)
                 {

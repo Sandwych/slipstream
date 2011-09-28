@@ -231,9 +231,14 @@ namespace ObjectServer.Server
                 error = JsonRpcError.LogginError;
                 LoggerProvider.EnvironmentLogger.Error("安全异常", sex);
             }
+            catch (ResourceNotFoundException ex)
+            {
+                error = JsonRpcError.ResourceNotFound;
+                LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", ex);
+            }
             catch (RecordNotFoundException rnfex)
             {
-                error = JsonRpcError.ResourceCannotFound;
+                error = JsonRpcError.ResourceNotFound;
                 LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", rnfex);
             }
             catch (System.Exception ex)

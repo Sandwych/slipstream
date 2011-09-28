@@ -63,7 +63,7 @@ namespace ObjectServer.Json
         public static readonly JsonRpcError ValidationError =
             new JsonRpcError("0006", "验证错误");
 
-        public static readonly JsonRpcError ResourceCannotFound =
+        public static readonly JsonRpcError ResourceNotFound =
             new JsonRpcError("0007", "无法找到指定的资源");
     }
 }
