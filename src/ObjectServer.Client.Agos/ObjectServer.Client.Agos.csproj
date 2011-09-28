@@ -164,6 +164,7 @@
     <Compile Include="UI\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\FormView\Fields\OneToManyFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\FieldLabel.cs" />
     <Compile Include="Windows\FormView\Fields\BooleanFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\DateFieldControl.cs" />
@@ -171,7 +172,6 @@
     <Compile Include="Windows\FormView\Fields\FloatFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\HLine.cs" />
     <Compile Include="Windows\FormView\Fields\ManyToManyFieldControl.cs" />
-    <Compile Include="Windows\FormView\Fields\OneToManyFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\DateTimeFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\ReferenceFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\ManyToOneFieldControl.cs" />
