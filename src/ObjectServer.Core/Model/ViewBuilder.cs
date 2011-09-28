@@ -35,6 +35,20 @@ namespace ObjectServer.Model
             sbView.AppendLine("</list>");
         }
 
+        public void WriteColumn(string field, string where = null)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(field));
+
+            if (string.IsNullOrEmpty(where))
+            {
+                sbView.AppendFormat("<field name=\"{0}\" />\n", field);
+            }
+            else
+            {
+                sbView.AppendFormat("<field name=\"{0}\" where=\"{1}\" />\n", field, where);
+            }
+        }
+
         public void WriteField(string field, int colspan = 1)
         {
             Debug.Assert(!string.IsNullOrEmpty(field));

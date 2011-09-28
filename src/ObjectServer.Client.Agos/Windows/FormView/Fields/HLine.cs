@@ -10,13 +10,11 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-using Malt.Layout.Widgets;
-
 using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class HLine : UserControl, IHorizontalLineWidget
+    public class HLine : UserControl
     {
         Rectangle border;
         Label label;

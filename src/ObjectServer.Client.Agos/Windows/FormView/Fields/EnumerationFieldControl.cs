@@ -11,8 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-using Malt.Layout.Widgets;
-
 using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView

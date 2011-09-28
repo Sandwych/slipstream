@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
 using System.Diagnostics;
+using System.Threading;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;
@@ -43,6 +44,8 @@ namespace ObjectServer.Client.Agos.Windows.ListView
         private IDictionary<string, object> actionRecord;
         private readonly IList<string> fields = new List<string>();
         private string modelName;
+        private IDictionary<string, IQueryField> createdQueryFields =
+            new Dictionary<string, IQueryField>();
 
         public ListView(long actionID)
             : this()
@@ -67,16 +70,23 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             var app = (App)Application.Current;
             var actionIds = new long[] { this.ActionID };
             var fields = new string[] { "_id", "name", "view", "model", "views" };
+            var sc = SynchronizationContext.Current;
             app.ClientService.ReadModel("core.action_window", actionIds, fields, actionRecords =>
             {
-                this.actionRecord = actionRecords[0];
-                var view = (object[])actionRecords[0]["view"];
-                var viewIds = new long[] { (long)view[0] };
-                app.ClientService.ReadModel("core.view", viewIds, null, viewRecords =>
+                sc.Send(delegate
                 {
-                    this.viewRecord = viewRecords[0];
-                    this.LoadInternal();
-                });
+                    this.actionRecord = actionRecords[0];
+                    var view = (object[])actionRecords[0]["view"];
+                    var viewIds = new long[] { (long)view[0] };
+                    app.ClientService.ReadModel("core.view", viewIds, null, viewRecords =>
+                    {
+                        sc.Send(delegate
+                        {
+                            this.viewRecord = viewRecords[0];
+                            this.LoadInternal();
+                        }, null);
+                    });
+                }, null);
             });
         }
 
@@ -88,17 +98,36 @@ namespace ObjectServer.Client.Agos.Windows.ListView
 
         private void LoadData()
         {
+            Debug.Assert(this.createdQueryFields != null);
+
             var app = (App)Application.Current;
             //加载数据
             var offset = 0;// long.Parse(this.textOffset.Text);
             var limit = 2000;// long.Parse(this.textLimit.Text);
 
-            app.ClientService.SearchModel(this.modelName, null, null, offset, limit, ids =>
+            //生成条件
+            var constraints = new List<object[]>();
+            foreach (var p in this.createdQueryFields)
+            {
+                if (!p.Value.IsEmpty)
+                {
+                    foreach (var c in p.Value.GetConstraints())
+                    {
+                        constraints.Add(c.ToConstraint());
+                    }
+                }
+            }
+
+            var sc = SynchronizationContext.Current;
+            app.ClientService.SearchModel(this.modelName, constraints.ToArray(), null, offset, limit, ids =>
             {
                 app.ClientService.ReadModel(this.modelName, ids, this.fields, records =>
                 {
-                    //我们需要一个唯一的字符串型 ID
-                    this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records, this.modelName, fields.ToArray());
+                    sc.Send(delegate
+                    {
+                        //我们需要一个唯一的字符串型 ID
+                        this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records, this.modelName, fields.ToArray());
+                    }, null);
                 });
             });
         }
@@ -108,22 +137,22 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             var app = (App)Application.Current;
 
             var layout = (string)this.viewRecord["layout"];
-            var layoutDoc = XDocument.Parse(layout);
+            var layoutDocument = XDocument.Parse(layout);
             this.modelName = (string)this.actionRecord["model"];
 
-            this.InitializeColumns(layoutDoc);
+            this.InitializeColumns(layoutDocument);
 
             this.LoadData();
         }
 
-        private void InitializeColumns(XDocument layoutDoc)
+        private void InitializeColumns(XDocument layoutDocument)
         {
             var app = (App)Application.Current;
             var args = new object[] { this.modelName };
             app.ClientService.Execute("core.model", "GetFields", args, result =>
             {
-                var fields = ((object[])result).Select(r => (Dictionary<string, object>)r);
-                var viewFields = layoutDoc.Elements("tree").Elements();
+                var fields = ((object[])result).Select(r => (Dictionary<string, object>)r).ToArray();
+                var viewFields = layoutDocument.Elements("tree").Elements();
 
                 IList<DataGridBoundColumn> cols = new List<DataGridBoundColumn>();
                 cols.Add(this.MakeColumn("_id", "ID", "ID", System.Windows.Visibility.Collapsed));
@@ -140,7 +169,49 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                 {
                     this.gridList.Columns.Add(col);
                 }
+
+                this.CreateQueryForm(fields, viewFields);
             });
+        }
+
+        private void CreateQueryForm(Dictionary<string, object>[] fields, IEnumerable<XElement> viewFields)
+        {
+            //生成基本查询条件表单
+            var columns = (int)Math.Round(this.BasicConditions.ActualWidth / 150.00) * 2;
+            if (columns % 2 != 0) columns--;
+            var basicQueryForm = new Malt.Layout.Models.Form()
+            {
+                ColumnCount = columns,
+            };
+
+            var basicFields = viewFields.Where(ele => ele.Attribute("where").Value == "basic");
+            var basicQueryFormChildren = new List<Malt.Layout.Models.Placable>();
+            var factory = new QueryFieldControlFactory(fields);
+            var createdFieldControls = new Dictionary<string, IQueryField>();
+            foreach (var fieldLayout in basicFields)
+            {
+                var fieldName = fieldLayout.Attribute("name").Value;
+                var metaField = fields.Single(i => (string)i["name"] == fieldName);
+                var label = new Malt.Layout.Models.Label()
+                {
+                    Text = (string)metaField["label"],
+                };
+                basicQueryFormChildren.Add(label);
+
+                var field = new Malt.Layout.Models.Field()
+                {
+                    Name = (string)metaField["name"],
+                };
+                basicQueryFormChildren.Add(field);
+            }
+            basicQueryForm.ChildElements = basicQueryFormChildren.ToArray();
+
+            var layoutEngine = new Malt.Layout.LayoutEngine(factory);
+            var basicQueryGrid = layoutEngine.CreateLayoutTable(basicQueryForm);
+            this.BasicConditions.Child = (Grid)basicQueryGrid;
+            this.createdQueryFields = factory.CreatedQueryField;
+
+            this.ClearAllConstraints();
         }
 
 
@@ -179,6 +250,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             var msg = String.Format("您确定要永久删除 {0} 条记录吗？", ids.Count);
             var dlgResult = MessageBox.Show(msg, "删除确认", MessageBoxButton.OKCancel);
 
+            var sc = SynchronizationContext.Current;
             if (dlgResult == MessageBoxResult.OK)
             {
                 //执行删除
@@ -188,8 +260,11 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                 var args = new object[] { ids };
                 app.ClientService.Execute(this.modelName, "Delete", args, result =>
                 {
-                    this.LoadData();
-                    app.IsBusy = false;
+                    sc.Send(delegate
+                    {
+                        this.LoadData();
+                        app.IsBusy = false;
+                    }, null);
                 });
             }
         }
@@ -199,7 +274,6 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             var dlg = new FormView.FormDialog(this.modelName, -1, this.actionRecord);
             dlg.ShowDialog();
             //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
-
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -214,6 +288,22 @@ namespace ObjectServer.Client.Agos.Windows.ListView
 
             var dlg = new FormView.FormDialog(this.modelName, recordID, this.actionRecord);
             dlg.ShowDialog();
+        }
+
+        private void ClearConstraintsButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.ClearAllConstraints();
+            this.LoadData();
+        }
+
+        private void ClearAllConstraints()
+        {
+            System.Diagnostics.Debug.Assert(this.createdQueryFields != null);
+
+            foreach (var p in this.createdQueryFields)
+            {
+                p.Value.Empty();
+            }
         }
 
     }

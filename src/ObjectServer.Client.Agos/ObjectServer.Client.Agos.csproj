@@ -100,7 +100,7 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action.cs" />
+    <Compile Include="Windows\Action.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -121,6 +121,7 @@
     <Compile Include="DataSourceCreator.cs" />
     <Compile Include="Models\DBCreationModel.cs" />
     <Compile Include="Models\ListViewModel.cs" />
+    <Compile Include="Models\QueryConstraint.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
     <Compile Include="Controls\VisualStates.cs" />
     <Compile Include="Helpers\DataBindingExtensions.cs" />
@@ -187,16 +188,23 @@
     </Compile>
     <Compile Include="Windows\FormView\GridLayoutPanelWidget.cs" />
     <Compile Include="Windows\FormView\Fields\CharsFieldControl.cs" />
+    <Compile Include="Windows\FormView\IFieldWidget.cs" />
+    <Compile Include="Windows\ListView\IQueryField.cs" />
     <Compile Include="Windows\ListView\ListView.xaml.cs">
       <DependentUpon>ListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ListView\ListWindow.xaml.cs">
       <DependentUpon>ListWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ListView\ValueConverters\TimeFieldConverter.cs" />
-    <Compile Include="Windows\ListView\ValueConverters\DateFieldConverter.cs" />
-    <Compile Include="Windows\ListView\ValueConverters\EnumFieldConverter.cs" />
-    <Compile Include="Windows\ListView\ValueConverters\ManyToOneFieldConverter.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControlFactory.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\BooleanQueryFieldControl.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\IntegerQueryFieldControl.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\EnumerationQueryFieldControl.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\StringQueryFieldControl.cs" />
+    <Compile Include="ValueConverters\TimeFieldConverter.cs" />
+    <Compile Include="ValueConverters\DateFieldConverter.cs" />
+    <Compile Include="ValueConverters\EnumFieldConverter.cs" />
+    <Compile Include="ValueConverters\ManyToOneFieldConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

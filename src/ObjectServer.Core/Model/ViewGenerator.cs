@@ -67,7 +67,7 @@ namespace ObjectServer.Model
             vb.WriteListStart();
             foreach (var f in viewFields)
             {
-                vb.WriteField(f.Value.Name);
+                vb.WriteColumn(f.Value.Name);
             }
             vb.WriteListEnd();
 

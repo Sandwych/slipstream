@@ -40,7 +40,7 @@
                 <Button  MinWidth="75" Height="25" Name="buttonDelete" Click="buttonDelete_Click" >
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
+                            <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/user-trash.png" />
                             <Rectangle Width="5" />
                             <TextBlock>删除</TextBlock>
                         </StackPanel>
@@ -50,9 +50,19 @@
                 <Button MinWidth="75" Height="25" Name="buttonQuery" Click="buttonQuery_Click" >
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <Image Name="image1" Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/system-search.png" />
+                            <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/system-search.png" />
                             <Rectangle Width="5" />
                             <TextBlock>查询</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Rectangle Width="3"/>
+                <Button MinWidth="75" Height="25" Name="ClearConstraintsButton" Click="ClearConstraintsButton_Click">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
+                            <Rectangle Width="5" />
+                            <TextBlock>清除</TextBlock>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -64,6 +74,8 @@
 
             <StackPanel Orientation="Vertical" >
                 <TextBlock Grid.Column="0" Text="查询条件" FontWeight="Bold" VerticalAlignment="Center" />
+                <Border x:Name="BasicConditions" Margin="0,5,0,5">
+                </Border>
 
                 <toolkit:Expander Name="expanderAdvancedConditions" Margin="5">
                     <toolkit:Expander.HeaderTemplate>
