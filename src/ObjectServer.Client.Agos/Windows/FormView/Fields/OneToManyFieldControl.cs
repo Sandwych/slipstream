@@ -65,11 +65,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 var relatedModel = (string)this.metaField["relation"];
                 var getFieldsArgs = new object[] { (string)this.metaField["relation"] };
                 var sc = SynchronizationContext.Current;
-                app.ClientService.Execute("core.model", "GetFields", getFieldsArgs, o =>
+                app.ClientService.BeginExecute("core.model", "GetFields", getFieldsArgs, o =>
                     {
                         var fields = (object[])o;
                         var args = new object[] { refIDs, null };
-                        app.ClientService.Execute(relatedModel, "Read", args, o2 =>
+                        app.ClientService.BeginExecute(relatedModel, "Read", args, o2 =>
                             {
                                 var objs = (object[])o2;
                                 var records = objs.Select(r => (Dictionary<string, object>)r).ToArray();

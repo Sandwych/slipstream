@@ -11,56 +11,12 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 
 using ObjectServer.Client.Agos.Models;
+using ObjectServer.Client.Agos.Controls;
 
 namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
 {
     public class IntegerQueryFieldControl : UserControl, IQueryField
     {
-        class IntegerUpDown : UpDownBase<int?>
-        {
-            protected override string FormatValue()
-            {
-                return this.Value == null ? string.Empty : this.Value.Value.ToString();
-            }
-
-            protected override void OnDecrement()
-            {
-                if (this.Value != null)
-                {
-                    this.Value = this.Value.Value - 1;
-                }
-                else
-                {
-                    this.Value = 0;
-                }
-            }
-
-            protected override void OnIncrement()
-            {
-                if (this.Value != null)
-                {
-                    this.Value = this.Value.Value + 1;
-                }
-                else
-                {
-                    this.Value = 0;
-                }
-            }
-
-            protected override int? ParseValue(string text)
-            {
-                int val;
-                if (int.TryParse(text, out val))
-                {
-                    return val;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
         private readonly IDictionary<string, object> metaField;
         private readonly ColumnDefinition col0 =
             new ColumnDefinition() { Width = new GridLength(50, GridUnitType.Star) };
@@ -69,8 +25,8 @@ namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
         private readonly ColumnDefinition col2 =
             new ColumnDefinition() { Width = new GridLength(50, GridUnitType.Star) };
 
-        private readonly IntegerUpDown lowUpdown = new IntegerUpDown();
-        private readonly IntegerUpDown highUpdown = new IntegerUpDown();
+        private readonly NullableInt32UpDown lowUpdown = new NullableInt32UpDown();
+        private readonly NullableInt32UpDown highUpdown = new NullableInt32UpDown();
 
         public IntegerQueryFieldControl(object metaField)
             : base()
