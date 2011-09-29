@@ -182,7 +182,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
         private void CreateQueryForm(Dictionary<string, object>[] fields, IEnumerable<XElement> viewFields)
         {
             //生成基本查询条件表单
-            var columnsPerRow = 8;// (int)Math.Round(this.Width / 150.00) * 2;
+            var columnsPerRow = 6;// (int)Math.Round(this.Width / 150.00) * 2;
             if (columnsPerRow % 2 != 0) columnsPerRow--;
             var basicQueryForm = new Malt.Layout.Models.Form()
             {

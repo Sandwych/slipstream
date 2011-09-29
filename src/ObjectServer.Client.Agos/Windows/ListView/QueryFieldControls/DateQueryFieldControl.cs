@@ -15,7 +15,7 @@ using ObjectServer.Client.Agos.Controls;
 
 namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
 {
-    public class IntegerQueryFieldControl : UserControl, IQueryField
+    public class DateQueryFieldControl : UserControl, IQueryField
     {
         private readonly IDictionary<string, object> metaField;
         private readonly ColumnDefinition col0 =
@@ -25,10 +25,10 @@ namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
         private readonly ColumnDefinition col2 =
             new ColumnDefinition() { Width = new GridLength(50, GridUnitType.Star) };
 
-        private readonly NullableInt32UpDown lowUpdown = new NullableInt32UpDown();
-        private readonly NullableInt32UpDown highUpdown = new NullableInt32UpDown();
+        private readonly DatePicker lowDatePicker = new DatePicker();
+        private readonly DatePicker highDatePicker = new DatePicker();
 
-        public IntegerQueryFieldControl(object metaField)
+        public DateQueryFieldControl(object metaField)
             : base()
         {
             this.metaField = (IDictionary<string, object>)metaField;
@@ -40,11 +40,11 @@ namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
             grid.ColumnDefinitions.Add(col1);
             grid.ColumnDefinitions.Add(col2);
 
-            grid.Children.Add(this.lowUpdown);
-            this.lowUpdown.SetValue(Grid.ColumnProperty, 0);
+            grid.Children.Add(this.lowDatePicker);
+            this.lowDatePicker.SetValue(Grid.ColumnProperty, 0);
 
-            grid.Children.Add(this.highUpdown);
-            this.highUpdown.SetValue(Grid.ColumnProperty, 2);
+            grid.Children.Add(this.highDatePicker);
+            this.highDatePicker.SetValue(Grid.ColumnProperty, 2);
 
             var label = new Label();
             grid.Children.Add(label);
@@ -58,14 +58,16 @@ namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
             System.Diagnostics.Debug.Assert(!this.IsEmpty);
 
             var constraints = new List<QueryConstraint>(2);
-            if (this.highUpdown.Value != null)
+            if (this.highDatePicker.SelectedDate != null)
             {
-                constraints.Add(new QueryConstraint(this.FieldName, "<=", this.highUpdown.Value.Value));
+                constraints.Add(
+                    new QueryConstraint(this.FieldName, "<=", this.highDatePicker.SelectedDate.Value));
             }
 
-            if (this.lowUpdown.Value != null)
+            if (this.lowDatePicker.SelectedDate != null)
             {
-                constraints.Add(new QueryConstraint(this.FieldName, ">=", this.lowUpdown.Value.Value));
+                constraints.Add(
+                    new QueryConstraint(this.FieldName, ">=", this.lowDatePicker.SelectedDate.Value));
             }
 
             return constraints.ToArray();
@@ -73,15 +75,15 @@ namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
 
         public void Empty()
         {
-            this.lowUpdown.Value = null;
-            this.highUpdown.Value = null;
+            this.lowDatePicker.SelectedDate = null;
+            this.highDatePicker.SelectedDate = null;
         }
 
         public bool IsEmpty
         {
             get
             {
-                return this.lowUpdown.Value == null && this.highUpdown.Value == null;
+                return this.lowDatePicker.SelectedDate == null && this.highDatePicker.SelectedDate == null;
             }
         }
 

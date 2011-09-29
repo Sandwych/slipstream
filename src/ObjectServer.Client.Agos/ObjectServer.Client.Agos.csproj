@@ -200,13 +200,14 @@
     </Compile>
     <Compile Include="Windows\ListView\QueryFieldControlFactory.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\BooleanQueryFieldControl.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\DateQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\IntegerQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\EnumerationQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\StringQueryFieldControl.cs" />
-    <Compile Include="ValueConverters\TimeFieldConverter.cs" />
-    <Compile Include="ValueConverters\DateFieldConverter.cs" />
-    <Compile Include="ValueConverters\EnumFieldConverter.cs" />
-    <Compile Include="ValueConverters\ManyToOneFieldConverter.cs" />
+    <Compile Include="Windows\ListView\ValueConverters\TimeFieldConverter.cs" />
+    <Compile Include="Windows\ListView\ValueConverters\DateFieldConverter.cs" />
+    <Compile Include="Windows\ListView\ValueConverters\EnumFieldConverter.cs" />
+    <Compile Include="Windows\ListView\ValueConverters\ManyToOneFieldConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

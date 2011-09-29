@@ -23,6 +23,8 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                 { "Text", typeof(QueryFieldControls.StringQueryFieldControl) },
                 { "Enumeration", typeof(QueryFieldControls.EnumerationQueryFieldControl) },
                 { "Integer", typeof(QueryFieldControls.IntegerQueryFieldControl) },
+                { "Date", typeof(QueryFieldControls.DateQueryFieldControl) },
+                { "DateTime", typeof(QueryFieldControls.DateQueryFieldControl) },
             };
 
         private readonly IDictionary<string, object>[] metaFields;

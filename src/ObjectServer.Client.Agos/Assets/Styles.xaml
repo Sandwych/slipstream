@@ -898,4 +898,8 @@
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
+   <Style TargetType="queryFields:DateQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
 </ResourceDictionary>
