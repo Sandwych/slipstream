@@ -120,7 +120,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
         {
             var app = (App)Application.Current;
             var args = new object[] { this.modelName };
-            app.ClientService.Execute("core.model", "GetFields", args, result =>
+            app.ClientService.BeginExecute("core.model", "GetFields", args, result =>
             {
                 var fields = ((object[])result).Select(r => (Dictionary<string, object>)r);
                 var viewFields = layoutDoc.Elements("tree").Elements();
@@ -186,7 +186,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                 app.IsBusy = true;
 
                 var args = new object[] { ids };
-                app.ClientService.Execute(this.modelName, "Delete", args, result =>
+                app.ClientService.BeginExecute(this.modelName, "Delete", args, result =>
                 {
                     this.LoadData();
                     app.IsBusy = false;

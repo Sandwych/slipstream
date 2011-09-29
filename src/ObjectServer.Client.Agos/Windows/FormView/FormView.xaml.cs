@@ -50,11 +50,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 new object[] { "model", "=", this.modelName },
             };
 
-            app.ClientService.Execute("core.view", "GetView", new object[] { this.modelName, "form", null }, o =>
+            app.ClientService.BeginExecute("core.view", "GetView", new object[] { this.modelName, "form", null }, o =>
                 {
                     this.viewRecord = (IDictionary<string, object>)o;
                     var args = new object[] { this.modelName };
-                    app.ClientService.Execute("core.model", "GetFields", args, result =>
+                    app.ClientService.BeginExecute("core.model", "GetFields", args, result =>
                     {
                         var metaFields = ((object[])result).Select(r => (IDictionary<string, object>)r).ToArray();
 

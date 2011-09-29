@@ -37,7 +37,7 @@ namespace ObjectServer.Client.Agos.UI
             var app = (App)Application.Current;
 
             app.IsBusy = true;
-            app.ClientService.CreateDatabase(model.ServerPassword, model.DBName, model.AdminPassword, () =>
+            app.ClientService.BeginCreateDatabase(model.ServerPassword, model.DBName, model.AdminPassword, () =>
             {
                 app.IsBusy = false;
                 app.MainPage.NavigateToByRelative("/Databases");

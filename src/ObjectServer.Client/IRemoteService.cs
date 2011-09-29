@@ -10,17 +10,21 @@ namespace ObjectServer.Client
     public interface IRemoteService
     {
 
-        void GetVersion(Action<Version> resultCallback);
-        void ListDatabases(Action<string[], Exception> resultCallback);
+        void BeginGetVersion(Action<Version> resultCallback);
+        void BeginListDatabases(Action<string[], Exception> resultCallback);
         Task<string[]> ListDatabasesAsync();
-        void CreateDatabase(string serverPasswordHash, string dbName, string adminPassword, Action resultCallback);
-        void DeleteDatabase(string serverPasswordHash, string dbName, Action resultCallback);
+        void BeginCreateDatabase(string serverPasswordHash, string dbName, string adminPassword, Action resultCallback);
+        void BeginDeleteDatabase(string serverPasswordHash, string dbName, Action resultCallback);
 
-        void LogOn(
-           string dbName, string userName, string password, Action<string> resultCallback);
-        void LogOff(Action resultCallback);
-        void Execute(
+        void BeginLogOn(
+           string dbName, string userName, string password, Action<string, Exception> resultCallback);
+
+        void BeginLogOff(Action resultCallback);
+
+        void BeginExecute(
             string objectName, string method, object[] parameters, Action<object> resultCallback);
+        Task<object> ExecuteAsync(
+            string objectName, string method, object[] parameters);
 
         //辅助方法
         void CountModel(

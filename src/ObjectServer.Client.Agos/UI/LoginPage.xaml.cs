@@ -82,7 +82,7 @@ namespace ObjectServer.Client.Agos.UI
                 app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
             }
 
-            app.ClientService.ListDatabases((dbs, error) =>
+            app.ClientService.BeginListDatabases((dbs, error) =>
             {
 
                 if (error != null)
@@ -130,18 +130,22 @@ namespace ObjectServer.Client.Agos.UI
 
             var client = new ObjectServerClient(new Uri(this.textServer.Text));
 
-            client.LogOn(loginModel.Database, loginModel.Login, loginModel.Password,
-                sid =>
+            var sc = SynchronizationContext.Current;
+            client.BeginLogOn(loginModel.Database, loginModel.Login, loginModel.Password,
+                (sid, error) =>
                 {
-                    if (string.IsNullOrEmpty(sid))
+                    sc.Send(delegate
                     {
-                        this.textMessage.Text = "登录失败，请检查用户名与密码是否正确";
-                    }
-                    else
-                    {
-                        app.ClientService = client;
-                        app.MainPage.NavigateToContentPage();
-                    }
+                        if (error != null || string.IsNullOrEmpty(sid))
+                        {
+                            this.textMessage.Text = "登录失败，请检查用户名与密码是否正确";
+                        }
+                        else
+                        {
+                            app.ClientService = client;
+                            app.MainPage.NavigateToContentPage();
+                        }
+                    }, null);
                 });
 
         }

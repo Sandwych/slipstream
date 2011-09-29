@@ -166,7 +166,7 @@
 
     <!-- **************************** -->
     <!-- Primary Color Brushes -->
-    <SolidColorBrush x:Key="SolidControlColor" Color="#FFD9D4CC"/>
+    <SolidColorBrush x:Key="SolidControlColor" Color="#FFF0F0F0"/>
     <SolidColorBrush x:Key="SolidBackgroundColor" Color="#FF302E2C"/>
     <SolidColorBrush x:Key="NavigationBackgroundColorBrush" Color="#FF484848"/>
     <SolidColorBrush x:Key="NavigationForegroundColorBrush" Color="#FFFFFFFF"/>

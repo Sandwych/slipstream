@@ -40,7 +40,7 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
 
-            app.ClientService.ListDatabases((dbs, error) =>
+            app.ClientService.BeginListDatabases((dbs, error) =>
             {
 
                 if (error != null)
@@ -98,7 +98,7 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
             app.IsBusy = true;
-            app.ClientService.DeleteDatabase(password, dbName, () =>
+            app.ClientService.BeginDeleteDatabase(password, dbName, () =>
             {
                 this.LoadDatabaseList();
                 app.IsBusy = false;
