@@ -10,7 +10,7 @@ namespace ObjectServer.Client
     public interface IRemoteService
     {
 
-        void BeginGetVersion(Action<Version> resultCallback);
+        void BeginGetVersion(Action<Version, Exception> resultCallback);
         void BeginListDatabases(Action<string[], Exception> resultCallback);
         Task<string[]> ListDatabasesAsync();
         void BeginCreateDatabase(string serverPasswordHash, string dbName, string adminPassword, Action resultCallback);

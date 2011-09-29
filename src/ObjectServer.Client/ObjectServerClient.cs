@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 using ObjectServer.Client.Model;
 using ObjectServer.Utility;
@@ -30,15 +31,27 @@ namespace ObjectServer.Client
         public Uri Uri { get; private set; }
         public Uri ServerAddress { get; private set; }
 
-        bool Logged { get { return !string.IsNullOrEmpty(this.SessionId); } }
+        public bool Logged { get { return !string.IsNullOrEmpty(this.SessionId); } }
 
-        public void BeginGetVersion(Action<Version> resultCallback)
+        public void BeginGetVersion(Action<Version, Exception> resultCallback)
         {
-            this.jsonRpcClient.BeginInvoke("getVersion", null, o =>
+            this.jsonRpcClient.BeginInvoke("getVersion", null, (result, error) =>
             {
-                var version = Version.Parse((string)o);
-                resultCallback(version);
+                var version = Version.Parse((string)result);
+                resultCallback(version, error);
             });
+        }
+
+        public Task<Version> GetVersionAsync()
+        {
+            var tcs = new TaskCompletionSource<Version>();
+            this.jsonRpcClient.InvokeAsync("getVersion", null)
+                .ContinueWith(tk =>
+                {
+                    var VerStr = (string)tk.Result;
+                    tcs.SetResult(Version.Parse(VerStr));
+                });
+            return tcs.Task;
         }
 
         public void BeginListDatabases(Action<string[], Exception> resultCallback)
@@ -78,7 +91,6 @@ namespace ObjectServer.Client
 
             return tcs.Task;
         }
-
 
         public void BeginCreateDatabase(string serverPassword, string dbName, string adminPassword, Action resultCallback)
         {

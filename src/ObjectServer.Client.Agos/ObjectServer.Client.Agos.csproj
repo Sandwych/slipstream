@@ -102,6 +102,8 @@
   <ItemGroup>
     <Compile Include="Controls\NullableInt64UpDown.cs" />
     <Compile Include="Controls\NullableInt32UpDown.cs" />
+    <Compile Include="Models\FormModel.cs" />
+    <Compile Include="Models\ServerConnection.cs" />
     <Compile Include="Windows\Action.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
