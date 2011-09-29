@@ -20,19 +20,19 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private readonly static IDictionary<String, Type> fieldTypeMapping =
             new Dictionary<String, Type>()
             {
-                { "Chars", typeof(CharsFieldControl) },
-                { "Boolean", typeof(BooleanFieldControl) },
-                { "Enumeration", typeof(EnumerationFieldControl) },
-                { "Text", typeof(TextFieldControl) },
-                { "Integer", typeof(IntegerFieldControl) },
-                { "ManyToOne", typeof(ManyToOneFieldControl) },
-                { "OneToMany", typeof(OneToManyFieldControl) },
-                { "ManyToMany", typeof(ManyToManyFieldControl) },
-                { "Reference", typeof(ReferenceFieldControl) },
-                { "DateTime", typeof(DateTimeFieldControl) },
-                { "Date", typeof(DateFieldControl) },
-                { "Float", typeof(FloatFieldControl) },
-                { "Decimal", typeof(DecimalFieldControl) },
+                { "chars", typeof(CharsFieldControl) },
+                { "boolean", typeof(BooleanFieldControl) },
+                { "enum", typeof(EnumerationFieldControl) },
+                { "text", typeof(TextFieldControl) },
+                { "int32", typeof(IntegerFieldControl) },
+                { "many-to-one", typeof(ManyToOneFieldControl) },
+                { "one-to-many", typeof(OneToManyFieldControl) },
+                { "many-to-many", typeof(ManyToManyFieldControl) },
+                { "reference", typeof(ReferenceFieldControl) },
+                { "datetime", typeof(DateTimeFieldControl) },
+                { "date", typeof(DateFieldControl) },
+                { "float8", typeof(FloatFieldControl) },
+                { "decimal", typeof(DecimalFieldControl) },
             };
 
         private IDictionary<string, object>[] metaFields;

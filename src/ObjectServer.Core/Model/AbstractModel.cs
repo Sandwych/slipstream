@@ -201,7 +201,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 var field = this.Fields[fieldName];
                 db.Execute(sqlInsert,
                     this.Module, modelId, fieldName, field.IsRequired, field.IsReadonly,
-                    field.Relation, field.Label, field.Type.ToString(), "");
+                    field.Relation, field.Label, field.Type.ToKeyString(), "");
             }
 
             //删除数据库存在，但代码未定义的
@@ -247,7 +247,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             var fieldId = (long)dbField[IDFieldName];
 
             var metaField = this.Fields[fieldName];
-            var metaFieldType = metaField.Type.ToString();
+            var metaFieldType = metaField.Type.ToKeyString();
             if (fieldLabel != metaField.Label ||
                 fieldRelation != metaField.Relation ||
                 fieldType != metaFieldType ||

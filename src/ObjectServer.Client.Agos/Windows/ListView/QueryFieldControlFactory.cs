@@ -18,13 +18,13 @@ namespace ObjectServer.Client.Agos.Windows.ListView
         private static readonly Dictionary<String, Type> fieldTypeControlMapping =
             new Dictionary<string, Type>()
             {
-                { "Boolean", typeof(QueryFieldControls.BooleanQueryFieldControl) },
-                { "Chars", typeof(QueryFieldControls.StringQueryFieldControl) },
-                { "Text", typeof(QueryFieldControls.StringQueryFieldControl) },
-                { "Enumeration", typeof(QueryFieldControls.EnumerationQueryFieldControl) },
-                { "Integer", typeof(QueryFieldControls.IntegerQueryFieldControl) },
-                { "Date", typeof(QueryFieldControls.DateQueryFieldControl) },
-                { "DateTime", typeof(QueryFieldControls.DateQueryFieldControl) },
+                { "boolean", typeof(QueryFieldControls.BooleanQueryFieldControl) },
+                { "chars", typeof(QueryFieldControls.StringQueryFieldControl) },
+                { "text", typeof(QueryFieldControls.StringQueryFieldControl) },
+                { "enum", typeof(QueryFieldControls.EnumerationQueryFieldControl) },
+                { "int32", typeof(QueryFieldControls.IntegerQueryFieldControl) },
+                { "date", typeof(QueryFieldControls.DateQueryFieldControl) },
+                { "datetime", typeof(QueryFieldControls.DateQueryFieldControl) },
             };
 
         private readonly IDictionary<string, object>[] metaFields;

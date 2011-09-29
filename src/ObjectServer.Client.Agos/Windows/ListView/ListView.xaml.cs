@@ -26,18 +26,18 @@ namespace ObjectServer.Client.Agos.Windows.ListView
         private static Dictionary<string, Tuple<Type, IValueConverter>> COLUMN_TYPE_MAPPING
             = new Dictionary<string, Tuple<Type, IValueConverter>>()
         {
-            {"ID", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"Integer", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"Float", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"Decimal", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"Chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"Text", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"Boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
-            {"DateTime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"Date", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new DateFieldConverter()) },
-            {"Time", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new TimeFieldConverter()) },
-            {"ManyToOne", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
-            {"Enumeration", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
+            {"id", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"int32", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"float8", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"decimal", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"text", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
+            {"datetime", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
+            {"date", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new DateFieldConverter()) },
+            {"time", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new TimeFieldConverter()) },
+            {"many-to-one", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
+            {"enum", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
         };
 
         private IDictionary<string, object> viewRecord;
@@ -159,7 +159,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                     var viewFields = layoutDocument.Elements("tree").Elements();
 
                     IList<DataGridBoundColumn> cols = new List<DataGridBoundColumn>();
-                    cols.Add(this.MakeColumn("_id", "ID", "ID", System.Windows.Visibility.Collapsed));
+                    cols.Add(this.MakeColumn("_id", "id", "ID", System.Windows.Visibility.Collapsed));
 
                     foreach (var f in viewFields)
                     {
