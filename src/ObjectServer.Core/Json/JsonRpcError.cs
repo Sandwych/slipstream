@@ -65,5 +65,8 @@ namespace ObjectServer.Json
 
         public static readonly JsonRpcError ResourceNotFound =
             new JsonRpcError("0007", "无法找到指定的资源");
+
+        public static readonly JsonRpcError BadData =
+            new JsonRpcError("0008", "系统数据异常，原因可能是数据库中包含无效数据");
     }
 }

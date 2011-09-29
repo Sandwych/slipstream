@@ -22,7 +22,6 @@ namespace ObjectServer.Core
             Fields.Enumeration("kind",
                 new Dictionary<string, string>() { 
                     { "form", "Form View" }, 
-                    { "list", "List View" },
                     { "tree", "Tree View" },
                 })
                 .SetLabel("View Kind").Required();
@@ -107,7 +106,7 @@ namespace ObjectServer.Core
                     layout = ViewGenerator.GenerateFormView(destModel.Fields);
                     break;
 
-                case "list":
+                case "tree":
                     layout = ViewGenerator.GenerateListView(destModel.Fields);
                     break;
 

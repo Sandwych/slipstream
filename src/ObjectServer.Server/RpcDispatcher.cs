@@ -241,6 +241,11 @@ namespace ObjectServer.Server
                 error = JsonRpcError.ResourceNotFound;
                 LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", rnfex);
             }
+            catch (DataException ex)
+            {
+                error = JsonRpcError.BadData;
+                LoggerProvider.EnvironmentLogger.Error("BadData", ex);
+            }
             catch (System.Exception ex)
             {
                 error = JsonRpcError.ServerInternalError;

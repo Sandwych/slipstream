@@ -75,21 +75,21 @@ namespace ObjectServer.Client
             webReq.GetRequestStreamAsync().ContinueWith(t =>
            {
                var reqStream = t.Result;
-               this.SerializeTo(reqStream);
+               try
+               {
+                   this.SerializeTo(reqStream);
+               }
+               catch (Exception ex)
+               {
+                   tcs.SetException(ex);
+               }
 
                webReq.GetReponseAsync().ContinueWith(ca2 =>
                {
-                   try
+                   using (var repStream = ca2.Result.GetResponseStream())
                    {
-                       using (var repStream = ca2.Result.GetResponseStream())
-                       {
-                           var jsonRep = JsonRpcResponse.Deserialize(repStream);
-                           tcs.SetResult(jsonRep);
-                       }
-                   }
-                   catch (Exception ex) //TODO 特化异常
-                   {
-                       tcs.SetException(ex);
+                       var jsonRep = JsonRpcResponse.Deserialize(repStream);
+                       tcs.SetResult(jsonRep);
                    }
                });
            });

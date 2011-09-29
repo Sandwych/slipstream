@@ -73,15 +73,22 @@ namespace ObjectServer.Client
         {
             var jreq = new JsonRpcRequest(method, args);
             var tcs = new TaskCompletionSource<object>();
-            jreq.PostAsync(this.Uri).ContinueWith(jrep =>
+            jreq.PostAsync(this.Uri).ContinueWith(task =>
             {
-                var error = jrep.Result.Error;
+                if (task.IsFaulted)
+                {
+                    tcs.SetException(task.Exception);
+                    return;
+                }
+
+                var error = task.Result.Error;
                 if (error != null)
                 {
                     var ex = new JsonRpcException("调用JSON-RPC 失败", error);
                     tcs.SetException(ex);
+                    return;
                 }
-                tcs.SetResult(jrep.Result.Result);
+                tcs.SetResult(task.Result.Result);
             });
             return tcs.Task;
         }

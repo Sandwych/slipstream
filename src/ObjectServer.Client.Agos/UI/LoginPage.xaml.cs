@@ -48,28 +48,33 @@ namespace ObjectServer.Client.Agos.UI
             }
 
             var sc = SynchronizationContext.Current;
-            try
-            {
-                var task = app.ClientService.ListDatabasesAsync();
-
-                task.ContinueWith(t =>
+            app.ClientService.ListDatabasesAsync()
+                .ContinueWith(t =>
                 {
-                    sc.Send(delegate
+                    try
                     {
                         var dbs = t.Result;
-                        this.listDatabases.ItemsSource = dbs;
-                        if (dbs.Length >= 1)
+                        sc.Send(delegate
                         {
-                            this.buttonSignIn.IsEnabled = true;
-                            this.listDatabases.SelectedIndex = 0;
-                        }
-                    }, null);
+                            this.listDatabases.ItemsSource = dbs;
+                            if (dbs.Length >= 1)
+                            {
+                                this.buttonSignIn.IsEnabled = true;
+                                this.listDatabases.SelectedIndex = 0;
+                            }
+                        }, null);
+                    }
+                    catch (AggregateException)
+                    {
+                        sc.Send(delegate
+                        {
+                            ErrorWindow.CreateNew(
+                                "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
+                                StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+                        }, null);
+                    }
                 });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+
         }
 
         private void LoadDatabaseList()

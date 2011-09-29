@@ -62,8 +62,16 @@ namespace ObjectServer.Model
                 if (!colValue.IsNull())
                 {
                     var enumKey = (string)colValue;
-                    var fieldValue = new string[] { enumKey, this.Options[enumKey] };
-                    result.Add(id, fieldValue);
+                    string value;
+                    if (this.Options.TryGetValue(enumKey, out value))
+                    {
+                        var fieldValue = new string[] { enumKey, value };
+                        result.Add(id, fieldValue);
+                    }
+                    else
+                    {
+                        throw new ObjectServer.Exceptions.DataException("Invalid enumeration item: " + enumKey);
+                    }
                 }
                 else
                 {

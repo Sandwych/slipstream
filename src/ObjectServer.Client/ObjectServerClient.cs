@@ -81,6 +81,12 @@ namespace ObjectServer.Client
             this.jsonRpcClient.InvokeDyanmicAsync("listDatabases", null)
                 .ContinueWith(tk =>
                 {
+                    if (tk.IsFaulted)
+                    {
+                        tcs.SetException(tk.Exception);
+                        return;
+                    }
+
                     var result = new string[tk.Result.Length];
                     for (int i = 0; i < tk.Result.Length; i++)
                     {
