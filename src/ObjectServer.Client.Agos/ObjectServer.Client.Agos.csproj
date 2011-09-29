@@ -104,6 +104,10 @@
     <Compile Include="Controls\NullableInt32UpDown.cs" />
     <Compile Include="Models\FormModel.cs" />
     <Compile Include="Models\ServerConnection.cs" />
+    <Compile Include="Utility\SilverlightTable\PropertyValueChange.cs" />
+    <Compile Include="Utility\SilverlightTable\Row.cs" />
+    <Compile Include="Utility\SilverlightTable\RowIndexConverter.cs" />
+    <Compile Include="Utility\SilverlightTable\SortableCollectionView.cs" />
     <Compile Include="Windows\Action.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -122,7 +126,7 @@
       <DependentUpon>MenuTree.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TransitionFrame.cs" />
-    <Compile Include="DataSourceCreator.cs" />
+    <Compile Include="Utility\DataSourceCreator.cs" />
     <Compile Include="Models\DBCreationModel.cs" />
     <Compile Include="Models\ListViewModel.cs" />
     <Compile Include="Models\QueryConstraint.cs" />

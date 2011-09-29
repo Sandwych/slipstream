@@ -128,7 +128,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                     this.syncContext.Send(delegate
                     {
                         //我们需要一个唯一的字符串型 ID
-                        this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records, this.modelName, fields.ToArray());
+                        this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records);
                     }, null);
                 });
             });

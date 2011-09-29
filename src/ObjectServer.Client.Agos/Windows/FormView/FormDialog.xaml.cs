@@ -22,7 +22,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             InitializeComponent();
 
             var formWindow = new FormView(model, recordID, action);
-            this.ScrollContent.Content = formWindow;
+            this.ScrollContent.Child = formWindow;
             /*
             this.LayoutRoot.Children.Add(formWindow);
             formWindow.SetValue(Grid.ColumnProperty, 0);

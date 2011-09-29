@@ -27,4 +27,13 @@ namespace ObjectServer.Model
         ManyToMany,
 
     }
+
+    public static class FieldTypeExtensions
+    {
+        public static string ToKeyString(this FieldType ft)
+        {
+            return ft.ToString();
+        }
+    }
 }
+

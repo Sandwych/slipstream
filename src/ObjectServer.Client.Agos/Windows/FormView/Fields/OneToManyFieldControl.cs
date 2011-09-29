@@ -76,8 +76,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
                                 sc.Send(delegate
                                 {
-                                    this.grid.ItemsSource = DataSourceCreator.ToDataSource(
-                                        records, relatedModel, new string[] { "name" });
+                                    this.grid.ItemsSource = DataSourceCreator.ToDataSource(records);
                                 }, null);
                             });
                     });
