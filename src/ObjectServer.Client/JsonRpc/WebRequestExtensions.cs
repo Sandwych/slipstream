@@ -19,14 +19,22 @@ namespace ObjectServer.Client.JsonRpc
 
             request.BeginGetResponse(ar =>
             {
+                WebResponse rep = null;
                 try
                 {
-                    var rep = request.EndGetResponse(ar);
+                    rep = request.EndGetResponse(ar);
                     tcs.SetResult(rep);
                 }
                 catch (Exception ex)
                 {
                     tcs.SetException(ex);
+                }
+                finally
+                {
+                    if (rep != null)
+                    {
+                        rep.Close();
+                    }
                 }
             }, null);
 
@@ -44,14 +52,22 @@ namespace ObjectServer.Client.JsonRpc
 
             request.BeginGetRequestStream(ar =>
             {
+                Stream stream = null;
                 try
                 {
-                    var stream = request.EndGetRequestStream(ar);
+                    stream = request.EndGetRequestStream(ar);
                     tcs.SetResult(stream);
                 }
                 catch (Exception ex)
                 {
                     tcs.SetException(ex);
+                }
+                finally
+                {
+                    if (stream != null)
+                    {
+                        stream.Close();
+                    }
                 }
             }, null);
 

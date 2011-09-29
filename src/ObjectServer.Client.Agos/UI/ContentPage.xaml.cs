@@ -134,11 +134,12 @@
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             var app = (App)Application.Current;
-            app.ClientService.BeginLogOff(
-                () =>
-                {
-                    app.PrepareToLogin();
-                });
+            app.ClientService.LogOff(delegate
+            {
+                this.TabContainer.Items.Clear();
+                app.PrepareToLogin();
+                GC.Collect();
+            });
         }
 
     }

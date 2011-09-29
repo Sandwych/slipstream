@@ -28,12 +28,12 @@ namespace ObjectServer.Client
         /// <param name="args"></param>
         /// <param name="resultCallback"></param>
         /// <returns></returns>
-        public void Invoke(string method, object[] args, Action<object> resultCallback)
+        public void BeginInvoke(string method, object[] args, Action<object> resultCallback)
         {
-            this.Invoke(method, args, (o, e) => resultCallback(o));
+            this.BeginInvoke(method, args, (o, e) => resultCallback(o));
         }
 
-        public void Invoke(string method, object[] args, Action<object, Exception> resultCallback)
+        public void BeginInvoke(string method, object[] args, Action<object, Exception> resultCallback)
         {
             var jreq = new JsonRpcRequest(method, args);
             var syncCtx = SynchronizationContext.Current;

@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public sealed class FieldLabel : Label, Malt.Layout.Widgets.ILabelWidget
+    public sealed class FieldLabel : Label
     {
         public FieldLabel(string field = null, string text = null)
             : base()

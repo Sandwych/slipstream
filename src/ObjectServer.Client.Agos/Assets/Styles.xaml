@@ -6,6 +6,7 @@
   xmlns:appControls="clr-namespace:ObjectServer.Client.Agos.Controls"
   xmlns:fw="clr-namespace:System.Windows.Controls;assembly=FloatableWindow"
   xmlns:fields="clr-namespace:ObjectServer.Client.Agos.Windows.FormView"
+  xmlns:queryFields="clr-namespace:ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls"
   xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input">
 
     <ResourceDictionary.MergedDictionaries>
@@ -137,16 +138,7 @@
     </Style>
 
     <Style x:Key="HeaderStyle" TargetType="Border">
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="#FF302E2C" Offset="1"/>
-                        <GradientStop Color="#FFB8B3A9" Offset="0"/>
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Background" Value="#FF302E2c" />
     </Style>
 
     <Style x:Key="ToolbarStyle" TargetType="Border">
@@ -887,6 +879,23 @@
 
     <Style TargetType="fields:HLine">
         <Setter Property="Margin" Value="5,10,5,10" />
+    </Style>
+
+    <!-- 查询条件表单 -->
+   <Style TargetType="queryFields:BooleanQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+   <Style TargetType="queryFields:StringQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+   <Style TargetType="queryFields:EnumerationQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+   <Style TargetType="queryFields:IntegerQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
 </ResourceDictionary>

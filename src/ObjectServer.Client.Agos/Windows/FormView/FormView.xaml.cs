@@ -23,7 +23,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private IDictionary<string, object> viewRecord;
         private IDictionary<string, object> actionRecord;
 
-        private IDictionary<string, Malt.Layout.Widgets.IFieldWidget> fieldWidgets;
+        private IDictionary<string, IFieldWidget> fieldWidgets;
 
         private readonly IList<string> fields = new List<string>();
         private long recordID;
@@ -92,7 +92,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var le = new Malt.Layout.LayoutEngine(factory);
             var layoutGrid = (UIElement)le.CreateLayoutTable(form);
             this.fieldWidgets = factory.CreatedFieldWidgets;
-            factory.BindLabels();
             this.Content = layoutGrid;
 
         }

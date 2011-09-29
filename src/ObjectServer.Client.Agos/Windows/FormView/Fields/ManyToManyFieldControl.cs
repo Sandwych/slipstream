@@ -9,8 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-
-using Malt.Layout.Widgets;
+using System.Threading;
 
 using ObjectServer.Client.Agos.Models;
 
@@ -65,7 +64,12 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
                 var relatedFieldName = (string)this.metaField["related_field"];
                 var getFieldsArgs = new object[] { (string)this.metaField["relation"] };
+<<<<<<< HEAD
                 app.ClientService.BeginExecute("core.model", "GetFields", getFieldsArgs, o =>
+=======
+                var sc = SynchronizationContext.Current;
+                app.ClientService.Execute("core.model", "GetFields", getFieldsArgs, o =>
+>>>>>>> 56272ee557a21c36a6e2cefd33abc297982b6d14
                     {
                         var fields = (object[])o;
                         var relatedField =
@@ -80,8 +84,12 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                             {
                                 var objs = (object[])o2;
                                 var records = objs.Select(r => (Dictionary<string, object>)r).ToArray();
-                                this.grid.ItemsSource = DataSourceCreator.ToDataSource(
-                                    records, relatedModel, new string[] { "name" });
+
+                                sc.Send(delegate
+                                {
+                                    this.grid.ItemsSource = DataSourceCreator.ToDataSource(
+                                        records, relatedModel, new string[] { "name" });
+                                }, null);
                             });
                     });
 

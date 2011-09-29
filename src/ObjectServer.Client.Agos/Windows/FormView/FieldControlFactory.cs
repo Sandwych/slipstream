@@ -11,8 +11,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Linq;
 
-using Malt.Layout.Widgets;
-
 using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
@@ -40,22 +38,14 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private IDictionary<string, object>[] metaFields;
         private IDictionary<string, IFieldWidget> createdFieldWidgets =
             new Dictionary<string, IFieldWidget>();
-        private List<ILabelWidget> createdLabels = new List<ILabelWidget>();
+        private List<Label> createdLabels = new List<Label>();
 
         public FieldControlFactory(IDictionary<string, object>[] fields)
         {
             this.metaFields = fields;
         }
 
-        /*
-
-        IFieldWidget CreateFieldControl(string fieldType)
-        {
-        }
-        */
-
-
-        public IFieldWidget CreateFieldWidget(Malt.Layout.Models.Field field)
+        public object CreateFieldWidget(Malt.Layout.Models.Field field)
         {
             var metaField = this.metaFields.Where(i => (string)i["name"] == field.Name).Single();
             var fieldType = (string)metaField["type"];
@@ -71,7 +61,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             return new GridLayoutPanelWidget();
         }
 
-        public ILabelWidget CreateLabelWidget(Malt.Layout.Models.Label label)
+        public Object CreateLabelWidget(Malt.Layout.Models.Label label)
         {
             var labelWidget = new FieldLabel(label.Field, label.Text);
             if (!String.IsNullOrEmpty(label.Field))
@@ -84,7 +74,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             return labelWidget;
         }
 
-        public IHorizontalLineWidget CreateHorizontalLineWidget(Malt.Layout.Models.HorizontalLine hl)
+        public object CreateHorizontalLineWidget(Malt.Layout.Models.HorizontalLine hl)
         {
             var hlWidget = new HLine();
             hlWidget.Text = hl.Text;
@@ -97,19 +87,5 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         }
 
 
-        public void BindLabels()
-        {
-            foreach (var label in this.createdLabels)
-            {
-                IFieldWidget field;
-                if (this.CreatedFieldWidgets.TryGetValue(label.Text, out field))
-                {
-                    var labelControl = (Label)label;
-                    var fieldControl = (FrameworkElement)field;
-
-                    labelControl.Target = fieldControl;
-                }
-            }
-        }
     }
 }

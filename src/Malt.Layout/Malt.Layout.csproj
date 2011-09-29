@@ -70,9 +70,6 @@
     <Compile Include="Models\PlaceHolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SizeType.cs" />
-    <Compile Include="Widgets\IFieldWidget.cs" />
-    <Compile Include="Widgets\IHorizontalLineWidget.cs" />
-    <Compile Include="Widgets\ILabelWidget.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
