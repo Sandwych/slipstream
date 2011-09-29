@@ -26,9 +26,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.FieldName = (string)this.metaField["name"];
 
             this.AcceptsReturn = true;
-            this.VerticalContentAlignment = System.Windows.VerticalAlignment.Top;
-            this.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            this.MinHeight = 120;
+            this.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
         }
 
         public string FieldName { get; private set; }

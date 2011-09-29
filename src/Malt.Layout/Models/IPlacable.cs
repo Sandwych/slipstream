@@ -9,5 +9,7 @@ namespace Malt.Layout
         int RowSpan { get; }
 
         int ColumnSpan { get; }
+
+        bool Fill { get; }
     }
 }

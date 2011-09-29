@@ -65,13 +65,25 @@ namespace ObjectServer.Client.Agos.Models
                     lock (syncRoot)
                     {
                         if (s_instance == null)
+                        {
                             s_instance = new ServerConnection();
+                        }
                     }
                 }
 
                 return s_instance;
             }
         }
+
+        public ObjectServer.Client.ObjectServerClient Client
+        {
+            get
+            {
+                Debug.Assert(this.client != null);
+                return this.Client;
+            }
+        }
+
 
         #region IDisposable Members
 

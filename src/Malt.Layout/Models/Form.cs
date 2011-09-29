@@ -15,6 +15,7 @@ namespace Malt.Layout.Models
             this.RowSpan = 1;
             this.Height = -1.0F;
             this.Width = -1.0F;
+            this.Fill = false;
         }
 
         #region IContainer 成员
@@ -48,6 +49,9 @@ namespace Malt.Layout.Models
 
         [XmlAttribute("width")]
         public double Width { get; set; }
+
+        [XmlAttribute("fill")]
+        public bool Fill { get; set; }
 
         [XmlIgnore]
         public IEnumerable<IPlacable> Children

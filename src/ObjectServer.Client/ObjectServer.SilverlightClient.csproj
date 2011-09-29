@@ -63,9 +63,7 @@
   <ItemGroup>
     <Compile Include="JsonRpc\JsonRpcException.cs" />
     <Compile Include="JsonRpc\WebRequestExtensions.cs" />
-    <Compile Include="Model\AbstractModel.cs" />
     <Compile Include="Model\FieldAttribute.cs" />
-    <Compile Include="Model\ViewModel.cs" />
     <Compile Include="Threading\AsyncEnumerator.cs" />
     <Compile Include="Threading\InterlockedEx.cs" />
     <Compile Include="IRemoteService.cs" />

@@ -45,7 +45,7 @@ namespace ObjectServer.Model
                 vb.WriteNewLine();
                 vb.WriteHLine(f.Value.Label);
                 vb.WriteNewLine();
-                vb.WriteField(f.Value.Name, 4);
+                vb.WriteField(f.Value.Name, 4, true);
             }
 
             vb.WriteFormEnd();

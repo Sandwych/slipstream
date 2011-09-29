@@ -10,9 +10,10 @@ namespace Malt.Layout
 
         int ColumnCount { get; set; }
 
-        void AddRow();
+        void AddStarHeightRow(double weight);
+        void AddAutoHeightRow();
 
-        int RowCount { get; set;  }
+        int RowCount { get; set; }
 
         void SetColumnSpan(int row, int col, int colspan);
 

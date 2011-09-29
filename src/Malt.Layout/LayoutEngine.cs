@@ -38,12 +38,19 @@ namespace Malt.Layout
             {
                 if (pos.Column == 0)
                 {
-                    tablePanel.AddRow();
+                    if (placable.Fill)
+                    {
+                        tablePanel.AddStarHeightRow(1);
+                    }
+                    else
+                    {
+                        tablePanel.AddAutoHeightRow();
+                    }
                 }
 
                 var colSpan = ComputeColumnSpan(tablePanel.ColumnCount, placable, pos);
-
                 object widget = this.CreateWidget(placable);
+
                 if (widget != null)
                 {
                     tablePanel.SetCellWidget(widget, pos.Row, pos.Column);

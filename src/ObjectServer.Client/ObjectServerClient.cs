@@ -132,15 +132,15 @@ namespace ObjectServer.Client
 
         }
 
-        public void BeginLogOff(Action resultCallback)
+        public void BeginLogOff(Action<Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.SessionId };
-            this.jsonRpcClient.BeginInvoke("logOff", args, o =>
+            this.jsonRpcClient.BeginInvoke("logOff", args, (result, error) =>
             {
                 this.SessionId = null;
-                resultCallback();
+                resultCallback(error);
             });
         }
 
@@ -153,6 +153,18 @@ namespace ObjectServer.Client
             this.jsonRpcClient.BeginInvoke("execute", args, o =>
             {
                 resultCallback(o);
+            });
+        }
+
+        public void BeginExecute(
+            string objectName, string method, object[] parameters, Action<object, Exception> resultCallback)
+        {
+            Debug.Assert(this.Logged);
+
+            var args = new object[] { this.SessionId, objectName, method, parameters };
+            this.jsonRpcClient.BeginInvoke("execute", args, (result, error) =>
+            {
+                resultCallback(result, error);
             });
         }
 
@@ -173,26 +185,28 @@ namespace ObjectServer.Client
         }
 
         public void CountModel(
-            string objectName, object[][] constraints, Action<long> resultCallback)
+            string objectName, object[][] constraints, Action<long, Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { constraints };
-            this.BeginExecute(objectName, "Count", args, n =>
+            this.BeginExecute(objectName, "Count", args, (result, error) =>
             {
-                resultCallback((long)n);
+                resultCallback((long)result, error);
             });
         }
 
         public void SearchModel(
-            string objectName, object[][] constraints, object[][] order, long offset, long limit, Action<long[]> resultCallback)
+            string objectName, object[][] constraints, object[][] order, long offset, long limit,
+            Action<long[], Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { constraints, order, offset, limit };
-            this.BeginExecute(objectName, "Search", args, o =>
+            this.BeginExecute(objectName, "Search", args, (result, error) =>
             {
-                resultCallback(((object[])o).Select(id => (long)id).ToArray());
+                var ids = ((object[])result).Select(id => (long)id).ToArray();
+                resultCallback(ids, error);
             });
         }
 
@@ -252,7 +266,7 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             this.SearchModel("core.menu", null, null, 0, 0,
-                ids =>
+                (ids, error) =>
                 {
                     this.ReadModel("core.menu", ids, null, records =>
                         {

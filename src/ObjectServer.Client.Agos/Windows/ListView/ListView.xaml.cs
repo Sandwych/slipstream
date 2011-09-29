@@ -79,13 +79,17 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                 this.syncContext.Send(delegate
                 {
                     this.actionRecord = actionRecords[0];
-                    var view = (object[])actionRecords[0]["view"];
-                    var viewIds = new long[] { (long)view[0] };
-                    app.ClientService.ReadModel("core.view", viewIds, null, viewRecords =>
+                    this.modelName = (string)this.actionRecord["model"];
+
+                    var viewField = actionRecords[0]["view"] as object[];
+                    var view = viewField == null ? null : viewField[0];
+
+                    var getViewArgs = new object[] { this.modelName, "form", view };
+                    app.ClientService.BeginExecute("core.view", "GetView", getViewArgs, o =>
                     {
                         this.syncContext.Send(delegate
                         {
-                            this.viewRecord = viewRecords[0];
+                            this.viewRecord = (IDictionary<string, object>)o;
                             this.LoadInternal();
                         }, null);
                     });
@@ -121,7 +125,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                 }
             }
 
-            app.ClientService.SearchModel(this.modelName, constraints.ToArray(), null, offset, limit, ids =>
+            app.ClientService.SearchModel(this.modelName, constraints.ToArray(), null, offset, limit, (ids, error) =>
             {
                 app.ClientService.ReadModel(this.modelName, ids, this.fields, records =>
                 {
@@ -140,7 +144,6 @@ namespace ObjectServer.Client.Agos.Windows.ListView
 
             var layout = (string)this.viewRecord["layout"];
             var layoutDocument = XDocument.Parse(layout);
-            this.modelName = (string)this.actionRecord["model"];
 
             this.InitializeColumns(layoutDocument);
 

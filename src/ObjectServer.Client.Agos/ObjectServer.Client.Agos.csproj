@@ -330,6 +330,7 @@
     <None Include="Properties\OutOfBrowserSettings.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Models\FormFieldValidators\" />
     <Folder Include="Web\Resources\" />
   </ItemGroup>
   <ItemGroup>
@@ -359,6 +360,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Icons\16x16\document-new.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\16x16\document-save.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

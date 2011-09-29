@@ -63,18 +63,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                     this.ColumnDefinitions.Add(colDef);
                 }
             }
-
-            //初始化行样式
-            //默认策略是：最后一行设为 100% 占满剩余空间，其他的行固定高度 27
-            for (int i = 0; i < this.RowCount; i++)
-            {
-                var rowDef = new RowDefinition()
-                {
-                    Height = GridLength.Auto // new GridLength(27, GridUnitType.Pixel)
-                };
-
-                this.RowDefinitions.Add(rowDef);
-            }
         }
 
         public int ColumnCount
@@ -83,10 +71,23 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             set;
         }
 
-        public void AddRow()
+        public void AddStarHeightRow(double weight)
         {
-            base.RowDefinitions.Add(
-                new RowDefinition() { Height = GridLength.Auto });
+            RowDefinition rowdef = new RowDefinition()
+            {
+                Height = new GridLength(weight, GridUnitType.Star)
+            };
+
+            base.RowDefinitions.Add(rowdef);
+        }
+
+        public void AddAutoHeightRow()
+        {
+            var rowdef = new RowDefinition()
+            {
+                Height = GridLength.Auto
+            };
+            base.RowDefinitions.Add(rowdef);
         }
 
         public int RowCount

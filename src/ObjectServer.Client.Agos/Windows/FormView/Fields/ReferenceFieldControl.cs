@@ -31,9 +31,9 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             var layoutRoot = new Grid();
             this.Content = layoutRoot;
-            var col1 = new ColumnDefinition() { Width = new GridLength(40, GridUnitType.Star) };
-            var col2 = new ColumnDefinition() { Width = new GridLength(60, GridUnitType.Star) };
-            var col3 = new ColumnDefinition() { Width = GridLength.Auto, };
+            var col1 = new ColumnDefinition() { Width = new GridLength(2, GridUnitType.Star) };
+            var col2 = new ColumnDefinition() { Width = new GridLength(3, GridUnitType.Star) };
+            var col3 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) };
             layoutRoot.ColumnDefinitions.Add(col1);
             layoutRoot.ColumnDefinitions.Add(col2);
             layoutRoot.ColumnDefinitions.Add(col3);

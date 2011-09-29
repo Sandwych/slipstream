@@ -12,6 +12,7 @@ namespace Malt.Layout.Models
         {
             this.ColumnSpan = 1;
             this.RowSpan = 1;
+            this.Fill = false;
         }
 
         #region IPlacable 成员
@@ -21,6 +22,10 @@ namespace Malt.Layout.Models
 
         [XmlAttribute("colspan")]
         public int ColumnSpan { get; set; }
+
+        [XmlAttribute("fill")]
+        public bool Fill { get; set; }
+
 
         #endregion
     }

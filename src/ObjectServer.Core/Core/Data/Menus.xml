@@ -32,6 +32,13 @@
     <field name="action" ref-model="core.action_window" ref-key="model_menu_action" />
   </record>
 
+  <record model="core.menu" key="menu_base_view">
+    <field name="parent" ref-key="menu_admin_base" />
+    <field name="name">Views</field>
+    <field name="ordinal">1</field>
+    <field name="action" ref-model="core.action_window" ref-key="view_menu_action" />
+  </record>
+
   <record model="core.menu" key="menu_admin_role">
     <field name="parent" ref-key="menu_admin_security" />
     <field name="name">Role Management</field>

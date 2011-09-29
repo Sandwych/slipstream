@@ -19,20 +19,22 @@ namespace ObjectServer.Client
         void BeginLogOn(
            string dbName, string userName, string password, Action<string, Exception> resultCallback);
 
-        void BeginLogOff(Action resultCallback);
+        void BeginLogOff(Action<Exception> resultCallback);
 
         void BeginExecute(
             string objectName, string method, object[] parameters, Action<object> resultCallback);
+        void BeginExecute(
+            string objectName, string method, object[] parameters, Action<object, Exception> resultCallback);
         Task<object> ExecuteAsync(
             string objectName, string method, object[] parameters);
 
         //辅助方法
         void CountModel(
-            string objectName, object[][] constraints, Action<long> resultCallback);
+            string objectName, object[][] constraints, Action<long, Exception> resultCallback);
 
         void SearchModel(
             string objectName, object[][] constraints,
-            object[][] order, long offset, long limit, Action<long[]> resultCallback);
+            object[][] order, long offset, long limit, Action<long[], Exception> resultCallback);
 
         void ReadModel(
             string objectName, IEnumerable<long> ids, IEnumerable<string> fields,

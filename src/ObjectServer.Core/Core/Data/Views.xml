@@ -148,5 +148,11 @@
     <field name="model">core.menu</field>
   </record>
 
+  <record  model="core.action_window" key="view_menu_action">
+    <field name="name">Views</field>
+    <field name="type">core.action_window</field>
+    <field name="model">core.view</field>
+  </record>
+
 </data>
 

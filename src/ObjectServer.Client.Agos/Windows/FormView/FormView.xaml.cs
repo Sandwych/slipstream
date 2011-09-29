@@ -12,6 +12,8 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Diagnostics;
+using System.Threading;
+using System.Windows.Data;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;
@@ -28,6 +30,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private readonly IList<string> fields = new List<string>();
         private long recordID;
         private string modelName;
+        private FormModel formModel;
+        private SynchronizationContext syncCtx = SynchronizationContext.Current;
 
         public FormView(string model, long recordID, IDictionary<string, object> action)
         {
@@ -62,7 +66,10 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
                         if (this.recordID > 0)
                         {
-                            this.LoadData();
+                            syncCtx.Send(delegate
+                            {
+                                this.LoadData();
+                            }, null);
                         }
                     });
                 });
@@ -108,14 +115,23 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var app = (App)Application.Current;
             var ids = new long[] { this.recordID };
 
-            app.ClientService.ReadModel(this.modelName, ids, this.fieldWidgets.Keys, records =>
+            var readArgs = new object[] { ids, this.fieldWidgets.Keys };
+            app.ClientService.BeginExecute(this.modelName, "Read", readArgs, (result) =>
+            {
+                var objs = (object[])result;
+                var records = objs.Select(r => (Dictionary<string, object>)r).ToArray();
+                var record = records[0];
+                this.formModel = new FormModel(record);
+                this.syncCtx.Send(delegate
                 {
-                    var record = records[0];
                     foreach (var p in this.fieldWidgets)
                     {
                         p.Value.Value = record[p.Key];
                     }
-                });
+
+                }, null);
+            });
+
         }
     }
 }

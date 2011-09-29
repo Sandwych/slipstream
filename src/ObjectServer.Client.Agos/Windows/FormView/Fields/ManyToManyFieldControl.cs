@@ -30,8 +30,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             //载入数据
 
-            this.MinHeight = 120;
-
             this.RowDefinitions.Add(
                 new RowDefinition()
                 {

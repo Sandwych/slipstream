@@ -49,11 +49,12 @@ namespace ObjectServer.Model
             }
         }
 
-        public void WriteField(string field, int colspan = 1)
+        public void WriteField(string field, int colspan = 1, bool fill = false)
         {
             Debug.Assert(!string.IsNullOrEmpty(field));
 
-            sbView.AppendFormat("<field name=\"{0}\" colspan=\"{1}\" />\n", field, colspan);
+            sbView.AppendFormat("<field name=\"{0}\" colspan=\"{1}\" fill=\"{2}\" />\n", 
+                field, colspan, fill.ToString().ToLowerInvariant());
         }
 
         public void WriteFieldLabel(string field)
