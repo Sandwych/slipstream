@@ -60,17 +60,17 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                     var args = new object[] { this.modelName };
                     app.ClientService.BeginExecute("core.model", "GetFields", args, result =>
                     {
-                        var metaFields = ((object[])result).Select(r => (IDictionary<string, object>)r).ToArray();
-
-                        this.LoadForm(metaFields);
-
-                        if (this.recordID > 0)
+                        syncCtx.Send(delegate
                         {
-                            syncCtx.Send(delegate
+                            var metaFields = ((object[])result).Select(r => (IDictionary<string, object>)r).ToArray();
+
+                            this.LoadForm(metaFields);
+
+                            if (this.recordID > 0)
                             {
                                 this.LoadData();
-                            }, null);
-                        }
+                            }
+                        }, null);
                     });
                 });
         }

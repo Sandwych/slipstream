@@ -76,24 +76,21 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             var fields = new string[] { "_id", "name", "view", "model", "views" };
             app.ClientService.ReadModel("core.action_window", actionIds, fields, actionRecords =>
             {
-                this.syncContext.Send(delegate
+                this.actionRecord = actionRecords[0];
+                this.modelName = (string)this.actionRecord["model"];
+
+                var viewField = actionRecords[0]["view"] as object[];
+                var view = viewField == null ? null : viewField[0];
+
+                var getViewArgs = new object[] { this.modelName, "tree", view };
+                app.ClientService.BeginExecute("core.view", "GetView", getViewArgs, (result, error) =>
                 {
-                    this.actionRecord = actionRecords[0];
-                    this.modelName = (string)this.actionRecord["model"];
-
-                    var viewField = actionRecords[0]["view"] as object[];
-                    var view = viewField == null ? null : viewField[0];
-
-                    var getViewArgs = new object[] { this.modelName, "form", view };
-                    app.ClientService.BeginExecute("core.view", "GetView", getViewArgs, o =>
+                    this.viewRecord = (IDictionary<string, object>)result;
+                    this.syncContext.Post(delegate
                     {
-                        this.syncContext.Send(delegate
-                        {
-                            this.viewRecord = (IDictionary<string, object>)o;
-                            this.LoadInternal();
-                        }, null);
-                    });
-                }, null);
+                        this.LoadInternal();
+                    }, null);
+                });
             });
         }
 
@@ -140,8 +137,6 @@ namespace ObjectServer.Client.Agos.Windows.ListView
 
         private void LoadInternal()
         {
-            var app = (App)Application.Current;
-
             var layout = (string)this.viewRecord["layout"];
             var layoutDocument = XDocument.Parse(layout);
 
@@ -154,7 +149,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
         {
             var app = (App)Application.Current;
             var args = new object[] { this.modelName };
-            app.ClientService.BeginExecute("core.model", "GetFields", args, result =>
+            app.ClientService.BeginExecute("core.model", "GetFields", args, (result, error) =>
             {
                 this.syncContext.Send(delegate
                 {

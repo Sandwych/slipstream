@@ -33,13 +33,14 @@ namespace ObjectServer.Client
             this.BeginInvoke(method, args, (o, e) => resultCallback(o));
         }
 
+        /*
         public void BeginInvoke(string method, object[] args, Action<object, Exception> resultCallback)
         {
             var jreq = new JsonRpcRequest(method, args);
             var syncCtx = SynchronizationContext.Current;
             jreq.BeginPost(this.Uri, (jrep, e) =>
             {
-                syncCtx.Post(state =>
+                syncCtx.Post(delegate
                 {
                     if (jrep != null)
                     {
@@ -52,8 +53,9 @@ namespace ObjectServer.Client
                 }, null);
             });
         }
+        */
 
-        public void InvokeAsync(string method, object[] args, Action<object, Exception> resultCallback)
+        public void BeginInvoke(string method, object[] args, Action<object, Exception> resultCallback)
         {
             var jreq = new JsonRpcRequest(method, args);
             jreq.BeginPost(this.Uri, (jrep, e) =>

@@ -5,7 +5,7 @@
   <record model="core.view" key="module_tree_view">
     <field name="name">Modules</field>
     <field name="model">core.module</field>
-    <field name="kind">list</field>
+    <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <tree label="Modules">
@@ -34,7 +34,7 @@
   <record model="core.view" key="user_tree_view">
     <field name="name">Users</field>
     <field name="model">core.user</field>
-    <field name="kind">list</field>
+    <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <tree label="Users">
@@ -61,7 +61,7 @@
         <field name="admin" />
         <br/>
         <hr text="Roles" />
-        <field name="roles" colspan="4" />
+        <field name="roles" colspan="4" fill="true" />
       </form>
       ]]>
     </field>
@@ -84,7 +84,7 @@
   <record model="core.view" key="model_tree_view">
     <field name="name">Models</field>
     <field name="model">core.model</field>
-    <field name="kind">list</field>
+    <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <tree label="Models">
@@ -107,7 +107,7 @@
   <record model="core.view" key="role_tree_view">
     <field name="name">User Roles</field>
     <field name="model">core.role</field>
-    <field name="kind">list</field>
+    <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <tree label="User Roles">
@@ -128,7 +128,7 @@
   <record model="core.view" key="menu_tree_view">
     <field name="name">Menus</field>
     <field name="model">core.model</field>
-    <field name="kind">list</field>
+    <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <tree label="Menus">

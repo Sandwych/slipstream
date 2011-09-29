@@ -102,6 +102,7 @@
   <ItemGroup>
     <Compile Include="Controls\NullableInt64UpDown.cs" />
     <Compile Include="Controls\NullableInt32UpDown.cs" />
+    <Compile Include="Controls\Tree\TreeDataGrid.cs" />
     <Compile Include="Models\FormModel.cs" />
     <Compile Include="Models\ServerConnection.cs" />
     <Compile Include="Utility\SilverlightTable\PropertyValueChange.cs" />
@@ -210,10 +211,10 @@
     <Compile Include="Windows\ListView\QueryFieldControls\IntegerQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\EnumerationQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\StringQueryFieldControl.cs" />
-    <Compile Include="Windows\ListView\ValueConverters\TimeFieldConverter.cs" />
-    <Compile Include="Windows\ListView\ValueConverters\DateFieldConverter.cs" />
-    <Compile Include="Windows\ListView\ValueConverters\EnumFieldConverter.cs" />
-    <Compile Include="Windows\ListView\ValueConverters\ManyToOneFieldConverter.cs" />
+    <Compile Include="Controls\Tree\TimeFieldConverter.cs" />
+    <Compile Include="Controls\Tree\DateFieldConverter.cs" />
+    <Compile Include="Controls\Tree\EnumFieldConverter.cs" />
+    <Compile Include="Controls\Tree\ManyToOneFieldConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

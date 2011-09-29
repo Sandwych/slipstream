@@ -5,7 +5,7 @@
   <record model="core.view" key="employee_tree_view">
     <field name="name">员工管理</field>
     <field name="model">demo.employee</field>
-    <field name="kind">list</field>
+    <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <tree label="员工管理">

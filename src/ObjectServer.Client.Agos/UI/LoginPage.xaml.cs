@@ -87,6 +87,7 @@ namespace ObjectServer.Client.Agos.UI
                 app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
             }
 
+            var sc = SynchronizationContext.Current;
             app.ClientService.BeginListDatabases((dbs, error) =>
             {
 
@@ -94,19 +95,26 @@ namespace ObjectServer.Client.Agos.UI
                 {
                     if (error is System.Security.SecurityException)
                     {
-                        ErrorWindow.CreateNew(
-                            "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
-                            StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+                        sc.Send(delegate
+                        {
+                            ErrorWindow.CreateNew(
+                                "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
+                                StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+                        }, null);
                     }
                     return;
                 }
 
-                this.listDatabases.ItemsSource = dbs;
-                if (dbs.Length >= 1)
+                sc.Send(delegate
                 {
-                    this.buttonSignIn.IsEnabled = true;
-                    this.listDatabases.SelectedIndex = 0;
-                }
+                    this.listDatabases.ItemsSource = dbs;
+
+                    if (dbs.Length >= 1)
+                    {
+                        this.buttonSignIn.IsEnabled = true;
+                        this.listDatabases.SelectedIndex = 0;
+                    }
+                }, null);
             });
         }
 

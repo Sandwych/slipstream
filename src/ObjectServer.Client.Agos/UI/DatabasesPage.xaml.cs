@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Navigation;
+using System.Threading;
 
 namespace ObjectServer.Client.Agos.UI
 {
@@ -40,21 +41,27 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
 
+            var sc = SynchronizationContext.Current;
             app.ClientService.BeginListDatabases((dbs, error) =>
             {
 
-                if (error != null)
+                sc.Send(delegate
                 {
-                    if (error is System.Security.SecurityException)
+                    if (error != null)
                     {
-                        ErrorWindow.CreateNew(
-                            "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
-                            StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+                        if (error is System.Security.SecurityException)
+                        {
+                            ErrorWindow.CreateNew(
+                                "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
+                                StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+                        }
                     }
-                    return;
-                }
+                    else
+                    {
+                        this.databases.ItemsSource = dbs;
+                    }
 
-                this.databases.ItemsSource = dbs;
+                }, null);
             });
         }
 
@@ -98,10 +105,14 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
             app.IsBusy = true;
+            var sc = System.Threading.SynchronizationContext.Current;
             app.ClientService.BeginDeleteDatabase(password, dbName, () =>
             {
-                this.LoadDatabaseList();
-                app.IsBusy = false;
+                sc.Send(delegate
+                {
+                    this.LoadDatabaseList();
+                    app.IsBusy = false;
+                }, null);
             });
         }
 

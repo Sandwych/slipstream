@@ -6,6 +6,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Navigation;
+    using System.Threading;
 
     using ObjectServer.Client;
     using ObjectServer.Client.Model;
@@ -34,9 +35,13 @@
             this.TextUserName.Text = app.ClientService.LoggedUserName;
             this.TextServerUri.Text = app.ClientService.ServerAddress.ToString();
 
+            var sc = SynchronizationContext.Current;
             app.ClientService.ReadAllMenus(menus =>
             {
-                this.LoadMenus(menus);
+                sc.Send(delegate
+                {
+                    this.LoadMenus(menus);
+                }, null);
             });
         }
 
