@@ -68,9 +68,19 @@ namespace ObjectServer
         [XmlArrayItem("file")]
         public string[] SourceFiles { get; set; }
 
-        [XmlArray("data-files")]
-        [XmlArrayItem("file")]
-        public string[] DataFiles { get; set; }
+        /// <summary>
+        /// 模块初安装的时候导入的文件
+        /// </summary>
+        [XmlArray("init-files", IsNullable = true)]
+        [XmlArrayItem("file", IsNullable = false)]
+        public string[] InitFiles { get; set; }
+
+        /// <summary>
+        /// 模块升级时导入的文件
+        /// </summary>
+        [XmlArray("upgrade-files", IsNullable = true)]
+        [XmlArrayItem("file", IsNullable = false)]
+        public string[] UpgradeFiles { get; set; }
 
         [XmlElement("source-language")]
         public string SourceLanguage { get; set; }
@@ -145,7 +155,7 @@ namespace ObjectServer
 
             dbProfile.InitializeAllResources(scope.DBContext, update);
 
-            if (update && this.DataFiles != null)
+            if (update && this.InitFiles != null)
             {
                 this.LoadModuleData(scope);
             }
@@ -189,7 +199,7 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Info(() => "Importing data...");
 
             var importer = new Model.XmlDataImporter(scope, this.Name);
-            foreach (var dataFile in this.DataFiles)
+            foreach (var dataFile in this.InitFiles)
             {
                 var dataFilePath = System.IO.Path.Combine(this.Path, dataFile);
                 LoggerProvider.EnvironmentLogger.Info(() => "Importing data file: [" + dataFilePath + "]");

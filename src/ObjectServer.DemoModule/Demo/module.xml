@@ -13,9 +13,9 @@
     <file>EmployeeModel.cs</file>
   </sources>
 
-  <data-files>
+  <init-files>
     <file>ui.xml</file>
     <file>demo-data.xml</file>
-  </data-files>
+  </init-files>
 
 </module-metadata>
