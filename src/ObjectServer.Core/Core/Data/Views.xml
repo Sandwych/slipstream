@@ -141,6 +141,22 @@
     </field>
   </record>
 
+  <!-- View's View -->
+  <record model="core.view" key="view_tree_view">
+    <field name="name">Views</field>
+    <field name="model">core.view</field>
+    <field name="kind">tree</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <tree label="Views">
+        <field name="name" where="basic" />
+        <field name="model" where="basic" />
+        <field name="kind" where="basic" />
+      </tree>
+      ]]>
+    </field>
+  </record>
+
   <record  model="core.action_window" key="menu_menu_action">
     <field name="name">Menus</field>
     <field name="type">core.action_window</field>
@@ -152,6 +168,7 @@
     <field name="name">Views</field>
     <field name="type">core.action_window</field>
     <field name="model">core.view</field>
+    <field name="view" ref-key="view_tree_view" />
   </record>
 
 </data>
