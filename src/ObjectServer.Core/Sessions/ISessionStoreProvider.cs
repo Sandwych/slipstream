@@ -13,7 +13,7 @@ namespace ObjectServer
 
         void PutSession(Session session);
 
-        void RemoveSessionsByUser(string database, long userID);
+        bool TryRemoveSessionsByUser(string database, long userID);
 
         void Remove(string sessionId);
 

@@ -7,14 +7,14 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
   xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
   xmlns:appControls="clr-namespace:ObjectServer.Client.Agos.Controls"
-  mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
+  mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480"  Background="#FF32302E">
 
 
     <Grid x:Name="LayoutRoot"  >
 
         <Border x:Name="ContentBorder" >
             <appControls:TransitionFrame x:Name="ContentFrame" 
-                  Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed" Background="{StaticResource SolidControlColor}">
+                  Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed" Background="#FF32302E">
                 <appControls:TransitionFrame.UriMapper>
                     <uriMapper:UriMapper>
                         <uriMapper:UriMapping Uri="/Login" MappedUri="/UI/LoginPage.xaml"/>

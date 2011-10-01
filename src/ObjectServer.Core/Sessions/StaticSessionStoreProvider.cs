@@ -71,7 +71,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void RemoveSessionsByUser(string database, long uid)
+        public bool TryRemoveSessionsByUser(string database, long uid)
         {
             if (database == null)
             {
@@ -87,9 +87,16 @@ namespace ObjectServer
                 from p in this.sessions
                 where p.Value.DBName == database && p.Value.UserID == uid
                 select p.Value.ID;
-            var sid = sessions.First();
-
-            this.sessions.Remove(sid);
+            var sid = sessions.SingleOrDefault();
+            if (sid != null)
+            {
+                this.sessions.Remove(sid);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]

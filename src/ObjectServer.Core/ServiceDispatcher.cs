@@ -29,7 +29,7 @@ namespace ObjectServer
 
                 if (session == null)
                 {
-                    throw new System.Security.SecurityException("Failed to logon");
+                    throw new Exceptions.SecurityException("Failed to logon");
                 }
 
                 //用新 session 替换老 session
@@ -38,7 +38,7 @@ namespace ObjectServer
 
                 tx.Complete();
 
-           
+
                 return session.ID.ToString();
             }
         }

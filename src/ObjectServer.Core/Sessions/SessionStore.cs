@@ -69,7 +69,7 @@ namespace ObjectServer
             {
                 throw new ArgumentOutOfRangeException("userId");
             }
-            this.provider.RemoveSessionsByUser(database, userId);
+            this.provider.TryRemoveSessionsByUser(database, userId);
         }
 
         public void Remove(string sessionId)
