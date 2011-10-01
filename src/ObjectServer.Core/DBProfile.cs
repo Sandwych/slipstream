@@ -17,8 +17,12 @@ namespace ObjectServer
     /// </summary>
     internal class DBProfile : IDBProfile
     {
-        private IDictionary<string, IResource> resources = new Dictionary<string, IResource>();
-        private HashSet<string> initializedResources = new HashSet<string>();
+        private readonly IDictionary<string, int> resourceDependencyWeightMapping =
+            new Dictionary<string, int>();
+        private readonly IDictionary<string, IResource> resources =
+            new Dictionary<string, IResource>();
+        private readonly HashSet<string> initializedResources =
+            new HashSet<string>();
         private bool disposed = false;
 
         /// <summary>
@@ -124,6 +128,16 @@ namespace ObjectServer
             return this.resources.ContainsKey(resName);
         }
 
+        public int GetResourceDependencyWeight(string resName)
+        {
+            if (string.IsNullOrEmpty(resName))
+            {
+                throw new ArgumentNullException("resName");
+            }
+
+            return this.resourceDependencyWeightMapping[resName];
+        }
+
         #endregion
 
         public string DatabaseName { get; private set; }
@@ -133,13 +147,14 @@ namespace ObjectServer
             var allRes = new List<IResource>(this.resources.Values);
             ResourceDependencySort(allRes);
 
-            foreach (var res in allRes)
+            for (int i = 0; i < allRes.Count; i++)
             {
-                this.InitializeResource(conn, res, update);
+                var res = allRes[i];
+                this.InitializeResource(conn, res, i, update);
             }
         }
 
-        private void InitializeResource(IDBContext conn, IResource res, bool update)
+        private void InitializeResource(IDBContext conn, IResource res, int index, bool update)
         {
             Debug.Assert(res != null);
 
@@ -147,9 +162,9 @@ namespace ObjectServer
             {
                 res.Initialize(conn, update);
                 this.initializedResources.Add(res.Name);
+                this.resourceDependencyWeightMapping.Add(res.Name, index);
             }
         }
-
 
         private static void ResourceDependencySort(IList<IResource> resList)
         {

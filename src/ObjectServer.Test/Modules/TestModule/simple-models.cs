@@ -69,7 +69,7 @@ namespace ObjectServer.Test
                 });
         }
 
-        [ServiceMethod]
+        [ServiceMethod("GetNumberPlusResult")]
         public static int GetNumberPlusResult(IModel self, IServiceContext scope, int x, int y)
         {
             return x + y;

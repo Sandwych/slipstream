@@ -70,6 +70,21 @@ namespace ObjectServer
             return this.resources.GetResource(resName);
         }
 
+        public int GetResourceDependencyWeight(string resName)
+        {
+            if (string.IsNullOrEmpty(resName))
+            {
+                throw new ArgumentNullException("resName");
+            }
+
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("disposed");
+            }
+
+            return this.resources.GetResourceDependencyWeight(resName);
+        }
+
         public IDBContext DBContext
         {
             get

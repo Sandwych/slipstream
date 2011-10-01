@@ -217,7 +217,7 @@ namespace ObjectServer.Model
                     break;
 
                 case FieldType.Reference:
-                    if (string.IsNullOrEmpty(refKey))
+                    if (string.IsNullOrEmpty(refKey) || string.IsNullOrEmpty(refModel))
                     {
                         throw new DataException(
                             "Reference field must have 'ref-key' and 'ref-model' attributes");

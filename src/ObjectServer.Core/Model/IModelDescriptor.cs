@@ -22,6 +22,5 @@ namespace ObjectServer.Model
 
         bool LogCreation { get; }
         bool LogWriting { get; }
-
     }
 }

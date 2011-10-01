@@ -93,12 +93,13 @@ namespace ObjectServer
         /// <summary>
         /// 为动态语言预留的
         /// </summary>
-        protected void RegisterServiceMethod(MethodInfo mi)
+        protected void RegisterServiceMethod(string name, MethodInfo mi)
         {
             Debug.Assert(mi != null);
+            Debug.Assert(!string.IsNullOrEmpty(name));
 
             this.VerifyMethod(mi);
-            var clrSvc = new ClrService(this, mi.Name, mi);
+            var clrSvc = new ClrService(this, name, mi);
             this.services.Add(clrSvc.Name, clrSvc);
         }
 
@@ -128,17 +129,18 @@ namespace ObjectServer
             }
         }
 
-        private void RegisterAllServiceMethods(Type t)
+        protected void RegisterAllServiceMethods(Type t)
         {
             Debug.Assert(t != null);
 
             var methods = t.GetMethods().Where(m => m.IsStatic && m.ReflectedType == t);
             foreach (var m in methods)
             {
-                var attr = Attribute.GetCustomAttribute(m, typeof(ServiceMethodAttribute));
+                var attr = Attribute.GetCustomAttribute(
+                    m, typeof(ServiceMethodAttribute), false) as ServiceMethodAttribute;
                 if (attr != null)
                 {
-                    this.RegisterServiceMethod(m);
+                    this.RegisterServiceMethod(attr.Name, m);
                 }
             }
         }
@@ -158,6 +160,8 @@ namespace ObjectServer
         public string Name { get; private set; }
 
         public string Label { get; protected set; }
+
+        public int DependencyWeight { get; private set; }
 
         /// <summary>
         /// 属性由载入器负责设置

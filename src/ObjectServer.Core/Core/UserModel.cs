@@ -260,7 +260,7 @@ namespace ObjectServer.Core
             }
         }
 
-        [ServiceMethod]
+        [ServiceMethod("ChangePassword")]
         public static void ChangePassword(
             IModel model, IServiceContext ctx, string newPassword)
         {

@@ -12,6 +12,7 @@ namespace ObjectServer
         Session Session { get; }
 
         IResource GetResource(string resName);
+        int GetResourceDependencyWeight(string resName);
         IDBContext DBContext { get; }
     }
 }

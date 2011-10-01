@@ -52,7 +52,6 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("db");
             }
 
-
             base.Initialize(db, update);
             this.InitializeInheritances(db);
             this.VerifyFields();
@@ -78,13 +77,7 @@ namespace ObjectServer.Model
         /// </summary>
         private void RegisterInternalServiceMethods()
         {
-            var selfType = typeof(AbstractModel);
-            this.RegisterServiceMethod(selfType.GetMethod("Count"));
-            this.RegisterServiceMethod(selfType.GetMethod("Search"));
-            this.RegisterServiceMethod(selfType.GetMethod("Create"));
-            this.RegisterServiceMethod(selfType.GetMethod("Read"));
-            this.RegisterServiceMethod(selfType.GetMethod("Write"));
-            this.RegisterServiceMethod(selfType.GetMethod("Delete"));
+            base.RegisterAllServiceMethods(typeof(AbstractModel));
         }
 
         private void AddInternalFields()
@@ -338,11 +331,18 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         /// <returns></returns>
         public override string[] GetReferencedObjects()
         {
-            var query =
-                from f in this.Fields.Values
-                where f.Type == FieldType.ManyToOne
-                select f.Relation;
+            var inheritedObjs = from i in this.Inheritances select i.BaseModel;
+            var fieldsObjs = from f in this.Fields.Values
+                             where f.Type == FieldType.ManyToOne
+                             select f.Relation;
 
+            var refObjs = new List<string>();
+            foreach (var f in this.fields.Values.Where(f => f.Type == FieldType.Reference))
+            {
+                refObjs.AddRange(f.Options.Keys);
+            }
+
+            var query = inheritedObjs.Union(fieldsObjs).Union(refObjs);
             //自己不能依赖自己
             query = from m in query
                     where m != this.Name
@@ -392,7 +392,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         #region Service Methods
 
-        [ServiceMethod]
+        [ServiceMethod("Count")]
         public static long Count(
             IModel model, IServiceContext ctx, object[] constraints = null)
         {
@@ -401,7 +401,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.CountInternal(ctx, constraints);
         }
 
-        [ServiceMethod]
+        [ServiceMethod("Search")]
         public static long[] Search(
             IModel model, IServiceContext ctx, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
         {
@@ -423,7 +423,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.SearchInternal(ctx, constraints, orderInfos, offset, limit);
         }
 
-        [ServiceMethod]
+        [ServiceMethod("Read")]
         public static Dictionary<string, object>[] Read(
             IModel model, IServiceContext ctx, dynamic clientIds, dynamic clientFields = null)
         {
@@ -446,7 +446,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.ReadInternal(ctx, ids, strFields);
         }
 
-        [ServiceMethod]
+        [ServiceMethod("Create")]
         public static long Create(
             IModel model, IServiceContext ctx, IDictionary<string, object> propertyBag)
         {
@@ -454,7 +454,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.CreateInternal(ctx, propertyBag);
         }
 
-        [ServiceMethod]
+        [ServiceMethod("Write")]
         public static void Write(
            IModel model, IServiceContext ctx, object id, IDictionary<string, object> userRecord)
         {
@@ -462,7 +462,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             model.WriteInternal(ctx, (long)id, userRecord);
         }
 
-        [ServiceMethod]
+        [ServiceMethod("Delete")]
         public static void Delete(
             IModel model, IServiceContext ctx, dynamic clientIDs)
         {
@@ -517,6 +517,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         public virtual bool LogCreation { get; protected set; }
         public virtual bool LogWriting { get; protected set; }
+        public int DepencyWeight { get; private set; }
 
 
         public virtual NameGetter NameGetter { get; protected set; }

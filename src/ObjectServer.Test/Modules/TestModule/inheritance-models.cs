@@ -30,7 +30,7 @@ namespace ObjectServer.Test
         }
 
         
-        [ServiceMethod]
+        [ServiceMethod("Create")]
         public static long Create(IModel model, IServiceContext ctx, IDictionary<string, object> propertyBag)
         {
             var record = new Dictionary<string, object>(propertyBag);
