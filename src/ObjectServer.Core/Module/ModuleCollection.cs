@@ -167,12 +167,16 @@ namespace ObjectServer
                     var state = (string)m["state"];
                     if (state == ModuleModel.States.Installed)
                     {
-                        module.Load(scope, false);
+                        module.Load(scope, ModuleUpdateAction.None);
                     }
-                    else if (state == ModuleModel.States.ToInstall
-                        || state == ModuleModel.States.ToUpgrade)
+                    else if (state == ModuleModel.States.ToInstall)
                     {
-                        module.Load(scope, true);
+                        module.Load(scope, ModuleUpdateAction.ToInstall);
+                        this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Installed);
+                    }
+                    else if (state == ModuleModel.States.ToUpgrade)
+                    {
+                        module.Load(scope, ModuleUpdateAction.ToUpgrade);
                         this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Installed);
                     }
                     else if (state == ModuleModel.States.ToUninstall)

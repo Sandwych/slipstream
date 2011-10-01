@@ -28,9 +28,9 @@ namespace ObjectServer
         private static readonly Module s_coreModule;
         private readonly List<IResource> resources = new List<IResource>();
 
-        private static readonly string[] s_coreDataFiles = new string[] 
+        private static readonly string[] s_coreInitDataFiles = new string[] 
         {
-            //TODO 下面的初始化顺序很重要，底层的放在前，高层的放在后
+            //下面的初始化顺序很重要，底层的放在前，高层的放在后
             "ObjectServer.Core.Data.InitData.xml",
             "ObjectServer.Core.Data.Security.xml",            
             "ObjectServer.Core.Data.Views.xml",
@@ -102,7 +102,7 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(IServiceContext ctx, bool update)
+        public void Load(IServiceContext ctx, ModuleUpdateAction action)
         {
             if (ctx == null)
             {
@@ -116,7 +116,7 @@ namespace ObjectServer
             if (this.Name == "core")
             {
 #if DEBUG //调试模式不捕获异常，以便于调试
-                this.LoadCoreModule(ctx, update);
+                this.LoadCoreModule(ctx, action);
 #else
                 try
                 {
@@ -132,11 +132,11 @@ namespace ObjectServer
             }
             else
             {
-                this.LoadAdditionalModule(ctx, update);
+                this.LoadAdditionalModule(ctx, action);
             }
         }
 
-        private void LoadAdditionalModule(IServiceContext scope, bool update)
+        private void LoadAdditionalModule(IServiceContext scope, ModuleUpdateAction action)
         {
             Debug.Assert(scope != null);
 
@@ -153,18 +153,17 @@ namespace ObjectServer
                 this.LoadDynamicAssembly(dbProfile, dbProfile);
             }
 
-            dbProfile.InitializeAllResources(scope.DBContext, update);
+            dbProfile.InitializeAllResources(
+                scope.DBContext,
+                action == ModuleUpdateAction.ToInstall || action == ModuleUpdateAction.ToUpgrade);
 
-            if (update && this.InitFiles != null)
-            {
-                this.LoadModuleData(scope);
-            }
+            this.LoadModuleData(scope, action);
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
         }
 
 
-        private void LoadCoreModule(IServiceContext scope, bool update)
+        private void LoadCoreModule(IServiceContext scope, ModuleUpdateAction action)
         {
             Debug.Assert(scope != null);
 
@@ -173,13 +172,16 @@ namespace ObjectServer
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
             RegisterResourceWithinAssembly(dbProfile, a);
 
-            dbProfile.InitializeAllResources(scope.DBContext, update);
+            dbProfile.InitializeAllResources(
+                scope.DBContext,
+                action == ModuleUpdateAction.ToInstall || action == ModuleUpdateAction.ToUpgrade);
 
-            if (update)
+            //加载核心模块数据
+            if (action == ModuleUpdateAction.ToInstall)
             {
                 LoggerProvider.EnvironmentLogger.Info(() => "Importing data for the Core Module...");
                 var importer = new Model.XmlDataImporter(scope, this.Name);
-                foreach (var resPath in s_coreDataFiles)
+                foreach (var resPath in s_coreInitDataFiles)
                 {
                     using (var resStream = a.GetManifestResourceStream(resPath))
                     {
@@ -192,14 +194,31 @@ namespace ObjectServer
         }
 
 
-        private void LoadModuleData(IServiceContext scope)
+        private void LoadModuleData(IServiceContext scope, ModuleUpdateAction action)
         {
             Debug.Assert(scope != null);
 
             LoggerProvider.EnvironmentLogger.Info(() => "Importing data...");
 
+            if (action == ModuleUpdateAction.ToInstall && this.InitFiles != null && this.InitFiles.Length > 0)
+            {
+                LoggerProvider.EnvironmentLogger.Info(() => "Importing data for installation...");
+                var files = this.InitFiles;
+                this.ImportDataFiles(scope, files);
+            }
+
+            if (action == ModuleUpdateAction.ToUpgrade && this.UpgradeFiles != null && this.UpgradeFiles.Length > 0)
+            {
+                LoggerProvider.EnvironmentLogger.Info(() => "Importing data for upgrade...");
+                var files = this.UpgradeFiles;
+                this.ImportDataFiles(scope, files);
+            }
+        }
+
+        private void ImportDataFiles(IServiceContext scope, string[] files)
+        {
             var importer = new Model.XmlDataImporter(scope, this.Name);
-            foreach (var dataFile in this.InitFiles)
+            foreach (var dataFile in files)
             {
                 var dataFilePath = System.IO.Path.Combine(this.Path, dataFile);
                 LoggerProvider.EnvironmentLogger.Info(() => "Importing data file: [" + dataFilePath + "]");
