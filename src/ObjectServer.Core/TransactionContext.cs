@@ -22,40 +22,48 @@ namespace ObjectServer
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public TransactionContext(string sessionId)
+        public TransactionContext(string dbName, string sessionId)
         {
-            var session = this.SessionStore.GetSession(sessionId);
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentNullException("sessionId");
+            }
+
+            this.dbctx = DataProvider.CreateDataContext(dbName);
+            this.DBContext.Open();
+
+            var session = Session.GetByID(this.dbctx, sessionId);
+            Session.Pulse(this.dbctx, sessionId);
             if (session == null || !session.IsActive)
             {
                 throw new ObjectServer.Exceptions.SecurityException("Not logged!");
             }
 
-            LoggerProvider.EnvironmentLogger.Debug(() =>
-                string.Format("ContextScope is opening for sessionId: [{0}]", sessionId));
-
-            this.resources = Environment.DBProfiles.GetDBProfile(session.DBName);
+            this.resources = Environment.DBProfiles.GetDBProfile(dbName);
 
             this.Session = session;
-            this.SessionStore.Pulse(session.ID);
-
-            this.dbctx = DataProvider.CreateDataContext(session.DBName);
-            this.DBContext.Open();
         }
 
         /// <summary>
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        public TransactionContext(string dbName, string login)
+        public TransactionContext(string dbName)
         {
-            LoggerProvider.EnvironmentLogger.Debug(() =>
-                string.Format("ContextScope is opening for database: [{0}]", dbName));
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
 
             this.resources = Environment.DBProfiles.GetDBProfile(dbName);
-            this.Session = new Session(dbName);
-            this.SessionStore.PutSession(this.Session);
             this.dbctx = DataProvider.CreateDataContext(dbName);
             this.DBContext.Open();
+            this.Session = Session.CreateSystemUserSession();
+            Session.Put(dbctx, this.Session);
         }
 
         /// <summary>
@@ -64,16 +72,16 @@ namespace ObjectServer
         /// <param name="db"></param>
         public TransactionContext(IDBContext db)
         {
-            Debug.Assert(db != null);
-
-            LoggerProvider.EnvironmentLogger.Debug(() =>
-                string.Format("ContextScope is opening for DatabaseContext"));
+            if (db == null)
+            {
+                throw new ArgumentNullException("db");
+            }
 
             this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
-            this.Session = new Session(db.DatabaseName);
-            this.SessionStore.PutSession(this.Session);
             this.dbctx = DataProvider.CreateDataContext(db.DatabaseName);
             this.DBContext.Open();
+            this.Session = Session.CreateSystemUserSession();
+            Session.Put(this.dbctx, this.Session);
         }
 
         ~TransactionContext()
@@ -174,11 +182,6 @@ namespace ObjectServer
         public override int GetHashCode()
         {
             return this.Session.ID.GetHashCode();
-        }
-
-        private SessionStore SessionStore
-        {
-            get { return Environment.SessionStore; }
         }
     }
 }

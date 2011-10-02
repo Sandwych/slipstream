@@ -56,7 +56,7 @@ namespace ObjectServer
             this.HttpListenUrl = "http://localhost:9287/";
 
             this.ModulePath = "Modules";
-            this.RootPassword = "root";
+            this.ServerPassword = "root";
         }
 
         /// <summary>
@@ -95,8 +95,8 @@ namespace ObjectServer
         [XmlElement("debug")]
         public bool Debug { get; set; }
 
-        [XmlElement("root-password", IsNullable = false)]
-        public string RootPassword { get; set; }
+        [XmlElement("server-password", IsNullable = false)]
+        public string ServerPassword { get; set; }
 
         [XmlElement("log-to-console")]
         public bool LogToConsole { get; set; }

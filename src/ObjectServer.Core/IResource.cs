@@ -14,7 +14,6 @@ namespace ObjectServer
         string Label { get; }
         string Name { get; }
         string Module { get; }
-        bool DatabaseRequired { get; }
         ICollection<ITransaction> Services { get; }
 
         /// <summary>

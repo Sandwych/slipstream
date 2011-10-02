@@ -31,7 +31,7 @@ namespace ObjectServer
             if (!dbs.Contains(TestingDatabaseName))
             {
                 var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(
-                    Environment.Configuration.RootPassword);
+                    Environment.Configuration.ServerPassword);
                 Environment.ExportedService.CreateDatabase(hashedRootPassword, TestingDatabaseName, "root");
             }
 

@@ -19,7 +19,22 @@ namespace ObjectServer
 
         public string LogOn(string dbName, string username, string password)
         {
-            using (var ctx = new TransactionContext(dbName, "system"))
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
+
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentNullException("username");
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentNullException("password");
+            }
+
+            using (var ctx = new TransactionContext(dbName))
             using (var tx = new TransactionScope())
             {
                 ctx.DBContext.Open();
@@ -32,12 +47,7 @@ namespace ObjectServer
                     throw new Exceptions.SecurityException("Failed to logon");
                 }
 
-                //用新 session 替换老 session
-                Environment.SessionStore.PutSession(session);
-                Environment.SessionStore.Remove(ctx.Session.ID);
-
                 tx.Complete();
-
 
                 return session.ID.ToString();
             }
@@ -46,7 +56,17 @@ namespace ObjectServer
 
         public void LogOff(string db, string sessionId)
         {
-            using (var ctx = new TransactionContext(sessionId))
+            if (string.IsNullOrEmpty(db))
+            {
+                throw new ArgumentNullException("db");
+            }
+
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentNullException("sessionId");
+            }
+
+            using (var ctx = new TransactionContext(db, sessionId))
             using (var tx = new TransactionScope())
             {
                 ctx.DBContext.Open();
@@ -63,20 +83,27 @@ namespace ObjectServer
 
         public object Execute(string db, string sessionId, string resource, string method, params object[] args)
         {
+            if (string.IsNullOrEmpty(db))
+            {
+                throw new ArgumentNullException("db");
+            }
 
-            using (var scope = new TransactionContext(sessionId))
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                throw new ArgumentNullException("sessionId");
+            }
+
+            if (string.IsNullOrEmpty(resource))
+            {
+                throw new ArgumentNullException("resource");
+            }
+
+            using (var scope = new TransactionContext(db, sessionId))
             {
                 dynamic res = scope.GetResource(resource);
                 var svc = res.GetService(method);
 
-                if (res.DatabaseRequired)
-                {
-                    return ExecuteTransactional(scope, res, svc, args);
-                }
-                else
-                {
-                    return svc.Invoke(res, scope, args);
-                }
+                return ExecuteTransactional(scope, res, svc, args);
             }
         }
 
@@ -121,7 +148,7 @@ namespace ObjectServer
 
         private static void VerifyRootPassword(string rootPasswordHash)
         {
-            var cfgRootPasswordHash = Environment.Configuration.RootPassword.ToSha();
+            var cfgRootPasswordHash = Environment.Configuration.ServerPassword.ToSha();
             if (rootPasswordHash != cfgRootPasswordHash)
             {
                 throw new ObjectServer.Exceptions.SecurityException("Invalid password of root user");

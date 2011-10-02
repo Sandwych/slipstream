@@ -45,8 +45,6 @@ namespace ObjectServer.Model
         private string tableName = null;
         private string quotedTableName = null;
 
-        public override bool DatabaseRequired { get { return true; } }
-
         public override string TableName
         {
             get

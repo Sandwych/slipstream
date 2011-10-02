@@ -18,7 +18,7 @@ namespace ObjectServer
         {
             Debug.Assert(db != null);
             this.db = db;
-            this.Session = new Session(db.DatabaseName);
+            this.Session = Session.CreateSystemUserSession();
             this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
         }
 

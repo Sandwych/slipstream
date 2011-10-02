@@ -23,7 +23,7 @@ namespace ObjectServer.Test
 
             var dbName = "os-testdb";
             var adminPassword = "root";
-            var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(Environment.Configuration.RootPassword);
+            var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(Environment.Configuration.ServerPassword);
 
             var service = Environment.ExportedService;
 

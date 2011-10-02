@@ -162,9 +162,5 @@ namespace ObjectServer.Model
             throw new NotSupportedException();
         }
 
-        public override bool DatabaseRequired
-        {
-            get { throw new NotSupportedException(); }
-        }
     }
 }

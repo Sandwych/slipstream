@@ -168,8 +168,6 @@ namespace ObjectServer
         /// </summary>
         public string Module { get; internal set; }
 
-        public abstract bool DatabaseRequired { get; }
-
         public abstract string[] GetReferencedObjects();
 
         public ICollection<ITransaction> Services

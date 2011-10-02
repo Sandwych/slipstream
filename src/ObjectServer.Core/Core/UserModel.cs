@@ -93,7 +93,7 @@ namespace ObjectServer.Core
                 Parameter.Placeholder, ")");
 
             //创建 root 用户
-            var rootPassword = Environment.Configuration.RootPassword;
+            var rootPassword = Environment.Configuration.ServerPassword;
             var user = new Dictionary<string, object>()
                     {
                         { "name", "Root User" },
@@ -223,7 +223,7 @@ namespace ObjectServer.Core
             Session result = null;
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
-                var session = this.FetchOrCreateSession(database, login, user);
+                var session = this.FetchOrCreateSession(scope, database, login, user);
                 result = session;
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
@@ -235,7 +235,6 @@ namespace ObjectServer.Core
                     String.Format("Failed to log on user: [{0}.{1}]", scope.DBContext.DatabaseName, login));
 
                 var uid = (long)user[IDFieldName];
-                Environment.SessionStore.RemoveSessionsByUser(database, uid);
             }
 
             return result;
@@ -244,14 +243,14 @@ namespace ObjectServer.Core
 
         public void LogOff(IServiceContext scope, string sessionId)
         {
-            var session = Environment.SessionStore.GetSession(sessionId);
+            var session = Session.GetByID(scope.DBContext, sessionId);
 
             if (session != null)
             {
-                Environment.SessionStore.Remove(sessionId);
+                Session.Remove(scope.DBContext, sessionId);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged out.", session.DBName, session.Login));
+                    String.Format("User[{0}.{1}] logged out.", scope.DBContext.DatabaseName, session.Login));
             }
             else
             {
@@ -294,19 +293,19 @@ namespace ObjectServer.Core
 
 
         private Session FetchOrCreateSession(
-            string dbName, string login, IDictionary<string, object> userFields)
+            IServiceContext ctx, string dbName, string login, IDictionary<string, object> userFields)
         {
+            Debug.Assert(ctx != null);
             Debug.Assert(userFields.ContainsKey("password"));
 
             var uid = (long)userFields[IDFieldName];
 
-            var sessStore = Environment.SessionStore;
-            var oldSession = sessStore.GetSession(dbName, uid);
+            var oldSession = Session.GetByUserID(ctx.DBContext, uid);
 
             if (oldSession == null)
             {
-                var newSession = new Session(dbName, login, uid);
-                sessStore.PutSession(newSession);
+                var newSession = new Session(login, uid);
+                Session.Put(ctx.DBContext, newSession);
                 return newSession;
             }
             else

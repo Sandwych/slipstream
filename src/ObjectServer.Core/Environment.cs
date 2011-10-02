@@ -25,7 +25,6 @@ namespace ObjectServer
         private bool initialized;
         private DBProfileCollection databaseProfiles = new DBProfileCollection();
         private ModuleCollection modules = new ModuleCollection();
-        private SessionStore sessionStore = new SessionStore();
         private IExportedService exportedService = ServiceDispatcher.CreateDispatcher();
 
         private Environment()
@@ -113,6 +112,7 @@ namespace ObjectServer
             ConfigurateLogger(cfg);
             LoggerProvider.EnvironmentLogger.Info("The Logging Subsystem has been initialized");
 
+            /*
             LoggerProvider.EnvironmentLogger.Info(() => "Initializing the Session Storage Subsystem...");
             string sessionProviderType = cfg.SessionProvider;
             if (string.IsNullOrEmpty(sessionProviderType))
@@ -120,6 +120,7 @@ namespace ObjectServer
                 sessionProviderType = typeof(ObjectServer.StaticSessionStoreProvider).AssemblyQualifiedName;
             }
             s_instance.sessionStore.Initialize(sessionProviderType);
+            */
 
             //查找所有模块并加载模块元信息
             LoggerProvider.EnvironmentLogger.Info(() => "Initializing the Module Management Subsystem...");
@@ -173,6 +174,7 @@ namespace ObjectServer
             }
         }
 
+        /*
         public static SessionStore SessionStore
         {
             get
@@ -180,6 +182,7 @@ namespace ObjectServer
                 return Instance.sessionStore;
             }
         }
+        */
 
         private static void ConfigurateLogger(Config cfg)
         {

@@ -13,6 +13,9 @@ namespace ObjectServer.Data
         [XmlEnum("postgresql")]
         Postgresql,
 
+        [XmlEnum("oracle")]
+        Oracle,
+
         //Sqlite
     }
 }
