@@ -213,9 +213,25 @@ namespace ObjectServer
                 throw new ArgumentNullException("sid");
             }
 
-            var sql = SqlString.Parse("update core_session set last_activity_time=? where last_activity_time<? and sid=?");
-            var now = DateTime.Now;
-            db.Execute(sql, now, now, sid);
+            var s = GetByID(db, sid);
+            if (s.IsActive)
+            {
+                var sql = SqlString.Parse("update core_session set last_activity_time=? where last_activity_time<? and sid=?");
+                var now = DateTime.Now;
+                db.Execute(sql, now, now, sid);
+            }
+            else
+            {
+                Remove(db, sid);
+            }
+        }
+
+        /// <summary>
+        /// 清理所有无效的 Sessions
+        /// </summary>
+        public static void Clear()
+        {
+            throw new NotImplementedException();
         }
     }
 }
