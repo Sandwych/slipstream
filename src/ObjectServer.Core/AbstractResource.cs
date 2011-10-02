@@ -16,8 +16,8 @@ namespace ObjectServer
     /// </summary>
     public abstract class AbstractResource : DynamicObject, IResource
     {
-        private readonly IDictionary<string, IService> services =
-            new Dictionary<string, IService>();
+        private readonly IDictionary<string, ITransaction> services =
+            new Dictionary<string, ITransaction>();
 
         protected AbstractResource(string name)
         {
@@ -45,14 +45,14 @@ namespace ObjectServer
             }
         }
 
-        public IService GetService(string name)
+        public ITransaction GetService(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException("name");
             }
 
-            IService service;
+            ITransaction service;
             if (!this.services.TryGetValue(name, out service))
             {
                 var msg = String.Format("Cannot found service: [{0}]", name);
@@ -72,7 +72,7 @@ namespace ObjectServer
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             result = null;
-            IService service;
+            ITransaction service;
 
             Debug.Assert(args.Length > 0);
             var scope = (IServiceContext)args[0];
@@ -99,7 +99,7 @@ namespace ObjectServer
             Debug.Assert(!string.IsNullOrEmpty(name));
 
             this.VerifyMethod(mi);
-            var clrSvc = new ClrService(this, name, mi);
+            var clrSvc = new ClrTransaction(this, name, mi);
             this.services.Add(clrSvc.Name, clrSvc);
         }
 
@@ -172,7 +172,7 @@ namespace ObjectServer
 
         public abstract string[] GetReferencedObjects();
 
-        public ICollection<IService> Services
+        public ICollection<ITransaction> Services
         {
             get { return this.services.Values; }
         }

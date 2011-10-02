@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Reflection;
 
 using ObjectServer.Exceptions;
 using Newtonsoft.Json;
@@ -107,7 +108,6 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("cfg");
             }
-
 
             //日志子系统必须最先初始化
             ConfigurateLogger(cfg);
@@ -217,7 +217,5 @@ namespace ObjectServer
                 return s_instance;
             }
         }
-
-
     }
 }

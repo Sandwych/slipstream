@@ -19,7 +19,7 @@ namespace ObjectServer
 
         public string LogOn(string dbName, string username, string password)
         {
-            using (var ctx = new ServiceContext(dbName, "system"))
+            using (var ctx = new TransactionContext(dbName, "system"))
             using (var tx = new TransactionScope())
             {
                 ctx.DBContext.Open();
@@ -44,9 +44,9 @@ namespace ObjectServer
         }
 
 
-        public void LogOff(string sessionId)
+        public void LogOff(string db, string sessionId)
         {
-            using (var ctx = new ServiceContext(sessionId))
+            using (var ctx = new TransactionContext(sessionId))
             using (var tx = new TransactionScope())
             {
                 ctx.DBContext.Open();
@@ -61,10 +61,10 @@ namespace ObjectServer
             return StaticSettings.Version.ToString();
         }
 
-        public object Execute(string sessionId, string resource, string method, params object[] args)
+        public object Execute(string db, string sessionId, string resource, string method, params object[] args)
         {
 
-            using (var scope = new ServiceContext(sessionId))
+            using (var scope = new TransactionContext(sessionId))
             {
                 dynamic res = scope.GetResource(resource);
                 var svc = res.GetService(method);
@@ -80,7 +80,7 @@ namespace ObjectServer
             }
         }
 
-        private static object ExecuteTransactional(ServiceContext scope, dynamic res, dynamic svc, object[] args)
+        private static object ExecuteTransactional(TransactionContext scope, dynamic res, dynamic svc, object[] args)
         {
             var tx = scope.DBContext.BeginTransaction();
             try
@@ -133,35 +133,35 @@ namespace ObjectServer
 
         #region Model methods
 
-        public long CreateModel(string sessionId, string modelName, IDictionary<string, object> propertyBag)
+        public long CreateModel(string db, string sessionId, string modelName, IDictionary<string, object> propertyBag)
         {
-            return (long)Execute(sessionId, modelName, "Create", new object[] { propertyBag });
+            return (long)Execute(db, sessionId, modelName, "Create", new object[] { propertyBag });
         }
 
-        public long CountModel(string sessionId, string modelName, object[] constraints)
+        public long CountModel(string db, string sessionId, string modelName, object[] constraints)
         {
-            return (long)Execute(sessionId, modelName, "Count", new object[] { constraints });
+            return (long)Execute(db, sessionId, modelName, "Count", new object[] { constraints });
         }
 
-        public long[] SearchModel(string sessionId, string modelName, object[] constraints, object[] order, long offset, long limit)
+        public long[] SearchModel(string db, string sessionId, string modelName, object[] constraints, object[] order, long offset, long limit)
         {
-            return (long[])Execute(sessionId, modelName, "Search", new object[] { constraints, order, offset, limit });
+            return (long[])Execute(db, sessionId, modelName, "Search", new object[] { constraints, order, offset, limit });
         }
 
-        public Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields)
+        public Dictionary<string, object>[] ReadModel(string db, string sessionId, string modelName, object[] ids, object[] fields)
         {
             return (Dictionary<string, object>[])Execute(
-                sessionId, modelName, "Read", new object[] { ids, fields });
+                db, sessionId, modelName, "Read", new object[] { ids, fields });
         }
 
-        public void WriteModel(string sessionId, string modelName, object id, IDictionary<string, object> record)
+        public void WriteModel(string db, string sessionId, string modelName, object id, IDictionary<string, object> record)
         {
-            Execute(sessionId, modelName, "Write", new object[] { id, record });
+            Execute(db, sessionId, modelName, "Write", new object[] { id, record });
         }
 
-        public void DeleteModel(string sessionId, string modelName, object[] ids)
+        public void DeleteModel(string db, string sessionId, string modelName, object[] ids)
         {
-            Execute(sessionId, modelName, "Delete", new object[] { ids });
+            Execute(db, sessionId, modelName, "Delete", new object[] { ids });
         }
 
         #endregion

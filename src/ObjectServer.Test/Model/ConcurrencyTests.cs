@@ -18,7 +18,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void TestMultithreadRead()
         {
-            long[] ids = (long[])this.Service.Execute(this.SessionId, "core.menu", "Search", null, null, 0, 0);
+            long[] ids = (long[])this.Service.Execute(TestingDatabaseName, this.SessionId, "core.menu", "Search", null, null, 0, 0);
 
             var threadProc = new ThreadStart(() =>
                 {
@@ -28,7 +28,7 @@ namespace ObjectServer.Model.Test
                         const int ReadTimes = 5;
                         for (int i = 0; i < ReadTimes; i++)
                         {
-                            this.Service.Execute(this.SessionId, "core.menu", "Read", ids, null);
+                            this.Service.Execute(TestingDatabaseName, this.SessionId, "core.menu", "Read", ids, null);
                         }
                     });
                 });

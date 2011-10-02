@@ -60,10 +60,10 @@ namespace ObjectServer.Model.Test
                 new object[] { "binary_field", "=", fieldData1 },
             };
 
-            var n = this.Service.CountModel(this.SessionId, "test.test_model", constraints);
+            var n = this.Service.CountModel(TestingDatabaseName, this.SessionId, "test.test_model", constraints);
             Assert.AreEqual(1, n);
 
-            var ids = this.Service.SearchModel(this.SessionId, "test.test_model", constraints);
+            var ids = this.Service.SearchModel(TestingDatabaseName, this.SessionId, "test.test_model", constraints);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id1, ids[0]);
         }

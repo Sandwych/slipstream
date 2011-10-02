@@ -19,6 +19,7 @@ namespace ObjectServer
     {
         public Config()
         {
+            this.Role = ServerRoles.Standalone;
             this.DbType = "postgres";
             this.DBHost = "localhost";
             this.DBPort = 5432;
@@ -63,6 +64,9 @@ namespace ObjectServer
         /// </summary>
         [XmlIgnore]
         public string ConfigurationPath { get; set; }
+
+        [XmlElement("role")]
+        public ServerRoles Role { get; set; }
 
         [XmlElement("db-type", IsNullable = false)]
         public string DbType { get; set; }

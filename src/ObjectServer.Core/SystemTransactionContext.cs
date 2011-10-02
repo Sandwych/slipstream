@@ -8,13 +8,13 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    internal class SystemServiceContext : IServiceContext
+    internal class SystemTransactionContext : IServiceContext
     {
         private bool disposed = false;
         private readonly IResourceContainer resources;
         private readonly IDBContext db;
 
-        public SystemServiceContext(IDBContext db)
+        public SystemTransactionContext(IDBContext db)
         {
             Debug.Assert(db != null);
             this.db = db;
@@ -22,7 +22,7 @@ namespace ObjectServer
             this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
         }
 
-        ~SystemServiceContext()
+        ~SystemTransactionContext()
         {
             this.Dispose(false);
         }

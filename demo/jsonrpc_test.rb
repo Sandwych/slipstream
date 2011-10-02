@@ -63,6 +63,7 @@ class ServiceProxy
     @logged = false
     @session_id = nil
     @proxy = proxy_class.new(url)
+    @database = nil
   end
 
   def close()
@@ -87,16 +88,17 @@ class ServiceProxy
   def logOn(dbname, user, password)
     #错误检查
     @session_id = self.call("logOn", dbname, user, password)
+    @database = dbname
     @logged = true
   end
 
   def logOff()
-    self.call("logOff", @session_id)
+    self.call("logOff", @database, @session_id)
     @logged = false
   end
 
   def execute(model_name, service, *args)
-    self.call("execute", @session_id, model_name, service, [*args])
+    self.call("execute", @database, @session_id, model_name, service, [*args])
   end
 
   def method_missing(method, *args, &block)

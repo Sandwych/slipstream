@@ -64,3 +64,15 @@ CREATE TABLE core_model_data (
 	PRIMARY KEY(_id)
 );
 CREATE UNIQUE INDEX index_core_model_data_name ON core_model_data ("name");
+
+CREATE TABLE core_session (
+	_id BIGSERIAL NOT NULL,
+	session_id VARCHAR(128) NOT NULL,
+	start_time TIMESTAMP NOT NULL,
+	last_activity_time TIMESTAMP NOT NULL,
+	"user" BIGINT NOT NULL,
+	"login" VARCHAR(128) NOT NULL,
+	PRIMARY KEY(_id),
+	FOREIGN KEY("user") REFERENCES core_user(_id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX index_core_sessionid ON core_session("session_id");

@@ -44,7 +44,7 @@ namespace ObjectServer
         private void ActiveTestModule()
         {
             //激活 test 模块
-            using (var scope = new ServiceContext(this.SessionId))
+            using (var scope = new TransactionContext(this.SessionId))
             {
                 var constraints = new object[][] { new object[] { "name", "=", "test" } };
                 var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
@@ -61,17 +61,17 @@ namespace ObjectServer
             var service = Environment.ExportedService;
             ClearTestUsers(service);
 
-            service.LogOff(this.SessionId);
+            service.LogOff(TestingDatabaseName, this.SessionId);
         }
 
         private void ClearTestUsers(IExportedService service)
         {
 
             var constraints = new object[] { new object[] { "login", "=", "test" } };
-            var ids = service.SearchModel(this.SessionId, "core.user", constraints);
+            var ids = service.SearchModel(TestingDatabaseName, this.SessionId, "core.user", constraints);
             if (ids.Length > 0)
             {
-                service.DeleteModel(this.SessionId, "core.user", ids.Select(i => (object)i).ToArray());
+                service.DeleteModel(TestingDatabaseName, this.SessionId, "core.user", ids.Select(i => (object)i).ToArray());
             }
         }
 
@@ -87,7 +87,7 @@ namespace ObjectServer
             Debug.Assert(this.ServiceContext == null);
             Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
 
-            this.ServiceContext = new ServiceContext(this.SessionId);
+            this.ServiceContext = new TransactionContext(this.SessionId);
         }
 
         [TearDown]
@@ -126,7 +126,7 @@ namespace ObjectServer
             if (ids.Length > 0)
             {
                 var idsToDel = ids.Select(e => (object)e).ToArray();
-                this.Service.Execute(this.SessionId, model, "Delete", new object[] { idsToDel });
+                this.Service.Execute(TestingDatabaseName, this.SessionId, model, "Delete", new object[] { idsToDel });
             }
 
         }

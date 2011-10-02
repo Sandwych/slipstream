@@ -9,9 +9,9 @@ using ObjectServer.Utility;
 
 namespace ObjectServer
 {
-    internal class ClrService : IService
+    internal class ClrTransaction : ITransaction
     {
-        public ClrService(IResource res, string name, MethodInfo mi)
+        public ClrTransaction(IResource res, string name, MethodInfo mi)
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
             Debug.Assert(mi != null);

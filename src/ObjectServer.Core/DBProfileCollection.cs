@@ -87,7 +87,7 @@ namespace ObjectServer
 
             //加载其它模块
             LoggerProvider.EnvironmentLogger.Info(() => "Loading modules...");
-            using (var ctx = new SystemServiceContext(db))
+            using (var ctx = new SystemTransactionContext(db))
             {
                 Environment.Modules.UpdateModuleList(db);
                 Environment.Modules.LoadModules(ctx);

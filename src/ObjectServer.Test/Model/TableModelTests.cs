@@ -24,10 +24,10 @@ namespace ObjectServer.Model.Test
 
             //Delete all records first
             var allIds = this.Service.SearchModel(
-                this.SessionId, modelName).Select(_ => (object)_).ToArray();
+                TestingDatabaseName, this.SessionId, modelName).Select(_ => (object)_).ToArray();
             if (allIds.Length > 0)
             {
-                this.Service.DeleteModel(this.SessionId, modelName, allIds);
+                this.Service.DeleteModel(TestingDatabaseName, this.SessionId, modelName, allIds);
             }
 
             var values = new Dictionary<string, object>
@@ -37,11 +37,11 @@ namespace ObjectServer.Model.Test
                 { "field1", 123 },
                 { "field2", 100 },
             };
-            dynamic id = this.Service.Execute(this.SessionId, modelName, "Create", values);
+            dynamic id = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Create", values);
             Assert.True(id > 0);
 
             var domain1 = new object[][] { new object[] { "name", "=", "sweet_name" } };
-            dynamic foundIds = this.Service.Execute(this.SessionId, modelName, "Search", domain1, null, 0, 100);
+            dynamic foundIds = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Search", domain1, null, 0, 100);
             Assert.AreEqual(1, foundIds.Length);
             Assert.AreEqual(id, foundIds[0]);
 
@@ -51,15 +51,15 @@ namespace ObjectServer.Model.Test
             this.Service.Execute(this.SessionId, modelName, "Write", id, newValues);
 
             var ids = new object[] { id };
-            dynamic data = this.Service.Execute(this.SessionId, modelName, "Read", ids, null);
+            dynamic data = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Read", ids, null);
             Assert.AreEqual(1, data.Length);
             Assert.AreEqual("changed_name", data[0]["name"]);
             Assert.AreEqual(223, data[0]["field3"]); //检测函数字段的计算是否正确
 
 
-            this.Service.Execute(this.SessionId, modelName, "Delete", ids);
+            this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Delete", ids);
 
-            foundIds = this.Service.Execute(this.SessionId, modelName, "Search", domain1, null, 0, 100);
+            foundIds = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Search", domain1, null, 0, 100);
             Assert.AreEqual(0, foundIds.Length);
         }
 
@@ -72,7 +72,7 @@ namespace ObjectServer.Model.Test
             {
                 { "name", "master-obj" },
             };
-            var masterId = this.Service.Execute(this.SessionId, "test.master", "Create", masterPropBag);
+            var masterId = this.Service.Execute(TestingDatabaseName, this.SessionId, "test.master", "Create", masterPropBag);
 
             var childPropBag = new Dictionary<string, object>()
             {
@@ -80,10 +80,10 @@ namespace ObjectServer.Model.Test
                 { "master", masterId },
             };
 
-            var childId = (long)this.Service.Execute(this.SessionId, "test.child", "Create", childPropBag);
+            var childId = (long)this.Service.Execute(TestingDatabaseName, this.SessionId, "test.child", "Create", childPropBag);
 
             var ids = new object[] { childId };
-            dynamic rows = this.Service.Execute(this.SessionId, "test.child", "Read", ids, null);
+            dynamic rows = this.Service.Execute(TestingDatabaseName, this.SessionId, "test.child", "Read", ids, null);
             var masterField = rows[0]["master"];
             Assert.AreEqual(typeof(object[]), masterField.GetType());
             var one2ManyField = (object[])masterField;
@@ -92,7 +92,7 @@ namespace ObjectServer.Model.Test
 
             var masterFieldNames = new string[] { "name", "children" };
             var masterRows = this.Service.ReadModel(
-                this.SessionId, "test.master",
+                TestingDatabaseName, this.SessionId, "test.master",
                 new object[] { masterId }, masterFieldNames);
             var master = masterRows[0];
             var children = (long[])master["children"];
@@ -101,11 +101,13 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(childId, children[0]);
 
             //更新
-            var masterId2 = (long)this.Service.Execute(this.SessionId, "test.master", "Create", masterPropBag);
+            var masterId2 = (long)this.Service.Execute(
+                TestingDatabaseName, this.SessionId, "test.master", "Create", masterPropBag);
             childPropBag["master"] = masterId2;
-            this.Service.WriteModel(this.SessionId, "test.child", childId, childPropBag);
+            this.Service.WriteModel(TestingDatabaseName, this.SessionId, "test.child", childId, childPropBag);
 
-            dynamic children2 = this.Service.Execute(this.SessionId, "test.child", "Read", new object[] { childId }, new object[] { "master" });
+            dynamic children2 = this.Service.Execute(
+                TestingDatabaseName, this.SessionId, "test.child", "Read", new object[] { childId }, new object[] { "master" });
             var masterField3 = (object[])children2[0]["master"];
             Assert.AreEqual(masterId2, masterField3[0]);
 
@@ -118,9 +120,11 @@ namespace ObjectServer.Model.Test
             var masterFields = new object[] { "name", "children" };
             var master = new Dictionary<string, object>();
 
-            var id = this.Service.Execute(this.SessionId, "test.master", "Create", master);
+            var id = this.Service.Execute(
+                TestingDatabaseName, this.SessionId, "test.master", "Create", master);
 
-            dynamic masterRecords = this.Service.Execute(this.SessionId, "test.master", "Read",
+            dynamic masterRecords = this.Service.Execute(
+                TestingDatabaseName, this.SessionId, "test.master", "Read",
                 new object[] { id }, masterFields);
             var record = masterRecords[0];
 

@@ -40,7 +40,7 @@ namespace ObjectServer.Model.Test
             this.ClearManyToManyModels();
             dynamic ids = this.GenerateTestData();
 
-            var employees = this.Service.ReadModel(this.SessionId, "test.employee",
+            var employees = this.Service.ReadModel(TestingDatabaseName, this.SessionId, "test.employee",
                 new object[] { ids.eid1, ids.eid2 }, new object[] { "name", "departments" });
 
             Assert.AreEqual(2, employees.Length);
@@ -68,11 +68,11 @@ namespace ObjectServer.Model.Test
             dynamic e = new ExpandoObject();
             e.name = "test-employee";
             e.departments = new long[] { ids.did1, ids.did2, ids.did3 };
-            var eid = this.Service.CreateModel(this.SessionId, "test.employee", e);
+            var eid = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
 
             var fields = new string[] { "name", "departments" };
             var record = this.Service.ReadModel(
-                this.SessionId, "test.employee", new object[] { eid }, fields)[0];
+               TestingDatabaseName, this.SessionId, "test.employee", new object[] { eid }, fields)[0];
 
             var departments = (long[])record["departments"];
 
@@ -96,12 +96,12 @@ namespace ObjectServer.Model.Test
             e1.departments = new long[] { ids.did1, ids.did2 };
             Assert.DoesNotThrow(() =>
             {
-                this.Service.WriteModel(this.SessionId, "test.employee", ids.eid1, e1);
+                this.Service.WriteModel(TestingDatabaseName, this.SessionId, "test.employee", ids.eid1, e1);
             });
 
             var fields = new string[] { "name", "departments" };
             var record = this.Service.ReadModel(
-                this.SessionId, "test.employee", new object[] { ids.eid1 }, fields)[0];
+                TestingDatabaseName, this.SessionId, "test.employee", new object[] { ids.eid1 }, fields)[0];
 
             var departments = (long[])record["departments"];
             Assert.AreEqual(2, departments.Length);
@@ -117,32 +117,32 @@ namespace ObjectServer.Model.Test
             dynamic ids = new ExpandoObject();
             dynamic e = new ExpandoObject();
             e.name = "employee";
-            ids.eid1 = this.Service.CreateModel(this.SessionId, "test.employee", e);
-            ids.eid2 = this.Service.CreateModel(this.SessionId, "test.employee", e);
-            ids.eid3 = this.Service.CreateModel(this.SessionId, "test.employee", e);
-            ids.eid4 = this.Service.CreateModel(this.SessionId, "test.employee", e);
-            ids.eid5 = this.Service.CreateModel(this.SessionId, "test.employee", e);
+            ids.eid1 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
+            ids.eid2 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
+            ids.eid3 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
+            ids.eid4 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
+            ids.eid5 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
 
             dynamic dept = new ExpandoObject();
             dept.name = "department";
-            ids.did1 = this.Service.CreateModel(this.SessionId, "test.department", dept);
-            ids.did2 = this.Service.CreateModel(this.SessionId, "test.department", dept);
-            ids.did3 = this.Service.CreateModel(this.SessionId, "test.department", dept);
-            ids.did4 = this.Service.CreateModel(this.SessionId, "test.department", dept);
-            ids.did5 = this.Service.CreateModel(this.SessionId, "test.department", dept);
+            ids.did1 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
+            ids.did2 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
+            ids.did3 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
+            ids.did4 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
+            ids.did5 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
 
             //设置e1 对应 did2, did3, did4
-            this.Service.CreateModel(this.SessionId, "test.department_employee",
+            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did2 }, });
-            this.Service.CreateModel(this.SessionId, "test.department_employee",
+            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did3 }, });
-            this.Service.CreateModel(this.SessionId, "test.department_employee",
+            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did4 }, });
 
             //设置 e2  对应 did3 did4
-            this.Service.CreateModel(this.SessionId, "test.department_employee",
+            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
                 new Dictionary<string, object>() { { "eid", ids.eid2 }, { "did", ids.did3 }, });
-            this.Service.CreateModel(this.SessionId, "test.department_employee",
+            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
                 new Dictionary<string, object>() { { "eid", ids.eid2 }, { "did", ids.did4 }, });
 
             return ids;

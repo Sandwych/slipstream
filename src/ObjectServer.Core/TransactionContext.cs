@@ -13,7 +13,7 @@ namespace ObjectServer
     /// <summary>
     /// 但凡是需要 RPC 的方法都需要用此 scope 包裹
     /// </summary>
-    internal sealed class ServiceContext : IServiceContext
+    internal sealed class TransactionContext : IServiceContext
     {
         private bool disposed = false;
         private readonly IResourceContainer resources;
@@ -22,10 +22,9 @@ namespace ObjectServer
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public ServiceContext(string sessionId)
+        public TransactionContext(string sessionId)
         {
-            var sessStore = Environment.SessionStore;
-            var session = sessStore.GetSession(sessionId);
+            var session = this.SessionStore.GetSession(sessionId);
             if (session == null || !session.IsActive)
             {
                 throw new ObjectServer.Exceptions.SecurityException("Not logged!");
@@ -47,7 +46,7 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        public ServiceContext(string dbName, string login)
+        public TransactionContext(string dbName, string login)
         {
             LoggerProvider.EnvironmentLogger.Debug(() =>
                 string.Format("ContextScope is opening for database: [{0}]", dbName));
@@ -63,7 +62,7 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="db"></param>
-        public ServiceContext(IDBContext db)
+        public TransactionContext(IDBContext db)
         {
             Debug.Assert(db != null);
 
@@ -77,7 +76,7 @@ namespace ObjectServer
             this.DBContext.Open();
         }
 
-        ~ServiceContext()
+        ~TransactionContext()
         {
             this.Dispose(false);
         }

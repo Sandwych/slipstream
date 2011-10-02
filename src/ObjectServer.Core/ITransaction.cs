@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer
 {
-    public interface IService
+    public interface ITransaction
     {
         IResource Resource { get; }
         string Name { get; }

@@ -22,8 +22,8 @@ namespace ObjectServer.Core.Test
                 { "admin", false },
             };
 
-            var uid = this.Service.Execute(this.SessionId, UserModel.ModelName, "Create", userRecord);
-            dynamic records = this.Service.Execute(
+            var uid = this.Service.Execute(TestingDatabaseName, this.SessionId, UserModel.ModelName, "Create", userRecord);
+            dynamic records = this.Service.Execute(TestingDatabaseName, 
                 this.SessionId, UserModel.ModelName, "Read", new object[] { uid }, null);            
             var user1 = records[0];
 

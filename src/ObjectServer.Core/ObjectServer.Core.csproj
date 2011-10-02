@@ -80,6 +80,7 @@
     </Reference>
     <Reference Include="System">
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="System.Runtime.Remoting">
@@ -121,7 +122,7 @@
     <Compile Include="Data\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Data\Postgresql\PgTableContext.cs" />
     <Compile Include="Caching\CachedMethodAttribute.cs" />
-    <Compile Include="ClrService.cs" />
+    <Compile Include="ClrTransaction.cs" />
     <Compile Include="Core\RuleRoleModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Exceptions\SecurityException.cs" />
@@ -129,6 +130,8 @@
     <Compile Include="Exceptions\ResourceException.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Module\ModuleUpdateAction.cs" />
+    <Compile Include="Sessions\ISessionStore.cs" />
+    <Compile Include="Sessions\SqlSessionStore.cs" />
     <Compile Include="Sql\OrderExpression.cs" />
     <Compile Include="Sql\ConstraintTranslator.cs" />
     <Compile Include="Sql\SortDirection.cs" />
@@ -145,7 +148,7 @@
     <Compile Include="Core\UserRoleModel.cs" />
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
-    <Compile Include="IService.cs" />
+    <Compile Include="ITransaction.cs" />
     <Compile Include="Json\JsonRpcProtocol.cs" />
     <Compile Include="Json\JsonRpcResponse.cs" />
     <Compile Include="Model\AbstractExtendedModel.cs" />
@@ -166,7 +169,6 @@
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="Model\ViewBuilder.cs" />
     <Compile Include="Model\ViewGenerator.cs" />
-    <Compile Include="Data\DummySessionFactoryImplementor.cs" />
     <Compile Include="Core\AuditLogModel.cs" />
     <Compile Include="Core\WizardActionModel.cs" />
     <Compile Include="Core\RoleModel.cs" />
@@ -227,9 +229,9 @@
     <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="ServiceMethodAttribute.cs" />
-    <Compile Include="ServiceContext.cs" />
+    <Compile Include="TransactionContext.cs" />
     <Compile Include="Sessions\StaticSessionStoreProvider.cs" />
-    <Compile Include="SystemServiceContext.cs" />
+    <Compile Include="SystemTransactionContext.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />

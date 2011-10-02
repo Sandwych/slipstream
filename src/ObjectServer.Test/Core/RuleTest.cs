@@ -33,7 +33,7 @@ namespace ObjectServer.Core.Test
 
             try
             {
-                using (var scope = new ServiceContext(sid))
+                using (var scope = new TransactionContext(sid))
                 {
                     var orders = new OrderExpression[] {
                         new OrderExpression("name", SortDirection.Asc) 
@@ -51,7 +51,7 @@ namespace ObjectServer.Core.Test
             }
             finally
             {
-                this.Service.LogOff(sid);
+                this.Service.LogOff("objectserver", sid);
             }
         }
 

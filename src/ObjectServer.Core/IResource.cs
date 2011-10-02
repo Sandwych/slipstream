@@ -15,13 +15,13 @@ namespace ObjectServer
         string Name { get; }
         string Module { get; }
         bool DatabaseRequired { get; }
-        ICollection<IService> Services { get; }
+        ICollection<ITransaction> Services { get; }
 
         /// <summary>
         /// 此对象引用（依赖）的其它对象名称
         /// </summary>
         string[] GetReferencedObjects();
-        IService GetService(string name);
+        ITransaction GetService(string name);
 
         /// <summary>
         /// 初始化资源

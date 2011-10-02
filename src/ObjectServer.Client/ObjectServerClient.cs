@@ -142,7 +142,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(this.Logged);
 
-            var args = new object[] { this.SessionId };
+            var args = new object[] { this.LoggedDatabase, this.SessionId };
             this.jsonRpcClient.BeginInvoke("logOff", args, (result, error) =>
             {
                 this.SessionId = null;
@@ -155,7 +155,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(this.Logged);
 
-            var args = new object[] { this.SessionId, objectName, method, parameters };
+            var args = new object[] { this.LoggedDatabase, this.SessionId, objectName, method, parameters };
             this.jsonRpcClient.BeginInvoke("execute", args, o =>
             {
                 resultCallback(o);
@@ -167,7 +167,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(this.Logged);
 
-            var args = new object[] { this.SessionId, objectName, method, parameters };
+            var args = new object[] { this.LoggedDatabase, this.SessionId, objectName, method, parameters };
             this.jsonRpcClient.BeginInvoke("execute", args, (result, error) =>
             {
                 resultCallback(result, error);
@@ -180,7 +180,7 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             var tcs = new TaskCompletionSource<object>();
-            var args = new object[] { this.SessionId, objectName, method, parameters };
+            var args = new object[] { this.LoggedDatabase, this.SessionId, objectName, method, parameters };
             this.jsonRpcClient.InvokeDyanmicAsync("execute", args)
                 .ContinueWith(tk =>
                 {

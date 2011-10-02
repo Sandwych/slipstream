@@ -71,7 +71,7 @@ namespace ObjectServer.Model.Test
             var ids = dogModel.SearchInternal(this.ServiceContext);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id, ids[0]);
-            Assert.AreEqual(1, this.Service.CountModel(this.SessionId, "test.animal"));
+            Assert.AreEqual(1, this.Service.CountModel(TestingDatabaseName, this.SessionId, "test.animal"));
         }
 
         [Test]
@@ -112,8 +112,8 @@ namespace ObjectServer.Model.Test
             {
                 dogModel.DeleteInternal(this.ServiceContext, new long[] { id });
             });
-            Assert.AreEqual(0, this.Service.CountModel(this.SessionId, "test.animal"));
-            Assert.AreEqual(0, this.Service.CountModel(this.SessionId, "test.dog"));
+            Assert.AreEqual(0, this.Service.CountModel(TestingDatabaseName, this.SessionId, "test.animal"));
+            Assert.AreEqual(0, this.Service.CountModel(TestingDatabaseName, this.SessionId, "test.dog"));
         }
 
         [Test]

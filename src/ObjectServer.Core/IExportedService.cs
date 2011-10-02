@@ -21,7 +21,7 @@ namespace ObjectServer
         /// <returns>登录成功返回 session ID, 失败返回 null</returns>
         string LogOn(string dbName, string login, string password);
 
-        void LogOff(string sessionId);
+        void LogOff(string db, string sessionId);
 
         //string[] GetResourceNames(string sessionId);
 
@@ -39,17 +39,17 @@ namespace ObjectServer
         /// <param name="parameters"></param>
         /// <returns></returns>
         object Execute(
-            string sessionId, string resourceName, string name, params object[] parameters);
+            string db, string sessionId, string resourceName, string name, params object[] parameters);
 
         string[] ListDatabases();
         void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword);
         void DeleteDatabase(string rootPasswordHash, string dbName);
 
-        long CreateModel(string sessionId, string modelName, IDictionary<string, object> propertyBag);
-        long CountModel(string sessionId, string modelName, object[] constraints = null);
-        long[] SearchModel(string sessionId, string modelName, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0);
-        Dictionary<string, object>[] ReadModel(string sessionId, string modelName, object[] ids, object[] fields = null);
-        void WriteModel(string sessionId, string modelName, object id, IDictionary<string, object> record);
-        void DeleteModel(string sessionId, string modelName, object[] ids);
+        long CreateModel(string db, string sessionId, string modelName, IDictionary<string, object> propertyBag);
+        long CountModel(string db, string sessionId, string modelName, object[] constraints = null);
+        long[] SearchModel(string db, string sessionId, string modelName, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0);
+        Dictionary<string, object>[] ReadModel(string db, string sessionId, string modelName, object[] ids, object[] fields = null);
+        void WriteModel(string db, string sessionId, string modelName, object id, IDictionary<string, object> record);
+        void DeleteModel(string db, string sessionId, string modelName, object[] ids);
     }
 }
