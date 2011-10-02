@@ -147,12 +147,18 @@ namespace ObjectServer.Http
                 Debug.Assert(n == reqData.Length);
             }
 
+            LoggerProvider.RpcLogger.Debug(() =>
+            {
+                var reqStr = Encoding.UTF8.GetString(reqData);
+                return string.Format("JSON Request=[{0}]", reqStr);
+            });
+
             var jresponse = this.CallJsonRpc(reqData);
 
             LoggerProvider.RpcLogger.Debug(() =>
             {
                 var repStr = Encoding.UTF8.GetString(jresponse);
-                return string.Format("RPC 返回的 JSON=[{0}]", repStr);
+                return string.Format("JSON Response=[{0}]", repStr);
             });
 
             return jresponse;

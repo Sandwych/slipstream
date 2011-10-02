@@ -75,7 +75,7 @@ namespace ObjectServer
             ITransaction service;
 
             Debug.Assert(args.Length > 0);
-            var scope = (IServiceContext)args[0];
+            var scope = (ITransactionContext)args[0];
             var userArgs = new object[args.Length - 1];
             Array.Copy(args, 1, userArgs, 0, args.Length - 1);
 
@@ -118,7 +118,7 @@ namespace ObjectServer
 
             var parameters = mi.GetParameters();
             if (parameters.Length < 2
-                || parameters[1].ParameterType != typeof(IServiceContext)
+                || parameters[1].ParameterType != typeof(ITransactionContext)
                 || !mi.IsPublic)
             {
                 var msg = string.Format(

@@ -22,7 +22,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IServiceContext scope, ICollection<Dictionary<string, object>> rawRecords)
+           ITransactionContext scope, ICollection<Dictionary<string, object>> rawRecords)
         {
             var result = new Dictionary<long, object>(rawRecords.Count());
             this.LoadAllNames(scope, rawRecords, result);
@@ -30,7 +30,7 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override object OnSetFieldValue(IServiceContext scope, object value)
+        protected override object OnSetFieldValue(ITransactionContext scope, object value)
         {
             var fieldValue = (object[])value;
             if (fieldValue.Length != 2)
@@ -53,7 +53,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void LoadAllNames(IServiceContext ctx,
+        private void LoadAllNames(ITransactionContext ctx,
             ICollection<Dictionary<string, object>> rawRecords,
             IDictionary<long, object> result)
         {
@@ -98,7 +98,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public override object BrowseField(IServiceContext ctx, IDictionary<string, object> record)
+        public override object BrowseField(ITransactionContext ctx, IDictionary<string, object> record)
         {
             if (ctx == null)
             {

@@ -38,6 +38,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.modelName = model;
             this.recordID = recordID;
 
+            this.Loaded += new RoutedEventHandler(this.OnLoaded);
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs args)
+        {
             this.Init();
         }
 

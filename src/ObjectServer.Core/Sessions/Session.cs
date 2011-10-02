@@ -14,6 +14,13 @@ namespace ObjectServer
     [Serializable]
     public sealed class Session
     {
+        private static readonly SqlString SelectByIDSql =
+            new SqlString("select * from core_session where sid=", Parameter.Placeholder);
+        private static readonly SqlString SelectByUserIDSql =
+            new SqlString("select * from core_session where userid=", Parameter.Placeholder);
+        private static readonly SqlString UpdateLastActivityTimeSql = SqlString.Parse(
+            "update core_session set last_activity_time=? where last_activity_time<? and sid=?");
+
         public const int IDLength = 16;
         public const string SystemUserName = "system";
         public const long SystemUserId = 0;
@@ -69,7 +76,8 @@ namespace ObjectServer
             {
                 rng.GetBytes(bytes);
             }
-            return bytes.ToSha();
+            var hash = bytes.ToSha();
+            return Convert.ToBase64String(hash);
         }
 
         public string ID { get; set; }
@@ -118,8 +126,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("sid");
             }
 
-            var sql = new SqlString("select * from core_session where sid=", Parameter.Placeholder);
-            var records = db.QueryAsDictionary(sql, sid);
+            var records = db.QueryAsDictionary(SelectByIDSql, sid);
             if (records.Length > 1)
             {
                 throw new Exceptions.DataException("More than one session id in table [core_session]!");
@@ -142,9 +149,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("db");
             }
 
-            var sql = new SqlString(
-                "select * from core_session where userid=", Parameter.Placeholder);
-            var records = db.QueryAsDictionary(sql, uid);
+            var records = db.QueryAsDictionary(SelectByUserIDSql, uid);
             if (records.Length > 1)
             {
                 throw new Exceptions.DataException("More than one user id in table [core_session]!");
@@ -216,9 +221,8 @@ namespace ObjectServer
             var s = GetByID(db, sid);
             if (s.IsActive)
             {
-                var sql = SqlString.Parse("update core_session set last_activity_time=? where last_activity_time<? and sid=?");
                 var now = DateTime.Now;
-                db.Execute(sql, now, now, sid);
+                db.Execute(UpdateLastActivityTimeSql, now, now, sid);
             }
             else
             {

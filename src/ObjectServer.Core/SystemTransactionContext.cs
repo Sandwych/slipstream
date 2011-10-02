@@ -8,7 +8,7 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    internal class SystemTransactionContext : IServiceContext
+    internal sealed class SystemTransactionContext : ITransactionContext
     {
         private bool disposed = false;
         private readonly IResourceContainer resources;
@@ -56,7 +56,7 @@ namespace ObjectServer
             GC.SuppressFinalize(this);
         }
 
-        public bool Equals(IServiceContext other)
+        public bool Equals(ITransactionContext other)
         {
             throw new NotSupportedException("Invalid Equals invocation");
         }

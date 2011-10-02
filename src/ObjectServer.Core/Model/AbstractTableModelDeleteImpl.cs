@@ -21,7 +21,7 @@ namespace ObjectServer.Model
         private static readonly string[] HierarchyFields =
             new string[] { IDFieldName, LeftFieldName, RightFieldName };
 
-        public override void DeleteInternal(IServiceContext ctx, long[] ids)
+        public override void DeleteInternal(ITransactionContext ctx, long[] ids)
         {
             if (ctx == null)
             {
@@ -68,7 +68,7 @@ namespace ObjectServer.Model
             this.ProcessBaseModelsDeletion(ctx, existedRecords);
         }
 
-        private void ProcessBaseModelsDeletion(IServiceContext scope, IEnumerable<Dictionary<string, object>> existedRecords)
+        private void ProcessBaseModelsDeletion(ITransactionContext scope, IEnumerable<Dictionary<string, object>> existedRecords)
         {
             Debug.Assert(scope != null);
 
@@ -94,7 +94,7 @@ namespace ObjectServer.Model
         }
 
         private static void DeleteRows(
-            IServiceContext scope, IEnumerable<long> ids, AbstractTableModel tableModel)
+            ITransactionContext scope, IEnumerable<long> ids, AbstractTableModel tableModel)
         {
             Debug.Assert(scope != null);
             Debug.Assert(ids != null);

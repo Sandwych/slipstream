@@ -141,11 +141,11 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadModules(IServiceContext scope)
+        public void LoadModules(ITransactionContext tx)
         {
-            if (scope == null)
+            if (tx == null)
             {
-                throw new ArgumentNullException("scope");
+                throw new ArgumentNullException("tx");
             }
             //加载的策略是：
             //1. 加载状态为 "installed" 的模块
@@ -155,7 +155,7 @@ namespace ObjectServer
             //加载已安装的模块
             var sql = new SqlString("select _id, name, state from core_module");
 
-            var modules = scope.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
+            var modules = tx.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
 
             foreach (var m in modules)
             {
@@ -167,21 +167,21 @@ namespace ObjectServer
                     var state = (string)m["state"];
                     if (state == ModuleModel.States.Installed)
                     {
-                        module.Load(scope, ModuleUpdateAction.NoAction);
+                        module.Load(tx, ModuleUpdateAction.NoAction);
                     }
                     else if (state == ModuleModel.States.ToInstall)
                     {
-                        module.Load(scope, ModuleUpdateAction.ToInstall);
-                        this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Installed);
+                        module.Load(tx, ModuleUpdateAction.ToInstall);
+                        this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Installed);
                     }
                     else if (state == ModuleModel.States.ToUpgrade)
                     {
-                        module.Load(scope, ModuleUpdateAction.ToUpgrade);
-                        this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Installed);
+                        module.Load(tx, ModuleUpdateAction.ToUpgrade);
+                        this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Installed);
                     }
                     else if (state == ModuleModel.States.ToUninstall)
                     {
-                        this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                        this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Uninstalled);
                     }
                     else if (state == ModuleModel.States.Uninstalled)
                     {
@@ -194,7 +194,7 @@ namespace ObjectServer
                 }
                 else
                 {
-                    this.UpdateModuleState(scope.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                    this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Uninstalled);
                     LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }

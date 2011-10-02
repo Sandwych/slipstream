@@ -70,12 +70,12 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod("GetNumberPlusResult")]
-        public static int GetNumberPlusResult(IModel self, IServiceContext scope, int x, int y)
+        public static int GetNumberPlusResult(IModel self, ITransactionContext scope, int x, int y)
         {
             return x + y;
         }
 
-        public Dictionary<long, object> GetField3(IServiceContext ctx, long[] ids)
+        public Dictionary<long, object> GetField3(ITransactionContext ctx, long[] ids)
         {
             var fieldNames = new string[] { "field1", "field2" };
             var values = base.ReadInternal(ctx, ids, fieldNames);

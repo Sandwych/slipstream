@@ -20,6 +20,7 @@ namespace ObjectServer.Core
     [Resource]
     public sealed class RuleModel : AbstractTableModel
     {
+        private static readonly ConstraintExpression[][] EmptyConstraints = new ConstraintExpression[][] { };
         //为了让 VS 复制 IronRuby.Libraries.dll 
         private static readonly Type _rubyHashOpsType = typeof(IronRuby.Builtins.HashOps);
 
@@ -53,7 +54,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static IList<ConstraintExpression[]> GetRuleConstraints(IServiceContext scope, string modelName, string action)
+        internal static IList<ConstraintExpression[]> GetRuleConstraints(ITransactionContext scope, string modelName, string action)
         {
             Debug.Assert(scope != null);
             Debug.Assert(!string.IsNullOrEmpty(modelName));
@@ -70,17 +71,34 @@ namespace ObjectServer.Core
                         "INNER JOIN core_user_role_rel ur ON (rr.role = ur.role) ",
                         "WHERE ur.user =", Parameter.Placeholder, " )))");
 
-            var result = scope.DBContext.QueryAsDataTable(
+            var result = scope.DBContext.QueryAsDictionary(
                 sql, modelName, scope.Session.UserID);
 
+            if (result.Length > 0)
+            {
+                return EvalConstraints(scope, result);
+            }
+            else
+            {
+                return EmptyConstraints;
+            }
+        }
+
+        private static IList<ConstraintExpression[]> EvalConstraints(
+            ITransactionContext scope, Dictionary<string, object>[] result)
+        {
             var scriptScope = CreateScriptScope(scope);
 
             var constraintGroups = new List<ConstraintExpression[]>();
-            foreach (DataRow row in result.Rows)
+            foreach (var row in result)
             {
                 var constraints = new List<ConstraintExpression>();
                 var constraintExp = (string)row["constraints"];
-                var dynObj = s_engine.Execute(constraintExp, scriptScope);
+                var scriptSource = s_engine.CreateScriptSourceFromString(
+                    constraintExp, SourceCodeKind.Expression);
+                var compiledCode = scriptSource.Compile();
+                var dynObj = compiledCode.Execute(scriptScope);
+                //var dynObj = s_engine.Execute(constraintExp, scriptScope);
 
                 foreach (dynamic d in dynObj)
                 {
@@ -90,18 +108,16 @@ namespace ObjectServer.Core
                 }
                 constraintGroups.Add(constraints.ToArray());
             }
-
             return constraintGroups;
         }
 
-        private static ScriptScope CreateScriptScope(IServiceContext scope)
+        private static ScriptScope CreateScriptScope(ITransactionContext scope)
         {
             var userModel = (UserModel)scope.GetResource("core.user");
             dynamic user = userModel.Browse(scope, scope.Session.UserID);
 
             var scriptScope = s_engine.CreateScope();
             scriptScope.SetVariable("user", user);
-            scriptScope.SetVariable("now", DateTime.Now);
             return scriptScope;
         }
 
@@ -113,7 +129,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static ConstraintExpression[] GetRuleConstraintsCached(IServiceContext scope, string modelName, string action)
+        internal static ConstraintExpression[] GetRuleConstraintsCached(ITransactionContext scope, string modelName, string action)
         {
             throw new NotImplementedException();
         }

@@ -7,6 +7,7 @@ using System.Data;
 using System.Transactions;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Threading;
 
 using ObjectServer.Exceptions;
 using ObjectServer.Data;
@@ -23,6 +24,7 @@ namespace ObjectServer
         private Dictionary<string, DBProfile> dbProfiles =
             new Dictionary<string, DBProfile>();
         private bool disposed = false;
+        private readonly ReaderWriterLockSlim dbProfilesLock = new ReaderWriterLockSlim();
 
 
         ~DBProfileCollection()
@@ -41,7 +43,19 @@ namespace ObjectServer
             var dbs = DataProvider.ListDatabases();
             foreach (var dbName in dbs)
             {
-                if (!this.dbProfiles.ContainsKey(dbName))
+                bool isRegistered;
+
+                this.dbProfilesLock.EnterReadLock();
+                try
+                {
+                    isRegistered = this.dbProfiles.ContainsKey(dbName);
+                }
+                finally
+                {
+                    this.dbProfilesLock.ExitReadLock();
+                }
+
+                if (isRegistered)
                 {
                     LoadDB(dbName);
                 }
@@ -97,23 +111,39 @@ namespace ObjectServer
         public DBProfile GetDBProfile(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
-            if (!this.dbProfiles.ContainsKey(dbName))
-            {
-                throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
-            }
 
-            return this.dbProfiles[dbName];
+            this.dbProfilesLock.EnterReadLock();
+            try
+            {
+                if (!this.dbProfiles.ContainsKey(dbName))
+                {
+                    throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
+                }
+
+                return this.dbProfiles[dbName];
+            }
+            finally
+            {
+                this.dbProfilesLock.ExitReadLock();
+            }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void RemoveDB(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
             //比如两个客户端，一个正在操作数据库，另一个要删除数据库
+            this.dbProfilesLock.EnterWriteLock();
+            try
+            {
 
-            var db = this.dbProfiles[dbName];
-            this.dbProfiles.Remove(dbName);
+                var db = this.dbProfiles[dbName];
+                this.dbProfiles.Remove(dbName);
+            }
+            finally
+            {
+                this.dbProfilesLock.ExitWriteLock();
+            }
         }
 
         #region IDisposable 成员

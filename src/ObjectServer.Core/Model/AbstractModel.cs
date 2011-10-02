@@ -394,7 +394,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [ServiceMethod("Count")]
         public static long Count(
-            IModel model, IServiceContext ctx, object[] constraints = null)
+            IModel model, ITransactionContext ctx, object[] constraints = null)
         {
             EnsureServiceMethodArgs(model, ctx);
 
@@ -403,7 +403,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [ServiceMethod("Search")]
         public static long[] Search(
-            IModel model, IServiceContext ctx, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
+            IModel model, ITransactionContext ctx, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
         {
             EnsureServiceMethodArgs(model, ctx);
 
@@ -425,7 +425,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [ServiceMethod("Read")]
         public static Dictionary<string, object>[] Read(
-            IModel model, IServiceContext ctx, dynamic clientIds, dynamic clientFields = null)
+            IModel model, ITransactionContext ctx, dynamic clientIds, dynamic clientFields = null)
         {
             EnsureServiceMethodArgs(model, ctx);
 
@@ -448,7 +448,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [ServiceMethod("Create")]
         public static long Create(
-            IModel model, IServiceContext ctx, IDictionary<string, object> propertyBag)
+            IModel model, ITransactionContext ctx, IDictionary<string, object> propertyBag)
         {
             EnsureServiceMethodArgs(model, ctx);
             return model.CreateInternal(ctx, propertyBag);
@@ -456,7 +456,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [ServiceMethod("Write")]
         public static void Write(
-           IModel model, IServiceContext ctx, object id, IDictionary<string, object> userRecord)
+           IModel model, ITransactionContext ctx, object id, IDictionary<string, object> userRecord)
         {
             EnsureServiceMethodArgs(model, ctx);
             model.WriteInternal(ctx, (long)id, userRecord);
@@ -464,7 +464,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [ServiceMethod("Delete")]
         public static void Delete(
-            IModel model, IServiceContext ctx, dynamic clientIDs)
+            IModel model, ITransactionContext ctx, dynamic clientIDs)
         {
             EnsureServiceMethodArgs(model, ctx);
 
@@ -487,7 +487,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
 
-        private static void EnsureServiceMethodArgs(IModel self, IServiceContext ctx)
+        private static void EnsureServiceMethodArgs(IModel self, ITransactionContext ctx)
         {
             if (self == null)
             {
@@ -522,17 +522,17 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         public virtual NameGetter NameGetter { get; protected set; }
 
-        public abstract long CountInternal(IServiceContext scope, object[] constraints = null);
+        public abstract long CountInternal(ITransactionContext scope, object[] constraints = null);
         public abstract long[] SearchInternal(
-            IServiceContext scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
+            ITransactionContext scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(
-            IServiceContext scope, IDictionary<string, object> propertyBag);
+            ITransactionContext scope, IDictionary<string, object> propertyBag);
         public abstract void WriteInternal(
-            IServiceContext scope, long id, IDictionary<string, object> record);
+            ITransactionContext scope, long id, IDictionary<string, object> record);
         public abstract Dictionary<string, object>[] ReadInternal(
-            IServiceContext scope, long[] ids, string[] requiredFields = null);
-        public abstract void DeleteInternal(IServiceContext scope, long[] ids);
-        public abstract dynamic Browse(IServiceContext scope, long id);
+            ITransactionContext scope, long[] ids, string[] requiredFields = null);
+        public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
+        public abstract dynamic Browse(ITransactionContext scope, long id);
 
         #endregion
     }

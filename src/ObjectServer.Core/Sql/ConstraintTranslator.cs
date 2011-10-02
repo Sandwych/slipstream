@@ -35,9 +35,9 @@ namespace ObjectServer.Sql
         public const string MainTableAlias = "_t0";
 
         IModel rootModel;
-        IServiceContext serviceScope;
+        ITransactionContext serviceScope;
 
-        public ConstraintTranslator(IServiceContext scope, IModel rootModel)
+        public ConstraintTranslator(ITransactionContext scope, IModel rootModel)
         {
             if (scope == null)
             {
@@ -56,7 +56,7 @@ namespace ObjectServer.Sql
             this.fromJoins.Add(rootFormClause);
         }
 
-        public ConstraintTranslator(IServiceContext scope, string rootModelName)
+        public ConstraintTranslator(ITransactionContext scope, string rootModelName)
             : this(scope, (IModel)scope.GetResource(rootModelName))
         {
 

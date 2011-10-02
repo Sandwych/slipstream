@@ -20,7 +20,7 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IServiceContext ctx, ICollection<Dictionary<string, object>> rawRecords)
+           ITransactionContext ctx, ICollection<Dictionary<string, object>> rawRecords)
         {
             if (ctx == null)
             {
@@ -87,12 +87,12 @@ namespace ObjectServer.Model
         }
 
 
-        protected override object OnSetFieldValue(IServiceContext scope, object value)
+        protected override object OnSetFieldValue(ITransactionContext scope, object value)
         {
             return value;
         }
 
-        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
+        public override object BrowseField(ITransactionContext scope, IDictionary<string, object> record)
         {
             if (scope == null)
             {

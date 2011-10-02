@@ -49,7 +49,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <param name="userId"></param>
         /// <returns></returns>
         public Dictionary<string, object>[]
-            FindByModelAndUserId(IServiceContext ctx, string model, long userID)
+            FindByModelAndUserId(ITransactionContext ctx, string model, long userID)
         {
             if (ctx == null)
             {
@@ -73,7 +73,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <param name="scope"></param>
         /// <param name="userRecord"></param>
         /// <returns></returns>
-        public override long CreateInternal(IServiceContext scope, IDictionary<string, object> userRecord)
+        public override long CreateInternal(ITransactionContext scope, IDictionary<string, object> userRecord)
         {
             return base.CreateInternal(scope, userRecord);
         }
@@ -84,7 +84,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <param name="scope"></param>
         /// <param name="id"></param>
         /// <param name="userRecord"></param>
-        public override void WriteInternal(IServiceContext scope, long id, IDictionary<string, object> userRecord)
+        public override void WriteInternal(ITransactionContext scope, long id, IDictionary<string, object> userRecord)
         {
             base.WriteInternal(scope, id, userRecord);
         }

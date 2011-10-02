@@ -35,7 +35,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <returns></returns>
         [ServiceMethod("GetFields")]
-        public static Dictionary<string, object>[] GetFields(IModel model, IServiceContext scope, string modelName)
+        public static Dictionary<string, object>[] GetFields(IModel model, ITransactionContext scope, string modelName)
         {
             if (model == null)
             {

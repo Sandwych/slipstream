@@ -14,7 +14,7 @@ namespace ObjectServer.Model
     {
         private IDBContext db;
         private AbstractTableModel model;
-        private IServiceContext context;
+        private ITransactionContext context;
         private bool disposed = false;
 
         public TableMigrator(IDBContext db, AbstractTableModel model)

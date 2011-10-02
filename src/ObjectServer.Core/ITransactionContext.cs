@@ -7,7 +7,7 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    public interface IServiceContext : IDisposable, IEquatable<IServiceContext>
+    public interface ITransactionContext : IDisposable, IEquatable<ITransactionContext>
     {
         Session Session { get; }
 

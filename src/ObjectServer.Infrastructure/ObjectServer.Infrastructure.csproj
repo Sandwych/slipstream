@@ -59,6 +59,7 @@
     <Compile Include="Utility\Sha.cs" />
     <Compile Include="Utility\StringExtension.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />
+    <Compile Include="WeakReferenceCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logging.config">

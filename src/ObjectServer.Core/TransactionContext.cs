@@ -11,9 +11,9 @@ using ObjectServer.Data;
 namespace ObjectServer
 {
     /// <summary>
-    /// 但凡是需要 RPC 的方法都需要用此 scope 包裹
+    /// 但凡是需要 RPC 的方法都需要用此类包裹
     /// </summary>
-    internal sealed class TransactionContext : IServiceContext
+    internal sealed class TransactionContext : ITransactionContext
     {
         private bool disposed = false;
         private readonly IResourceContainer resources;
@@ -158,7 +158,6 @@ namespace ObjectServer
                 this.DBContext.Close();
 
                 this.disposed = true;
-                LoggerProvider.EnvironmentLogger.Debug(() => "ScopeContext closed");
             }
         }
 
@@ -172,7 +171,7 @@ namespace ObjectServer
 
         #region IEquatable<IContext> 成员
 
-        public bool Equals(IServiceContext other)
+        public bool Equals(ITransactionContext other)
         {
             if (other == null)
             {
@@ -184,9 +183,5 @@ namespace ObjectServer
 
         #endregion
 
-        public override int GetHashCode()
-        {
-            return this.Session.ID.GetHashCode();
-        }
     }
 }

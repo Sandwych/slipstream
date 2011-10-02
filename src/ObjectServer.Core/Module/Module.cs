@@ -102,7 +102,7 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(IServiceContext ctx, ModuleUpdateAction action)
+        public void Load(ITransactionContext ctx, ModuleUpdateAction action)
         {
             if (ctx == null)
             {
@@ -136,7 +136,7 @@ namespace ObjectServer
             }
         }
 
-        private void LoadAdditionalModule(IServiceContext scope, ModuleUpdateAction action)
+        private void LoadAdditionalModule(ITransactionContext scope, ModuleUpdateAction action)
         {
             Debug.Assert(scope != null);
 
@@ -163,7 +163,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadCoreModule(IServiceContext scope, ModuleUpdateAction action)
+        private void LoadCoreModule(ITransactionContext scope, ModuleUpdateAction action)
         {
             Debug.Assert(scope != null);
 
@@ -194,7 +194,7 @@ namespace ObjectServer
         }
 
 
-        private void LoadModuleData(IServiceContext scope, ModuleUpdateAction action)
+        private void LoadModuleData(ITransactionContext scope, ModuleUpdateAction action)
         {
             Debug.Assert(scope != null);
 
@@ -215,7 +215,7 @@ namespace ObjectServer
             }
         }
 
-        private void ImportDataFiles(IServiceContext scope, string[] files)
+        private void ImportDataFiles(ITransactionContext scope, string[] files)
         {
             var importer = new Model.XmlDataImporter(scope, this.Name);
             foreach (var dataFile in files)

@@ -79,7 +79,7 @@ namespace ObjectServer
 
         public IExportedService Service { get; private set; }
 
-        public IServiceContext ServiceContext { get; private set; }
+        public ITransactionContext ServiceContext { get; private set; }
 
         [SetUp]
         public void BeforeTest()

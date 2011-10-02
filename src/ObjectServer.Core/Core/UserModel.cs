@@ -152,14 +152,14 @@ namespace ObjectServer.Core
         }
 
 
-        public override long CreateInternal(IServiceContext scope, IDictionary<string, object> values)
+        public override long CreateInternal(ITransactionContext scope, IDictionary<string, object> values)
         {
             IDictionary<string, object> values2 = HashPassword(values);
             return base.CreateInternal(scope, values2);
         }
 
 
-        public override void WriteInternal(IServiceContext scope, long id, IDictionary<string, object> record)
+        public override void WriteInternal(ITransactionContext scope, long id, IDictionary<string, object> record)
         {
             //更新用户记录业务是不能修改密码与 Salt 的
             var values2 = new Dictionary<string, object>(record);
@@ -179,7 +179,7 @@ namespace ObjectServer.Core
 
 
         public override Dictionary<string, object>[] ReadInternal(
-            IServiceContext scope, long[] ids, string[] fields)
+            ITransactionContext scope, long[] ids, string[] fields)
         {
             var records = base.ReadInternal(scope, ids, fields);
 
@@ -202,7 +202,7 @@ namespace ObjectServer.Core
         }
 
 
-        public Session LogOn(IServiceContext scope,
+        public Session LogOn(ITransactionContext scope,
             string database, string login, string password)
         {
             var constraints = new object[][] { new object[] { "login", "=", login } };
@@ -241,7 +241,7 @@ namespace ObjectServer.Core
         }
 
 
-        public void LogOff(IServiceContext scope, string sessionId)
+        public void LogOff(ITransactionContext scope, string sessionId)
         {
             var session = Session.GetByID(scope.DBContext, sessionId);
 
@@ -261,7 +261,7 @@ namespace ObjectServer.Core
 
         [ServiceMethod("ChangePassword")]
         public static void ChangePassword(
-            IModel model, IServiceContext ctx, string newPassword)
+            IModel model, ITransactionContext ctx, string newPassword)
         {
             if (model == null)
             {
@@ -293,7 +293,7 @@ namespace ObjectServer.Core
 
 
         private Session FetchOrCreateSession(
-            IServiceContext ctx, string dbName, string login, IDictionary<string, object> userFields)
+            ITransactionContext ctx, string dbName, string login, IDictionary<string, object> userFields)
         {
             Debug.Assert(ctx != null);
             Debug.Assert(userFields.ContainsKey("password"));

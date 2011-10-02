@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Threading;
 
 using ObjectServer.Exceptions;
 using ObjectServer.Utility;
@@ -24,23 +25,19 @@ namespace ObjectServer
         private readonly HashSet<string> initializedResources =
             new HashSet<string>();
         private bool disposed = false;
+        private readonly ReaderWriterLockSlim resourcesLock = new ReaderWriterLockSlim();
 
         /// <summary>
         /// 初始化一个数据库环境
         /// </summary>
-        /// <param name="dbName"></param>
-        public DBProfile(string dbName)
+        public DBProfile(string db)
         {
-            Debug.Assert(!string.IsNullOrEmpty(dbName));
+            if (string.IsNullOrEmpty(db))
+            {
+                throw new ArgumentNullException("db");
+            }
 
-        }
-
-        public DBProfile(IResourceContainer resources)
-        {
-            Debug.Assert(resources != null);
-
-            this.Resources = resources;
-
+            this.DatabaseName = db;
         }
 
         ~DBProfile()
@@ -84,7 +81,8 @@ namespace ObjectServer
                 throw new ArgumentNullException("res");
             }
 
-            lock (this)
+            this.resourcesLock.EnterWriteLock();
+            try
             {
                 IResource extendedRes;
                 //先看是否存在               
@@ -98,23 +96,35 @@ namespace ObjectServer
                     this.resources.Add(res.Name, res);
                 }
             }
+            finally
+            {
+                this.resourcesLock.ExitWriteLock();
+            }
         }
 
         public IResource GetResource(string resName)
         {
             Debug.Assert(!string.IsNullOrEmpty(resName));
 
-            IResource res;
-            if (this.resources.TryGetValue(resName, out res))
+            this.resourcesLock.EnterReadLock();
+            try
             {
-                return res;
-            }
-            else
-            {
-                var msg = string.Format("Cannot found resource: [{0}]", resName);
-                LoggerProvider.EnvironmentLogger.Error(() => msg);
+                IResource res;
+                if (this.resources.TryGetValue(resName, out res))
+                {
+                    return res;
+                }
+                else
+                {
+                    var msg = string.Format("Cannot found resource: [{0}]", resName);
+                    LoggerProvider.EnvironmentLogger.Error(() => msg);
 
-                throw new ResourceNotFoundException(msg, resName);
+                    throw new ResourceNotFoundException(msg, resName);
+                }
+            }
+            finally
+            {
+                this.resourcesLock.ExitReadLock();
             }
         }
 
@@ -125,7 +135,15 @@ namespace ObjectServer
                 throw new ArgumentNullException("resName");
             }
 
-            return this.resources.ContainsKey(resName);
+            this.resourcesLock.EnterReadLock();
+            try
+            {
+                return this.resources.ContainsKey(resName);
+            }
+            finally
+            {
+                this.resourcesLock.ExitReadLock();
+            }
         }
 
         public int GetResourceDependencyWeight(string resName)
@@ -135,7 +153,15 @@ namespace ObjectServer
                 throw new ArgumentNullException("resName");
             }
 
-            return this.resourceDependencyWeightMapping[resName];
+            this.resourcesLock.EnterReadLock();
+            try
+            {
+                return this.resourceDependencyWeightMapping[resName];
+            }
+            finally
+            {
+                this.resourcesLock.ExitReadLock();
+            }
         }
 
         #endregion
@@ -147,12 +173,21 @@ namespace ObjectServer
             var allRes = new List<IResource>(this.resources.Values);
             ResourceDependencySort(allRes);
 
-            for (int i = 0; i < allRes.Count; i++)
+            this.resourcesLock.EnterWriteLock();
+            try
             {
-                var res = allRes[i];
-                this.InitializeResource(conn, res, i, update);
+                for (int i = 0; i < allRes.Count; i++)
+                {
+                    var res = allRes[i];
+                    this.InitializeResource(conn, res, i, update);
+                }
+            }
+            finally
+            {
+                this.resourcesLock.ExitWriteLock();
             }
         }
+
 
         private void InitializeResource(IDBContext conn, IResource res, int index, bool update)
         {

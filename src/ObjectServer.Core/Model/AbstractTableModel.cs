@@ -234,7 +234,7 @@ where   hp._id=? and hc._id<>?
         }
 
         private void ConvertFieldToColumn(
-            IServiceContext ctx, Dictionary<string, object> record, string[] updatableColumnFields)
+            ITransactionContext ctx, Dictionary<string, object> record, string[] updatableColumnFields)
         {
 
             foreach (var f in updatableColumnFields)
@@ -245,13 +245,13 @@ where   hp._id=? and hc._id<>?
             }
         }
 
-        public override dynamic Browse(IServiceContext ctx, long id)
+        public override dynamic Browse(ITransactionContext ctx, long id)
         {
             return new BrowsableRecord(ctx, this, id);
         }
 
         private IDictionary<long, string> DefaultNameGetter(
-            IServiceContext ctx, long[] ids)
+            ITransactionContext ctx, long[] ids)
         {
             var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))
@@ -274,7 +274,7 @@ where   hp._id=? and hc._id<>?
             return result;
         }
 
-        private void AuditLog(IServiceContext ctx, long id, string msg)
+        private void AuditLog(ITransactionContext ctx, long id, string msg)
         {
             var logRecord = new Dictionary<string, object>()
                 {
@@ -332,7 +332,7 @@ where   hp._id=? and hc._id<>?
         /// 检查模型的可读权限
         /// </summary>
         /// <param name="scope"></param>
-        private void VerifyReadPermission(IServiceContext scope)
+        private void VerifyReadPermission(ITransactionContext scope)
         {
             if (!this.CanRead)
             {

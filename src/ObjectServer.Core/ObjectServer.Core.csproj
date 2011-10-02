@@ -217,7 +217,7 @@
     <Compile Include="Environment.cs" />
     <Compile Include="DBProfileCollection.cs" />
     <Compile Include="Core\UserModel.cs" />
-    <Compile Include="IServiceContext.cs" />
+    <Compile Include="ITransactionContext.cs" />
     <Compile Include="Core\FieldModel.cs" />
     <Compile Include="Core\ModelModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
