@@ -881,24 +881,36 @@
         <Setter Property="Margin" Value="5,5,5,5" />
     </Style>
 
+    <Style TargetType="fields:TextFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+    <Style TargetType="fields:ManyToManyFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
+    <Style TargetType="fields:OneToManyFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+    </Style>
+
     <!-- 查询条件表单 -->
-   <Style TargetType="queryFields:BooleanQueryFieldControl">
+    <Style TargetType="queryFields:BooleanQueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
-   <Style TargetType="queryFields:StringQueryFieldControl">
+    <Style TargetType="queryFields:StringQueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
-   <Style TargetType="queryFields:EnumerationQueryFieldControl">
+    <Style TargetType="queryFields:EnumerationQueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
-   <Style TargetType="queryFields:IntegerQueryFieldControl">
+    <Style TargetType="queryFields:IntegerQueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
-   <Style TargetType="queryFields:DateQueryFieldControl">
+    <Style TargetType="queryFields:DateQueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
