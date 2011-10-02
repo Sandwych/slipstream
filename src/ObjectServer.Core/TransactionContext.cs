@@ -150,6 +150,11 @@ namespace ObjectServer
                 }
 
                 //处置非托管对象
+                if (this.Session.IsSystemUser)
+                {
+                    Session.Remove(this.dbctx, this.Session.ID);
+                }
+
                 this.DBContext.Close();
 
                 this.disposed = true;

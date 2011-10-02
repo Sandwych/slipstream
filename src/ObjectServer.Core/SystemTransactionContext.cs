@@ -19,6 +19,7 @@ namespace ObjectServer
             Debug.Assert(db != null);
             this.db = db;
             this.Session = Session.CreateSystemUserSession();
+            Session.Put(db, this.Session);
             this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
         }
 
@@ -39,6 +40,11 @@ namespace ObjectServer
                 }
 
                 //处理非托管资源
+                //删除系统 Session
+                if (this.Session.IsSystemUser)
+                {
+                    Session.Remove(this.db, this.Session.ID);
+                }
 
                 this.disposed = true;
             }
