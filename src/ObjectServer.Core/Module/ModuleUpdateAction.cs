@@ -7,7 +7,7 @@ namespace ObjectServer
 {
     public enum ModuleUpdateAction
     {
-        None,
+        NoAction,
         ToInstall,
         ToUpgrade
     }

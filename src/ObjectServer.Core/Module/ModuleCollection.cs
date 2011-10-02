@@ -167,7 +167,7 @@ namespace ObjectServer
                     var state = (string)m["state"];
                     if (state == ModuleModel.States.Installed)
                     {
-                        module.Load(scope, ModuleUpdateAction.None);
+                        module.Load(scope, ModuleUpdateAction.NoAction);
                     }
                     else if (state == ModuleModel.States.ToInstall)
                     {
