@@ -23,7 +23,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
     public partial class FormView : UserControl
     {
         private IDictionary<string, object> viewRecord;
-        private IDictionary<string, object> actionRecord;
 
         private IDictionary<string, IFieldWidget> fieldWidgets;
 
@@ -31,14 +30,12 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private long recordID;
         private string modelName;
         private FormModel formModel;
-        private SynchronizationContext syncCtx = SynchronizationContext.Current;
 
-        public FormView(string model, long recordID, IDictionary<string, object> action)
+        public FormView(string model, long recordID)
         {
             InitializeComponent();
 
             this.modelName = model;
-            this.actionRecord = action;
             this.recordID = recordID;
 
             this.Init();
@@ -55,31 +52,27 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             };
 
             app.ClientService.BeginExecute("core.view", "GetView", new object[] { this.modelName, "form", null }, o =>
+            {
+                this.viewRecord = (IDictionary<string, object>)o;
+                var args = new object[] { this.modelName };
+                app.ClientService.BeginExecute("core.model", "GetFields", args, result =>
                 {
-                    this.viewRecord = (IDictionary<string, object>)o;
-                    var args = new object[] { this.modelName };
-                    app.ClientService.BeginExecute("core.model", "GetFields", args, result =>
+                    var metaFields = ((object[])result).Select(r => (IDictionary<string, object>)r).ToArray();
+
+                    this.LoadForm(metaFields);
+
+                    if (this.recordID > 0)
                     {
-                        syncCtx.Send(delegate
-                        {
-                            var metaFields = ((object[])result).Select(r => (IDictionary<string, object>)r).ToArray();
-
-                            this.LoadForm(metaFields);
-
-                            if (this.recordID > 0)
-                            {
-                                this.LoadData();
-                            }
-                        }, null);
-                    });
+                        this.LoadData();
+                    }
                 });
+            });
         }
 
         private void LoadForm(IDictionary<string, object>[] metaFields)
         {
             Debug.Assert(!string.IsNullOrEmpty(this.modelName));
             Debug.Assert(this.viewRecord != null);
-            Debug.Assert(this.actionRecord != null);
             Debug.Assert(this.fields != null);
 
             //this.modelName = (string)this.actionRecord["model"];
@@ -108,7 +101,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             Debug.Assert(!string.IsNullOrEmpty(this.modelName));
             Debug.Assert(this.recordID > 0);
             Debug.Assert(this.viewRecord != null);
-            Debug.Assert(this.actionRecord != null);
             Debug.Assert(this.fieldWidgets != null);
 
             //加载 Record 数据
@@ -122,14 +114,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 var records = objs.Select(r => (Dictionary<string, object>)r).ToArray();
                 var record = records[0];
                 this.formModel = new FormModel(record);
-                this.syncCtx.Send(delegate
+                foreach (var p in this.fieldWidgets)
                 {
-                    foreach (var p in this.fieldWidgets)
-                    {
-                        p.Value.Value = record[p.Key];
-                    }
+                    p.Value.Value = record[p.Key];
+                }
 
-                }, null);
             });
 
         }

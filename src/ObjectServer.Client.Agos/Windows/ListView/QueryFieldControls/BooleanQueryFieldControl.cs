@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 using ObjectServer.Client.Agos.Models;
 
-namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
+namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
 {
     public class BooleanQueryFieldControl : CheckBox, IQueryField
     {

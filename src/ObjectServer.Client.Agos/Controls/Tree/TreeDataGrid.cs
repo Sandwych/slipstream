@@ -12,7 +12,7 @@ using System.Windows.Data;
 using System.Linq;
 using System.Collections.Generic;
 
-using ObjectServer.Client.Agos.Windows.ListView.ValueConverters;
+using ObjectServer.Client.Agos.Windows.TreeView.ValueConverters;
 
 namespace ObjectServer.Client.Agos.Controls.Tree
 {

@@ -10,24 +10,20 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-namespace ObjectServer.Client.Agos.Windows.FormView
+namespace ObjectServer.Client.Agos.Controls
 {
-    public partial class FormDialog : FloatableWindow
+    public partial class SelectionDialog : FloatableWindow
     {
-        public FormDialog(string model, long recordID)
+        private readonly string modelName;
+
+        public SelectionDialog(string modelName)
         {
             var app = (App)App.Current;
             this.ParentLayoutRoot = app.MainPage.LayoutRoot;
-
             InitializeComponent();
 
-            var formWindow = new FormView(model, recordID);
-            this.ScrollContent.Child = formWindow;
-            /*
-            this.LayoutRoot.Children.Add(formWindow);
-            formWindow.SetValue(Grid.ColumnProperty, 0);
-            formWindow.SetValue(Grid.RowProperty, 0);
-            */
+            this.modelName = modelName;
+            this.treeView1.Init(this.modelName, null);
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)

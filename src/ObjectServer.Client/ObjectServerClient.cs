@@ -98,23 +98,23 @@ namespace ObjectServer.Client
             return tcs.Task;
         }
 
-        public void BeginCreateDatabase(string serverPassword, string dbName, string adminPassword, Action resultCallback)
+        public void BeginCreateDatabase(string serverPassword, string dbName, string adminPassword, Action<Exception> resultCallback)
         {
             var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim(), adminPassword.Trim() };
-            this.jsonRpcClient.BeginInvoke("createDatabase", args, o =>
+            this.jsonRpcClient.BeginInvoke("createDatabase", args, (result, error) =>
             {
-                resultCallback();
+                resultCallback(error);
             });
         }
 
-        public void BeginDeleteDatabase(string serverPassword, string dbName, Action resultCallback)
+        public void BeginDeleteDatabase(string serverPassword, string dbName, Action<Exception> resultCallback)
         {
             var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim() };
-            this.jsonRpcClient.BeginInvoke("deleteDatabase", args, o =>
+            this.jsonRpcClient.BeginInvoke("deleteDatabase", args, (result, exception) =>
             {
-                resultCallback();
+                resultCallback(exception);
             });
         }
 

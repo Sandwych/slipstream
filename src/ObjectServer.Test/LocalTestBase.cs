@@ -44,7 +44,7 @@ namespace ObjectServer
         private void ActiveTestModule()
         {
             //激活 test 模块
-            using (var scope = new TransactionContext(this.SessionId))
+            using (var scope = new TransactionContext(TestingDatabaseName, this.SessionId))
             {
                 var constraints = new object[][] { new object[] { "name", "=", "test" } };
                 var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
@@ -87,7 +87,7 @@ namespace ObjectServer
             Debug.Assert(this.ServiceContext == null);
             Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
 
-            this.ServiceContext = new TransactionContext(this.SessionId);
+            this.ServiceContext = new TransactionContext(TestingDatabaseName, this.SessionId);
         }
 
         [TearDown]
@@ -122,7 +122,8 @@ namespace ObjectServer
 
         protected void ClearModel(string model)
         {
-            var ids = (long[])this.Service.Execute(this.SessionId, model, "Search", null, null, 0, 0);
+            var ids = (long[])this.Service.Execute(
+                TestingDatabaseName, this.SessionId, model, "Search", null, null, 0, 0);
             if (ids.Length > 0)
             {
                 var idsToDel = ids.Select(e => (object)e).ToArray();

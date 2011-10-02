@@ -17,7 +17,7 @@ namespace ObjectServer.Model.Test
             var service = ObjectServer.Environment.ExportedService;
             var sessionId = service.LogOn(TestingDatabaseName, "testuser", "testuser");
 
-            using (var scope = new TransactionContext(sessionId))
+            using (var scope = new TransactionContext(TestingDatabaseName, sessionId))
             {
                 var userModel = (ObjectServer.Model.IModel)scope.GetResource("core.user");
 
@@ -49,7 +49,7 @@ namespace ObjectServer.Model.Test
 
             }
 
-            service.LogOff("objectserver", sessionId);
+            service.LogOff(TestingDatabaseName, sessionId);
 
         }
     }

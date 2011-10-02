@@ -33,7 +33,7 @@ namespace ObjectServer.Core.Test
 
             try
             {
-                using (var scope = new TransactionContext(sid))
+                using (var scope = new TransactionContext(TestingDatabaseName, sid))
                 {
                     var orders = new OrderExpression[] {
                         new OrderExpression("name", SortDirection.Asc) 

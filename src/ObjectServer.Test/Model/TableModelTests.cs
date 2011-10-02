@@ -48,7 +48,7 @@ namespace ObjectServer.Model.Test
             var newValues = new Dictionary<string, object> {
                 { "name", "changed_name" },
             };
-            this.Service.Execute(this.SessionId, modelName, "Write", id, newValues);
+            this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Write", id, newValues);
 
             var ids = new object[] { id };
             dynamic data = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Read", ids, null);

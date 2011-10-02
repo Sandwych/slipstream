@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 using ObjectServer.Client.Agos.Models;
 
@@ -18,7 +19,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
     {
         private readonly IDictionary<string, object> metaField;
 
-        private readonly Button selectButton;
+        private readonly Button selectionButton;
         private readonly TextBox nameTextBox;
 
         public ManyToOneFieldControl(object metaField)
@@ -36,10 +37,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.nameTextBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             layoutRoot.Children.Add(nameTextBox);
 
-            this.selectButton = new Button();
-            this.selectButton.SetValue(Grid.ColumnProperty, 1);
-            this.selectButton.Content = "...";
-            layoutRoot.Children.Add(selectButton);
+            this.selectionButton = new Button();
+            this.selectionButton.SetValue(Grid.ColumnProperty, 1);
+            this.selectionButton.Content = "...";
+            this.selectionButton.Click += new RoutedEventHandler(this.SelectionButtonClicked);
+            layoutRoot.Children.Add(selectionButton);
 
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
@@ -68,6 +70,16 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public void Empty()
         {
+        }
+
+        public void SelectionButtonClicked(object sender, RoutedEventArgs args)
+        {
+            Debug.Assert(this.metaField != null);
+            var relatedModel = this.metaField["relation"] as string;
+            Debug.Assert(!string.IsNullOrEmpty(relatedModel));
+
+            var dlg = new Controls.SelectionDialog(relatedModel);
+            dlg.ShowDialog();
         }
     }
 }

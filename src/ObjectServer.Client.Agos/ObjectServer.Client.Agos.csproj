@@ -98,10 +98,16 @@
     </Reference>
     <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="TreeGrid">
+      <HintPath>..\..\lib\sl4-treegrid\TreeGrid.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\NullableInt64UpDown.cs" />
     <Compile Include="Controls\NullableInt32UpDown.cs" />
+    <Compile Include="Controls\SelectionDialog.xaml.cs">
+      <DependentUpon>SelectionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Tree\TreeDataGrid.cs" />
     <Compile Include="Models\FormModel.cs" />
     <Compile Include="Models\ServerConnection.cs" />
@@ -129,7 +135,7 @@
     <Compile Include="Controls\TransitionFrame.cs" />
     <Compile Include="Utility\DataSourceCreator.cs" />
     <Compile Include="Models\DBCreationModel.cs" />
-    <Compile Include="Models\ListViewModel.cs" />
+    <Compile Include="Models\TreeViewModel.cs" />
     <Compile Include="Models\QueryConstraint.cs" />
     <Compile Include="Properties\GlobalSuppressions.cs" />
     <Compile Include="Controls\VisualStates.cs" />
@@ -144,7 +150,7 @@
       <DependentUpon>SecurityQuestions.resx</DependentUpon>
     </Compile>
     <Compile Include="Models\IWindowAction.cs" />
-    <Compile Include="Models\ListWindowModel.cs" />
+    <Compile Include="Models\TreeWindowModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\WindowManager.cs" />
     <Compile Include="UI\DBCreationPage.xaml.cs">
@@ -199,11 +205,11 @@
     <Compile Include="Windows\FormView\Fields\CharsFieldControl.cs" />
     <Compile Include="Windows\FormView\IFieldWidget.cs" />
     <Compile Include="Windows\ListView\IQueryField.cs" />
-    <Compile Include="Windows\ListView\ListView.xaml.cs">
-      <DependentUpon>ListView.xaml</DependentUpon>
+    <Compile Include="Windows\ListView\TreeView.xaml.cs">
+      <DependentUpon>TreeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ListView\ListWindow.xaml.cs">
-      <DependentUpon>ListWindow.xaml</DependentUpon>
+    <Compile Include="Windows\ListView\TreeWindow.xaml.cs">
+      <DependentUpon>TreeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ListView\QueryFieldControlFactory.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\BooleanQueryFieldControl.cs" />
@@ -221,7 +227,11 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Windows\ListView\ListWindow.xaml">
+    <Page Include="Controls\SelectionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ListView\TreeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -302,7 +312,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ListView\ListView.xaml">
+    <Page Include="Windows\ListView\TreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -46,11 +46,15 @@
                             <TextBlock Grid.Column="1" x:Name="ApplicationNameTextBlock" FontSize="18" VerticalAlignment="Center"
                             Margin="5,5,5,5" Foreground="White"
                             Text="{Binding ApplicationStrings.ApplicationName, Source={StaticResource ResourceWrapper}}"  />
-                            <HyperlinkButton Grid.Column="3" x:Name="LogoutButton" Content="注销" Width="75" Height="23" Click="LogoutButton_Click"  />
+                            <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                <HyperlinkButton x:Name="ChangePasswordButton" Content="更改密码" Margin="5,5,5,5" 
+                                                 VerticalContentAlignment="Center" Foreground="White" />
+                                <Rectangle Width="1" Fill="White" Margin="0,10,0,10" />
+                                <HyperlinkButton x:Name="LogoutButton" Content="注销" Margin="5,5,5,5" Click="LogoutButton_Click" 
+                                                 VerticalContentAlignment="Center" Foreground="White"  />
+                            </StackPanel>
                         </Grid>
-                        <Rectangle Height="1" Fill="#FFD9D4CC" />
                         <Border Height="25">
-
                         </Border>
                     </StackPanel>
                 </Border>
@@ -72,7 +76,14 @@
             <controls:TreeView Name="Menu" Width="Auto" Grid.Column="0" SelectedItemChanged="Menu_SelectedItemChanged" Margin="5,5,5,5" BorderBrush="#FF999999">
             </controls:TreeView>
             <controls:GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="0,5,0,5" Width="6" BorderThickness="0" />
-            <controls:TabControl Grid.Column="2" Padding="0,0,0,0" x:Name="TabContainer" Margin="5,5,5,5" BorderBrush="#FF999999" Background="{StaticResource SolidControlColor}">
+            <controls:TabControl Grid.Column="2" Padding="0,0,0,0" x:Name="TabContainer" 
+                                 Margin="5,5,5,5" BorderBrush="#FF999999" Background="{StaticResource SolidControlColor}">
+                <controls:TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="X" />
+                    </DataTemplate>
+                </controls:TabControl.ItemTemplate>
+
             </controls:TabControl>
         </Grid>
         <Border x:Name="StatusBar" Margin="0,0,0,0" Grid.Row="2" Style="{StaticResource StatusBarStyle}">

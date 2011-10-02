@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 
 using ObjectServer.Client.Agos.Models;
 
-namespace ObjectServer.Client.Agos.Windows.ListView
+namespace ObjectServer.Client.Agos.Windows.TreeView
 {
     public interface IQueryField
     {

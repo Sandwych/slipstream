@@ -13,8 +13,9 @@ namespace ObjectServer.Client
         void BeginGetVersion(Action<Version, Exception> resultCallback);
         void BeginListDatabases(Action<string[], Exception> resultCallback);
         Task<string[]> ListDatabasesAsync();
-        void BeginCreateDatabase(string serverPasswordHash, string dbName, string adminPassword, Action resultCallback);
-        void BeginDeleteDatabase(string serverPasswordHash, string dbName, Action resultCallback);
+        void BeginCreateDatabase(
+            string serverPasswordHash, string dbName, string adminPassword, Action<Exception> resultCallback);
+        void BeginDeleteDatabase(string serverPasswordHash, string dbName, Action<Exception> resultCallback);
 
         void BeginLogOn(
            string dbName, string userName, string password, Action<string, Exception> resultCallback);

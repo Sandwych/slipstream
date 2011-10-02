@@ -35,13 +35,9 @@
             this.TextUserName.Text = app.ClientService.LoggedUserName;
             this.TextServerUri.Text = app.ClientService.ServerAddress.ToString();
 
-            var sc = SynchronizationContext.Current;
             app.ClientService.ReadAllMenus(menus =>
             {
-                sc.Send(delegate
-                {
-                    this.LoadMenus(menus);
-                }, null);
+                this.LoadMenus(menus);
             });
         }
 
@@ -68,7 +64,7 @@
             this.TabContainer.SelectedItem = tabPage;
 
             //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
-            var actWin = new Windows.ListView.ListView(menu.Action.Item2);
+            var actWin = new Windows.TreeView.TreeWindow(menu.Action.Item2);
 
             var actionName = menu.Action.Item1;
 
@@ -140,15 +136,11 @@
         {
             var app = (App)Application.Current;
 
-            var sc = System.Threading.SynchronizationContext.Current;
             app.ClientService.BeginLogOff(delegate
             {
-                sc.Send(delegate
-                {
-                    this.TabContainer.Items.Clear();
-                    app.PrepareToLogin();
-                    GC.Collect();
-                }, null);
+                this.TabContainer.Items.Clear();
+                app.PrepareToLogin();
+                GC.Collect();
             });
         }
 

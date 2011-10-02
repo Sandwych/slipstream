@@ -58,16 +58,20 @@ namespace ObjectServer.Client
         public void BeginInvoke(string method, object[] args, Action<object, Exception> resultCallback)
         {
             var jreq = new JsonRpcRequest(method, args);
+            var syncCtx = SynchronizationContext.Current;
             jreq.BeginPost(this.Uri, (jrep, e) =>
             {
-                if (jrep != null)
+                syncCtx.Post(delegate
                 {
-                    resultCallback(jrep.Result, e);
-                }
-                else
-                {
-                    resultCallback(null, e);
-                }
+                    if (jrep != null)
+                    {
+                        resultCallback(jrep.Result, e);
+                    }
+                    else
+                    {
+                        resultCallback(null, e);
+                    }
+                }, null);
             });
         }
 

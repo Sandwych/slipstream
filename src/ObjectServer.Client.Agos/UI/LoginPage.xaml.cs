@@ -37,46 +37,6 @@ namespace ObjectServer.Client.Agos.UI
             this.LoadDatabaseList();
         }
 
-        private void LoadDatabaseListAsync()
-        {
-            var app = (App)Application.Current;
-            var loginModel = (LoginModel)this.DataContext;
-
-            if (app.ClientService == null)
-            {
-                app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
-            }
-
-            var sc = SynchronizationContext.Current;
-            app.ClientService.ListDatabasesAsync()
-                .ContinueWith(t =>
-                {
-                    try
-                    {
-                        var dbs = t.Result;
-                        sc.Send(delegate
-                        {
-                            this.listDatabases.ItemsSource = dbs;
-                            if (dbs.Length >= 1)
-                            {
-                                this.buttonSignIn.IsEnabled = true;
-                                this.listDatabases.SelectedIndex = 0;
-                            }
-                        }, null);
-                    }
-                    catch (AggregateException)
-                    {
-                        sc.Send(delegate
-                        {
-                            ErrorWindow.CreateNew(
-                                "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
-                                StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
-                        }, null);
-                    }
-                });
-
-        }
-
         private void LoadDatabaseList()
         {
             var app = (App)Application.Current;
@@ -87,7 +47,6 @@ namespace ObjectServer.Client.Agos.UI
                 app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
             }
 
-            var sc = SynchronizationContext.Current;
             app.ClientService.BeginListDatabases((dbs, error) =>
             {
 
@@ -95,26 +54,20 @@ namespace ObjectServer.Client.Agos.UI
                 {
                     if (error is System.Security.SecurityException)
                     {
-                        sc.Send(delegate
-                        {
-                            ErrorWindow.CreateNew(
-                                "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
-                                StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
-                        }, null);
+                        ErrorWindow.CreateNew(
+                            "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
+                            StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
                     }
                     return;
                 }
 
-                sc.Send(delegate
-                {
-                    this.listDatabases.ItemsSource = dbs;
+                this.listDatabases.ItemsSource = dbs;
 
-                    if (dbs.Length >= 1)
-                    {
-                        this.buttonSignIn.IsEnabled = true;
-                        this.listDatabases.SelectedIndex = 0;
-                    }
-                }, null);
+                if (dbs.Length >= 1)
+                {
+                    this.buttonSignIn.IsEnabled = true;
+                    this.listDatabases.SelectedIndex = 0;
+                }
             });
         }
 
@@ -143,22 +96,18 @@ namespace ObjectServer.Client.Agos.UI
 
             var client = new ObjectServerClient(new Uri(this.textServer.Text));
 
-            var sc = SynchronizationContext.Current;
             client.BeginLogOn(loginModel.Database, loginModel.Login, loginModel.Password,
                 (sid, error) =>
                 {
-                    sc.Send(delegate
+                    if (error != null || string.IsNullOrEmpty(sid))
                     {
-                        if (error != null || string.IsNullOrEmpty(sid))
-                        {
-                            this.textMessage.Text = "登录失败，请检查用户名与密码是否正确";
-                        }
-                        else
-                        {
-                            app.ClientService = client;
-                            app.MainPage.NavigateToContentPage();
-                        }
-                    }, null);
+                        this.textMessage.Text = "登录失败，请检查用户名与密码是否正确";
+                    }
+                    else
+                    {
+                        app.ClientService = client;
+                        app.MainPage.NavigateToContentPage();
+                    }
                 });
 
         }

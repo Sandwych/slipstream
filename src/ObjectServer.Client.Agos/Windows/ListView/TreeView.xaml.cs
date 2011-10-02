@@ -17,11 +17,11 @@ using System.Threading;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;
-using ObjectServer.Client.Agos.Windows.ListView.ValueConverters;
+using ObjectServer.Client.Agos.Windows.TreeView.ValueConverters;
 
-namespace ObjectServer.Client.Agos.Windows.ListView
+namespace ObjectServer.Client.Agos.Windows.TreeView
 {
-    public partial class ListView : UserControl
+    public partial class TreeView : UserControl
     {
         private static Dictionary<string, Tuple<Type, IValueConverter>> COLUMN_TYPE_MAPPING
             = new Dictionary<string, Tuple<Type, IValueConverter>>()
@@ -41,23 +41,15 @@ namespace ObjectServer.Client.Agos.Windows.ListView
         };
 
         private IDictionary<string, object> viewRecord;
-        private IDictionary<string, object> actionRecord;
         private readonly IList<string> fields = new List<string>();
         private string modelName;
-        private IDictionary<string, IQueryField> createdQueryFields =
+        private readonly Dictionary<string, IQueryField> createdQueryFields =
             new Dictionary<string, IQueryField>();
-        private SynchronizationContext syncContext = SynchronizationContext.Current;
 
-        public ListView(long actionID)
-            : this()
-        {
-            this.ActionID = actionID;
-            this.Init();
-        }
-
-        public ListView()
+        public TreeView()
         {
             this.InitializeComponent();
+            this.AdvancedConditionsExpander.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         public void Query()
@@ -69,36 +61,18 @@ namespace ObjectServer.Client.Agos.Windows.ListView
         {
         }
 
-        private void Init()
+        public void Init(string model, long? viewID)
         {
+            this.modelName = model;
             var app = (App)Application.Current;
-            var actionIds = new long[] { this.ActionID };
-            var fields = new string[] { "_id", "name", "view", "model", "views" };
-            app.ClientService.ReadModel("core.action_window", actionIds, fields, actionRecords =>
+
+            var getViewArgs = new object[] { this.modelName, "tree", viewID };
+            app.ClientService.BeginExecute("core.view", "GetView", getViewArgs, (result, error) =>
             {
-                this.actionRecord = actionRecords[0];
-                this.modelName = (string)this.actionRecord["model"];
-
-                var viewField = actionRecords[0]["view"] as object[];
-                var view = viewField == null ? null : viewField[0];
-
-                var getViewArgs = new object[] { this.modelName, "tree", view };
-                app.ClientService.BeginExecute("core.view", "GetView", getViewArgs, (result, error) =>
-                {
-                    this.viewRecord = (IDictionary<string, object>)result;
-                    this.syncContext.Post(delegate
-                    {
-                        this.LoadInternal();
-                    }, null);
-                });
+                this.viewRecord = (IDictionary<string, object>)result;
+                this.LoadInternal();
             });
         }
-
-        #region IWindowAction Members
-
-        public long ActionID { get; set; }
-
-        #endregion
 
         private void LoadData()
         {
@@ -126,11 +100,8 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             {
                 app.ClientService.ReadModel(this.modelName, ids, this.fields, records =>
                 {
-                    this.syncContext.Send(delegate
-                    {
-                        //我们需要一个唯一的字符串型 ID
-                        this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records);
-                    }, null);
+                    //我们需要一个唯一的字符串型 ID
+                    this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records);
                 });
             });
         }
@@ -151,33 +122,42 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             var args = new object[] { this.modelName };
             app.ClientService.BeginExecute("core.model", "GetFields", args, (result, error) =>
             {
-                this.syncContext.Send(delegate
+                var metaFields = ((object[])result).Select(r => (Dictionary<string, object>)r).ToArray();
+                var viewFields = layoutDocument.Elements("tree").Elements();
+
+                IList<DataGridBoundColumn> cols = new List<DataGridBoundColumn>();
+                cols.Add(this.MakeColumn("_id", "id", "ID", System.Windows.Visibility.Collapsed));
+
+                foreach (var f in viewFields)
                 {
-                    var metaFields = ((object[])result).Select(r => (Dictionary<string, object>)r).ToArray();
-                    var viewFields = layoutDocument.Elements("tree").Elements();
+                    var fieldName = f.Attribute("name").Value;
+                    var metaField = metaFields.Single(i => (string)i["name"] == fieldName);
+                    cols.Add(this.MakeColumn(fieldName, (string)metaField["type"], (string)metaField["label"]));
+                }
 
-                    IList<DataGridBoundColumn> cols = new List<DataGridBoundColumn>();
-                    cols.Add(this.MakeColumn("_id", "id", "ID", System.Windows.Visibility.Collapsed));
+                this.gridList.Columns.Clear();
+                foreach (var col in cols)
+                {
+                    this.gridList.Columns.Add(col);
+                }
 
-                    foreach (var f in viewFields)
-                    {
-                        var fieldName = f.Attribute("name").Value;
-                        var metaField = metaFields.Single(i => (string)i["name"] == fieldName);
-                        cols.Add(this.MakeColumn(fieldName, (string)metaField["type"], (string)metaField["label"]));
-                    }
+                this.BasicConditions.Child = (Grid)this.CreateQueryForm(metaFields, viewFields, "basic");
 
-                    this.gridList.Columns.Clear();
-                    foreach (var col in cols)
-                    {
-                        this.gridList.Columns.Add(col);
-                    }
+                if (viewFields.Count(ele => ele.Attribute("where").Value == "advanced") > 0)
+                {
+                    this.AdvancedConditionsExpander.Visibility = System.Windows.Visibility.Visible;
+                    this.AdvancedConditionsExpander.Content = (Grid)this.CreateQueryForm(metaFields, viewFields, "advanced");
+                }
+                else
+                {
+                    this.AdvancedConditionsExpander.Visibility = System.Windows.Visibility.Collapsed;
+                }
 
-                    this.CreateQueryForm(metaFields, viewFields);
-                }, null);
+                this.ClearAllConstraints();
             });
         }
 
-        private void CreateQueryForm(Dictionary<string, object>[] fields, IEnumerable<XElement> viewFields)
+        private object CreateQueryForm(Dictionary<string, object>[] fields, IEnumerable<XElement> viewFields, string where)
         {
             //生成基本查询条件表单
             var columnsPerRow = 6;// (int)Math.Round(this.Width / 150.00) * 2;
@@ -187,7 +167,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                 ColumnCount = columnsPerRow,
             };
 
-            var basicFields = viewFields.Where(ele => ele.Attribute("where").Value == "basic");
+            var basicFields = viewFields.Where(ele => ele.Attribute("where").Value == where);
             var basicQueryFormChildren = new List<Malt.Layout.Models.Placable>();
             var factory = new QueryFieldControlFactory(fields);
             var createdFieldControls = new Dictionary<string, IQueryField>();
@@ -211,10 +191,13 @@ namespace ObjectServer.Client.Agos.Windows.ListView
 
             var layoutEngine = new Malt.Layout.LayoutEngine(factory);
             var basicQueryGrid = layoutEngine.CreateLayoutTable(basicQueryForm);
-            this.BasicConditions.Child = (Grid)basicQueryGrid;
-            this.createdQueryFields = factory.CreatedQueryField;
 
-            this.ClearAllConstraints();
+            foreach (var p in factory.CreatedQueryFields)
+            {
+                this.createdQueryFields.Add(p.Key, p.Value);
+            }
+
+            return basicQueryGrid;
         }
 
 
@@ -234,13 +217,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             return col;
         }
 
-        private void buttonQuery_Click(object sender, RoutedEventArgs e)
-        {
-            Debug.Assert(this.ActionID > 0);
-            this.LoadData();
-        }
-
-        private void buttonDelete_Click(object sender, RoutedEventArgs e)
+        public void DeleteSelectedItems()
         {
             var sb = new System.Text.StringBuilder();
             var ids = new List<long>();
@@ -262,23 +239,19 @@ namespace ObjectServer.Client.Agos.Windows.ListView
                 var args = new object[] { ids };
                 app.ClientService.BeginExecute(this.modelName, "Delete", args, result =>
                 {
-                    this.syncContext.Send(delegate
-                    {
-                        this.LoadData();
-                        app.IsBusy = false;
-                    }, null);
+                    this.LoadData();
+                    app.IsBusy = false;
                 });
             }
         }
 
-        private void NewButton_Click(object sender, RoutedEventArgs e)
+        public void New()
         {
-            var dlg = new FormView.FormDialog(this.modelName, -1, this.actionRecord);
+            var dlg = new FormView.FormDialog(this.modelName, -1);
             dlg.ShowDialog();
-            //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        public void EditSelectedItem()
         {
             if (this.gridList.SelectedItems.Count != 1)
             {
@@ -288,7 +261,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             dynamic item = this.gridList.SelectedItems[0];
             var recordID = (long)item._id;
 
-            var dlg = new FormView.FormDialog(this.modelName, recordID, this.actionRecord);
+            var dlg = new FormView.FormDialog(this.modelName, recordID);
             dlg.ShowDialog();
         }
 
@@ -298,7 +271,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             this.LoadData();
         }
 
-        private void ClearAllConstraints()
+        public void ClearAllConstraints()
         {
             System.Diagnostics.Debug.Assert(this.createdQueryFields != null);
 
@@ -308,7 +281,54 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             }
         }
 
+        #region IsQueryable
+        public bool IsQueryable
+        {
+            get { return (bool)GetValue(IsQueryableProperty); }
+            set { SetValue(IsQueryableProperty, value); }
+        }
 
+        /// <summary>
+        /// Identifies the
+        /// <see cref="P:System.Windows.Controls.DatePicker.IsDropDownOpen" />
+        /// dependency property.
+        /// </summary>
+        /// <value>
+        /// The identifier for the
+        /// <see cref="P:System.Windows.Controls.DatePicker.IsDropDownOpen" />
+        /// dependency property.
+        /// </value>
+        public static readonly DependencyProperty IsQueryableProperty =
+            DependencyProperty.Register(
+            "IsQueryable",
+            typeof(bool),
+            typeof(TreeView),
+            new PropertyMetadata(true, OnIsDropDownOpenChanged));
+
+        /// <summary>
+        /// IsDropDownOpenProperty property changed handler.
+        /// </summary>
+        /// <param name="d">DatePicker that changed its IsDropDownOpen.</param>
+        /// <param name="e">The DependencyPropertyChangedEventArgs.</param>
+        private static void OnIsDropDownOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var self = d as TreeView;
+            Debug.Assert(self != null, "The TreeView should not be null!");
+            bool newValue = (bool)e.NewValue;
+            bool oldValue = (bool)e.OldValue;
+
+            if (newValue)
+            {
+                self.QueryConditionsArea.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                self.QueryConditionsArea.Visibility = Visibility.Collapsed;
+            }
+
+        }
+
+        #endregion
 
     }
 }

@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ObjectServer.Client.Agos.Windows.ListView
+namespace ObjectServer.Client.Agos.Windows.TreeView
 {
     public class QueryFieldControlFactory : Malt.Layout.IWidgetFactory
     {
@@ -74,7 +74,7 @@ namespace ObjectServer.Client.Agos.Windows.ListView
             throw new NotImplementedException();
         }
 
-        public IDictionary<string, IQueryField> CreatedQueryField
+        public IDictionary<string, IQueryField> CreatedQueryFields
         {
             get
             {

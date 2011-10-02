@@ -14,7 +14,7 @@ using System.Linq;
 
 using ObjectServer.Client.Agos.Models;
 
-namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
+namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
 {
     public class EnumerationQueryFieldControl : ComboBox, IQueryField
     {

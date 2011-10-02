@@ -6,7 +6,7 @@
   xmlns:appControls="clr-namespace:ObjectServer.Client.Agos.Controls"
   xmlns:fw="clr-namespace:System.Windows.Controls;assembly=FloatableWindow"
   xmlns:fields="clr-namespace:ObjectServer.Client.Agos.Windows.FormView"
-  xmlns:queryFields="clr-namespace:ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls"
+  xmlns:queryFields="clr-namespace:ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls"
   xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input">
 
     <ResourceDictionary.MergedDictionaries>

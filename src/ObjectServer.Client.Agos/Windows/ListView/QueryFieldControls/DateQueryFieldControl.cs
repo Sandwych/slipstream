@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos.Controls;
 
-namespace ObjectServer.Client.Agos.Windows.ListView.QueryFieldControls
+namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
 {
     public class DateQueryFieldControl : UserControl, IQueryField
     {

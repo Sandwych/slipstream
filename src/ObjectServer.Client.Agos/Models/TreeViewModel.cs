@@ -12,9 +12,9 @@ using System.Windows.Shapes;
 
 namespace ObjectServer.Client.Agos.Models
 {
-    public class ListViewModel
+    public class TreeViewModel
     {
-        public ListViewModel(long actionID)
+        public TreeViewModel(long actionID)
         {
             this.ActionID = actionID;
         }

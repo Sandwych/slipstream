@@ -27,6 +27,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.AcceptsReturn = true;
             this.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
+            this.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            this.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         }
 
         public string FieldName { get; private set; }
