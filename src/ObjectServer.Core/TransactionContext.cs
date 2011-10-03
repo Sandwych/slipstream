@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading;
 
 using ObjectServer.Data;
 
@@ -17,6 +18,7 @@ namespace ObjectServer
     {
         private bool disposed = false;
         private readonly IResourceContainer resources;
+        private readonly int currentThreadID;
 
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
@@ -32,6 +34,8 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("sessionId");
             }
+
+            this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
             this.dbctx = DataProvider.CreateDataContext(dbName);
             this.DBContext.Open();
@@ -58,6 +62,7 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("dbName");
             }
+            this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
             this.resources = Environment.DBProfiles.GetDBProfile(dbName);
             this.dbctx = DataProvider.CreateDataContext(dbName);
@@ -76,6 +81,7 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("db");
             }
+            this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
             this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
             this.dbctx = DataProvider.CreateDataContext(db.DatabaseName);
@@ -100,6 +106,7 @@ namespace ObjectServer
             {
                 throw new ObjectDisposedException("ServiceContext");
             }
+            Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
             return this.resources.GetResource(resName);
         }
@@ -116,6 +123,8 @@ namespace ObjectServer
                 throw new ObjectDisposedException("ServiceContext");
             }
 
+            Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+
             return this.resources.GetResourceDependencyWeight(resName);
         }
 
@@ -130,6 +139,7 @@ namespace ObjectServer
                 }
 
                 Debug.Assert(this.dbctx != null);
+                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
                 return this.dbctx;
             }

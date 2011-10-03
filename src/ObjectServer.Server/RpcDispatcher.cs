@@ -161,11 +161,11 @@ namespace ObjectServer.Server
         {
             //TODO 优化，避免转换
             var message = socket.Recv();
-            var result = DoJsonRpc(message);
+            var result = InvokeJsonRpc(message);
             socket.Send(result);
         }
 
-        private static byte[] DoJsonRpc(byte[] json)
+        private static byte[] InvokeJsonRpc(byte[] json)
         {
             Debug.Assert(json != null);
 
