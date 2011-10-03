@@ -53,7 +53,7 @@ namespace ObjectServer.Model
         {
             Debug.Assert(!string.IsNullOrEmpty(field));
 
-            sbView.AppendFormat("<field name=\"{0}\" colspan=\"{1}\" fill=\"{2}\" />\n", 
+            sbView.AppendFormat("<input field=\"{0}\" colspan=\"{1}\" fill=\"{2}\" />\n",
                 field, colspan, fill.ToString().ToLowerInvariant());
         }
 

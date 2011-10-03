@@ -63,14 +63,14 @@
         <notebook>
           <page label="General">
             <label field="name" />
-            <field name="name" />
+            <input field="name" />
             <label field="login" />
-            <field name="login" />
+            <input field="login" />
             <label field="admin" />
-            <field name="admin" />
+            <input field="admin" />
           </page>
           <page label="Roles">
-            <field name="roles" colspan="4" fill="true" />
+            <input field="roles" colspan="4" fill="true" />
           </page>
         </notebook>
       </form>

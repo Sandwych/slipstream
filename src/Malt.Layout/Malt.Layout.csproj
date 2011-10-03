@@ -59,10 +59,11 @@
     <Compile Include="ITableLayoutWidget.cs" />
     <Compile Include="IWidgetFactory.cs" />
     <Compile Include="LayoutEngine.cs" />
+    <Compile Include="Models\AbstractContainer.cs" />
     <Compile Include="Models\Grid.cs" />
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\Notebook.cs" />
-    <Compile Include="Models\Field.cs" />
+    <Compile Include="Models\Input.cs" />
     <Compile Include="Models\Form.cs" />
     <Compile Include="Models\HorizontalLine.cs" />
     <Compile Include="Models\IContainer.cs" />

@@ -188,16 +188,16 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 };
                 basicQueryFormChildren.Add(label);
 
-                var field = new Malt.Layout.Models.Field()
+                var field = new Malt.Layout.Models.Input()
                 {
-                    Name = (string)metaField["name"],
+                    Field = (string)metaField["name"],
                 };
                 basicQueryFormChildren.Add(field);
             }
             basicQueryForm.ChildElements = basicQueryFormChildren.ToArray();
 
             var layoutEngine = new Malt.Layout.LayoutEngine(factory);
-            var basicQueryGrid = layoutEngine.CreateLayoutTable(basicQueryForm);
+            var basicQueryGrid = layoutEngine.CreateLayout(basicQueryForm);
 
             foreach (var p in factory.CreatedQueryFields)
             {
@@ -250,12 +250,6 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                     app.IsBusy = false;
                 });
             }
-        }
-
-        public void New()
-        {
-            var dlg = new FormView.FormDialog(this.modelName, -1);
-            dlg.ShowDialog();
         }
 
         public void EditSelectedItem()
@@ -336,6 +330,17 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
         }
 
         #endregion
+
+        public long[] GetSelectedIDs()
+        {
+            var ids = new List<long>();
+            foreach (dynamic item in this.gridList.SelectedItems)
+            {
+                var id = (long)item._id;
+                ids.Add(id);
+            }
+            return ids.ToArray();
+        }
 
     }
 }

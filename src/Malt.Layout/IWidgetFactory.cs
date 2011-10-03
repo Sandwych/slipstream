@@ -8,16 +8,8 @@ namespace Malt.Layout
 {
     public interface IWidgetFactory
     {
-        /// <summary>
-        /// 创建自定义控件
-        /// </summary>
-        object CreateFieldWidget(Field field);
-
-        /// <summary>
-        /// 创建表格布局控件
-        /// </summary>
-        /// <returns></returns>
-        ITableLayoutWidget CreateTableLayoutWidget();
+        object CreateInputWidget(Input field);
+        ITableLayoutWidget CreateTableLayoutWidget(IContainer container);
 
         /// <summary>
         /// 创建标签控件

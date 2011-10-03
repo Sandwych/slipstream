@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Malt.Layout.Models
 {
     [XmlType("label")]
-    public class Label : Placable
+    public sealed class Label : Placable
     {
         [XmlAttribute("text")]
         public string Text { get; set; }

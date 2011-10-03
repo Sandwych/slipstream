@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Malt.Layout.Models
 {
     [XmlType("notebook")]
-    public class Notebook : Placable
+    public sealed class Notebook : Placable
     {
         private static readonly Page[] EmptyPages = new Page[] { };
 

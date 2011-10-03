@@ -6,63 +6,17 @@ using System.Xml.Serialization;
 namespace Malt.Layout.Models
 {
     [XmlType("form")]
-    public class Form : IContainer
+    public class Form : AbstractContainer
     {
-        private static readonly Placable[] EmptyChildElements = new Placable[] { };
 
         public Form()
+            : base()
         {
-            this.ColumnCount = 4;
-            this.ColumnSpan = 1;
-            this.RowSpan = 1;
-            this.Height = -1.0F;
-            this.Width = -1.0F;
-            this.Fill = false;
-            this.ChildElements = EmptyChildElements;
+
         }
 
-        #region IContainer 成员
+        [XmlAttribute("label")]
+        public string Label { get; set; }
 
-        [XmlElement(ElementName = "label", IsNullable = true, Type = typeof(Label))]
-        [XmlElement(ElementName = "field", IsNullable = true, Type = typeof(Field))]
-        [XmlElement(ElementName = "br", IsNullable = true, Type = typeof(NewLine))]
-        [XmlElement(ElementName = "placeholder", IsNullable = true, Type = typeof(PlaceHolder))]
-        [XmlElement(ElementName = "hr", IsNullable = true, Type = typeof(HorizontalLine))]
-        [XmlElement(ElementName = "notebook", IsNullable = true, Type = typeof(Notebook))]
-        public Placable[] ChildElements
-        {
-            get;
-            set;
-        }
-
-        [XmlAttribute("col")]
-        public int ColumnCount { get; set; }
-
-        #endregion
-
-        #region IPlacable 成员
-
-        [XmlAttribute("rowspan")]
-        public int RowSpan { get; set; }
-
-        [XmlAttribute("colspan")]
-        public int ColumnSpan { get; set; }
-
-        [XmlAttribute("height")]
-        public double Height { get; set; }
-
-        [XmlAttribute("width")]
-        public double Width { get; set; }
-
-        [XmlAttribute("fill")]
-        public bool Fill { get; set; }
-
-        [XmlIgnore]
-        public IEnumerable<IPlacable> Children
-        {
-            get { return this.ChildElements; }
-        }
-
-        #endregion
     }
 }

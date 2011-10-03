@@ -21,7 +21,7 @@ namespace Malt.Layout
             this.widgetFactory = factory;
         }
 
-        public ITableLayoutWidget CreateLayoutTable(IContainer container)
+        public ITableLayoutWidget CreateLayout(IContainer container)
         {
             if (container == null)
             {
@@ -29,7 +29,7 @@ namespace Malt.Layout
             }
 
             var pos = new CellPosition();
-            var tablePanel = this.widgetFactory.CreateTableLayoutWidget();
+            var tablePanel = this.widgetFactory.CreateTableLayoutWidget(container);
             tablePanel.ColumnCount = container.ColumnCount;
             tablePanel.RowCount = ComputeRowCount(container, tablePanel.ColumnCount);
 
@@ -143,14 +143,14 @@ namespace Malt.Layout
                 foreach (Page page in nb.Pages)
                 {
                     var le = new LayoutEngine(this.widgetFactory);
-                    var pageContent = le.CreateLayoutTable(page);
+                    var pageContent = le.CreateLayout(page);
                     var pageWidget = this.widgetFactory.CreatePageWidget(page, widget, pageContent);
                 }
             }
-            else if (placable is Field)
+            else if (placable is Input)
             {
-                var field = placable as Field;
-                widget = this.widgetFactory.CreateFieldWidget(field);
+                var field = placable as Input;
+                widget = this.widgetFactory.CreateInputWidget(field);
             }
             else
             {

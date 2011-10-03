@@ -5,11 +5,11 @@ using System.Xml.Serialization;
 
 namespace Malt.Layout.Models
 {
-    [XmlType("field")]
-    public class Field : Placable
+    [XmlType("input")]
+    public class Input : Placable
     {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
+        [XmlAttribute("field")]
+        public string Field { get; set; }
 
     }
 }

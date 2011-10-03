@@ -36,9 +36,9 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             this.metaFields = fields;
         }
 
-        public object CreateFieldWidget(Malt.Layout.Models.Field field)
+        public object CreateInputWidget(Malt.Layout.Models.Input field)
         {
-            var metaField = this.metaFields.Where(i => (string)i["name"] == field.Name).Single();
+            var metaField = this.metaFields.Where(i => (string)i["name"] == field.Field).Single();
             var fieldType = (string)metaField["type"];
 
             var fieldName = (string)metaField["name"];
@@ -58,7 +58,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             return queryField;
         }
 
-        public Malt.Layout.ITableLayoutWidget CreateTableLayoutWidget()
+        public Malt.Layout.ITableLayoutWidget CreateTableLayoutWidget(Malt.Layout.Models.IContainer container)
         {
             return new FormView.GridLayoutPanelWidget();
         }

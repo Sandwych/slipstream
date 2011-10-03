@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Malt.Layout.Models
 {
     [XmlType("br")]
-    public class NewLine : Placable
+    public sealed class NewLine : Placable
     {
         public NewLine()
         {
