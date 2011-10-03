@@ -108,6 +108,7 @@
     <Compile Include="Controls\SelectionDialog.xaml.cs">
       <DependentUpon>SelectionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Tree\ReferenceFieldConverter.cs" />
     <Compile Include="Controls\Tree\TreeDataGrid.cs" />
     <Compile Include="Models\FormModel.cs" />
     <Compile Include="Models\ServerConnection.cs" />
@@ -157,11 +158,11 @@
       <DependentUpon>DBCreationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utility\XamlLoader.cs" />
-    <Compile Include="UI\DatabaseDeletionDialog.xaml.cs">
-      <DependentUpon>DatabaseDeletionDialog.xaml</DependentUpon>
+    <Compile Include="UI\DBDeletionDialog.xaml.cs">
+      <DependentUpon>DBDeletionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\DatabasesPage.xaml.cs">
-      <DependentUpon>DatabasesPage.xaml</DependentUpon>
+    <Compile Include="UI\DBManagementPage.xaml.cs">
+      <DependentUpon>DBManagementPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
@@ -179,6 +180,8 @@
     <Compile Include="UI\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\FormView\Fields\PageControl.cs" />
+    <Compile Include="Windows\FormView\Fields\NotebookControl.cs" />
     <Compile Include="Windows\FormView\Fields\OneToManyFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\FieldLabel.cs" />
     <Compile Include="Windows\FormView\Fields\BooleanFieldControl.cs" />
@@ -272,11 +275,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\DatabaseDeletionDialog.xaml">
+    <Page Include="UI\DBDeletionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\DatabasesPage.xaml">
+    <Page Include="UI\DBManagementPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

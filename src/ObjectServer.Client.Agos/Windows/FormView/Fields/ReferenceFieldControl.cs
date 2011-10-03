@@ -41,13 +41,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.modelComboBox = new ComboBox();
             this.modelComboBox.SetValue(Grid.ColumnProperty, 0);
             this.modelComboBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-            this.modelComboBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             layoutRoot.Children.Add(modelComboBox);
 
             this.nameTextBox = new TextBox();
             this.nameTextBox.SetValue(Grid.ColumnProperty, 1);
             this.nameTextBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-            this.nameTextBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             layoutRoot.Children.Add(nameTextBox);
 
             this.selectButton = new Button();

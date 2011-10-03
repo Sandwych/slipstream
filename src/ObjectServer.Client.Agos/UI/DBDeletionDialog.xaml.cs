@@ -12,17 +12,17 @@ using System.Windows.Shapes;
 
 namespace ObjectServer.Client.Agos.UI
 {
-    public partial class DatabaseDeletionDialog : ChildWindow
+    public partial class DBDeletionDialog : ChildWindow
     {
-        public DatabaseDeletionDialog()
+        public DBDeletionDialog()
         {
             InitializeComponent();
         }
 
-        public DatabaseDeletionDialog(string dbName)
+        public DBDeletionDialog(string dbName)
             : this()
         {
-            this.DatabaseName = dbName;
+            this.DBName = dbName;
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -35,7 +35,7 @@ namespace ObjectServer.Client.Agos.UI
             this.DialogResult = false;
         }
 
-        public string DatabaseName { get; private set; }
+        public string DBName { get; private set; }
     }
 }
 

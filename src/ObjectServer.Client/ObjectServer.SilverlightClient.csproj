@@ -61,6 +61,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonRpc\JsonRpcError.cs" />
     <Compile Include="JsonRpc\JsonRpcException.cs" />
     <Compile Include="JsonRpc\WebRequestExtensions.cs" />
     <Compile Include="Model\FieldAttribute.cs" />

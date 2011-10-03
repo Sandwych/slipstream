@@ -59,12 +59,6 @@
             this.ContentFrame.Navigate(uri);
         }
 
-        public void NavigateToDatabasesPage()
-        {
-            var uri = new Uri("/Databases", UriKind.Relative);
-            this.ContentFrame.Navigate(uri);
-        }
-
         /// <summary>
         /// If an error occurs during navigation, show an error window
         /// </summary>

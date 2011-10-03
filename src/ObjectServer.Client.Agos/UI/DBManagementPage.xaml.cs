@@ -14,9 +14,9 @@ using System.Threading;
 
 namespace ObjectServer.Client.Agos.UI
 {
-    public partial class DatabasesPage : Page
+    public partial class DBManagementPage : Page
     {
-        public DatabasesPage()
+        public DBManagementPage()
         {
             InitializeComponent();
         }
@@ -70,7 +70,7 @@ namespace ObjectServer.Client.Agos.UI
         private void buttonDrop_Click(object sender, RoutedEventArgs e)
         {
             var dbName = this.databases.SelectedValue as string;
-            var dlg = new DatabaseDeletionDialog(dbName);
+            var dlg = new DBDeletionDialog(dbName);
             dlg.Closed += this.passwordDlg_Closed;
             dlg.Show();
         }
@@ -87,12 +87,12 @@ namespace ObjectServer.Client.Agos.UI
 
         void passwordDlg_Closed(object sender, EventArgs e)
         {
-            var dlg = (DatabaseDeletionDialog)sender;
+            var dlg = (DBDeletionDialog)sender;
 
             if (dlg.DialogResult == true && !string.IsNullOrEmpty(dlg.rootPassword.Password))
             {
                 var password = dlg.rootPassword.Password;
-                var dbName = dlg.DatabaseName;
+                var dbName = dlg.DBName;
                 DeleteDatabase(password, dbName);
             }
         }
@@ -103,8 +103,12 @@ namespace ObjectServer.Client.Agos.UI
             app.IsBusy = true;
             app.ClientService.BeginDeleteDatabase(password, dbName, (error) =>
             {
-                this.LoadDatabaseList();
                 app.IsBusy = false;
+                if (error != null)
+                {
+                    ErrorWindow.CreateNew(error.ToString());
+                }
+                this.LoadDatabaseList();
             });
         }
 

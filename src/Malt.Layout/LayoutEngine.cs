@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 using Malt.Layout.Models;
 
@@ -69,8 +70,12 @@ namespace Malt.Layout
             return tablePanel;
         }
 
+
         private int ComputeRowCount(IContainer container, int columnCount)
         {
+            Debug.Assert(this.widgetFactory != null);
+            Debug.Assert(container != null);
+
             var pos = new CellPosition();
             int rowCount = 0;
 
@@ -95,6 +100,7 @@ namespace Malt.Layout
             return rowCount + 1;
         }
 
+
         private static int ComputeColumnSpan(int columnCount, IPlacable placable, CellPosition pos)
         {
             //先看整个格子够不够放
@@ -111,6 +117,8 @@ namespace Malt.Layout
 
         private object CreateWidget(IPlacable placable)
         {
+            Debug.Assert(placable != null);
+
             object widget = null;
 
             if (placable is Label)
@@ -127,6 +135,17 @@ namespace Malt.Layout
             {
                 var hl = placable as HorizontalLine;
                 widget = this.widgetFactory.CreateHorizontalLineWidget(hl);
+            }
+            else if (placable is Notebook)
+            {
+                var nb = placable as Notebook;
+                widget = this.widgetFactory.CreateNotebookWidget(nb);
+                foreach (Page page in nb.Pages)
+                {
+                    var le = new LayoutEngine(this.widgetFactory);
+                    var pageContent = le.CreateLayoutTable(page);
+                    var pageWidget = this.widgetFactory.CreatePageWidget(page, widget, pageContent);
+                }
             }
             else if (placable is Field)
             {

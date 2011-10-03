@@ -5,12 +5,10 @@ using System.Xml.Serialization;
 
 namespace Malt.Layout.Models
 {
-    [XmlType("form")]
-    public class Form : IContainer
+    [XmlType("grid")]
+    public class Grid : IContainer
     {
-        private static readonly Placable[] EmptyChildElements = new Placable[] { };
-
-        public Form()
+        public Grid()
         {
             this.ColumnCount = 4;
             this.ColumnSpan = 1;
@@ -18,7 +16,6 @@ namespace Malt.Layout.Models
             this.Height = -1.0F;
             this.Width = -1.0F;
             this.Fill = false;
-            this.ChildElements = EmptyChildElements;
         }
 
         #region IContainer 成员
@@ -28,7 +25,6 @@ namespace Malt.Layout.Models
         [XmlElement(ElementName = "br", IsNullable = true, Type = typeof(NewLine))]
         [XmlElement(ElementName = "placeholder", IsNullable = true, Type = typeof(PlaceHolder))]
         [XmlElement(ElementName = "hr", IsNullable = true, Type = typeof(HorizontalLine))]
-        [XmlElement(ElementName = "notebook", IsNullable = true, Type = typeof(Notebook))]
         public Placable[] ChildElements
         {
             get;

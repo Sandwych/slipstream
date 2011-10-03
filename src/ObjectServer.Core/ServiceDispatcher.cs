@@ -142,8 +142,8 @@ namespace ObjectServer
         {
             VerifyRootPassword(rootPasswordHash);
 
-            Environment.DBProfiles.RemoveDB(dbName); //删除数据库上下文
             DataProvider.DeleteDatabase(dbName); //删除实际数据库
+            Environment.DBProfiles.RemoveDB(dbName); //删除数据库上下文
         }
 
         private static void VerifyRootPassword(string rootPasswordHash)

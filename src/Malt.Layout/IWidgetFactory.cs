@@ -25,6 +25,10 @@ namespace Malt.Layout
         /// <returns></returns>
         object CreateLabelWidget(Models.Label label);
 
+        object CreateNotebookWidget(Models.Notebook notebook);
+
+        object CreatePageWidget(Models.Page page, object parentWidget, object childContent);
+
         /// <summary>
         /// 创建水平线控件
         /// </summary>

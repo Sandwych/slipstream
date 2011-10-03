@@ -10,7 +10,7 @@
            Title="登录" KeyDown="Page_KeyDown">
     <Grid Background="#FF32302E">
 
-        <StackPanel VerticalAlignment="Center" Height="Auto" Width="420" Orientation="Vertical" Background="{StaticResource SolidControlColor}"  >
+        <StackPanel VerticalAlignment="Center" Height="Auto" Width="390" Orientation="Vertical" Background="{StaticResource SolidControlColor}"  >
 
             <StackPanel.Effect>
                 <DropShadowEffect ShadowDepth="5" BlurRadius="5" Color="Black" />
@@ -22,34 +22,35 @@
 
             <Grid Name="gridForm"  Margin="15,0,15,15" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="28" MinHeight="21" />
-                    <RowDefinition Height="28" MinHeight="21" />
-                    <RowDefinition Height="28" MinHeight="21"/>
-                    <RowDefinition Height="28" MinHeight="21"/>
+                    <RowDefinition Height="Auto" MinHeight="21" />
+                    <RowDefinition Height="Auto" MinHeight="21" />
+                    <RowDefinition Height="Auto" MinHeight="21"/>
+                    <RowDefinition Height="Auto" MinHeight="21"/>
                     <RowDefinition Height="40" MinHeight="21"/>
                     <RowDefinition Height="Auto" MinHeight="30"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" MinWidth="48" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <dataInput:Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" 
-                             Target="{Binding ElementName=textServer}" Content="服务器" />
-                <TextBox x:Name="textServer" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" 
+                             Target="{Binding ElementName=textServer}" Content="服务器" Margin="0,0,10,0" />
+                <TextBox x:Name="textServer" Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" Margin="5,3,5,3"
                      Text="{Binding Path=Address, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=False}" />
 
                 <dataInput:Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" 
                              Target="{Binding ElementName=listDatabases}" Content="数据库" />
-                <ComboBox x:Name="listDatabases" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
+                <ComboBox x:Name="listDatabases" Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" Margin="5,3,5,3" Background="White"
                      SelectedValue="{Binding Path=Database, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True, ValidatesOnNotifyDataErrors=False}" 
                       ></ComboBox>
 
                 <dataInput:Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Target="{Binding ElementName=textLogin}" Content="用户名" />
-                <TextBox x:Name="textLogin" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Center"
+                <TextBox x:Name="textLogin" Grid.Row="2" Grid.Column="1"  VerticalAlignment="Stretch" Margin="5,3,5,3"
                      Text="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=Login, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}"  />
 
                 <dataInput:Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Target="{Binding ElementName=textPassword}" Content="密码" />
-                <PasswordBox x:Name="textPassword" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=Password, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}" />
+                <PasswordBox x:Name="textPassword" Grid.Row="3" Grid.Column="1"   VerticalAlignment="Stretch" Margin="5,3,5,3"
+                             Password="{Binding Mode=TwoWay, NotifyOnValidationError=True, Path=Password, ValidatesOnNotifyDataErrors=False, ValidatesOnExceptions=True}" />
 
                 <TextBlock x:Name="textMessage" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
                        VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#FF990000" />

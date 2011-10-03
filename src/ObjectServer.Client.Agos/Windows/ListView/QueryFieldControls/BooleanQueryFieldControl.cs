@@ -24,9 +24,9 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
 
-            this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.IsThreeState = true;
-
+            this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+            this.VerticalAlignment= System.Windows.VerticalAlignment.Center;
         }
 
         public QueryConstraint[] GetConstraints()

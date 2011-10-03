@@ -24,7 +24,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.metaField = (IDictionary<string, object>)metaField;
 
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-            this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
 
             this.FieldName = (string)this.metaField["name"];
             if (!this.IsReadOnly && (bool)this.metaField["required"])

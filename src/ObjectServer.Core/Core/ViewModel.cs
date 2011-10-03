@@ -107,7 +107,7 @@ namespace ObjectServer.Core
                     break;
 
                 case "tree":
-                    layout = ViewGenerator.GenerateListView(destModel.Fields);
+                    layout = ViewGenerator.GenerateTreeView(destModel.Fields);
                     break;
 
                 default:

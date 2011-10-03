@@ -27,7 +27,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.DefaultStyleKey = typeof(DatePicker);
 
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-            this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
 
             /*
             if ((bool)this.metaField["required"])

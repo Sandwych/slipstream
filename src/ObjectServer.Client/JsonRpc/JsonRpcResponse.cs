@@ -19,9 +19,10 @@ namespace ObjectServer.Client
 
         public JsonRpcResponse(IDictionary<string, object> propertyBag)
         {
-            if(propertyBag.ContainsKey("error"))
+            object error = null;
+            if (propertyBag.TryGetValue("error", out error) && error != null)
             {
-            this.Error = propertyBag["error"];
+                this.Error = new JsonRpcError(propertyBag["error"] as IDictionary<string, object>);
             }
 
             if (propertyBag.ContainsKey("result"))
@@ -39,7 +40,7 @@ namespace ObjectServer.Client
         public object Result { get; set; }
 
         [JsonProperty("error", Required = Required.AllowNull)]
-        public object Error { get; set; }
+        public JsonRpcError Error { get; set; }
 
         [JsonProperty("id", Required = Required.Always)]
         public object Id { get; set; }
@@ -47,7 +48,7 @@ namespace ObjectServer.Client
         public static JsonRpcResponse Deserialize(Stream input)
         {
             using (var reader = new StreamReader(input, Encoding.UTF8))
-            {           
+            {
                 var propBag = (Dictionary<string, object>)PlainJsonConvert.Deserialize(reader);
                 reader.Close();
                 return new JsonRpcResponse(propBag);

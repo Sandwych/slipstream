@@ -6,6 +6,13 @@
     <field name="ordinal">9999</field>
   </record>
 
+  <record model="core.menu" key="menu_admin_org">
+    <field name="name">Organization Structure</field>
+    <field name="parent" ref-key="menu_admin_root" />
+    <field name="ordinal">1000</field>
+    <field name="action" ref-model="core.action_window" ref-key="org_menu_action" />
+  </record>
+
   <record model="core.menu" key="menu_admin_security">
     <field name="name">Security</field>
     <field name="parent" ref-key="menu_admin_root" />

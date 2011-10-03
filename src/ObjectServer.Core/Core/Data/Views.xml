@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data noupdate="true">
 
+  <!-- Organizations' action -->
+  <record  model="core.action_window" key="org_menu_action">
+    <field name="name">Organizations</field>
+    <field name="type">core.action_window</field>
+    <field name="model">core.organization</field>
+  </record>
+
   <!-- Modules's View -->
   <record model="core.view" key="module_tree_view">
     <field name="name">Modules</field>
@@ -53,15 +60,19 @@
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
       <form label="Users" width="640" height="400">
-        <label field="name" />
-        <field name="name" />
-        <label field="login" />
-        <field name="login" />
-        <label field="admin" />
-        <field name="admin" />
-        <br/>
-        <hr text="Roles" />
-        <field name="roles" colspan="4" fill="true" />
+        <notebook>
+          <page label="General">
+            <label field="name" />
+            <field name="name" />
+            <label field="login" />
+            <field name="login" />
+            <label field="admin" />
+            <field name="admin" />
+          </page>
+          <page label="Roles">
+            <field name="roles" colspan="4" fill="true" />
+          </page>
+        </notebook>
       </form>
       ]]>
     </field>

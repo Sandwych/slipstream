@@ -59,17 +59,26 @@ namespace ObjectServer.Client
         {
             var jreq = new JsonRpcRequest(method, args);
             var syncCtx = SynchronizationContext.Current;
-            jreq.BeginPost(this.Uri, (jrep, e) =>
+            jreq.BeginPost(this.Uri, (jrep, postError) =>
             {
                 syncCtx.Post(delegate
                 {
-                    if (jrep != null)
+                    if (postError != null)
                     {
-                        resultCallback(jrep.Result, e);
+                        resultCallback(null, postError);
                     }
                     else
                     {
-                        resultCallback(null, e);
+                        if (jrep.Error == null)
+                        {
+                            resultCallback(jrep.Result, null);
+                        }
+                        else
+                        {
+                            var msg = String.Format("Failed to invoke JSON-RPC: {0}", jrep.Error);
+                            var error = new JsonRpcException(msg, jrep.Error);
+                            resultCallback(null, error);
+                        }
                     }
                 }, null);
             });

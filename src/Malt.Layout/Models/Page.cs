@@ -5,20 +5,16 @@ using System.Xml.Serialization;
 
 namespace Malt.Layout.Models
 {
-    [XmlType("form")]
-    public class Form : IContainer
+    [XmlType("page")]
+    public sealed class Page : IContainer
     {
-        private static readonly Placable[] EmptyChildElements = new Placable[] { };
-
-        public Form()
+        public Page()
         {
             this.ColumnCount = 4;
             this.ColumnSpan = 1;
             this.RowSpan = 1;
-            this.Height = -1.0F;
-            this.Width = -1.0F;
             this.Fill = false;
-            this.ChildElements = EmptyChildElements;
+            this.Label = string.Empty;
         }
 
         #region IContainer 成员
@@ -48,14 +44,11 @@ namespace Malt.Layout.Models
         [XmlAttribute("colspan")]
         public int ColumnSpan { get; set; }
 
-        [XmlAttribute("height")]
-        public double Height { get; set; }
-
-        [XmlAttribute("width")]
-        public double Width { get; set; }
-
         [XmlAttribute("fill")]
         public bool Fill { get; set; }
+
+        [XmlAttribute("label")]
+        public string Label { get; set; }
 
         [XmlIgnore]
         public IEnumerable<IPlacable> Children

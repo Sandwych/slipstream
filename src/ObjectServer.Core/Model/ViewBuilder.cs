@@ -25,14 +25,14 @@ namespace ObjectServer.Model
             sbView.AppendLine("</form>");
         }
 
-        public void WriteListStart()
+        public void WriteTreeStart()
         {
-            sbView.AppendLine("<list>");
+            sbView.AppendLine("<tree>");
         }
 
-        public void WriteListEnd()
+        public void WriteTreeEnd()
         {
-            sbView.AppendLine("</list>");
+            sbView.AppendLine("</tree>");
         }
 
         public void WriteColumn(string field, string where = null)

@@ -18,7 +18,7 @@ namespace ObjectServer.Model
             var smallFields =
                 from f in fields
                 where !AbstractTableModel.SystemReadonlyFields.Contains(f.Key)
-                    && !f.Key.StartsWith("_")
+                    && !f.Value.Name.StartsWith("_")
                     && !isBigFieldDlg(f.Value.Type)
                 select f;
 
@@ -52,24 +52,33 @@ namespace ObjectServer.Model
             return vb.ToString();
         }
 
-        public static string GenerateListView(IFieldCollection fields)
+        public static string GenerateTreeView(IFieldCollection fields)
         {
             Debug.Assert(fields != null);
 
-            var viewFields = fields.SkipWhile(
-                f => AbstractTableModel.SystemReadonlyFields.Contains(f.Key)
-                    || f.Key.StartsWith("_")
-                    || f.Value.Type == FieldType.Text
-                    || f.Value.Type == FieldType.ManyToMany
-                    || f.Value.Type == FieldType.OneToMany);
+            var viewFields =
+                from f in fields
+                where !AbstractTableModel.SystemReadonlyFields.Contains(f.Key)
+                    && !f.Value.Name.StartsWith("_")
+                    && f.Value.Type != FieldType.Text
+                    && f.Value.Type != FieldType.ManyToMany
+                    && f.Value.Type != FieldType.OneToMany
+                select f.Value;
 
             var vb = new ViewBuilder();
-            vb.WriteListStart();
+            vb.WriteTreeStart();
             foreach (var f in viewFields)
             {
-                vb.WriteColumn(f.Value.Name);
+                if (f.Name == "name")
+                {
+                    vb.WriteColumn(f.Name, "basic");
+                }
+                else
+                {
+                    vb.WriteColumn(f.Name, "advanced");
+                }
             }
-            vb.WriteListEnd();
+            vb.WriteTreeEnd();
 
             return vb.ToString();
         }

@@ -28,7 +28,7 @@ namespace ObjectServer.Client.Agos.UI
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             var app = (App)Application.Current;
-            app.MainPage.NavigateToByRelative("/Databases");
+            app.MainPage.NavigateToByRelative("/DBManagement");
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -40,7 +40,7 @@ namespace ObjectServer.Client.Agos.UI
             app.ClientService.BeginCreateDatabase(model.ServerPassword, model.DBName, model.AdminPassword, (error) =>
             {
                 app.IsBusy = false;
-                app.MainPage.NavigateToByRelative("/Databases");
+                app.MainPage.NavigateToByRelative("/DBManagement");
             });
         }
 

@@ -86,6 +86,33 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             get { return this.createdFieldWidgets; }
         }
 
+        public object CreateNotebookWidget(Malt.Layout.Models.Notebook notebook)
+        {
+            if (notebook == null)
+            {
+                throw new ArgumentNullException("notebook");
+            }
 
+            return new NotebookControl();
+        }
+
+        public object CreatePageWidget(Malt.Layout.Models.Page page, object parentWidget, object childContent)
+        {
+            if (page == null)
+            {
+                throw new ArgumentNullException("page");
+            }
+
+            if (childContent == null)
+            {
+                throw new ArgumentNullException("childContent");
+            }
+
+            var tabItem = new PageControl(page.Label);
+            tabItem.Content = childContent;
+            var tabControl = (TabControl)parentWidget;
+            tabControl.Items.Add(tabItem);
+            return tabItem;
+        }
     }
 }

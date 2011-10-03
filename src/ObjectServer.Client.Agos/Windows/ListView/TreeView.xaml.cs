@@ -37,6 +37,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             {"date", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new DateFieldConverter()) },
             {"time", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new TimeFieldConverter()) },
             {"many-to-one", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
+            {"reference", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ReferenceFieldConverter()) },
             {"enum", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
         };
 
@@ -143,7 +144,8 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
 
                 this.BasicConditions.Child = (Grid)this.CreateQueryForm(metaFields, viewFields, "basic");
 
-                if (viewFields.Count(ele => ele.Attribute("where").Value == "advanced") > 0)
+                if (viewFields.Select(ele => ele.Attribute("where"))
+                    .Count(attr => attr != null && attr.Value == "advanced") > 0)
                 {
                     this.AdvancedConditionsExpander.Visibility = System.Windows.Visibility.Visible;
                     this.AdvancedConditionsExpander.Content = (Grid)this.CreateQueryForm(metaFields, viewFields, "advanced");
@@ -167,7 +169,12 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 ColumnCount = columnsPerRow,
             };
 
-            var basicFields = viewFields.Where(ele => ele.Attribute("where").Value == where);
+            var basicFields = viewFields.Where(ele =>
+            {
+                var attr = ele.Attribute("where");
+                return attr != null && attr.Value == where;
+            });
+
             var basicQueryFormChildren = new List<Malt.Layout.Models.Placable>();
             var factory = new QueryFieldControlFactory(fields);
             var createdFieldControls = new Dictionary<string, IQueryField>();

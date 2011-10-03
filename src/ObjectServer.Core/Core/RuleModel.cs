@@ -76,7 +76,7 @@ namespace ObjectServer.Core
 
             if (result.Length > 0)
             {
-                return EvalConstraints(scope, result);
+                return ConvertConstraintExpressions(scope, result);
             }
             else
             {
@@ -84,7 +84,7 @@ namespace ObjectServer.Core
             }
         }
 
-        private static IList<ConstraintExpression[]> EvalConstraints(
+        private static IList<ConstraintExpression[]> ConvertConstraintExpressions(
             ITransactionContext scope, Dictionary<string, object>[] result)
         {
             var scriptScope = CreateScriptScope(scope);
@@ -98,7 +98,6 @@ namespace ObjectServer.Core
                     constraintExp, SourceCodeKind.Expression);
                 var compiledCode = scriptSource.Compile();
                 var dynObj = compiledCode.Execute(scriptScope);
-                //var dynObj = s_engine.Execute(constraintExp, scriptScope);
 
                 foreach (dynamic d in dynObj)
                 {

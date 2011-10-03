@@ -85,6 +85,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                      where (string)f["name"] == relatedFieldName
                      select f).Single();
                 this.relatedModel = (string)relatedField["relation"];
+                Debug.Assert(!string.IsNullOrEmpty(this.relatedModel));
             });
         }
 
@@ -98,6 +99,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             }
             set
             {
+                Debug.Assert(!string.IsNullOrEmpty(this.relatedModel));
                 var app = (App)Application.Current;
                 var refIDs = (object[])value;
 

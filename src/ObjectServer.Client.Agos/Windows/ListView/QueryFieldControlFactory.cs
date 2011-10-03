@@ -82,5 +82,14 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             }
         }
 
+        public object CreateNotebookWidget(Malt.Layout.Models.Notebook notebook)
+        {
+            throw new NotSupportedException();
+        }
+
+        public object CreatePageWidget(Malt.Layout.Models.Page page, object parentWidget, object childContent)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

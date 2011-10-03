@@ -21,9 +21,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public EnumerationFieldControl(object metaField)
         {
-
-            this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-            this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            this.VerticalAlignment = System.Windows.VerticalAlignment.Stretch;
 
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];

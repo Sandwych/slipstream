@@ -17,9 +17,6 @@
                   Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed" Background="#FF32302E">
                 <appControls:TransitionFrame.UriMapper>
                     <uriMapper:UriMapper>
-                        <uriMapper:UriMapping Uri="/Login" MappedUri="/UI/LoginPage.xaml"/>
-                        <uriMapper:UriMapping Uri="/Content" MappedUri="/UI/ContentPage.xaml"/>
-                        <uriMapper:UriMapping Uri="/Databases" MappedUri="/UI/DatabasesPage.xaml"/>
                         <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/UI/{pageName}Page.xaml"/>
                     </uriMapper:UriMapper>
                 </appControls:TransitionFrame.UriMapper>

@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 namespace ObjectServer.Json
 {
     [JsonObject("error")]
+    [Serializable]
     public sealed class JsonRpcError
     {
         public JsonRpcError()
