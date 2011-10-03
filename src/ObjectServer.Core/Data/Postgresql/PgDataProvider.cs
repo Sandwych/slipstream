@@ -15,6 +15,13 @@ namespace ObjectServer.Data.Postgresql
         private static readonly Dialect s_dialect = new PostgreSQL82Dialect();
         private static readonly DriverBase s_driver = new NpgsqlDriver();
 
+        private static readonly SqlString ListDatabasesSql = SqlString.Parse(@"
+select datname from pg_database  
+    where datdba = (select distinct usesysid from pg_user where usename=?) 
+        and datname not in ('template0', 'template1', 'postgres')  
+    order by datname asc
+");
+
         #region IDataProvider 成员
 
         public IDBContext CreateDataContext()
@@ -34,27 +41,17 @@ namespace ObjectServer.Data.Postgresql
 
         public string[] ListDatabases()
         {
+            var dbUser = Environment.Configuration.DBUser;
+
             using (var ctx = this.CreateDataContext())
             {
                 ctx.Open();
-
-
-                var dbUser = Environment.Configuration.DBUser;
-                var sql = SqlString.Parse(@"
-select datname from pg_database  
-    where datdba = (select distinct usesysid from pg_user where usename=?) 
-        and datname not in ('template0', 'template1', 'postgres')  
-    order by datname asc
-");
-
-                var result = ctx.QueryAsDictionary(sql, dbUser);
-
+                var result = ctx.QueryAsDictionary(ListDatabasesSql, dbUser);
                 ctx.Close();
 
                 return result.Select(e => (string)e["datname"]).ToArray();
             }
         }
-
 
         public void CreateDatabase(string dbName)
         {
@@ -74,10 +71,7 @@ select datname from pg_database
                 conn.Execute(sql);
                 conn.Close();
             }
-
         }
-
-
 
         public void DeleteDatabase(string dbName)
         {

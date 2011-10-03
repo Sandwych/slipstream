@@ -54,8 +54,8 @@ namespace ObjectServer.Json
         public static readonly JsonRpcError RpcArgumentError =
             new JsonRpcError("0003", "JSON-RPC 参数不正确");
 
-        public static readonly JsonRpcError LogginError =
-            new JsonRpcError("0004", "登录错误");
+        public static readonly JsonRpcError SecurityError =
+            new JsonRpcError("0004", "安全性错误");
 
         public static readonly JsonRpcError AccessDeniedError =
             new JsonRpcError("0005", "权限不足，访问被禁止");
@@ -68,5 +68,8 @@ namespace ObjectServer.Json
 
         public static readonly JsonRpcError BadData =
             new JsonRpcError("0008", "系统数据异常，原因可能是数据库中包含无效数据");
+
+        public static readonly JsonRpcError DBError =
+            new JsonRpcError("0009", "数据库操作异常，请与系统管理员联系");
     }
 }

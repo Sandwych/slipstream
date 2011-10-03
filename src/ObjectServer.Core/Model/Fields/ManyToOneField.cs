@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace ObjectServer.Model
 {
@@ -117,10 +118,7 @@ namespace ObjectServer.Model
         {
             get
             {
-                if (this.OnDeleteAction == OnDeleteAction.SetNull)
-                {
-                    this.OnDeleteAction = OnDeleteAction.Restrict;
-                }
+                Debug.Assert(this.OnDeleteAction != OnDeleteAction.SetNull);
                 return base.IsRequired;
             }
         }

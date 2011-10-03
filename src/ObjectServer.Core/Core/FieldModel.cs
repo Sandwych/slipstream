@@ -18,7 +18,8 @@ namespace ObjectServer.Core
         {
             this.AutoMigration = false;
 
-            Fields.ManyToOne("model", "core.model").SetLabel("Model").Required();
+            Fields.ManyToOne("model", "core.model").SetLabel("Model")
+                .Required().OnDelete(OnDeleteAction.Cascade);
             Fields.Chars("name").SetLabel("Name").SetSize(64).Required();
             Fields.Chars("label").SetLabel("Label").SetSize(256).NotRequired();
             Fields.Boolean("required").SetLabel("Required").Required();

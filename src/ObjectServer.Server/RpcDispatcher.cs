@@ -169,7 +169,7 @@ namespace ObjectServer.Server
         {
             Debug.Assert(json != null);
 
-            var jreq = (Dictionary<string, object>)PlainJsonConvert.Parse(json);
+            var jreq = (IDictionary<string, object>)PlainJsonConvert.Parse(json);
             //TODO 检查 jreq 格式
 
             //执行调用
@@ -217,35 +217,40 @@ namespace ObjectServer.Server
                 LoggerProvider.EnvironmentLogger.Fatal("系统发生了致命错误", fex);
                 throw fex; //接着抛出异常，让系统结束运行
             }
-            catch (ArgumentException aex)
+            catch (ArgumentException ex)
             {
                 error = JsonRpcError.RpcArgumentError;
-                LoggerProvider.EnvironmentLogger.Error("ArgumentException", aex);
+                LoggerProvider.EnvironmentLogger.Error("ArgumentException", ex);
             }
-            catch (ValidationException vex)
+            catch (ValidationException ex)
             {
                 error = JsonRpcError.ValidationError;
-                LoggerProvider.EnvironmentLogger.Error("ValidationException", vex);
+                LoggerProvider.EnvironmentLogger.Error("ValidationException", ex);
             }
-            catch (SecurityException sex)
+            catch (SecurityException ex)
             {
-                error = JsonRpcError.LogginError;
-                LoggerProvider.EnvironmentLogger.Error("安全异常", sex);
+                error = JsonRpcError.SecurityError;
+                LoggerProvider.EnvironmentLogger.Error("SecurityError", ex);
             }
             catch (ResourceNotFoundException ex)
             {
                 error = JsonRpcError.ResourceNotFound;
                 LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", ex);
             }
-            catch (RecordNotFoundException rnfex)
+            catch (RecordNotFoundException ex)
             {
                 error = JsonRpcError.ResourceNotFound;
-                LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", rnfex);
+                LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", ex);
             }
             catch (DataException ex)
             {
                 error = JsonRpcError.BadData;
                 LoggerProvider.EnvironmentLogger.Error("BadData", ex);
+            }
+            catch (System.Data.Common.DbException ex)
+            {
+                error = JsonRpcError.DBError;
+                LoggerProvider.EnvironmentLogger.Error("DBError", ex);
             }
             catch (System.Exception ex)
             {

@@ -16,7 +16,7 @@ namespace ObjectServer.Data.Postgresql
     internal sealed class PgTableContext : ITableContext
     {
         private IDictionary<string, IColumnMetadata> columns = new Dictionary<string, IColumnMetadata>();
-        private readonly IDictionary<OnDeleteAction, string> onDeleteMapping =
+        private readonly static IDictionary<OnDeleteAction, string> OnDeleteMapping =
             new Dictionary<OnDeleteAction, string>()
             {
                 { OnDeleteAction.SetNull, "SET NULL" },
@@ -433,7 +433,7 @@ select coalesce(count(constraint_name), 0)
                 throw new ArgumentNullException("refTable");
             }
 
-            var onDelete = onDeleteMapping[act];
+            var onDelete = OnDeleteMapping[act];
             var fkName = this.GenerateFkName(columnName);
             var sql = string.Format(
                 "alter table \"{0}\" add constraint \"{1}\" foreign key (\"{2}\") references \"{3}\" on delete {4}",

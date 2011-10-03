@@ -44,6 +44,7 @@ namespace ObjectServer
                 Name = StaticSettings.CoreModuleName,
                 Depends = new string[] { },
                 AutoLoad = true,
+                LatestVersion = Assembly.GetExecutingAssembly().GetName().Version,
             };
         }
 
@@ -60,6 +61,9 @@ namespace ObjectServer
 
         [XmlElement("label")]
         public string Label { get; set; }
+
+        [XmlElement("latest-version")]
+        public Version LatestVersion { get; set; }
 
         [XmlElement("info")]
         public string Info { get; set; }
@@ -333,8 +337,8 @@ namespace ObjectServer
                 state = ModuleModel.States.ToInstall;
             }
 
-            var insertSql = SqlString.Parse("insert into core_module(name, state, label, info) values(?, ?, ?, ?)");
-            dbctx.Execute(insertSql, this.Name, state, this.Label, this.Info);
+            var insertSql = SqlString.Parse("insert into core_module(name, state, label, latest_version, info) values(?,?,?,?,?)");
+            dbctx.Execute(insertSql, this.Name, state, this.Label, this.LatestVersion.ToString(), this.Info);
         }
 
         public static Module CoreModule { get { return s_coreModule; } }
