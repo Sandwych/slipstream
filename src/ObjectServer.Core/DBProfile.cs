@@ -170,21 +170,23 @@ namespace ObjectServer
 
         public void InitializeAllResources(IDBContext conn, bool update)
         {
-            var allRes = new List<IResource>(this.resources.Values);
-            ResourceDependencySort(allRes);
-
-            this.resourcesLock.EnterWriteLock();
+            IList<IResource> allRes = null;
+            this.resourcesLock.EnterReadLock();
             try
             {
-                for (int i = 0; i < allRes.Count; i++)
-                {
-                    var res = allRes[i];
-                    this.InitializeResource(conn, res, i, update);
-                }
+                allRes = new List<IResource>(this.resources.Values);
             }
             finally
             {
-                this.resourcesLock.ExitWriteLock();
+                this.resourcesLock.ExitReadLock();
+            }
+
+            ResourceDependencySort(allRes);
+
+            for (int i = 0; i < allRes.Count; i++)
+            {
+                var res = allRes[i];
+                this.InitializeResource(conn, res, i, update);
             }
         }
 
@@ -196,8 +198,16 @@ namespace ObjectServer
             if (!this.initializedResources.Contains(res.Name))
             {
                 res.Initialize(conn, update);
-                this.initializedResources.Add(res.Name);
-                this.resourceDependencyWeightMapping.Add(res.Name, index);
+                this.resourcesLock.EnterWriteLock();
+                try
+                {
+                    this.initializedResources.Add(res.Name);
+                    this.resourceDependencyWeightMapping.Add(res.Name, index);
+                }
+                finally
+                {
+                    this.resourcesLock.ExitWriteLock();
+                }
             }
         }
 

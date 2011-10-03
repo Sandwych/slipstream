@@ -5,7 +5,6 @@ using System.Text;
 using System.Reflection;
 using System.Data;
 using System.Transactions;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Threading;
 
@@ -55,9 +54,9 @@ namespace ObjectServer
                     this.dbProfilesLock.ExitReadLock();
                 }
 
-                if (isRegistered)
+                if (!isRegistered)
                 {
-                    LoadDB(dbName);
+                    this.LoadDB(dbName);
                 }
             }
 
@@ -66,7 +65,6 @@ namespace ObjectServer
 
         #endregion
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void LoadDB(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
@@ -84,9 +82,14 @@ namespace ObjectServer
 
             var db = new DBProfile(dbName);
 
-            lock (this)
+            this.dbProfilesLock.EnterWriteLock();
+            try
             {
                 this.dbProfiles.Add(dbName.Trim(), db);
+            }
+            finally
+            {
+                this.dbProfilesLock.ExitWriteLock();
             }
 
             using (var dbctx = DataProvider.CreateDataContext(dbName))

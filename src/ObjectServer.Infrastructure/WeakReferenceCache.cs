@@ -33,7 +33,7 @@ namespace ObjectServer
             {
                 if (this._owner._autoCleanAbandonedItems)
                 {
-                    this._owner.CleanAbandonedItems();
+                    this._owner.ClearAbandonedItems();
                     GC.ReRegisterForFinalize(this);
                 }
             }
@@ -185,7 +185,7 @@ namespace ObjectServer
             }
         }
 
-        public void CleanAbandonedItems()
+        public void ClearAbandonedItems()
         {
             if (this._cacheLock.TryEnterWriteLock(LOCK_TIMEOUT_MSECS))
             {
