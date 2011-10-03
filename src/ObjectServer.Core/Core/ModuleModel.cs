@@ -49,7 +49,7 @@ namespace ObjectServer.Core
             Fields.Boolean("demo").SetLabel("Demostration?").SetDefaultValueGetter(getter => false);
             Fields.Chars("author").SetLabel("Author").SetSize(128);
             Fields.Chars("url").SetLabel("Web Site").SetSize(128);
-            Fields.Chars("latest_version").SetLabel("Latest Version").SetSize(64);
+            Fields.Chars("version").SetLabel("Version").SetSize(64);
             Fields.Chars("license").SetLabel("License").SetSize(32);
             Fields.Text("info").SetLabel("Information");
         }

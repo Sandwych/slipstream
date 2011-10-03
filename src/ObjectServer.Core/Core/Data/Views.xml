@@ -22,7 +22,7 @@
         <field name="demo" where="basic" />
         <field name="author" where="advanced" />
         <field name="url" where="advanced" />
-        <field name="latest_version" where="advanced" />
+        <field name="version" where="advanced" />
         <field name="license" where="advanced" />
       </tree>
       ]]>

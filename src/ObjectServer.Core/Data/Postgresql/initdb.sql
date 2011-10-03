@@ -34,7 +34,7 @@ CREATE TABLE core_module (
     demo BOOLEAN DEFAULT FALSE,
     author VARCHAR(128),
     url VARCHAR(128),
-    latest_version VARCHAR(64),
+    version VARCHAR(64),
     info TEXT,
     license VARCHAR(32),
     PRIMARY KEY(_id)
