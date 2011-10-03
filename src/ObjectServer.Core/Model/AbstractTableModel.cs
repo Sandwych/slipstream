@@ -24,8 +24,8 @@ namespace ObjectServer.Model
         public const string LeftFieldName = "_left";
         public const string RightFieldName = "_right";
         public const string ParentFieldName = "parent";
-        public const string ChildrenFieldName = "children";
-        public const string DescendantsFieldName = "descendants";
+        public const string ChildrenFieldName = "_children";
+        public const string DescendantsFieldName = "_descendants";
 
         /// <summary>
         /// 这些字段是由 ORM 子系统处理的，客户端不能操作
@@ -40,6 +40,8 @@ namespace ObjectServer.Model
             VersionFieldName,
             LeftFieldName,
             RightFieldName,
+            ChildrenFieldName,
+            DescendantsFieldName,
         };
 
         private string tableName = null;
@@ -158,8 +160,11 @@ namespace ObjectServer.Model
                 .Required().SetDefaultValueGetter(ctx => -1);
 
             //这里通过 SQL 查询返回
-            Fields.ManyToOne(ParentFieldName, this.Name)
-                .SetLabel("Parent");
+            if (!Fields.ContainsKey(ParentFieldName))
+            {
+                Fields.ManyToOne(ParentFieldName, this.Name)
+                    .SetLabel("Parent");
+            }
 
             Fields.OneToMany(ChildrenFieldName, this.Name, ParentFieldName)
                 .SetLabel("Children")
