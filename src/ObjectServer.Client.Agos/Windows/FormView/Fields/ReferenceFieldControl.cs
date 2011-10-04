@@ -64,12 +64,19 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public string FieldName { get; private set; }
 
-        private object[] fieldValue;
+        private object[] fieldValue = null;
         public object Value
         {
             get
             {
-                return new object[] { this.fieldValue[0], this.fieldValue[1] };
+                if (this.fieldValue != null)
+                {
+                    return new object[] { this.fieldValue[0], this.fieldValue[1] };
+                }
+                else
+                {
+                    return null;
+                }
             }
             set
             {

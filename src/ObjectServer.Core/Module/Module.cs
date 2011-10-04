@@ -51,6 +51,7 @@ namespace ObjectServer
         public Module()
         {
             //设置属性默认值
+            this.Version = Version.Parse("0.0.0.0");
             this.Depends = new string[] { };
             this.Dlls = new string[] { };
         }

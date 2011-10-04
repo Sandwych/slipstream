@@ -32,10 +32,22 @@ namespace ObjectServer.Model
 
         protected override object OnSetFieldValue(ITransactionContext scope, object value)
         {
-            var fieldValue = (object[])value;
+            var fieldValue = (object[])value as object[];
+
+            if (this.IsRequired && fieldValue == null)
+            {
+                var msg = string.Format("Field [{0}] cannot be null", this.Name);
+                throw new ArgumentOutOfRangeException("value", msg);
+            }
+
+            if (fieldValue == null)
+            {
+                return null;
+            }
+
             if (fieldValue.Length != 2)
             {
-                throw new ArgumentException("value");
+                throw new ArgumentOutOfRangeException("value");
             }
 
             var modelName = (string)fieldValue[0];
