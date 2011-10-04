@@ -124,9 +124,10 @@ namespace ObjectServer.Model
             //处理层次表
             long rhsValue = 0;
             //先检查是否给了 parent 字段的值
-            if (record.ContainsKey(ParentFieldName))
+            object parentIDObj = 0;
+            if (record.TryGetValue(ParentFieldName, out parentIDObj) && parentIDObj != null)
             {
-                var parentID = (long)record[ParentFieldName];
+                var parentID = (long)parentIDObj;
                 var sql = new SqlString(
                     "select ",
                     DataProvider.Dialect.QuoteForColumnName(AbstractTableModel.LeftFieldName),
@@ -184,7 +185,7 @@ namespace ObjectServer.Model
 
             //因为NestedSets 模型的关系，
             //我们修改的不止一条记录，所以这里需要锁定表，防止其它连接修改数据库
-            dbctx.LockTable(this.TableName); 
+            dbctx.LockTable(this.TableName);
 
             var sqlUpdate1 = string.Format(
                 "update \"{0}\" set _right = _right + 2 where _right>?", this.TableName);
@@ -284,7 +285,7 @@ namespace ObjectServer.Model
                 {
                     propertyBag[UpdatedUserFieldName] = propertyBag[CreatedUserFieldName];
                 }
-                else if(!ctx.Session.IsSystemUser)
+                else if (!ctx.Session.IsSystemUser)
                 {
                     propertyBag[UpdatedUserFieldName] = ctx.Session.UserID;
                 }
