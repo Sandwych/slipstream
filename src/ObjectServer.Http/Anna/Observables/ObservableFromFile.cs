@@ -16,13 +16,13 @@ namespace Anna.Observables
         {
             this.chunkSize = chunkSize;
             buffer = new byte[chunkSize];
-            subject = Observable.Create<byte[]>(obs =>
-                                                    {
-                                                        fileStream = new FileStream(fileName, FileMode.Open);
-                                                        fileStream.BeginRead(buffer, 0, chunkSize,
-                                                                             ar => EndReadCallback(ar, obs), null);
-                                                        return () => fileStream.Close();
-                                                    });
+            subject = Observable.Create<byte[]>(
+                obs =>
+                {
+                    fileStream = new FileStream(fileName, FileMode.Open);
+                    fileStream.BeginRead(buffer, 0, chunkSize, ar => EndReadCallback(ar, obs), null);
+                    return () => fileStream.Close();
+                });
 
 
         }
@@ -36,7 +36,7 @@ namespace Anna.Observables
                 return;
             }
             obs.OnNext(buffer.Take(result).ToArray());
-            if(result < chunkSize)
+            if (result < chunkSize)
             {
                 obs.OnCompleted();
                 return;
