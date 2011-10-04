@@ -57,17 +57,8 @@ namespace ObjectServer.Model
             {
                 if (reader.NodeType == XmlNodeType.Element && reader.Name == "data")
                 {
-                    var tx = this.context.DBContext.BeginTransaction();
-                    try
-                    {
-                        this.ReadDataElement(reader);
-                        tx.Commit();
-                    }
-                    catch
-                    {
-                        tx.Rollback();
-                        throw;
-                    }
+
+                    this.ReadDataElement(reader);
                 }
             }
         }

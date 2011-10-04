@@ -39,13 +39,24 @@ namespace ObjectServer
 
         static Module()
         {
+            var asm = Assembly.GetExecutingAssembly();
             s_coreModule = new Module()
             {
                 Name = StaticSettings.CoreModuleName,
                 Depends = new string[] { },
                 AutoLoad = true,
-                Version = Assembly.GetExecutingAssembly().GetName().Version,
+                Version = asm.GetName().Version,
             };
+
+            var asmAttrs = asm.GetCustomAttributes(false);
+            foreach (var attr in asmAttrs)
+            {
+                if (attr is AssemblyCompanyAttribute)
+                {
+                    var aca = (AssemblyCompanyAttribute)attr;
+                    s_coreModule.Author = aca.Company;
+                }
+            }
         }
 
         public Module()
@@ -54,6 +65,7 @@ namespace ObjectServer
             this.Version = Version.Parse("0.0.0.0");
             this.Depends = new string[] { };
             this.Dlls = new string[] { };
+            this.IsDemo = false;
         }
 
         #region Serializable Fields
@@ -68,6 +80,18 @@ namespace ObjectServer
 
         [XmlElement("info")]
         public string Info { get; set; }
+
+        [XmlElement("demo")]
+        public bool IsDemo { get; set; }
+
+        [XmlElement("author")]
+        public string Author { get; set; }
+
+        [XmlElement("url")]
+        public string Url { get; set; }
+
+        [XmlElement("license")]
+        public string License { get; set; }
 
         [XmlArray("sources")]
         [XmlArrayItem("file")]
@@ -338,8 +362,10 @@ namespace ObjectServer
                 state = ModuleModel.States.ToInstall;
             }
 
-            var insertSql = SqlString.Parse("insert into core_module(name, state, label, version, info) values(?,?,?,?,?)");
-            dbctx.Execute(insertSql, this.Name, state, this.Label, this.Version.ToString(), this.Info);
+            var insertSql = SqlString.Parse(
+                "insert into core_module(name, state, label, version, demo, author, info) values(?,?,?,?,?,?,?)");
+            dbctx.Execute(insertSql,
+                this.Name, state, this.Label, this.Version.ToString(), this.IsDemo, this.Author, this.Info);
         }
 
         public static Module CoreModule { get { return s_coreModule; } }

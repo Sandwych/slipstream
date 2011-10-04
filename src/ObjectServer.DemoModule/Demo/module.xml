@@ -7,6 +7,9 @@
       此模块演示一个最小化的 ObjectServer 业务模块应该怎么编写
    ]]>
   </info>
+  <demo>true</demo>
+  <author>Wei Li [oldrev@gmail.com]</author>
+  <version>0.01</version>
   <auto-load>true</auto-load>
   <source-language>csharp</source-language>
   <sources>

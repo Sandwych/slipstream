@@ -96,24 +96,7 @@ namespace ObjectServer
             {
                 dynamic res = scope.GetResource(resource);
                 var svc = res.GetService(method);
-
                 return svc.Invoke(res, scope, args);
-            }
-        }
-
-        private static object ExecuteTransactional(TransactionContext scope, dynamic res, dynamic svc, object[] args)
-        {
-            var tx = scope.DBContext.BeginTransaction();
-            try
-            {
-                var result = svc.Invoke(res, scope, args);
-                tx.Commit();
-                return result;
-            }
-            catch
-            {
-                tx.Rollback();
-                throw;
             }
         }
 
