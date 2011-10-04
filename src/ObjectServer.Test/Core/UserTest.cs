@@ -16,17 +16,16 @@ namespace ObjectServer.Core.Test
         {
             var userRecord = new Dictionary<string, object>()
             {
-                { "name", "测试用户" },
+                { "name", "Testing User" },
                 { "login", "test" },
                 { "password", "test" },
                 { "admin", false },
             };
 
-            var uid = this.Service.Execute(TestingDatabaseName, this.SessionId, UserModel.ModelName, "Create", userRecord);
-            dynamic records = this.Service.Execute(TestingDatabaseName, 
-                this.SessionId, UserModel.ModelName, "Read", new object[] { uid }, null);            
+            dynamic userModel = this.GetResource("core.user");
+            var uid = userModel.Create(this.TransactionContext, userRecord);
+            dynamic records = userModel.Read(this.TransactionContext, new object[] { uid }, null);
             var user1 = records[0];
-
             var salt = (string)user1["salt"];
             Assert.IsNull(salt);
         }

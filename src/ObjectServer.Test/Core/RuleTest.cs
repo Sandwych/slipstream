@@ -33,14 +33,14 @@ namespace ObjectServer.Core.Test
 
             try
             {
-                using (var scope = new TransactionContext(TestingDatabaseName, sid))
+                using (var tc = new TransactionContext(TestingDatabaseName, sid))
                 {
                     var orders = new OrderExpression[] {
                         new OrderExpression("name", SortDirection.Asc) 
                     };
-                    var ids = salesOrderModel.SearchInternal(scope, null, orders);
+                    var ids = salesOrderModel.SearchInternal(tc, null, orders);
                     Assert.AreEqual(expectedOrderNames.Length, ids.Length);
-                    var records = salesOrderModel.ReadInternal(scope, ids);
+                    var records = salesOrderModel.ReadInternal(tc, ids);
                     var names = records.Select(r => (string)r["name"]).ToArray();
                     Assert.AreEqual(expectedOrderNames.Length, names.Length);
                     for (int i = 0; i < expectedOrderNames.Length; i++)
