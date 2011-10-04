@@ -69,7 +69,7 @@ namespace ObjectServer.Test
                 });
         }
 
-        [ServiceMethod("GetNumberPlusResult")]
+        [TransactionMethod("GetNumberPlusResult")]
         public static int GetNumberPlusResult(IModel self, ITransactionContext scope, int x, int y)
         {
             return x + y;

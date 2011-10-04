@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Transactions;
 using System.Reflection;
+using System.Diagnostics;
 
 using ObjectServer.Data;
 using ObjectServer.Core;
@@ -37,8 +38,6 @@ namespace ObjectServer
             using (var ctx = new TransactionContext(dbName))
             using (var tx = new TransactionScope())
             {
-                ctx.DBContext.Open();
-
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
 
@@ -69,8 +68,7 @@ namespace ObjectServer
             using (var ctx = new TransactionContext(db, sessionId))
             using (var tx = new TransactionScope())
             {
-                ctx.DBContext.Open();
-
+                
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 userModel.LogOff(ctx, sessionId);
             }

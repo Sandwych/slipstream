@@ -137,7 +137,7 @@ namespace ObjectServer
             foreach (var m in methods)
             {
                 var attr = Attribute.GetCustomAttribute(
-                    m, typeof(ServiceMethodAttribute), false) as ServiceMethodAttribute;
+                    m, typeof(TransactionMethodAttribute), false) as TransactionMethodAttribute;
                 if (attr != null)
                 {
                     this.RegisterServiceMethod(attr.Name, m);

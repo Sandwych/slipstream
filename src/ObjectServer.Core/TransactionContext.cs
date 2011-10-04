@@ -38,18 +38,30 @@ namespace ObjectServer
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
             this.dbctx = DataProvider.CreateDataContext(dbName);
+
             this.DBContext.Open();
 
-            var session = Session.GetByID(this.dbctx, sessionId);
-            Session.Pulse(this.dbctx, sessionId);
-            if (session == null || !session.IsActive)
+            try
             {
-                throw new ObjectServer.Exceptions.SecurityException("Not logged!");
+                var session = Session.GetByID(this.dbctx, sessionId);
+
+                if (session == null || !session.IsActive)
+                {
+                    //删掉无效的 Session
+                    Session.Remove(this.dbctx, session.ID);
+                    this.DBContext.Close();
+                    throw new ObjectServer.Exceptions.SecurityException("Not logged!");
+                }
+
+                Session.Pulse(this.dbctx, sessionId);
+                this.resources = Environment.DBProfiles.GetDBProfile(dbName);
+                this.Session = session;
+            }
+            finally
+            {
+                this.DBContext.Close();
             }
 
-            this.resources = Environment.DBProfiles.GetDBProfile(dbName);
-
-            this.Session = session;
         }
 
         /// <summary>
@@ -67,8 +79,16 @@ namespace ObjectServer
             this.resources = Environment.DBProfiles.GetDBProfile(dbName);
             this.dbctx = DataProvider.CreateDataContext(dbName);
             this.DBContext.Open();
-            this.Session = Session.CreateSystemUserSession();
-            Session.Put(dbctx, this.Session);
+
+            try
+            {
+                this.Session = Session.CreateSystemUserSession();
+                Session.Put(dbctx, this.Session);
+            }
+            finally
+            {
+                this.DBContext.Close();
+            }
         }
 
         /// <summary>
@@ -86,8 +106,16 @@ namespace ObjectServer
             this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
             this.dbctx = DataProvider.CreateDataContext(db.DatabaseName);
             this.DBContext.Open();
-            this.Session = Session.CreateSystemUserSession();
-            Session.Put(this.dbctx, this.Session);
+
+            try
+            {
+                this.Session = Session.CreateSystemUserSession();
+                Session.Put(this.dbctx, this.Session);
+            }
+            finally
+            {
+                this.DBContext.Close();
+            }
         }
 
         ~TransactionContext()

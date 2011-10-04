@@ -30,7 +30,7 @@ namespace ObjectServer.Test
         }
 
         
-        [ServiceMethod("Create")]
+        [TransactionMethod("Create")]
         public static long Create(IModel model, ITransactionContext ctx, IDictionary<string, object> propertyBag)
         {
             var record = new Dictionary<string, object>(propertyBag);

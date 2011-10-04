@@ -224,7 +224,7 @@
     <Compile Include="Runtime\CompilerProvider.cs" />
     <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
-    <Compile Include="ServiceMethodAttribute.cs" />
+    <Compile Include="TransactionMethodAttribute.cs" />
     <Compile Include="TransactionContext.cs" />
     <Compile Include="SystemTransactionContext.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />

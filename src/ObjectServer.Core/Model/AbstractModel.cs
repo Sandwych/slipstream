@@ -392,7 +392,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         #region Service Methods
 
-        [ServiceMethod("Count")]
+        [TransactionMethod("Count")]
         public static long Count(
             IModel model, ITransactionContext ctx, object[] constraints = null)
         {
@@ -401,7 +401,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.CountInternal(ctx, constraints);
         }
 
-        [ServiceMethod("Search")]
+        [TransactionMethod("Search")]
         public static long[] Search(
             IModel model, ITransactionContext ctx, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
         {
@@ -423,7 +423,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.SearchInternal(ctx, constraints, orderInfos, offset, limit);
         }
 
-        [ServiceMethod("Read")]
+        [TransactionMethod("Read")]
         public static Dictionary<string, object>[] Read(
             IModel model, ITransactionContext ctx, dynamic clientIds, dynamic clientFields = null)
         {
@@ -446,7 +446,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.ReadInternal(ctx, ids, strFields);
         }
 
-        [ServiceMethod("Create")]
+        [TransactionMethod("Create")]
         public static long Create(
             IModel model, ITransactionContext ctx, IDictionary<string, object> propertyBag)
         {
@@ -454,7 +454,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.CreateInternal(ctx, propertyBag);
         }
 
-        [ServiceMethod("Write")]
+        [TransactionMethod("Write")]
         public static void Write(
            IModel model, ITransactionContext ctx, object id, IDictionary<string, object> userRecord)
         {
@@ -462,7 +462,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             model.WriteInternal(ctx, (long)id, userRecord);
         }
 
-        [ServiceMethod("Delete")]
+        [TransactionMethod("Delete")]
         public static void Delete(
             IModel model, ITransactionContext ctx, dynamic clientIDs)
         {

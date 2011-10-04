@@ -259,7 +259,7 @@ namespace ObjectServer.Core
             }
         }
 
-        [ServiceMethod("ChangePassword")]
+        [TransactionMethod("ChangePassword")]
         public static void ChangePassword(
             IModel model, ITransactionContext ctx, string newPassword)
         {
