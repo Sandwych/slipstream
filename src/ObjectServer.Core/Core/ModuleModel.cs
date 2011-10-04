@@ -46,7 +46,7 @@ namespace ObjectServer.Core
                 { States.ToUpgrade, "To Upgrade" },
                 { States.ToUninstall, "To Uninstall" },
             }).Required().SetLabel("State");
-            Fields.Boolean("demo").SetLabel("Demostration?").SetDefaultValueGetter(getter => false);
+            Fields.Boolean("demo").SetLabel("Demostration?").Required().SetDefaultValueGetter(getter => false);
             Fields.Chars("author").SetLabel("Author").SetSize(128);
             Fields.Chars("url").SetLabel("Web Site").SetSize(128);
             Fields.Chars("version").SetLabel("Version").SetSize(64);

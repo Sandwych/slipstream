@@ -864,7 +864,7 @@
     <Style TargetType="fields:BooleanFieldControl">
         <Setter Property="Background" Value="White" />
         <Setter Property="Margin" Value="5,3,5,3" />
-        <Setter Property="Height" Value="24" />
+        <Setter Property="Height" Value="Auto" />
     </Style>
 
     <Style TargetType="fields:IntegerFieldControl">
@@ -921,7 +921,7 @@
     <!-- 查询条件表单 -->
     <Style TargetType="queryFields:BooleanQueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
-        <Setter Property="Height" Value="24" />
+        <Setter Property="Height" Value="Auto" />
     </Style>
 
     <Style TargetType="queryFields:StringQueryFieldControl">
@@ -937,6 +937,7 @@
     <Style TargetType="queryFields:IntegerQueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
         <Setter Property="Height" Value="24" />
+        <Setter Property="Background" Value="White" />
     </Style>
 
     <Style TargetType="queryFields:DateQueryFieldControl">

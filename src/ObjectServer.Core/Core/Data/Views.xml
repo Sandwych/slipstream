@@ -138,7 +138,7 @@
   <!-- Menu's View -->
   <record model="core.view" key="menu_tree_view">
     <field name="name">Menus</field>
-    <field name="model">core.model</field>
+    <field name="model">core.menu</field>
     <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[<?xml version="1.0" encoding="utf-8" ?>

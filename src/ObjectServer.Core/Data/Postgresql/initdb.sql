@@ -31,7 +31,7 @@ CREATE TABLE core_module (
     "name" VARCHAR(128) NOT NULL UNIQUE,
     label VARCHAR(256),
     "state" VARCHAR(16) NOT NULL,
-    demo BOOLEAN DEFAULT FALSE,
+    demo BOOLEAN NOT NULL DEFAULT FALSE,
     author VARCHAR(128),
     url VARCHAR(128),
     version VARCHAR(64),

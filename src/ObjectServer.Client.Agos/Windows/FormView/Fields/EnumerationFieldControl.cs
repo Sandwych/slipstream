@@ -18,6 +18,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
     public class EnumerationFieldControl : ComboBox, IFieldWidget
     {
         private readonly IDictionary<string, object> metaField;
+        private readonly bool isRequired;
 
         public EnumerationFieldControl(object metaField)
         {
@@ -25,11 +26,26 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
+            this.isRequired = (bool)this.metaField["required"];
 
-            var options = (IEnumerable)this.metaField["options"];
+            if (this.isRequired)
+            {
+                this.ItemsSource = (IEnumerable)this.metaField["options"];
+            }
+            else
+            {
+                var options = new Dictionary<string, string>();
+                options.Add(string.Empty, " ");
+                dynamic items = this.metaField["options"];
+                foreach (dynamic i in items)
+                {
+                    options.Add(i.Key, i.Value);
+                }
+                this.ItemsSource = options;
+            }
+
             this.SelectedValuePath = "Key";
             this.DisplayMemberPath = "Value";
-            this.ItemsSource = options;
         }
 
         public string FieldName { get; private set; }
@@ -49,7 +65,14 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public void Empty()
         {
-            this.SelectedValue = null;
+            if (this.isRequired)
+            {
+                this.SelectedIndex = -1;
+            }
+            else
+            {
+                this.SelectedValue = String.Empty;
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
     public sealed class BooleanFieldControl : CheckBox, IFieldWidget
     {
         private readonly IDictionary<string, object> metaField;
+        private readonly bool isRequired;
 
         public BooleanFieldControl(object metaField)
         {
@@ -27,6 +28,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.VerticalAlignment = System.Windows.VerticalAlignment.Center;
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+            this.isRequired = (bool)this.metaField["required"];
+            this.IsThreeState = !this.isRequired;
         }
 
         public string FieldName { get; private set; }
@@ -45,7 +48,14 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public void Empty()
         {
-            this.IsChecked = false;
+            if (this.IsThreeState)
+            {
+                this.IsChecked = null;
+            }
+            else
+            {
+                this.IsChecked = false;
+            }
         }
     }
 }
