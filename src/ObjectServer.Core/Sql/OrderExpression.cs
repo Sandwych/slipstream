@@ -13,7 +13,7 @@ namespace ObjectServer.Sql
     {
         private static readonly OrderExpression[] DefaultOrders = new OrderExpression[] { 
                 new OrderExpression(
-                    ObjectServer.Model.AbstractModel.IDFieldName, SortDirection.Asc) };
+                    ObjectServer.Model.AbstractModel.IDFieldName, SortDirection.Ascend) };
 
         public OrderExpression(string field, SortDirection so)
         {

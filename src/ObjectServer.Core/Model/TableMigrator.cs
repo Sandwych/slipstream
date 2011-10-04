@@ -12,12 +12,12 @@ namespace ObjectServer.Model
 {
     internal class TableMigrator : IDisposable
     {
-        private IDBContext db;
+        private IDbContext db;
         private AbstractTableModel model;
         private ITransactionContext context;
         private bool disposed = false;
 
-        public TableMigrator(IDBContext db, AbstractTableModel model)
+        public TableMigrator(IDbContext db, AbstractTableModel model)
         {
             if (db == null)
             {

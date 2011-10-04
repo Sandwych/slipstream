@@ -36,7 +36,7 @@ namespace ObjectServer.Core
             Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
         }
 
-        public override void Initialize(IDBContext db, bool update)
+        public override void Initialize(IDbContext db, bool update)
         {
             base.Initialize(db, update);
 
@@ -48,7 +48,7 @@ namespace ObjectServer.Core
             }
         }
 
-        private static bool UserExists(IDBContext db, string login)
+        private static bool UserExists(IDbContext db, string login)
         {
             var sql = new SqlString(
                 "select count(*) from ",
@@ -61,7 +61,7 @@ namespace ObjectServer.Core
             return isRootUserExisted;
         }
 
-        private void CreateRootUser(IDBContext conn)
+        private void CreateRootUser(IDbContext conn)
         {
             Debug.Assert(conn != null);
 
@@ -283,7 +283,7 @@ namespace ObjectServer.Core
                 { "password", newPassword },
             };
             HashPassword(record);
-            model.WriteInternal(ctx, ctx.Session.UserID, record);
+            model.WriteInternal(ctx, ctx.Session.UserId, record);
         }
 
         public static Dictionary<string, object>[] GetAllModelAccessEntries(long userId)

@@ -45,7 +45,7 @@ namespace ObjectServer
                 {
                     throw new Exceptions.SecurityException("Failed to logon");
                 }
-                return session.ID.ToString();
+                return session.Id.ToString();
             }
         }
 

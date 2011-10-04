@@ -23,7 +23,7 @@ namespace ObjectServer
         private bool disposed = false;
         private Config config;
         private bool initialized;
-        private DBProfileCollection databaseProfiles = new DBProfileCollection();
+        private DbProfileCollection databaseProfiles = new DbProfileCollection();
         private ModuleCollection modules = new ModuleCollection();
         private IExportedService exportedService = ServiceDispatcher.CreateDispatcher();
 
@@ -158,7 +158,7 @@ namespace ObjectServer
         }
 
 
-        internal static DBProfileCollection DBProfiles
+        internal static DbProfileCollection DBProfiles
         {
             get
             {

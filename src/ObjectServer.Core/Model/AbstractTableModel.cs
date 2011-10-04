@@ -92,7 +92,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IDBContext db, bool update)
+        public override void Initialize(IDbContext db, bool update)
         {
             this.AddInternalFields();
 
@@ -134,11 +134,11 @@ namespace ObjectServer.Model
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserID > 0 ? (object)ctx.Session.UserID : null);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
 
                 Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Modifier")
                     .NotRequired()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserID > 0 ? (object)ctx.Session.UserID : null);
+                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
 
                 if (this.Hierarchy)
                 {
@@ -201,7 +201,7 @@ namespace ObjectServer.Model
         /// <param name="dbctx"></param>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        private long[] GetChildrenIDs(IDBContext dbctx, long parentID)
+        private long[] GetChildrenIDs(IDbContext dbctx, long parentID)
         {
             var sqlFmt =
 @"
@@ -224,7 +224,7 @@ WHERE   hp._id = ? AND hc._id <> ?
             return ids.ToArray();
         }
 
-        private long[] GetDescendantIDs(IDBContext dbctx, long parentID)
+        private long[] GetDescendantIDs(IDbContext dbctx, long parentID)
         {
             var sqlFmt =
 @"
@@ -283,7 +283,7 @@ where   hp._id=? and hc._id<>?
         {
             var logRecord = new Dictionary<string, object>()
                 {
-                    { "user", ctx.Session.UserID },
+                    { "user", ctx.Session.UserId },
                     { "resource", this.Name },
                     { "resource_id", id },
                     { "description", msg }
@@ -344,7 +344,7 @@ where   hp._id=? and hc._id<>?
                 throw new NotSupportedException();
             }
 
-            if (!scope.CanReadModel(scope.Session.UserID, this.Name))
+            if (!scope.CanReadModel(scope.Session.UserId, this.Name))
             {
                 throw new SecurityException("Access denied");
             }

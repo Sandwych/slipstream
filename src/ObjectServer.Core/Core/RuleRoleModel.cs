@@ -22,7 +22,7 @@ namespace ObjectServer.Core
             Fields.ManyToOne("rule", "core.rule").SetLabel("Rule").Required();
         }
 
-        public override void Initialize(IDBContext db, bool update)
+        public override void Initialize(IDbContext db, bool update)
         {
             if (db == null)
             {

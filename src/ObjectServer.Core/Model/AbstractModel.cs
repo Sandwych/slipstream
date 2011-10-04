@@ -45,7 +45,7 @@ namespace ObjectServer.Model
         /// 此函数要允许多次调用
         /// </summary>
         /// <param name="db"></param>
-        public override void Initialize(IDBContext db, bool update)
+        public override void Initialize(IDbContext db, bool update)
         {
             if (db == null)
             {
@@ -93,7 +93,7 @@ namespace ObjectServer.Model
         /// 初始化继承设置
         /// </summary>
         /// <param name="db"></param>
-        private void InitializeInheritances(IDBContext db)
+        private void InitializeInheritances(IDbContext db)
         {
             var resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
 
@@ -152,7 +152,7 @@ namespace ObjectServer.Model
         /// 同步代码定义的模型到数据库
         /// </summary>
         /// <param name="db"></param>
-        private void SyncModel(IDBContext db)
+        private void SyncModel(IDbContext db)
         {
             Debug.Assert(db != null);
 
@@ -173,7 +173,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="db"></param>
         /// <param name="modelId"></param>
-        private void SyncFields(IDBContext db, long modelId)
+        private void SyncFields(IDbContext db, long modelId)
         {
             Debug.Assert(db != null);
 
@@ -227,7 +227,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         /// <param name="dbField"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        private void SyncSingleField(IDBContext db, Dictionary<string, object> dbField, string fieldName)
+        private void SyncSingleField(IDbContext db, Dictionary<string, object> dbField, string fieldName)
         {
             Debug.Assert(db != null);
             Debug.Assert(dbField != null);
@@ -268,7 +268,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             }
         }
 
-        private long? FindExistedModelInDb(IDBContext db)
+        private long? FindExistedModelInDb(IDbContext db)
         {
             Debug.Assert(db != null);
 
@@ -291,7 +291,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             }
         }
 
-        private void CreateModel(IDBContext db)
+        private void CreateModel(IDbContext db)
         {
             Debug.Assert(db != null);
 

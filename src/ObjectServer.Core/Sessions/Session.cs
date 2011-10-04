@@ -14,28 +14,28 @@ namespace ObjectServer
     [Serializable]
     public sealed class Session
     {
-        private static readonly SqlString SelectByIDSql =
+        private static readonly SqlString SelectByIdSql =
             new SqlString("select * from core_session where sid=", Parameter.Placeholder);
-        private static readonly SqlString SelectByUserIDSql =
+        private static readonly SqlString SelectByUserIdSql =
             new SqlString("select * from core_session where userid=", Parameter.Placeholder);
         private static readonly SqlString UpdateLastActivityTimeSql = SqlString.Parse(
             "update core_session set last_activity_time=? where last_activity_time<? and sid=?");
 
-        public const int IDLength = 16;
+        public const int IdLength = 16;
         public const string SystemUserName = "system";
         public const long SystemUserId = 0;
 
         public Session(IDictionary<string, object> record)
         {
-            this.ID = (string)record["sid"];
+            this.Id = (string)record["sid"];
             this.Login = (string)record["login"];
-            this.UserID = (long)record["userid"];
+            this.UserId = (long)record["userid"];
             this.LastActivityTime = (DateTime)record["last_activity_time"];
             this.StartTime = (DateTime)record["start_time"];
         }
 
 
-        public Session(string login, long userID)
+        public Session(string login, long userId)
             : this()
         {
 
@@ -44,19 +44,19 @@ namespace ObjectServer
                 throw new ArgumentNullException("login");
             }
 
-            if (userID <= 0)
+            if (userId <= 0)
             {
                 throw new ArgumentOutOfRangeException("userId");
             }
 
             this.Login = login;
-            this.UserID = userID;
+            this.UserId = userId;
         }
 
         private Session()
         {
-            this.UserID = 0;
-            this.ID = GenerateSessionId();
+            this.UserId = 0;
+            this.Id = GenerateSessionId();
             this.StartTime = DateTime.Now;
             this.LastActivityTime = this.StartTime;
         }
@@ -65,13 +65,13 @@ namespace ObjectServer
         {
             var s = new Session();
             s.Login = SystemUserName;
-            s.UserID = SystemUserId;
+            s.UserId = SystemUserId;
             return s;
         }
 
         private static string GenerateSessionId()
         {
-            var bytes = new byte[IDLength];
+            var bytes = new byte[IdLength];
             using (var rng = RNGCryptoServiceProvider.Create())
             {
                 rng.GetBytes(bytes);
@@ -80,11 +80,11 @@ namespace ObjectServer
             return Convert.ToBase64String(hash);
         }
 
-        public string ID { get; set; }
+        public string Id { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime LastActivityTime { get; set; }
         public string Login { get; set; }
-        public long UserID { get; set; }
+        public long UserId { get; set; }
 
         public DateTime Deadline
         {
@@ -111,11 +111,11 @@ namespace ObjectServer
         {
             get
             {
-                return this.UserID <= 0;
+                return this.UserId <= 0;
             }
         }
 
-        public static Session GetByID(IDBContext db, string sid)
+        public static Session GetByID(IDbContext db, string sid)
         {
             if (db == null)
             {
@@ -126,7 +126,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("sid");
             }
 
-            var records = db.QueryAsDictionary(SelectByIDSql, sid);
+            var records = db.QueryAsDictionary(SelectByIdSql, sid);
             if (records.Length > 1)
             {
                 throw new Exceptions.DataException("More than one session id in table [core_session]!");
@@ -142,14 +142,14 @@ namespace ObjectServer
             }
         }
 
-        public static Session GetByUserID(IDBContext db, long uid)
+        public static Session GetByUserID(IDbContext db, long uid)
         {
             if (db == null)
             {
                 throw new ArgumentNullException("db");
             }
 
-            var records = db.QueryAsDictionary(SelectByUserIDSql, uid);
+            var records = db.QueryAsDictionary(SelectByUserIdSql, uid);
             if (records.Length > 1)
             {
                 throw new Exceptions.DataException("More than one user id in table [core_session]!");
@@ -165,7 +165,7 @@ namespace ObjectServer
             }
         }
 
-        public static void Put(IDBContext db, Session s)
+        public static void Put(IDbContext db, Session s)
         {
             if (db == null)
             {
@@ -179,14 +179,14 @@ namespace ObjectServer
 
             var sql = SqlString.Parse(
                 "insert into core_session(sid, start_time, last_activity_time, userid, login) values(?,?,?,?,?)");
-            var n = db.Execute(sql, s.ID, s.StartTime, s.LastActivityTime, s.UserID, s.Login);
+            var n = db.Execute(sql, s.Id, s.StartTime, s.LastActivityTime, s.UserId, s.Login);
             if (n != 1)
             {
                 throw new Exceptions.DataException("Failed to put session");
             }
         }
 
-        public static void Remove(IDBContext db, string sid)
+        public static void Remove(IDbContext db, string sid)
         {
             if (db == null)
             {
@@ -206,7 +206,7 @@ namespace ObjectServer
             }
         }
 
-        public static void Pulse(IDBContext db, string sid)
+        public static void Pulse(IDbContext db, string sid)
         {
             if (db == null)
             {

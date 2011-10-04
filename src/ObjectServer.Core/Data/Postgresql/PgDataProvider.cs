@@ -24,12 +24,12 @@ select datname from pg_database
 
         #region IDataProvider 成员
 
-        public IDBContext CreateDataContext()
+        public IDbContext CreateDataContext()
         {
             return new PgDBContext();
         }
 
-        public IDBContext CreateDataContext(string dbName)
+        public IDbContext CreateDataContext(string dbName)
         {
             if (string.IsNullOrEmpty(dbName))
             {

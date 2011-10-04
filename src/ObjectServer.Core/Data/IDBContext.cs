@@ -9,7 +9,7 @@ using NHibernate.SqlCommand;
 
 namespace ObjectServer.Data
 {
-    public interface IDBContext : IDisposable
+    public interface IDbContext : IDisposable
     {
 
         void Open();

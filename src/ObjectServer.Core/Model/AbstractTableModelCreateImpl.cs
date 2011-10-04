@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Data;
 using System.Reflection;
 using System.Dynamic;
+using System.Globalization;
 
 using ObjectServer.Exceptions;
 using NHibernate.SqlCommand;
@@ -32,7 +33,7 @@ namespace ObjectServer.Model
                 throw new ArgumentException(msg, "propertyBag");
             }
 
-            if (!scope.CanCreateModel(scope.Session.UserID, this.Name))
+            if (!scope.CanCreateModel(scope.Session.UserId, this.Name))
             {
                 throw new SecurityException("Access denied");
             }
@@ -119,7 +120,7 @@ namespace ObjectServer.Model
         }
 
         private void PostCreateHierarchy(
-            IDBContext dbctx, long id, Dictionary<string, object> record)
+            IDbContext dbctx, long id, Dictionary<string, object> record)
         {
             //处理层次表
             long rhsValue = 0;
@@ -187,15 +188,15 @@ namespace ObjectServer.Model
             //我们修改的不止一条记录，所以这里需要锁定表，防止其它连接修改数据库
             dbctx.LockTable(this.TableName);
 
-            var sqlUpdate1 = string.Format(
+            var sqlUpdate1 = string.Format(CultureInfo.InvariantCulture,
                 "update \"{0}\" set _right = _right + 2 where _right>?", this.TableName);
             dbctx.Execute(SqlString.Parse(sqlUpdate1), rhsValue);
 
-            var sqlUpdate2 = string.Format(
+            var sqlUpdate2 = string.Format(CultureInfo.InvariantCulture,
                 "update \"{0}\" set _left = _left + 2 where _left>?", this.TableName);
             dbctx.Execute(SqlString.Parse(sqlUpdate2), rhsValue);
 
-            var sqlUpdate3 = string.Format(
+            var sqlUpdate3 = string.Format(CultureInfo.InvariantCulture,
                 "update \"{0}\" set _left=?, _right=? where (_id=?) ", this.TableName);
             dbctx.Execute(SqlString.Parse(sqlUpdate3), rhsValue + 1, rhsValue + 2, id);
         }
@@ -287,7 +288,7 @@ namespace ObjectServer.Model
                 }
                 else if (!ctx.Session.IsSystemUser)
                 {
-                    propertyBag[UpdatedUserFieldName] = ctx.Session.UserID;
+                    propertyBag[UpdatedUserFieldName] = ctx.Session.UserId;
                 }
             }
         }

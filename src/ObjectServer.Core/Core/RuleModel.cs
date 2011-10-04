@@ -72,7 +72,7 @@ namespace ObjectServer.Core
                         "WHERE ur.user =", Parameter.Placeholder, " )))");
 
             var result = scope.DBContext.QueryAsDictionary(
-                sql, modelName, scope.Session.UserID);
+                sql, modelName, scope.Session.UserId);
 
             if (result.Length > 0)
             {
@@ -113,7 +113,7 @@ namespace ObjectServer.Core
         private static ScriptScope CreateScriptScope(ITransactionContext scope)
         {
             var userModel = (UserModel)scope.GetResource("core.user");
-            dynamic user = userModel.Browse(scope, scope.Session.UserID);
+            dynamic user = userModel.Browse(scope, scope.Session.UserId);
 
             var scriptScope = s_engine.CreateScope();
             scriptScope.SetVariable("user", user);

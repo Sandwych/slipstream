@@ -36,7 +36,7 @@ namespace ObjectServer.Core.Test
                 using (var tc = new TransactionContext(TestingDatabaseName, sid))
                 {
                     var orders = new OrderExpression[] {
-                        new OrderExpression("name", SortDirection.Asc) 
+                        new OrderExpression("name", SortDirection.Ascend) 
                     };
                     var ids = salesOrderModel.SearchInternal(tc, null, orders);
                     Assert.AreEqual(expectedOrderNames.Length, ids.Length);

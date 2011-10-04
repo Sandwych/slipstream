@@ -16,7 +16,7 @@ namespace ObjectServer
     /// 用于描述一个帐套数据库的上下文环境
     /// 一个数据库包含了该数据库中的所有对象
     /// </summary>
-    internal class DBProfile : IDBProfile
+    internal class DbProfile : IDbProfile
     {
         private readonly IDictionary<string, int> resourceDependencyWeightMapping =
             new Dictionary<string, int>();
@@ -30,7 +30,7 @@ namespace ObjectServer
         /// <summary>
         /// 初始化一个数据库环境
         /// </summary>
-        public DBProfile(string db)
+        public DbProfile(string db)
         {
             if (string.IsNullOrEmpty(db))
             {
@@ -40,7 +40,7 @@ namespace ObjectServer
             this.DatabaseName = db;
         }
 
-        ~DBProfile()
+        ~DbProfile()
         {
             this.Dispose(false);
         }
@@ -168,7 +168,7 @@ namespace ObjectServer
 
         public string DatabaseName { get; private set; }
 
-        public void InitializeAllResources(IDBContext conn, bool update)
+        public void InitializeAllResources(IDbContext conn, bool update)
         {
             IList<IResource> allRes = null;
             this.resourcesLock.EnterReadLock();
@@ -191,7 +191,7 @@ namespace ObjectServer
         }
 
 
-        private void InitializeResource(IDBContext conn, IResource res, int index, bool update)
+        private void InitializeResource(IDbContext conn, IResource res, int index, bool update)
         {
             Debug.Assert(res != null);
 

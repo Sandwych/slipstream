@@ -25,7 +25,7 @@ namespace ObjectServer.Core
 
         }
 
-        public override void Initialize(IDBContext db, bool update)
+        public override void Initialize(IDbContext db, bool update)
         {
             base.Initialize(db, update);
 

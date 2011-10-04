@@ -14,10 +14,10 @@ namespace ObjectServer
     {
         private bool disposed = false;
         private readonly IResourceContainer resources;
-        private readonly IDBContext db;
+        private readonly IDbContext db;
         private readonly int currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-        public DummyTransactionContext(IDBContext db)
+        public DummyTransactionContext(IDbContext db)
         {
             Debug.Assert(db != null);
             this.db = db;
@@ -46,7 +46,7 @@ namespace ObjectServer
                 //删除系统 Session
                 if (this.Session.IsSystemUser)
                 {
-                    Session.Remove(this.db, this.Session.ID);
+                    Session.Remove(this.db, this.Session.Id);
                 }
 
                 this.disposed = true;
@@ -96,7 +96,7 @@ namespace ObjectServer
             return this.resources.GetResourceDependencyWeight(resName);
         }
 
-        public IDBContext DBContext
+        public IDbContext DBContext
         {
             get
             {

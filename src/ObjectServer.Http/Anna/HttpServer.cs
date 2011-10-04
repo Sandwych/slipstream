@@ -57,9 +57,15 @@ namespace Anna
                     //释放托管资源
                 }
 
+
                 //释放非托管资源
-                listener.Stop();
-                listener.Close();
+                this.listener.Stop();
+                this.listener.Close();
+
+                if (this.scheduler is IDisposable)
+                {
+                    (this.scheduler as IDisposable).Dispose();
+                }
 
                 this.disposed = true;
             }

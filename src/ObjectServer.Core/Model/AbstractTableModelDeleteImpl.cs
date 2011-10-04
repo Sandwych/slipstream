@@ -38,7 +38,7 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("ids");
             }
 
-            if (!ctx.CanDeleteModel(ctx.Session.UserID, this.Name))
+            if (!ctx.CanDeleteModel(ctx.Session.UserId, this.Name))
             {
                 throw new SecurityException("Access denied");
             }

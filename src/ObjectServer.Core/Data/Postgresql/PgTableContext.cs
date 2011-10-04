@@ -26,7 +26,7 @@ namespace ObjectServer.Data.Postgresql
                 { OnDeleteAction.Restrict, "RESTRICT" },
             };
 
-        public PgTableContext(IDBContext db, string tableName)
+        public PgTableContext(IDbContext db, string tableName)
         {
             if (db == null)
             {
@@ -49,7 +49,7 @@ namespace ObjectServer.Data.Postgresql
 
         public string Name { get; private set; }
 
-        public bool TableExists(IDBContext db, string tableName)
+        public bool TableExists(IDbContext db, string tableName)
         {
             if (db == null)
             {
@@ -77,7 +77,7 @@ namespace ObjectServer.Data.Postgresql
             return n > 0;
         }
 
-        public void CreateTable(IDBContext db, IModelDescriptor model, string label)
+        public void CreateTable(IDbContext db, IModelDescriptor model, string label)
         {
             if (db == null)
             {
@@ -123,7 +123,7 @@ namespace ObjectServer.Data.Postgresql
             SetTableComment(db, tableName, label);
         }
 
-        public void CreateTable(IDBContext db, string tableName, string label)
+        public void CreateTable(IDbContext db, string tableName, string label)
         {
             if (db == null)
             {
@@ -160,7 +160,7 @@ namespace ObjectServer.Data.Postgresql
             SetTableComment(db, tableName, label);
         }
 
-        private static void SetTableComment(IDBContext db, string tableName, string label)
+        private static void SetTableComment(IDbContext db, string tableName, string label)
         {
             if (!String.IsNullOrEmpty(label))
             {
@@ -173,7 +173,7 @@ namespace ObjectServer.Data.Postgresql
             }
         }
 
-        public void AddColumn(IDBContext db, IFieldDescriptor field)
+        public void AddColumn(IDbContext db, IFieldDescriptor field)
         {
             if (db == null)
             {
@@ -201,7 +201,7 @@ namespace ObjectServer.Data.Postgresql
             }
         }
 
-        private void SetColumnComment(IDBContext db, IFieldDescriptor field)
+        private void SetColumnComment(IDbContext db, IFieldDescriptor field)
         {
             if (!string.IsNullOrEmpty(field.Label))
             {
@@ -216,7 +216,7 @@ namespace ObjectServer.Data.Postgresql
             }
         }
 
-        public void DeleteColumn(IDBContext db, string columnName)
+        public void DeleteColumn(IDbContext db, string columnName)
         {
             if (db == null)
             {
@@ -238,7 +238,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void AlterColumnNullable(IDBContext db, string columnName, bool nullable)
+        public void AlterColumnNullable(IDbContext db, string columnName, bool nullable)
         {
             if (db == null)
             {
@@ -262,7 +262,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void AlterColumnType(IDBContext db, string columnName, string sqlType)
+        public void AlterColumnType(IDbContext db, string columnName, string sqlType)
         {
             if (db == null)
             {
@@ -322,7 +322,7 @@ namespace ObjectServer.Data.Postgresql
             return this.columns.Values.ToArray();
         }
 
-        private void LoadColumns(IDBContext db, string tableName)
+        private void LoadColumns(IDbContext db, string tableName)
         {
             if (db == null)
             {
@@ -353,7 +353,7 @@ namespace ObjectServer.Data.Postgresql
 
         }
 
-        private void AddUniqueConstraint(IDBContext db, string column)
+        private void AddUniqueConstraint(IDbContext db, string column)
         {
             Debug.Assert(db != null);
             Debug.Assert(!string.IsNullOrEmpty(column));
@@ -364,7 +364,7 @@ namespace ObjectServer.Data.Postgresql
         }
 
 
-        public void AddConstraint(IDBContext db, string constraintName, string constraint)
+        public void AddConstraint(IDbContext db, string constraintName, string constraint)
         {
             Debug.Assert(db != null);
             Debug.Assert(!string.IsNullOrEmpty(constraintName));
@@ -375,7 +375,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void DeleteConstraint(IDBContext db, string constraintName)
+        public void DeleteConstraint(IDbContext db, string constraintName)
         {
             if (db == null)
             {
@@ -393,7 +393,7 @@ namespace ObjectServer.Data.Postgresql
         }
 
 
-        public bool ConstraintExists(IDBContext db, string constraintName)
+        public bool ConstraintExists(IDbContext db, string constraintName)
         {
             //TODO ESCAPE SQL
             if (db == null)
@@ -414,7 +414,7 @@ select coalesce(count(constraint_name), 0)
             return n > 0;
         }
 
-        public void AddFK(IDBContext db, string columnName, string refTable, OnDeleteAction act)
+        public void AddFK(IDbContext db, string columnName, string refTable, OnDeleteAction act)
         {
             if (db == null)
             {
@@ -443,7 +443,7 @@ select coalesce(count(constraint_name), 0)
         }
 
 
-        public void DeleteFK(IDBContext db, string columnName)
+        public void DeleteFK(IDbContext db, string columnName)
         {
             if (db == null)
             {
@@ -462,7 +462,7 @@ select coalesce(count(constraint_name), 0)
             this.DeleteConstraint(db, fkName);
         }
 
-        public bool FKExists(IDBContext db, string columnName)
+        public bool FKExists(IDbContext db, string columnName)
         {
             if (db == null)
             {

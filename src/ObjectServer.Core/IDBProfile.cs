@@ -7,7 +7,7 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    public interface IDBProfile : IDisposable, IResourceContainer
+    public interface IDbProfile : IDisposable, IResourceContainer
     {
     }
 }

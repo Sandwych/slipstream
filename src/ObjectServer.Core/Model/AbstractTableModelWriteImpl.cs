@@ -36,7 +36,7 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
-            if (!ctx.CanWriteModel(ctx.Session.UserID, this.Name))
+            if (!ctx.CanWriteModel(ctx.Session.UserId, this.Name))
             {
                 throw new SecurityException("Access denied");
             }
@@ -239,9 +239,9 @@ namespace ObjectServer.Model
             }
             if (this.ContainsField(UpdatedUserFieldName) &&
                 scope.Session != null &&
-                scope.Session.UserID > 0)
+                scope.Session.UserId > 0)
             {
-                record[UpdatedUserFieldName] = scope.Session.UserID;
+                record[UpdatedUserFieldName] = scope.Session.UserId;
             }
         }
 

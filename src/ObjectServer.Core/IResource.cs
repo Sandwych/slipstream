@@ -27,7 +27,7 @@ namespace ObjectServer
         /// </summary>
         /// <param name="db"></param>
         /// <param name="update">是否进行涉及数据库等的更新动作</param>
-        void Initialize(IDBContext db, bool update);
+        void Initialize(IDbContext db, bool update);
 
         //从另一个资源合并字段与业务方法
         void MergeFrom(IResource res);

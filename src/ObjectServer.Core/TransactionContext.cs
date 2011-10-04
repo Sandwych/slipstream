@@ -51,7 +51,7 @@ namespace ObjectServer
                     if (session == null || !session.IsActive)
                     {
                         //删掉无效的 Session
-                        Session.Remove(this.dbctx, session.ID);
+                        Session.Remove(this.dbctx, session.Id);
                         this.DBContext.Close();
                         throw new ObjectServer.Exceptions.SecurityException("Not logged!");
                     }
@@ -116,7 +116,7 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="db"></param>
-        public TransactionContext(IDBContext db)
+        public TransactionContext(IDbContext db)
         {
             if (db == null)
             {
@@ -187,8 +187,8 @@ namespace ObjectServer
             return this.resources.GetResourceDependencyWeight(resName);
         }
 
-        private readonly IDBContext dbctx;
-        public IDBContext DBContext
+        private readonly IDbContext dbctx;
+        public IDbContext DBContext
         {
             get
             {
@@ -240,7 +240,7 @@ namespace ObjectServer
                     //处置非托管对象
                     if (this.Session.IsSystemUser)
                     {
-                        Session.Remove(this.dbctx, this.Session.ID);
+                        Session.Remove(this.dbctx, this.Session.Id);
                     }
 
                     this.DBTransaction.Commit();
@@ -275,7 +275,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("other");
             }
 
-            return this.Session.ID == other.Session.ID;
+            return this.Session.Id == other.Session.Id;
         }
 
         #endregion

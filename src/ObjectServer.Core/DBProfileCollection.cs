@@ -17,16 +17,16 @@ namespace ObjectServer
     /// <summary>
     /// Singleton
     /// </summary>
-    internal sealed class DBProfileCollection : IGlobalObject, IDisposable
+    internal sealed class DbProfileCollection : IGlobalObject, IDisposable
     {
         private Config config;
-        private Dictionary<string, DBProfile> dbProfiles =
-            new Dictionary<string, DBProfile>();
+        private Dictionary<string, DbProfile> dbProfiles =
+            new Dictionary<string, DbProfile>();
         private bool disposed = false;
         private readonly ReaderWriterLockSlim dbProfilesLock = new ReaderWriterLockSlim();
 
 
-        ~DBProfileCollection()
+        ~DbProfileCollection()
         {
             this.Dispose(false);
         }
@@ -80,7 +80,7 @@ namespace ObjectServer
                 throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
             }
 
-            var db = new DBProfile(dbName);
+            var db = new DbProfile(dbName);
 
             this.dbProfilesLock.EnterWriteLock();
             try
@@ -108,7 +108,7 @@ namespace ObjectServer
             Environment.Modules.LoadModules(ctx, isUpdate);
         }
 
-        public DBProfile GetDBProfile(string dbName)
+        public DbProfile GetDBProfile(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 

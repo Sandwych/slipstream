@@ -8,10 +8,10 @@ namespace ObjectServer.Sql
 {
     public enum SortDirection
     {
-        [EnumMember(Value = "asc")]
-        Asc,
-        [EnumMember(Value = "desc")]
-        Desc
+        [EnumMember(Value = "ASC")]
+        Ascend,
+        [EnumMember(Value = "DESC")]
+        Descend
     }
 
     public static class SortDirectionParser
@@ -23,15 +23,15 @@ namespace ObjectServer.Sql
                 throw new ArgumentNullException("value");
             }
 
-            value = value.ToLowerInvariant();
+            value = value.ToUpperInvariant();
 
             switch (value)
             {
-                case "asc":
-                    return SortDirection.Asc;
+                case "ASC":
+                    return SortDirection.Ascend;
 
-                case "desc":
-                    return SortDirection.Desc;
+                case "DESC":
+                    return SortDirection.Descend;
 
                 default:
                     throw new NotSupportedException();
@@ -40,7 +40,7 @@ namespace ObjectServer.Sql
 
         public static string ToUpperString(this SortDirection so)
         {
-            return so.ToString().ToUpper();
+            return so.ToString();
         }
     }
 }

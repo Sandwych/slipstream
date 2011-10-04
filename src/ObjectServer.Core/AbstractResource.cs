@@ -145,7 +145,7 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Initialize(IDBContext db, bool update)
+        public virtual void Initialize(IDbContext db, bool update)
         {
             if (db == null)
             {
