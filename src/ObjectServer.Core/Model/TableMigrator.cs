@@ -31,7 +31,7 @@ namespace ObjectServer.Model
 
             this.db = db;
             this.model = model;
-            this.context = new SystemTransactionContext(db);
+            this.context = new DummyTransactionContext(db);
         }
 
         public void Migrate()

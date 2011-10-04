@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 using ObjectServer.Data;
 
@@ -14,5 +15,6 @@ namespace ObjectServer
         IResource GetResource(string resName);
         int GetResourceDependencyWeight(string resName);
         IDBContext DBContext { get; }
+        IDbTransaction DBTransaction { get; }
     }
 }

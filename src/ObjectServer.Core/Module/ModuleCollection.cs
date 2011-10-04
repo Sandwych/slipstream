@@ -107,7 +107,7 @@ namespace ObjectServer
                 module.Path = moduleDir;
                 modules.Add(module);
 
-                LoggerProvider.EnvironmentLogger.Info(() => string.Format("Found additional module: [{0}], Path=[{1}]",
+                LoggerProvider.EnvironmentLogger.Info(() => string.Format("Additional module found: [{0}], Path=[{1}]",
                         module.Name, module.Path));
             }
 
@@ -123,6 +123,8 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("dbctx");
             }
+
+            LoggerProvider.EnvironmentLogger.Info("Updating modules list...");
 
             var cfg = Environment.Configuration;
             this.LookupAllModules(cfg.ModulePath);
@@ -146,6 +148,9 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("tx");
             }
+
+            LoggerProvider.EnvironmentLogger.Info("Loading modules...");
+
             //加载的策略是：
             //1. 加载状态为 "installed" 的模块
             //2. 加载状态为 "to-install" 的模块

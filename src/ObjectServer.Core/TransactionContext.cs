@@ -43,23 +43,33 @@ namespace ObjectServer
 
             try
             {
-                var session = Session.GetByID(this.dbctx, sessionId);
-
-                if (session == null || !session.IsActive)
+                this.dbtx = this.DBContext.BeginTransaction();
+                try
                 {
-                    //删掉无效的 Session
-                    Session.Remove(this.dbctx, session.ID);
-                    this.DBContext.Close();
-                    throw new ObjectServer.Exceptions.SecurityException("Not logged!");
-                }
+                    var session = Session.GetByID(this.dbctx, sessionId);
 
-                Session.Pulse(this.dbctx, sessionId);
-                this.resources = Environment.DBProfiles.GetDBProfile(dbName);
-                this.Session = session;
+                    if (session == null || !session.IsActive)
+                    {
+                        //删掉无效的 Session
+                        Session.Remove(this.dbctx, session.ID);
+                        this.DBContext.Close();
+                        throw new ObjectServer.Exceptions.SecurityException("Not logged!");
+                    }
+
+                    Session.Pulse(this.dbctx, sessionId);
+                    this.resources = Environment.DBProfiles.GetDBProfile(dbName);
+                    this.Session = session;
+                }
+                catch
+                {
+                    this.DBTransaction.Rollback();
+                    throw;
+                }
             }
-            finally
+            catch
             {
                 this.DBContext.Close();
+                throw;
             }
 
         }
@@ -82,12 +92,23 @@ namespace ObjectServer
 
             try
             {
-                this.Session = Session.CreateSystemUserSession();
-                Session.Put(dbctx, this.Session);
+                this.dbtx = this.DBContext.BeginTransaction();
+                try
+                {
+                    this.Session = Session.CreateSystemUserSession();
+                    Session.Put(dbctx, this.Session);
+                }
+                catch
+                {
+                    this.DBTransaction.Rollback();
+                    throw;
+                }
+
             }
-            finally
+            catch
             {
                 this.DBContext.Close();
+                throw;
             }
         }
 
@@ -109,12 +130,22 @@ namespace ObjectServer
 
             try
             {
-                this.Session = Session.CreateSystemUserSession();
-                Session.Put(this.dbctx, this.Session);
+                this.dbtx = this.DBContext.BeginTransaction();
+                try
+                {
+                    this.Session = Session.CreateSystemUserSession();
+                    Session.Put(this.dbctx, this.Session);
+                }
+                catch
+                {
+                    this.DBTransaction.Rollback();
+                    throw;
+                }
             }
-            finally
+            catch
             {
                 this.DBContext.Close();
+                throw;
             }
         }
 
@@ -148,7 +179,7 @@ namespace ObjectServer
 
             if (this.disposed)
             {
-                throw new ObjectDisposedException("ServiceContext");
+                throw new ObjectDisposedException("TransactionContext");
             }
 
             Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
@@ -156,20 +187,37 @@ namespace ObjectServer
             return this.resources.GetResourceDependencyWeight(resName);
         }
 
-        private IDBContext dbctx;
+        private readonly IDBContext dbctx;
         public IDBContext DBContext
         {
             get
             {
                 if (this.disposed)
                 {
-                    throw new ObjectDisposedException("ServiceContext");
+                    throw new ObjectDisposedException("TransactionContext");
                 }
 
                 Debug.Assert(this.dbctx != null);
                 Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
                 return this.dbctx;
+            }
+        }
+
+        private readonly IDbTransaction dbtx;
+        public IDbTransaction DBTransaction
+        {
+            get
+            {
+                if (this.disposed)
+                {
+                    throw new ObjectDisposedException("TransactionContext");
+                }
+
+                Debug.Assert(this.dbctx != null);
+                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+
+                return this.dbtx;
             }
         }
 
@@ -187,15 +235,26 @@ namespace ObjectServer
                     //处置托管对象
                 }
 
-                //处置非托管对象
-                if (this.Session.IsSystemUser)
+                try
                 {
-                    Session.Remove(this.dbctx, this.Session.ID);
+                    //处置非托管对象
+                    if (this.Session.IsSystemUser)
+                    {
+                        Session.Remove(this.dbctx, this.Session.ID);
+                    }
+
+                    this.DBTransaction.Commit();
+                }
+                catch
+                {
+                    this.DBTransaction.Rollback();
+                }
+                finally
+                {
+                    this.DBContext.Close();
+                    this.disposed = true;
                 }
 
-                this.DBContext.Close();
-
-                this.disposed = true;
             }
         }
 

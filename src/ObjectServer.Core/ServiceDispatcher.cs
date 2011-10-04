@@ -36,8 +36,8 @@ namespace ObjectServer
             }
 
             using (var ctx = new TransactionContext(dbName))
-            using (var tx = new TransactionScope())
             {
+
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
 
@@ -45,9 +45,6 @@ namespace ObjectServer
                 {
                     throw new Exceptions.SecurityException("Failed to logon");
                 }
-
-                tx.Complete();
-
                 return session.ID.ToString();
             }
         }
@@ -66,9 +63,8 @@ namespace ObjectServer
             }
 
             using (var ctx = new TransactionContext(db, sessionId))
-            using (var tx = new TransactionScope())
             {
-                
+
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 userModel.LogOff(ctx, sessionId);
             }
@@ -101,7 +97,7 @@ namespace ObjectServer
                 dynamic res = scope.GetResource(resource);
                 var svc = res.GetService(method);
 
-                return ExecuteTransactional(scope, res, svc, args);
+                return svc.Invoke(res, scope, args);
             }
         }
 

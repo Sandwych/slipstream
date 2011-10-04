@@ -92,23 +92,20 @@ namespace ObjectServer
                 this.dbProfilesLock.ExitWriteLock();
             }
 
-            using (var dbctx = DataProvider.CreateDataContext(dbName))
+            using (var ctx = new TransactionContext(dbName))
             {
-                this.LoadModules(dbctx, isUpdate);
+                this.LoadModules(ctx, isUpdate);
             }
         }
 
-        private void LoadModules(IDBContext db, bool isUpdate)
+        private void LoadModules(ITransactionContext ctx, bool isUpdate)
         {
-            Debug.Assert(db != null);
+            Debug.Assert(ctx != null);
 
             //加载其它模块
             LoggerProvider.EnvironmentLogger.Info(() => "Loading modules...");
-            using (var ctx = new SystemTransactionContext(db))
-            {
-                Environment.Modules.UpdateModuleList(db);
-                Environment.Modules.LoadModules(ctx, isUpdate);
-            }
+            Environment.Modules.UpdateModuleList(ctx.DBContext);
+            Environment.Modules.LoadModules(ctx, isUpdate);
         }
 
         public DBProfile GetDBProfile(string dbName)

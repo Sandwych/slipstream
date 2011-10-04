@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Data;
+using System.Threading;
 
 using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    internal sealed class SystemTransactionContext : ITransactionContext
+    internal sealed class DummyTransactionContext : ITransactionContext
     {
         private bool disposed = false;
         private readonly IResourceContainer resources;
         private readonly IDBContext db;
+        private readonly int currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-        public SystemTransactionContext(IDBContext db)
+        public DummyTransactionContext(IDBContext db)
         {
             Debug.Assert(db != null);
             this.db = db;
@@ -23,7 +26,7 @@ namespace ObjectServer
             this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
         }
 
-        ~SystemTransactionContext()
+        ~DummyTransactionContext()
         {
             this.Dispose(false);
         }
@@ -63,6 +66,7 @@ namespace ObjectServer
 
         public IResource GetResource(string resName)
         {
+            Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
             if (string.IsNullOrEmpty(resName))
             {
                 throw new ArgumentNullException("resName");
@@ -78,6 +82,7 @@ namespace ObjectServer
 
         public int GetResourceDependencyWeight(string resName)
         {
+            Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
             if (string.IsNullOrEmpty(resName))
             {
                 throw new ArgumentNullException("resName");
@@ -95,12 +100,21 @@ namespace ObjectServer
         {
             get
             {
+                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
                 Debug.Assert(this.db != null);
                 if (this.disposed)
                 {
                     throw new ObjectDisposedException("disposed");
                 }
                 return this.db;
+            }
+        }
+
+        public IDbTransaction DBTransaction
+        {
+            get
+            {
+                throw new NotSupportedException();
             }
         }
     }
