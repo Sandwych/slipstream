@@ -15,8 +15,8 @@ namespace ObjectServer.Core.Test
         public void Test_GetFields()
         {
             var modelName = "core.user";
-
-            var result = this.Service.Execute(TestingDatabaseName, this.SessionId, "core.model", "GetFields", modelName);
+            dynamic userModel = this.GetResource("core.model");
+            var result = userModel.GetFields(this.TransactionContext, modelName);
             var records = ((object[])result).Select(i => (Dictionary<string, object>)i);
 
             Assert.IsTrue(records.Count() > 0);

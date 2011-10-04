@@ -18,7 +18,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void Test_creation()
         {
-            var model = (IModel)this.ServiceContext.GetResource("test.validator");
+            var model = (IModel)this.TransactionContext.GetResource("test.validator");
             dynamic record = new ExpandoObject();
             record.required_field = null;
             record.readonly_field = "hello!";

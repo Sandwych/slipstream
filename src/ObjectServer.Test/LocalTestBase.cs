@@ -79,42 +79,47 @@ namespace ObjectServer
 
         public IExportedService Service { get; private set; }
 
-        public ITransactionContext ServiceContext { get; private set; }
+        public ITransactionContext TransactionContext { get; private set; }
+
+        protected dynamic GetResource(string resName)
+        {
+            return this.TransactionContext.GetResource(resName);
+        }
 
         [SetUp]
         public void BeforeTest()
         {
-            Debug.Assert(this.ServiceContext == null);
+            Debug.Assert(this.TransactionContext == null);
             Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
 
-            this.ServiceContext = new TransactionContext(TestingDatabaseName, this.SessionId);
+            this.TransactionContext = new TransactionContext(TestingDatabaseName, this.SessionId);
         }
 
         [TearDown]
         public void AfterTest()
         {
-            Debug.Assert(this.ServiceContext != null);
-            this.ServiceContext.Dispose();
-            this.ServiceContext = null;
+            Debug.Assert(this.TransactionContext != null);
+            this.TransactionContext.Dispose();
+            this.TransactionContext = null;
         }
 
         protected void ClearTestModelTable()
         {
-            Debug.Assert(this.ServiceContext != null);
+            Debug.Assert(this.TransactionContext != null);
             this.ClearModel("test.test_model");
         }
 
 
         protected void ClearMasterAndChildTable()
         {
-            Debug.Assert(this.ServiceContext != null);
+            Debug.Assert(this.TransactionContext != null);
             this.ClearModel("test.child");
             this.ClearModel("test.master");
         }
 
         protected void ClearManyToManyModels()
         {
-            Debug.Assert(this.ServiceContext != null);
+            Debug.Assert(this.TransactionContext != null);
             this.ClearModel("test.department_employee");
             this.ClearModel("test.department");
             this.ClearModel("test.employee");

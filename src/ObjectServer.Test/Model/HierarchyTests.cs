@@ -18,7 +18,7 @@ namespace ObjectServer.Model.Test
 
         private void AssertNode(long id, long left, long right)
         {
-            var model = (IModel)this.ServiceContext.GetResource("test.category");
+            var model = (IModel)this.TransactionContext.GetResource("test.category");
             dynamic records = this.Service.Execute(TestingDatabaseName, this.SessionId, "test.category", "Read", new object[] { id }, AssertNodeFields);
             Assert.AreEqual(1, records.Length);
             var record = records[0];

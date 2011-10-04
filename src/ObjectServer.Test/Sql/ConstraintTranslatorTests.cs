@@ -38,7 +38,7 @@ namespace ObjectServer.Sql.Test
                 "where  ( _t0.login = ?  and  _t1.name = ?  and  _t1.code = ? ) ",
                 "order by  _t0.login ASC,  _t0.name ASC");
 
-            var cb = new ConstraintTranslator(this.ServiceContext, "core.user");
+            var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
             cb.AddConstraints(constraints);
             cb.SetOrder(new OrderExpression("login", SortDirection.Asc));
             cb.SetOrder(new OrderExpression("name", SortDirection.Asc));

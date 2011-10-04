@@ -26,12 +26,12 @@ namespace ObjectServer.Model.Test
             };
             var childId = (long)this.Service.Execute(TestingDatabaseName, this.SessionId, "test.child", "Create", childPropBag);
 
-            dynamic childModel = this.ServiceContext.GetResource("test.child");
-            dynamic dynamicChild = childModel.Browse(this.ServiceContext, childId);
+            dynamic childModel = this.TransactionContext.GetResource("test.child");
+            dynamic dynamicChild = childModel.Browse(this.TransactionContext, childId);
             Assert.AreEqual("master-obj", dynamicChild.master.name);
 
-            IModel masterModel = (IModel)this.ServiceContext.GetResource("test.master");
-            dynamic dynamicMaster = masterModel.Browse(this.ServiceContext, masterId);
+            IModel masterModel = (IModel)this.TransactionContext.GetResource("test.master");
+            dynamic dynamicMaster = masterModel.Browse(this.TransactionContext, masterId);
             Assert.AreEqual(1, dynamicMaster.children.Length);
             Assert.AreEqual("child-obj", dynamicMaster.children[0].name);
         }
@@ -58,8 +58,8 @@ namespace ObjectServer.Model.Test
             testRecord1.reference_field = new object[] { "test.master", masterId1 };
             var testId1 = this.Service.Execute(TestingDatabaseName, this.SessionId, "test.test_model", "Create", testRecord1);
 
-            var model = (IModel)this.ServiceContext.GetResource("test.test_model");
-            dynamic obj = model.Browse(this.ServiceContext, testId1);
+            var model = (IModel)this.TransactionContext.GetResource("test.test_model");
+            dynamic obj = model.Browse(this.TransactionContext, testId1);
 
             Assert.AreEqual("master1", obj.reference_field.name);
         }

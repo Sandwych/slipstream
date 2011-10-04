@@ -159,8 +159,8 @@ namespace ObjectServer.Model.Test
         {
             ClearMasterAndChildTable();
 
-            var masterModel = this.ServiceContext.GetResource("test.master");
-            var childModel = this.ServiceContext.GetResource("test.child");
+            var masterModel = this.TransactionContext.GetResource("test.master");
+            var childModel = this.TransactionContext.GetResource("test.child");
 
             dynamic master1 = new ExpandoObject();
             master1.name = "master1";

@@ -26,12 +26,12 @@ namespace ObjectServer.Model.Test
                 { "master", null },
             };
 
-            var childModel = (IModel)this.ServiceContext.GetResource("test.child");
+            var childModel = (IModel)this.TransactionContext.GetResource("test.child");
 
-            var id = childModel.CreateInternal(this.ServiceContext, child);
+            var id = childModel.CreateInternal(this.TransactionContext, child);
 
             var children = childModel.ReadInternal(
-                this.ServiceContext, new long[] { id }, new string[] { "name", "master" });
+                this.TransactionContext, new long[] { id }, new string[] { "name", "master" });
             var record = children[0];
 
             Assert.True(record["master"].IsNull());
