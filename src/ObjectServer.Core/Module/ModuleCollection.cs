@@ -139,9 +139,8 @@ namespace ObjectServer
             }
         }
 
-
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadModules(ITransactionContext tx)
+        public void LoadModules(ITransactionContext tx, bool isUpdate)
         {
             if (tx == null)
             {
@@ -165,32 +164,7 @@ namespace ObjectServer
                 if (module != null)
                 {
                     var state = (string)m["state"];
-                    if (state == ModuleModel.States.Installed)
-                    {
-                        module.Load(tx, ModuleUpdateAction.NoAction);
-                    }
-                    else if (state == ModuleModel.States.ToInstall)
-                    {
-                        module.Load(tx, ModuleUpdateAction.ToInstall);
-                        this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Installed);
-                    }
-                    else if (state == ModuleModel.States.ToUpgrade)
-                    {
-                        module.Load(tx, ModuleUpdateAction.ToUpgrade);
-                        this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Installed);
-                    }
-                    else if (state == ModuleModel.States.ToUninstall)
-                    {
-                        this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Uninstalled);
-                    }
-                    else if (state == ModuleModel.States.Uninstalled)
-                    {
-                        //do nothing
-                    }
-                    else
-                    {
-                        throw new NotImplementedException();
-                    }
+                    this.InstallOrUpgradeModule(tx, module, moduleId, state, isUpdate);
                 }
                 else
                 {
@@ -200,6 +174,32 @@ namespace ObjectServer
                 }
             }
 
+        }
+
+        private void InstallOrUpgradeModule(ITransactionContext tx, Module module, long moduleId, string state, bool isUpdate)
+        {
+            if (isUpdate && state == ModuleModel.States.ToInstall)
+            {
+                module.Load(tx, ModuleUpdateAction.ToInstall);
+                this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Installed);
+            }
+            else if (isUpdate && state == ModuleModel.States.ToUpgrade)
+            {
+                module.Load(tx, ModuleUpdateAction.ToUpgrade);
+                this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Installed);
+            }
+            else if (isUpdate && state == ModuleModel.States.ToUninstall)
+            {
+                this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Uninstalled);
+            }
+            else if (state == ModuleModel.States.Installed)
+            {
+                module.Load(tx, ModuleUpdateAction.NoAction);
+            }
+            else
+            {
+                //skip this module
+            }
         }
 
         private void UpdateModuleState(IDBContext db, long moduleID, string state)

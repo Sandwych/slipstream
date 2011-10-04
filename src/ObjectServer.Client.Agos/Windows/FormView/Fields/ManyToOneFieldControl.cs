@@ -51,24 +51,31 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public string FieldName { get; private set; }
 
+        private object[] fieldValue = null;
         public object Value
         {
             get
             {
-                return this.nameTextBox.Text;
+                return fieldValue != null ? fieldValue.First() : null;
             }
             set
             {
                 var tuple = value as object[];
                 if (tuple != null)
                 {
+                    this.fieldValue = tuple;
                     this.nameTextBox.Text = (string)tuple[1];
+                }
+                else if (value is long)
+                {
+                    this.Value = new object[] { value, String.Empty }; //TODO 读取名称
                 }
             }
         }
 
         public void Empty()
         {
+            this.Value = null;
         }
 
         public void SelectionButtonClicked(object sender, RoutedEventArgs args)
@@ -78,7 +85,18 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             Debug.Assert(!string.IsNullOrEmpty(relatedModel));
 
             var dlg = new Controls.SelectionDialog(relatedModel);
+            dlg.RecordsSelected += new EventHandler<Controls.RecordsSelectedEventArgs>(this.OnIDsSelected);
             dlg.ShowDialog();
+        }
+
+        public void OnIDsSelected(object sender, Controls.RecordsSelectedEventArgs args)
+        {
+            if (args.SelectedIDs.Length != 1)
+            {
+                return;
+            }
+
+            this.Value = args.SelectedIDs.First();
         }
     }
 }

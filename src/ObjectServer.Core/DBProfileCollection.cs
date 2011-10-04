@@ -56,7 +56,7 @@ namespace ObjectServer
 
                 if (!isRegistered)
                 {
-                    this.LoadDB(dbName);
+                    this.LoadDB(dbName, false);
                 }
             }
 
@@ -65,7 +65,7 @@ namespace ObjectServer
 
         #endregion
 
-        public void LoadDB(string dbName)
+        public void LoadDB(string dbName, bool isUpdate)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
@@ -94,11 +94,11 @@ namespace ObjectServer
 
             using (var dbctx = DataProvider.CreateDataContext(dbName))
             {
-                this.LoadModules(dbctx);
+                this.LoadModules(dbctx, isUpdate);
             }
         }
 
-        private void LoadModules(IDBContext db)
+        private void LoadModules(IDBContext db, bool isUpdate)
         {
             Debug.Assert(db != null);
 
@@ -107,7 +107,7 @@ namespace ObjectServer
             using (var ctx = new SystemTransactionContext(db))
             {
                 Environment.Modules.UpdateModuleList(db);
-                Environment.Modules.LoadModules(ctx);
+                Environment.Modules.LoadModules(ctx, isUpdate);
             }
         }
 

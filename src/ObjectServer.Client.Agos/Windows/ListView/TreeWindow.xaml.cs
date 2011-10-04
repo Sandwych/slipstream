@@ -63,7 +63,14 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            this.TreeView.EditSelectedItem();
+            var ids = this.TreeView.GetSelectedIDs();
+            if (ids.Length == 0)
+            {
+                return;
+            }
+            var dlg = new FormView.FormDialog(this.modelName, ids.First());
+            dlg.Saved += new EventHandler(this.OnSaved);
+            dlg.ShowDialog();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -95,7 +102,13 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new FormView.FormDialog(this.modelName, -1);
+            dlg.Saved += new EventHandler(this.OnSaved);
             dlg.ShowDialog();
+        }
+
+        private void OnSaved(object sender, EventArgs args)
+        {
+            this.TreeView.Query();
         }
 
     }

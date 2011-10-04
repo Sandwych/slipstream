@@ -53,7 +53,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public void Empty()
         {
-            this.SelectedDate = DateTime.Now;
+            this.SelectedDate = null;
         }
     }
 }

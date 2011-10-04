@@ -64,17 +64,19 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public string FieldName { get; private set; }
 
+        private object[] fieldValue;
         public object Value
         {
             get
             {
-                return this.nameTextBox.Text;
+                return new object[] { this.fieldValue[0], this.fieldValue[1] };
             }
             set
             {
                 var tuple = value as object[];
                 if (tuple != null)
                 {
+                    this.fieldValue = tuple;
                     this.modelComboBox.SelectedValue = tuple[0];
                     this.nameTextBox.Text = (string)tuple[2];
                 }

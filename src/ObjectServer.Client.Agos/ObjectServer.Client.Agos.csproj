@@ -207,6 +207,7 @@
     <Compile Include="Windows\FormView\GridLayoutPanelWidget.cs" />
     <Compile Include="Windows\FormView\Fields\CharsFieldControl.cs" />
     <Compile Include="Windows\FormView\IFieldWidget.cs" />
+    <Compile Include="Controls\RecordsSelectedEventArgs.cs" />
     <Compile Include="Windows\ListView\IQueryField.cs" />
     <Compile Include="Windows\ListView\TreeView.xaml.cs">
       <DependentUpon>TreeView.xaml</DependentUpon>

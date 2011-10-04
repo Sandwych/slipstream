@@ -16,6 +16,8 @@ namespace ObjectServer.Client.Agos.Controls
     {
         private readonly string modelName;
 
+        public event EventHandler<RecordsSelectedEventArgs> RecordsSelected;
+
         public SelectionDialog(string modelName)
         {
             var app = (App)App.Current;
@@ -28,6 +30,13 @@ namespace ObjectServer.Client.Agos.Controls
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
+            var ids = this.treeView1.GetSelectedIDs();
+            if (ids.Length >= 0)
+            {
+                var args = new EventArgs();
+                this.RecordsSelected(this, new RecordsSelectedEventArgs(ids));
+            }
+
             this.DialogResult = true;
         }
 

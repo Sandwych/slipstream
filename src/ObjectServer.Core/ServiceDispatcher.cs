@@ -135,7 +135,7 @@ namespace ObjectServer
             VerifyRootPassword(rootPasswordHash);
 
             DataProvider.CreateDatabase(dbName);
-            Environment.DBProfiles.LoadDB(dbName);
+            Environment.DBProfiles.LoadDB(dbName, true);
         }
 
         public void DeleteDatabase(string rootPasswordHash, string dbName)

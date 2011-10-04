@@ -14,25 +14,67 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 {
     public partial class FormDialog : FloatableWindow
     {
+        private readonly long recordID;
+        private readonly FormView formView;
+        private readonly string model;
+
+        public event EventHandler Saved;
+
         public FormDialog(string model, long recordID)
         {
+            this.recordID = recordID;
+            this.model = model;
+
             var app = (App)App.Current;
             this.ParentLayoutRoot = app.MainPage.LayoutRoot;
 
             InitializeComponent();
 
-            var formWindow = new FormView(model, recordID);
-            this.ScrollContent.Child = formWindow;
-            /*
-            this.LayoutRoot.Children.Add(formWindow);
-            formWindow.SetValue(Grid.ColumnProperty, 0);
-            formWindow.SetValue(Grid.RowProperty, 0);
-            */
+            this.formView = new FormView(model, recordID);
+            this.ScrollContent.Child = formView;
+
+        }
+
+        public bool IsNew
+        {
+            get { return this.recordID <= 0; }
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+            var app = (App)App.Current;
+            //执行保存
+            var record = formView.GetFieldValues();
+
+            if (this.IsNew)
+            {
+                //执行创建
+                this.CreateModel(app, record);
+            }
+            else
+            {
+                this.WriteModel(app, record);
+            }
+        }
+
+        private void CreateModel(App app, IDictionary<string, object> record)
+        {
+            var args = new object[] { record };
+            app.ClientService.BeginExecute(this.model, "Create", args, (result, error) =>
+            {
+                this.Saved(this, new EventArgs());
+                this.DialogResult = true;
+            });
+        }
+
+        private void WriteModel(App app, IDictionary<string, object> record)
+        {
+            var args = new object[] { this.recordID, record };
+            app.ClientService.BeginExecute(this.model, "Write", args, (result, error) =>
+            {
+                this.Saved(this, new EventArgs());
+                this.DialogResult = true;
+            });
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

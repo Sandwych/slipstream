@@ -125,7 +125,16 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 }
 
             });
+        }
 
+        public IDictionary<string, object> GetFieldValues()
+        {
+            var record = new Dictionary<string, object>(this.fieldWidgets.Count);
+            foreach (var p in this.fieldWidgets)
+            {
+                record[p.Key] = p.Value.Value;
+            }
+            return record;
         }
     }
 }
