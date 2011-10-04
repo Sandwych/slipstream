@@ -20,7 +20,6 @@ namespace ObjectServer
             using (var reader = new XmlNodeReader(section))
             {
                 var obj = xs.Deserialize(reader);
-                reader.Close();
                 return obj;
             }
         }
