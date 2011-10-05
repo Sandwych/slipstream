@@ -15,38 +15,50 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class ManyToOneFieldControl : UserControl, IFieldWidget
+    [TemplatePart(Name = ManyToOneFieldControl.ElementRoot, Type = typeof(FrameworkElement))]
+    [TemplatePart(Name = ManyToOneFieldControl.ElementTextBox, Type = typeof(TextBox))]
+    [TemplatePart(Name = ManyToOneFieldControl.ElementSelectButton, Type = typeof(Button))]
+    [TemplatePart(Name = ManyToOneFieldControl.ElementOpenButton, Type = typeof(Button))]
+    public class ManyToOneFieldControl : Control, IFieldWidget
     {
+        public const string ElementRoot = "Root";
+        public const string ElementTextBox = "TextBox";
+        public const string ElementSelectButton = "SelectButton";
+        public const string ElementOpenButton = "OpenButton";
+
         private readonly IDictionary<string, object> metaField;
 
-        private readonly Button selectionButton;
-        private readonly TextBox nameTextBox;
+        private FrameworkElement root;
+        private Button selectButton;
+        private Button openButton;
+        private TextBox textBox;
 
         public ManyToOneFieldControl(object metaField)
         {
-            var layoutRoot = new Grid();
-            this.Content = layoutRoot;
-            var col1 = new ColumnDefinition() { Width = new GridLength(100, GridUnitType.Star) };
-            var col2 = new ColumnDefinition() { Width = GridLength.Auto, };
-            layoutRoot.ColumnDefinitions.Add(col1);
-            layoutRoot.ColumnDefinitions.Add(col2);
-
-            this.nameTextBox = new TextBox();
-            this.nameTextBox.SetValue(Grid.ColumnProperty, 0);
-            this.nameTextBox.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-            this.nameTextBox.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            layoutRoot.Children.Add(nameTextBox);
-
-            this.selectionButton = new Button();
-            this.selectionButton.SetValue(Grid.ColumnProperty, 1);
-            this.selectionButton.Content = "...";
-            this.selectionButton.Click += new RoutedEventHandler(this.SelectionButtonClicked);
-            layoutRoot.Children.Add(selectionButton);
-
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
 
-            this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+            DefaultStyleKey = typeof(ManyToOneFieldControl);
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
+            this.selectButton = this.GetTemplateChild(ElementSelectButton) as Button;
+            this.openButton = this.GetTemplateChild(ElementOpenButton) as Button;
+            this.textBox = this.GetTemplateChild(ElementTextBox) as TextBox;
+
+            if (this.selectButton != null)
+            {
+                this.selectButton.Click += new RoutedEventHandler(this.SelectButtonClicked);
+            }
+
+            if (this.openButton != null)
+            {
+                this.openButton.Click += new RoutedEventHandler(this.OpenButtonClicked);
+            }
         }
 
         public string FieldName { get; private set; }
@@ -64,7 +76,10 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 if (tuple != null)
                 {
                     this.fieldValue = tuple;
-                    this.nameTextBox.Text = (string)tuple[1];
+                    if (this.textBox != null)
+                    {
+                        this.textBox.Text = (string)tuple[1];
+                    }
                 }
                 else if (value is long)
                 {
@@ -78,7 +93,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.Value = null;
         }
 
-        public void SelectionButtonClicked(object sender, RoutedEventArgs args)
+        public void SelectButtonClicked(object sender, RoutedEventArgs args)
         {
             Debug.Assert(this.metaField != null);
             var relatedModel = this.metaField["relation"] as string;
@@ -97,6 +112,19 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             }
 
             this.Value = args.SelectedIDs.First();
+        }
+
+        public void OpenButtonClicked(object sender, RoutedEventArgs args)
+        {
+            Debug.Assert(this.metaField != null);
+            var relatedModel = this.metaField["relation"] as string;
+            Debug.Assert(!string.IsNullOrEmpty(relatedModel));
+
+            if (this.Value != null)
+            {
+                var dlg = new Agos.Windows.FormView.FormDialog(relatedModel, (long)this.Value);
+                dlg.ShowDialog();
+            }
         }
     }
 }

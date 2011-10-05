@@ -76,7 +76,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         public object CreateHorizontalLineWidget(Malt.Layout.Models.HorizontalLine hl)
         {
-            var hlWidget = new HLine();
+            var hlWidget = new HLine(hl.Text);
             hlWidget.Text = hl.Text;
             return hlWidget;
         }

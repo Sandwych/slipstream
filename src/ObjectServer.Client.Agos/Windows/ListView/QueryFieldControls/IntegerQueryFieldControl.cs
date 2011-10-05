@@ -15,42 +15,35 @@ using ObjectServer.Client.Agos.Controls;
 
 namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
 {
-    public class IntegerQueryFieldControl : UserControl, IQueryField
+    [TemplatePart(Name = IntegerQueryFieldControl.ElementRoot, Type = typeof(FrameworkElement))]
+    [TemplatePart(Name = IntegerQueryFieldControl.ElementLowUpDown, Type = typeof(NumericUpDown))]
+    [TemplatePart(Name = IntegerQueryFieldControl.ElementHighUpDown, Type = typeof(NumericUpDown))]
+    public class IntegerQueryFieldControl : Control, IQueryField
     {
-        private readonly IDictionary<string, object> metaField;
-        private readonly ColumnDefinition col0 =
-            new ColumnDefinition() { Width = new GridLength(50, GridUnitType.Star) };
-        private readonly ColumnDefinition col1 =
-            new ColumnDefinition() { Width = GridLength.Auto };
-        private readonly ColumnDefinition col2 =
-            new ColumnDefinition() { Width = new GridLength(50, GridUnitType.Star) };
+        public const string ElementRoot = "Root";
+        public const string ElementLowUpDown = "LowUpDown";
+        public const string ElementHighUpDown = "HighUpDown";
 
-        private readonly NullableInt32UpDown lowUpdown = new NullableInt32UpDown();
-        private readonly NullableInt32UpDown highUpdown = new NullableInt32UpDown();
+        private readonly IDictionary<string, object> metaField;
+
+        private FrameworkElement root;
+        private NumericUpDown lowUpdown;
+        private NumericUpDown highUpdown;
 
         public IntegerQueryFieldControl(object metaField)
             : base()
         {
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
+        }
 
-            var grid = new Grid();
-            this.Content = grid;
-            grid.ColumnDefinitions.Add(col0);
-            grid.ColumnDefinitions.Add(col1);
-            grid.ColumnDefinitions.Add(col2);
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
 
-            grid.Children.Add(this.lowUpdown);
-            this.lowUpdown.SetValue(Grid.ColumnProperty, 0);
-
-            grid.Children.Add(this.highUpdown);
-            this.highUpdown.SetValue(Grid.ColumnProperty, 2);
-
-            var label = new Label();
-            grid.Children.Add(label);
-            label.Content = "至";
-            label.Margin = new Thickness(3, 0, 3, 0);
-            label.SetValue(Grid.ColumnProperty, 1);
+            this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
+            this.lowUpdown = this.GetTemplateChild(ElementLowUpDown) as NumericUpDown;
+            this.highUpdown = this.GetTemplateChild(ElementHighUpDown) as NumericUpDown;
         }
 
         public QueryConstraint[] GetConstraints()
@@ -58,14 +51,14 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
             System.Diagnostics.Debug.Assert(!this.IsEmpty);
 
             var constraints = new List<QueryConstraint>(2);
-            if (this.highUpdown.Value != null)
+            if (!double.IsNaN(this.highUpdown.Value))
             {
-                constraints.Add(new QueryConstraint(this.FieldName, "<=", this.highUpdown.Value.Value));
+                constraints.Add(new QueryConstraint(this.FieldName, "<=", (int)this.highUpdown.Value));
             }
 
-            if (this.lowUpdown.Value != null)
+            if (!double.IsNaN(this.lowUpdown.Value))
             {
-                constraints.Add(new QueryConstraint(this.FieldName, ">=", this.lowUpdown.Value.Value));
+                constraints.Add(new QueryConstraint(this.FieldName, ">=", (int)this.lowUpdown.Value));
             }
 
             return constraints.ToArray();
@@ -73,15 +66,21 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
 
         public void Empty()
         {
-            this.lowUpdown.Value = null;
-            this.highUpdown.Value = null;
+            if (this.lowUpdown != null)
+            {
+                this.lowUpdown.Value = double.NaN;
+            }
+            if (this.highUpdown != null)
+            {
+                this.highUpdown.Value = double.NaN;
+            }
         }
 
         public bool IsEmpty
         {
             get
             {
-                return this.lowUpdown.Value == null && this.highUpdown.Value == null;
+                return double.IsNaN(this.lowUpdown.Value) && double.IsNaN(this.highUpdown.Value);
             }
         }
 

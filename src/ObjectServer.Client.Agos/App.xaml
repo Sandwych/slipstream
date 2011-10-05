@@ -10,6 +10,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Assets/Styles.xaml" />
+                <ResourceDictionary Source="Assets/FormFieldStyles.xaml" />
+                <ResourceDictionary Source="Assets/QueryFieldStyles.xaml" />
                 <ResourceDictionary>
                     <app:ResourceWrapper x:Key="ResourceWrapper" />
                     <app:NotOperatorValueConverter x:Key="NotOperatorValueConverter" />

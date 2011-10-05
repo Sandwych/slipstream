@@ -14,48 +14,59 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class HLine : UserControl
+
+    [TemplatePart(Name = HLine.ElementRoot, Type = typeof(FrameworkElement))]
+    [TemplatePart(Name = HLine.ElementHorizontalLine, Type = typeof(Rectangle))]
+    [TemplatePart(Name = HLine.ElementLabel, Type = typeof(Label))]
+    public class HLine : Control
     {
+        public const string ElementRoot = "Root";
+        public const string ElementHorizontalLine = "HorizontalLine";
+        public const string ElementLabel = "Label";
+
+        FrameworkElement root;
         Rectangle border;
         Label label;
+        private readonly string text;
 
-        public HLine()
+        public HLine(string text)
         {
-            var layoutRoot = new Grid();
-            this.Content = layoutRoot;
+            this.text = text;
+        }
 
-            layoutRoot.ColumnDefinitions.Add(
-                new ColumnDefinition() { Width = GridLength.Auto });
-            layoutRoot.ColumnDefinitions.Add(
-                new ColumnDefinition() { Width = new GridLength(100, GridUnitType.Star) });
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
 
-            this.label = new Label();
-            layoutRoot.Children.Add(this.label);
-            this.label.SetValue(Grid.ColumnProperty, 0);
-            this.label.Content = this.Text ?? string.Empty;
-            this.label.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
-            this.label.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            this.label.Margin = new Thickness(0, 0, 5, 0);
+            this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
+            this.border = this.GetTemplateChild(ElementHorizontalLine) as Rectangle;
+            this.label = this.GetTemplateChild(ElementLabel) as Label;
 
-            this.border = new Rectangle();
-            layoutRoot.Children.Add(this.border);
-            this.border.SetValue(Grid.ColumnProperty, 1);
-            this.border.Fill = new SolidColorBrush(Color.FromArgb(0xff, 0x99, 0x99, 0x99));
-            this.border.Height = 1;
-            this.border.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-
-            this.label.Content = string.Empty;
+            if (this.label != null && !string.IsNullOrEmpty(this.text))
+            {
+                this.label.Content = this.text;
+            }
         }
 
         public string Text
         {
             get
             {
-                return (string)this.label.Content;
+                if (this.label != null)
+                {
+                    return (string)this.label.Content;
+                }
+                else
+                {
+                    return string.Empty;
+                }
             }
             set
             {
-                this.label.Content = value ?? string.Empty;
+                if (this.label != null)
+                {
+                    this.label.Content = value ?? string.Empty;
+                }
             }
         }
     }
