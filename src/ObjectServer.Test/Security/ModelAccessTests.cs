@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class ModelAccessTests : UserLoggedTestCaseBase
+    public class ModelAccessTests : TransactionContextTestCaseBase
     {
         [Test]
         public void ExpectAccessDenied()
@@ -23,9 +23,9 @@ namespace ObjectServer.Model.Test
 
                 Assert.DoesNotThrow(() =>
                 {
-                    var ids = userModel.SearchInternal(scope);
+                    var ids = userModel.SearchInternal(scope, null, null, 0, 0);
                     Assert.True(ids.Length > 0);
-                    userModel.ReadInternal(scope, ids);
+                    userModel.ReadInternal(scope, ids, null);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>

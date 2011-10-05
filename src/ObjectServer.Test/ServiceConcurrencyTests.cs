@@ -10,26 +10,16 @@ using NUnit.Framework;
 using ObjectServer.Sql;
 using ObjectServer.Model;
 
-namespace ObjectServer.Model.Test
+namespace ObjectServer.Test
 {
     [TestFixture]
-    public sealed class ConcurrencyTests : UserLoggedTestCaseBase
+    public sealed class ServiceConcurrencyTests : TransactionTestCaseBase
     {
         [Test]
         public void TestMultithreadRead()
         {
-            var menuModel = this.GetResource("core.menu");
-            var ids = (long[])menuModel.Search(this.TransactionContext, null, null, 0, 0);
 
-            var threadProc = new ThreadStart(() =>
-            {
-                //每个线程中读取5次
-                const int ReadTimes = 5;
-                for (int i = 0; i < ReadTimes; i++)
-                {
-                    menuModel.Read(this.TransactionContext, ids, null);
-                }
-            });
+            var threadProc = new ThreadStart(this.TestProc);
 
             //启动多个线程并发测试
             const int ThreadCount = 50;
@@ -45,6 +35,22 @@ namespace ObjectServer.Model.Test
             foreach (var t in threads)
             {
                 t.Join();
+            }
+        }
+
+        private void TestProc()
+        {
+            var service = Environment.ExportedService;
+            var ids = (long[])service.Execute(TestingDatabaseName,
+                base.SessionId, "core.menu", "Search",
+                null, null, 0, 0);
+
+            //每个线程中读取5次
+            const int ReadTimes = 5;
+            for (int i = 0; i < ReadTimes; i++)
+            {
+                dynamic records = service.Execute(TestingDatabaseName, base.SessionId, "core.menu", "Read", ids, null);
+                Assert.AreEqual(ids.Length, records.Length);
             }
         }
 

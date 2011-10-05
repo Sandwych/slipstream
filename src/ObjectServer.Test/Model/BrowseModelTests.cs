@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class BrowseModelTests : UserLoggedTestCaseBase
+    public class BrowseModelTests : TransactionContextTestCaseBase
     {
         [Test]
         public void CanBrowseManyToOneAndOneToManyFields()

@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class XmlDataImporterTests : UserLoggedTestCaseBase
+    public class XmlDataImporterTests : TransactionContextTestCaseBase
     {
         const string TestModelXmlResourcePath = "ObjectServer.Test.XmlFiles.test-model-data.xml";
         const string MasterChildXmlResourcePath = "ObjectServer.Test.XmlFiles.master-child-data.xml";
@@ -34,11 +34,11 @@ namespace ObjectServer.Model.Test
 
                 importer.Import(xmlStream);
 
-                var ids = testObjectModel.SearchInternal(this.TransactionContext);
+                var ids = testObjectModel.SearchInternal(this.TransactionContext, null, null, 0, 0);
                 Assert.AreEqual(3, ids.Length);
 
                 var domain1 = new object[][] { new object[] { "name", "=", "name_changed" } };
-                ids = testObjectModel.SearchInternal(this.TransactionContext, domain1);
+                ids = testObjectModel.SearchInternal(this.TransactionContext, domain1, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
             }
 
@@ -50,7 +50,7 @@ namespace ObjectServer.Model.Test
                 importer.Import(xmlStream);
             }
 
-            var ids2 = testObjectModel.SearchInternal(this.TransactionContext);
+            var ids2 = testObjectModel.SearchInternal(this.TransactionContext, null, null, 0, 0);
             Assert.AreEqual(4, ids2.Length);
         }
 
@@ -127,7 +127,7 @@ namespace ObjectServer.Model.Test
         private void ClearAllModelData(IModel model, string modelName)
         {
             var constraints = new object[][] { new object[] { "model", "=", modelName } };
-            var ids = model.SearchInternal(this.TransactionContext, constraints);
+            var ids = model.SearchInternal(this.TransactionContext, constraints, null, 0, 0);
             if (ids != null && ids.Length > 0)
             {
                 model.DeleteInternal(this.TransactionContext, ids);

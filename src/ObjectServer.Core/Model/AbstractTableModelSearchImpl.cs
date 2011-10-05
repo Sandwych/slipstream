@@ -25,7 +25,7 @@ namespace ObjectServer.Model
         private static readonly ConstraintExpression[] EmptyConstraints = { };
 
         public override long[] SearchInternal(
-            ITransactionContext scope, object[] constraints = null, OrderExpression[] order = null, long offset = 0, long limit = 0)
+            ITransactionContext scope, object[] constraints, OrderExpression[] order, long offset, long limit)
         {
             if (scope == null)
             {

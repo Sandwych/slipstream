@@ -96,7 +96,7 @@ namespace ObjectServer.Model
             var relationModel = (IModel)scope.GetResource(this.Relation);
             var targetModelName = relationModel.Fields[this.RelatedField].Relation;
             var targetModel = (IModel)scope.GetResource(targetModelName);
-            var targetRecords = targetModel.ReadInternal(scope, targetIds);
+            var targetRecords = targetModel.ReadInternal(scope, targetIds, null);
             return targetRecords.Select(tr => new BrowsableRecord(scope, targetModel, tr)).ToArray();
         }
 

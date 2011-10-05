@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Dynamic;
+using System.Diagnostics;
 
 using NUnit.Framework;
 
@@ -11,8 +12,16 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class ManyToManyFieldTests : UserLoggedTestCaseBase
+    public class ManyToManyFieldTests : TransactionContextTestCaseBase
     {
+        private void ClearManyToManyModels()
+        {
+            Debug.Assert(this.TransactionContext != null);
+            this.ClearModel("test.department_employee");
+            this.ClearModel("test.department");
+            this.ClearModel("test.employee");
+        }
+
         [Test]
         public void CanBrowseManyToManyField()
         {

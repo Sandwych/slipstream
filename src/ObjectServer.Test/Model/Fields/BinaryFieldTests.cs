@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class BinaryFieldTests : UserLoggedTestCaseBase
+    public class BinaryFieldTests : TransactionContextTestCaseBase
     {
         [Test]
         public void test_write_and_read_binary_field()

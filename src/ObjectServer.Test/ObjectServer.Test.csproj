@@ -87,13 +87,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TransactionTestCaseBase.cs" />
     <Compile Include="Data\DataContextTests.cs" />
     <Compile Include="Core\RuleTest.cs" />
     <Compile Include="Core\ModelTest.cs" />
     <Compile Include="Core\UserTest.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
-    <Compile Include="Model\ConcurrencyTests.cs" />
+    <Compile Include="ServiceConcurrencyTests.cs" />
     <Compile Include="Model\Fields\BinaryFieldTests.cs" />
     <Compile Include="Model\ModelValidatorTests.cs" />
     <Compile Include="Sql\ConstraintTranslatorTests.cs" />
@@ -142,7 +143,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceDispatcherTests.cs" />
-    <Compile Include="UserLoggedTestBase.cs" />
+    <Compile Include="TransactionContextTestCaseBase.cs" />
     <Compile Include="Utility\EnumerableExtensionsTest.cs" />
     <Compile Include="Utility\DependencySorterTest.cs" />
     <Compile Include="Rpc\JsonSerializedCallingTests.cs" />

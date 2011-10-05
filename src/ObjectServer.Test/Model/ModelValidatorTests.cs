@@ -12,7 +12,7 @@ using ObjectServer.Exceptions;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class ModelValidatorTests : UserLoggedTestCaseBase
+    public class ModelValidatorTests : TransactionContextTestCaseBase
     {
 
         [Test]

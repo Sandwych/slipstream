@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class ManyToOneFieldTests : UserLoggedTestCaseBase
+    public class ManyToOneFieldTests : TransactionContextTestCaseBase
     {
 
         [Test]

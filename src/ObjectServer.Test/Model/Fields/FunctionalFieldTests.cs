@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class FunctionalFieldTests : UserLoggedTestCaseBase
+    public class FunctionalFieldTests : TransactionContextTestCaseBase
     {
         private const string ModelName = "test.functional_field_object";
 
@@ -49,12 +49,13 @@ namespace ObjectServer.Model.Fields.Test
         {
             var constraints = new object[][] { new object[] { "login", "=", "root" } };
             dynamic userModel = this.GetResource("core.user");
+            dynamic model = this.GetResource(ModelName);
             dynamic ids = userModel.Search(this.TransactionContext, constraints, null, 0, 0);
 
             dynamic data = PrepareTestData();
 
-            dynamic records = userModel.Read(
-                this.TransactionContext, new object[] { data.record1_id }, null, 0, 0);
+            dynamic records = model.Read(
+                this.TransactionContext, new object[] { data.record1_id }, null);
 
             var userField0 = (object[])records[0]["user"];
             Assert.AreEqual(ids[0], userField0[0]);

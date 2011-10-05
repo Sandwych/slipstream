@@ -18,7 +18,7 @@ namespace ObjectServer.Model
     public abstract partial class AbstractTableModel : AbstractModel
     {
         public override Dictionary<string, object>[] ReadInternal(
-                 ITransactionContext scope, long[] ids, string[] requiredFields = null)
+                 ITransactionContext scope, long[] ids, string[] requiredFields)
         {
             if (scope == null)
             {

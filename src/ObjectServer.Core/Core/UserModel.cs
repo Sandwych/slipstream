@@ -207,14 +207,14 @@ namespace ObjectServer.Core
         {
             var constraints = new object[][] { new object[] { "login", "=", login } };
 
-            var users = base.SearchInternal(scope, constraints);
-            if (users.Length != 1)
+            var userIds = base.SearchInternal(scope, constraints, null, 0, 0);
+            if (userIds.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);
             }
 
             var user = base.ReadInternal(scope,
-                new long[] { users[0] },
+                new long[] { userIds[0] },
                 new string[] { "password", "salt" })[0];
 
             var hashedPassword = (string)user["password"];

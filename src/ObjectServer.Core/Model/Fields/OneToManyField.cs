@@ -37,7 +37,7 @@ namespace ObjectServer.Model
                 var masterID = (long)master[AbstractModel.IDFieldName];
                 var constraints = new List<object[]>();
                 constraints.Add(new object[] { this.RelatedField, "=", masterID });
-                var childIDs = childModel.SearchInternal(ctx, constraints.ToArray());
+                var childIDs = childModel.SearchInternal(ctx, constraints.ToArray(), null, 0, 0);
                 children[masterID] = childIDs;
             }
 
@@ -74,7 +74,7 @@ namespace ObjectServer.Model
             var thisId = record[AbstractModel.IDFieldName];
             //TODO: 下面的条件可能还不够，差 active 等等
             var constraints = new object[][] { new object[] { this.RelatedField, "=", thisId } };
-            var destIds = targetModel.SearchInternal(scope, constraints);
+            var destIds = targetModel.SearchInternal(scope, constraints, null, 0, 0);
             var records = (Dictionary<string, object>[])targetModel.ReadInternal(scope, destIds, null);
             return records.Select(r => new BrowsableRecord(scope, targetModel, r)).ToArray();
         }

@@ -62,7 +62,7 @@ namespace ObjectServer.Core
 
             if (viewId != null)
             {
-                var viewRecords = model.ReadInternal(ctx, new long[] { viewId.Value });
+                var viewRecords = model.ReadInternal(ctx, new long[] { viewId.Value }, null);
                 result = viewRecords[0];
             }
             else
@@ -75,7 +75,7 @@ namespace ObjectServer.Core
                 var viewIDs = model.SearchInternal(ctx, constraints, null, 0, 0);
                 if (viewIDs != null && viewIDs.Length > 0)
                 {
-                    result = model.ReadInternal(ctx, viewIDs)[0];
+                    result = model.ReadInternal(ctx, viewIDs, null)[0];
                 }
                 else
                 {

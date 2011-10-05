@@ -23,15 +23,22 @@ namespace ObjectServer
 
         #region IService Members
 
-        public object Invoke(IResource self, ITransactionContext scope, params object[] parameters)
+        public object Invoke(IResource self, ITransactionContext tc, params object[] parameters)
         {
-            Debug.Assert(self != null);
-            Debug.Assert(scope != null);
+            if (self == null)
+            {
+                throw new ArgumentNullException("self");
+            }
+
+            if (tc == null)
+            {
+                throw new ArgumentNullException("tc");
+            }
 
             var userParamCount = parameters == null ? 0 : parameters.Length;
             var args = new object[userParamCount + 2];
             args[0] = self;
-            args[1] = scope;
+            args[1] = tc;
             parameters.CopyTo(args, 2);
 
             try

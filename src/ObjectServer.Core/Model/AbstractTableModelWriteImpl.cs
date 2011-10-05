@@ -49,6 +49,8 @@ namespace ObjectServer.Model
             var oldParentID = (long)0;
             IRecord existedRecord = null;
 
+            ModelValidator.ValidateRecordForUpdating(this, record);
+
             //处理版本字段与基类继承
             if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0 || this.Hierarchy)
             {
@@ -277,7 +279,7 @@ namespace ObjectServer.Model
             };
 
             //删掉原来的中间表记录重新插入
-            var relIds = relModel.SearchInternal(scope, constraints);
+            var relIds = relModel.SearchInternal(scope, constraints, null, 0, 0);
             if (relIds.Length > 0)
             {
                 relModel.DeleteInternal(scope, relIds);

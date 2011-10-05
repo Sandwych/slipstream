@@ -397,7 +397,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [TransactionMethod("Count")]
         public static long Count(
-            IModel model, ITransactionContext ctx, object[] constraints = null)
+            IModel model, ITransactionContext ctx, object[] constraints)
         {
             EnsureServiceMethodArgs(model, ctx);
 
@@ -406,7 +406,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [TransactionMethod("Search")]
         public static long[] Search(
-            IModel model, ITransactionContext ctx, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0)
+            IModel model, ITransactionContext ctx, object[] constraints, object[] order, long offset, long limit)
         {
             EnsureServiceMethodArgs(model, ctx);
 
@@ -428,7 +428,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [TransactionMethod("Read")]
         public static Record[] Read(
-            IModel model, ITransactionContext ctx, dynamic clientIds, dynamic clientFields = null)
+            IModel model, ITransactionContext ctx, dynamic clientIds, dynamic clientFields)
         {
             EnsureServiceMethodArgs(model, ctx);
 
@@ -525,15 +525,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         public virtual NameGetter NameGetter { get; protected set; }
 
-        public abstract long CountInternal(ITransactionContext scope, object[] constraints = null);
+        public abstract long CountInternal(ITransactionContext scope, object[] constraints);
         public abstract long[] SearchInternal(
-            ITransactionContext scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
+            ITransactionContext scope, object[] constraints, OrderExpression[] orders, long offset, long limit);
         public abstract long CreateInternal(
             ITransactionContext scope, IRecord record);
         public abstract void WriteInternal(
             ITransactionContext scope, long id, IRecord record);
         public abstract Record[] ReadInternal(
-            ITransactionContext scope, long[] ids, string[] requiredFields = null);
+            ITransactionContext scope, long[] ids, string[] requiredFields);
         public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
         public abstract dynamic Browse(ITransactionContext scope, long id);
 

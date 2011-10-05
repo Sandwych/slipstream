@@ -50,14 +50,14 @@ namespace ObjectServer.Core
             var destModel = (AbstractModel)scope.GetResource(modelName);
 
             var modelDomain = new object[] { new object[] { "name", "=", modelName } };
-            var modelIds = model.SearchInternal(scope, modelDomain);
+            var modelIds = model.SearchInternal(scope, modelDomain, null, 0, 0);
 
             //TODO 检查 IDS 错误，好好想一下要用数据库的字段信息还是用内存的字段信息
 
             var fieldModel = (IModel)scope.GetResource("core.field");
             var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
-            var fieldIds = fieldModel.SearchInternal(scope, fieldDomain);
-            var records = fieldModel.ReadInternal(scope, fieldIds);
+            var fieldIds = fieldModel.SearchInternal(scope, fieldDomain, null, 0, 0);
+            var records = fieldModel.ReadInternal(scope, fieldIds, null);
 
             foreach (var r in records)
             {

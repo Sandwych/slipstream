@@ -12,7 +12,7 @@ namespace ObjectServer.Core.Test
 {
 
     [TestFixture]
-    public sealed class RuleTest
+    public sealed class RuleTest : TransactionTestCaseBase
     {
         [Test]
         public void Test_search_with_rules()
@@ -27,10 +27,9 @@ namespace ObjectServer.Core.Test
 
         private void AssertSearchingOfSalesOrder(string login, string password, string[] expectedOrderNames)
         {
-            InitEnvironment();
             var services = Environment.ExportedService;
 
-            var sid = services.LogOn(UserLoggedTestCaseBase.TestingDatabaseName, login, password);
+            var sid = services.LogOn(TestingDatabaseName, login, password);
             //var ruleModel = (RuleModel)this.TransactionContext.GetResource("core.rule");
             //var salesOrderModel = (IModel)this.TransactionContext.GetResource("test.sales_order");
 
@@ -39,11 +38,11 @@ namespace ObjectServer.Core.Test
                 var orders = new OrderExpression[] {
                         new OrderExpression("name", SortDirection.Ascend) 
                     };
-                var ids = (long[])services.Execute(UserLoggedTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Search",
+                var ids = (long[])services.Execute(TransactionContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Search",
                     null, null, 0, 0);
                 Assert.AreEqual(expectedOrderNames.Length, ids.Length);
                 var records = (Dictionary<string, object>[])services.Execute(
-                    UserLoggedTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Read",
+                    TransactionContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Read",
                     ids, null);
                 var names = records.Select(r => (string)r["name"]).ToArray();
                 Assert.AreEqual(expectedOrderNames.Length, names.Length);
@@ -54,20 +53,10 @@ namespace ObjectServer.Core.Test
             }
             finally
             {
-                services.LogOff("objectserver", sid);
+                services.LogOff(TestingDatabaseName, sid);
             }
         }
 
-        private static void InitEnvironment()
-        {
-            var cfg = new Config();
-            cfg.DbName = UserLoggedTestCaseBase.TestingDatabaseName;
-
-            if (!Environment.Initialized)
-            {
-                Environment.Initialize(cfg);
-            }
-        }
 
     }
 }
