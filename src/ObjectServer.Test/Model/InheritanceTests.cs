@@ -18,13 +18,12 @@ namespace ObjectServer.Model.Test
 
         private long PrepareTestingData()
         {
+            var dogModel = this.GetResource("test.dog");
+
             dynamic dog = new ExpandoObject();
             dog.name = InitName;
             dog.dogfood = InitDogfood;
-
-            var dogModel = (IModel)this.TransactionContext.GetResource("test.dog");
-
-            return dogModel.CreateInternal(this.TransactionContext, dog);
+            return dogModel.Create(this.TransactionContext, dog);
         }
 
         [SetUp]
@@ -35,7 +34,7 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
-        public void Test_single_table()
+        public void CanCreateAndReadSingleTable()
         {
             dynamic inheritedModel = this.TransactionContext.GetResource("test.single_table");
             Assert.True(inheritedModel.Fields.ContainsKey("age"));
@@ -49,12 +48,11 @@ namespace ObjectServer.Model.Test
             object id = inheritedModel.Create(this.TransactionContext, propBag);
 
             var record = inheritedModel.Read(this.TransactionContext, new object[] { id }, null)[0];
-
             Assert.AreEqual(33, record["age"]);
         }
 
         [Test]
-        public void Test_multitable_create()
+        public void CanCreateMultiTable()
         {
             this.ClearData();
 
@@ -62,35 +60,32 @@ namespace ObjectServer.Model.Test
             dog.name = "oldblue";
             dog.dogfood = "pear";
 
-            var dogModel = (IModel)this.TransactionContext.GetResource("test.dog");
-            long id = -1;
-            Assert.DoesNotThrow(() =>
-            {
-                id = dogModel.CreateInternal(this.TransactionContext, dog);
-            });
-            var ids = dogModel.SearchInternal(this.TransactionContext);
+            var animalModel = this.GetResource("test.animal");
+            var dogModel = this.GetResource("test.dog");
+            long id = dogModel.Create(this.TransactionContext, dog);
+            var ids = dogModel.Search(this.TransactionContext, null, null, 0, 0);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id, ids[0]);
-            Assert.AreEqual(1, this.Service.CountModel(TestingDatabaseName, this.SessionId, "test.animal"));
+            Assert.AreEqual(1, animalModel.Count(this.TransactionContext, null));
         }
 
         [Test]
-        public void Test_multitable_creation_and_reading()
+        public void CanCreateAndReadMultiTable()
         {
-            var dogModel = (IModel)this.TransactionContext.GetResource("test.dog");
+            var dogModel = this.GetResource("test.dog");
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
 
-            var dog = dogModel.ReadInternal(this.TransactionContext, new long[] { id })[0];
+            var dog = dogModel.Read(this.TransactionContext, new long[] { id }, null)[0];
             Assert.AreEqual(InitName, (string)dog["name"]);
             Assert.AreEqual(InitDogfood, (string)dog["dogfood"]);
         }
 
         [Test]
-        public void Test_multitable_creation_and_browsing()
+        public void CanCreateAndBrowseMultiTable()
         {
-            var dogModel = (IModel)this.TransactionContext.GetResource("test.dog");
+            var dogModel = this.GetResource("test.dog");
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
@@ -102,24 +97,22 @@ namespace ObjectServer.Model.Test
 
 
         [Test]
-        public void Test_multitable_deletion()
+        public void CanDeleteMultiTable()
         {
-            var dogModel = (IModel)this.TransactionContext.GetResource("test.dog");
+            var animalModel = this.GetResource("test.animal");
+            var dogModel = this.GetResource("test.dog");
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
-            Assert.DoesNotThrow(() =>
-            {
-                dogModel.DeleteInternal(this.TransactionContext, new long[] { id });
-            });
-            Assert.AreEqual(0, this.Service.CountModel(TestingDatabaseName, this.SessionId, "test.animal"));
-            Assert.AreEqual(0, this.Service.CountModel(TestingDatabaseName, this.SessionId, "test.dog"));
+            dogModel.Delete(this.TransactionContext, new long[] { id });
+            Assert.AreEqual(0, animalModel.Count(this.TransactionContext, null));
+            Assert.AreEqual(0, dogModel.Count(this.TransactionContext, null));
         }
 
         [Test]
-        public void Test_multitable_writing()
+        public void CanWriteMultiTable()
         {
-            var dogModel = (IModel)this.TransactionContext.GetResource("test.dog");
+            var dogModel = this.GetResource("test.dog");
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
@@ -127,23 +120,18 @@ namespace ObjectServer.Model.Test
             dynamic fieldValues = new ExpandoObject();
             fieldValues.name = "oldyellow";
             fieldValues.dogfood = "apple";
+            dogModel.Write(this.TransactionContext, id, fieldValues);
 
-            Assert.DoesNotThrow(() =>
-                {
-                    dogModel.WriteInternal(this.TransactionContext, id, fieldValues);
-                });
-
-            var dog = dogModel.ReadInternal(this.TransactionContext, new long[] { id })[0];
-
+            var dog = dogModel.Read(this.TransactionContext, new long[] { id }, null)[0];
             Assert.AreEqual("oldyellow", (string)dog["name"]);
             Assert.AreEqual("apple", (string)dog["dogfood"]);
         }
 
         [Test]
-        public void Test_multitable_searching()
+        public void CanSearchMultiTable()
         {
-            var animalModel = (IModel)this.TransactionContext.GetResource("test.animal");
-            var dogModel = (IModel)this.TransactionContext.GetResource("test.dog");
+            var animalModel = this.GetResource("test.animal");
+            var dogModel = this.GetResource("test.dog");
 
             this.ClearData();
             var id = this.PrepareTestingData();
@@ -154,9 +142,8 @@ namespace ObjectServer.Model.Test
             { 
                 new object[] { "name", "=", InitName } 
             };
-
-            var animalIds = animalModel.SearchInternal(this.TransactionContext, constraints);
-            var dogIds = dogModel.SearchInternal(this.TransactionContext, constraints);
+            var animalIds = animalModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            var dogIds = dogModel.Search(this.TransactionContext, constraints, null, 0, 0);
 
             Assert.AreEqual(1, animalIds.Length);
             Assert.AreEqual(1, dogIds.Length);

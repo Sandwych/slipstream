@@ -18,20 +18,18 @@ namespace ObjectServer.Model.Test
         [Test]
         public void TestMultithreadRead()
         {
-            long[] ids = (long[])this.Service.Execute(TestingDatabaseName, this.SessionId, "core.menu", "Search", null, null, 0, 0);
+            var menuModel = this.GetResource("core.menu");
+            var ids = (long[])menuModel.Search(this.TransactionContext, null, null, 0, 0);
 
             var threadProc = new ThreadStart(() =>
+            {
+                //每个线程中读取5次
+                const int ReadTimes = 5;
+                for (int i = 0; i < ReadTimes; i++)
                 {
-                    Assert.DoesNotThrow(() =>
-                    {
-                        //每个线程中读取5次
-                        const int ReadTimes = 5;
-                        for (int i = 0; i < ReadTimes; i++)
-                        {
-                            this.Service.Execute(TestingDatabaseName, this.SessionId, "core.menu", "Read", ids, null);
-                        }
-                    });
-                });
+                    menuModel.Read(this.TransactionContext, ids, null);
+                }
+            });
 
             //启动多个线程并发测试
             const int ThreadCount = 50;
