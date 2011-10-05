@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Model.Test
+namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
     public class ReferenceFieldTests : LocalTestCase

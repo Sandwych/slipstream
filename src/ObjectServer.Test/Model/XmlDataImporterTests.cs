@@ -29,9 +29,8 @@ namespace ObjectServer.Model.Test
             //第一遍更新，应该是插入3条，更新一条，总记录数 3 条
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(TestModelXmlResourcePath))
-            using (var ctx = new TransactionContext(TestingDatabaseName, this.SessionId))
             {
-                var importer = new XmlDataImporter(ctx, "test");
+                var importer = new XmlDataImporter(this.TransactionContext, "test");
 
                 importer.Import(xmlStream);
 
@@ -46,9 +45,8 @@ namespace ObjectServer.Model.Test
             //再导入一遍，现在应该是更新3条，插入一条,因此 test_test_model 里的记录总数是4条
             using (var xmlStream = Assembly.GetExecutingAssembly()
              .GetManifestResourceStream(TestModelXmlResourcePath))
-            using (var ctx = new TransactionContext(TestingDatabaseName, this.SessionId))
             {
-                var importer = new XmlDataImporter(ctx, "test");
+                var importer = new XmlDataImporter(this.TransactionContext, "test");
                 importer.Import(xmlStream);
             }
 
@@ -69,9 +67,8 @@ namespace ObjectServer.Model.Test
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(MasterChildXmlResourcePath))
-            using (var ctx = new TransactionContext(TestingDatabaseName, this.SessionId))
             {
-                var importer = new XmlDataImporter(ctx, "test");
+                var importer = new XmlDataImporter(this.TransactionContext, "test");
 
                 importer.Import(xmlStream);
 
@@ -98,9 +95,8 @@ namespace ObjectServer.Model.Test
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(ReferenceFieldXmlResourcePath))
-            using (var ctx = new TransactionContext(TestingDatabaseName, this.SessionId))
             {
-                var importer = new XmlDataImporter(ctx, "test");
+                var importer = new XmlDataImporter(this.TransactionContext, "test");
 
                 importer.Import(xmlStream);
 

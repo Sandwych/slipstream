@@ -8,18 +8,18 @@ using NUnit.Framework;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Model.Test
+namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
     public class ManyToManyFieldTests : LocalTestCase
     {
         [Test]
-        public void Can_browse_m2m_field()
+        public void CanBrowseManyToManyField()
         {
             this.ClearManyToManyModels();
             dynamic ids = this.GenerateTestData();
 
-            dynamic employeeModel = this.TransactionContext.GetResource("test.employee");
+            dynamic employeeModel = this.GetResource("test.employee");
             dynamic e1 = employeeModel.Browse(this.TransactionContext, ids.eid1);
 
             //TODO: 这里要排序再比较
@@ -38,10 +38,13 @@ namespace ObjectServer.Model.Test
         public void Test_CRUD_m2m_field()
         {
             this.ClearManyToManyModels();
-            dynamic ids = this.GenerateTestData();
+            dynamic employeeModel = this.GetResource("test.employee");
 
-            var employees = this.Service.ReadModel(TestingDatabaseName, this.SessionId, "test.employee",
-                new object[] { ids.eid1, ids.eid2 }, new object[] { "name", "departments" });
+            dynamic data = this.GenerateTestData();
+            var ids = new object[] { data.eid1, data.eid2 };
+
+            var employees = employeeModel.Read(
+                this.TransactionContext, ids, new object[] { "name", "departments" });
 
             Assert.AreEqual(2, employees.Length);
             var employee1 = employees[0];
@@ -51,7 +54,7 @@ namespace ObjectServer.Model.Test
             var departments1 = (long[])employee1["departments"];
             Assert.AreEqual(3, departments1.Length);
 
-            var originDeptIds = new long[] { ids.did2, ids.did3, ids.did4 };
+            var originDeptIds = new long[] { data.did2, data.did3, data.did4 };
             Array.Sort(originDeptIds);
             Array.Sort(departments1);
             Assert.AreEqual(originDeptIds[0], departments1[0]);
@@ -60,25 +63,26 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
-        public void Test_create_m2m_field()
+        public void CanCreateManyToManyField()
         {
             this.ClearManyToManyModels();
-            dynamic ids = this.GenerateTestData();
+            dynamic employeeModel = this.GetResource("test.employee");
+
+            dynamic data = this.GenerateTestData();
 
             dynamic e = new ExpandoObject();
             e.name = "test-employee";
-            e.departments = new long[] { ids.did1, ids.did2, ids.did3 };
-            var eid = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
+            e.departments = new long[] { data.did1, data.did2, data.did3 };
+            var eid = employeeModel.Create(this.TransactionContext, e);
 
             var fields = new string[] { "name", "departments" };
-            var record = this.Service.ReadModel(
-               TestingDatabaseName, this.SessionId, "test.employee", new object[] { eid }, fields)[0];
+            var record = employeeModel.Read(this.TransactionContext, new object[] { eid }, fields)[0];
 
             var departments = (long[])record["departments"];
 
             Assert.AreEqual(3, departments.Length);
 
-            var originDeptIds = new long[] { ids.did1, ids.did2, ids.did3 };
+            var originDeptIds = new long[] { data.did1, data.did2, data.did3 };
             Array.Sort(originDeptIds);
             Array.Sort(departments);
             Assert.AreEqual(originDeptIds[0], departments[0]);
@@ -87,25 +91,23 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
-        public void Test_write_m2m_field()
+        public void CanWriteManyToManyField()
         {
             this.ClearManyToManyModels();
-            dynamic ids = this.GenerateTestData();
+            dynamic employeeModel = this.GetResource("test.employee");
+            dynamic data = this.GenerateTestData();
 
             dynamic e1 = new ExpandoObject();
-            e1.departments = new long[] { ids.did1, ids.did2 };
-            Assert.DoesNotThrow(() =>
-            {
-                this.Service.WriteModel(TestingDatabaseName, this.SessionId, "test.employee", ids.eid1, e1);
-            });
+            e1.departments = new long[] { data.did1, data.did2 };
+            employeeModel.Write(this.TransactionContext, data.eid1, e1);
 
             var fields = new string[] { "name", "departments" };
-            var record = this.Service.ReadModel(
-                TestingDatabaseName, this.SessionId, "test.employee", new object[] { ids.eid1 }, fields)[0];
+            var record = employeeModel.Read(
+                this.TransactionContext, new object[] { data.eid1 }, fields)[0];
 
             var departments = (long[])record["departments"];
             Assert.AreEqual(2, departments.Length);
-            var originDeptIds = new long[] { ids.did1, ids.did2 };
+            var originDeptIds = new long[] { data.did1, data.did2 };
             Array.Sort(originDeptIds);
             Array.Sort(departments);
             Assert.AreEqual(originDeptIds[0], departments[0]);
@@ -116,33 +118,37 @@ namespace ObjectServer.Model.Test
         {
             dynamic ids = new ExpandoObject();
             dynamic e = new ExpandoObject();
+            dynamic employeeModel = this.GetResource("test.employee");
+            dynamic depModel = this.GetResource("test.department");
+            dynamic depEmployeeModel = this.GetResource("test.department_employee");
+
             e.name = "employee";
-            ids.eid1 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
-            ids.eid2 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
-            ids.eid3 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
-            ids.eid4 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
-            ids.eid5 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.employee", e);
+            ids.eid1 = employeeModel.Create(this.TransactionContext, e);
+            ids.eid2 = employeeModel.Create(this.TransactionContext, e);
+            ids.eid3 = employeeModel.Create(this.TransactionContext, e);
+            ids.eid4 = employeeModel.Create(this.TransactionContext, e);
+            ids.eid5 = employeeModel.Create(this.TransactionContext, e);
 
             dynamic dept = new ExpandoObject();
             dept.name = "department";
-            ids.did1 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
-            ids.did2 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
-            ids.did3 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
-            ids.did4 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
-            ids.did5 = this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department", dept);
+            ids.did1 = depModel.Create(this.TransactionContext, dept);
+            ids.did2 = depModel.Create(this.TransactionContext, dept);
+            ids.did3 = depModel.Create(this.TransactionContext, dept);
+            ids.did4 = depModel.Create(this.TransactionContext, dept);
+            ids.did5 = depModel.Create(this.TransactionContext, dept);
 
             //设置e1 对应 did2, did3, did4
-            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
+            depEmployeeModel.Create(this.TransactionContext,
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did2 }, });
-            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
+            depEmployeeModel.Create(this.TransactionContext,
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did3 }, });
-            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
+            depEmployeeModel.Create(this.TransactionContext,
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did4 }, });
 
             //设置 e2  对应 did3 did4
-            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
+            depEmployeeModel.Create(this.TransactionContext,
                 new Dictionary<string, object>() { { "eid", ids.eid2 }, { "did", ids.did3 }, });
-            this.Service.CreateModel(TestingDatabaseName, this.SessionId, "test.department_employee",
+            depEmployeeModel.Create(this.TransactionContext,
                 new Dictionary<string, object>() { { "eid", ids.eid2 }, { "did", ids.did4 }, });
 
             return ids;

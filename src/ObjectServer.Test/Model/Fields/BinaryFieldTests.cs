@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Model.Test
+namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
     public class BinaryFieldTests : LocalTestCase
@@ -60,10 +60,10 @@ namespace ObjectServer.Model.Test
                 new object[] { "binary_field", "=", fieldData1 },
             };
 
-            var n = this.Service.CountModel(TestingDatabaseName, this.SessionId, "test.test_model", constraints);
+            var n = testModel.Count(this.TransactionContext, constraints);
             Assert.AreEqual(1, n);
 
-            var ids = this.Service.SearchModel(TestingDatabaseName, this.SessionId, "test.test_model", constraints);
+            var ids = testModel.Search(this.TransactionContext, constraints, null, 0, 0);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id1, ids[0]);
         }
