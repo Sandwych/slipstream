@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Data;
 using System.Reflection;
 using System.Dynamic;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -68,7 +69,7 @@ namespace ObjectServer.Model
             this.ProcessBaseModelsDeletion(ctx, existedRecords);
         }
 
-        private void ProcessBaseModelsDeletion(ITransactionContext scope, IEnumerable<Dictionary<string, object>> existedRecords)
+        private void ProcessBaseModelsDeletion(ITransactionContext scope, Dictionary<string, object>[] existedRecords)
         {
             Debug.Assert(scope != null);
 
@@ -87,14 +88,13 @@ namespace ObjectServer.Model
                     {
                         var baseModel = (AbstractTableModel)scope
                             .GetResource(inheritInfo.BaseModel);
-                        DeleteRows(scope, baseIds, baseModel);
+                        DeleteRows(scope, baseIds.ToArray(), baseModel);
                     }
                 }
             }
         }
 
-        private static void DeleteRows(
-            ITransactionContext scope, IEnumerable<long> ids, AbstractTableModel tableModel)
+        private static void DeleteRows(ITransactionContext scope, long[] ids, AbstractTableModel tableModel)
         {
             Debug.Assert(scope != null);
             Debug.Assert(ids != null);
@@ -103,7 +103,7 @@ namespace ObjectServer.Model
             if (tableModel.Hierarchy)
             {
                 var records =
-                    from r in tableModel.ReadInternal(scope, ids.ToArray(), HierarchyFields)
+                    from r in tableModel.ReadInternal(scope, ids, HierarchyFields)
                     select new
                     {
                         ID = (long)r[IDFieldName],
@@ -117,7 +117,7 @@ namespace ObjectServer.Model
                 var parentRecords =
                     from r in records
                     where records.Count(i => i.Left < r.Left && i.Right > r.Right) == 0
-                    orderby r.Right descending  
+                    orderby r.Right descending
                     select r;
 
                 scope.DBContext.LockTable(tableModel.TableName);
@@ -134,11 +134,11 @@ namespace ObjectServer.Model
                     scope.DBContext.Execute(sql, record.Left, record.Right);
 
                     //更新所有右边节点的 _left 与 _right
-                    var sqlUpdate1 = String.Format(
+                    var sqlUpdate1 = String.Format(CultureInfo.InvariantCulture,
                         "update {0} set _right = _right - {1} where _right > {2}",
                         tableModel.quotedTableName, width + 1, record.Right);
 
-                    var sqlUpdate2 = String.Format(
+                    var sqlUpdate2 = String.Format(CultureInfo.InvariantCulture,
                         "update {0} set _left = _left - {1} where _left > {2}",
                         tableModel.quotedTableName, width + 1, record.Left);
 

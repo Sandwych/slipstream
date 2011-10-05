@@ -22,12 +22,13 @@ namespace ObjectServer.Model.Test
             var modelName = "test.test_model";
             var dbName = this.SessionId;
 
+            dynamic testModel = this.GetResource(modelName);
+
             //Delete all records first
-            var allIds = this.Service.SearchModel(
-                TestingDatabaseName, this.SessionId, modelName).Select(_ => (object)_).ToArray();
+            var allIds = testModel.Search(this.TransactionContext, null, null, 0, 0);
             if (allIds.Length > 0)
             {
-                this.Service.DeleteModel(TestingDatabaseName, this.SessionId, modelName, allIds);
+                testModel.Delete(this.TransactionContext, allIds);
             }
 
             var values = new Dictionary<string, object>
@@ -37,42 +38,44 @@ namespace ObjectServer.Model.Test
                 { "field1", 123 },
                 { "field2", 100 },
             };
-            dynamic id = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Create", values);
+            dynamic id = testModel.Create(this.TransactionContext, values);
             Assert.True(id > 0);
 
             var domain1 = new object[][] { new object[] { "name", "=", "sweet_name" } };
-            dynamic foundIds = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Search", domain1, null, 0, 100);
+            dynamic foundIds = testModel.Search(this.TransactionContext, domain1, null, 0, 100);
             Assert.AreEqual(1, foundIds.Length);
             Assert.AreEqual(id, foundIds[0]);
 
             var newValues = new Dictionary<string, object> {
                 { "name", "changed_name" },
             };
-            this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Write", id, newValues);
+            testModel.Write(this.TransactionContext, id, newValues);
 
             var ids = new object[] { id };
-            dynamic data = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Read", ids, null);
+            dynamic data = testModel.Read(this.TransactionContext, ids, null);
             Assert.AreEqual(1, data.Length);
             Assert.AreEqual("changed_name", data[0]["name"]);
             Assert.AreEqual(223, data[0]["field3"]); //检测函数字段的计算是否正确
 
+            testModel.Delete(this.TransactionContext, ids);
 
-            this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Delete", ids);
-
-            foundIds = this.Service.Execute(TestingDatabaseName, this.SessionId, modelName, "Search", domain1, null, 0, 100);
+            foundIds = testModel.Search(this.TransactionContext, domain1, null, 0, 100);
             Assert.AreEqual(0, foundIds.Length);
         }
 
         [Test]
         public void Create_and_read_related_fields()
         {
+            dynamic masterModel = this.GetResource("test.master");
+            dynamic childModel = this.GetResource("test.child");
+
             this.ClearMasterAndChildTable();
 
             var masterPropBag = new Dictionary<string, object>()
             {
                 { "name", "master-obj" },
             };
-            var masterId = this.Service.Execute(TestingDatabaseName, this.SessionId, "test.master", "Create", masterPropBag);
+            var masterId = masterModel.Create(this.TransactionContext, masterPropBag);
 
             var childPropBag = new Dictionary<string, object>()
             {
@@ -80,10 +83,10 @@ namespace ObjectServer.Model.Test
                 { "master", masterId },
             };
 
-            var childId = (long)this.Service.Execute(TestingDatabaseName, this.SessionId, "test.child", "Create", childPropBag);
+            var childId = (long)childModel.Create(this.TransactionContext, childPropBag);
 
             var ids = new object[] { childId };
-            dynamic rows = this.Service.Execute(TestingDatabaseName, this.SessionId, "test.child", "Read", ids, null);
+            dynamic rows = childModel.Read(this.TransactionContext, ids, null);
             var masterField = rows[0]["master"];
             Assert.AreEqual(typeof(object[]), masterField.GetType());
             var one2ManyField = (object[])masterField;
@@ -91,9 +94,7 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(one2ManyField[1], "master-obj");
 
             var masterFieldNames = new string[] { "name", "children" };
-            var masterRows = this.Service.ReadModel(
-                TestingDatabaseName, this.SessionId, "test.master",
-                new object[] { masterId }, masterFieldNames);
+            var masterRows = masterModel.Read(this.TransactionContext, new object[] { masterId }, masterFieldNames);
             var master = masterRows[0];
             var children = (long[])master["children"];
 
@@ -101,16 +102,13 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(childId, children[0]);
 
             //更新
-            var masterId2 = (long)this.Service.Execute(
-                TestingDatabaseName, this.SessionId, "test.master", "Create", masterPropBag);
+            var masterId2 = (long)masterModel.Create(this.TransactionContext, masterPropBag);
             childPropBag["master"] = masterId2;
-            this.Service.WriteModel(TestingDatabaseName, this.SessionId, "test.child", childId, childPropBag);
+            childModel.Write(this.TransactionContext, childId, childPropBag);
 
-            dynamic children2 = this.Service.Execute(
-                TestingDatabaseName, this.SessionId, "test.child", "Read", new object[] { childId }, new object[] { "master" });
+            dynamic children2 = childModel.Read(this.TransactionContext, new object[] { childId }, new object[] { "master" });
             var masterField3 = (object[])children2[0]["master"];
             Assert.AreEqual(masterId2, masterField3[0]);
-
         }
 
 
@@ -119,13 +117,11 @@ namespace ObjectServer.Model.Test
         {
             var masterFields = new object[] { "name", "children" };
             var master = new Dictionary<string, object>();
+            dynamic masterModel = this.GetResource("test.master");
 
-            var id = this.Service.Execute(
-                TestingDatabaseName, this.SessionId, "test.master", "Create", master);
+            var id = masterModel.Create(this.TransactionContext, master);
 
-            dynamic masterRecords = this.Service.Execute(
-                TestingDatabaseName, this.SessionId, "test.master", "Read",
-                new object[] { id }, masterFields);
+            dynamic masterRecords = masterModel.Read(this.TransactionContext, new object[] { id }, masterFields);
             var record = masterRecords[0];
 
             Assert.IsInstanceOf<long[]>(record["children"]);

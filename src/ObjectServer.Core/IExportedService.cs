@@ -5,6 +5,8 @@ using System.Text;
 
 namespace ObjectServer
 {
+    using IRecord = IDictionary<string, object>;
+    using Record = Dictionary<string, object>;
     /// <summary>
     /// 对外服务接口
     /// </summary>
@@ -45,11 +47,12 @@ namespace ObjectServer
         void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword);
         void DeleteDatabase(string rootPasswordHash, string dbName);
 
-        long CreateModel(string db, string sessionId, string modelName, IDictionary<string, object> propertyBag);
+        long CreateModel(string db, string sessionId, string modelName, IRecord propertyBag);
         long CountModel(string db, string sessionId, string modelName, object[] constraints = null);
-        long[] SearchModel(string db, string sessionId, string modelName, object[] constraints = null, object[] order = null, long offset = 0, long limit = 0);
-        Dictionary<string, object>[] ReadModel(string db, string sessionId, string modelName, object[] ids, object[] fields = null);
-        void WriteModel(string db, string sessionId, string modelName, object id, IDictionary<string, object> record);
+        long[] SearchModel(string db, string sessionId, string modelName, object[] constraints = null,
+            object[] order = null, long offset = 0, long limit = 0);
+        Record[] ReadModel(string db, string sessionId, string modelName, object[] ids, object[] fields = null);
+        void WriteModel(string db, string sessionId, string modelName, object id, IRecord record);
         void DeleteModel(string db, string sessionId, string modelName, object[] ids);
     }
 }

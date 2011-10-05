@@ -16,6 +16,9 @@ using ObjectServer.Utility;
 
 namespace ObjectServer.Model
 {
+    using IRecord = IDictionary<string, object>;
+    using Record = Dictionary<string, object>;
+
     /// <summary>
     /// 基于关系数据库表的实体类基类
     /// </summary>
@@ -239,7 +242,7 @@ where   hp._id=? and hc._id<>?
         }
 
         private void ConvertFieldToColumn(
-            ITransactionContext ctx, Dictionary<string, object> record, string[] updatableColumnFields)
+            ITransactionContext ctx, IRecord record, string[] updatableColumnFields)
         {
 
             foreach (var f in updatableColumnFields)
@@ -281,7 +284,7 @@ where   hp._id=? and hc._id<>?
 
         private void AuditLog(ITransactionContext ctx, long id, string msg)
         {
-            var logRecord = new Dictionary<string, object>()
+            var logRecord = new Record()
                 {
                     { "user", ctx.Session.UserId },
                     { "resource", this.Name },
@@ -325,7 +328,7 @@ where   hp._id=? and hc._id<>?
         /// </summary>
         /// <param name="record"></param>
         /// <returns></returns>
-        private static Dictionary<string, object> ClearUserRecord(IDictionary<string, object> record)
+        private static Record ClearUserRecord(IRecord record)
         {
             Debug.Assert(record != null);
 

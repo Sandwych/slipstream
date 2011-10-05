@@ -12,6 +12,9 @@ using ObjectServer.Data;
 
 namespace ObjectServer.Model
 {
+    using IRecord = IDictionary<string, object>;
+    using Record = Dictionary<string, object>;
+
     /// <summary>
     /// 实体类基类
     /// </summary>
@@ -227,7 +230,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         /// <param name="dbField"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        private void SyncSingleField(IDbContext db, Dictionary<string, object> dbField, string fieldName)
+        private void SyncSingleField(IDbContext db, IRecord dbField, string fieldName)
         {
             Debug.Assert(db != null);
             Debug.Assert(dbField != null);
@@ -424,7 +427,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
         [TransactionMethod("Read")]
-        public static Dictionary<string, object>[] Read(
+        public static Record[] Read(
             IModel model, ITransactionContext ctx, dynamic clientIds, dynamic clientFields = null)
         {
             EnsureServiceMethodArgs(model, ctx);
@@ -448,7 +451,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [TransactionMethod("Create")]
         public static long Create(
-            IModel model, ITransactionContext ctx, IDictionary<string, object> propertyBag)
+            IModel model, ITransactionContext ctx, IRecord propertyBag)
         {
             EnsureServiceMethodArgs(model, ctx);
             return model.CreateInternal(ctx, propertyBag);
@@ -456,7 +459,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [TransactionMethod("Write")]
         public static void Write(
-           IModel model, ITransactionContext ctx, object id, IDictionary<string, object> userRecord)
+           IModel model, ITransactionContext ctx, object id, IRecord userRecord)
         {
             EnsureServiceMethodArgs(model, ctx);
             model.WriteInternal(ctx, (long)id, userRecord);
@@ -526,10 +529,10 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public abstract long[] SearchInternal(
             ITransactionContext scope, object[] constraints = null, OrderExpression[] orders = null, long offset = 0, long limit = 0);
         public abstract long CreateInternal(
-            ITransactionContext scope, IDictionary<string, object> propertyBag);
+            ITransactionContext scope, IRecord record);
         public abstract void WriteInternal(
-            ITransactionContext scope, long id, IDictionary<string, object> record);
-        public abstract Dictionary<string, object>[] ReadInternal(
+            ITransactionContext scope, long id, IRecord record);
+        public abstract Record[] ReadInternal(
             ITransactionContext scope, long[] ids, string[] requiredFields = null);
         public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
         public abstract dynamic Browse(ITransactionContext scope, long id);

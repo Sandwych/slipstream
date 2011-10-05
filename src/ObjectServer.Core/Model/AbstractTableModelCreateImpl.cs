@@ -18,9 +18,12 @@ using ObjectServer.Core;
 
 namespace ObjectServer.Model
 {
+    using Record = Dictionary<string, object>;
+    using IRecord = IDictionary<string, object>;
+
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        public override long CreateInternal(ITransactionContext scope, IDictionary<string, object> userRecord)
+        public override long CreateInternal(ITransactionContext scope, IRecord userRecord)
         {
             if (!this.CanCreate)
             {
@@ -47,7 +50,7 @@ namespace ObjectServer.Model
             foreach (var i in this.Inheritances)
             {
                 var baseModel = (IModel)scope.GetResource(i.BaseModel);
-                var baseRecord = new Dictionary<string, object>();
+                var baseRecord = new Record();
 
                 foreach (var f in baseModel.Fields)
                 {
@@ -89,11 +92,10 @@ namespace ObjectServer.Model
         /// <summary>
         /// 处理 Many-to-many 字段
         /// </summary>
-        /// <param name="scope"></param>
+        /// <param name="tc"></param>
         /// <param name="record"></param>
         /// <param name="id"></param>
-        private void PostcreateManyToManyFields(
-            ITransactionContext scope, long id, Dictionary<string, object> record)
+        private void PostcreateManyToManyFields(ITransactionContext tc, long id, IRecord record)
         {
 
             //处理 Many-to-many 字段
@@ -105,22 +107,21 @@ namespace ObjectServer.Model
 
             foreach (var f in manyToManyFields)
             {
-                var relModel = (IModel)scope.GetResource(f.Relation);
+                var relModel = (IModel)tc.GetResource(f.Relation);
                 //写入
                 var targetIds = (long[])record[f.Name];
 
                 foreach (var targetId in targetIds)
                 {
-                    var targetRecord = new Dictionary<string, object>(2);
+                    var targetRecord = new Record(2);
                     targetRecord[f.OriginField] = id;
                     targetRecord[f.RelatedField] = targetId;
-                    relModel.CreateInternal(scope, targetRecord);
+                    relModel.CreateInternal(tc, targetRecord);
                 }
             }
         }
 
-        private void PostCreateHierarchy(
-            IDbContext dbctx, long id, Dictionary<string, object> record)
+        private void PostCreateHierarchy(IDbContext dbctx, long id, Record record)
         {
             //处理层次表
             long rhsValue = 0;
@@ -201,7 +202,7 @@ namespace ObjectServer.Model
             dbctx.Execute(SqlString.Parse(sqlUpdate3), rhsValue + 1, rhsValue + 2, id);
         }
 
-        private long CreateSelf(ITransactionContext ctx, IDictionary<string, object> values)
+        private long CreateSelf(ITransactionContext ctx, IRecord values)
         {
             var serial = ctx.DBContext.NextSerial(this.SequenceName);
 
@@ -257,7 +258,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValuesForCreation(ITransactionContext ctx, IDictionary<string, object> propertyBag)
+        private void AddDefaultValuesForCreation(ITransactionContext ctx, IRecord propertyBag)
         {
             var defaultFields =
                 this.Fields.Values.Where(

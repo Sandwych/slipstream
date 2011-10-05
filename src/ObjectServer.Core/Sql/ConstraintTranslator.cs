@@ -232,7 +232,7 @@ namespace ObjectServer.Sql
             {
                 foreach (var o in this.orders)
                 {
-                    var orderBySql = ' ' + MainTableAlias + '.' + o.Field + ' ' + o.Order.ToUpperString();
+                    var orderBySql = ' ' + MainTableAlias + '.' + o.Field + ' ' + o.Order.ToSql();
                     qs.AddOrderBy(orderBySql);
                 }
             }

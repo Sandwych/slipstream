@@ -8,9 +8,7 @@ namespace ObjectServer.Sql
 {
     public enum SortDirection
     {
-        [EnumMember(Value = "ASC")]
         Ascend,
-        [EnumMember(Value = "DESC")]
         Descend
     }
 
@@ -38,9 +36,16 @@ namespace ObjectServer.Sql
             }
         }
 
-        public static string ToUpperString(this SortDirection so)
+        public static string ToSql(this SortDirection so)
         {
-            return so.ToString();
+            if (so == SortDirection.Ascend)
+            {
+                return "ASC";
+            }
+            else
+            {
+                return "DESC";
+            }
         }
     }
 }

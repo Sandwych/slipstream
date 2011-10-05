@@ -43,18 +43,18 @@ namespace ObjectServer
 
             try
             {
+                var session = Session.GetByID(this.dbctx, sessionId);
+                if (session == null || !session.IsActive)
+                {
+                    //删掉无效的 Session
+                    Session.Remove(this.dbctx, session.Id);
+                    throw new ObjectServer.Exceptions.SecurityException("Not logged!");
+                }
+
                 this.dbtx = this.DBContext.BeginTransaction();
                 try
                 {
-                    var session = Session.GetByID(this.dbctx, sessionId);
 
-                    if (session == null || !session.IsActive)
-                    {
-                        //删掉无效的 Session
-                        Session.Remove(this.dbctx, session.Id);
-                        this.DBContext.Close();
-                        throw new ObjectServer.Exceptions.SecurityException("Not logged!");
-                    }
 
                     Session.Pulse(this.dbctx, sessionId);
                     this.resources = Environment.DBProfiles.GetDBProfile(dbName);

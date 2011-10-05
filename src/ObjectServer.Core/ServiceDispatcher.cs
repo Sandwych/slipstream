@@ -12,6 +12,9 @@ using ObjectServer.Utility;
 
 namespace ObjectServer
 {
+    using IRecord = IDictionary<string, object>;
+    using Record = Dictionary<string, object>;
+
     internal sealed class ServiceDispatcher : IExportedService
     {
         private ServiceDispatcher()
@@ -137,9 +140,9 @@ namespace ObjectServer
 
         #region Model methods
 
-        public long CreateModel(string db, string sessionId, string modelName, IDictionary<string, object> propertyBag)
+        public long CreateModel(string db, string sessionId, string modelName, IRecord record)
         {
-            return (long)Execute(db, sessionId, modelName, "Create", new object[] { propertyBag });
+            return (long)Execute(db, sessionId, modelName, "Create", new object[] { record });
         }
 
         public long CountModel(string db, string sessionId, string modelName, object[] constraints)
@@ -147,18 +150,19 @@ namespace ObjectServer
             return (long)Execute(db, sessionId, modelName, "Count", new object[] { constraints });
         }
 
-        public long[] SearchModel(string db, string sessionId, string modelName, object[] constraints, object[] order, long offset, long limit)
+        public long[] SearchModel(
+            string db, string sessionId, string modelName, object[] constraints, object[] order, long offset, long limit)
         {
             return (long[])Execute(db, sessionId, modelName, "Search", new object[] { constraints, order, offset, limit });
         }
 
-        public Dictionary<string, object>[] ReadModel(string db, string sessionId, string modelName, object[] ids, object[] fields)
+        public Record[] ReadModel(string db, string sessionId, string modelName, object[] ids, object[] fields)
         {
-            return (Dictionary<string, object>[])Execute(
-                db, sessionId, modelName, "Read", new object[] { ids, fields });
+            return (Record[])Execute(db, sessionId, modelName, "Read", new object[] { ids, fields });
         }
 
-        public void WriteModel(string db, string sessionId, string modelName, object id, IDictionary<string, object> record)
+        public void WriteModel(
+            string db, string sessionId, string modelName, object id, IRecord record)
         {
             Execute(db, sessionId, modelName, "Write", new object[] { id, record });
         }

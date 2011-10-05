@@ -125,14 +125,13 @@ namespace ObjectServer
             this.ClearModel("test.employee");
         }
 
-        protected void ClearModel(string model)
+        protected void ClearModel(string modelName)
         {
-            var ids = (long[])this.Service.Execute(
-                TestingDatabaseName, this.SessionId, model, "Search", null, null, 0, 0);
+            dynamic model = this.GetResource(modelName);
+            var ids = model.Search(this.TransactionContext, null, null, 0, 0);
             if (ids.Length > 0)
             {
-                var idsToDel = ids.Select(e => (object)e).ToArray();
-                this.Service.Execute(TestingDatabaseName, this.SessionId, model, "Delete", new object[] { idsToDel });
+                model.Delete(this.TransactionContext, ids);
             }
 
         }

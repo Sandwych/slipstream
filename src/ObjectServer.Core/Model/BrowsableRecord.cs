@@ -36,7 +36,8 @@ namespace ObjectServer.Model
             this.record = metaModel.ReadInternal(scope, new long[] { id }, null)[0];
         }
 
-        public BrowsableRecord(ITransactionContext scope, IModel metaModel, IDictionary<string, object> record)
+        public BrowsableRecord(ITransactionContext scope,
+            IModel metaModel, IDictionary<string, object> record)
         {
             if (scope == null)
             {

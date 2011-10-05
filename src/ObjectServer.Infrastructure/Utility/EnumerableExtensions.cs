@@ -14,7 +14,7 @@ namespace ObjectServer.Utility
                 throw new ArgumentNullException("items");
             }
 
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(items.Count() * 4);
             var flag = true;
             foreach (var item in items)
             {

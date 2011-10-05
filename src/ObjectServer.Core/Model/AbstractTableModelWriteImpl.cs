@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Data;
 using System.Reflection;
 using System.Dynamic;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -16,10 +17,12 @@ using ObjectServer.Utility;
 
 namespace ObjectServer.Model
 {
+    using Record = Dictionary<string, object>;
+    using IRecord = IDictionary<string, object>;
+
     public abstract partial class AbstractTableModel : AbstractModel
     {
-        public override void WriteInternal(
-            ITransactionContext ctx, long id, IDictionary<string, object> userRecord)
+        public override void WriteInternal(ITransactionContext ctx, long id, IRecord userRecord)
         {
             if (ctx == null)
             {
@@ -44,7 +47,7 @@ namespace ObjectServer.Model
             var record = ClearUserRecord(userRecord);
             var isParentChanged = false;
             var oldParentID = (long)0;
-            Dictionary<string, object> existedRecord = null;
+            IRecord existedRecord = null;
 
             //处理版本字段与基类继承
             if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0 || this.Hierarchy)
@@ -52,7 +55,8 @@ namespace ObjectServer.Model
                 /*
                 select * from <TableName> where _id=?
                 */
-                var sqlSelectSelf = String.Format("select * from {0} where _id = ?", this.quotedTableName);
+                var sqlSelectSelf = String.Format(CultureInfo.InvariantCulture,
+                    "select * from {0} where _id = ?", this.quotedTableName);
                 existedRecord = ctx.DBContext.QueryAsDictionary(SqlString.Parse(sqlSelectSelf), id)[0];
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
@@ -150,7 +154,7 @@ namespace ObjectServer.Model
                 //UPDATE `list_items`
                 //SET `pos_left` = 0-(`pos_left`), `pos_right` = 0-(`pos_right`)
                 //WHERE `pos_left` >= @node_pos_left AND `pos_right` <= @node_pos_right;
-                var sqlStr = String.Format(
+                var sqlStr = String.Format(CultureInfo.InvariantCulture,
                     "update {0} set _left = 0 - _left, _right = 0 - _right " +
                     "where _left >= {1} and _right <= {2}",
                     this.quotedTableName, nodeLeft, nodeRight);
@@ -164,10 +168,12 @@ namespace ObjectServer.Model
                 //UPDATE `list_items`
                 //SET `pos_right` = `pos_right` - @node_size
                 //WHERE `pos_right` > @node_pos_right;
-                sqlStr = String.Format("update {0} set _left = _left - {1} where _left > {2}",
+                sqlStr = String.Format(CultureInfo.InvariantCulture,
+                    "update {0} set _left = _left - {1} where _left > {2}",
                     this.quotedTableName, nodeWidth, nodeRight);
                 ctx.DBContext.Execute(SqlString.Parse(sqlStr));
-                sqlStr = String.Format("update {0} set _right = _right - {1} where _right > {2}",
+                sqlStr = String.Format(CultureInfo.InvariantCulture,
+                    "update {0} set _right = _right - {1} where _right > {2}",
                     this.quotedTableName, nodeWidth, nodeRight);
                 ctx.DBContext.Execute(SqlString.Parse(sqlStr));
 
@@ -182,14 +188,14 @@ namespace ObjectServer.Model
                         @parent_pos_right - @node_size, @parent_pos_right);
                 */
 
-                sqlStr = String.Format(
+                sqlStr = String.Format(CultureInfo.InvariantCulture,
                     "update {0} set _left = _left + {1} where _left >= " +
                     "case when {2} > {3} then {4} - {5} else {6} end",
                     this.quotedTableName, nodeWidth, newParentRight,
                     nodeRight, newParentRight, nodeWidth, newParentRight);
                 ctx.DBContext.Execute(SqlString.Parse(sqlStr));
 
-                sqlStr = String.Format(
+                sqlStr = String.Format(CultureInfo.InvariantCulture,
                     "update {0} set _right = _right + {1} where _right >= " +
                     "case when {2} > {3} then {4} - {5} else {6} end",
                     this.quotedTableName, nodeWidth, newParentRight,
@@ -213,7 +219,7 @@ namespace ObjectServer.Model
                     WHERE `item_id` = @node_id;
                 */
 
-                sqlStr = String.Format(
+                sqlStr = String.Format(CultureInfo.InvariantCulture,
                     "update {0} set " +
                     "_left = 0 - _left + case when {1} > {2} then {1} - {2} - 1 else {1} - {2} - 1 + {3} end, " +
                     "_right = 0 - _right + case when {1} > {2} then {1} - {2} - 1 else {1} - {2} - 1 + {3} end " +
@@ -230,7 +236,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void SetModificationInfo(ITransactionContext scope, Dictionary<string, object> record)
+        private void SetModificationInfo(ITransactionContext scope, IRecord record)
         {
             //处理最近更新用户与最近更新时间字段            
             if (this.ContainsField(UpdatedTimeFieldName))
@@ -246,7 +252,7 @@ namespace ObjectServer.Model
         }
 
         private void PrewriteManyToManyFields(
-            ITransactionContext scope, long id, Dictionary<string, object> record, ICollection<string> allFields)
+            ITransactionContext scope, long id, IRecord record, ICollection<string> allFields)
         {
             //过滤所有可以更新的 many2many 字段
             var writableManyToManyFields =
@@ -262,7 +268,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private static void PrewriteManyToManyField(ITransactionContext scope, long id, Dictionary<string, object> record, IField f)
+        private static void PrewriteManyToManyField(ITransactionContext scope, long id, IRecord record, IField f)
         {
             var relModel = (IModel)scope.GetResource(f.Relation);
             var constraints = new object[][]  
@@ -279,7 +285,7 @@ namespace ObjectServer.Model
                 var targetIds = (long[])record[f.Name];
                 foreach (var targetId in targetIds)
                 {
-                    var relRecord = new Dictionary<string, object>(2);
+                    var relRecord = new Record(2);
                     relRecord[f.OriginField] = id;
                     relRecord[f.RelatedField] = targetId;
                     relModel.CreateInternal(scope, relRecord);
@@ -287,7 +293,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void PrewriteBaseModels(ITransactionContext ctx, Dictionary<string, object> record, Dictionary<string, object> existedRecord)
+        private void PrewriteBaseModels(ITransactionContext ctx, IRecord record, IRecord existedRecord)
         {
             //处理继承表的策略
             //继承表写入的策略是这样的：
@@ -311,7 +317,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void VerifyRecordVersion(long id, IDictionary<string, object> userRecord, Dictionary<string, object> existedRecord)
+        private void VerifyRecordVersion(long id, IRecord userRecord, IRecord existedRecord)
         {
             if (userRecord.ContainsKey(VersionFieldName))
             {
@@ -326,7 +332,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private static SqlString GetVersionExpression(IDictionary<string, object> record)
+        private static SqlString GetVersionExpression(IRecord record)
         {
             //如果存在 _version 字段就加入版本检查条件
             //TODO: 是否强制要求客户端必须送来 _version 字段？
