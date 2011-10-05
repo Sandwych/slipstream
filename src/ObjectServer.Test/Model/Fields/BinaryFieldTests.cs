@@ -14,7 +14,7 @@ namespace ObjectServer.Model.Fields.Test
     public class BinaryFieldTests : TransactionContextTestCaseBase
     {
         [Test]
-        public void test_write_and_read_binary_field()
+        public void CanWriteAndReadBinaryField()
         {
             this.ClearTestModelTable();
             dynamic testModel = this.TransactionContext.GetResource("test.test_model");
@@ -37,7 +37,7 @@ namespace ObjectServer.Model.Fields.Test
         }
 
         [Test]
-        public void test_write_search_and_count_binary_field()
+        public void CanSearchAndCountBinaryField()
         {
             this.ClearTestModelTable();
             dynamic testModel = this.TransactionContext.GetResource("test.test_model");

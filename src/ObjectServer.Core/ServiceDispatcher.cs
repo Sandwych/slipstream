@@ -43,11 +43,7 @@ namespace ObjectServer
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
-
-                if (session == null)
-                {
-                    throw new Exceptions.SecurityException("Failed to logon");
-                }
+                Debug.Assert(session != null);
                 return session.Id.ToString();
             }
         }

@@ -54,8 +54,6 @@ namespace ObjectServer
                 this.dbtx = this.DBContext.BeginTransaction();
                 try
                 {
-
-
                     Session.Pulse(this.dbctx, sessionId);
                     this.resources = Environment.DBProfiles.GetDBProfile(dbName);
                     this.Session = session;
@@ -63,12 +61,14 @@ namespace ObjectServer
                 catch
                 {
                     this.DBTransaction.Rollback();
+                    this.DBTransaction.Dispose();
                     throw;
                 }
             }
             catch
             {
                 this.DBContext.Close();
+                this.disposed = true;
                 throw;
             }
 
@@ -101,6 +101,7 @@ namespace ObjectServer
                 catch
                 {
                     this.DBTransaction.Rollback();
+                    this.DBTransaction.Dispose();
                     throw;
                 }
 
@@ -108,6 +109,7 @@ namespace ObjectServer
             catch
             {
                 this.DBContext.Close();
+                this.disposed = true;
                 throw;
             }
         }
@@ -139,12 +141,14 @@ namespace ObjectServer
                 catch
                 {
                     this.DBTransaction.Rollback();
+                    this.DBTransaction.Dispose();
                     throw;
                 }
             }
             catch
             {
                 this.DBContext.Close();
+                this.disposed = true;
                 throw;
             }
         }
@@ -251,6 +255,7 @@ namespace ObjectServer
                 }
                 finally
                 {
+                    this.DBTransaction.Dispose();
                     this.DBContext.Close();
                     this.disposed = true;
                 }

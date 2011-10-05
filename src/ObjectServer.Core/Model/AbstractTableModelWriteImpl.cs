@@ -22,6 +22,8 @@ namespace ObjectServer.Model
 
     public abstract partial class AbstractTableModel : AbstractModel
     {
+        private static readonly string[] SearchParentNodeFields = new string[] { IDFieldName, LeftFieldName, RightFieldName };
+
         public override void WriteInternal(ITransactionContext ctx, long id, IRecord userRecord)
         {
             if (ctx == null)
@@ -46,7 +48,7 @@ namespace ObjectServer.Model
 
             var record = ClearUserRecord(userRecord);
             var isParentChanged = false;
-            var oldParentID = (long)0;
+            long? oldParentID = null;
             IRecord existedRecord = null;
 
             ModelValidator.ValidateRecordForUpdating(this, record);
@@ -67,9 +69,10 @@ namespace ObjectServer.Model
 
                 if (userRecord.ContainsKey(ParentFieldName))
                 {
-                    oldParentID = (long)existedRecord[ParentFieldName];
-                    var newParentId = (long)userRecord[ParentFieldName];
-                    if (newParentId != oldParentID)
+                    var newParentId = userRecord[ParentFieldName] as long?;
+                    oldParentID = existedRecord[ParentFieldName] as long?;
+                    if ((newParentId.HasValue && (oldParentID == null || oldParentID.Value != newParentId.Value))
+                        || (!newParentId.HasValue && oldParentID.HasValue))
                     {
                         isParentChanged = true;
                     }
@@ -140,102 +143,81 @@ namespace ObjectServer.Model
             //      so that it's now will be exactly "after" (or "down") of new parent node.
             if (isParentChanged && Hierarchy)
             {
-                var fields = new string[] { IDFieldName, LeftFieldName, RightFieldName };
                 var nodeLeft = (long)existedRecord[LeftFieldName];
                 var nodeRight = (long)existedRecord[RightFieldName];
                 var nodeWidth = nodeRight - nodeLeft + 1;
-                var newParentID = (long)userRecord[ParentFieldName];
-                var newParent = this.ReadInternal(ctx, new long[] { newParentID }, fields)[0];
-                var newParentLeft = (long)newParent[LeftFieldName];
-                var newParentRight = (long)newParent[RightFieldName];
+
+                long newParentID = 0;
+                object newParentIDObj = null;
+                if (userRecord.TryGetValue(ParentFieldName, out newParentIDObj) && newParentIDObj != null)
+                {
+                    newParentID = (long)newParentIDObj;
+                }
 
                 ctx.DBContext.LockTable(this.TableName);
 
-                //# step 1: temporary "remove" moving node
-                //
-                //UPDATE `list_items`
-                //SET `pos_left` = 0-(`pos_left`), `pos_right` = 0-(`pos_right`)
-                //WHERE `pos_left` >= @node_pos_left AND `pos_right` <= @node_pos_right;
-                var sqlStr = String.Format(CultureInfo.InvariantCulture,
-                    "update {0} set _left = 0 - _left, _right = 0 - _right " +
-                    "where _left >= {1} and _right <= {2}",
-                    this.quotedTableName, nodeLeft, nodeRight);
-                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
-
-                //# step 2: decrease left and/or right position values of currently 'lower' items (and parents)
-                //
-                //UPDATE `list_items`
-                //SET `pos_left` = `pos_left` - @node_size
-                //WHERE `pos_left` > @node_pos_right;
-                //UPDATE `list_items`
-                //SET `pos_right` = `pos_right` - @node_size
-                //WHERE `pos_right` > @node_pos_right;
-                sqlStr = String.Format(CultureInfo.InvariantCulture,
-                    "update {0} set _left = _left - {1} where _left > {2}",
-                    this.quotedTableName, nodeWidth, nodeRight);
-                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
-                sqlStr = String.Format(CultureInfo.InvariantCulture,
-                    "update {0} set _right = _right - {1} where _right > {2}",
-                    this.quotedTableName, nodeWidth, nodeRight);
-                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
-
-                /* # step 3: increase left and/or right position values of future 'lower' items (and parents)
-                    UPDATE `list_items`
-                    SET `pos_left` = `pos_left` + @node_size
-                    WHERE `pos_left` >= IF(@parent_pos_right > @node_pos_right, 
-                        @parent_pos_right - @node_size, @parent_pos_right);
-                    UPDATE `list_items`
-                    SET `pos_right` = `pos_right` + @node_size
-                    WHERE `pos_right` >= IF(@parent_pos_right > @node_pos_right, 
-                        @parent_pos_right - @node_size, @parent_pos_right);
-                */
-
-                sqlStr = String.Format(CultureInfo.InvariantCulture,
-                    "update {0} set _left = _left + {1} where _left >= " +
-                    "case when {2} > {3} then {4} - {5} else {6} end",
-                    this.quotedTableName, nodeWidth, newParentRight,
-                    nodeRight, newParentRight, nodeWidth, newParentRight);
-                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
-
-                sqlStr = String.Format(CultureInfo.InvariantCulture,
-                    "update {0} set _right = _right + {1} where _right >= " +
-                    "case when {2} > {3} then {4} - {5} else {6} end",
-                    this.quotedTableName, nodeWidth, newParentRight,
-                    nodeRight, newParentRight, nodeWidth, newParentRight);
-                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
-
-                /* # step 4: move node (ant it's subnodes) and update it's parent item id
-                    UPDATE `list_items`
-                    SET
-                        `pos_left` = 0-(`pos_left`)+
-                            IF(@parent_pos_right > @node_pos_right, 
-                                @parent_pos_right - @node_pos_right - 1, 
-                                @parent_pos_right - @node_pos_right - 1 + @node_size),
-                        `pos_right` = 0-(`pos_right`)+
-                            IF(@parent_pos_right > @node_pos_right, 
-                                @parent_pos_right - @node_pos_right - 1, 
-                                @parent_pos_right - @node_pos_right - 1 + @node_size)
-                    WHERE `pos_left` <= 0-@node_pos_left AND `pos_right` >= 0-@node_pos_right;
-                    UPDATE `list_items`
-                    SET `parent_item_id` = @parent_id
-                    WHERE `item_id` = @node_id;
-                */
-
-                sqlStr = String.Format(CultureInfo.InvariantCulture,
-                    "update {0} set " +
-                    "_left = 0 - _left + case when {1} > {2} then {1} - {2} - 1 else {1} - {2} - 1 + {3} end, " +
-                    "_right = 0 - _right + case when {1} > {2} then {1} - {2} - 1 else {1} - {2} - 1 + {3} end " +
-                    "where _left <= 0 - {4} and _right >= 0 - {2} ",
-                    this.quotedTableName, newParentRight, nodeRight, nodeWidth, nodeLeft);
-                ctx.DBContext.Execute(SqlString.Parse(sqlStr));
-
-                //最后一步不需要执行了，之前已经更新过 parent
+                this.MoveTo(ctx, nodeLeft, nodeRight, nodeWidth, newParentID);
             }
 
             if (this.LogWriting)
             {
                 AuditLog(ctx, (long)id, this.Label + " updated");
             }
+        }
+
+        private void MoveTo(ITransactionContext ctx, long nodeLeft, long nodeRight, long nodeWidth, long newParentID)
+        {
+            //TODO 检查父节点不存在的异常
+            long insertPos = 0;
+
+            if (newParentID > 0)
+            {
+                var ids = new long[] { newParentID };
+                var newParent = this.ReadInternal(ctx, ids, SearchParentNodeFields).First();
+                insertPos = (long)newParent[LeftFieldName] + 1;
+            }
+            else
+            {
+                insertPos = 1;
+            }
+
+            //检查递归
+            if (nodeLeft < insertPos && insertPos <= nodeRight)
+            {
+                throw new Exceptions.DataException("Cannot create a recursion node");
+            }
+
+            string sql;
+
+            //nested-set 的算法就是把一个二维树转换成一维的线段
+            sql = String.Format(
+                "update {0} set _left=_left+{1} where _left>={2}",
+                this.quotedTableName, nodeWidth, insertPos);
+            ctx.DBContext.Execute(SqlString.Parse(sql));
+
+            sql = String.Format(
+                "update {0} set _right=_right+{1} where _right>={2}",
+                this.quotedTableName, nodeWidth, insertPos);
+            ctx.DBContext.Execute(SqlString.Parse(sql));
+
+            if (nodeLeft < insertPos) //往左移动
+            {
+                long moveDistance = insertPos - nodeLeft;
+                sql = String.Format(
+                    "update {0} set _left=_left+{1}, _right=_right+{1} where _left>={2} and _left<{3}",
+                    this.quotedTableName, moveDistance, nodeLeft, nodeRight);
+                ctx.DBContext.Execute(SqlString.Parse(sql));
+            }
+            else //往右移动
+            {
+                long moveDistance = nodeLeft - insertPos;
+                sql = String.Format(
+                    "update {0} set _left=_left-{1}, _right=_right-{1} where _left>={2} and _left<{3}",
+                    this.quotedTableName, moveDistance + nodeWidth, nodeLeft + nodeWidth, nodeRight + nodeWidth);
+                ctx.DBContext.Execute(SqlString.Parse(sql));
+            }
+
+            //最后一步不需要执行了，之前已经更新过 parent
         }
 
         private void SetModificationInfo(ITransactionContext scope, IRecord record)

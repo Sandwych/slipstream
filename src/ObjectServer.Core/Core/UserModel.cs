@@ -202,42 +202,38 @@ namespace ObjectServer.Core
         }
 
 
-        public Session LogOn(ITransactionContext scope,
+        public Session LogOn(ITransactionContext tc,
             string database, string login, string password)
         {
             var constraints = new object[][] { new object[] { "login", "=", login } };
 
-            var userIds = base.SearchInternal(scope, constraints, null, 0, 0);
+            var userIds = base.SearchInternal(tc, constraints, null, 0, 0);
             if (userIds.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);
             }
 
-            var user = base.ReadInternal(scope,
+            var user = base.ReadInternal(tc,
                 new long[] { userIds[0] },
                 new string[] { "password", "salt" })[0];
 
             var hashedPassword = (string)user["password"];
             var salt = (string)user["salt"];
 
-            Session result = null;
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
-                var session = this.FetchOrCreateSession(scope, database, login, user);
-                result = session;
+                var session = this.FetchOrCreateSession(tc, database, login, user);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged.", scope.DBContext.DatabaseName, login));
+                    String.Format("User[{0}.{1}] logged.", tc.DBContext.DatabaseName, login));
+                return session;
             }
             else
             {
                 LoggerProvider.EnvironmentLogger.Warn(() =>
-                    String.Format("Failed to log on user: [{0}.{1}]", scope.DBContext.DatabaseName, login));
-
-                var uid = (long)user[IDFieldName];
+                    String.Format("Failed to log on user: [{0}.{1}]", tc.DBContext.DatabaseName, login));
+                throw new Exceptions.SecurityException("Failed to log on");
             }
-
-            return result;
         }
 
 

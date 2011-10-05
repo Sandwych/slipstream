@@ -122,17 +122,20 @@ namespace ObjectServer.Client
         {
             Debug.Assert(!this.Logged);
 
-            this.jsonRpcClient.BeginInvoke("logOn", new object[] { dbName, userName, password }, (o, error) =>
+            this.jsonRpcClient.BeginInvoke("logOn", new object[] { dbName, userName, password }, (result, error) =>
             {
-                //TODO  线程安全
-                var sid = (string)o;
-                if (!string.IsNullOrEmpty(sid))
+                if (error == null && result != null)
                 {
+                    var sid = (string)result;
                     this.SessionId = sid;
                     this.LoggedDatabase = dbName;
                     this.LoggedUserName = userName;
+                    resultCallback(sid, null);
                 }
-                resultCallback(this.SessionId, error);
+                else
+                {
+                    resultCallback(null, error);
+                }
             });
 
         }
