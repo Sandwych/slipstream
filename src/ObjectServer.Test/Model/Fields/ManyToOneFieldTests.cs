@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class ManyToOneFieldTests : LocalTestCase
+    public class ManyToOneFieldTests : UserLoggedTestCaseBase
     {
 
         [Test]

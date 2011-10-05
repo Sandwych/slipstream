@@ -9,7 +9,7 @@ namespace ObjectServer.Core.Test
 {
 
     [TestFixture]
-    public sealed class ModelTest : LocalTestCase
+    public sealed class ModelTest : UserLoggedTestCaseBase
     {
         [Test]
         public void Test_GetFields()

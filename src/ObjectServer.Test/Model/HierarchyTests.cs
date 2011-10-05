@@ -12,7 +12,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class HierarchyTests : LocalTestCase
+    public class HierarchyTests : UserLoggedTestCaseBase
     {
         private static readonly string[] AssertNodeFields = { "name", "_left", "_right", "children", "descendants" };
 

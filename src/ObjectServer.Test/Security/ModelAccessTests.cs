@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class ModelAccessTests : LocalTestCase
+    public class ModelAccessTests : UserLoggedTestCaseBase
     {
         [Test]
         public void ExpectAccessDenied()

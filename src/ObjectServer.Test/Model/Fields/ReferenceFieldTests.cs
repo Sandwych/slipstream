@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class ReferenceFieldTests : LocalTestCase
+    public class ReferenceFieldTests : UserLoggedTestCaseBase
     {
         public void PrepareTestingData()
         {

@@ -9,7 +9,7 @@ namespace ObjectServer.Core.Test
 {
 
     [TestFixture]
-    public sealed class UserTest : LocalTestCase
+    public sealed class UserTest : UserLoggedTestCaseBase
     {
         [Test]
         public void Test_user_password_hashing()

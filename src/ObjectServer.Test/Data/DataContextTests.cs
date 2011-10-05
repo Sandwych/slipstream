@@ -12,7 +12,7 @@ using ObjectServer.Utility;
 namespace ObjectServer.Data.Test
 {
     [TestFixture]
-    public class DataContextTests : LocalTestCase
+    public class DataContextTests : UserLoggedTestCaseBase
     {
         [Test]
         public void Query_as_dictionary()

@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class FunctionalFieldTests : LocalTestCase
+    public class FunctionalFieldTests : UserLoggedTestCaseBase
     {
         private const string ModelName = "test.functional_field_object";
 

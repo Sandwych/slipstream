@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class InheritanceTests : LocalTestCase
+    public class InheritanceTests : UserLoggedTestCaseBase
     {
         private const string InitName = "animal_name";
         private const string InitDogfood = "bone";

@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class ManyToManyFieldTests : LocalTestCase
+    public class ManyToManyFieldTests : UserLoggedTestCaseBase
     {
         [Test]
         public void CanBrowseManyToManyField()

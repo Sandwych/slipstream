@@ -12,7 +12,7 @@ namespace ObjectServer.Core.Test
 {
 
     [TestFixture]
-    public sealed class RuleTest : LocalTestCase
+    public sealed class RuleTest
     {
         [Test]
         public void Test_search_with_rules()
@@ -27,31 +27,45 @@ namespace ObjectServer.Core.Test
 
         private void AssertSearchingOfSalesOrder(string login, string password, string[] expectedOrderNames)
         {
-            var sid = this.Service.LogOn(TestingDatabaseName, login, password);
-            var ruleModel = (RuleModel)this.TransactionContext.GetResource("core.rule");
-            var salesOrderModel = (IModel)this.TransactionContext.GetResource("test.sales_order");
+            InitEnvironment();
+            var services = Environment.ExportedService;
+
+            var sid = services.LogOn(UserLoggedTestCaseBase.TestingDatabaseName, login, password);
+            //var ruleModel = (RuleModel)this.TransactionContext.GetResource("core.rule");
+            //var salesOrderModel = (IModel)this.TransactionContext.GetResource("test.sales_order");
 
             try
             {
-                using (var tc = new TransactionContext(TestingDatabaseName, sid))
-                {
-                    var orders = new OrderExpression[] {
+                var orders = new OrderExpression[] {
                         new OrderExpression("name", SortDirection.Ascend) 
                     };
-                    var ids = salesOrderModel.SearchInternal(tc, null, orders);
-                    Assert.AreEqual(expectedOrderNames.Length, ids.Length);
-                    var records = salesOrderModel.ReadInternal(tc, ids);
-                    var names = records.Select(r => (string)r["name"]).ToArray();
-                    Assert.AreEqual(expectedOrderNames.Length, names.Length);
-                    for (int i = 0; i < expectedOrderNames.Length; i++)
-                    {
-                        Assert.AreEqual(expectedOrderNames[i], names[i]);
-                    }
+                var ids = (long[])services.Execute(UserLoggedTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Search",
+                    null, null, 0, 0);
+                Assert.AreEqual(expectedOrderNames.Length, ids.Length);
+                var records = (Dictionary<string, object>[])services.Execute(
+                    UserLoggedTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Read",
+                    ids, null);
+                var names = records.Select(r => (string)r["name"]).ToArray();
+                Assert.AreEqual(expectedOrderNames.Length, names.Length);
+                for (int i = 0; i < expectedOrderNames.Length; i++)
+                {
+                    Assert.AreEqual(expectedOrderNames[i], names[i]);
                 }
             }
             finally
             {
-                this.Service.LogOff("objectserver", sid);
+                services.LogOff("objectserver", sid);
+            }
+        }
+
+        private static void InitEnvironment()
+        {
+            var cfg = new Config();
+            cfg.DbName = UserLoggedTestCaseBase.TestingDatabaseName;
+
+            if (!Environment.Initialized)
+            {
+                Environment.Initialize(cfg);
             }
         }
 

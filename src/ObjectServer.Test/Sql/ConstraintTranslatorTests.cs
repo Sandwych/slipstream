@@ -12,7 +12,7 @@ using ObjectServer.Sql;
 namespace ObjectServer.Sql.Test
 {
     [TestFixture]
-    public sealed class ConstraintTranslatorTests : LocalTestCase
+    public sealed class ConstraintTranslatorTests : UserLoggedTestCaseBase
     {
         [TestFixtureSetUp]
         public void TestFixtureSetup()

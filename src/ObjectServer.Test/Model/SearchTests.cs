@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class SearchTests : LocalTestCase
+    public class SearchTests : UserLoggedTestCaseBase
     {
         [Test]
         public void CanSearchWithEmptyConstraints()
