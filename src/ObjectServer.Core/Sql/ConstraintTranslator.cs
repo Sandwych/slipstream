@@ -306,7 +306,11 @@ namespace ObjectServer.Sql
             var lastTableAlias = MainTableAlias;
             foreach (var fieldPart in fieldParts)
             {
-                var field = lastModel.Fields[fieldPart];
+                IField field = null;
+                if (!lastModel.Fields.TryGetValue(fieldPart, out field))
+                {
+                    throw new ArgumentOutOfRangeException("constraint");
+                }
 
                 lastTableAlias = this.ProcessInheritedFieldPart(lastModel, lastTableAlias, fieldPart, field);
 

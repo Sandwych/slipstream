@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-using ObjectServer.Model;
-
 namespace ObjectServer.Exceptions
 {
     [Serializable]

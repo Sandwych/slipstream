@@ -15,7 +15,7 @@ namespace ObjectServer.Model.Fields.Test
     {
 
         [Test]
-        public void Test_read_nullable_many_to_one_field()
+        public void CanReadNullableManyToOneField()
         {
             this.ClearMasterAndChildTable();
 
@@ -36,6 +36,25 @@ namespace ObjectServer.Model.Fields.Test
 
             Assert.True(record["master"].IsNull());
             Assert.AreEqual(nameFieldValue, (string)record["name"]);
+        }
+
+        [Test]
+        public void CanWriteNullableManyToOneField()
+        {
+            this.ClearMasterAndChildTable();
+
+            var nameFieldValue = "child_with_empty_master_field";
+            var child = new Dictionary<string, object>()
+            {
+                { "name", nameFieldValue },
+                { "master", null },
+            };
+
+            var childModel = (IModel)this.TransactionContext.GetResource("test.child");
+
+            var id = childModel.CreateInternal(this.TransactionContext, child);
+
+            childModel.WriteInternal(this.TransactionContext, id, child);
         }
     }
 }
