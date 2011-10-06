@@ -36,7 +36,7 @@ namespace ObjectServer
             Dispose(false);
         }
 
-        #region IDisposable 成员
+        #region IDisposable Members
 
         private void Dispose(bool disposing)
         {
@@ -72,7 +72,10 @@ namespace ObjectServer
             s_instance.InitializeInternal(cfg);
         }
 
-        //这个做实际的初始化工作
+        /// <summary>
+        /// Do the real initialization job
+        /// </summary>
+        /// <param name="cfg"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Initialize(Config cfg)
         {
@@ -108,22 +111,12 @@ namespace ObjectServer
                 throw new ArgumentNullException("cfg");
             }
 
-            //日志子系统必须最先初始化
+            //We must initialize the logging subsystem first
             ConfigurateLogger(cfg);
             LoggerProvider.EnvironmentLogger.Info("The Logging Subsystem has been initialized");
 
-            /*
-            LoggerProvider.EnvironmentLogger.Info(() => "Initializing the Session Storage Subsystem...");
-            string sessionProviderType = cfg.SessionProvider;
-            if (string.IsNullOrEmpty(sessionProviderType))
-            {
-                sessionProviderType = typeof(ObjectServer.StaticSessionStoreProvider).AssemblyQualifiedName;
-            }
-            s_instance.sessionStore.Initialize(sessionProviderType);
-            */
-
             //查找所有模块并加载模块元信息
-            LoggerProvider.EnvironmentLogger.Info(() => "Initializing the Module Management Subsystem...");
+            LoggerProvider.EnvironmentLogger.Info(() => "Module Management Subsystem Initializing...");
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
                 s_instance.modules.Initialize(cfg);
@@ -136,7 +129,7 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Info(() => "Initializing databases...");
             s_instance.databaseProfiles.Initialize(cfg);
 
-            LoggerProvider.EnvironmentLogger.Info(() => "The ObjectServer Platform is ready to load the Core Module...");
+            LoggerProvider.EnvironmentLogger.Info(() => "Runtime environment successfully initialized.");
         }
 
         public static void Shutdown()
