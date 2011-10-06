@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Data\AbstractDbContext.cs" />
     <Compile Include="Data\DatabaseType.cs" />
     <Compile Include="Data\DataProvider.cs" />
@@ -236,9 +237,13 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Data\Menus.xml" />
-    <EmbeddedResource Include="Core\Data\Views.xml" />
+    <EmbeddedResource Include="Core\Data\Views.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Core\Data\InitData.xml" />
-    <EmbeddedResource Include="Core\Data\Security.xml" />
+    <EmbeddedResource Include="Core\Data\Security.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

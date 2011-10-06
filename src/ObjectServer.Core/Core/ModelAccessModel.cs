@@ -48,7 +48,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <param name="model"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public Dictionary<string, object>[]
+        public static Dictionary<string, object>[]
             FindByModelAndUserId(ITransactionContext ctx, string model, long userID)
         {
             if (ctx == null)
@@ -61,8 +61,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
                 throw new ArgumentNullException("model");
             }
 
-            var sql = SqlToQuery;
-            var result = ctx.DBContext.QueryAsDictionary(sql, userID, model);
+            var result = ctx.DBContext.QueryAsDictionary(SqlToQuery, userID, model);
 
             return result;
         }

@@ -39,6 +39,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.FieldName = (string)this.metaField["name"];
 
             DefaultStyleKey = typeof(ManyToOneFieldControl);
+
+            this.Loaded += new RoutedEventHandler(this.OnLoaded);
         }
 
         public override void OnApplyTemplate()
@@ -58,6 +60,14 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             if (this.openButton != null)
             {
                 this.openButton.Click += new RoutedEventHandler(this.OpenButtonClicked);
+            }
+        }
+
+        public void OnLoaded(object sender, RoutedEventArgs args)
+        {
+            if (fieldValue != null && fieldValue is object[] && this.textBox != null)
+            {
+                this.textBox.Text = (string)this.fieldValue[1];
             }
         }
 

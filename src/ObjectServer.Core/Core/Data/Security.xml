@@ -3,11 +3,25 @@
 
   <!-- 安全设定 -->
   <record model="core.role" key="role_user">
-    <field name="name">Normal User</field>
+    <field name="name">Normal Users</field>
   </record>
 
   <record model="core.role" key="role_admin">
     <field name="name">Administrators</field>
+  </record>
+
+  <!-- 添加一个普通用户用于演示 -->
+  <record model="core.user" key="user_demo">
+    <field name="name">Demo User</field>
+    <field name="login">demo</field>
+    <field name="password">demo</field>
+    <field name="admin">false</field>
+  </record>
+
+  <!-- 关联 demo 到 Normal Users 组 -->
+  <record model="core.user_role" >
+    <field name="user" ref-key="user_demo" />
+    <field name="role" ref-key="role_user" />
   </record>
 
   <!-- Normal User 组 -->
@@ -75,6 +89,22 @@
     <field name="allow_delete">false</field>
   </record>
 
-  
-</data>
+  <record model="core.model_access" key="access_core_menu">
+    <field name="model" ref-key="model_core_menu" />
+    <field name="role" ref-key="role_user" />
+    <field name="allow_create">false</field>
+    <field name="allow_read">true</field>
+    <field name="allow_write">false</field>
+    <field name="allow_delete">false</field>
+  </record>
 
+  <record model="core.model_access" key="access_core_view">
+    <field name="model" ref-key="model_core_view" />
+    <field name="role" ref-key="role_user" />
+    <field name="allow_create">false</field>
+    <field name="allow_read">true</field>
+    <field name="allow_write">false</field>
+    <field name="allow_delete">false</field>
+  </record>
+
+</data>

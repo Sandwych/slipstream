@@ -38,11 +38,17 @@ namespace ObjectServer.Model
             Debug.Assert(!string.IsNullOrEmpty(model));
             Debug.Assert(!string.IsNullOrEmpty(action));
 
-            var accessModel = (ModelAccessModel)scope.GetResource(ModelAccessModel.ModelName);
-            var records = accessModel.FindByModelAndUserId(scope, model, userId);
-            var denyCount = records.Count(r => !(bool)r[action]);
-            var result = denyCount == 0;
-            return result;
+            if (!scope.Session.IsSystemUser)
+            {
+                var records = ModelAccessModel.FindByModelAndUserId(scope, model, userId);
+                var denyCount = records.Count(r => !(bool)r[action]);
+                var result = denyCount == 0;
+                return result;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

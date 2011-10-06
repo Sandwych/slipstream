@@ -21,8 +21,7 @@ namespace ObjectServer.Core
 
             Fields.Chars("model").SetLabel("Related Model").Required().SetSize(128);
             Fields.ManyToOne("view", "core.view").SetLabel("Master View");
-            Fields.OneToMany("views", "core.action_window_view", "window_action")
-                .SetLabel("Views");
+            Fields.OneToMany("views", "core.action_window_view", "window_action").SetLabel("Views");
         }
 
     }

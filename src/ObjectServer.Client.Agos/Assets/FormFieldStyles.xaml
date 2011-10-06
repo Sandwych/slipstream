@@ -71,10 +71,6 @@
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
-    <Style TargetType="fields:ManyToManyFieldControl">
-        <Setter Property="Margin" Value="5,3,5,3" />
-    </Style>
-
     <Style TargetType="fields:OneToManyFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
@@ -124,6 +120,48 @@
                         <sdk:Label x:Name="Label" Grid.Column="0" Margin="0,0,5,0" />
                         <Rectangle x:Name="HorizontalLine" Grid.Column="1" Height="1" Fill="#FFA59D8F"  VerticalAlignment="Stretch" />
                     </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="fields:ManyToManyFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="fields:ManyToManyFieldControl">
+                    <Border BorderBrush="#FF999999" BorderThickness="1">
+                        <Grid x:Name="Root">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Border Padding="5,5,5,5" Grid.Row="0" >
+                                <StackPanel Orientation="Horizontal" >
+                                    <Button x:Name="AddButton" Height="23" Width="75">
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/list-add.png" />
+                                                <Rectangle Width="5" />
+                                                <TextBlock>添加</TextBlock>
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                    <Rectangle Width="10" />
+                                    <Button x:Name="RemoveButton" Height="23" Width="75">
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/list-remove.png" />
+                                                <Rectangle Width="5" />
+                                                <TextBlock>移除</TextBlock>
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                            <sdk:DataGrid x:Name="TreeGrid" Grid.Row="1"  BorderThickness="0" />
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
