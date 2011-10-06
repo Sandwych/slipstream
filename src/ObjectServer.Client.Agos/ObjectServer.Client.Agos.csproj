@@ -108,6 +108,7 @@
     <Compile Include="Controls\SelectionDialog.xaml.cs">
       <DependentUpon>SelectionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TreeMenu.cs" />
     <Compile Include="Controls\Tree\ReferenceFieldConverter.cs" />
     <Compile Include="Controls\Tree\TreeDataGrid.cs" />
     <Compile Include="Models\FormModel.cs" />
@@ -129,9 +130,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorResources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MenuTree.xaml.cs">
-      <DependentUpon>MenuTree.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TransitionFrame.cs" />
     <Compile Include="Utility\DataSourceCreator.cs" />
@@ -282,10 +280,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Resource>
-    <Page Include="Controls\MenuTree.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Resource Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

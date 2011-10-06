@@ -6,7 +6,8 @@
   xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
   mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"  
   xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls" 
-  Style="{StaticResource PageStyle}">
+  xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
+  Style="{StaticResource PageStyle}" Loaded="Page_Loaded">
 
 
     <Grid x:Name="LayoutRoot" Background="#FFD9D4CC">
@@ -73,8 +74,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <controls:TreeView Name="Menu" Width="Auto" Grid.Column="0" SelectedItemChanged="Menu_SelectedItemChanged" Margin="5,5,5,5" BorderBrush="#FF999999">
-            </controls:TreeView>
+
+            <my:TreeMenu x:Name="Menu" Grid.Column="0" SelectedItemChanged="Menu_SelectedItemChanged"  Margin="5"
+                         BorderBrush="#FF999999" BorderThickness="1" Background="White"/>
+
             <controls:GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="0,5,0,5" Width="6" BorderThickness="0" />
             <controls:TabControl Grid.Column="2" Padding="0,0,0,0" x:Name="TabContainer" 
                                  Margin="5,5,5,5" BorderBrush="#FF999999" Background="{StaticResource SolidControlColor}">

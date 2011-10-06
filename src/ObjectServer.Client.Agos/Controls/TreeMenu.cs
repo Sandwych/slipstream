@@ -10,23 +10,42 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-using ObjectServer.Client;
 using ObjectServer.Client.Model;
 
 namespace ObjectServer.Client.Agos.Controls
 {
-    public partial class MenuTree : UserControl
+    public class TreeMenu : TreeView
     {
-        public MenuTree()
+        public TreeMenu()
         {
-            InitializeComponent();
-
-            this.Tree.SelectedValuePath = "Id";
+            this.DefaultStyleKey = typeof(TreeView);
+            this.Loaded += new RoutedEventHandler(this.OnLoaded);
         }
 
-        public void LoadMenus(IEnumerable<MenuModel> menus)
+        public override void OnApplyTemplate()
         {
-            this.Tree.Items.Clear();
+            base.OnApplyTemplate();
+
+            this.Reload();
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs args)
+        {
+        }
+
+        public void Reload()
+        {
+            var app = (App)Application.Current;
+
+            app.ClientService.ReadAllMenus(menus =>
+            {
+                this.LoadAllMenus(menus);
+            });
+        }
+
+        private void LoadAllMenus(IEnumerable<MenuModel> menus)
+        {
+            this.Items.Clear();
             this.InsertMenus(menus);
         }
 
@@ -60,7 +79,7 @@ namespace ObjectServer.Client.Agos.Controls
             }
             else
             {
-                this.Tree.Items.Add(node);
+                this.Items.Add(node);
             }
             return node;
         }
@@ -82,5 +101,8 @@ namespace ObjectServer.Client.Agos.Controls
                 InsertSubmenus(menus, menu, node);
             }
         }
+
+
+
     }
 }

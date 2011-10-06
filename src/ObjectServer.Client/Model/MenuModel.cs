@@ -13,21 +13,26 @@ namespace ObjectServer.Client.Model
 
         public MenuModel(IDictionary<string, object> record)
         {
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             this.Id = (long)record["_id"];
             this.Name = (string)record["name"];
 
-            var parentField = record["parent"];
-            if (parentField != null)
+            object parentField;
+            if (record.TryGetValue("parent", out parentField) && parentField != null)
             {
                 var parentInfo = (object[])parentField;
                 this.ParentId = (long)parentInfo[0];
                 this.ParentName = (string)parentInfo[1];
             }
 
-            if (record.ContainsKey("ordinal"))
+            object ordinal;
+            if (record.TryGetValue("ordinal", out ordinal))
             {
-                var x = record["ordinal"];
-                this.Ordinal = (long)record["ordinal"];
+                this.Ordinal = (long)ordinal;
             }
 
             object action;

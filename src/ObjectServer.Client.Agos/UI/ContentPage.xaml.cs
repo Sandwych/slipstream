@@ -34,11 +34,6 @@
             this.Title = ApplicationStrings.HomePageTitle;
             this.TextUserName.Text = app.ClientService.LoggedUserName;
             this.TextServerUri.Text = app.ClientService.ServerAddress.ToString();
-
-            app.ClientService.ReadAllMenus(menus =>
-            {
-                this.LoadMenus(menus);
-            });
         }
 
         private void Menu_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -72,65 +67,6 @@
         }
 
 
-        public void LoadMenus(IEnumerable<MenuModel> menus)
-        {
-            this.Menu.Items.Clear();
-            this.InsertMenus(menus);
-        }
-
-        private void InsertMenus(IEnumerable<MenuModel> menus)
-        {
-            var rootMenus =
-                from m in menus
-                where m.ParentId == null
-                orderby m.Ordinal
-                select m;
-
-            foreach (var menu in rootMenus)
-            {
-                var node = InsertMenu(null, menu);
-
-                InsertSubmenus(menus, menu, node);
-            }
-        }
-
-
-        private TreeViewItem InsertMenu(TreeViewItem parent, MenuModel menu)
-        {
-            var node = new TreeViewItem();
-            node.Header = menu.Name;
-            node.DataContext = menu;
-            node.DisplayMemberPath = "Name";
-
-            if (parent != null)
-            {
-                parent.Items.Add(node);
-            }
-            else
-            {
-                this.Menu.Items.Add(node);
-            }
-            return node;
-        }
-
-        private void InsertSubmenus(
-            IEnumerable<MenuModel> menus, MenuModel parentMenu, TreeViewItem parentNode)
-        {
-            //子菜单们
-            var submenus =
-                from m in menus
-                where m.ParentId != null && m.ParentId == parentMenu.Id
-                orderby m.Ordinal
-                select m;
-
-            foreach (var menu in submenus)
-            {
-                var node = InsertMenu(parentNode, menu);
-                //再把子子菜单们找出来
-                InsertSubmenus(menus, menu, node);
-            }
-        }
-
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
@@ -142,6 +78,12 @@
                 app.PrepareToLogin();
                 GC.Collect();
             });
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+
+
         }
 
     }
