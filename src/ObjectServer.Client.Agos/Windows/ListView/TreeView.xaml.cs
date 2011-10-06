@@ -17,7 +17,7 @@ using System.Threading;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;
-using ObjectServer.Client.Agos.Windows.TreeView.ValueConverters;
+using ObjectServer.Client.Agos.Controls;
 
 namespace ObjectServer.Client.Agos.Windows.TreeView
 {
@@ -250,20 +250,6 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                     app.IsBusy = false;
                 });
             }
-        }
-
-        public void EditSelectedItem()
-        {
-            if (this.gridList.SelectedItems.Count != 1)
-            {
-                return;
-            }
-
-            dynamic item = this.gridList.SelectedItems[0];
-            var recordID = (long)item._id;
-
-            var dlg = new FormView.FormDialog(this.modelName, recordID);
-            dlg.ShowDialog();
         }
 
         private void ClearConstraintsButton_Click(object sender, RoutedEventArgs e)

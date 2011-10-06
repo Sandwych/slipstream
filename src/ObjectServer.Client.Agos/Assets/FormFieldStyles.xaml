@@ -159,7 +159,7 @@
                                     </Button>
                                 </StackPanel>
                             </Border>
-                            <sdk:DataGrid x:Name="TreeGrid" Grid.Row="1"  BorderThickness="0" />
+                            <appControls:TreeDataGrid x:Name="TreeGrid" Grid.Row="1"  BorderThickness="0" />
                         </Grid>
                     </Border>
                 </ControlTemplate>

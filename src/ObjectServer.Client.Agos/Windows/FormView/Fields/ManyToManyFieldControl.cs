@@ -13,13 +13,14 @@ using System.Threading;
 using System.Diagnostics;
 
 using ObjectServer.Client.Agos.Models;
+using ObjectServer.Client.Agos.Controls;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
     [TemplatePart(Name = ManyToManyFieldControl.ElementRoot, Type = typeof(FrameworkElement))]
     [TemplatePart(Name = ManyToManyFieldControl.ElementAddButton, Type = typeof(Button))]
     [TemplatePart(Name = ManyToManyFieldControl.ElementRemoveButton, Type = typeof(Button))]
-    [TemplatePart(Name = ManyToManyFieldControl.ElementTreeGrid, Type = typeof(DataGrid))]
+    [TemplatePart(Name = ManyToManyFieldControl.ElementTreeGrid, Type = typeof(TreeDataGrid))]
     public class ManyToManyFieldControl : Control, IFieldWidget
     {
         public const string ElementRoot = "Root";
@@ -30,7 +31,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private FrameworkElement root;
         private Button addButton;
         private Button removeButton;
-        private DataGrid dataTree;
+        private TreeDataGrid dataTree;
+        private bool inited = false;
 
         private readonly IDictionary<string, object> metaField;
         private string relatedModel;
@@ -42,9 +44,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
 
-            //载入数据
-            this.SetFieldInfo();
-
             this.Loaded += new RoutedEventHandler(this.OnLoaded);
         }
 
@@ -55,22 +54,23 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
             this.addButton = this.GetTemplateChild(ElementAddButton) as Button;
             this.removeButton = this.GetTemplateChild(ElementRemoveButton) as Button;
-            this.dataTree = this.GetTemplateChild(ElementTreeGrid) as DataGrid;
+            this.dataTree = this.GetTemplateChild(ElementTreeGrid) as TreeDataGrid;
 
             this.addButton.Click += new RoutedEventHandler(this.OnAddButtonClicked);
-
+            if (this.dataTree != null)
+            {
+                this.InitGrid();
+            }
         }
 
         public void OnLoaded(object sender, RoutedEventArgs args)
         {
-            if (this.fieldValue != null && this.dataTree != null)
-            {
-                this.LoadData();
-            }
         }
 
-        private void SetFieldInfo()
+        private void InitGrid()
         {
+            Debug.Assert(this.dataTree != null);
+
             var app = (App)Application.Current;
             var relatedFieldName = (string)this.metaField["related_field"];
             var getFieldsArgs = new object[] { (string)this.metaField["relation"] };
@@ -84,6 +84,13 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                      select f).Single();
                 this.relatedModel = (string)relatedField["relation"];
                 Debug.Assert(!string.IsNullOrEmpty(this.relatedModel));
+                this.dataTree.Init(this.relatedModel, null);
+                this.inited = true;
+
+                if (this.fieldValue != null)
+                {
+                    this.LoadData();
+                }
             });
         }
 
@@ -98,9 +105,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             }
             set
             {
-                Debug.Assert(!string.IsNullOrEmpty(this.relatedModel));
                 this.fieldValue = value;
-                if (this.dataTree != null && this.fieldValue != null)
+                if (this.inited && this.fieldValue != null)
                 {
                     this.LoadData();
                 }
@@ -110,6 +116,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private void LoadData()
         {
             var refIDs = (object[])this.fieldValue;
+            this.dataTree.Reload(refIDs.Cast<long>());
+            /*
             var app = (App)Application.Current;
             var args = new object[] { refIDs, null };
             app.ClientService.BeginExecute(this.relatedModel, "Read", args, o2 =>
@@ -119,6 +127,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
                 this.dataTree.ItemsSource = DataSourceCreator.ToDataSource(records);
             });
+            */
         }
 
         public void Empty()

@@ -3,7 +3,7 @@ using System.Net;
 using System.Windows;
 using System.Windows.Data;
 
-namespace ObjectServer.Client.Agos.Windows.TreeView.ValueConverters
+namespace ObjectServer.Client.Agos.Controls
 {
     public sealed class ManyToOneFieldConverter : IValueConverter
     {

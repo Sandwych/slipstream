@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using System.Threading;
 
 using ObjectServer.Client.Agos.Models;
+using ObjectServer.Client.Agos.Controls;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
@@ -19,7 +20,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
     {
         private readonly IDictionary<string, object> metaField;
         private readonly Border border;
-        private readonly DataGrid grid;
+        private readonly TreeDataGrid grid;
 
         public OneToManyFieldControl(object metaField)
         {
@@ -42,7 +43,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.border.BorderThickness = new Thickness(1);
             this.border.BorderBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x99, 0x99, 0x99));
 
-            this.grid = new DataGrid();
+            this.grid = new TreeDataGrid();
             this.grid.BorderThickness = new Thickness(0);
             this.border.Child = this.grid;
         }
@@ -62,19 +63,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
                 var relatedModel = (string)this.metaField["relation"];
                 var getFieldsArgs = new object[] { (string)this.metaField["relation"] };
-                app.ClientService.BeginExecute("core.model", "GetFields", getFieldsArgs, o =>
+                this.grid.Init(relatedModel, null);
+                if (refIDs.Count() > 0)
                 {
-                    var fields = (object[])o;
-                    var args = new object[] { refIDs, null };
-                    app.ClientService.BeginExecute(relatedModel, "Read", args, o2 =>
-                    {
-                        var objs = (object[])o2;
-                        var records = objs.Select(r => (Dictionary<string, object>)r).ToArray();
-
-                        this.grid.ItemsSource = DataSourceCreator.ToDataSource(records);
-                    });
-                });
-
+                    this.grid.Reload(refIDs.Cast<long>());
+                }
             }
         }
 
