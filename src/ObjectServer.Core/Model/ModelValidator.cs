@@ -45,7 +45,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public static void ValidateRecordForUpdating(
+        public static void ValidateRecordForWriting(
             this IModel model, IDictionary<string, object> record)
         {
             Debug.Assert(model != null);

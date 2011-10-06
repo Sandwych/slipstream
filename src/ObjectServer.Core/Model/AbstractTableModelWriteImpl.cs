@@ -51,7 +51,7 @@ namespace ObjectServer.Model
             long? oldParentID = null;
             IRecord existedRecord = null;
 
-            ModelValidator.ValidateRecordForUpdating(this, record);
+            ModelValidator.ValidateRecordForWriting(this, record);
 
             //处理版本字段与基类继承
             if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0 || this.Hierarchy)
