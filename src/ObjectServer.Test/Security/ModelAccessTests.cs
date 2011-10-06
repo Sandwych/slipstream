@@ -19,32 +19,32 @@ namespace ObjectServer.Model.Test
 
             using (var scope = new TransactionContext(TestingDatabaseName, sessionId))
             {
-                var userModel = (ObjectServer.Model.IModel)scope.GetResource("core.user");
+                var userModel = this.GetResource("core.user");
 
                 Assert.DoesNotThrow(() =>
                 {
                     var ids = userModel.SearchInternal(scope, null, null, 0, 0);
                     Assert.True(ids.Length > 0);
-                    userModel.ReadInternal(scope, ids, null);
+                    userModel.Read(scope, ids, null);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
                     record.login = "login";
-                    userModel.CreateInternal(scope, record);
+                    userModel.Create(scope, record);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
                     record.login = "login";
-                    userModel.WriteInternal(scope, 1, record);
+                    userModel.Write(scope, (long)1, record);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
-                    userModel.DeleteInternal(scope, new long[] { 1 });
+                    userModel.Delete(scope, new long[] { (long)1 });
                 });
 
             }

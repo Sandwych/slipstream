@@ -29,7 +29,7 @@ namespace ObjectServer.Test
             Fields.Integer("age").SetLabel("Age");
         }
 
-        
+
         [TransactionMethod("Create")]
         public static long Create(IModel model, ITransactionContext ctx, IDictionary<string, object> propertyBag)
         {
@@ -52,6 +52,9 @@ namespace ObjectServer.Test
         }
     }
 
+    /// <summary>
+    /// dog 继承自 animal
+    /// </summary>
     [Resource]
     public sealed class TestDogModel : AbstractTableModel
     {
@@ -63,6 +66,52 @@ namespace ObjectServer.Test
             Fields.ManyToOne("animal", "test.dog").Required().OnDelete(OnDeleteAction.Cascade)
                 .SetLabel("Base Animal Model");
             Fields.Chars("dogfood").SetLabel("Favorite Dogfood");
+        }
+    }
+
+    /// <summary>
+    /// cocker dog 继承自 dog
+    /// </summary>
+    [Resource]
+    public sealed class TestCockerModel : AbstractTableModel
+    {
+        public TestCockerModel()
+            : base("test.cocker")
+        {
+            Inherit("test.dog", "dog");
+
+            Fields.ManyToOne("dog", "test.dog").Required().OnDelete(OnDeleteAction.Cascade)
+                .SetLabel("Base Animal Model");
+            Fields.Chars("color").SetLabel("Color");
+        }
+    }
+
+    /************* 演示多继承 ***************/
+
+    [Resource]
+    public sealed class TestFlyableModel : AbstractTableModel
+    {
+        public TestFlyableModel()
+            : base("test.flyable")
+        {
+            Fields.Integer("wings").SetLabel("Wings");
+        }
+    }
+
+    [Resource]
+    public sealed class TestBatModel : AbstractTableModel
+    {
+        public TestBatModel()
+            : base("test.bat")
+        {
+            Inherit("test.animal", "animal");
+            Inherit("test.flyable", "flyable");
+
+            Fields.ManyToOne("animal", "test.animal").Required()
+                .OnDelete(OnDeleteAction.Cascade).SetLabel("Base Animal Model");
+            Fields.ManyToOne("flyable", "test.flyable").Required()
+                .OnDelete(OnDeleteAction.Cascade).SetLabel("Base Flyable Model");
+            Fields.Boolean("sucker").SetLabel("Is Sucker?");
         }
     }
 

@@ -83,7 +83,7 @@ namespace ObjectServer.Model
         private void ReadRecordElement(XmlReader reader, bool noUpdate)
         {
             var modelName = reader["model"];
-            var model = (IModel)this.context.GetResource(modelName);
+            dynamic model = this.context.GetResource(modelName);
             var key = reader["key"];
 
             if (model == null)
@@ -98,7 +98,7 @@ namespace ObjectServer.Model
         }
 
         private void ImportRecord(
-            bool noUpdate, IModel model, Dictionary<string, object> record, string key = null)
+            bool noUpdate, dynamic model, Dictionary<string, object> record, string key = null)
         {
             //查找 key 指定的记录看是否存在
             long? existedId = null;
@@ -110,7 +110,7 @@ namespace ObjectServer.Model
 
             if (existedId == null) // Create
             {
-                existedId = (long)model.CreateInternal(this.context, record);
+                existedId = (long)model.Create(this.context, record);
                 if (!string.IsNullOrEmpty(key))
                 {
                     ModelDataModel.Create(
@@ -122,11 +122,11 @@ namespace ObjectServer.Model
                 if (model.Fields.ContainsKey(AbstractModel.VersionFieldName)) //处理版本
                 {
                     var fields = new string[] { AbstractModel.VersionFieldName };
-                    var read = model.ReadInternal(this.context, new long[] { existedId.Value }, fields)[0];
+                    var read = model.Read(this.context, new long[] { existedId.Value }, fields)[0];
                     record[AbstractModel.VersionFieldName] = read[AbstractModel.VersionFieldName];
                 }
 
-                model.WriteInternal(this.context, existedId.Value, record);
+                model.Write(this.context, existedId.Value, record);
                 ModelDataModel.UpdateResourceId(
                     this.context.DBContext, model.Name, key, existedId.Value);
             }

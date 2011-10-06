@@ -34,6 +34,13 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
+        public void CheckMultiTablesInheritance()
+        {
+            dynamic batModel = this.GetResource("test.bat");
+            Assert.AreEqual(2, batModel.Inheritances.Count);
+        }
+
+        [Test]
         public void CanCreateAndReadSingleTable()
         {
             dynamic inheritedModel = this.TransactionContext.GetResource("test.single_table");
