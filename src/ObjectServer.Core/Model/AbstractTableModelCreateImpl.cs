@@ -46,27 +46,11 @@ namespace ObjectServer.Model
             //处理用户没有给的默认值
             this.AddDefaultValuesForCreation(scope, record);
 
-            //插入被继承的表记录
-            foreach (var i in this.Inheritances)
-            {
-                var baseModel = (IModel)scope.GetResource(i.BaseModel);
-                var baseRecord = new Record();
-
-                foreach (var f in baseModel.Fields)
-                {
-                    if (record.ContainsKey(f.Key))
-                    {
-                        baseRecord.Add(f.Key, record[f.Key]);
-                        record.Remove(f.Key);
-                    }
-                }
-
-                var baseId = baseModel.CreateInternal(scope, baseRecord);
-                record[i.RelatedField] = baseId;
-            }
-
             //校验用户提供的值是否满足字段约束
             this.ValidateRecordForCreation(record);
+
+            //创建被继承表的记录
+            this.PrecreateBaseRecords(scope, record);
 
             //转换用户给的字段值到数据库原始类型
             this.ConvertFieldToColumn(scope, record, record.Keys.ToArray());
@@ -87,6 +71,27 @@ namespace ObjectServer.Model
             }
 
             return selfId;
+        }
+
+        private void PrecreateBaseRecords(ITransactionContext scope, IRecord record)
+        {
+            foreach (var i in this.Inheritances)
+            {
+                var baseModel = (IModel)scope.GetResource(i.BaseModel);
+                var baseRecord = new Record();
+
+                foreach (var f in baseModel.Fields)
+                {
+                    object fieldValue = null;
+                    if (record.TryGetValue(f.Key, out fieldValue))
+                    {
+                        baseRecord.Add(f.Key, fieldValue);
+                        record.Remove(f.Key);
+                    }
+                }
+                var baseId = baseModel.CreateInternal(scope, baseRecord);                
+                record[i.RelatedField] = baseId;
+            }
         }
 
         /// <summary>

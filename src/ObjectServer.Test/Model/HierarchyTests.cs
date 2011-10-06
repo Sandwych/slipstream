@@ -32,8 +32,10 @@ namespace ObjectServer.Model.Test
             var record = this.ReadNode(id);
             var ids = (long[])record["_children"];
             Assert.AreEqual(childIds.Length, ids.Length);
-            var hash1 = new HashSet<long>(childIds);
-            var hash2 = new HashSet<long>(ids);
+            var hash1 = new List<long>(childIds);
+            hash1.Sort();
+            var hash2 = new List<long>(ids);
+            hash2.Sort();
             Assert.That(hash1.SequenceEqual(hash2));
         }
 

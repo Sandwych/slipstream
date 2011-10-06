@@ -47,21 +47,47 @@ namespace ObjectServer.Model
             }
 
             var record = ClearUserRecord(userRecord);
+            ModelValidator.ValidateRecordForWriting(this, record);
+
             var isParentChanged = false;
             long? oldParentID = null;
             IRecord existedRecord = null;
 
-            ModelValidator.ValidateRecordForWriting(this, record);
 
             //处理版本字段与基类继承
             if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0 || this.Hierarchy)
             {
-                /*
-                select * from <TableName> where _id=?
-                */
-                var sqlSelectSelf = String.Format(CultureInfo.InvariantCulture,
-                    "select * from {0} where _id = ?", this.quotedTableName);
-                existedRecord = ctx.DBContext.QueryAsDictionary(SqlString.Parse(sqlSelectSelf), id)[0];
+                var fieldsToRead = new List<string>();
+
+                //如果包含版本字段，那么我们需要先读取版本字段
+                //TODO 在继承树上查找
+                if (this.Fields.ContainsKey(VersionFieldName))
+                {
+                    fieldsToRead.Add(VersionFieldName);
+                }
+
+                //如果此表使用了继承，那么我们还需要读取关联到父表的字段
+                if (this.Inheritances.Count > 0)
+                {
+                    foreach (var i in this.Inheritances)
+                    {
+                        Debug.Assert(!string.IsNullOrEmpty(i.RelatedField));
+                        fieldsToRead.Add(i.RelatedField);
+                    }
+                }
+
+                if (this.Hierarchy)
+                {
+                    fieldsToRead.Add(LeftFieldName);
+                    fieldsToRead.Add(RightFieldName);
+
+                    if (this.Fields.ContainsKey(ParentFieldName))
+                    {
+                        fieldsToRead.Add(ParentFieldName);
+                    }
+                }
+
+                existedRecord = this.ReadInternal(ctx, new long[] { id }, fieldsToRead.ToArray()).First();
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
@@ -70,7 +96,11 @@ namespace ObjectServer.Model
                 if (userRecord.ContainsKey(ParentFieldName))
                 {
                     var newParentId = userRecord[ParentFieldName] as long?;
-                    oldParentID = existedRecord[ParentFieldName] as long?;
+                    var oldParentValue = existedRecord[ParentFieldName] as object[];
+                    if (oldParentValue != null)
+                    {
+                        oldParentID = (long)oldParentValue.First();
+                    }
                     if ((newParentId.HasValue && (oldParentID == null || oldParentID.Value != newParentId.Value))
                         || (!newParentId.HasValue && oldParentID.HasValue))
                     {
@@ -79,6 +109,50 @@ namespace ObjectServer.Model
                 }
             }
 
+            var rowsAffected = this.WriteSelf(ctx, id, record);
+
+            //检查更新结果
+            if (rowsAffected != 1)
+            {
+                var msg = string.Format("不能更新 ['{0}', {1}]，因为其已经被其它用户更新",
+                    this.TableName, id);
+                throw new ConcurrencyException(msg);
+            }
+
+            //更新层次结构
+            //算法来自于：
+            //http://stackoverflow.com/questions/889527/mysql-move-node-in-nested-set
+            // 1.   Change positions of node ant all it's sub nodes into negative values, 
+            //      which are equal to current ones by module.
+            // 2.   Move all positions "up", which are more, that pos_right of current node.
+            // 3.   Move all positions "down", which are more, that pos_right of new parent node.
+            // 4.   Change positions of current node and all it's subnodes, 
+            //      so that it's now will be exactly "after" (or "down") of new parent node.
+            if (isParentChanged && Hierarchy)
+            {
+                var nodeLeft = (long)existedRecord[LeftFieldName];
+                var nodeRight = (long)existedRecord[RightFieldName];
+                var nodeWidth = nodeRight - nodeLeft + 1;
+
+                long newParentID = 0;
+                object newParentIDObj = null;
+                if (userRecord.TryGetValue(ParentFieldName, out newParentIDObj) && newParentIDObj != null)
+                {
+                    newParentID = (long)newParentIDObj;
+                }
+
+                ctx.DBContext.LockTable(this.TableName); //层次表移动节点的时候需要锁表，因为涉及不止一行
+                this.NodeMoveTo(ctx, nodeLeft, nodeRight, nodeWidth, newParentID);
+            }
+
+            if (this.LogWriting)
+            {
+                AuditLog(ctx, (long)id, this.Label + " updated");
+            }
+        }
+
+        private int WriteSelf(ITransactionContext ctx, long id, Record record)
+        {
             var allFields = record.Keys; //记录中的所有字段
 
             //先写入 many-to-many 字段
@@ -123,49 +197,10 @@ namespace ObjectServer.Model
 
             var sql = sqlBuilder.ToSqlString();
             var rowsAffected = ctx.DBContext.Execute(sql, args);
-
-            //检查更新结果
-            if (rowsAffected != 1)
-            {
-                var msg = string.Format("不能更新 ['{0}', {1}]，因为其已经被其它用户更新",
-                    this.TableName, id);
-                throw new ConcurrencyException(msg);
-            }
-
-            //更新层次结构
-            //算法来自于：
-            //http://stackoverflow.com/questions/889527/mysql-move-node-in-nested-set
-            // 1.   Change positions of node ant all it's sub nodes into negative values, 
-            //      which are equal to current ones by module.
-            // 2.   Move all positions "up", which are more, that pos_right of current node.
-            // 3.   Move all positions "down", which are more, that pos_right of new parent node.
-            // 4.   Change positions of current node and all it's subnodes, 
-            //      so that it's now will be exactly "after" (or "down") of new parent node.
-            if (isParentChanged && Hierarchy)
-            {
-                var nodeLeft = (long)existedRecord[LeftFieldName];
-                var nodeRight = (long)existedRecord[RightFieldName];
-                var nodeWidth = nodeRight - nodeLeft + 1;
-
-                long newParentID = 0;
-                object newParentIDObj = null;
-                if (userRecord.TryGetValue(ParentFieldName, out newParentIDObj) && newParentIDObj != null)
-                {
-                    newParentID = (long)newParentIDObj;
-                }
-
-                ctx.DBContext.LockTable(this.TableName);
-
-                this.MoveTo(ctx, nodeLeft, nodeRight, nodeWidth, newParentID);
-            }
-
-            if (this.LogWriting)
-            {
-                AuditLog(ctx, (long)id, this.Label + " updated");
-            }
+            return rowsAffected;
         }
 
-        private void MoveTo(ITransactionContext ctx, long nodeLeft, long nodeRight, long nodeWidth, long newParentID)
+        private void NodeMoveTo(ITransactionContext ctx, long nodeLeft, long nodeRight, long nodeWidth, long newParentID)
         {
             //TODO 检查父节点不存在的异常
             long insertPos = 0;
@@ -283,12 +318,19 @@ namespace ObjectServer.Model
             //继承表写入的策略是这样的：
             //1. 先考察用户提供的字段，并按基类、子类的各个表分组，
             //      如果某一字段同时出现在基类和子类中的时候就报错
-            //2. 分别更新各个基类表
-            //3. 最后更新子类表
+            //2. 分别更新各个基表
+            //3. 最后更新子表
             foreach (var inheritInfo in this.Inheritances)
             {
                 var baseModel = (IModel)ctx.GetResource(inheritInfo.BaseModel);
-                var baseID = (long)existedRecord[inheritInfo.RelatedField];
+                var relatedFieldValue = existedRecord[inheritInfo.RelatedField] as object[];
+                if (relatedFieldValue == null)
+                {
+                    var msg = String.Format("The field [{0}.{1}] can not be null",
+                        this.Name, inheritInfo.RelatedField);
+                    throw new Exceptions.DataException(msg);
+                }
+                var baseId = (long)(relatedFieldValue.First());
 
                 //看用户提供的记录的字段是否涉及到基类
                 var baseFields = baseModel.Fields.Keys.Intersect(record.Keys);
@@ -296,7 +338,7 @@ namespace ObjectServer.Model
                 {
                     var baseRecord = record.Where(p => baseFields.Contains(p.Key))
                         .ToDictionary(p => p.Key, p => p.Value);
-                    baseModel.WriteInternal(ctx, baseID, baseRecord);
+                    baseModel.WriteInternal(ctx, baseId, baseRecord);
                 }
             }
         }

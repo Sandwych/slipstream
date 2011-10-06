@@ -124,7 +124,6 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="ClrTransaction.cs" />
     <Compile Include="Core\RuleRoleModel.cs" />
-    <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Exceptions\SecurityException.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />

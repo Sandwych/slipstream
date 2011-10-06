@@ -85,12 +85,6 @@
     <field name="model">core.user</field>
   </record>
 
-  <record  model="core.action_window_view" key="user_form_view_ref">
-    <field name="ordinal">1</field>
-    <field name="view" ref-key="user_form_view" />
-    <field name="window_action" ref-key="user_menu_action" />
-  </record>
-
   <!-- Model's View -->
   <record model="core.view" key="model_tree_view">
     <field name="name">Models</field>
