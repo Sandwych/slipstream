@@ -128,6 +128,7 @@
     <Compile Include="Exceptions\SecurityException.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />
+    <Compile Include="Model\Fields\CriterionConverter.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Module\ModuleUpdateAction.cs" />
     <Compile Include="Model\Sql\OrderExpression.cs" />

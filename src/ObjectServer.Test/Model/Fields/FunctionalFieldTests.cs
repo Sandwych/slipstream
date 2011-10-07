@@ -62,14 +62,13 @@ namespace ObjectServer.Model.Fields.Test
         }
 
         [Test]
-        public void CanFunctionFieldAsConstraint()
+        public void CanFunctionalFieldAsConstraint()
         {
             dynamic model = this.GetResource(ModelName);
-            var constraints = new object[][] { new object[] { "sum_field", "=", 9 } };
+            var constraint = new object[][] { new object[] { "sum_field", "=", 9 } };
             dynamic data = PrepareTestData();
 
-            var args = new object[] { constraints };
-            dynamic n = model.Count(this.TransactionContext, args);
+            dynamic n = model.Count(this.TransactionContext, constraint);
             Assert.AreEqual(1, n);
         }
     }

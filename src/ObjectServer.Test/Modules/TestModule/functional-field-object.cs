@@ -20,7 +20,8 @@ namespace ObjectServer.Test
             Fields.ManyToOne("user", "core.user").SetValueGetter(GetUser);
             Fields.Integer("field1").Required();
             Fields.Integer("field2").Required();
-            Fields.Integer("sum_field").SetValueGetter(GetSum).Readonly();
+            Fields.Integer("sum_field").SetValueGetter(GetSum).Readonly()
+                .SetCriterionConverter(this.ConvertSumFieldCriterion);
         }
 
         private Dictionary<long, object> GetSum(ITransactionContext ctx, IEnumerable<long> ids)
@@ -37,6 +38,27 @@ namespace ObjectServer.Test
             }
 
             return result;
+        }
+
+        private Criterion[] ConvertSumFieldCriterion(ITransactionContext ctx, Criterion cr)
+        {
+            var ids = (long[])this.SearchInternal(ctx, null, null, 0, 0);
+            var values = GetSum(ctx, ids);
+
+            if (cr.Operator == "=")
+            {
+                var resultIds = values.Where(p => (int)p.Value == (int)cr.Value).Select(p => p.Key).ToArray();
+                return new Criterion[] { new Criterion(IdFieldName, "in", resultIds) };
+            }
+            else if (cr.Operator == "!=")
+            {
+                var resultIds = values.Where(p => (int)p.Value != (int)cr.Value).Select(p => p.Key).ToArray();
+                return new Criterion[] { new Criterion(IdFieldName, "in", resultIds) };
+            }
+            else
+            {
+                return new Criterion[] { Criterion.NegeativeCriterion };
+            }
         }
 
         private Dictionary<long, object> GetUser(ITransactionContext ctx, IEnumerable<long> ids)

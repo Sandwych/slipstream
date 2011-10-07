@@ -7,8 +7,9 @@ namespace ObjectServer.Model
 {
     public interface IField : IFieldDescriptor
     {
-        FieldValueGetter Getter { get; set; }
-        FieldDefaultValueGetter DefaultProc { get; set; }
+        FieldValueGetter ValueGetter { get; }
+        FieldDefaultValueGetter DefaultProc { get; }
+        CriterionConverter CriterionConverter { get; }
 
         void VerifyDefinition();
 
@@ -26,6 +27,7 @@ namespace ObjectServer.Model
         IField NotRequired();
         IField SetValueGetter(FieldValueGetter fieldGetter);
         IField SetDefaultValueGetter(FieldDefaultValueGetter defaultProc);
+        IField SetCriterionConverter(CriterionConverter convProc);
         IField SetSize(int size);
         IField SetHelp(string help);
         IField Readonly();

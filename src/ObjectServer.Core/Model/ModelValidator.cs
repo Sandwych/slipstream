@@ -31,7 +31,7 @@ namespace ObjectServer.Model
                 }
                 else if (field.IsRequired
                     && field.DefaultProc == null
-                    && field.Getter == null
+                    && field.ValueGetter == null
                     && record.ContainsKey(field.Name)
                     && record[field.Name].IsNull())
                 {

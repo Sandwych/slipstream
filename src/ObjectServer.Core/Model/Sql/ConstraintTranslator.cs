@@ -243,14 +243,19 @@ namespace ObjectServer.Model
         /// <summary>
         /// 每组之间使用 OR 连接，一组中的元素之间使用 AND 连接
         /// </summary>
-        /// <param name="ruleCriteria"></param>
-        public void AddGroupedCriteria(IEnumerable<Criterion[]> ruleCriteria)
+        /// <param name="constraints"></param>
+        public void AddConstraint(IEnumerable<Criterion[]> constraints)
         {
-            if (ruleCriteria.Count() > 0)
+            if (constraints == null)
+            {
+                throw new ArgumentNullException("constraints");
+            }
+
+            if (constraints.Count() > 0)
             {
                 this.AddWhereFragment("(");
                 var orNeeded = false;
-                foreach (var criteria in ruleCriteria)
+                foreach (var criteria in constraints)
                 {
                     if (orNeeded)
                     {
@@ -270,6 +275,11 @@ namespace ObjectServer.Model
 
         public void AddCriteria(IEnumerable<Criterion> criteria)
         {
+            if (criteria == null)
+            {
+                throw new ArgumentNullException("criteria");
+            }
+
             if (criteria.Count() > 0)
             {
                 this.AddWhereFragment("(");
@@ -292,39 +302,63 @@ namespace ObjectServer.Model
             }
         }
 
-        private void AddCriterion(Criterion constraint)
+        private void AddCriterion(Criterion criterion)
         {
-            if (constraint == null)
+            if (criterion == null)
             {
-                throw new ArgumentNullException("constraint");
+                throw new ArgumentNullException("criterion");
             }
 
-            var fieldParts = constraint.Field.Split('.');
+            var fieldParts = criterion.Field.Split('.');
 
-            var leafPart = fieldParts.Last();
-            var lastModel = this.rootModel;
-            var lastTableAlias = MainTableAlias;
-            foreach (var fieldPart in fieldParts)
+            var firstPart = fieldParts.First();
+            var firstPartFieldInfo = this.rootModel.Fields[firstPart];
+
+            if (!firstPartFieldInfo.Selectable)
             {
+                return;
+            }
+
+            if (firstPartFieldInfo.IsColumn)
+            {
+                var leafPart = fieldParts.Last();
+                var lastModel = this.rootModel;
+                var lastTableAlias = MainTableAlias;
                 IField field = null;
-                if (!lastModel.Fields.TryGetValue(fieldPart, out field))
+                foreach (var fieldPart in fieldParts)
                 {
-                    throw new ArgumentOutOfRangeException("constraint");
+                    if (!lastModel.Fields.TryGetValue(fieldPart, out field))
+                    {
+                        throw new ArgumentOutOfRangeException("criterion");
+                    }
+
+                    lastTableAlias = this.ProcessInheritedFieldPart(lastModel, lastTableAlias, fieldPart, field);
+
+                    //处理连接字段
+                    if (field.Type == FieldType.ManyToOne && fieldPart != leafPart)
+                    {
+                        var relatedModel = (IModel)this.serviceScope.GetResource(field.Relation);
+                        lastTableAlias = this.JoinTableByFieldPart(lastTableAlias, field, relatedModel);
+                        lastModel = relatedModel;
+                    }
                 }
 
-                lastTableAlias = this.ProcessInheritedFieldPart(lastModel, lastTableAlias, fieldPart, field);
+                Debug.Assert(field != null);
+                Debug.Assert(lastModel != null);
 
-                //处理连接字段
-                if (field.Type == FieldType.ManyToOne && fieldPart != leafPart)
+                this.AddLeafColumnCriterion(criterion, lastTableAlias, lastModel, field);
+            }
+            else
+            {
+                var criteria = firstPartFieldInfo.CriterionConverter(this.serviceScope, criterion);
+                //检查是否包含
+                //CriterionConverter 返回的新条件不能包含字段本身，否则将递归
+                if (criteria.Count(cr => cr.Field == criterion.Field) > 0)
                 {
-                    IModel relatedModel = (IModel)this.serviceScope.GetResource(field.Relation);
-                    lastTableAlias = this.JoinTableByFieldPart(lastTableAlias, field, relatedModel);
-                    lastModel = relatedModel;
+                    throw new ArgumentException("CriterionConverter");
                 }
-                else //否则则为叶子节点 
-                {
-                    this.ProcessLeafNode(constraint, lastTableAlias, lastModel, field);
-                }
+
+                this.AddCriteria(criteria);
             }
         }
 
@@ -356,10 +390,10 @@ namespace ObjectServer.Model
             return lastTableAlias;
         }
 
-        private void ProcessLeafNode(
+        private void AddLeafColumnCriterion(
             Criterion cr, string lastTableAlias, IModel model, IField field)
         {
-            if (field.IsFunctional)
+            if (!field.Selectable || !field.IsColumn)
             {
                 throw new NotSupportedException();
             }
@@ -372,21 +406,21 @@ namespace ObjectServer.Model
                 case "<":
                 case "<=":
                 case "!=":
-                    this.ProcessSimpleLeafNode(cr, lastTableAlias, model, field);
+                    this.AddSimpleLeafCriterion(cr, lastTableAlias, model, field);
                     break;
 
                 case "like":
                 case "!like":
-                    this.ProcessLikeAndNotLikeNode(cr, lastTableAlias, model, field);
+                    this.AddLikeAndNotLikeLeafCriterion(cr, lastTableAlias, model, field);
                     break;
 
                 case "in":
                 case "!in":
-                    this.ProcessInAndNotInNode(cr, lastTableAlias, model, field);
+                    this.AddInAndNotInLeafCriterion(cr, lastTableAlias, model, field);
                     break;
 
                 case "childof":
-                    this.ProcessChildOfNode(cr, lastTableAlias, model, field);
+                    this.AddChildOfLeafCriterion(cr, lastTableAlias, model, field);
                     break;
 
                 case "!childof":
@@ -399,7 +433,7 @@ namespace ObjectServer.Model
 
         }
 
-        private void ProcessSimpleLeafNode(
+        private void AddSimpleLeafCriterion(
             Criterion cr, string lastTableAlias, IModel model, IField field)
         {
             var column = lastTableAlias + '.' + field.Name;
@@ -421,7 +455,7 @@ namespace ObjectServer.Model
 
         }
 
-        private void ProcessLikeAndNotLikeNode(
+        private void AddLikeAndNotLikeLeafCriterion(
             Criterion cr, string lastTableAlias, IModel model, IField field)
         {
             var opr = cr.Operator == "like" ? "like" : "not like";
@@ -433,7 +467,7 @@ namespace ObjectServer.Model
             this.values.Add(cr.Value);
         }
 
-        private void ProcessInAndNotInNode(
+        private void AddInAndNotInLeafCriterion(
             Criterion cr, string lastTableAlias, IModel model, IField field)
         {
             var opr = cr.Operator == "in" ? "in" : "not in";
@@ -460,7 +494,7 @@ namespace ObjectServer.Model
             this.values.AddRange(inValues);
         }
 
-        private void ProcessChildOfNode(
+        private void AddChildOfLeafCriterion(
             Criterion cr, string lastTableAlias, IModel model, IField field)
         {
             /* 生成的 SQL 形如：

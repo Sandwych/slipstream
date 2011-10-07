@@ -21,7 +21,7 @@ namespace ObjectServer.Model
     {
         private static readonly List<Criterion[]> EmptyRules =
             new List<Criterion[]>();
-        private static readonly Criterion[] EmptyConstraints = { };
+        private static readonly Criterion[] EmptyConstraint = { };
 
         public override long[] SearchInternal(
             ITransactionContext tc, object[] constraint, OrderExpression[] order, long offset, long limit)
@@ -74,24 +74,17 @@ namespace ObjectServer.Model
         private void TranslateConstraint(ITransactionContext tc, object[] constraint, ConstraintTranslator translator)
         {
             //处理查询约束
-            IEnumerable<Criterion> userConstraints = null;
+            IEnumerable<Criterion> userConstraint = null;
             if (constraint != null)
             {
-                userConstraints = constraint.Select(o => new Criterion(o));
+                userConstraint = constraint.Select(o => new Criterion(o));
             }
             else
             {
-                userConstraints = EmptyConstraints;
+                userConstraint = EmptyConstraint;
             }
 
-            try
-            {
-                translator.AddCriteria(userConstraints);
-            }
-            catch (ArgumentException)
-            {
-                throw new ArgumentException("Failed to translate constraints", "constraints");
-            }
+            translator.AddCriteria(userConstraint);
 
             translator.AddWhereFragment(new SqlString(" and "));
 
@@ -108,12 +101,12 @@ namespace ObjectServer.Model
             //系统用户不检查访问规则
             if (scope.Session.IsSystemUser)
             {
-                translator.AddGroupedCriteria(EmptyRules);
+                translator.AddConstraint(EmptyRules);
             }
             else
             {
                 var ruleConstraints = RuleModel.GetRuleConstraints(scope, this.Name, "read");
-                translator.AddGroupedCriteria(ruleConstraints);
+                translator.AddConstraint(ruleConstraints);
             }
         }
 

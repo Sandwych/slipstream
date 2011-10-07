@@ -67,16 +67,14 @@ namespace ObjectServer.Model
 
         public bool IsFunctional
         {
-            get { return this.Getter != null; }
+            get { return this.ValueGetter != null; }
         }
 
-        public FieldValueGetter Getter
-        {
-            get;
-            set;
-        }
+        public FieldValueGetter ValueGetter { get; private set; }
 
-        public FieldDefaultValueGetter DefaultProc { get; set; }
+        public FieldDefaultValueGetter DefaultProc { get; private set; }
+
+        public CriterionConverter CriterionConverter { get; private set; }
 
         public FieldType Type { get; set; }
 
@@ -108,13 +106,13 @@ namespace ObjectServer.Model
 
         public bool Selectable
         {
-            get { return this.IsColumn; }
+            get { return this.IsColumn || this.CriterionConverter != null; }
         }
 
         public virtual void VerifyDefinition()
         {
             //基础的验证
-            if (this.DefaultProc != null && this.Getter != null)
+            if (this.DefaultProc != null && this.ValueGetter != null)
             {
                 throw new ArgumentException("Function field cannot have the DefaultProc property");
             }
@@ -188,7 +186,7 @@ namespace ObjectServer.Model
 
             var ids = records.Select(p => (long)p[AbstractModel.IdFieldName]).ToArray();
 
-            var result = this.Getter(ctx, ids);
+            var result = this.ValueGetter(ctx, ids);
 
             return result;
         }
@@ -226,7 +224,7 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("fieldGetter");
             }
 
-            this.Getter = fieldGetter;
+            this.ValueGetter = fieldGetter;
             return this;
         }
 
@@ -238,6 +236,17 @@ namespace ObjectServer.Model
             }
 
             this.DefaultProc = defaultProc;
+            return this;
+        }
+
+        public IField SetCriterionConverter(CriterionConverter convProc)
+        {
+            if (convProc == null)
+            {
+                throw new ArgumentNullException("convProc");
+            }
+
+            this.CriterionConverter = convProc;
             return this;
         }
 

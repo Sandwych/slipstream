@@ -15,6 +15,19 @@ namespace ObjectServer.Model
     [JsonArray(false)]
     public class Criterion
     {
+        public const string EqualOperator = "=";
+        public const string NotEqualOperator = "!=";
+        public const string InOperator = "in";
+        public const string NotInOperator = "!in";
+        public const string GreaterOperator = ">";
+        public const string GreaterEqualOperator = ">=";
+        public const string LessOperator = "<";
+        public const string LessEqualOperator = "<=";
+        public const string LikeOperator = "like";
+        public const string NotLikeOperator = "!like";
+        public const string ChildOfOperator = "childof";
+        public const string NotChildOfOperator = "!childof";
+
         private static readonly HashSet<string> Operators;
         private static readonly Criterion s_negeativeCriterion;
 
@@ -22,7 +35,7 @@ namespace ObjectServer.Model
         {
             Operators = new HashSet<string>()
             {
-                 "=", "!=", ">", ">=", "<", "<=", "in", "!in",  "like", "!like", "childof", "!childof"
+                 "=", "!=", "in", "!in", ">", ">=", "<", "<=", "like", "!like", "childof", "!childof"
             };
 
             s_negeativeCriterion = new Criterion(AbstractModel.IdFieldName, "=", (long)0);
@@ -57,8 +70,8 @@ namespace ObjectServer.Model
 
             VerifyOperatorAndValue(opr, arr[2]);
 
-            this.Field = field;
-            this.Operator = opr;
+            this.Field = field.Trim().ToLowerInvariant();
+            this.Operator = opr.Trim().ToLowerInvariant();
             this.Value = arr[2];
         }
 
@@ -99,17 +112,13 @@ namespace ObjectServer.Model
         [JsonProperty("value")]
         public object Value { get; private set; }
 
-        public object[] ToPlainCriterion
+        public object[] ToPlainCriterion()
         {
-            get
-            {
-                Debug.Assert(!string.IsNullOrEmpty(this.Field));
-                Debug.Assert(!string.IsNullOrEmpty(this.Operator));
+            Debug.Assert(!string.IsNullOrEmpty(this.Operator));
 
-                return new object[] { this.Field, this.Operator, this.Value };
-            }
+            return new object[] { this.Field, this.Operator, this.Value };
         }
 
-        public Criterion NegeativeCriterion { get { return s_negeativeCriterion; } }
+        public static Criterion NegeativeCriterion { get { return s_negeativeCriterion; } }
     }
 }
