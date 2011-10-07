@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Data;
+using System.ComponentModel.Composition;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;

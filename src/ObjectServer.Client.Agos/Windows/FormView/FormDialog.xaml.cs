@@ -42,7 +42,10 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = true;
+
             var app = (App)App.Current;
+
             //执行保存
             var record = formView.GetFieldValues();
 

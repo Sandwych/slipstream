@@ -4,10 +4,12 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Navigation;
+    using System.ComponentModel.Composition;
 
     /// <summary>
     /// <see cref="UserControl"/> class providing the main UI for the application.
     /// </summary>
+    [Export]
     public partial class MainPage : UserControl
     {
         /// <summary>

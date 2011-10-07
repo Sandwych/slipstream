@@ -56,6 +56,7 @@
       <HintPath>..\..\lib\FloatableWindow\FloatableWindow.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.ComponentModel.Composition, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Threading.Tasks.SL4">
@@ -110,6 +111,7 @@
     <Compile Include="Controls\Tree\ReferenceFieldConverter.cs" />
     <Compile Include="Controls\Tree\TreeDataGrid.cs" />
     <Compile Include="Models\FormModel.cs" />
+    <Compile Include="Models\IServerConnection.cs" />
     <Compile Include="Models\ServerConnection.cs" />
     <Compile Include="Utility\SilverlightTable\PropertyValueChange.cs" />
     <Compile Include="Utility\SilverlightTable\Row.cs" />

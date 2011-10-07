@@ -8,7 +8,7 @@ using ObjectServer.Client;
 
 namespace ObjectServer.Client.Agos.Models
 {
-    public sealed class ServerConnection : IDisposable
+    public sealed class ServerConnection : IServerConnection
     {
         private static volatile ServerConnection s_instance;
         private static readonly object syncRoot = new object();
@@ -21,23 +21,6 @@ namespace ObjectServer.Client.Agos.Models
         ~ServerConnection()
         {
             this.Dispose();
-        }
-
-        public Task ConnectAsync(Uri uri)
-        {
-            Debug.Assert(this.client != null);
-
-            lock (clientLock)
-            {
-                this.client = new ObjectServerClient(uri);
-            }
-            var tcs = new TaskCompletionSource<Version>();
-            this.client.GetVersionAsync().ContinueWith(tk =>
-            {
-                tcs.SetResult(tk.Result);
-            });
-
-            return tcs.Task;
         }
 
         public void BeginConnect(Uri uri, Action<Exception> resultCallback)

@@ -1,11 +1,15 @@
-﻿namespace ObjectServer.Client.Agos
+﻿using System;
+using System.Runtime.Serialization;
+using System.Windows;
+using System.Windows.Controls;
+using System.Diagnostics;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using ObjectServer.Client.Agos.Controls;
+
+namespace ObjectServer.Client.Agos
 {
-    using System;
-    using System.Runtime.Serialization;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Diagnostics;
-    using ObjectServer.Client.Agos.Controls;
+
 
     /// <summary>
     /// Main <see cref="Application"/> class.
@@ -36,6 +40,27 @@
             // Show some UI to the user while LoadUser is in progress
             this.InitializeRootVisual();
             this.PrepareToLogin();
+        }
+
+        private CompositionContainer container;
+        internal CompositionContainer Container
+        {
+            get
+            {
+                //TODO 多线程处理
+                if (container == null)
+                {
+                    var catalog1 = new AssemblyCatalog(typeof(App).Assembly);
+                    var catalog2 = new AssemblyCatalog(typeof(ObjectServerClient).Assembly);
+                    var catalog = new AggregateCatalog(catalog1, catalog2);
+
+                    this.container = new CompositionContainer(catalog);
+
+                    this.container.ComposeParts();
+                }
+
+                return this.container;
+            }
         }
 
         public bool IsBusy
@@ -115,7 +140,7 @@
         protected virtual void InitializeRootVisual()
         {
             this.busyIndicator = new BusyIndicator();
-            this.busyIndicator.Content = new MainPage();
+            this.busyIndicator.Content = this.Container.GetExportedValue<MainPage>();
             this.busyIndicator.HorizontalContentAlignment = HorizontalAlignment.Stretch;
             this.busyIndicator.VerticalContentAlignment = VerticalAlignment.Stretch;
 
