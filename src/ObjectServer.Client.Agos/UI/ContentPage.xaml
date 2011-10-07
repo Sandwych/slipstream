@@ -83,10 +83,12 @@
                                  Margin="5,5,5,5" BorderBrush="#FF999999" Background="{StaticResource SolidControlColor}">
                 <controls:TabControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Content="X" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}" />
+                            <Button Content="X" />
+                        </StackPanel>
                     </DataTemplate>
                 </controls:TabControl.ItemTemplate>
-
             </controls:TabControl>
         </Grid>
         <Border x:Name="StatusBar" Margin="0,0,0,0" Grid.Row="2" Style="{StaticResource StatusBarStyle}">

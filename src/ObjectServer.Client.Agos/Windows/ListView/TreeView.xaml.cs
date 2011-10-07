@@ -148,7 +148,8 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                     .Count(attr => attr != null && attr.Value == "advanced") > 0)
                 {
                     this.AdvancedConditionsExpander.Visibility = System.Windows.Visibility.Visible;
-                    this.AdvancedConditionsExpander.Content = (Grid)this.CreateQueryForm(metaFields, viewFields, "advanced");
+                    this.AdvancedConditionsExpander.DataContext
+                        = (Grid)this.CreateQueryForm(metaFields, viewFields, "advanced");
                 }
                 else
                 {
@@ -326,6 +327,11 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 ids.Add(id);
             }
             return ids.ToArray();
+        }
+
+        public void Clear()
+        {
+            this.gridList.ItemsSource = null;
         }
 
     }

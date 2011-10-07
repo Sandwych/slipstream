@@ -149,7 +149,7 @@ namespace ObjectServer
 #else
                 try
                 {
-                    this.LoadCoreModule(ctx, update);
+                    this.LoadCoreModule(ctx, action);
                 }
                 catch (Exception ex)
                 {

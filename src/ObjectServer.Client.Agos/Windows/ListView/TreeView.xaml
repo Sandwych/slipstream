@@ -22,12 +22,17 @@
                 <Border x:Name="BasicConditions" Margin="0,5,0,5">
                 </Border>
 
-                <toolkit:Expander x:Name="AdvancedConditionsExpander" Margin="0,5,0,5">
+                <toolkit:Expander x:Name="AdvancedConditionsExpander" Margin="0,5,0,5"  >
                     <toolkit:Expander.HeaderTemplate>
                         <DataTemplate>
                             <TextBlock Text="高级查询条件" />
                         </DataTemplate>
                     </toolkit:Expander.HeaderTemplate>
+                    <toolkit:Expander.Content>
+                        <Border BorderBrush="#FFC0C0C0" BorderThickness="1" Background="#FFE0E0E0" Padding="5">
+                            <ContentPresenter Content="{Binding}"  />
+                        </Border>
+                    </toolkit:Expander.Content>
                 </toolkit:Expander>
 
             </StackPanel>

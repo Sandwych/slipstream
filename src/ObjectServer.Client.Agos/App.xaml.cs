@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.Serialization;
-    using System.ServiceModel.DomainServices.Client.ApplicationServices;
     using System.Windows;
     using System.Windows.Controls;
     using System.Diagnostics;

@@ -53,7 +53,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
         private void ClearConstraintsButton_Click(object sender, RoutedEventArgs e)
         {
             this.TreeView.ClearAllConstraints();
-            this.TreeView.Query();
+            this.TreeView.Clear();
         }
 
         private void QueryButton_Click(object sender, RoutedEventArgs e)

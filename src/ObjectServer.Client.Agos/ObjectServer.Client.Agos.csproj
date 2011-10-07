@@ -58,17 +58,15 @@
     <Reference Include="Microsoft.CSharp, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Threading.Tasks, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="System.Threading.Tasks.SL4">
+      <HintPath>..\packages\System.Threading.Tasks.2.1.2\lib\sl40\System.Threading.Tasks.SL4.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Data.Input" />
-    <Reference Include="System.ServiceModel.DomainServices.Client" />
-    <Reference Include="System.ServiceModel.DomainServices.Client.Web" />
-    <Reference Include="System.ServiceModel.Web.Extensions" />
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit">
       <HintPath>..\..\lib\silverlight-toolkit\Bin\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
     </Reference>
@@ -330,6 +328,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
