@@ -5,13 +5,24 @@
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            mc:Ignorable="d"
            xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
-           d:DesignWidth="640" d:DesignHeight="480"
+           d:DesignWidth="800" d:DesignHeight="600"
            Title="DatabasesPage Page">
-    <Grid x:Name="LayoutRoot" Loaded="LayoutRoot_Loaded" Background="{StaticResource SolidControlColor}">
-        <ListBox Height="337" HorizontalAlignment="Left" Margin="42,82,0,0" Name="databases" VerticalAlignment="Top" Width="346" SelectionChanged="databases_SelectionChanged" />
-        <Button Content="新建" Height="23" HorizontalAlignment="Left" Margin="123,434,0,0" Name="buttonNew" VerticalAlignment="Top" Width="75" Click="buttonNew_Click" />
-        <Button Content="删除" Height="23" HorizontalAlignment="Left" Margin="313,434,0,0" Name="buttonDrop" VerticalAlignment="Top" Width="75" Click="buttonDrop_Click" />
-        <Button Content="返回" Height="23" HorizontalAlignment="Left" Margin="42,434,0,0" Name="buttonCancel" VerticalAlignment="Top" Width="75" Click="buttonCancel_Click" />
-        <TextBlock Height="Auto" HorizontalAlignment="Left" Margin="42,12,0,0" Name="textBlock1" Text="数据库管理" VerticalAlignment="Top" Width="586" Foreground="{StaticResource SolidBackgroundColor}" FontSize="28" />
+    <Grid x:Name="LayoutRoot" Loaded="LayoutRoot_Loaded" Background="{StaticResource SolidControlColor}" >
+        <Grid Height="480" Width="480" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Margin="0,10,0,30" Name="textBlock1" Text="数据库管理" Foreground="{StaticResource SolidBackgroundColor}" FontSize="28" />
+            <ListBox Grid.Row="1" Name="databases"  SelectionChanged="databases_SelectionChanged" />
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,10,0,10">
+                <Button Content="新建"  Name="buttonNew"  Click="buttonNew_Click" Style="{StaticResource CommandButtonStyle}" />
+                <Rectangle Width="10" />
+                <Button Content="删除"  Name="buttonDrop"  Click="buttonDrop_Click"  Style="{StaticResource CommandButtonStyle}"/>
+                <Rectangle Width="20" />
+                <Button Content="返回"  Name="buttonCancel" Click="buttonCancel_Click"  Style="{StaticResource CommandButtonStyle}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </navigation:Page>

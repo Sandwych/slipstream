@@ -15,9 +15,9 @@
 
         <Rectangle Grid.Row="1" Fill="#FF999999" Height="1" Margin="0,5,0,5" />
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5,5,0,5">
-            <Button x:Name="OKButton" Content="确定" Click="OKButton_Click" Width="75" Height="23" Grid.Row="1" />
+            <Button x:Name="OKButton" Content="确定" Click="OKButton_Click" Style="{StaticResource CommandButtonStyle}" Grid.Row="1" />
             <Rectangle Width="10"/>
-            <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Width="75" Height="23" Grid.Row="1" />
+            <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Style="{StaticResource CommandButtonStyle}" Grid.Row="1" />
         </StackPanel>
     </Grid>
 </controls:FloatableWindow>

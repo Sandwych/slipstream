@@ -57,8 +57,7 @@
 
                 <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" 
                         HorizontalAlignment="Right">
-                    <Button x:Name="buttonSignIn" Click="buttonSignIn_Click"  
-                      MinWidth="75"  Height="25" Margin="5,0,5,0" Padding="10,0,10,0" VerticalAlignment="Center" VerticalContentAlignment="Center">
+                    <Button x:Name="buttonSignIn" Click="buttonSignIn_Click" Style="{StaticResource CommandButtonStyle}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/go-next.png" Stretch="None" />
@@ -67,8 +66,9 @@
                             </StackPanel>
                         </Button.Content>
                     </Button>
-                    <Button x:Name="ButtonDatabaseManagement" Content="数据库管理..." Padding="10,0,10,0"
-                        Margin="5,0,0,0" MinWidth="75" Width="Auto" Height="25" Click="ButtonDatabaseManagement_Click" />
+                    <Rectangle Width="10" />
+                    <Button x:Name="ButtonDatabaseManagement" Content="数据库管理" 
+                         Click="ButtonDatabaseManagement_Click" Style="{StaticResource CommandButtonStyle}" />
 
                 </StackPanel>
             </Grid>

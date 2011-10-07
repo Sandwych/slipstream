@@ -1279,4 +1279,11 @@
         </Setter>
     </Style>
 
+    
+    <Style x:Key="CommandButtonStyle" TargetType="Button">
+        <Setter Property="Padding"  Value="10,5,10,5" />
+        <Setter Property="MinWidth"  Value="75" />
+    </Style>
+    
+
 </ResourceDictionary>

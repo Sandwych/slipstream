@@ -138,7 +138,7 @@
                             </Grid.RowDefinitions>
                             <Border Padding="5,5,5,5" Grid.Row="0" >
                                 <StackPanel Orientation="Horizontal" >
-                                    <Button x:Name="AddButton" Height="23" Width="75">
+                                    <Button x:Name="AddButton" Padding="10,5,10,5" >
                                         <Button.Content>
                                             <StackPanel Orientation="Horizontal">
                                                 <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/list-add.png" />
@@ -148,7 +148,7 @@
                                         </Button.Content>
                                     </Button>
                                     <Rectangle Width="10" />
-                                    <Button x:Name="RemoveButton" Height="23" Width="75">
+                                    <Button x:Name="RemoveButton" Padding="10,5,10,5" >
                                         <Button.Content>
                                             <StackPanel Orientation="Horizontal">
                                                 <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/list-remove.png" />

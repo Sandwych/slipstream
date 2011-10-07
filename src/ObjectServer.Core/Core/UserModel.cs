@@ -34,6 +34,9 @@ namespace ObjectServer.Core
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
             Fields.ManyToMany("roles", "core.user_role", "user", "role").SetLabel("Roles");
             Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
+            Fields.ManyToOne("home_action", "core.action").SetLabel("Home Action").NotRequired();
+            Fields.Chars("email").SetLabel("Email").NotRequired().SetSize(256);
+            Fields.Boolean("active").SetLabel("Active?").Required().SetDefaultValueGetter(r => true);
         }
 
         public override void Initialize(ITransactionContext tc, bool update)
@@ -81,9 +84,11 @@ namespace ObjectServer.Core
                 DataProvider.Dialect.QuoteForColumnName("login"), ",",
                 DataProvider.Dialect.QuoteForColumnName("password"), ",",
                 DataProvider.Dialect.QuoteForColumnName("admin"), ",",
+                DataProvider.Dialect.QuoteForColumnName("active"), ",",
                 DataProvider.Dialect.QuoteForColumnName(CreatedTimeFieldName), ",",
                 DataProvider.Dialect.QuoteForColumnName("salt"),
                 ") values(",
+                Parameter.Placeholder, ",",
                 Parameter.Placeholder, ",",
                 Parameter.Placeholder, ",",
                 Parameter.Placeholder, ",",
@@ -95,20 +100,21 @@ namespace ObjectServer.Core
             //创建 root 用户
             var rootPassword = Environment.Configuration.ServerPassword;
             var user = new Dictionary<string, object>()
-                    {
-                        { "name", "Root User" },
-                        { "login", RootUserName },
-                        { "password", rootPassword } ,
-                        { "admin", true },
-                        { CreatedUserFieldName, DBNull.Value }, //一定要覆盖掉默认设置，因为此时系统里还没有用户，取 Session 里的 UserId 是无意义的
-                        { CreatedTimeFieldName, DateTime.Now },
-                        { VersionFieldName, 1 },
-                    };
+            {
+                { "name", "Root User" },
+                { "login", RootUserName },
+                { "password", rootPassword } ,
+                { "admin", true },
+                { "active", true },
+                { CreatedUserFieldName, DBNull.Value }, //一定要覆盖掉默认设置，因为此时系统里还没有用户，取 Session 里的 UserId 是无意义的
+                { CreatedTimeFieldName, DateTime.Now },
+                { VersionFieldName, 1 },
+            };
             var row = HashPassword(user);
 
             conn.Execute(
                 sql, row[VersionFieldName], row["name"], row["login"], row["password"],
-                row["admin"], row["_created_time"], row["salt"]);
+                row["admin"], row["active"], row["_created_time"], row["salt"]);
 
             LoggerProvider.BizLogger.Info("Root user has been created.");
         }

@@ -30,9 +30,10 @@
         </Grid>
 
         <StackPanel Orientation="Horizontal"  Grid.Row="1" HorizontalAlignment="Right">
-            <Button x:Name="OKButton" Content="确定" Click="OKButton_Click" Width="75" Height="23" Grid.Row="1" />
+            <Button x:Name="OKButton" Content="确定" Click="OKButton_Click" Grid.Row="1"
+                    Style="{StaticResource CommandButtonStyle}" />
             <Rectangle Width="10" />
-            <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Width="75" Height="23" Grid.Row="1" />
+            <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Grid.Row="1"  Style="{StaticResource CommandButtonStyle}" />
         </StackPanel>
     </Grid>
 </controls:ChildWindow>

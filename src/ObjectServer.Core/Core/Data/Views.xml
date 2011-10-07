@@ -47,7 +47,9 @@
       <tree label="Users">
         <field name="name" where="basic" />
         <field name="login" where="basic" />
+        <field name="organization" where="basic" />
         <field name="admin" where="advanced" />
+        <field name="active" where="basic" />
       </tree>
       ]]>
     </field>
@@ -66,8 +68,16 @@
             <input field="name" />
             <label field="login" />
             <input field="login" />
+            <label field="organization" />
+            <input field="organization" />
+            <label field="home_action" />
+            <input field="home_action" />
+            <label field="email" />
+            <input field="email" />
             <label field="admin" />
             <input field="admin" />
+            <label field="active" />
+            <input field="active" />
           </page>
           <page label="Roles">
             <input field="roles" colspan="4" fill="true" />
@@ -133,6 +143,30 @@
     <field name="type">core.action_window</field>
     <field name="view" ref-key="role_tree_view" />
     <field name="model">core.role</field>
+  </record>
+
+  <record model="core.view" key="role_form_view">
+    <field name="name">Role</field>
+    <field name="model">core.role</field>
+    <field name="kind">form</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <form label="Role" width="640" height="400">
+        <label field="name" />
+        <input field="name" />
+        <br />
+        <notebook>
+          <page label="Members">
+            <input field="users" colspan="4" fill="true" />
+          </page>
+          <page label="Access Permissions">
+            <input field="model_access_entries" colspan="4" fill="true" />
+            <input field="rules" colspan="4" fill="true" />
+          </page>
+        </notebook>
+      </form>
+      ]]>
+    </field>
   </record>
 
   <!-- Menu's View -->

@@ -54,10 +54,11 @@
             </Grid>
 
             <StackPanel Orientation="Horizontal" Margin="0,48,0,0">
-                <Button x:Name="CancelButton" Content="返回" Width="75"  
-                    Height="23" HorizontalAlignment="Right" Grid.Row="1" Margin="5" Click="CancelButton_Click" />
-                <Button x:Name="OKButton" Content="确定" Width="75"  
-                    Height="23" HorizontalAlignment="Right" Grid.Row="1" Margin="5" Click="OKButton_Click" />
+                <Button x:Name="CancelButton" Content="返回" Style="{StaticResource CommandButtonStyle}" 
+                    Click="CancelButton_Click" />
+                <Rectangle Width="10" />
+                <Button x:Name="OKButton" Content="确定" Style="{StaticResource CommandButtonStyle}" 
+                    Click="OKButton_Click" />
             </StackPanel>
         </StackPanel>
     </Grid>
