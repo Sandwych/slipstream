@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public class ModelModel : AbstractTableModel
+    public class ModelModel : AbstractSqlModel
     {
         public const string ModelName = "core.model";
 

@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public class FieldModel : AbstractTableModel
+    public class FieldModel : AbstractSqlModel
     {
         public const string ModelName = "core.field";
         public const int FieldNameMax = 64;

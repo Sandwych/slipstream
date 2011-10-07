@@ -57,10 +57,7 @@ namespace ObjectServer.Model
             return record[this.Name];
         }
 
-        public override bool IsColumn()
-        {
-            return !this.IsFunctional;
-        }
+        public override bool IsColumn { get { return !this.IsFunctional; } }
 
         public override bool IsScalar
         {

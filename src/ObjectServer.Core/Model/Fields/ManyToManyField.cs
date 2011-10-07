@@ -41,7 +41,7 @@ namespace ObjectServer.Model
             var result = new Dictionary<long, object>();
             foreach (var rec in records)
             {
-                var selfId = (long)rec[AbstractModel.IDFieldName];
+                var selfId = (long)rec[AbstractModel.IdFieldName];
                 //中间表没有记录，返回空
                 var sql = new SqlString(
                     "select ",
@@ -87,7 +87,7 @@ namespace ObjectServer.Model
             }
             else //Lazy 的字段，我们重新读取
             {
-                var id = (long)record[AbstractModel.IDFieldName];
+                var id = (long)record[AbstractModel.IdFieldName];
                 var fields = new string[] { this.Name };
                 var newRecord = ((Dictionary<string, object>[])this.Model.ReadInternal(scope, new long[] { id }, fields))[0];
                 targetIds = (long[])newRecord[this.Name];
@@ -100,10 +100,7 @@ namespace ObjectServer.Model
             return targetRecords.Select(tr => new BrowsableRecord(scope, targetModel, tr)).ToArray();
         }
 
-        public override bool IsColumn()
-        {
-            return false;
-        }
+        public override bool IsColumn { get { return false; } }
 
         public override bool IsReadonly
         {

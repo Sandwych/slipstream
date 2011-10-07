@@ -34,17 +34,17 @@ namespace ObjectServer.Model
             var children = new Dictionary<long, long[]>();
             foreach (var master in records)
             {
-                var masterID = (long)master[AbstractModel.IDFieldName];
-                var constraints = new List<object[]>();
-                constraints.Add(new object[] { this.RelatedField, "=", masterID });
-                var childIDs = childModel.SearchInternal(ctx, constraints.ToArray(), null, 0, 0);
+                var masterID = (long)master[AbstractModel.IdFieldName];
+                var constraint = new List<object[]>();
+                constraint.Add(new object[] { this.RelatedField, "=", masterID });
+                var childIDs = childModel.SearchInternal(ctx, constraint.ToArray(), null, 0, 0);
                 children[masterID] = childIDs;
             }
 
             var result = new Dictionary<long, object>();
             foreach (var p in records)
             {
-                var masterId = (long)p[AbstractModel.IDFieldName];
+                var masterId = (long)p[AbstractModel.IdFieldName];
                 result.Add(masterId, children[masterId]);
             }
 
@@ -71,18 +71,15 @@ namespace ObjectServer.Model
             //TODO 重构成跟Many-to-many 一样的
             var targetModelName = this.Relation;
             IModel targetModel = (IModel)scope.GetResource(targetModelName);
-            var thisId = record[AbstractModel.IDFieldName];
+            var thisId = record[AbstractModel.IdFieldName];
             //TODO: 下面的条件可能还不够，差 active 等等
-            var constraints = new object[][] { new object[] { this.RelatedField, "=", thisId } };
-            var destIds = targetModel.SearchInternal(scope, constraints, null, 0, 0);
+            var constraint = new object[][] { new object[] { this.RelatedField, "=", thisId } };
+            var destIds = targetModel.SearchInternal(scope, constraint, null, 0, 0);
             var records = (Dictionary<string, object>[])targetModel.ReadInternal(scope, destIds, null);
             return records.Select(r => new BrowsableRecord(scope, targetModel, r)).ToArray();
         }
 
-        public override bool IsColumn()
-        {
-            return false;
-        }
+        public override bool IsColumn { get { return false; } }
 
         public override bool IsReadonly
         {

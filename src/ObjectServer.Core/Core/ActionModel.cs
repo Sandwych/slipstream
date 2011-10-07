@@ -9,7 +9,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class ActionModel : AbstractTableModel
+    public sealed class ActionModel : AbstractSqlModel
     {
         public ActionModel()
             : base("core.action")

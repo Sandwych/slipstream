@@ -12,7 +12,7 @@ namespace ObjectServer.Test
 
     //子表
     [Resource]
-    public sealed class ChildModel : AbstractTableModel
+    public sealed class ChildModel : AbstractSqlModel
     {
         public ChildModel()
             : base("test.child")
@@ -25,7 +25,7 @@ namespace ObjectServer.Test
 
     //主表
     [Resource]
-    public sealed class MasterModel : AbstractTableModel
+    public sealed class MasterModel : AbstractSqlModel
     {
         public MasterModel()
             : base("test.master")
@@ -37,7 +37,7 @@ namespace ObjectServer.Test
 
 
     [Resource]
-    public class TestModel : AbstractTableModel
+    public class TestModel : AbstractSqlModel
     {
 
         public TestModel()
@@ -102,7 +102,7 @@ namespace ObjectServer.Test
 
 
     [Resource]
-    public sealed class ProductModel : AbstractTableModel
+    public sealed class ProductModel : AbstractSqlModel
     {
         public ProductModel()
             : base("test.product")
@@ -113,7 +113,7 @@ namespace ObjectServer.Test
     }
 
     [Resource]
-    public sealed class SalesOrderModel : AbstractTableModel
+    public sealed class SalesOrderModel : AbstractSqlModel
     {
         public SalesOrderModel()
             : base("test.sales_order")
@@ -126,7 +126,7 @@ namespace ObjectServer.Test
 
 
     [Resource]
-    public sealed class ValidatorModel : AbstractTableModel
+    public sealed class ValidatorModel : AbstractSqlModel
     {
         public ValidatorModel()
             : base("test.validator")
@@ -137,7 +137,7 @@ namespace ObjectServer.Test
     }
 
     [Resource]
-    public sealed class PersonModel : AbstractTableModel
+    public sealed class PersonModel : AbstractSqlModel
     {
         public PersonModel()
             : base("test.person")

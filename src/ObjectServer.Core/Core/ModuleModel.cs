@@ -15,7 +15,7 @@ namespace ObjectServer.Core
     /// TODO 线程安全
     /// </summary>
     [Resource]
-    public sealed class ModuleModel : AbstractTableModel
+    public sealed class ModuleModel : AbstractSqlModel
     {
         public static class States
         {

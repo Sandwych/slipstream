@@ -11,7 +11,7 @@ using ObjectServer.Data;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class UserRoleModel : AbstractTableModel
+    public sealed class UserRoleModel : AbstractSqlModel
     {
         private const string UniqueConstraintName = "unique_core_user_role";
 

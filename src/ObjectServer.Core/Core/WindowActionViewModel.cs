@@ -12,7 +12,7 @@ namespace ObjectServer.Core
     /// WindowAction 与 View 的关联表
     /// </summary>
     [Resource]
-    public sealed class WindowActionViewModel : AbstractTableModel
+    public sealed class WindowActionViewModel : AbstractSqlModel
     {
 
         public WindowActionViewModel()

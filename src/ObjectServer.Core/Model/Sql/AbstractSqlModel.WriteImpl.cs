@@ -20,9 +20,9 @@ namespace ObjectServer.Model
     using Record = Dictionary<string, object>;
     using IRecord = IDictionary<string, object>;
 
-    public abstract partial class AbstractTableModel : AbstractModel
+    public abstract partial class AbstractSqlModel : AbstractModel
     {
-        private static readonly string[] SearchParentNodeFields = new string[] { IDFieldName, LeftFieldName, RightFieldName };
+        private static readonly string[] SearchParentNodeFields = new string[] { IdFieldName, LeftFieldName, RightFieldName };
 
         public override void WriteInternal(ITransactionContext ctx, long id, IRecord userRecord)
         {
@@ -162,7 +162,7 @@ namespace ObjectServer.Model
 
             //所有可更新的字段
             var updatableColumnFields = allFields.Where(
-                f => this.Fields[f].IsColumn() && !this.Fields[f].IsReadonly).ToArray();
+                f => this.Fields[f].IsColumn && !this.Fields[f].IsReadonly).ToArray();
             this.ConvertFieldToColumn(ctx, record, updatableColumnFields);
 
             var sqlBuilder = new SqlStringBuilder();

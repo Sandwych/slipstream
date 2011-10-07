@@ -10,7 +10,7 @@ namespace ObjectServer.Test
 
     //////////////////// 继承单表测试的表 ///////////////////
     [Resource]
-    public sealed class SingleTableBaseModel : AbstractTableModel
+    public sealed class SingleTableBaseModel : AbstractSqlModel
     {
         public SingleTableBaseModel()
             : base("test.single_table")
@@ -43,7 +43,7 @@ namespace ObjectServer.Test
     ////////////////////// 测试多表继承的表 /////////////////
 
     [Resource]
-    public sealed class TestAnimalModel : AbstractTableModel
+    public sealed class TestAnimalModel : AbstractSqlModel
     {
         public TestAnimalModel()
             : base("test.animal")
@@ -56,7 +56,7 @@ namespace ObjectServer.Test
     /// dog 继承自 animal
     /// </summary>
     [Resource]
-    public sealed class TestDogModel : AbstractTableModel
+    public sealed class TestDogModel : AbstractSqlModel
     {
         public TestDogModel()
             : base("test.dog")
@@ -73,7 +73,7 @@ namespace ObjectServer.Test
     /// cocker dog 继承自 dog
     /// </summary>
     [Resource]
-    public sealed class TestCockerModel : AbstractTableModel
+    public sealed class TestCockerModel : AbstractSqlModel
     {
         public TestCockerModel()
             : base("test.cocker")
@@ -89,7 +89,7 @@ namespace ObjectServer.Test
     /************* 演示多继承 ***************/
 
     [Resource]
-    public sealed class TestFlyableModel : AbstractTableModel
+    public sealed class TestFlyableModel : AbstractSqlModel
     {
         public TestFlyableModel()
             : base("test.flyable")
@@ -99,7 +99,7 @@ namespace ObjectServer.Test
     }
 
     [Resource]
-    public sealed class TestBatModel : AbstractTableModel
+    public sealed class TestBatModel : AbstractSqlModel
     {
         public TestBatModel()
             : base("test.bat")

@@ -9,7 +9,7 @@ namespace ObjectServer.Test
 {
 
     [Resource]
-    public sealed class EmployeeModel : AbstractTableModel
+    public sealed class EmployeeModel : AbstractSqlModel
     {
         public EmployeeModel()
             : base("test.employee")
@@ -22,7 +22,7 @@ namespace ObjectServer.Test
     }
 
     [Resource]
-    public sealed class DepartmentModel : AbstractTableModel
+    public sealed class DepartmentModel : AbstractSqlModel
     {
         public DepartmentModel()
             : base("test.department")
@@ -34,7 +34,7 @@ namespace ObjectServer.Test
     }
 
     [Resource]
-    public sealed class DepartmentEmployeeModel : AbstractTableModel
+    public sealed class DepartmentEmployeeModel : AbstractSqlModel
     {
 
         public DepartmentEmployeeModel()

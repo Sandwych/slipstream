@@ -57,7 +57,7 @@ namespace ObjectServer.Model
             var result = new Dictionary<long, object>(records.Count);
             foreach (var r in records)
             {
-                var id = (long)r[AbstractModel.IDFieldName];
+                var id = (long)r[AbstractModel.IdFieldName];
                 var colValue = r[this.Name];
                 if (!colValue.IsNull())
                 {
@@ -112,10 +112,7 @@ namespace ObjectServer.Model
             return record[this.Name];
         }
 
-        public override bool IsColumn()
-        {
-            return !this.IsFunctional;
-        }
+        public override bool IsColumn { get { return !this.IsFunctional; } }
 
         public override bool IsScalar
         {

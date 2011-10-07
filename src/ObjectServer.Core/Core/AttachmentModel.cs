@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class AttachmentModel : AbstractTableModel
+    public sealed class AttachmentModel : AbstractSqlModel
     {
 
         public AttachmentModel()

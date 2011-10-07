@@ -18,9 +18,9 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class RuleModel : AbstractTableModel
+    public sealed class RuleModel : AbstractSqlModel
     {
-        private static readonly ConstraintExpression[][] EmptyConstraints = new ConstraintExpression[][] { };
+        private static readonly Criterion[][] EmptyConstraints = new Criterion[][] { };
         //为了让 VS 复制 IronRuby.Libraries.dll 
         private static readonly Type _rubyHashOpsType = typeof(IronRuby.Builtins.HashOps);
 
@@ -43,7 +43,7 @@ namespace ObjectServer.Core
             Fields.Boolean("on_delete").SetLabel("Apply for Deleting")
                 .Required().SetDefaultValueGetter(s => true);
             Fields.ManyToMany("roles", "core.user_role", "rule", "role").SetLabel("Roles");
-            Fields.Chars("constraints").Required().SetLabel("Constraint Domain");
+            Fields.Chars("constraint").Required().SetLabel("Constraint");
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static IList<ConstraintExpression[]> GetRuleConstraints(ITransactionContext scope, string modelName, string action)
+        internal static IList<Criterion[]> GetRuleConstraints(ITransactionContext scope, string modelName, string action)
         {
             Debug.Assert(scope != null);
             Debug.Assert(!string.IsNullOrEmpty(modelName));
@@ -63,7 +63,7 @@ namespace ObjectServer.Core
 
             //TODO 缓存
             var sql = new SqlString(
-                "SELECT DISTINCT r._id, r.name, r.constraints FROM core_rule r ",
+                "SELECT DISTINCT r._id, r.name, r.constraint FROM core_rule r ",
                 "INNER JOIN core_model m ON (r.model=m._id) ",
                 "WHERE m.name=", Parameter.Placeholder,
                     " AND r.on_", action, " AND (r.global OR (r._id IN ",
@@ -76,7 +76,7 @@ namespace ObjectServer.Core
 
             if (result.Length > 0)
             {
-                return ConvertConstraintExpressions(scope, result);
+                return ConvertConstraints(scope, result);
             }
             else
             {
@@ -84,16 +84,17 @@ namespace ObjectServer.Core
             }
         }
 
-        private static IList<ConstraintExpression[]> ConvertConstraintExpressions(
+        private static IList<Criterion[]> ConvertConstraints(
             ITransactionContext scope, Dictionary<string, object>[] result)
         {
             var scriptScope = CreateScriptScope(scope);
 
-            var constraintGroups = new List<ConstraintExpression[]>();
+            var constraints = new List<Criterion[]>();
+            var cr = new List<Criterion>(4);
             foreach (var row in result)
             {
-                var constraints = new List<ConstraintExpression>();
-                var constraintExp = (string)row["constraints"];
+                cr.Clear();
+                var constraintExp = (string)row["constraint"];
                 var scriptSource = s_engine.CreateScriptSourceFromString(
                     constraintExp, SourceCodeKind.Expression);
                 var compiledCode = scriptSource.Compile();
@@ -101,13 +102,13 @@ namespace ObjectServer.Core
 
                 foreach (dynamic d in dynObj)
                 {
-                    var c = new ConstraintExpression(
+                    var c = new Criterion(
                         (string)d[0], (string)d[1], d[2]);
-                    constraints.Add(c);
+                    cr.Add(c);
                 }
-                constraintGroups.Add(constraints.ToArray());
+                constraints.Add(cr.ToArray());
             }
-            return constraintGroups;
+            return constraints;
         }
 
         private static ScriptScope CreateScriptScope(ITransactionContext scope)
@@ -128,7 +129,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static ConstraintExpression[] GetRuleConstraintsCached(ITransactionContext scope, string modelName, string action)
+        internal static Criterion[] GetRuleConstraintsCached(ITransactionContext scope, string modelName, string action)
         {
             throw new NotImplementedException();
         }

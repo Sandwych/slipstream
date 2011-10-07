@@ -38,7 +38,7 @@ namespace ObjectServer.Model
             dynamic masterModel = ctx.GetResource(this.Relation);
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
-                var manyToOneFieldValues = rawRecords.ToDictionary(_ => (long)_[AbstractModel.IDFieldName]);
+                var manyToOneFieldValues = rawRecords.ToDictionary(_ => (long)_[AbstractModel.IdFieldName]);
 
                 var availableRecords = from r in rawRecords
                                        let mid = r[this.Name]
@@ -46,7 +46,7 @@ namespace ObjectServer.Model
                                        select new
                                        {
                                            MasterId = (long)mid,
-                                           SelfId = (long)r[AbstractModel.IDFieldName]
+                                           SelfId = (long)r[AbstractModel.IdFieldName]
                                        };
 
                 if (availableRecords.Count() > 0)
@@ -56,7 +56,7 @@ namespace ObjectServer.Model
                     var masterNames = new Dictionary<long, string>(masterRecords.Length);
                     foreach (var mr in masterRecords)
                     {
-                        masterNames.Add((long)mr[AbstractModel.IDFieldName], (string)mr["name"]);
+                        masterNames.Add((long)mr[AbstractModel.IdFieldName], (string)mr["name"]);
                     }
 
                     foreach (var mid in availableRecords)
@@ -68,7 +68,7 @@ namespace ObjectServer.Model
                 var nullRecords = from r in rawRecords
                                   let mid = r[this.Name]
                                   where mid.IsNull()
-                                  select (long)r[AbstractModel.IDFieldName];
+                                  select (long)r[AbstractModel.IdFieldName];
                 foreach (var mid in nullRecords)
                 {
                     result[mid] = null;
@@ -78,7 +78,7 @@ namespace ObjectServer.Model
             {
                 foreach (var r in rawRecords)
                 {
-                    var id = (long)r[AbstractModel.IDFieldName];
+                    var id = (long)r[AbstractModel.IdFieldName];
                     var masterId = (long)r[this.Name];
                     result.Add(id, new object[] { masterId, string.Empty });
                 }
@@ -123,10 +123,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public override bool IsColumn()
-        {
-            return !this.IsFunctional;
-        }
+        public override bool IsColumn { get { return !this.IsFunctional; } }
 
         public override bool IsScalar
         {

@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Dynamic;
 
-using ObjectServer.Sql;
-
 namespace ObjectServer.Model
 {
     public interface IModel : IResource, IModelDescriptor
     {
         IField[] GetAllStorableFields();
 
-        long CountInternal(ITransactionContext ctx, object[] constraints);
-        long[] SearchInternal(ITransactionContext ctx, object[] constraints, OrderExpression[] orders, long offset, long limit);
+        long CountInternal(ITransactionContext ctx, object[] constraint);
+        long[] SearchInternal(ITransactionContext ctx, object[] constraint, OrderExpression[] orders, long offset, long limit);
         long CreateInternal(ITransactionContext ctx, IDictionary<string, object> propertyBag);
         void WriteInternal(ITransactionContext ctx, long id, IDictionary<string, object> record);
         Dictionary<string, object>[] ReadInternal(ITransactionContext ctx, long[] ids, string[] requiredFields);

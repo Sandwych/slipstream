@@ -10,7 +10,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class ViewModel : AbstractTableModel
+    public sealed class ViewModel : AbstractSqlModel
     {
 
         public ViewModel()
@@ -67,12 +67,12 @@ namespace ObjectServer.Core
             }
             else
             {
-                var constraints = new object[][] { 
+                var constraint = new object[][] { 
                     new object[] { "kind", "=", viewKind },
                     new object[] { "model", "=", modelName },
                 };
 
-                var viewIDs = model.SearchInternal(ctx, constraints, null, 0, 0);
+                var viewIDs = model.SearchInternal(ctx, constraint, null, 0, 0);
                 if (viewIDs != null && viewIDs.Length > 0)
                 {
                     result = model.ReadInternal(ctx, viewIDs, null)[0];

@@ -11,7 +11,7 @@ using ObjectServer.Exceptions;
 using ObjectServer.Data;
 using ObjectServer.Model;
 
-namespace ObjectServer.Sql
+namespace ObjectServer.Model
 {
     internal class ConstraintTranslator
     {
@@ -19,7 +19,7 @@ namespace ObjectServer.Sql
             ' ' + DataProvider.Dialect.ToBooleanValueString(true) + ' ';
 
         private static readonly string[] s_treeParentFields = new string[] { 
-                AbstractTableModel.LeftFieldName, AbstractTableModel.RightFieldName };
+                AbstractSqlModel.LeftFieldName, AbstractSqlModel.RightFieldName };
 
         private readonly List<TableJoinInfo> outerJoins = new List<TableJoinInfo>();
         private readonly List<TableJoinInfo> innerJoins = new List<TableJoinInfo>();
@@ -70,7 +70,7 @@ namespace ObjectServer.Sql
             }
 
             var field = this.rootModel.Fields[oe.Field];
-            if (field.IsColumn())
+            if (field.IsColumn)
             {
                 this.orders.Add(oe);
             }
@@ -113,7 +113,7 @@ namespace ObjectServer.Sql
             if (existed == null)
             {
                 string alias = this.GenerateNextAlias();
-                var tj = new TableJoinInfo(table, alias, fkColumn, AbstractModel.IDFieldName);
+                var tj = new TableJoinInfo(table, alias, fkColumn, AbstractModel.IdFieldName);
                 this.outerJoins.Add(tj);
                 return tj;
             }
@@ -141,7 +141,7 @@ namespace ObjectServer.Sql
             if (existed == null)
             {
                 string alias = this.GenerateNextAlias();
-                var tj = new TableJoinInfo(table, alias, fkColumn, AbstractModel.IDFieldName);
+                var tj = new TableJoinInfo(table, alias, fkColumn, AbstractModel.IdFieldName);
                 this.innerJoins.Add(tj);
                 return tj;
             }
@@ -180,11 +180,11 @@ namespace ObjectServer.Sql
             SqlString columnsFragment = null;
             if (isCount)
             {
-                columnsFragment = new SqlString("count(", MainTableAlias + '.' + AbstractModel.IDFieldName, ")");
+                columnsFragment = new SqlString("count(", MainTableAlias + '.' + AbstractModel.IdFieldName, ")");
             }
             else
             {
-                columnsFragment = new SqlString(MainTableAlias + '.' + AbstractModel.IDFieldName);
+                columnsFragment = new SqlString(MainTableAlias + '.' + AbstractModel.IdFieldName);
             }
             qs.AddSelectFragmentString(columnsFragment);
             qs.Distinct = false;
@@ -243,14 +243,14 @@ namespace ObjectServer.Sql
         /// <summary>
         /// 每组之间使用 OR 连接，一组中的元素之间使用 AND 连接
         /// </summary>
-        /// <param name="ruleConstraints"></param>
-        public void AddGroupedConstraints(IEnumerable<ConstraintExpression[]> ruleConstraints)
+        /// <param name="ruleCriteria"></param>
+        public void AddGroupedCriteria(IEnumerable<Criterion[]> ruleCriteria)
         {
-            if (ruleConstraints.Count() > 0)
+            if (ruleCriteria.Count() > 0)
             {
                 this.AddWhereFragment("(");
                 var orNeeded = false;
-                foreach (var constraints in ruleConstraints)
+                foreach (var criteria in ruleCriteria)
                 {
                     if (orNeeded)
                     {
@@ -258,7 +258,7 @@ namespace ObjectServer.Sql
                     }
                     orNeeded = true;
 
-                    this.AddConstraints(constraints);
+                    this.AddCriteria(criteria);
                 }
                 this.AddWhereFragment(")");
             }
@@ -268,20 +268,20 @@ namespace ObjectServer.Sql
             }
         }
 
-        public void AddConstraints(IEnumerable<ConstraintExpression> constraints)
+        public void AddCriteria(IEnumerable<Criterion> criteria)
         {
-            if (constraints.Count() > 0)
+            if (criteria.Count() > 0)
             {
                 this.AddWhereFragment("(");
                 var andNeeded = false;
-                foreach (var c in constraints)
+                foreach (var c in criteria)
                 {
                     if (andNeeded)
                     {
                         this.AddWhereFragment(" and ");
                     }
                     andNeeded = true;
-                    this.AddConstraint(c);
+                    this.AddCriterion(c);
                 }
 
                 this.AddWhereFragment(")");
@@ -292,7 +292,7 @@ namespace ObjectServer.Sql
             }
         }
 
-        private void AddConstraint(ConstraintExpression constraint)
+        private void AddCriterion(Criterion constraint)
         {
             if (constraint == null)
             {
@@ -357,14 +357,14 @@ namespace ObjectServer.Sql
         }
 
         private void ProcessLeafNode(
-            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
+            Criterion cr, string lastTableAlias, IModel model, IField field)
         {
             if (field.IsFunctional)
             {
                 throw new NotSupportedException();
             }
 
-            switch (constraint.Operator)
+            switch (cr.Operator)
             {
                 case "=":
                 case ">":
@@ -372,21 +372,21 @@ namespace ObjectServer.Sql
                 case "<":
                 case "<=":
                 case "!=":
-                    this.ProcessSimpleLeafNode(constraint, lastTableAlias, model, field);
+                    this.ProcessSimpleLeafNode(cr, lastTableAlias, model, field);
                     break;
 
                 case "like":
                 case "!like":
-                    this.ProcessLikeAndNotLikeNode(constraint, lastTableAlias, model, field);
+                    this.ProcessLikeAndNotLikeNode(cr, lastTableAlias, model, field);
                     break;
 
                 case "in":
                 case "!in":
-                    this.ProcessInAndNotInNode(constraint, lastTableAlias, model, field);
+                    this.ProcessInAndNotInNode(cr, lastTableAlias, model, field);
                     break;
 
                 case "childof":
-                    this.ProcessChildOfNode(constraint, lastTableAlias, model, field);
+                    this.ProcessChildOfNode(cr, lastTableAlias, model, field);
                     break;
 
                 case "!childof":
@@ -400,11 +400,11 @@ namespace ObjectServer.Sql
         }
 
         private void ProcessSimpleLeafNode(
-            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
+            Criterion cr, string lastTableAlias, IModel model, IField field)
         {
             var column = lastTableAlias + '.' + field.Name;
 
-            if (constraint.Operator == "=" && constraint.Value.IsNull())
+            if (cr.Operator == "=" && cr.Value.IsNull())
             {
                 var whereExp = new SqlString(column, " is null");
                 this.AddWhereFragment(whereExp);
@@ -412,32 +412,32 @@ namespace ObjectServer.Sql
             else
             {
                 var whereExp = new SqlString(
-                    column, " ", constraint.Operator, " ", Parameter.WithIndex(this.parameterIndex));
+                    column, " ", cr.Operator, " ", Parameter.WithIndex(this.parameterIndex));
                 this.parameterIndex++;
                 this.AddWhereFragment(whereExp);
-                this.values.Add(constraint.Value);
+                this.values.Add(cr.Value);
 
             }
 
         }
 
         private void ProcessLikeAndNotLikeNode(
-            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
+            Criterion cr, string lastTableAlias, IModel model, IField field)
         {
-            var opr = constraint.Operator == "like" ? "like" : "not like";
+            var opr = cr.Operator == "like" ? "like" : "not like";
             var column = lastTableAlias + '.' + field.Name;
             var whereExp = new SqlString(
                 column, " ", opr, " ", Parameter.WithIndex(this.parameterIndex));
             this.parameterIndex++;
             this.AddWhereFragment(whereExp);
-            this.values.Add(constraint.Value);
+            this.values.Add(cr.Value);
         }
 
         private void ProcessInAndNotInNode(
-            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
+            Criterion cr, string lastTableAlias, IModel model, IField field)
         {
-            var opr = constraint.Operator == "in" ? "in" : "not in";
-            var inValues = (ICollection<object>)constraint.Value;
+            var opr = cr.Operator == "in" ? "in" : "not in";
+            var inValues = (ICollection<object>)cr.Value;
 
             var expBuilder = new SqlStringBuilder();
             expBuilder.Add(lastTableAlias + '.' + field.Name);
@@ -461,7 +461,7 @@ namespace ObjectServer.Sql
         }
 
         private void ProcessChildOfNode(
-            ConstraintExpression constraint, string lastTableAlias, IModel model, IField field)
+            Criterion cr, string lastTableAlias, IModel model, IField field)
         {
             /* 生成的 SQL 形如：
              * SELECT mainTable._id 
@@ -472,7 +472,7 @@ namespace ObjectServer.Sql
              *     _category_child_0._left < _category_parent_0._right AND ...
                     * */
             IModel joinModel = null;
-            if (field.Name == AbstractModel.IDFieldName)
+            if (field.Name == AbstractModel.IdFieldName)
             {
                 joinModel = model;
             }
@@ -490,36 +490,36 @@ namespace ObjectServer.Sql
             var childTableAlias = this.SetInnerJoin(joinModel.TableName, field.Name);
 
             //直接做一次查询
-            var parent = this.ReadSingleTreeModel(constraint, joinModel);
+            var parent = this.ReadSingleTreeModel(cr, joinModel);
 
-            var parentLeft = parent[AbstractTableModel.LeftFieldName].ToString();
-            var parentRight = parent[AbstractTableModel.RightFieldName].ToString();
+            var parentLeft = parent[AbstractSqlModel.LeftFieldName].ToString();
+            var parentRight = parent[AbstractSqlModel.RightFieldName].ToString();
 
             //添加 Parent 连接
             var leftExp = new SqlString(
-                childTableAlias.Alias + "." + AbstractTableModel.LeftFieldName,
+                childTableAlias.Alias + "." + AbstractSqlModel.LeftFieldName,
                 ">",
                 parentLeft);
 
             var rightExp = new SqlString(
-                childTableAlias.Alias + "." + AbstractTableModel.LeftFieldName,
+                childTableAlias.Alias + "." + AbstractSqlModel.LeftFieldName,
                 "<",
                 parentRight);
 
             this.AddWhereFragment(new SqlString(leftExp, " and ", rightExp));
         }
 
-        private Dictionary<string, object> ReadSingleTreeModel(ConstraintExpression constraint, IModel joinModel)
+        private Dictionary<string, object> ReadSingleTreeModel(Criterion cr, IModel joinModel)
         {
-            var parentConstraints = new object[]{
-                new object[] { "_id", "=", constraint.Value }
+            var parentCriteria = new object[]{
+                new object[] { "_id", "=", cr.Value }
             };
-            var parentIDs = new long[] { (long)constraint.Value };
+            var parentIDs = new long[] { (long)cr.Value };
             var parents = joinModel.ReadInternal(this.serviceScope, parentIDs, s_treeParentFields);
             if (parents.Length != 1)
             {
                 var msg = string.Format(
-                    "Cannot found the record with ID=[{0}]", constraint.Value.ToString());
+                    "Cannot found the record with ID=[{0}]", cr.Value.ToString());
                 throw new RecordNotFoundException(msg, joinModel.Name);
             }
             var parent = parents[0];
@@ -536,7 +536,7 @@ namespace ObjectServer.Sql
                 return false;
             }
 
-            if (AbstractTableModel.SystemReadonlyFields.Contains(field))
+            if (AbstractSqlModel.SystemReadonlyFields.Contains(field))
             {
                 return false;
             }

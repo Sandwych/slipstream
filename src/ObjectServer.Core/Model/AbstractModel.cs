@@ -7,7 +7,6 @@ using System.Data;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Exceptions;
-using ObjectServer.Sql;
 using ObjectServer.Data;
 
 namespace ObjectServer.Model
@@ -20,7 +19,7 @@ namespace ObjectServer.Model
     /// </summary>
     public abstract class AbstractModel : AbstractResource, IModel
     {
-        public const string IDFieldName = "_id";
+        public const string IdFieldName = "_id";
         public const string VersionFieldName = "_version";
         public const string CreatedTimeFieldName = "_created_time";
         public const string UpdatedTimeFieldName = "_updated_time";
@@ -31,7 +30,7 @@ namespace ObjectServer.Model
         private readonly IFieldCollection fields;
 
         public static readonly string QuotedIdColumn =
-            DataProvider.Dialect.QuoteForColumnName(IDFieldName);
+            DataProvider.Dialect.QuoteForColumnName(IdFieldName);
 
         protected AbstractModel(string name)
             : base(name)
@@ -85,11 +84,11 @@ namespace ObjectServer.Model
 
         private void AddInternalFields()
         {
-            Debug.Assert(!this.Fields.ContainsKey(IDFieldName));
+            Debug.Assert(!this.Fields.ContainsKey(IdFieldName));
 
-            var idField = new ScalarField(this, IDFieldName, FieldType.ID)
+            var idField = new ScalarField(this, IdFieldName, FieldType.ID)
                 .Required().Readonly();
-            this.fields.Add(IDFieldName, idField);
+            this.fields.Add(IdFieldName, idField);
         }
 
         /// <summary>
@@ -240,7 +239,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             var fieldRelation = dbField["relation"].IsNull() ? null : (string)dbField["relation"];
             var fieldHelp = dbField["help"].IsNull() ? null : (string)dbField["help"];
             var fieldType = (string)dbField["type"];
-            var fieldId = (long)dbField[IDFieldName];
+            var fieldId = (long)dbField[IdFieldName];
 
             var metaField = this.Fields[fieldName];
             var metaFieldType = metaField.Type.ToKeyString();
@@ -368,7 +367,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         public IField[] GetAllStorableFields()
         {
-            return this.Fields.Values.Where(f => f.IsColumn() && f.Name != IDFieldName).ToArray();
+            return this.Fields.Values.Where(f => f.IsColumn && f.Name != IdFieldName).ToArray();
         }
 
         public override void MergeFrom(IResource res)
@@ -397,16 +396,16 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [TransactionMethod("Count")]
         public static long Count(
-            IModel model, ITransactionContext ctx, object[] constraints)
+            IModel model, ITransactionContext ctx, object[] constraint)
         {
             EnsureServiceMethodArgs(model, ctx);
 
-            return model.CountInternal(ctx, constraints);
+            return model.CountInternal(ctx, constraint);
         }
 
         [TransactionMethod("Search")]
         public static long[] Search(
-            IModel model, ITransactionContext ctx, object[] constraints, object[] order, long offset, long limit)
+            IModel model, ITransactionContext ctx, object[] constraint, object[] order, long offset, long limit)
         {
             EnsureServiceMethodArgs(model, ctx);
 
@@ -423,7 +422,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 }
             }
 
-            return model.SearchInternal(ctx, constraints, orderInfos, offset, limit);
+            return model.SearchInternal(ctx, constraint, orderInfos, offset, limit);
         }
 
         [TransactionMethod("Read")]

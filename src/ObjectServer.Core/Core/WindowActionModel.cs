@@ -9,7 +9,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class WindowActionModel : AbstractTableModel
+    public sealed class WindowActionModel : AbstractSqlModel
     {
 
         public WindowActionModel()

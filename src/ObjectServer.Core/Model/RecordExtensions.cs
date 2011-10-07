@@ -13,7 +13,7 @@ namespace ObjectServer.Model
             var result = new Dictionary<long, object>(records.Count);
             foreach (var r in records)
             {
-                var id = (long)r[AbstractModel.IDFieldName];
+                var id = (long)r[AbstractModel.IdFieldName];
                 var fieldValue = r[field];
                 result.Add(id, fieldValue);
             }

@@ -21,7 +21,7 @@ namespace ObjectServer.Model
     using Record = Dictionary<string, object>;
     using IRecord = IDictionary<string, object>;
 
-    public abstract partial class AbstractTableModel : AbstractModel
+    public abstract partial class AbstractSqlModel : AbstractModel
     {
         public override long CreateInternal(ITransactionContext scope, IRecord userRecord)
         {
@@ -30,9 +30,9 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
 
-            if (userRecord.ContainsKey(AbstractModel.IDFieldName))
+            if (userRecord.ContainsKey(AbstractModel.IdFieldName))
             {
-                var msg = string.Format("Unable to set the '{0}' field", AbstractModel.IDFieldName);
+                var msg = string.Format("Unable to set the '{0}' field", AbstractModel.IdFieldName);
                 throw new ArgumentException(msg, "propertyBag");
             }
 
@@ -137,13 +137,13 @@ namespace ObjectServer.Model
                 var parentID = (long)parentIDObj;
                 var sql = new SqlString(
                     "select ",
-                    DataProvider.Dialect.QuoteForColumnName(AbstractTableModel.LeftFieldName),
+                    DataProvider.Dialect.QuoteForColumnName(AbstractSqlModel.LeftFieldName),
                     ",",
-                    DataProvider.Dialect.QuoteForColumnName(AbstractTableModel.RightFieldName),
+                    DataProvider.Dialect.QuoteForColumnName(AbstractSqlModel.RightFieldName),
                     " from ",
                     DataProvider.Dialect.QuoteForTableName(this.TableName),
                     " where ",
-                    DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName),
+                    DataProvider.Dialect.QuoteForColumnName(AbstractModel.IdFieldName),
                     "=",
                     Parameter.Placeholder);
 
@@ -216,7 +216,7 @@ namespace ObjectServer.Model
                 values.Add(VersionFieldName, 0);
             }
 
-            var allColumnNames = values.Keys.Where(f => this.Fields[f].IsColumn());
+            var allColumnNames = values.Keys.Where(f => this.Fields[f].IsColumn);
             var colValues = new object[allColumnNames.Count()];
 
             // "insert into <tableName> (_id, cols... ) values (<id>, ?, ?, ?... );",

@@ -165,7 +165,7 @@ namespace ObjectServer
             {
                 var moduleName = (string)m["name"];
                 var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
-                var moduleId = (long)m[AbstractModel.IDFieldName];
+                var moduleId = (long)m[AbstractModel.IdFieldName];
                 if (module != null)
                 {
                     var state = (string)m["state"];

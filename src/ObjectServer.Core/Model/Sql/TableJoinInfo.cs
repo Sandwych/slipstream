@@ -5,7 +5,7 @@ using System.Text;
 
 using NHibernate.SqlCommand;
 
-namespace ObjectServer.Sql
+namespace ObjectServer.Model
 {
     internal class TableJoinInfo
     {

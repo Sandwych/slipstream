@@ -13,7 +13,7 @@ namespace ObjectServer.Core
     /// 模型访问控制列表
     /// </summary>
     [Resource]
-    public sealed class ModelAccessModel : AbstractTableModel
+    public sealed class ModelAccessModel : AbstractSqlModel
     {
         public const string ModelName = "core.model_access";
 

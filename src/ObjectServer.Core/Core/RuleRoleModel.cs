@@ -9,7 +9,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class RuleRoleModel : AbstractTableModel
+    public sealed class RuleRoleModel : AbstractSqlModel
     {
         private const string UniqueConstraintName = "unique_rule_role_rel";
 

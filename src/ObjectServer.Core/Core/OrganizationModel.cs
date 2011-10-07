@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class OrganizationModel : AbstractTableModel
+    public sealed class OrganizationModel : AbstractSqlModel
     {
 
         public OrganizationModel()

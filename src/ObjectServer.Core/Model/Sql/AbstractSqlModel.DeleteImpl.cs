@@ -17,10 +17,10 @@ using ObjectServer.Exceptions;
 
 namespace ObjectServer.Model
 {
-    public abstract partial class AbstractTableModel : AbstractModel
+    public abstract partial class AbstractSqlModel : AbstractModel
     {
         private static readonly string[] HierarchyFields =
-            new string[] { IDFieldName, LeftFieldName, RightFieldName };
+            new string[] { IdFieldName, LeftFieldName, RightFieldName };
 
         public override void DeleteInternal(ITransactionContext ctx, long[] ids)
         {
@@ -57,7 +57,7 @@ namespace ObjectServer.Model
                     "select * from ",
                     DataProvider.Dialect.QuoteForTableName(this.TableName),
                     " where ",
-                    DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName),
+                    DataProvider.Dialect.QuoteForColumnName(AbstractModel.IdFieldName),
                     " in (",
                     ids.ToCommaList(),
                     ")");
@@ -86,7 +86,7 @@ namespace ObjectServer.Model
 
                     if (baseIds.Count() > 0)
                     {
-                        var baseModel = (AbstractTableModel)scope
+                        var baseModel = (AbstractSqlModel)scope
                             .GetResource(inheritInfo.BaseModel);
                         DeleteRows(scope, baseIds.ToArray(), baseModel);
                     }
@@ -94,7 +94,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private static void DeleteRows(ITransactionContext scope, long[] ids, AbstractTableModel tableModel)
+        private static void DeleteRows(ITransactionContext scope, long[] ids, AbstractSqlModel tableModel)
         {
             Debug.Assert(scope != null);
             Debug.Assert(ids != null);
@@ -106,7 +106,7 @@ namespace ObjectServer.Model
                     from r in tableModel.ReadInternal(scope, ids, HierarchyFields)
                     select new
                     {
-                        ID = (long)r[IDFieldName],
+                        ID = (long)r[IdFieldName],
                         Left = (long)r[LeftFieldName],
                         Right = (long)r[RightFieldName]
                     };

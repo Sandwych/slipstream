@@ -17,7 +17,7 @@ namespace ObjectServer.Model
 
             var smallFields =
                 from f in fields
-                where !AbstractTableModel.SystemReadonlyFields.Contains(f.Key)
+                where !AbstractSqlModel.SystemReadonlyFields.Contains(f.Key)
                     && !f.Value.Name.StartsWith("_")
                     && !isBigFieldDlg(f.Value.Type)
                 select f;
@@ -33,7 +33,7 @@ namespace ObjectServer.Model
 
             var bigFields =
                 from f in fields
-                where !AbstractTableModel.SystemReadonlyFields.Contains(f.Key)
+                where !AbstractSqlModel.SystemReadonlyFields.Contains(f.Key)
                     && !f.Key.StartsWith("_")
                     && isBigFieldDlg(f.Value.Type)
                 select f;
@@ -58,7 +58,7 @@ namespace ObjectServer.Model
 
             var viewFields =
                 from f in fields
-                where !AbstractTableModel.SystemReadonlyFields.Contains(f.Key)
+                where !AbstractSqlModel.SystemReadonlyFields.Contains(f.Key)
                     && !f.Value.Name.StartsWith("_")
                     && f.Value.Type != FieldType.Text
                     && f.Value.Type != FieldType.ManyToMany

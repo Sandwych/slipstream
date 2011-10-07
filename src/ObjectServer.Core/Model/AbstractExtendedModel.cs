@@ -6,7 +6,6 @@ using System.Diagnostics;
 
 using ObjectServer.Data;
 using ObjectServer.Exceptions;
-using ObjectServer.Sql;
 
 namespace ObjectServer.Model
 {

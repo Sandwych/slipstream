@@ -13,11 +13,11 @@ namespace ObjectServer.Model
     internal class TableMigrator : IDisposable
     {
         private IDbContext db;
-        private AbstractTableModel model;
+        private AbstractSqlModel model;
         private ITransactionContext context;
         private bool disposed = false;
 
-        public TableMigrator(IDbContext db, AbstractTableModel model)
+        public TableMigrator(IDbContext db, AbstractSqlModel model)
         {
             if (db == null)
             {
@@ -68,7 +68,7 @@ namespace ObjectServer.Model
             var resources = Environment.DBProfiles.GetDBProfile(this.db.DatabaseName);
             foreach (var f in fields)
             {
-                if (f.IsColumn() && f.Type == FieldType.ManyToOne)
+                if (f.IsColumn && f.Type == FieldType.ManyToOne)
                 {
                     var refModel = (IModel)resources.GetResource(f.Relation);
                     table.AddFK(db, f.Name, refModel.TableName, OnDeleteAction.SetNull);
@@ -96,7 +96,7 @@ namespace ObjectServer.Model
             foreach (var pair in this.model.Fields)
             {
                 var field = pair.Value;
-                if (field.IsColumn())
+                if (field.IsColumn)
                 {
                     if (!table.ColumnExists(field.Name))
                     {

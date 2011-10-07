@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.DemoModule
 {
     [Resource]
-    public sealed class EmployeeModel : AbstractTableModel
+    public sealed class EmployeeModel : AbstractSqlModel
     {
         public EmployeeModel()
             : base("demo.employee")

@@ -25,7 +25,7 @@ namespace ObjectServer.Model
             {
                 var field = pair.Value;
 
-                if (AbstractTableModel.SystemReadonlyFields.Contains(field.Name))
+                if (AbstractSqlModel.SystemReadonlyFields.Contains(field.Name))
                 {
                     continue;
                 }
@@ -56,7 +56,7 @@ namespace ObjectServer.Model
             {
                 var field = model.Fields[fieldName];
 
-                if (AbstractTableModel.SystemReadonlyFields.Contains(field.Name))
+                if (AbstractSqlModel.SystemReadonlyFields.Contains(field.Name))
                 {
                     continue;
                 }

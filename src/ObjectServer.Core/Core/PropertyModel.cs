@@ -8,7 +8,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Core
 {
     [Resource]
-    public sealed class PropertyModel : AbstractTableModel
+    public sealed class PropertyModel : AbstractSqlModel
     {
 
         public PropertyModel()

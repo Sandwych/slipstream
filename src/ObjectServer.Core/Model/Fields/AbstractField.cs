@@ -50,7 +50,7 @@ namespace ObjectServer.Model
 
             this.Name = name;
             this.Internal = name == AbstractModel.VersionFieldName
-                || name == AbstractModel.IDFieldName
+                || name == AbstractModel.IdFieldName
                 || name == AbstractModel.ActiveFieldName;
         }
 
@@ -104,7 +104,12 @@ namespace ObjectServer.Model
 
         public abstract IDictionary<string, string> Options { get; set; }
 
-        public abstract bool IsColumn();
+        public abstract bool IsColumn { get; }
+
+        public bool Selectable
+        {
+            get { return this.IsColumn; }
+        }
 
         public virtual void VerifyDefinition()
         {
@@ -181,7 +186,7 @@ namespace ObjectServer.Model
             Debug.Assert(ctx != null);
             Debug.Assert(records != null);
 
-            var ids = records.Select(p => (long)p[AbstractModel.IDFieldName]).ToArray();
+            var ids = records.Select(p => (long)p[AbstractModel.IdFieldName]).ToArray();
 
             var result = this.Getter(ctx, ids);
 

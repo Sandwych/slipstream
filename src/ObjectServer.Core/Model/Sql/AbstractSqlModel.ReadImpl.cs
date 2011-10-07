@@ -15,7 +15,7 @@ using ObjectServer.Utility;
 
 namespace ObjectServer.Model
 {
-    public abstract partial class AbstractTableModel : AbstractModel
+    public abstract partial class AbstractSqlModel : AbstractModel
     {
         public override Dictionary<string, object>[] ReadInternal(
                  ITransactionContext scope, long[] ids, string[] requiredFields)
@@ -66,14 +66,14 @@ namespace ObjectServer.Model
                 allFields = userFields.ToList();
             }
 
-            if (!allFields.Contains(IDFieldName))
+            if (!allFields.Contains(IdFieldName))
             {
-                allFields.Add(IDFieldName);
+                allFields.Add(IdFieldName);
             }
 
             //表里的列，也就是可以直接用 SQL 查的列
             var columnFields = from f in allFields
-                               where this.Fields[f].IsColumn()
+                               where this.Fields[f].IsColumn
                                select f;
 
             columnFields = columnFields.Union(this.Inheritances.Select(i => i.RelatedField));
@@ -96,7 +96,7 @@ namespace ObjectServer.Model
 
             selectStmt.Add(" from ");
             selectStmt.Add(this.TableName);
-            var idColumn = DataProvider.Dialect.QuoteForColumnName(AbstractModel.IDFieldName);
+            var idColumn = DataProvider.Dialect.QuoteForColumnName(AbstractModel.IdFieldName);
             selectStmt.Add(" where " + idColumn + " in (");
 
             commaNeeded = false;
@@ -135,7 +135,7 @@ namespace ObjectServer.Model
             foreach (var fieldName in allFields)
             {
                 var f = this.Fields[fieldName];
-                if (f.Name == IDFieldName
+                if (f.Name == IdFieldName
                     || f.Name == LeftFieldName
                     || f.Name == RightFieldName)
                 {
@@ -145,7 +145,7 @@ namespace ObjectServer.Model
                 var fieldValues = f.GetFieldValues(scope, records);
                 foreach (var record in records)
                 {
-                    var id = (long)record[IDFieldName];
+                    var id = (long)record[IdFieldName];
                     record[f.Name] = fieldValues[id];
                 }
             }

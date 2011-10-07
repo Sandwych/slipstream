@@ -5,7 +5,7 @@ using System.Text;
 
 using Newtonsoft.Json;
 
-namespace ObjectServer.Sql
+namespace ObjectServer.Model
 {
     [Serializable]
     [JsonArray]
@@ -13,7 +13,7 @@ namespace ObjectServer.Sql
     {
         private static readonly OrderExpression[] DefaultOrders = new OrderExpression[] { 
                 new OrderExpression(
-                    ObjectServer.Model.AbstractModel.IDFieldName, SortDirection.Ascend) };
+                    ObjectServer.Model.AbstractModel.IdFieldName, SortDirection.Ascend) };
 
         public OrderExpression(string field, SortDirection so)
         {

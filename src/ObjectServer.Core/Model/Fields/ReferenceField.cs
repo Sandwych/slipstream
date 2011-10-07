@@ -76,7 +76,7 @@ namespace ObjectServer.Model
                 let parts = ((string)r[this.Name]).Split(':')
                 select new
                 {
-                    SelfId = (long)r[AbstractModel.IDFieldName],
+                    SelfId = (long)r[AbstractModel.IdFieldName],
                     Model = parts[0],
                     RefId = long.Parse(parts[1])
                 };
@@ -103,7 +103,7 @@ namespace ObjectServer.Model
             var nullRecords = from r in rawRecords
                               let mid = r[this.Name]
                               where mid.IsNull()
-                              select (long)r[AbstractModel.IDFieldName];
+                              select (long)r[AbstractModel.IdFieldName];
             foreach (var mid in nullRecords)
             {
                 result[mid] = null;
@@ -142,10 +142,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public override bool IsColumn()
-        {
-            return !this.IsFunctional;
-        }
+        public override bool IsColumn { get { return !this.IsFunctional; } }
 
         public override bool IsScalar
         {

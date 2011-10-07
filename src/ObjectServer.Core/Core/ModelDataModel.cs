@@ -15,7 +15,7 @@ namespace ObjectServer.Core
     /// <summary>
     /// </summary>
     [Resource]
-    public sealed class ModelDataModel : AbstractTableModel
+    public sealed class ModelDataModel : AbstractSqlModel
     {
         public const string ModelName = "core.model_data";
 

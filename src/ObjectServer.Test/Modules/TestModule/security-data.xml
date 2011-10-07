@@ -62,14 +62,14 @@
     <field name="name">销售员只能访问所在部门的销售订单</field>
     <field name="model" ref-key="model_test_sales_order" />
     <field name="global">false</field>
-    <field name="constraints">[ ["organization._id", "=", user.organization._id] ]</field>
+    <field name="constraint">[ ["organization._id", "=", user.organization._id] ]</field>
   </record>
 
   <record model="core.rule" key="rule_salesmen_access_all" >
     <field name="name">销售员可以访问所有尚未设置所属部门的销售订单</field>
     <field name="model" ref-key="model_test_sales_order" />
     <field name="global">false</field>
-    <field name="constraints">[ ["organization", "=", nil] ]</field>
+    <field name="constraint">[ ["organization", "=", nil] ]</field>
   </record>
 
   <record model="core.rule_role" key="rg_salesmen">

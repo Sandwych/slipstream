@@ -14,18 +14,17 @@ using NHibernate.SqlTypes;
 using ObjectServer.Core;
 using ObjectServer.Data;
 using ObjectServer.Utility;
-using ObjectServer.Sql;
 
 namespace ObjectServer.Model
 {
-    public abstract partial class AbstractTableModel : AbstractModel
+    public abstract partial class AbstractSqlModel : AbstractModel
     {
-        private static readonly List<ConstraintExpression[]> EmptyRules =
-            new List<ConstraintExpression[]>();
-        private static readonly ConstraintExpression[] EmptyConstraints = { };
+        private static readonly List<Criterion[]> EmptyRules =
+            new List<Criterion[]>();
+        private static readonly Criterion[] EmptyConstraints = { };
 
         public override long[] SearchInternal(
-            ITransactionContext tc, object[] constraints, OrderExpression[] order, long offset, long limit)
+            ITransactionContext tc, object[] constraint, OrderExpression[] order, long offset, long limit)
         {
             if (tc == null)
             {
@@ -35,7 +34,7 @@ namespace ObjectServer.Model
             this.VerifyReadPermission(tc);
 
             var translator = new ConstraintTranslator(tc, this);
-            this.TranslateConstraints(tc, constraints, translator);
+            this.TranslateConstraint(tc, constraint, translator);
 
             //处理排序
             if (order != null)
@@ -55,7 +54,7 @@ namespace ObjectServer.Model
         }
 
 
-        public override long CountInternal(ITransactionContext tx, object[] constraints = null)
+        public override long CountInternal(ITransactionContext tx, object[] constraint)
         {
             if (tx == null)
             {
@@ -65,20 +64,20 @@ namespace ObjectServer.Model
             this.VerifyReadPermission(tx);
 
             var translator = new ConstraintTranslator(tx, this);
-            this.TranslateConstraints(tx, constraints, translator);
+            this.TranslateConstraint(tx, constraint, translator);
 
             var querySql = translator.ToSqlString(true);
 
             return (long)tx.DBContext.QueryValue(querySql, translator.Values);
         }
 
-        private void TranslateConstraints(ITransactionContext tc, object[] constraints, ConstraintTranslator translator)
+        private void TranslateConstraint(ITransactionContext tc, object[] constraint, ConstraintTranslator translator)
         {
             //处理查询约束
-            IEnumerable<ConstraintExpression> userConstraints = null;
-            if (constraints != null)
+            IEnumerable<Criterion> userConstraints = null;
+            if (constraint != null)
             {
-                userConstraints = constraints.Select(o => new ConstraintExpression(o));
+                userConstraints = constraint.Select(o => new Criterion(o));
             }
             else
             {
@@ -87,7 +86,7 @@ namespace ObjectServer.Model
 
             try
             {
-                translator.AddConstraints(userConstraints);
+                translator.AddCriteria(userConstraints);
             }
             catch (ArgumentException)
             {
@@ -109,12 +108,12 @@ namespace ObjectServer.Model
             //系统用户不检查访问规则
             if (scope.Session.IsSystemUser)
             {
-                translator.AddGroupedConstraints(EmptyRules);
+                translator.AddGroupedCriteria(EmptyRules);
             }
             else
             {
                 var ruleConstraints = RuleModel.GetRuleConstraints(scope, this.Name, "read");
-                translator.AddGroupedConstraints(ruleConstraints);
+                translator.AddGroupedCriteria(ruleConstraints);
             }
         }
 

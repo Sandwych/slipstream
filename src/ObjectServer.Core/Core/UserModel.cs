@@ -16,7 +16,7 @@ namespace ObjectServer.Core
 {
 
     [Resource]
-    public sealed class UserModel : AbstractTableModel
+    public sealed class UserModel : AbstractSqlModel
     {
         public const string ModelName = "core.user";
         public const string PasswordMask = "************";
@@ -205,9 +205,9 @@ namespace ObjectServer.Core
         public Session LogOn(ITransactionContext tc,
             string database, string login, string password)
         {
-            var constraints = new object[][] { new object[] { "login", "=", login } };
+            var constraint = new object[][] { new object[] { "login", "=", login } };
 
-            var userIds = base.SearchInternal(tc, constraints, null, 0, 0);
+            var userIds = base.SearchInternal(tc, constraint, null, 0, 0);
             if (userIds.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);
@@ -294,7 +294,7 @@ namespace ObjectServer.Core
             Debug.Assert(ctx != null);
             Debug.Assert(userFields.ContainsKey("password"));
 
-            var uid = (long)userFields[IDFieldName];
+            var uid = (long)userFields[IdFieldName];
 
             var oldSession = Session.GetByUserID(ctx.DBContext, uid);
 

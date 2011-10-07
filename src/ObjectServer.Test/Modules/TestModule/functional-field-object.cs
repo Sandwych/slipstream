@@ -9,7 +9,7 @@ namespace ObjectServer.Test
 {
 
     [Resource]
-    public sealed class FunctionalFieldObject : AbstractTableModel
+    public sealed class FunctionalFieldObject : AbstractSqlModel
     {
         public const string ModelName = "test.functional_field_object";
 
@@ -30,7 +30,7 @@ namespace ObjectServer.Test
             var result = new Dictionary<long, object>(ids.Count());
             foreach (var record in records)
             {
-                var id = (long)record[AbstractModel.IDFieldName];
+                var id = (long)record[AbstractModel.IdFieldName];
                 var field1 = (int)record["field1"];
                 var field2 = (int)record["field2"];
                 result[id] = field1 + field2;

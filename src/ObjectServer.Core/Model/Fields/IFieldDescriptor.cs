@@ -24,6 +24,7 @@ namespace ObjectServer.Model
         bool Lazy { get; set; }
         bool IsUnique { get; }
         bool IsScalar { get; }
+        bool Selectable { get; }
         string Help { get; }
         OnDeleteAction OnDeleteAction { get; set; }
 
@@ -33,6 +34,6 @@ namespace ObjectServer.Model
         /// 是否映射到实际的数据库列
         /// </summary>
         /// <returns></returns>
-        bool IsColumn();
+        bool IsColumn { get; }
     }
 }

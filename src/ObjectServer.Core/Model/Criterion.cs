@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 using Newtonsoft.Json;
 
@@ -12,14 +13,22 @@ namespace ObjectServer.Model
     /// </summary>
     [Serializable]
     [JsonArray(false)]
-    public class ConstraintExpression
+    public class Criterion
     {
-        private static readonly HashSet<string> Operators = new HashSet<string>()
-        {
-             "=", "!=", ">", ">=", "<", "<=", "in", "!in",  "like", "!like", "childof", "!childof"
-        };
+        private static readonly HashSet<string> Operators;
+        private static readonly Criterion s_negeativeCriterion;
 
-        public ConstraintExpression(object o)
+        static Criterion()
+        {
+            Operators = new HashSet<string>()
+            {
+                 "=", "!=", ">", ">=", "<", "<=", "in", "!in",  "like", "!like", "childof", "!childof"
+            };
+
+            s_negeativeCriterion = new Criterion(AbstractModel.IdFieldName, "=", (long)0);
+        }
+
+        public Criterion(object o)
         {
             if (o == null)
             {
@@ -53,7 +62,7 @@ namespace ObjectServer.Model
             this.Value = arr[2];
         }
 
-        public ConstraintExpression(string field, string opr, object value)
+        public Criterion(string field, string opr, object value)
         {
             if (string.IsNullOrEmpty(field))
             {
@@ -89,5 +98,18 @@ namespace ObjectServer.Model
 
         [JsonProperty("value")]
         public object Value { get; private set; }
+
+        public object[] ToPlainCriterion
+        {
+            get
+            {
+                Debug.Assert(!string.IsNullOrEmpty(this.Field));
+                Debug.Assert(!string.IsNullOrEmpty(this.Operator));
+
+                return new object[] { this.Field, this.Operator, this.Value };
+            }
+        }
+
+        public Criterion NegeativeCriterion { get { return s_negeativeCriterion; } }
     }
 }

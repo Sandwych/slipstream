@@ -10,7 +10,7 @@ namespace ObjectServer.Test
 
     //////////////////// 多层次分类的表 ///////////////////
     [Resource]
-    public sealed class  CategoryModel : AbstractTableModel
+    public sealed class  CategoryModel : AbstractSqlModel
     {
         public CategoryModel()
             : base("test.category")

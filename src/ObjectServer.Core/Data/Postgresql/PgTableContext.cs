@@ -93,7 +93,7 @@ namespace ObjectServer.Data.Postgresql
 
             LoggerProvider.EnvironmentLogger.Debug(String.Format("Creating Table [{0}]...", tableName));
 
-            var fieldsWithoutId = model.Fields.Values.Where(f => f.IsColumn());
+            var fieldsWithoutId = model.Fields.Values.Where(f => f.IsColumn);
 
             var sb = new SqlStringBuilder();
             sb.Add("create table ");

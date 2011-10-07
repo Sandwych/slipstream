@@ -22,7 +22,7 @@ namespace ObjectServer.Model
     /// <summary>
     /// 基于关系数据库表的实体类基类
     /// </summary>
-    public abstract partial class AbstractTableModel : AbstractModel
+    public abstract partial class AbstractSqlModel : AbstractModel
     {
         public const string LeftFieldName = "_left";
         public const string RightFieldName = "_right";
@@ -35,7 +35,7 @@ namespace ObjectServer.Model
         /// </summary>
         public static readonly string[] SystemReadonlyFields = new string[]
         {
-            IDFieldName,
+            IdFieldName,
             CreatedTimeFieldName,
             CreatedUserFieldName,
             UpdatedTimeFieldName,
@@ -66,13 +66,13 @@ namespace ObjectServer.Model
 
                 this.tableName = value;
                 this.quotedTableName = DataProvider.Dialect.QuoteForTableName(value);
-                this.SequenceName = value + "_" + IDFieldName + "_seq";
+                this.SequenceName = value + "_" + IdFieldName + "_seq";
             }
         }
 
         public string SequenceName { get; protected set; }
 
-        protected AbstractTableModel(string name)
+        protected AbstractSqlModel(string name)
             : base(name)
         {
 
@@ -124,7 +124,7 @@ namespace ObjectServer.Model
 
         private void AddInternalFields()
         {
-            Debug.Assert(this.Fields.ContainsKey(IDFieldName));
+            Debug.Assert(this.Fields.ContainsKey(IdFieldName));
 
             //只有非继承的模型才添加内置字段
             if (this.AutoMigration)
@@ -264,10 +264,10 @@ where   hp._id=? and hc._id<>?
             var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))
             {
-                var records = this.ReadInternal(ctx, ids, new string[] { IDFieldName, "name" });
+                var records = this.ReadInternal(ctx, ids, new string[] { IdFieldName, "name" });
                 foreach (var r in records)
                 {
-                    var id = (long)r[IDFieldName];
+                    var id = (long)r[IdFieldName];
                     result.Add(id, (string)r["name"]);
                 }
             }

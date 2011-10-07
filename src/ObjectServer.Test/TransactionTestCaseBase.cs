@@ -57,7 +57,6 @@ namespace ObjectServer
         {
             var service = Environment.ExportedService;
             service.LogOff(TestingDatabaseName, this.SessionId);
-            Environment.Shutdown();
         }
 
         public string SessionId { get; private set; }

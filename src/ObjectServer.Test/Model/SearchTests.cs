@@ -14,14 +14,14 @@ namespace ObjectServer.Model.Test
     public class SearchTests : TransactionContextTestCaseBase
     {
         [Test]
-        public void CanSearchWithEmptyConstraints()
+        public void CanSearchWithEmptyConstraint()
         {
             var modelModel = this.GetResource("core.model");
-            var constraints = new object[][] { };
+            var constraint = new object[][] { };
             dynamic ids = null;
             Assert.DoesNotThrow(() =>
             {
-                ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
+                ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
             });
             Assert.That(ids != null);
             Assert.That(ids.Length > 1);
@@ -32,11 +32,11 @@ namespace ObjectServer.Model.Test
         {
             var modelModel = this.GetResource("core.model");
 
-            var constraints = new object[][] { new object[] { "name", "like", "%" } };
-            var ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 2);
+            var constraint = new object[][] { new object[] { "name", "like", "%" } };
+            var ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 2);
             Assert.AreEqual(2, ids.Length);
 
-            ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 3);
+            ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 3);
             Assert.AreEqual(3, ids.Length);
         }
 
@@ -44,9 +44,9 @@ namespace ObjectServer.Model.Test
         public void CanSearchWithOffset()
         {
             var modelModel = this.GetResource("core.model");
-            var constraints = new object[][] { new object[] { "name", "like", "%" } };
-            var ids1 = modelModel.Search(this.TransactionContext, constraints, null, 0, 2);
-            var ids2 = modelModel.Search(this.TransactionContext, constraints, null, 1, 2);
+            var constraint = new object[][] { new object[] { "name", "like", "%" } };
+            var ids1 = modelModel.Search(this.TransactionContext, constraint, null, 0, 2);
+            var ids2 = modelModel.Search(this.TransactionContext, constraint, null, 1, 2);
             Assert.AreNotEqual(ids1[0], ids2[0]);
             Assert.AreEqual(ids1[1], ids2[0]);
 
@@ -56,17 +56,17 @@ namespace ObjectServer.Model.Test
         public void CanUseEqualOperator()
         {
             var modelModel = this.GetResource("core.model");
-            var constraints = new object[][] { 
+            var constraint = new object[][] { 
                 new object[] {  "name", "=", "core.model" } 
             };
 
-            var ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            var ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(1, ids.Length);
 
-            constraints = new object[][] {
+            constraint = new object[][] {
                 new object[] { "name", "=", "a dummy model" }
             };
-            ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(0, ids.Length);
 
             //测试 many-to-one 字段的 = 操作符            
@@ -78,16 +78,16 @@ namespace ObjectServer.Model.Test
         {
             var modelModel = this.GetResource("core.model");
 
-            var constraints = new object[][] { new object[] { "name", "like", "core.modu%" } };
-            var ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            var constraint = new object[][] { new object[] { "name", "like", "core.modu%" } };
+            var ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(1, ids.Length);
 
-            constraints = new object[][] { new object[] { "name", "like", "%like dummy%" } };
-            ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            constraint = new object[][] { new object[] { "name", "like", "%like dummy%" } };
+            ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(0, ids.Length);
 
-            constraints = new object[][] { new object[] { "name", "like", "core.modul_" } };
-            ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            constraint = new object[][] { new object[] { "name", "like", "core.modul_" } };
+            ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(1, ids.Length);
         }
 
@@ -96,22 +96,22 @@ namespace ObjectServer.Model.Test
         {
             var modelModel = this.GetResource("core.model");
 
-            var constraints = new object[][] { new object[] { "name", "!like", "%.%" } };
-            var ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            var constraint = new object[][] { new object[] { "name", "!like", "%.%" } };
+            var ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(0, ids.Length);
         }
 
         [Test]
         public void CanUseInOperator()
         {
-            var constraints = new object[][] { 
+            var constraint = new object[][] { 
                 new object[] { 
                     "name", "in", 
                     new object[] { "core.model", "core.field", "core.module" } 
                 } 
             };
             var modelModel = this.GetResource("core.model");
-            dynamic ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            dynamic ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(3, ids.Length);
         }
 
@@ -154,11 +154,11 @@ namespace ObjectServer.Model.Test
             var count = modelModel.Count(this.TransactionContext, null);
             Assert.AreEqual(ids.Length, count);
 
-            var constraints = new object[][] {
+            var constraint = new object[][] {
                 new object[] { "name", "like", "core.%" },
             };
-            ids = modelModel.Search(this.TransactionContext, constraints, null, 0, 0);
-            count = modelModel.Count(this.TransactionContext, constraints);
+            ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
+            count = modelModel.Count(this.TransactionContext, constraint);
             Assert.AreEqual(ids.Length, count);
         }
 
@@ -189,19 +189,19 @@ namespace ObjectServer.Model.Test
             child2.name = "child2";
             var child2Id = childModel.Create(this.TransactionContext, child2);
 
-            var constraints = new object[][] 
+            var constraint = new object[][] 
             { 
                 new object[] { "master.name", "=", "master1" }
             };
-            var childIds = childModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            var childIds = childModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(1, childIds.Length);
             Assert.AreEqual(child1Id, childIds[0]);
 
-            constraints = new object[][]
+            constraint = new object[][]
             {
                 new object[] { "master.name", "like", "master%" }
             };
-            childIds = childModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            childIds = childModel.Search(this.TransactionContext, constraint, null, 0, 0);
             Assert.AreEqual(2, childIds.Length);
             Assert.AreEqual(child1Id, childIds[0]);
             Assert.AreEqual(child2Id, childIds[1]);

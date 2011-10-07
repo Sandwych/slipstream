@@ -26,10 +26,10 @@ namespace ObjectServer.Sql.Test
         [Test]
         public void Test_simple_constraints()
         {
-            var constraints = new ConstraintExpression[] {
-                new ConstraintExpression("login", "=", "root"),
-                new ConstraintExpression("organization.name", "=", "org1"),
-                new ConstraintExpression("organization.code", "=", "orgcode1"),
+            var constraints = new Criterion[] {
+                new Criterion("login", "=", "root"),
+                new Criterion("organization.name", "=", "org1"),
+                new Criterion("organization.code", "=", "orgcode1"),
             };
 
             var sql1 = new SqlString(
@@ -39,7 +39,7 @@ namespace ObjectServer.Sql.Test
                 "order by  _t0.login ASC,  _t0.name ASC");
 
             var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
-            cb.AddConstraints(constraints);
+            cb.AddCriteria(constraints);
             cb.SetOrder(new OrderExpression("login", SortDirection.Ascend));
             cb.SetOrder(new OrderExpression("name", SortDirection.Ascend));
 
