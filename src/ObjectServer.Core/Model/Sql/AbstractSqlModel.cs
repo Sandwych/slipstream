@@ -95,11 +95,11 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IDbContext db, bool update)
+        public override void Initialize(ITransactionContext tc, bool update)
         {
             this.AddInternalFields();
 
-            base.Initialize(db, update);
+            base.Initialize(tc, update);
 
             if (this.NameGetter == null)
             {
@@ -115,10 +115,8 @@ namespace ObjectServer.Model
 
             if (update && this.AutoMigration)
             {
-                using (var migrator = new TableMigrator(db, this))
-                {
-                    migrator.Migrate();
-                };
+                var migrator = new TableMigrator(tc, this);
+                migrator.Migrate();
             }
         }
 

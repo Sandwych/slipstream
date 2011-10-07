@@ -25,15 +25,15 @@ namespace ObjectServer.Core
 
         }
 
-        public override void Initialize(IDbContext db, bool update)
+        public override void Initialize(ITransactionContext tc, bool update)
         {
-            base.Initialize(db, update);
+            base.Initialize(tc, update);
 
-            var tableCtx = db.CreateTableContext(this.TableName);
+            var tableCtx = tc.DBContext.CreateTableContext(this.TableName);
 
-            if (update && !tableCtx.ConstraintExists(db, UniqueConstraintName))
+            if (update && !tableCtx.ConstraintExists(tc.DBContext, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(db, UniqueConstraintName, "UNIQUE(\"user\", \"role\")");
+                tableCtx.AddConstraint(tc.DBContext, UniqueConstraintName, "UNIQUE(\"user\", \"role\")");
             }
         }
     }

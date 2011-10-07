@@ -40,7 +40,6 @@ namespace ObjectServer
 
             using (var ctx = new TransactionContext(dbName))
             {
-
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
                 Debug.Assert(session != null);
@@ -111,7 +110,7 @@ namespace ObjectServer
             VerifyRootPassword(rootPasswordHash);
 
             DataProvider.CreateDatabase(dbName);
-            Environment.DBProfiles.LoadDB(dbName, true);
+            Environment.DBProfiles.Register(dbName, true);
         }
 
         public void DeleteDatabase(string rootPasswordHash, string dbName)

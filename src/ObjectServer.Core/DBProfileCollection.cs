@@ -23,8 +23,6 @@ namespace ObjectServer
         private Dictionary<string, DbProfile> dbProfiles =
             new Dictionary<string, DbProfile>();
         private bool disposed = false;
-        private readonly ReaderWriterLockSlim dbProfilesLock = new ReaderWriterLockSlim();
-
 
         ~DbProfileCollection()
         {
@@ -42,21 +40,11 @@ namespace ObjectServer
             var dbs = DataProvider.ListDatabases();
             foreach (var dbName in dbs)
             {
-                bool isRegistered;
-
-                this.dbProfilesLock.EnterReadLock();
-                try
-                {
-                    isRegistered = this.dbProfiles.ContainsKey(dbName);
-                }
-                finally
-                {
-                    this.dbProfilesLock.ExitReadLock();
-                }
+                bool isRegistered = this.dbProfiles.ContainsKey(dbName);
 
                 if (!isRegistered)
                 {
-                    this.LoadDB(dbName, false);
+                    this.Register(dbName, false);
                 }
             }
 
@@ -65,7 +53,7 @@ namespace ObjectServer
 
         #endregion
 
-        public void LoadDB(string dbName, bool isUpdate)
+        public void Register(string dbName, bool isUpdate)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
@@ -81,51 +69,21 @@ namespace ObjectServer
             }
 
             var db = new DbProfile(dbName);
+            db.Initialize(isUpdate);
+            this.dbProfiles.Add(dbName, db);
 
-            this.dbProfilesLock.EnterWriteLock();
-            try
-            {
-                this.dbProfiles.Add(dbName.Trim(), db);
-            }
-            finally
-            {
-                this.dbProfilesLock.ExitWriteLock();
-            }
-
-            using (var ctx = new TransactionContext(dbName))
-            {
-                this.LoadModules(ctx, isUpdate);
-            }
-        }
-
-        private void LoadModules(ITransactionContext ctx, bool isUpdate)
-        {
-            Debug.Assert(ctx != null);
-
-            //加载其它模块
-            LoggerProvider.EnvironmentLogger.Info(() => "Loading modules...");
-            Environment.Modules.UpdateModuleList(ctx.DBContext);
-            Environment.Modules.LoadModules(ctx, isUpdate);
         }
 
         public DbProfile GetDBProfile(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
-            this.dbProfilesLock.EnterReadLock();
-            try
+            if (!this.dbProfiles.ContainsKey(dbName))
             {
-                if (!this.dbProfiles.ContainsKey(dbName))
-                {
-                    throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
-                }
+                throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
+            }
 
-                return this.dbProfiles[dbName];
-            }
-            finally
-            {
-                this.dbProfilesLock.ExitReadLock();
-            }
+            return this.dbProfiles[dbName];
         }
 
         public void RemoveDB(string dbName)
@@ -133,17 +91,10 @@ namespace ObjectServer
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
             //比如两个客户端，一个正在操作数据库，另一个要删除数据库
-            this.dbProfilesLock.EnterWriteLock();
-            try
-            {
+            //TODO 线程安全
 
-                var db = this.dbProfiles[dbName];
-                this.dbProfiles.Remove(dbName);
-            }
-            finally
-            {
-                this.dbProfilesLock.ExitWriteLock();
-            }
+            var db = this.dbProfiles[dbName];
+            this.dbProfiles.Remove(dbName);
         }
 
         #region IDisposable 成员

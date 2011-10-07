@@ -27,22 +27,17 @@ namespace ObjectServer.Model
             this.fields = new FieldCollection(this);
         }
 
-        public override void Initialize(IDbContext db, bool update)
+        public override void Initialize(ITransactionContext tc, bool update)
         {
-            if (db == null)
+            if (tc == null)
             {
                 throw new ArgumentNullException("db");
             }
 
-            var resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
-            if (!resources.ContainsResource(this.Name))
-            {
-                var msg = string.Format("Cannot found model '{0}'", this.Name);
-                throw new ResourceNotFoundException(msg, this.Name);
-            }
+            var baseModel = tc.GetResource(Name);
 
-            var baseModel = resources.GetResource(this.Name);
-            baseModel.Initialize(db, update);
+            baseModel.Initialize(tc, update);
+
         }
 
         public ICollection<InheritanceInfo> Inheritances

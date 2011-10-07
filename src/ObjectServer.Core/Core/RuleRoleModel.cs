@@ -22,20 +22,20 @@ namespace ObjectServer.Core
             Fields.ManyToOne("rule", "core.rule").SetLabel("Rule").Required();
         }
 
-        public override void Initialize(IDbContext db, bool update)
+        public override void Initialize(ITransactionContext tc, bool update)
         {
-            if (db == null)
+            if (tc == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("tc");
             }
 
-            base.Initialize(db, update);
+            base.Initialize(tc, update);
 
-            var tableCtx = db.CreateTableContext(this.TableName);
+            var tableCtx = tc.DBContext.CreateTableContext(this.TableName);
 
-            if (update && !tableCtx.ConstraintExists(db, UniqueConstraintName))
+            if (update && !tableCtx.ConstraintExists(tc.DBContext, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(db, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
+                tableCtx.AddConstraint(tc.DBContext, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
             }
         }
     }

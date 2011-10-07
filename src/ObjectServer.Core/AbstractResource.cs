@@ -145,9 +145,9 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Initialize(IDbContext db, bool update)
+        public virtual void Initialize(ITransactionContext tc, bool update)
         {
-            if (db == null)
+            if (tc == null)
             {
                 throw new ArgumentNullException("db");
             }

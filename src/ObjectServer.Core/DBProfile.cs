@@ -26,6 +26,7 @@ namespace ObjectServer
             new HashSet<string>();
         private bool disposed = false;
         private readonly ReaderWriterLockSlim resourcesLock = new ReaderWriterLockSlim();
+        private readonly string dbName;
 
         /// <summary>
         /// 初始化一个数据库环境
@@ -37,12 +38,23 @@ namespace ObjectServer
                 throw new ArgumentNullException("db");
             }
 
-            this.DatabaseName = db;
+            this.dbName = db;
         }
 
         ~DbProfile()
         {
             this.Dispose(false);
+        }
+
+        public void Initialize(bool isUpdate)
+        {
+            using (var ctx = new TransactionContext(this.DatabaseName, this))
+            {
+                Environment.Modules.UpdateModuleList(ctx.DBContext);
+
+                //加载其它模块
+                Environment.Modules.LoadModules(ctx, isUpdate);
+            }
         }
 
         public IResourceContainer Resources { get; private set; }
@@ -164,11 +176,23 @@ namespace ObjectServer
             }
         }
 
+        public IResource[] GetAllResources()
+        {
+            return this.resources.Values.ToArray();
+        }
+
         #endregion
 
-        public string DatabaseName { get; private set; }
+        public string DatabaseName
+        {
+            get
+            {
+                Debug.Assert(!string.IsNullOrEmpty(this.dbName));
+                return this.dbName;
+            }
+        }
 
-        public void InitializeAllResources(IDbContext conn, bool update)
+        public void InitializeAllResources(ITransactionContext tc, bool update)
         {
             IList<IResource> allRes = null;
             this.resourcesLock.EnterReadLock();
@@ -186,18 +210,18 @@ namespace ObjectServer
             for (int i = 0; i < allRes.Count; i++)
             {
                 var res = allRes[i];
-                this.InitializeResource(conn, res, i, update);
+                this.InitializeResource(tc, res, i, update);
             }
         }
 
 
-        private void InitializeResource(IDbContext conn, IResource res, int index, bool update)
+        private void InitializeResource(ITransactionContext tc, IResource res, int index, bool update)
         {
             Debug.Assert(res != null);
 
             if (!this.initializedResources.Contains(res.Name))
             {
-                res.Initialize(conn, update);
+                res.Initialize(tc, update);
                 this.resourcesLock.EnterWriteLock();
                 try
                 {

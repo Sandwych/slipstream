@@ -170,46 +170,38 @@ namespace ObjectServer
             Debug.Assert(scope != null);
 
             LoggerProvider.EnvironmentLogger.Info(() => "Loading precompiled assemblies...");
-            var dbProfile = Environment.DBProfiles.GetDBProfile(scope.DBContext.DatabaseName);
 
             if (this.Dlls != null)
             {
-                this.LoadStaticAssemblies(dbProfile);
+                this.LoadStaticAssemblies();
             }
 
             if (!string.IsNullOrEmpty(this.Path))
             {
-                this.LoadDynamicAssembly(dbProfile, dbProfile);
+                this.LoadDynamicAssembly();
             }
 
-            dbProfile.InitializeAllResources(
-                scope.DBContext,
-                action == ModuleUpdateAction.ToInstall || action == ModuleUpdateAction.ToUpgrade);
+            this.InitializeAllResources(scope, action);
 
             this.LoadModuleData(scope, action);
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
         }
 
-
-        private void LoadCoreModule(ITransactionContext scope, ModuleUpdateAction action)
+        private void LoadCoreModule(ITransactionContext tc, ModuleUpdateAction action)
         {
-            Debug.Assert(scope != null);
-
-            var dbProfile = Environment.DBProfiles.GetDBProfile(scope.DBContext.DatabaseName);
+            Debug.Assert(tc != null);
 
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
-            RegisterResourceWithinAssembly(dbProfile, a);
+            this.RegisterResourcesWithinAssembly(a);
 
-            dbProfile.InitializeAllResources(
-                scope.DBContext,
-                action == ModuleUpdateAction.ToInstall || action == ModuleUpdateAction.ToUpgrade);
+            this.InitializeAllResources(tc, action);
 
             //加载核心模块数据
             if (action == ModuleUpdateAction.ToInstall)
             {
                 LoggerProvider.EnvironmentLogger.Info(() => "Importing data for the Core Module...");
-                var importer = new Model.XmlDataImporter(scope, this.Name);
+                var importer = new Model.XmlDataImporter(tc, this.Name);
                 foreach (var resPath in s_coreInitDataFiles)
                 {
                     using (var resStream = a.GetManifestResourceStream(resPath))
@@ -222,6 +214,16 @@ namespace ObjectServer
             }
         }
 
+        private void InitializeAllResources(ITransactionContext tc, ModuleUpdateAction action)
+        {
+            //注册并初始化所有资源
+            foreach (var r in this.resources)
+            {
+                tc.Resources.RegisterResource(r);
+            }
+
+            tc.Resources.InitializeAllResources(tc, action != ModuleUpdateAction.NoAction);
+        }
 
         private void LoadModuleData(ITransactionContext scope, ModuleUpdateAction action)
         {
@@ -255,19 +257,15 @@ namespace ObjectServer
             }
         }
 
-        private void LoadDynamicAssembly(IResourceContainer resContainer, IResourceContainer resources)
+        private void LoadDynamicAssembly()
         {
-            Debug.Assert(resContainer != null);
-            Debug.Assert(resources != null);
-
             var a = CompileSourceFiles(this.Path);
             this.AllAssemblies.Add(a);
-            RegisterResourceWithinAssembly(resContainer, a);
+            this.RegisterResourcesWithinAssembly(a);
         }
 
-        private void RegisterResourceWithinAssembly(IResourceContainer resContainer, Assembly assembly)
+        private void RegisterResourcesWithinAssembly(Assembly assembly)
         {
-            Debug.Assert(resContainer != null);
             Debug.Assert(assembly != null);
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format(
@@ -280,7 +278,6 @@ namespace ObjectServer
                 var res = AbstractResource.CreateStaticResourceInstance(t);
                 res.Module = this.Name;
                 this.resources.Add(res);
-                resContainer.RegisterResource(res);
             }
         }
 
@@ -301,7 +298,7 @@ namespace ObjectServer
             return result.ToArray();
         }
 
-        private void LoadStaticAssemblies(IResourceContainer resContainer)
+        private void LoadStaticAssemblies()
         {
             Debug.Assert(this.Dlls != null);
 
@@ -309,7 +306,7 @@ namespace ObjectServer
             {
                 var a = Assembly.LoadFile(dll);
                 this.allAssembly.Add(a);
-                RegisterResourceWithinAssembly(resContainer, a);
+                this.RegisterResourcesWithinAssembly(a);
             }
         }
 
@@ -395,6 +392,28 @@ namespace ObjectServer
                 "The module [{0}] has been compiled successfully.", this.Name));
             return a;
         }
+
+        public IEnumerable<IResource> Resources
+        {
+            get
+            {
+                return this.resources;
+            }
+        }
+
+        private static void ResourceDependencySort(IList<IResource> resList)
+        {
+            Debug.Assert(resList != null);
+
+            var objDepends = new Dictionary<string, string[]>(resList.Count);
+            foreach (var res in resList)
+            {
+                objDepends.Add(res.Name, res.GetReferencedObjects());
+            }
+
+            resList.DependencySort(m => m.Name, m => objDepends[m.Name]);
+        }
+
 
     }
 }

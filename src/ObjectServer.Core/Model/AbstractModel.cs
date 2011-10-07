@@ -46,21 +46,21 @@ namespace ObjectServer.Model
         /// <summary>
         /// 此函数要允许多次调用
         /// </summary>
-        /// <param name="db"></param>
-        public override void Initialize(IDbContext db, bool update)
+        /// <param name="tc"></param>
+        public override void Initialize(ITransactionContext tc, bool update)
         {
-            if (db == null)
+            if (tc == null)
             {
                 throw new ArgumentNullException("db");
             }
 
-            base.Initialize(db, update);
-            this.InitializeInheritances(db);
+            base.Initialize(tc, update);
+            this.InitializeInheritances(tc);
             this.VerifyFields();
 
             if (update)
             {
-                this.SyncModel(db);
+                this.SyncModel(tc.DBContext);
             }
         }
 
@@ -95,29 +95,20 @@ namespace ObjectServer.Model
         /// 初始化继承设置
         /// </summary>
         /// <param name="db"></param>
-        private void InitializeInheritances(IDbContext db)
+        private void InitializeInheritances(ITransactionContext tc)
         {
-            var resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
-
             //验证继承声明
             //这里可以安全地访问 many-to-one 指向的 ResourceContainer 里的对象，因为依赖排序的原因
             //被指向的对象肯定已经更早注册了
             foreach (var ii in this.Inheritances)
             {
-                if (!resources.ContainsResource(ii.BaseModel))
-                {
-                    var msg = string.Format(
-                        "Cannot found the base model '{0}' in inheritances", ii.BaseModel);
-                    throw new ResourceNotFoundException(msg, ii.BaseModel);
-                }
-
                 if (!this.Fields.ContainsKey(ii.RelatedField))
                 {
                     throw new FieldAccessException();
                 }
 
                 //把“基类”模型的字段引用复制过来
-                var baseModel = (IModel)resources.GetResource(ii.BaseModel);
+                var baseModel = (IModel)tc.GetResource(ii.BaseModel);
                 foreach (var baseField in baseModel.Fields)
                 {
                     if (!this.Fields.ContainsKey(baseField.Key))

@@ -14,11 +14,8 @@ namespace ObjectServer
         IResource GetResource(string resName);
         bool ContainsResource(string resName);
         int GetResourceDependencyWeight(string resName);
+        IResource[] GetAllResources();
 
-        /// <summary>
-        /// 初始化容器里的所有资源，此方法允许多次调用，但此方法仅会调用一次资源的 Initialize()
-        /// </summary>
-        void InitializeAllResources(IDbContext conn, bool update);
-
+        void InitializeAllResources(ITransactionContext tc, bool update);
     }
 }

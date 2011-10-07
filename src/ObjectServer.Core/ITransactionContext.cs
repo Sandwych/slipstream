@@ -16,5 +16,6 @@ namespace ObjectServer
         int GetResourceDependencyWeight(string resName);
         IDbContext DBContext { get; }
         IDbTransaction DBTransaction { get; }
+        IResourceContainer Resources { get; }
     }
 }

@@ -471,7 +471,8 @@ namespace ObjectServer.Model
             Criterion cr, string lastTableAlias, IModel model, IField field)
         {
             var opr = cr.Operator == "in" ? "in" : "not in";
-            var inValues = (ICollection<object>)cr.Value;
+            var objs = (System.Collections.IEnumerable)cr.Value;
+            var inValues = objs.Cast<object>().ToArray();
 
             var expBuilder = new SqlStringBuilder();
             expBuilder.Add(lastTableAlias + '.' + field.Name);
@@ -479,9 +480,9 @@ namespace ObjectServer.Model
             expBuilder.Add(opr);
             expBuilder.Add("(");
 
-            for (int i = 0; i < inValues.Count; i++)
+            for (int i = 0; i < inValues.Length; i++)
             {
-                if (inValues.Count > 1 && i != 0)
+                if (inValues.Length > 1 && i != 0)
                 {
                     expBuilder.Add(",");
                 }

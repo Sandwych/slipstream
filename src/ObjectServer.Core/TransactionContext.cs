@@ -79,6 +79,11 @@ namespace ObjectServer
         /// </summary>
         /// <param name="dbName"></param>
         public TransactionContext(string dbName)
+            : this(dbName, Environment.DBProfiles.GetDBProfile(dbName))
+        {
+        }
+
+        public TransactionContext(string dbName, IResourceContainer resourceContainer)
         {
             if (string.IsNullOrEmpty(dbName))
             {
@@ -86,7 +91,7 @@ namespace ObjectServer
             }
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-            this.resources = Environment.DBProfiles.GetDBProfile(dbName);
+            this.resources = resourceContainer;
             this.dbctx = DataProvider.CreateDataContext(dbName);
             this.DBContext.Open();
 
@@ -205,6 +210,23 @@ namespace ObjectServer
                 Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
                 return this.dbctx;
+            }
+        }
+
+        public IResourceContainer Resources
+        {
+            get
+            {
+                if (this.disposed)
+                {
+                    throw new ObjectDisposedException("TransactionContext");
+                }
+
+                Debug.Assert(this.resources != null);
+                Debug.Assert(this.dbctx != null);
+                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+
+                return this.resources;
             }
         }
 

@@ -159,9 +159,14 @@ namespace ObjectServer
             //加载已安装的模块
             var sql = new SqlString("select _id, name, state from core_module");
 
+            //TODO: 模块依赖排序
             var modules = tx.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
 
-            foreach (var m in modules)
+            var coreModule = modules.Where(m => (string)m["name"] == "core");
+            var sortedModules = modules.Where(m => (string)m["name"] != "core");
+            var allModules = coreModule.Concat(sortedModules);
+
+            foreach (var m in allModules)
             {
                 var moduleName = (string)m["name"];
                 var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
@@ -178,7 +183,6 @@ namespace ObjectServer
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
             }
-
         }
 
         private void InstallOrUpgradeModule(ITransactionContext tx, Module module, long moduleId, string state, bool isUpdate)

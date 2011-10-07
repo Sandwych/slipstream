@@ -227,7 +227,6 @@
     <Compile Include="Runtime\ICompiler.cs" />
     <Compile Include="TransactionMethodAttribute.cs" />
     <Compile Include="TransactionContext.cs" />
-    <Compile Include="DummyTransactionContext.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />

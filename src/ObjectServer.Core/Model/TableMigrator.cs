@@ -10,18 +10,17 @@ using ObjectServer.Data;
 
 namespace ObjectServer.Model
 {
-    internal class TableMigrator : IDisposable
+    internal class TableMigrator
     {
-        private IDbContext db;
         private AbstractSqlModel model;
         private ITransactionContext context;
         private bool disposed = false;
 
-        public TableMigrator(IDbContext db, AbstractSqlModel model)
+        public TableMigrator(ITransactionContext tc, AbstractSqlModel model)
         {
-            if (db == null)
+            if (tc == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("tc");
             }
 
             if (model == null)
@@ -29,18 +28,17 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("model");
             }
 
-            this.db = db;
             this.model = model;
-            this.context = new DummyTransactionContext(db);
+            this.context = tc;
         }
 
         public void Migrate()
         {
-            Debug.Assert(this.db != null);
+            Debug.Assert(this.context != null);
 
-            var table = this.db.CreateTableContext(this.model.TableName);
+            var table = this.context.DBContext.CreateTableContext(this.model.TableName);
 
-            if (!table.TableExists(db, this.model.TableName))
+            if (!table.TableExists(this.context.DBContext, this.model.TableName))
             {
                 this.CreateTable(table);
             }
@@ -52,7 +50,7 @@ namespace ObjectServer.Model
 
         private void CreateTable(ITableContext table)
         {
-            table.CreateTable(db, this.model, this.model.Name);
+            table.CreateTable(this.context.DBContext, this.model, this.model.Name);
 
             CreateForeignKeys(table, this.model.Fields.Values);
 
@@ -65,13 +63,12 @@ namespace ObjectServer.Model
 
         private void CreateForeignKeys(ITableContext table, IEnumerable<IField> fields)
         {
-            var resources = Environment.DBProfiles.GetDBProfile(this.db.DatabaseName);
             foreach (var f in fields)
             {
                 if (f.IsColumn && f.Type == FieldType.ManyToOne)
                 {
-                    var refModel = (IModel)resources.GetResource(f.Relation);
-                    table.AddFK(db, f.Name, refModel.TableName, OnDeleteAction.SetNull);
+                    var refModel = (IModel)this.context.GetResource(f.Relation);
+                    table.AddFK(this.context.DBContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
                 }
             }
         }
@@ -100,7 +97,7 @@ namespace ObjectServer.Model
                 {
                     if (!table.ColumnExists(field.Name))
                     {
-                        table.AddColumn(this.db, field);
+                        table.AddColumn(this.context.DBContext, field);
                     }
                     else
                     {
@@ -122,7 +119,7 @@ namespace ObjectServer.Model
                 {
                     if (!c.Nullable && columnsToDelete.Contains(c.Name))
                     {
-                        table.AlterColumnNullable(this.db, c.Name, true);
+                        table.AlterColumnNullable(this.context.DBContext, c.Name, true);
                     }
                 }
             }
@@ -130,7 +127,7 @@ namespace ObjectServer.Model
             {
                 foreach (var c in columnsToDelete)
                 {
-                    table.DeleteColumn(this.db, c);
+                    table.DeleteColumn(this.context.DBContext, c);
                 }
             }
 
@@ -146,7 +143,7 @@ namespace ObjectServer.Model
             {
                 //TODO:转换成可移植数据库类型    
                 var sqlType = string.Format("VARCHAR({0})", field.Size);
-                table.AlterColumnType(this.db, field.Name, sqlType);
+                table.AlterColumnType(this.context.DBContext, field.Name, sqlType);
             }
 
 
@@ -162,7 +159,7 @@ namespace ObjectServer.Model
 
         private void SetColumnNullable(ITableContext table, IField field)
         {
-            table.AlterColumnNullable(this.db, field.Name, true);
+            table.AlterColumnNullable(this.context.DBContext, field.Name, true);
         }
 
         private void SetColumnNotNullable(ITableContext table, IField field, bool hasRow)
@@ -176,8 +173,8 @@ namespace ObjectServer.Model
                     dialect.QuoteForTableName(table.Name),
                     " set ",
                     dialect.QuoteForColumnName(field.Name), "=", Parameter.Placeholder);
-                this.db.Execute(sql, defaultValue);
-                table.AlterColumnNullable(this.db, field.Name, false);
+                this.context.DBContext.Execute(sql, defaultValue);
+                table.AlterColumnNullable(this.context.DBContext, field.Name, false);
             }
             else
             {
@@ -190,29 +187,9 @@ namespace ObjectServer.Model
         {
             var sql = new SqlString("select count(*) from ",
                 DataProvider.Dialect.QuoteForTableName(tableName));
-            var rowCount = (long)this.db.QueryValue(sql);
+            var rowCount = (long)this.context.DBContext.QueryValue(sql);
             return rowCount > 0;
         }
 
-
-        private void Dispose(bool isDisposing)
-        {
-            if (!this.disposed)
-            {
-                if (isDisposing)
-                {
-                    //处置托管对象
-                }
-
-                this.context.Dispose();
-                this.disposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
     }
 }

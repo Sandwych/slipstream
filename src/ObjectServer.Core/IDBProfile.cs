@@ -9,5 +9,8 @@ namespace ObjectServer
 {
     public interface IDbProfile : IDisposable, IResourceContainer
     {
+
+        void Initialize(bool isUpdate);
+
     }
 }
