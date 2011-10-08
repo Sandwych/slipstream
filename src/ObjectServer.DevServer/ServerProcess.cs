@@ -16,8 +16,16 @@ namespace ObjectServer.Server
             {
                 commander.Start();
 
-                var rpcHostWorker = StartApplicationServer();
-                var httpThread = StartHttpServer();
+                var cfg = Environment.Configuration;
+                if(cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Worker)
+                {
+                    var rpcHostWorker = StartApplicationServer();
+                }
+
+                if(cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.HttpServer)
+                {
+                    var httpThread = StartHttpServer();
+                }
 
 
                 Console.WriteLine("\n系统启动完毕，开始等待客户端请求...");
