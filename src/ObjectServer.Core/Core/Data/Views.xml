@@ -160,7 +160,12 @@
             <input field="users" colspan="4" fill="true" />
           </page>
           <page label="Access Permissions">
+            <hr text="Model Access Entries" colspan="4" />
             <input field="model_access_entries" colspan="4" fill="true" />
+            <hr text="Model Field Access Entries" colspan="4" />
+            <input field="field_access_entries" colspan="4" fill="true" />
+          </page>
+          <page label="Access Rules">
             <input field="rules" colspan="4" fill="true" />
           </page>
         </notebook>

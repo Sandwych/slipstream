@@ -19,14 +19,6 @@ namespace ObjectServer.Core
     {
         public const string ModelName = "core.field_access";
 
-        private static readonly SqlString SqlToQuery = SqlString.Parse(@"
-SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
-    FROM core_model_access ma
-    INNER JOIN core_model m ON m._id=ma.model
-    INNER JOIN core_user_role_rel urr ON urr.role=ma.role
-    WHERE (urr.user=?) AND (m.name=?)
-");
-
         public FieldAccessModel()
             : base(ModelName)
         {
@@ -66,35 +58,48 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         }
 
         public IDictionary<string, bool> GetFieldAccess(
-            ITransactionContext tc, string modelName, IEnumerable<string> fields, string mode)
+            ITransactionContext tc, string modelName, IEnumerable<string> fields, string action)
         {
             if (string.IsNullOrEmpty(modelName))
             {
                 throw new ArgumentNullException("modelName");
             }
-            if (mode != "read" && modelName != "write")
+            if (action != "read" && action != "write")
             {
-                throw new ArgumentOutOfRangeException("model");
+                throw new ArgumentOutOfRangeException("action");
             }
 
             var modelModel = (IModel)tc.GetResource("core.model");
             var fieldModel = (IModel)tc.GetResource("core.field");
             var userRoleRelModel = (IModel)tc.GetResource("core.user_role");
             var sql = String.Format(CultureInfo.InvariantCulture,
-                "select f.name, max(case when a.allow_{0} then 1 else 0 end) > 0 " +
+                "select f.name field_name, (max(case when a.allow_{0} then 1 else 0 end) > 0) allow " +
                 "from {1} a " +
                 "inner join {2} f on (a.field = f._id) " +
                 "inner join {3} m on (f.model = m._id) " +
                 "left join {4} ur on (ur.role = a.role) " +
                 "where m.name = ? and (ur.user = ? or a.role is null) " +
                 "group by f.name ",
-                mode, this.TableName, fieldModel.TableName, modelModel.TableName, userRoleRelModel.TableName);
+                action, this.TableName, fieldModel.TableName, modelModel.TableName, userRoleRelModel.TableName);
 
             Debug.Assert(tc.Session != null);
             var userId = tc.Session.UserId;
             var records = tc.DBContext.QueryAsDictionary(SqlString.Parse(sql), modelName, userId);
-            var result = records.First();
-            return result.ToDictionary(p => p.Key, p => (bool)p.Value);
+            if (records.Count() == 0)
+            {
+                return new Dictionary<string, bool>();
+            }
+            else
+            {
+                var result = new Dictionary<string, bool>(records.Length);
+                foreach (var r in records)
+                {
+                    var name = (string)r["field_name"];
+                    var value = (bool)r["allow"];
+                    result.Add(name, value);
+                }
+                return result;
+            }
         }
 
     }

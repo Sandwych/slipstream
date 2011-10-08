@@ -45,8 +45,7 @@ namespace ObjectServer.Model
             IList<string> allFields;
             if (requiredFields == null || requiredFields.Count() == 0)
             {
-                allFields = this.Fields.Where(p => !p.Value.Lazy)
-                    .Select(p => p.Value.Name).ToList();
+                allFields = this.Fields.Select(p => p.Value.Name).ToList();
             }
             else
             {

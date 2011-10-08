@@ -24,6 +24,8 @@ namespace ObjectServer.Core
             Fields.ManyToMany("rules", "core.rule_role", "role", "rule").SetLabel("Rules");
             Fields.OneToMany("model_access_entries", "core.model_access", "role")
                 .SetLabel("Model Access Control");
+            Fields.OneToMany("field_access_entries", "core.field_access", "role")
+                .SetLabel("Field Access Control");
         }
 
     }

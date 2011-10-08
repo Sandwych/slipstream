@@ -419,6 +419,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new SecurityException("Access denied");
             }
 
+
+
             OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
 
             if (order != null)
@@ -460,6 +462,13 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                     strFields[i] = clientFields[i];
                 }
             }
+            else
+            {
+                strFields = model.Fields.Select(p => p.Value.Name).ToArray();
+            }
+
+            VerifyFieldAccess(model, ctx, "read", strFields);
+
             var ids = new long[clientIds.Length];
             for (int i = 0; i < ids.Length; i++)
             {
@@ -484,6 +493,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new SecurityException("Access denied");
             }
 
+            VerifyFieldAccess(model, ctx, "write", propertyBag.Keys);
+
             return model.CreateInternal(ctx, propertyBag);
         }
 
@@ -491,6 +502,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static void Write(
            IModel model, ITransactionContext ctx, object id, IRecord userRecord)
         {
+            EnsureServiceMethodArgs(model, ctx);
+
             if (!model.CanWrite)
             {
                 throw new NotSupportedException();
@@ -501,7 +514,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new SecurityException("Access denied");
             }
 
-            EnsureServiceMethodArgs(model, ctx);
+            VerifyFieldAccess(model, ctx, "write", userRecord.Keys);
+
             model.WriteInternal(ctx, (long)id, userRecord);
         }
 
@@ -588,5 +602,21 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public abstract dynamic Browse(ITransactionContext scope, long id);
 
         #endregion
+
+        protected static void VerifyFieldAccess(
+            IModel model, ITransactionContext tc, string action, IEnumerable<string> fields)
+        {
+            var availableFields = fields.Where(k => model.Fields.ContainsKey(k));
+            var fam = (Core.FieldAccessModel)tc.GetResource("core.field_access");
+            var result = fam.GetFieldAccess(tc, model.Name, availableFields, action);
+            foreach (var p in result)
+            {
+                if (!p.Value)
+                {
+                    throw new Exceptions.SecurityException("Access Denied");
+                }
+            }
+        }
+
     }
 }
