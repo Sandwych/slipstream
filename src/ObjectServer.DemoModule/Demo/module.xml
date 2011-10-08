@@ -21,4 +21,8 @@
     <file>demo-data.xml</file>
   </init-files>
 
+  <requires>
+    <module>core</module>
+  </requires>
+
 </module-metadata>

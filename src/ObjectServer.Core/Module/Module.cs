@@ -26,7 +26,6 @@ namespace ObjectServer
     {
         private readonly List<Assembly> allAssembly = new List<Assembly>();
         private static readonly Module s_coreModule;
-        private readonly List<IResource> resources = new List<IResource>();
 
         private static readonly string[] s_coreInitDataFiles = new string[] 
         {
@@ -66,6 +65,7 @@ namespace ObjectServer
             this.Depends = new string[] { };
             this.Dlls = new string[] { };
             this.IsDemo = false;
+            this.Depends = new string[] { };
         }
 
         #region Serializable Fields
@@ -129,6 +129,10 @@ namespace ObjectServer
         [XmlArrayItem("file")]
         public string[] Dlls { get; set; }
 
+        [XmlArray("requires")]
+        [XmlArrayItem("module")]
+        public string[] Requires { get; set; }
+
         #endregion
 
         public void Load(ITransactionContext ctx, ModuleUpdateAction action)
@@ -139,8 +143,6 @@ namespace ObjectServer
             }
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format("Loading module: [{0}]", this.Name));
-
-            this.resources.Clear();
 
             if (this.Name == "core")
             {
@@ -171,17 +173,18 @@ namespace ObjectServer
 
             LoggerProvider.EnvironmentLogger.Info(() => "Loading precompiled assemblies...");
 
+            var resources = new List<IResource>();
             if (this.Dlls != null)
             {
-                this.LoadStaticAssemblies();
+                resources.AddRange(this.LoadStaticAssemblies());
             }
 
             if (!string.IsNullOrEmpty(this.Path))
             {
-                this.LoadDynamicAssembly();
+                resources.AddRange(this.LoadDynamicAssembly());
             }
 
-            this.InitializeAllResources(scope, action);
+            this.InitializeResources(scope, resources, action);
 
             this.LoadModuleData(scope, action);
 
@@ -193,9 +196,8 @@ namespace ObjectServer
             Debug.Assert(tc != null);
 
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
-            this.RegisterResourcesWithinAssembly(a);
-
-            this.InitializeAllResources(tc, action);
+            var resources = this.GetResourcesWithinAssembly(a);
+            this.InitializeResources(tc, resources, action);
 
             //加载核心模块数据
             if (action == ModuleUpdateAction.ToInstall)
@@ -214,15 +216,25 @@ namespace ObjectServer
             }
         }
 
-        private void InitializeAllResources(ITransactionContext tc, ModuleUpdateAction action)
+        private void InitializeResources(ITransactionContext tc, IEnumerable<IResource> resources, ModuleUpdateAction action)
         {
             //注册并初始化所有资源
-            foreach (var r in this.resources)
+            var standaloneResources = new List<IResource>();
+            foreach (var r in resources)
             {
-                tc.Resources.RegisterResource(r);
+                var merged = tc.Resources.RegisterResource(r);
+                if (!merged)
+                {
+                    standaloneResources.Add(r);
+                }
             }
 
-            tc.Resources.InitializeAllResources(tc, action != ModuleUpdateAction.NoAction);
+            ResourceDependencySort(standaloneResources);
+
+            foreach (var r in standaloneResources)
+            {
+                r.Initialize(tc, action != ModuleUpdateAction.NoAction);
+            }
         }
 
         private void LoadModuleData(ITransactionContext scope, ModuleUpdateAction action)
@@ -257,31 +269,33 @@ namespace ObjectServer
             }
         }
 
-        private void LoadDynamicAssembly()
+        private IResource[] LoadDynamicAssembly()
         {
             var a = CompileSourceFiles(this.Path);
             this.AllAssemblies.Add(a);
-            this.RegisterResourcesWithinAssembly(a);
+            return this.GetResourcesWithinAssembly(a);
         }
 
-        private void RegisterResourcesWithinAssembly(Assembly assembly)
+        private IResource[] GetResourcesWithinAssembly(Assembly assembly)
         {
             Debug.Assert(assembly != null);
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format(
                 "Registering all resources in DLL[{0}], Path=[{1}]...", assembly.FullName, assembly.Location));
 
-            var types = GetStaticModelsFromAssembly(assembly);
+            var types = GetStaticResourceTypesFromAssembly(assembly);
 
+            var resources = new List<IResource>();
             foreach (var t in types)
             {
                 var res = AbstractResource.CreateStaticResourceInstance(t);
                 res.Module = this.Name;
-                this.resources.Add(res);
+                resources.Add(res);
             }
+            return resources.ToArray();
         }
 
-        private static Type[] GetStaticModelsFromAssembly(Assembly assembly)
+        private static Type[] GetStaticResourceTypesFromAssembly(Assembly assembly)
         {
             Debug.Assert(assembly != null);
 
@@ -298,16 +312,19 @@ namespace ObjectServer
             return result.ToArray();
         }
 
-        private void LoadStaticAssemblies()
+        private IResource[] LoadStaticAssemblies()
         {
             Debug.Assert(this.Dlls != null);
 
+            var resources = new List<IResource>();
             foreach (var dll in this.Dlls)
             {
                 var a = Assembly.LoadFile(dll);
                 this.allAssembly.Add(a);
-                this.RegisterResourcesWithinAssembly(a);
+                var res = this.GetResourcesWithinAssembly(a);
+                resources.AddRange(res);
             }
+            return resources.ToArray();
         }
 
         [XmlIgnore]
@@ -393,22 +410,17 @@ namespace ObjectServer
             return a;
         }
 
-        public IEnumerable<IResource> Resources
-        {
-            get
-            {
-                return this.resources;
-            }
-        }
-
         private static void ResourceDependencySort(IList<IResource> resList)
         {
             Debug.Assert(resList != null);
 
             var objDepends = new Dictionary<string, string[]>(resList.Count);
+            var resSet = new HashSet<string>(resList.Select(r => r.Name));
             foreach (var res in resList)
             {
-                objDepends.Add(res.Name, res.GetReferencedObjects());
+                var refObjs = res.GetReferencedObjects()
+                    .Where(r => resSet.Contains(r)).ToArray();
+                objDepends.Add(res.Name, refObjs);
             }
 
             resList.DependencySort(m => m.Name, m => objDepends[m.Name]);

@@ -83,7 +83,7 @@ namespace ObjectServer.Model
             long[] targetIds = null;
             if (record.ContainsKey(this.Name))
             {
-                var targetFields = (object[][])record[this.Name];
+                targetIds = (long[])record[this.Name];
             }
             else //Lazy 的字段，我们重新读取
             {

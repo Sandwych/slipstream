@@ -22,8 +22,6 @@ namespace ObjectServer
             new Dictionary<string, int>();
         private readonly IDictionary<string, IResource> resources =
             new Dictionary<string, IResource>();
-        private readonly HashSet<string> initializedResources =
-            new HashSet<string>();
         private bool disposed = false;
         private readonly ReaderWriterLockSlim resourcesLock = new ReaderWriterLockSlim();
         private readonly string dbName;
@@ -84,7 +82,7 @@ namespace ObjectServer
 
         #region IResourceContainer 成员
 
-        public void RegisterResource(IResource res)
+        public bool RegisterResource(IResource res)
         {
             Debug.Assert(res != null);
 
@@ -96,17 +94,21 @@ namespace ObjectServer
             this.resourcesLock.EnterWriteLock();
             try
             {
+                bool merged;
                 IResource extendedRes;
                 //先看是否存在               
                 if (this.resources.TryGetValue(res.Name, out extendedRes))
                 {
+                    merged = true;
                     //处理单表继承（扩展）
                     extendedRes.MergeFrom(res);
                 }
                 else
                 {
+                    merged = false;
                     this.resources.Add(res.Name, res);
                 }
+                return merged;
             }
             finally
             {
@@ -190,62 +192,6 @@ namespace ObjectServer
                 Debug.Assert(!string.IsNullOrEmpty(this.dbName));
                 return this.dbName;
             }
-        }
-
-        public void InitializeAllResources(ITransactionContext tc, bool update)
-        {
-            IList<IResource> allRes = null;
-            this.resourcesLock.EnterReadLock();
-            try
-            {
-                allRes = new List<IResource>(this.resources.Values);
-            }
-            finally
-            {
-                this.resourcesLock.ExitReadLock();
-            }
-
-            ResourceDependencySort(allRes);
-
-            for (int i = 0; i < allRes.Count; i++)
-            {
-                var res = allRes[i];
-                this.InitializeResource(tc, res, i, update);
-            }
-        }
-
-
-        private void InitializeResource(ITransactionContext tc, IResource res, int index, bool update)
-        {
-            Debug.Assert(res != null);
-
-            if (!this.initializedResources.Contains(res.Name))
-            {
-                res.Initialize(tc, update);
-                this.resourcesLock.EnterWriteLock();
-                try
-                {
-                    this.initializedResources.Add(res.Name);
-                    this.resourceDependencyWeightMapping.Add(res.Name, index);
-                }
-                finally
-                {
-                    this.resourcesLock.ExitWriteLock();
-                }
-            }
-        }
-
-        private static void ResourceDependencySort(IList<IResource> resList)
-        {
-            Debug.Assert(resList != null);
-
-            var objDepends = new Dictionary<string, string[]>(resList.Count);
-            foreach (var res in resList)
-            {
-                objDepends.Add(res.Name, res.GetReferencedObjects());
-            }
-
-            resList.DependencySort(m => m.Name, m => objDepends[m.Name]);
         }
     }
 }

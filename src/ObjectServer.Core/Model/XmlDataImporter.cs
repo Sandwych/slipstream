@@ -24,7 +24,8 @@ namespace ObjectServer.Model
         public void Import(string inputFile)
         {
             using (var fs = File.OpenRead(inputFile))
-            using (var reader = XmlReader.Create(fs))
+            using (var bs = new BufferedStream(fs))
+            using (var reader = XmlReader.Create(bs))
             {
                 this.ImportInternal(reader);
             }

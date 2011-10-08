@@ -152,6 +152,9 @@ namespace ObjectServer
                 throw new ArgumentNullException("db");
             }
 
+            LoggerProvider.EnvironmentLogger.Info(
+                () => String.Format("Initializing resource [{0}]", this.Name));
+
             //确保加载资源之前设置了合适的属性
             Debug.Assert(!string.IsNullOrEmpty(this.Name));
             Debug.Assert(!string.IsNullOrEmpty(this.Module));
