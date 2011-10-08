@@ -37,8 +37,6 @@ namespace ObjectServer.Model
 
             //检查列是否有重复的
 
-            this.VerifyReadPermission(scope);
-
             if (ids == null || ids.Count() == 0)
             {
                 return new Dictionary<string, object>[] { };

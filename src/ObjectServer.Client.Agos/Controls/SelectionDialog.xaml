@@ -6,15 +6,26 @@
            Title="查询并选择记录" Background="#FFF0F0F0" xmlns:my="clr-namespace:ObjectServer.Client.Agos.Windows.TreeView">
     <Grid x:Name="LayoutRoot" Margin="2">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Border Grid.Row="0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                <Button x:Name="NewButton" Content="新建" Style="{StaticResource CommandButtonStyle}" />
+                <Rectangle Width="10"/>
+                <Button x:Name="ClearButton" Content="清除" Style="{StaticResource CommandButtonStyle}" Click="ClearButton_Click" />
+                <Rectangle Width="10"/>
+                <Button x:Name="QueryButton" Content="查询" Style="{StaticResource CommandButtonStyle}" Click="QueryButton_Click" />
+            </StackPanel>
+        </Border>
 
-        <my:TreeView Grid.Row="0" x:Name="treeView1" BorderThickness="1" BorderBrush="#FF999999"  />
+        <my:TreeView Grid.Row="1" x:Name="treeView1" BorderThickness="1" BorderBrush="#FF999999"  />
 
-        <Rectangle Grid.Row="1" Fill="#FF999999" Height="1" Margin="0,5,0,5" />
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5,5,0,5">
+        <Rectangle Grid.Row="2" Fill="#FF999999" Height="1" Margin="0,5,0,5" />
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" >
             <Button x:Name="OKButton" Content="确定" Click="OKButton_Click" Style="{StaticResource CommandButtonStyle}" Grid.Row="1" />
             <Rectangle Width="10"/>
             <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Style="{StaticResource CommandButtonStyle}" Grid.Row="1" />

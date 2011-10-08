@@ -333,23 +333,5 @@ where   hp._id=? and hc._id<>?
             return record.Where(p => !SystemReadonlyFields.Contains(p.Key))
                 .ToDictionary(p => p.Key, p => p.Value);
         }
-
-        /// <summary>
-        /// 检查模型的可读权限
-        /// </summary>
-        /// <param name="scope"></param>
-        private void VerifyReadPermission(ITransactionContext scope)
-        {
-            if (!this.CanRead)
-            {
-                throw new NotSupportedException();
-            }
-
-            if (!scope.CanReadModel(scope.Session.UserId, this.Name))
-            {
-                throw new SecurityException("Access denied");
-            }
-        }
-
     }
 }

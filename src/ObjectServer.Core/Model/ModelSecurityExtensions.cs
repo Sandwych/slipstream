@@ -11,39 +11,36 @@ namespace ObjectServer.Model
     internal static class ModelSecurityExtensions
     {
 
-        public static bool CanCreateModel(this ITransactionContext scope, long userId, string model)
+        public static bool CanCreateModel(this ITransactionContext scope, string model)
         {
-            return scope.IsDeniedModelServiceMethod(userId, model, "allow_create");
+            return scope.IsDeniedModelServiceMethod(model, "create");
         }
 
-        public static bool CanReadModel(this ITransactionContext scope, long userId, string model)
+        public static bool CanReadModel(this ITransactionContext scope, string model)
         {
-            return scope.IsDeniedModelServiceMethod(userId, model, "allow_read");
+            return scope.IsDeniedModelServiceMethod(model, "read");
         }
 
-        public static bool CanWriteModel(this ITransactionContext scope, long userId, string model)
+        public static bool CanWriteModel(this ITransactionContext scope, string model)
         {
-            return scope.IsDeniedModelServiceMethod(userId, model, "allow_write");
+            return scope.IsDeniedModelServiceMethod(model, "write");
         }
 
-        public static bool CanDeleteModel(this ITransactionContext scope, long userId, string model)
+        public static bool CanDeleteModel(this ITransactionContext scope, string model)
         {
-            return scope.IsDeniedModelServiceMethod(userId, model, "allow_delete");
+            return scope.IsDeniedModelServiceMethod(model, "delete");
         }
 
-        private static bool IsDeniedModelServiceMethod(this ITransactionContext scope, long userId, string model, string action)
+        private static bool IsDeniedModelServiceMethod(
+            this ITransactionContext scope, string model, string action)
         {
             Debug.Assert(scope != null);
-            Debug.Assert(userId >= 0);
             Debug.Assert(!string.IsNullOrEmpty(model));
             Debug.Assert(!string.IsNullOrEmpty(action));
 
             if (!scope.Session.IsSystemUser)
             {
-                var records = ModelAccessModel.FindByModelAndUserId(scope, model, userId);
-                var denyCount = records.Count(r => !(bool)r[action]);
-                var result = denyCount == 0;
-                return result;
+                return ModelAccessModel.CheckForCurrentUser(scope, model, action);
             }
             else
             {

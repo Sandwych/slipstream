@@ -44,6 +44,17 @@ namespace ObjectServer.Client.Agos.Controls
         {
             this.DialogResult = false;
         }
+
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.treeView1.ClearAllConstraints();
+            this.treeView1.Clear();
+        }
+
+        private void QueryButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.treeView1.Query();
+        }
     }
 }
 

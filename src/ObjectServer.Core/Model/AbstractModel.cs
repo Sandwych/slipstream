@@ -382,7 +382,6 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
 
-
         #region Service Methods
 
         [TransactionMethod("Count")]
@@ -390,6 +389,16 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             IModel model, ITransactionContext ctx, object[] constraint)
         {
             EnsureServiceMethodArgs(model, ctx);
+
+            if (!model.CanRead)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!ctx.CanReadModel(model.Name))
+            {
+                throw new SecurityException("Access denied");
+            }
 
             return model.CountInternal(ctx, constraint);
         }
@@ -399,6 +408,16 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             IModel model, ITransactionContext ctx, object[] constraint, object[] order, long offset, long limit)
         {
             EnsureServiceMethodArgs(model, ctx);
+
+            if (!model.CanRead)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!ctx.CanReadModel(model.Name))
+            {
+                throw new SecurityException("Access denied");
+            }
 
             OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
 
@@ -422,6 +441,16 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         {
             EnsureServiceMethodArgs(model, ctx);
 
+            if (!model.CanRead)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!ctx.CanReadModel(model.Name))
+            {
+                throw new SecurityException("Access denied");
+            }
+
             string[] strFields = null;
             if (clientFields != null)
             {
@@ -444,6 +473,17 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             IModel model, ITransactionContext ctx, IRecord propertyBag)
         {
             EnsureServiceMethodArgs(model, ctx);
+
+            if (!model.CanCreate)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!ctx.CanCreateModel(model.Name))
+            {
+                throw new SecurityException("Access denied");
+            }
+
             return model.CreateInternal(ctx, propertyBag);
         }
 
@@ -451,6 +491,16 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static void Write(
            IModel model, ITransactionContext ctx, object id, IRecord userRecord)
         {
+            if (!model.CanWrite)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!ctx.CanWriteModel(model.Name))
+            {
+                throw new SecurityException("Access denied");
+            }
+
             EnsureServiceMethodArgs(model, ctx);
             model.WriteInternal(ctx, (long)id, userRecord);
         }
@@ -460,6 +510,16 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             IModel model, ITransactionContext ctx, dynamic clientIDs)
         {
             EnsureServiceMethodArgs(model, ctx);
+
+            if (!model.CanDelete)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!ctx.CanDeleteModel(model.Name))
+            {
+                throw new SecurityException("Access denied");
+            }
 
             long[] ids;
 

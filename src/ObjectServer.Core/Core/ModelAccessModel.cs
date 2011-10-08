@@ -17,13 +17,13 @@ namespace ObjectServer.Core
     {
         public const string ModelName = "core.model_access";
 
-        private static readonly SqlString SqlToQuery = SqlString.Parse(@"
-SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow_delete
-    FROM core_model_access ma
-    INNER JOIN core_model m ON m._id=ma.model
-    INNER JOIN core_user_role_rel urr ON urr.role=ma.role
-    WHERE (urr.user=?) AND (m.name=?)
-");
+        private const string SqlToQuery = @"
+select max(case when a.allow_{0} then 1 else 0 end) > 0
+    from core_model_access a 
+    join core_model m on (a.model = m._id) 
+    left join core_user_role_rel ur on (ur.role = a.role) 
+    where m.name = ? and (ur.user = ? or a.role is null)
+";
 
         public ModelAccessModel()
             : base(ModelName)
@@ -48,8 +48,7 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
         /// <param name="model"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static Dictionary<string, object>[]
-            FindByModelAndUserId(ITransactionContext ctx, string model, long userID)
+        public static bool CheckForCurrentUser(ITransactionContext ctx, string model, string action)
         {
             if (ctx == null)
             {
@@ -61,9 +60,22 @@ SELECT DISTINCT ma._id, ma.allow_create, ma.allow_read, ma.allow_write, ma.allow
                 throw new ArgumentNullException("model");
             }
 
-            var result = ctx.DBContext.QueryAsDictionary(SqlToQuery, userID, model);
+            if (string.IsNullOrEmpty(action))
+            {
+                throw new ArgumentNullException("action");
+            }
 
-            return result;
+            var sql = SqlString.Parse(String.Format(SqlToQuery, action));
+            var result = ctx.DBContext.QueryValue(sql, model, ctx.Session.UserId);
+
+            if (!result.IsNull())
+            {
+                return (bool)result;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         /// <summary>

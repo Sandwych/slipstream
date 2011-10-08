@@ -31,8 +31,6 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("scope");
             }
 
-            this.VerifyReadPermission(tc);
-
             var translator = new ConstraintTranslator(tc, this);
             this.TranslateConstraint(tc, constraint, translator);
 
@@ -60,8 +58,6 @@ namespace ObjectServer.Model
             {
                 throw new ArgumentNullException("scope");
             }
-
-            this.VerifyReadPermission(tx);
 
             var translator = new ConstraintTranslator(tx, this);
             this.TranslateConstraint(tx, constraint, translator);

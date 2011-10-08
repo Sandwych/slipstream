@@ -23,7 +23,7 @@ namespace ObjectServer.Model.Test
 
                 Assert.DoesNotThrow(() =>
                 {
-                    var ids = userModel.SearchInternal(scope, null, null, 0, 0);
+                    var ids = userModel.Search(scope, null, null, 0, 0);
                     Assert.True(ids.Length > 0);
                     userModel.Read(scope, ids, null);
                 });

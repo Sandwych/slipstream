@@ -36,15 +36,6 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("userRecord");
             }
 
-            if (!this.CanWrite)
-            {
-                throw new NotSupportedException();
-            }
-
-            if (!ctx.CanWriteModel(ctx.Session.UserId, this.Name))
-            {
-                throw new SecurityException("Access denied");
-            }
 
             var record = ClearUserRecord(userRecord);
             ModelValidator.ValidateRecordForWriting(this, record);

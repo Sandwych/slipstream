@@ -36,11 +36,6 @@ namespace ObjectServer.Model
                 throw new ArgumentException(msg, "propertyBag");
             }
 
-            if (!scope.CanCreateModel(scope.Session.UserId, this.Name))
-            {
-                throw new SecurityException("Access denied");
-            }
-
             var record = ClearUserRecord(userRecord);
 
             //处理用户没有给的默认值

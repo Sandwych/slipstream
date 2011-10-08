@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\FieldAccessModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Data\AbstractDbContext.cs" />
     <Compile Include="Data\DatabaseType.cs" />
