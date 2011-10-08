@@ -10,17 +10,33 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Threading;
+using System.Diagnostics;
 
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos.Controls;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class OneToManyFieldControl : Grid, IFieldWidget
+    [TemplatePart(Name = ManyToManyFieldControl.ElementRoot, Type = typeof(FrameworkElement))]
+    [TemplatePart(Name = ManyToManyFieldControl.ElementAddButton, Type = typeof(Button))]
+    [TemplatePart(Name = ManyToManyFieldControl.ElementRemoveButton, Type = typeof(Button))]
+    [TemplatePart(Name = ManyToManyFieldControl.ElementTreeGrid, Type = typeof(TreeDataGrid))]
+    public sealed class OneToManyFieldControl : Control, IFieldWidget
     {
+        public const string ElementRoot = "Root";
+        public const string ElementNewButton = "NewButton";
+        public const string ElementDeleteButton = "DeleteButton";
+        public const string ElementOpenButton = "OpenButton";
+        public const string ElementTreeGrid = "TreeGrid";
+
         private readonly IDictionary<string, object> metaField;
-        private readonly Border border;
-        private readonly TreeDataGrid grid;
+        private FrameworkElement root;
+        private Button newButton;
+        private Button deleteButton;
+        private Button openButton;
+        private TreeDataGrid treeGrid;
+
+        private readonly string relatedModel;
 
         public OneToManyFieldControl(object metaField)
         {
@@ -28,28 +44,41 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
+            this.relatedModel = (string)this.metaField["relation"];
 
             //载入数据
+            this.Loaded += new RoutedEventHandler(this.OnLoaded);
+        }
 
-            this.RowDefinitions.Add(
-                new RowDefinition()
-                {
-                    Height = new GridLength(100, GridUnitType.Star)
-                });
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
 
-            this.border = new Border();
-            this.Children.Add(this.border);
-            this.border.SetValue(Grid.RowProperty, 0);
-            this.border.BorderThickness = new Thickness(1);
-            this.border.BorderBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x99, 0x99, 0x99));
+            this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
+            this.newButton = this.GetTemplateChild(ElementNewButton) as Button;
+            this.openButton = this.GetTemplateChild(ElementOpenButton) as Button;
+            this.deleteButton = this.GetTemplateChild(ElementDeleteButton) as Button;
+            this.treeGrid = this.GetTemplateChild(ElementTreeGrid) as TreeDataGrid;
 
-            this.grid = new TreeDataGrid();
-            this.grid.BorderThickness = new Thickness(0);
-            this.border.Child = this.grid;
+            if (this.treeGrid != null)
+            {
+                this.treeGrid.Init(relatedModel, null);
+            }
+
+            if (this.openButton != null)
+            {
+                this.openButton.Click += new RoutedEventHandler(this.OnOpenButtonClicked);
+            }
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs args)
+        {
+
         }
 
         public string FieldName { get; private set; }
 
+        private object fieldValue;
         public object Value
         {
             get
@@ -58,21 +87,36 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             }
             set
             {
-                var app = (App)Application.Current;
-                var refIDs = (object[])value;
-
-                var relatedModel = (string)this.metaField["relation"];
-                var getFieldsArgs = new object[] { (string)this.metaField["relation"] };
-                this.grid.Init(relatedModel, null);
-                if (refIDs.Count() > 0)
+                this.fieldValue = value;
+                if (this.treeGrid != null && this.fieldValue != null)
                 {
-                    this.grid.Reload(refIDs.Cast<long>());
+                    var refIDs = (object[])this.fieldValue;
+                    var getFieldsArgs = new object[] { (string)this.metaField["relation"] };
+                    if (refIDs.Length > 0)
+                    {
+                        this.treeGrid.Reload(refIDs.Cast<long>());
+                    }
                 }
             }
         }
 
         public void Empty()
         {
+        }
+
+        private void OnOpenButtonClicked(object sender, RoutedEventArgs args)
+        {
+            Debug.Assert(this.metaField != null);
+            Debug.Assert(!string.IsNullOrEmpty(this.relatedModel));
+            Debug.Assert(this.treeGrid != null);
+
+            var ids = this.treeGrid.GetSelectedIDs();
+
+            if (ids.Length == 1)
+            {
+                var dlg = new Agos.Windows.FormView.FormDialog(relatedModel, ids.First());
+                dlg.ShowDialog();
+            }
         }
     }
 }

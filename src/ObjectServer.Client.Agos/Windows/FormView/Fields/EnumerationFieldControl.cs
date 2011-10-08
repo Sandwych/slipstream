@@ -46,6 +46,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.SelectedValuePath = "Key";
             this.DisplayMemberPath = "Value";
+
+            this.IsEnabled = !(bool)this.metaField["readonly"];
         }
 
         public string FieldName { get; private set; }

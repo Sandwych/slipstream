@@ -30,6 +30,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
             this.isRequired = (bool)this.metaField["required"];
             this.IsThreeState = !this.isRequired;
+            this.IsEnabled = !(bool)this.metaField["readonly"];
         }
 
         public string FieldName { get; private set; }

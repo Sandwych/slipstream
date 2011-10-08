@@ -30,6 +30,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             {
                 this.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0xff, 0xcc));
             }
+
+            this.IsReadOnly = (bool)this.metaField["readonly"];
         }
 
         public string FieldName { get; private set; }

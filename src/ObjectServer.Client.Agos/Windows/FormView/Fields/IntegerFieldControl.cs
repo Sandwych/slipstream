@@ -23,7 +23,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
 
-            this.VerticalContentAlignment = System.Windows.VerticalAlignment.Center;
+            this.IsEditable = !(bool)this.metaField["readonly"];
         }
 
         public string FieldName { get; private set; }

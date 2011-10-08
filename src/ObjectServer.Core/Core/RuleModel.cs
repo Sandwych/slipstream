@@ -42,7 +42,7 @@ namespace ObjectServer.Core
                 .Required().SetDefaultValueGetter(s => true);
             Fields.Boolean("on_delete").SetLabel("Apply for Deleting")
                 .Required().SetDefaultValueGetter(s => true);
-            Fields.ManyToMany("roles", "core.user_role", "rule", "role").SetLabel("Roles");
+            Fields.ManyToMany("roles", "core.rule_role", "rule", "role").SetLabel("Roles");
             Fields.Chars("constraint").Required().SetLabel("Constraint");
         }
 

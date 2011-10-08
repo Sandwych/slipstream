@@ -35,21 +35,6 @@ namespace ObjectServer
             }
 
             this.SessionId = service.LogOn(TestingDatabaseName, "root", "root");
-            this.ActiveTestModule();
-        }
-
-        private void ActiveTestModule()
-        {
-            //激活 test 模块
-            using (var scope = new TransactionContext(TestingDatabaseName, this.SessionId))
-            {
-                var constraints = new object[][] { new object[] { "name", "=", "test" } };
-                var moduleModel = (ObjectServer.Model.IModel)scope.GetResource("core.module");
-                var ids = moduleModel.SearchInternal(scope, constraints, null, 0, 0);
-                dynamic fields = new ExpandoObject();
-                fields.state = Core.ModuleModel.States.Installed;
-                moduleModel.WriteInternal(scope, ids[0], fields);
-            }
         }
 
         [TestFixtureTearDown]

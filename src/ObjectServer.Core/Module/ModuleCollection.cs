@@ -111,7 +111,7 @@ namespace ObjectServer
                         module.Name, module.Path));
             }
 
-            modules.DependencySort(m => m.Name, m => m.Depends);
+            modules.DependencySort(m => m.Name, m => m.Requires);
             this.allModules = modules;
         }
 

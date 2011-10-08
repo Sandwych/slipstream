@@ -61,6 +61,13 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             {
                 this.openButton.Click += new RoutedEventHandler(this.OpenButtonClicked);
             }
+
+            if (this.textBox != null)
+            {
+                var isReadonly = (bool)this.metaField["readonly"];
+                this.textBox.IsReadOnly = isReadonly;
+                this.selectButton.IsEnabled = !isReadonly;
+            }
         }
 
         public void OnLoaded(object sender, RoutedEventArgs args)

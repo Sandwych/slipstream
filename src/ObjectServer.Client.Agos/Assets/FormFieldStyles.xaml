@@ -71,10 +71,6 @@
         <Setter Property="Margin" Value="5,3,5,3" />
     </Style>
 
-    <Style TargetType="fields:OneToManyFieldControl">
-        <Setter Property="Margin" Value="5,3,5,3" />
-    </Style>
-
     <Style TargetType="fields:ManyToOneFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
         <Setter Property="Height" Value="24" />
@@ -154,6 +150,58 @@
                                                 <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/list-remove.png" />
                                                 <Rectangle Width="5" />
                                                 <TextBlock>移除</TextBlock>
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                            <appControls:TreeDataGrid x:Name="TreeGrid" Grid.Row="1"  BorderThickness="0" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="fields:OneToManyFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="fields:OneToManyFieldControl">
+                    <Border BorderBrush="#FF999999" BorderThickness="1">
+                        <Grid x:Name="Root">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Border Padding="5,5,5,5" Grid.Row="0" >
+                                <StackPanel Orientation="Horizontal" >
+                                    <Button x:Name="NewButton" Padding="10,5,10,5" >
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/document-new.png" />
+                                                <Rectangle Width="5" />
+                                                <TextBlock>新建</TextBlock>
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                    <Rectangle Width="10" />
+                                    <Button x:Name="OpenButton" Padding="10,5,10,5" >
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/document-open.png" />
+                                                <Rectangle Width="5" />
+                                                <TextBlock>打开</TextBlock>
+                                            </StackPanel>
+                                        </Button.Content>
+                                    </Button>
+                                    <Rectangle Width="10" />
+                                    <Button x:Name="DeleteButton" Padding="10,5,10,5" >
+                                        <Button.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
+                                                <Rectangle Width="5" />
+                                                <TextBlock>删除</TextBlock>
                                             </StackPanel>
                                         </Button.Content>
                                     </Button>

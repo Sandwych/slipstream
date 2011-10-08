@@ -10,6 +10,7 @@ CREATE TABLE core_model (
 );
 CREATE INDEX index_core_model_name ON core_model ("name");
 
+
 CREATE TABLE core_field (
     _id BIGSERIAL NOT NULL,
     "module" VARCHAR NOT NULL,
@@ -26,8 +27,9 @@ CREATE TABLE core_field (
 );
 CREATE INDEX index_core_field_name ON core_field ("name");
 
+CREATE SEQUENCE "core_module__id_seq";
 CREATE TABLE core_module (
-    _id BIGSERIAL NOT NULL,  
+    _id BIGINT DEFAULT NEXTVAL('core_module__id_seq') NOT NULL,
     "name" VARCHAR(128) NOT NULL UNIQUE,
     label VARCHAR(256),
     "state" VARCHAR(16) NOT NULL,
@@ -40,6 +42,16 @@ CREATE TABLE core_module (
     PRIMARY KEY(_id)
 );
 CREATE UNIQUE INDEX index_core_module_name ON core_module ("name");
+
+
+CREATE TABLE core_module_dependency (
+    _id BIGSERIAL NOT NULL,
+    name VARCHAR(128),
+    module BIGINT,
+    PRIMARY KEY(_id),
+    FOREIGN KEY (module) REFERENCES core_module ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX index_core_module_dependency_name ON core_module_dependency ("name");
 
 
 CREATE TABLE core_user (
@@ -64,6 +76,7 @@ CREATE TABLE core_model_data (
 	PRIMARY KEY(_id)
 );
 CREATE UNIQUE INDEX index_core_model_data_name ON core_model_data ("name");
+
 
 CREATE TABLE core_session (
 	_id BIGSERIAL NOT NULL,
