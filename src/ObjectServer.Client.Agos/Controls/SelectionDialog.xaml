@@ -3,7 +3,7 @@
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
            xmlns:controls="clr-namespace:System.Windows.Controls;assembly=FloatableWindow"
            Width="562" Height="373"  MinHeight="240" MinWidth="480"
-           Title="查询并选择记录" Background="#FFF0F0F0" xmlns:my="clr-namespace:ObjectServer.Client.Agos.Windows.TreeView">
+           Title="查询并选择记录" xmlns:my="clr-namespace:ObjectServer.Client.Agos.Windows.TreeView">
     <Grid x:Name="LayoutRoot" Margin="2">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0">
+        <Border Grid.Row="0" Style="{StaticResource ToolbarStyle}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
                 <Button x:Name="NewButton" Content="新建" Style="{StaticResource CommandButtonStyle}" />
                 <Rectangle Width="10"/>

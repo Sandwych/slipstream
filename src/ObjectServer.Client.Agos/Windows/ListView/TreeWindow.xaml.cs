@@ -88,13 +88,11 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             {
                 //执行删除
                 var app = (App)Application.Current;
-                app.IsBusy = true;
 
                 var args = new object[] { ids };
                 app.ClientService.BeginExecute(this.modelName, "Delete", args, result =>
                 {
                     this.TreeView.Query();
-                    app.IsBusy = false;
                 });
             }
         }

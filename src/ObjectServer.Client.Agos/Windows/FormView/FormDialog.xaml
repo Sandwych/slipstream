@@ -3,7 +3,7 @@
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
            xmlns:controls="clr-namespace:System.Windows.Controls;assembly=FloatableWindow"
            Width="640" Height="480" MinHeight="320" MinWidth="480"
-           Title="FormDialog" ResizeMode="CanResize"  Background="{StaticResource WideBrush}" >
+           Title="FormDialog" ResizeMode="CanResize"  >
     <Grid x:Name="LayoutRoot" Margin="5" >
         <Grid x:Name="ContentGrid">
             <Grid.RowDefinitions>

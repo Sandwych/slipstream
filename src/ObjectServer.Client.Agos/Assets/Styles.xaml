@@ -20,14 +20,14 @@
     </ResourceDictionary.MergedDictionaries>
 
 
-    <SolidColorBrush x:Key="WideBrush">#FFD9D4CC</SolidColorBrush>
-    <SolidColorBrush x:Key="LighterBrush">#FFE5E1DB</SolidColorBrush>
+    <SolidColorBrush x:Key="WideBrush">#FFE8EBED</SolidColorBrush>
+    <SolidColorBrush x:Key="LighterBrush">#FFF4F6F7</SolidColorBrush>
 
-    <SolidColorBrush x:Key="LineBrush">#FFA2998C</SolidColorBrush>
+    <SolidColorBrush x:Key="LineBrush">#FFCCCCCC</SolidColorBrush>
 
     <LinearGradientBrush x:Key="ToolBarBgBrush" EndPoint="0,1" StartPoint="0,0">
-        <GradientStop Color="#FF393835" Offset="0.0" />
-        <GradientStop Color="#FF2A2827" Offset="1.0" />
+        <GradientStop Color="#FFE8EBED" Offset="0.0" />
+        <GradientStop Color="#FFA8ABAD" Offset="1.0" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="ToolBarButtonBgActive" EndPoint="0,1" StartPoint="0,0">
@@ -168,7 +168,7 @@
     </Style>
 
     <Style x:Key="HeaderStyle" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource ToolBarBgBrush}" />
+        <Setter Property="Background" Value="#FF363636" />
     </Style>
 
     <Style x:Key="ToolbarStyle" TargetType="Border">
