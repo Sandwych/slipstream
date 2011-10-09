@@ -16,8 +16,8 @@ using ObjectServer.Client.Agos.Controls;
 namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
 {
     [TemplatePart(Name = IntegerQueryFieldControl.ElementRoot, Type = typeof(FrameworkElement))]
-    [TemplatePart(Name = IntegerQueryFieldControl.ElementLowUpDown, Type = typeof(NumericUpDown))]
-    [TemplatePart(Name = IntegerQueryFieldControl.ElementHighUpDown, Type = typeof(NumericUpDown))]
+    [TemplatePart(Name = IntegerQueryFieldControl.ElementLowUpDown, Type = typeof(NullableInt32UpDown))]
+    [TemplatePart(Name = IntegerQueryFieldControl.ElementHighUpDown, Type = typeof(NullableInt32UpDown))]
     public class IntegerQueryFieldControl : Control, IQueryField
     {
         public const string ElementRoot = "Root";
@@ -27,8 +27,8 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
         private readonly IDictionary<string, object> metaField;
 
         private FrameworkElement root;
-        private NumericUpDown lowUpdown;
-        private NumericUpDown highUpdown;
+        private NullableInt32UpDown lowUpdown;
+        private NullableInt32UpDown highUpdown;
 
         public IntegerQueryFieldControl(object metaField)
             : base()
@@ -42,8 +42,8 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
             base.OnApplyTemplate();
 
             this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
-            this.lowUpdown = this.GetTemplateChild(ElementLowUpDown) as NumericUpDown;
-            this.highUpdown = this.GetTemplateChild(ElementHighUpDown) as NumericUpDown;
+            this.lowUpdown = this.GetTemplateChild(ElementLowUpDown) as NullableInt32UpDown;
+            this.highUpdown = this.GetTemplateChild(ElementHighUpDown) as NullableInt32UpDown;
         }
 
         public QueryConstraint[] GetConstraints()
@@ -51,12 +51,12 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
             System.Diagnostics.Debug.Assert(!this.IsEmpty);
 
             var constraints = new List<QueryConstraint>(2);
-            if (!double.IsNaN(this.highUpdown.Value))
+            if (this.highUpdown.Value.Value != null)
             {
                 constraints.Add(new QueryConstraint(this.FieldName, "<=", (int)this.highUpdown.Value));
             }
 
-            if (!double.IsNaN(this.lowUpdown.Value))
+            if (this.lowUpdown.Value != null)
             {
                 constraints.Add(new QueryConstraint(this.FieldName, ">=", (int)this.lowUpdown.Value));
             }
@@ -68,11 +68,11 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
         {
             if (this.lowUpdown != null)
             {
-                this.lowUpdown.Value = double.NaN;
+                this.lowUpdown.Value = null;
             }
             if (this.highUpdown != null)
             {
-                this.highUpdown.Value = double.NaN;
+                this.highUpdown.Value = null;
             }
         }
 
@@ -80,7 +80,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
         {
             get
             {
-                return double.IsNaN(this.lowUpdown.Value) && double.IsNaN(this.highUpdown.Value);
+                return this.lowUpdown.Value == null && this.highUpdown.Value == null;
             }
         }
 

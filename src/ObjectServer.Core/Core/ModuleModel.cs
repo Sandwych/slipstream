@@ -53,6 +53,8 @@ namespace ObjectServer.Core
             Fields.Chars("url").SetLabel("Web Site").SetSize(128).Readonly();
             Fields.Chars("version").SetLabel("Version").SetSize(64).Readonly();
             Fields.Chars("license").SetLabel("License").SetSize(32).Readonly();
+            Fields.OneToMany("depends", "core.module_dependency", "module")
+                .SetLabel("Dependencies");
             Fields.Text("info").SetLabel("Information").Readonly();
         }
 

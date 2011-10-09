@@ -42,10 +42,10 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <toolkit:NumericUpDown x:Name="LowUpDown" Grid.Column="0" Background="White" Maximum="999999999" Minimum="-999999999" />
+                        <appControls:NullableInt32UpDown x:Name="LowUpDown" Grid.Column="0"  />
                         <!-- TODO 国际化 -->
                         <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
-                        <toolkit:NumericUpDown x:Name="HighUpDown" Grid.Column="2" Background="White" Maximum="999999999" Minimum="-99999999" />
+                        <appControls:NullableInt32UpDown x:Name="HighUpDown" Grid.Column="2" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

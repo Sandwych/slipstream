@@ -55,7 +55,7 @@ namespace ObjectServer
                 try
                 {
                     Session.Pulse(this.dbctx, sessionId);
-                    this.resources = Environment.DBProfiles.GetDBProfile(dbName);
+                    this.resources = Environment.DBProfiles.GetDbProfile(dbName);
                     this.Session = session;
                 }
                 catch
@@ -79,7 +79,7 @@ namespace ObjectServer
         /// </summary>
         /// <param name="dbName"></param>
         public TransactionContext(string dbName)
-            : this(dbName, Environment.DBProfiles.GetDBProfile(dbName))
+            : this(dbName, Environment.DBProfiles.GetDbProfile(dbName))
         {
         }
 
@@ -131,7 +131,7 @@ namespace ObjectServer
             }
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-            this.resources = Environment.DBProfiles.GetDBProfile(db.DatabaseName);
+            this.resources = Environment.DBProfiles.GetDbProfile(db.DatabaseName);
             this.dbctx = DataProvider.CreateDataContext(db.DatabaseName);
             this.DBContext.Open();
 

@@ -20,8 +20,8 @@ namespace ObjectServer
     internal sealed class DbProfileCollection : IGlobalObject, IDisposable
     {
         private Config config;
-        private Dictionary<string, DbProfile> dbProfiles =
-            new Dictionary<string, DbProfile>();
+        private Dictionary<string, IDbProfile> dbProfiles =
+            new Dictionary<string, IDbProfile>();
         private bool disposed = false;
 
         ~DbProfileCollection()
@@ -37,30 +37,25 @@ namespace ObjectServer
 
             this.config = cfg;
 
-            var dbs = DataProvider.ListDatabases();
-            foreach (var dbName in dbs)
-            {
-                bool isRegistered = this.dbProfiles.ContainsKey(dbName);
-
-                if (!isRegistered)
-                {
-                    this.Register(dbName, false);
-                }
-            }
-
-            LoggerProvider.EnvironmentLogger.Info("All databases has been loaded.");
+            LoggerProvider.EnvironmentLogger.Info("DbProfileCollection has been loaded.");
         }
 
         #endregion
 
         public void Register(string dbName, bool isUpdate)
         {
-            Debug.Assert(!string.IsNullOrEmpty(dbName));
+            if (string.IsNullOrEmpty(dbName))
+            {
+                throw new ArgumentNullException("dbName");
+            }
 
-            var msg = String.Format("Initializing DBProfile: [{0}]".PadRight(80, '='), dbName);
+            var msg = String.Format("Loading database profile: [{0}]", dbName);
             LoggerProvider.EnvironmentLogger.Info(msg);
 
-            LoggerProvider.EnvironmentLogger.Info(() => string.Format("Registering resources in database: [{0}]", dbName));
+            if (this.dbProfiles.ContainsKey(dbName))
+            {
+                throw new ArgumentException("dbName");
+            }
 
             var dbNames = DataProvider.ListDatabases();
             if (!dbNames.Contains(dbName))
@@ -71,22 +66,21 @@ namespace ObjectServer
             var db = new DbProfile(dbName);
             db.Initialize(isUpdate);
             this.dbProfiles.Add(dbName, db);
-
         }
 
-        public DbProfile GetDBProfile(string dbName)
+        public IDbProfile GetDbProfile(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
             if (!this.dbProfiles.ContainsKey(dbName))
             {
-                throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
+                this.Register(dbName, false);
             }
 
             return this.dbProfiles[dbName];
         }
 
-        public void RemoveDB(string dbName)
+        public void Remove(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 
