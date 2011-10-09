@@ -22,11 +22,6 @@
         <Setter Property="Height" Value="24" />
     </Style>
 
-    <Style TargetType="fields:ReferenceFieldControl">
-        <Setter Property="Margin" Value="5,3,5,3" />
-        <Setter Property="Height" Value="24" />
-    </Style>
-
     <Style TargetType="fields:BooleanFieldControl">
         <Setter Property="Background" Value="White" />
         <Setter Property="Margin" Value="5,3,5,3" />
@@ -84,6 +79,8 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="2" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="2" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="TextBox" Grid.Column="0" />
                         <Button x:Name="SelectButton" Grid.Column="2" ToolTipService.ToolTip="选择关联的记录" >
@@ -91,7 +88,53 @@
                                 <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/system-search.png" />
                             </Button.Content>
                         </Button>
-                        <Button x:Name="OpenButton" Grid.Column="4" ToolTipService.ToolTip="打开关联的记录" >
+                        <Button x:Name="ClearButton" Grid.Column="4" ToolTipService.ToolTip="清空此字段" >
+                            <Button.Content>
+                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="OpenButton" Grid.Column="6" ToolTipService.ToolTip="打开关联的记录" >
+                            <Button.Content>
+                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/document-open.png" />
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="fields:ReferenceFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="fields:ReferenceFieldControl">
+                    <Grid x:Name="Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="2" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="2" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="2" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="2" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="ComboBox" Grid.Column="0" />
+                        <TextBox x:Name="TextBox" Grid.Column="2" />
+                        <Button x:Name="SelectButton" Grid.Column="4" ToolTipService.ToolTip="选择关联的记录" >
+                            <Button.Content>
+                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/system-search.png" />
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="ClearButton" Grid.Column="6" ToolTipService.ToolTip="清空此字段" >
+                            <Button.Content>
+                                <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="OpenButton" Grid.Column="8" ToolTipService.ToolTip="打开关联的记录" >
                             <Button.Content>
                                 <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/document-open.png" />
                             </Button.Content>

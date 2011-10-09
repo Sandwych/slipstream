@@ -19,18 +19,21 @@ namespace ObjectServer.Client.Agos.Windows.FormView
     [TemplatePart(Name = ManyToOneFieldControl.ElementTextBox, Type = typeof(TextBox))]
     [TemplatePart(Name = ManyToOneFieldControl.ElementSelectButton, Type = typeof(Button))]
     [TemplatePart(Name = ManyToOneFieldControl.ElementOpenButton, Type = typeof(Button))]
+    [TemplatePart(Name = ManyToOneFieldControl.ElementClearButton, Type = typeof(Button))]
     public class ManyToOneFieldControl : Control, IFieldWidget
     {
         public const string ElementRoot = "Root";
         public const string ElementTextBox = "TextBox";
         public const string ElementSelectButton = "SelectButton";
         public const string ElementOpenButton = "OpenButton";
+        public const string ElementClearButton = "ClearButton";
 
         private readonly IDictionary<string, object> metaField;
 
         private FrameworkElement root;
         private Button selectButton;
         private Button openButton;
+        private Button clearButton;
         private TextBox textBox;
 
         public ManyToOneFieldControl(object metaField)
@@ -50,23 +53,39 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
             this.selectButton = this.GetTemplateChild(ElementSelectButton) as Button;
             this.openButton = this.GetTemplateChild(ElementOpenButton) as Button;
+            this.clearButton = this.GetTemplateChild(ElementClearButton) as Button;
             this.textBox = this.GetTemplateChild(ElementTextBox) as TextBox;
 
             if (this.selectButton != null)
             {
-                this.selectButton.Click += new RoutedEventHandler(this.SelectButtonClicked);
+                this.selectButton.Click += new RoutedEventHandler(this.OnSelectButtonClicked);
             }
 
             if (this.openButton != null)
             {
-                this.openButton.Click += new RoutedEventHandler(this.OpenButtonClicked);
+                this.openButton.Click += new RoutedEventHandler(this.OnOpenButtonClicked);
             }
+
+            if (this.clearButton != null)
+            {
+                this.clearButton.Click += new RoutedEventHandler(this.OnClearButtonClicked);
+            }
+
+            bool isReadonly = (bool)this.metaField["readonly"];
 
             if (this.textBox != null)
             {
-                var isReadonly = (bool)this.metaField["readonly"];
                 this.textBox.IsReadOnly = isReadonly;
+            }
+
+            if (this.selectButton != null)
+            {
                 this.selectButton.IsEnabled = !isReadonly;
+            }
+
+            if (this.clearButton != null)
+            {
+                this.clearButton.IsEnabled = !isReadonly;
             }
         }
 
@@ -102,6 +121,13 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 {
                     this.Value = new object[] { value, String.Empty }; //TODO 读取名称
                 }
+                else
+                {
+                    if (this.textBox != null)
+                    {
+                        this.textBox.Text = string.Empty;
+                    }
+                }
             }
         }
 
@@ -110,7 +136,13 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.Value = null;
         }
 
-        public void SelectButtonClicked(object sender, RoutedEventArgs args)
+        public void OnClearButtonClicked(object sender, RoutedEventArgs args)
+        {
+            Debug.Assert(this.metaField != null);
+            this.Empty();
+        }
+
+        public void OnSelectButtonClicked(object sender, RoutedEventArgs args)
         {
             Debug.Assert(this.metaField != null);
             var relatedModel = this.metaField["relation"] as string;
@@ -131,7 +163,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.Value = args.SelectedIDs.First();
         }
 
-        public void OpenButtonClicked(object sender, RoutedEventArgs args)
+        public void OnOpenButtonClicked(object sender, RoutedEventArgs args)
         {
             Debug.Assert(this.metaField != null);
             var relatedModel = this.metaField["relation"] as string;
