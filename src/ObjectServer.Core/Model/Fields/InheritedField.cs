@@ -58,7 +58,13 @@ namespace ObjectServer.Model
             }
         }
 
-        public override bool IsColumn { get { return false; } }
+        public override bool IsColumn
+        {
+            get
+            {
+                return this.BaseField.IsColumn;
+            }
+        }
 
         public override bool IsScalar
         {

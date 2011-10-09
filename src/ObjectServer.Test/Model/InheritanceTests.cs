@@ -74,6 +74,10 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id, ids[0]);
             Assert.AreEqual(1, animalModel.Count(this.TransactionContext, null));
+
+            var dogObj = dogModel.Browse(this.TransactionContext, id);
+            var animal = animalModel.Browse(this.TransactionContext, dogObj.animal._id);
+            Assert.AreEqual(dog.name, animal.name);
         }
 
         [Test]
@@ -154,6 +158,19 @@ namespace ObjectServer.Model.Test
 
             Assert.AreEqual(1, animalIds.Length);
             Assert.AreEqual(1, dogIds.Length);
+        }
+
+        [Test]
+        public void CheckThreeLevelMultiInheritances()
+        {
+            var batman = this.GetResource("test.batman");
+
+            //是否有父表的字段
+            Assert.That(batman.Fields.ContainsKey("sucker")); //test.bat            
+
+            //是否有祖辈表的字段
+            Assert.That(batman.Fields.ContainsKey("wings")); //test.flyable
+            Assert.That(batman.Fields.ContainsKey("name")); //test.animal
         }
 
     }

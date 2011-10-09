@@ -84,7 +84,7 @@ namespace ObjectServer.Model
                         record.Remove(f.Key);
                     }
                 }
-                var baseId = baseModel.CreateInternal(scope, baseRecord);                
+                var baseId = baseModel.CreateInternal(scope, baseRecord);
                 record[i.RelatedField] = baseId;
             }
         }
@@ -211,7 +211,11 @@ namespace ObjectServer.Model
                 values.Add(VersionFieldName, 0);
             }
 
-            var allColumnNames = values.Keys.Where(f => this.Fields[f].IsColumn);
+            var allColumnNames = from f in values.Keys
+                                 let fieldInfo = this.Fields[f]
+                                 where fieldInfo.IsColumn && !(fieldInfo is InheritedField) //TODO
+                                 select f;
+
             var colValues = new object[allColumnNames.Count()];
 
             // "insert into <tableName> (_id, cols... ) values (<id>, ?, ?, ?... );",

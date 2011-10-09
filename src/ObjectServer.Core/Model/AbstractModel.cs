@@ -66,7 +66,6 @@ namespace ObjectServer.Model
 
         private void VerifyFields()
         {
-
             foreach (var pair in this.Fields)
             {
                 pair.Value.VerifyDefinition();
@@ -102,9 +101,12 @@ namespace ObjectServer.Model
             //被指向的对象肯定已经更早注册了
             foreach (var ii in this.Inheritances)
             {
-                if (!this.Fields.ContainsKey(ii.RelatedField))
+                IField inhertField;
+                var hasInheritField = this.Fields.TryGetValue(ii.RelatedField, out inhertField);
+                if (!hasInheritField || inhertField.Type != FieldType.ManyToOne || !inhertField.IsRequired)
                 {
-                    throw new FieldAccessException();
+                    throw new Exceptions.ResourceException(
+                        "多表继承必须包含指向父表的 ManyToOne 字段，且不能为空");
                 }
 
                 //把“基类”模型的字段引用复制过来

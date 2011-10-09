@@ -9,7 +9,7 @@ namespace ObjectServer
     /// <summary>
     /// 系统的命名规则
     /// </summary>
-    internal static class NamingRule
+    public static class NamingRule
     {
         public static readonly Regex ResourcePattern =
             new Regex(@"^([a-z_][a-z_0-9]*)\.([a-z_][a-z_0-9]*)$",
@@ -58,6 +58,16 @@ namespace ObjectServer
         }
 
         public static bool IsValidSqlName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            return SqlNamePattern.IsMatch(name);
+        }
+
+        public static bool IsValidModuleName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {

@@ -194,7 +194,6 @@
     <Compile Include="Model\Fields\FieldCollection.cs" />
     <Compile Include="Model\Fields\ReferenceField.cs" />
     <Compile Include="Model\Fields\EnumerationField.cs" />
-    <Compile Include="NamingRule.cs" />
     <Compile Include="IExportedService.cs" />
     <Compile Include="IResource.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />

@@ -115,5 +115,19 @@ namespace ObjectServer.Test
         }
     }
 
+    [Resource]
+    public sealed class TestBatManModel : AbstractSqlModel
+    {
+        public TestBatManModel()
+            : base("test.batman")
+        {
+            Inherit("test.bat", "bat");
+
+            Fields.ManyToOne("bat", "test.bat").Required()
+                .OnDelete(OnDeleteAction.Cascade).SetLabel("Base Bat Model");
+            Fields.Chars("real_name");
+        }
+    }
+
 
 }

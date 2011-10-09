@@ -152,8 +152,13 @@ namespace ObjectServer.Model
             this.SetModificationInfo(ctx, record);
 
             //所有可更新的字段
-            var updatableColumnFields = allFields.Where(
-                f => this.Fields[f].IsColumn && !this.Fields[f].IsReadonly).ToArray();
+            var updatableColumnFields =
+                (from f in allFields
+                 let fieldInfo = this.Fields[f]
+                 where fieldInfo.IsColumn && !(fieldInfo is InheritedField) && !fieldInfo.IsReadonly
+                 select f).ToArray();
+            //TODO is InheritedField 不是太好
+
             this.ConvertFieldToColumn(ctx, record, updatableColumnFields);
 
             var sqlBuilder = new SqlStringBuilder();
