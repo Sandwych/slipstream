@@ -49,6 +49,10 @@ namespace ObjectServer
             using (var ctx = new TransactionContext(this.DatabaseName, this))
             {
                 Environment.Modules.UpdateModuleList(ctx.DBContext);
+            }
+
+            using (var ctx = new TransactionContext(this.DatabaseName, this))
+            {
 
                 //加载其它模块
                 Environment.Modules.LoadModules(ctx, isUpdate);

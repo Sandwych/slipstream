@@ -213,7 +213,7 @@ namespace ObjectServer.Model
 
             var allColumnNames = from f in values.Keys
                                  let fieldInfo = this.Fields[f]
-                                 where fieldInfo.IsColumn && !(fieldInfo is InheritedField) //TODO
+                                 where fieldInfo.IsColumn
                                  select f;
 
             var colValues = new object[allColumnNames.Count()];

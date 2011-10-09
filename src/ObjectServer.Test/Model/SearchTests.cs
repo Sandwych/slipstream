@@ -80,7 +80,7 @@ namespace ObjectServer.Model.Test
 
             var constraint = new object[][] { new object[] { "name", "like", "core.modu%" } };
             var ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);
-            Assert.AreEqual(1, ids.Length);
+            Assert.AreEqual(2, ids.Length);
 
             constraint = new object[][] { new object[] { "name", "like", "%like dummy%" } };
             ids = modelModel.Search(this.TransactionContext, constraint, null, 0, 0);

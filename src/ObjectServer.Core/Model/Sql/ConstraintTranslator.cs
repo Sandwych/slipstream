@@ -319,7 +319,8 @@ namespace ObjectServer.Model
                 return;
             }
 
-            if (firstPartFieldInfo.IsColumn)
+            //TODO 这里处理继承字段比较恶心
+            if (firstPartFieldInfo.IsColumn || firstPartFieldInfo is InheritedField)
             {
                 var leafPart = fieldParts.Last();
                 var lastModel = this.rootModel;
@@ -332,7 +333,10 @@ namespace ObjectServer.Model
                         throw new ArgumentOutOfRangeException("criterion");
                     }
 
-                    lastTableAlias = this.ProcessInheritedFieldPart(lastModel, lastTableAlias, fieldPart, field);
+                    if (this.IsInheritedField(lastModel, fieldPart))
+                    {
+                        lastTableAlias = this.HandleInheritedFieldPart(lastModel, lastTableAlias, fieldPart, field);
+                    }
 
                     //处理连接字段
                     if (field.Type == FieldType.ManyToOne && fieldPart != leafPart)
@@ -346,6 +350,10 @@ namespace ObjectServer.Model
                 Debug.Assert(field != null);
                 Debug.Assert(lastModel != null);
 
+                if (this.IsInheritedField(lastModel, field.Name))
+                {
+                    field = ((InheritedField)field).BaseField;
+                }
                 this.AddLeafColumnCriterion(criterion, lastTableAlias, lastModel, field);
             }
             else
@@ -362,6 +370,23 @@ namespace ObjectServer.Model
             }
         }
 
+        private string HandleInheritedFieldPart(IModel model, string lastTableAlias, string fieldPart, IField field)
+        {
+            Debug.Assert(model != null);
+            Debug.Assert(!string.IsNullOrEmpty(lastTableAlias));
+            Debug.Assert(!string.IsNullOrEmpty(fieldPart));
+            Debug.Assert(field != null);
+            Debug.Assert(this.IsInheritedField(model, fieldPart));
+
+            var baseField = ((InheritedField)field).BaseField;
+            var relatedField = model.Inheritances
+                .Where(i1 => i1.BaseModel == baseField.Model.Name)
+                .Select(i2 => i2.RelatedField).Single();
+            var baseTableJoin = this.SetInnerJoin(baseField.Model.TableName, relatedField);
+            lastTableAlias = baseTableJoin.Alias;
+            return lastTableAlias;
+        }
+
         private string JoinTableByFieldPart(string lastTableAlias, IField field, IModel relatedModel)
         {
             if (field.IsRequired)
@@ -371,21 +396,6 @@ namespace ObjectServer.Model
             else
             {
                 lastTableAlias = this.SetOuterJoin(relatedModel.TableName, field.Name).Alias;
-            }
-            return lastTableAlias;
-        }
-
-        private string ProcessInheritedFieldPart(IModel lastModel, string lastTableAlias, string fieldPart, IField field)
-        {
-            //处理继承字段
-            if (IsInheritedField(lastModel, fieldPart))
-            {
-                var baseField = ((InheritedField)field).BaseField;
-                var relatedField = lastModel.Inheritances
-                    .Where(i1 => i1.BaseModel == baseField.Model.Name)
-                    .Select(i2 => i2.RelatedField).Single();
-                var baseTableJoin = this.SetInnerJoin(baseField.Model.TableName, relatedField);
-                lastTableAlias = baseTableJoin.Alias;
             }
             return lastTableAlias;
         }

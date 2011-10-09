@@ -60,8 +60,8 @@ namespace ObjectServer
                 }
                 catch
                 {
-                    this.DBTransaction.Rollback();
-                    this.DBTransaction.Dispose();
+                    this.DbTransaction.Rollback();
+                    this.DbTransaction.Dispose();
                     throw;
                 }
             }
@@ -105,8 +105,8 @@ namespace ObjectServer
                 }
                 catch
                 {
-                    this.DBTransaction.Rollback();
-                    this.DBTransaction.Dispose();
+                    this.DbTransaction.Rollback();
+                    this.DbTransaction.Dispose();
                     throw;
                 }
 
@@ -145,8 +145,8 @@ namespace ObjectServer
                 }
                 catch
                 {
-                    this.DBTransaction.Rollback();
-                    this.DBTransaction.Dispose();
+                    this.DbTransaction.Rollback();
+                    this.DbTransaction.Dispose();
                     throw;
                 }
             }
@@ -231,7 +231,7 @@ namespace ObjectServer
         }
 
         private readonly IDbTransaction dbtx;
-        public IDbTransaction DBTransaction
+        public IDbTransaction DbTransaction
         {
             get
             {
@@ -269,15 +269,15 @@ namespace ObjectServer
                         Session.Remove(this.dbctx, this.Session.Id);
                     }
 
-                    this.DBTransaction.Commit();
+                    this.DbTransaction.Commit();
                 }
                 catch
                 {
-                    this.DBTransaction.Rollback();
+                    this.DbTransaction.Rollback();
                 }
                 finally
                 {
-                    this.DBTransaction.Dispose();
+                    this.DbTransaction.Dispose();
                     this.DBContext.Close();
                     this.disposed = true;
                 }

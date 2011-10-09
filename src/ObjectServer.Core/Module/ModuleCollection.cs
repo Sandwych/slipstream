@@ -142,9 +142,9 @@ namespace ObjectServer
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadModules(ITransactionContext tx, bool isUpdate)
+        public void LoadModules(ITransactionContext tc, bool isUpdate)
         {
-            if (tx == null)
+            if (tc == null)
             {
                 throw new ArgumentNullException("tx");
             }
@@ -160,7 +160,7 @@ namespace ObjectServer
             var sql = new SqlString("select _id, name, state from core_module");
 
             //TODO: 模块依赖排序
-            var modules = tx.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
+            var modules = tc.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
 
             var coreModule = modules.Where(m => (string)m["name"] == "core");
             var sortedModules = modules.Where(m => (string)m["name"] != "core");
@@ -171,17 +171,20 @@ namespace ObjectServer
                 var moduleName = (string)m["name"];
                 var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
                 var moduleId = (long)m[AbstractModel.IdFieldName];
+
+
                 if (module != null)
                 {
                     var state = (string)m["state"];
-                    this.InstallOrUpgradeModule(tx, module, moduleId, state, isUpdate);
+                    this.InstallOrUpgradeModule(tc, module, moduleId, state, isUpdate);
                 }
                 else
                 {
-                    this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                    this.UpdateModuleState(tc.DBContext, moduleId, ModuleModel.States.Uninstalled);
                     LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
+
             }
         }
 

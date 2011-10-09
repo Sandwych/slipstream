@@ -58,13 +58,7 @@ namespace ObjectServer.Model
             }
         }
 
-        public override bool IsColumn
-        {
-            get
-            {
-                return this.BaseField.IsColumn;
-            }
-        }
+        public override bool IsColumn { get { return false; } }
 
         public override bool IsScalar
         {
@@ -107,6 +101,14 @@ namespace ObjectServer.Model
             set
             {
                 throw new NotSupportedException();
+            }
+        }
+
+        public override bool Selectable
+        {
+            get
+            {
+                return this.BaseField.Selectable;
             }
         }
     }

@@ -71,7 +71,7 @@ namespace ObjectServer.Model
             //表里的列，也就是可以直接用 SQL 查的列
             var columnFields = from f in allFields
                                let fieldInfo = this.Fields[f]
-                               where fieldInfo.IsColumn && !(fieldInfo is InheritedField) //TODO 这里可能要重新考虑下
+                               where fieldInfo.IsColumn  //TODO 这里可能要重新考虑下
                                select f;
 
             columnFields = columnFields.Union(this.Inheritances.Select(i => i.RelatedField));

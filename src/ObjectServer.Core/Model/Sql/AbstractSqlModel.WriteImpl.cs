@@ -155,7 +155,7 @@ namespace ObjectServer.Model
             var updatableColumnFields =
                 (from f in allFields
                  let fieldInfo = this.Fields[f]
-                 where fieldInfo.IsColumn && !(fieldInfo is InheritedField) && !fieldInfo.IsReadonly
+                 where fieldInfo.IsColumn && !fieldInfo.IsReadonly
                  select f).ToArray();
             //TODO is InheritedField 不是太好
 

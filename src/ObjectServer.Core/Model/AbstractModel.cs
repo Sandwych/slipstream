@@ -103,10 +103,15 @@ namespace ObjectServer.Model
             {
                 IField inhertField;
                 var hasInheritField = this.Fields.TryGetValue(ii.RelatedField, out inhertField);
-                if (!hasInheritField || inhertField.Type != FieldType.ManyToOne || !inhertField.IsRequired)
+                if (!hasInheritField
+                    || !tc.Resources.ContainsResource(ii.BaseModel)
+                    || inhertField.Type != FieldType.ManyToOne
+                    || !inhertField.IsRequired)
                 {
-                    throw new Exceptions.ResourceException(
+                    var ex = new Exceptions.ResourceException(
                         "多表继承必须包含指向父表的 ManyToOne 字段，且不能为空");
+                    LoggerProvider.EnvironmentLogger.Error(ex.Message, ex);
+                    throw ex;
                 }
 
                 //把“基类”模型的字段引用复制过来

@@ -104,7 +104,7 @@ namespace ObjectServer.Model
 
         public abstract bool IsColumn { get; }
 
-        public bool Selectable
+        public virtual bool Selectable
         {
             get { return this.IsColumn || this.CriterionConverter != null; }
         }
