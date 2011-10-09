@@ -4,9 +4,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="600" d:DesignWidth="800" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" BorderBrush="#FF999999" BorderThickness="1" Loaded="UserControl_Loaded">
+    d:DesignHeight="600" d:DesignWidth="800" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Loaded="UserControl_Loaded">
 
-    <Grid x:Name="LayoutRoot" Background="{StaticResource SolidControlColor}">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource  WideBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -15,7 +15,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="2" x:Name="QueryConditionsArea" Margin="0,0,0,0" Padding="5,5,5,5" Background="{StaticResource SolidControlColor}" >
+        <Border Grid.Row="2" x:Name="QueryConditionsArea" Margin="0,0,0,0" Padding="5,5,5,5" Background="{StaticResource WideBrush}" >
 
             <StackPanel Orientation="Vertical" >
                 <TextBlock Grid.Column="0" Text="查询条件" FontWeight="Bold" VerticalAlignment="Center" />
@@ -29,7 +29,7 @@
                         </DataTemplate>
                     </toolkit:Expander.HeaderTemplate>
                     <toolkit:Expander.Content>
-                        <Border BorderBrush="#FFC0C0C0" BorderThickness="1" Background="#FFE0E0E0" Padding="5">
+                        <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Background="{StaticResource LighterBrush}" Padding="5">
                             <ContentPresenter Content="{Binding}"  />
                         </Border>
                     </toolkit:Expander.Content>
@@ -38,7 +38,7 @@
             </StackPanel>
         </Border>
 
-        <Rectangle Grid.Row="3" Height="1" Fill="#E0E0E0" ></Rectangle>
+        <Rectangle Grid.Row="3" Height="1" Fill="{StaticResource LineBrush}" ></Rectangle>
 
         <sdk:DataGrid x:Name="gridList" AutoGenerateColumns="False" Grid.Row="4" IsReadOnly="True"
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0">

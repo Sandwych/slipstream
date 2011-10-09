@@ -10,7 +10,7 @@
            Title="登录" KeyDown="Page_KeyDown">
     <Grid Background="#FF32302E">
 
-        <StackPanel VerticalAlignment="Center" Height="Auto" Width="390" Orientation="Vertical" Background="{StaticResource SolidControlColor}"  >
+        <StackPanel VerticalAlignment="Center" Height="Auto" Width="390" Orientation="Vertical" Background="{StaticResource WideBrush}"  >
 
             <StackPanel.Effect>
                 <DropShadowEffect ShadowDepth="5" BlurRadius="5" Color="Black" />

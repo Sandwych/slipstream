@@ -20,6 +20,31 @@
     </ResourceDictionary.MergedDictionaries>
 
 
+    <SolidColorBrush x:Key="WideBrush">#FFD9D4CC</SolidColorBrush>
+    <SolidColorBrush x:Key="LighterBrush">#FFE5E1DB</SolidColorBrush>
+
+    <SolidColorBrush x:Key="LineBrush">#FFA2998C</SolidColorBrush>
+
+    <LinearGradientBrush x:Key="ToolBarBgBrush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FF393835" Offset="0.0" />
+        <GradientStop Color="#FF2A2827" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ToolBarButtonBgActive" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FF3A3835" Offset="0.0" />
+        <GradientStop Color="#FF2E2D2B" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ActivatedTabHeaderBgBrush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FFECE9E5" Offset="0.0" />
+        <GradientStop Color="#FFE5E1DB" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="DeactivatedTabHeaderBgBrush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FFC4BDB2" Offset="0.0" />
+        <GradientStop Color="#FFBDB6AA" Offset="1.0" />
+    </LinearGradientBrush>    
+
     <!-- ******MAIN PAGE STYLES****** -->
 
     <Style TargetType="appControls:TransitionFrame">
@@ -143,22 +168,13 @@
     </Style>
 
     <Style x:Key="HeaderStyle" TargetType="Border">
-        <Setter Property="Background" Value="#FF302E2c" />
+        <Setter Property="Background" Value="{StaticResource ToolBarBgBrush}" />
     </Style>
 
     <Style x:Key="ToolbarStyle" TargetType="Border">
         <Setter Property="Padding" Value="5,5,5,5" />
         <Setter Property="Margin" Value="0,5,0,0" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="#FFB8B3A9" Offset="0"/>
-                        <GradientStop Color="#FFA9A298" Offset="1"/>
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Background" Value="{StaticResource ToolBarBgBrush}" />
     </Style>
 
     <!-- **************************** -->

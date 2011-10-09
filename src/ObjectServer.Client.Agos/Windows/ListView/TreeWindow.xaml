@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="480" d:DesignWidth="640">
-    <Grid x:Name="LayoutRoot" Background="{StaticResource SolidControlColor}" >
+    <Grid x:Name="LayoutRoot" Background="{StaticResource LighterBrush}" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"  />
             <RowDefinition Height="Auto"  />
@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0" x:Name="Toolbar" Style="{StaticResource ToolbarStyle}">
             <StackPanel Orientation="Horizontal" >
-                <Button Name="NewButton" MinWidth="75" Height="25" Click="NewButton_Click">
+                <Button Name="NewButton" MinWidth="75" Height="25" Click="NewButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/document-new.png" />
@@ -23,7 +23,7 @@
                     </Button.Content>
                 </Button>
                 <Rectangle Width="3"/>
-                <Button Name="EditButton" MinWidth="75" Height="25" Click="EditButton_Click">
+                <Button Name="EditButton" MinWidth="75" Height="25" Click="EditButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/accessories-text-editor.png" />
@@ -33,7 +33,7 @@
                     </Button.Content>
                 </Button>
                 <Rectangle Width="3"/>
-                <Button  MinWidth="75" Height="25" Name="DeleteButton" Click="DeleteButton_Click">
+                <Button  MinWidth="75" Height="25" Name="DeleteButton" Click="DeleteButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/user-trash.png" />
@@ -43,7 +43,7 @@
                     </Button.Content>
                 </Button>
                 <Rectangle Width="15" />
-                <Button MinWidth="75" Height="25" Name="QueryButton" Click="QueryButton_Click">
+                <Button MinWidth="75" Height="25" Name="QueryButton" Click="QueryButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/system-search.png" />
@@ -53,7 +53,7 @@
                     </Button.Content>
                 </Button>
                 <Rectangle Width="3"/>
-                <Button MinWidth="75" Height="25" Name="ClearConstraintsButton" Click="ClearConstraintsButton_Click">
+                <Button MinWidth="75" Height="25" Name="ClearConstraintsButton" Click="ClearConstraintsButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
@@ -64,7 +64,7 @@
                 </Button>
             </StackPanel>
         </Border>
-        <Rectangle  Grid.Row="1"  Height="1" Fill="#E0E0E0" ></Rectangle>
+        <Rectangle  Grid.Row="1"  Height="1" Fill="{StaticResource LineBrush}" ></Rectangle>
         <my:TreeView Grid.Row="2"  x:Name="TreeView"/>
     </Grid>
 </UserControl>

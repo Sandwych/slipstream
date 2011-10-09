@@ -8,7 +8,7 @@
            xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
            d:DesignWidth="640" d:DesignHeight="480" 
            Title="DBCreationPage Page" Loaded="Page_Loaded" >
-    <Grid Background="{StaticResource SolidControlColor}">
+    <Grid Background="{StaticResource WideBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>

@@ -7,7 +7,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
   xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
   xmlns:appControls="clr-namespace:ObjectServer.Client.Agos.Controls"
-  mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480"  Background="#FF32302E">
+  mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480"  Background="{StaticResource WideBrush}">
 
 
     <Grid x:Name="LayoutRoot"  >

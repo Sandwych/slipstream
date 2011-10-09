@@ -3,7 +3,7 @@
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
            xmlns:controls="clr-namespace:System.Windows.Controls;assembly=FloatableWindow"
            Width="640" Height="480" MinHeight="320" MinWidth="480"
-           Title="FormDialog" ResizeMode="CanResize"  Background="{StaticResource SolidControlColor}" >
+           Title="FormDialog" ResizeMode="CanResize"  Background="{StaticResource WideBrush}" >
     <Grid x:Name="LayoutRoot" Margin="5" >
         <Grid x:Name="ContentGrid">
             <Grid.RowDefinitions>
@@ -14,7 +14,7 @@
 
             <Border x:Name="ScrollContent" Grid.Row="0" BorderThickness="0" />
 
-            <Rectangle Grid.Row="1" Height="1" Margin="0,5,0,5" Fill="#FFA59D8F" ></Rectangle>
+            <Rectangle Grid.Row="1" Height="1" Margin="0,5,0,5" Fill="{StaticResource LineBrush}" ></Rectangle>
 
             <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,5,0,0">
                 <Button x:Name="OKButton" Click="OKButton_Click" Style="{StaticResource CommandButtonStyle}">
