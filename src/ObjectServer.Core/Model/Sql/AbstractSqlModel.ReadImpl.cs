@@ -130,12 +130,12 @@ namespace ObjectServer.Model
             Debug.Assert(allFields != null);
             Debug.Assert(records != null);
 
+            //TODO 处理字段读权限
             foreach (var fieldName in allFields)
             {
                 var f = this.Fields[fieldName];
-                if (f.Name == IdFieldName
-                    || f.Name == LeftFieldName
-                    || f.Name == RightFieldName)
+
+                if (f is InheritedField)
                 {
                     continue;
                 }

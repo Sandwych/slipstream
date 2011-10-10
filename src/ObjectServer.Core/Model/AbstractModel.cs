@@ -101,15 +101,16 @@ namespace ObjectServer.Model
             //被指向的对象肯定已经更早注册了
             foreach (var ii in this.Inheritances)
             {
-                IField inhertField;
-                var hasInheritField = this.Fields.TryGetValue(ii.RelatedField, out inhertField);
+                IField inheritField;
+                var hasInheritField = this.Fields.TryGetValue(ii.RelatedField, out inheritField);
                 if (!hasInheritField
                     || !tc.Resources.ContainsResource(ii.BaseModel)
-                    || inhertField.Type != FieldType.ManyToOne
-                    || !inhertField.IsRequired)
+                    || inheritField.Type != FieldType.ManyToOne
+                    || inheritField.OnDeleteAction != OnDeleteAction.Cascade
+                    || !inheritField.IsRequired)
                 {
                     var ex = new Exceptions.ResourceException(
-                        "多表继承必须包含指向父表的 ManyToOne 字段，且不能为空");
+                        "多表继承必须包含指向父表的 ManyToOne 字段，且必须满足：不能为空，级联删除");
                     LoggerProvider.EnvironmentLogger.Error(ex.Message, ex);
                     throw ex;
                 }

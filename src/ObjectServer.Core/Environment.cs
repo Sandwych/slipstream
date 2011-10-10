@@ -14,7 +14,7 @@ namespace ObjectServer
 {
     /// <summary>
     /// SINGLETON
-    /// 框架的全局入口点
+    /// 平台的全局入口点
     /// </summary>
     public sealed class Environment : IDisposable
     {

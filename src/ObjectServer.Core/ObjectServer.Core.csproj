@@ -209,6 +209,7 @@
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Runtime\CompileException.cs" />
+    <Compile Include="Sessions\ISessionService.cs" />
     <Compile Include="Sessions\Session.cs" />
     <Compile Include="AbstractResource.cs" />
     <Compile Include="ResourceAttribute.cs" />

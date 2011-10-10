@@ -108,8 +108,9 @@
       <DependentUpon>SelectionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TreeMenu.cs" />
-    <Compile Include="Controls\Tree\ReferenceFieldConverter.cs" />
-    <Compile Include="Controls\Tree\TreeDataGrid.cs" />
+    <Compile Include="Data\DateTimeFieldConverter.cs" />
+    <Compile Include="Data\ReferenceFieldConverter.cs" />
+    <Compile Include="Controls\TreeDataGrid.cs" />
     <Compile Include="Models\FormModel.cs" />
     <Compile Include="Models\IServerConnection.cs" />
     <Compile Include="Models\ServerConnection.cs" />
@@ -219,10 +220,10 @@
     <Compile Include="Windows\ListView\QueryFieldControls\IntegerQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\EnumerationQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\StringQueryFieldControl.cs" />
-    <Compile Include="Controls\Tree\TimeFieldConverter.cs" />
-    <Compile Include="Controls\Tree\DateFieldConverter.cs" />
-    <Compile Include="Controls\Tree\EnumFieldConverter.cs" />
-    <Compile Include="Controls\Tree\ManyToOneFieldConverter.cs" />
+    <Compile Include="Data\TimeFieldConverter.cs" />
+    <Compile Include="Data\DateFieldConverter.cs" />
+    <Compile Include="Data\EnumFieldConverter.cs" />
+    <Compile Include="Data\ManyToOneFieldConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
