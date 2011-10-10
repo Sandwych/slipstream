@@ -310,8 +310,16 @@ namespace ObjectServer.Core
                 Session.Put(ctx.DBContext, newSession);
                 return newSession;
             }
+            else if (!oldSession.IsActive)
+            {
+                Session.Remove(ctx.DBContext, oldSession.Id);
+                var newSession = new Session(login, uid);
+                Session.Put(ctx.DBContext, newSession);
+                return newSession;
+            }
             else
             {
+                Session.Pulse(ctx.DBContext, oldSession.Id);
                 return oldSession;
             }
         }
