@@ -5,7 +5,6 @@ using System.Text;
 
 using NUnit.Framework;
 
-using ObjectServer.Sql;
 using ObjectServer.Model;
 
 namespace ObjectServer.Core.Test

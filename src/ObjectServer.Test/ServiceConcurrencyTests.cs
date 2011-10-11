@@ -7,7 +7,6 @@ using System.Threading;
 
 using NUnit.Framework;
 
-using ObjectServer.Sql;
 using ObjectServer.Model;
 
 namespace ObjectServer.Test

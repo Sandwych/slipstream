@@ -7,9 +7,8 @@ using NUnit.Framework;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Model;
-using ObjectServer.Sql;
 
-namespace ObjectServer.Sql.Test
+namespace ObjectServer.Model.Test
 {
     [TestFixture]
     public sealed class ConstraintTranslatorTests : TransactionContextTestCaseBase
@@ -26,7 +25,7 @@ namespace ObjectServer.Sql.Test
         [Test]
         public void Test_simple_constraints()
         {
-            var constraints = new Criterion[] {
+            var criteria = new Criterion[] {
                 new Criterion("login", "=", "root"),
                 new Criterion("organization.name", "=", "org1"),
                 new Criterion("organization.code", "=", "orgcode1"),
@@ -39,7 +38,7 @@ namespace ObjectServer.Sql.Test
                 "order by  _t0.login ASC,  _t0.name ASC");
 
             var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
-            cb.AddCriteria(constraints);
+            cb.AddCriteria(criteria);
             cb.SetOrder(new OrderExpression("login", SortDirection.Ascend));
             cb.SetOrder(new OrderExpression("name", SortDirection.Ascend));
 
@@ -55,6 +54,18 @@ namespace ObjectServer.Sql.Test
 
         }
 
-        //TODO 添加层次表的单元测试
+        [Test]
+        public void CheckInOperatorWithEmptyCollection()
+        {
+            var criteria = new Criterion[] {
+                new Criterion("login", "in", new string[] {})
+            };
+
+            var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
+            Assert.Throws<ArgumentException>(delegate
+            {
+                cb.AddCriteria(criteria);
+            });
+        }
     }
 }

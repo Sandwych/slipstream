@@ -8,7 +8,6 @@ using System.Diagnostics;
 
 using NUnit.Framework;
 
-using ObjectServer.Sql;
 using ObjectServer.Model;
 
 namespace ObjectServer.Model.Test

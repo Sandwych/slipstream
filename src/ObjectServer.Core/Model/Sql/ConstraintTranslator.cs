@@ -485,9 +485,21 @@ namespace ObjectServer.Model
         private void AddInAndNotInLeafCriterion(
             Criterion cr, string lastTableAlias, IModel model, IField field)
         {
+            if (cr.Value == null)
+            {
+                throw new ArgumentException(
+                    "The sequence of 'in/!in' operator can not be null", "criterion");
+            }
+
             var opr = cr.Operator == "in" ? "in" : "not in";
             var objs = (System.Collections.IEnumerable)cr.Value;
             var inValues = objs.Cast<object>().ToArray();
+
+            if (!inValues.Any())
+            {
+                throw new ArgumentException(
+                    "The sequence of 'in/!in' operator can not be empty", "criterion");
+            }
 
             var expBuilder = new SqlStringBuilder();
             expBuilder.Add(lastTableAlias + '.' + field.Name);
