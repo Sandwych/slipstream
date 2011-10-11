@@ -62,10 +62,18 @@ namespace ObjectServer.Model.Test
             };
 
             var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
-            Assert.Throws<ArgumentException>(delegate
-            {
-                cb.AddCriteria(criteria);
-            });
+            Assert.Throws<ArgumentException>(delegate { cb.AddCriteria(criteria); });
+        }
+
+        [Test]
+        public void CheckNotInOperatorWithEmptyCollection()
+        {
+            var criteria = new Criterion[] {
+                new Criterion("login", "!in", new string[] {})
+            };
+
+            var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
+            Assert.Throws<ArgumentException>(delegate { cb.AddCriteria(criteria); });
         }
     }
 }
