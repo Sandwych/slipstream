@@ -23,6 +23,7 @@ namespace ObjectServer.Core
                 new Dictionary<string, string>() { 
                     { "form", "Form View" }, 
                     { "tree", "Tree View" },
+                    { "chart", "Chart View" },
                 })
                 .SetLabel("View Kind").Required();
             Fields.Text("layout").SetLabel("Layout");
