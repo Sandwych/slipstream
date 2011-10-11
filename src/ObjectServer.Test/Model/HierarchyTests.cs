@@ -201,6 +201,32 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(data.id5, ids2[0]);
         }
 
+        [Test]
+        public void ShouldThrowsWhenWritingRecursived()
+        {
+            dynamic catModel = this.GetResource("test.category");
+            dynamic data = this.PrepareTestingData();
+
+            dynamic record = new ExpandoObject();
+            record.parent = data.id3;
+            Assert.Throws<Exceptions.DataException>(delegate
+            {
+                catModel.Write(this.TransactionContext, data.id2, record);
+            });
+
+            record.parent = data.id2;
+            Assert.Throws<Exceptions.DataException>(delegate
+            {
+                catModel.Write(this.TransactionContext, data.id2, record);
+            });
+
+            record.parent = data.id5;
+            Assert.Throws<Exceptions.DataException>(delegate
+            {
+                catModel.Write(this.TransactionContext, data.id2, record);
+            });
+        }
+
 
         private dynamic PrepareTestingData()
         {
