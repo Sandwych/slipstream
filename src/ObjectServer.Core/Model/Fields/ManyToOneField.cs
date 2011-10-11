@@ -49,7 +49,7 @@ namespace ObjectServer.Model
                                            SelfId = (long)r[AbstractModel.IdFieldName]
                                        };
 
-                if (availableRecords.Count() > 0)
+                if (availableRecords.Any())
                 {
                     var masterRecords = masterModel.ReadInternal(
                         ctx, availableRecords.Select(ar => ar.MasterId).ToArray(), fields);
@@ -105,10 +105,30 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("record");
             }
 
+            object fieldValueObj;
+            if (!record.TryGetValue(this.Name, out fieldValueObj) || fieldValueObj == null)
+            {
+                throw new Exceptions.ResourceException(
+                    "Unable to get field value: " + this.Model.Name + "." + this.Name);
+            }
+
+            long[] destIds = null;
+            if (fieldValueObj is long || fieldValueObj is long?)
+            {
+                destIds = new long[] { (long)fieldValueObj };
+            }
+            else if (fieldValueObj is object[])
+            {
+                var destIdObj = ((object[])fieldValueObj).First();
+                destIds = new long[] { (long)destIdObj };
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+
             var destModelName = this.Relation;
             dynamic destMetaModel = scope.GetResource(destModelName);
-            var fieldValue = (object[])record[this.Name];
-            var destIds = new long[] { (long)fieldValue[0] };
             //查询 ManyToOne 字段
             var destRecord = destMetaModel.ReadInternal(scope, destIds, null)[0];
             return new BrowsableRecord(scope, destMetaModel, destRecord);

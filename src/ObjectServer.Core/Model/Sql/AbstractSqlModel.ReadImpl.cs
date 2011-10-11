@@ -135,7 +135,7 @@ namespace ObjectServer.Model
             {
                 var f = this.Fields[fieldName];
 
-                if (f is InheritedField)
+                if (this.Inheritances.Any(i => i.RelatedField == f.Name))
                 {
                     continue;
                 }

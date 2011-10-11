@@ -146,7 +146,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 this.BasicConditions.Child = (Grid)this.CreateQueryForm(metaFields, viewFields, "basic");
 
                 if (viewFields.Select(ele => ele.Attribute("where"))
-                    .Count(attr => attr != null && attr.Value == "advanced") > 0)
+                    .Any(attr => attr != null && attr.Value == "advanced"))
                 {
                     this.AdvancedConditionsExpander.Visibility = System.Windows.Visibility.Visible;
                     this.AdvancedConditionsExpander.DataContext

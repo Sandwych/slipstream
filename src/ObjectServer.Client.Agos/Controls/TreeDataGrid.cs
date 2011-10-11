@@ -53,7 +53,7 @@ namespace ObjectServer.Client.Agos.Controls
             this.recordIds.Clear();
             this.ItemsSource = null;
 
-            if (ids.Count() > 0)
+            if (ids.Any())
             {
                 this.recordIds.AddRange(ids);
                 this.LoadData();

@@ -19,7 +19,7 @@ namespace ObjectServer.Core.Test
             var result = userModel.GetFields(this.TransactionContext, modelName);
             var records = ((object[])result).Select(i => (Dictionary<string, object>)i);
 
-            Assert.IsTrue(records.Count() > 0);
+            Assert.IsTrue(records.Any());
         }
 
     }

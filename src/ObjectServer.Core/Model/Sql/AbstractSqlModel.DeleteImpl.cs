@@ -79,7 +79,7 @@ namespace ObjectServer.Model
                                   where !f.IsNull()
                                   select (long)f;
 
-                    if (baseIds.Count() > 0)
+                    if (baseIds.Any())
                     {
                         var baseModel = (AbstractSqlModel)scope
                             .GetResource(inheritInfo.BaseModel);
@@ -111,7 +111,7 @@ namespace ObjectServer.Model
                 //先删最右侧的很重要，否则 parentRecords 是保存在内存里的，没法反应出后面的 update 语句带来的更改
                 var parentRecords =
                     from r in records
-                    where records.Count(i => i.Left < r.Left && i.Right > r.Right) == 0
+                    where !records.Any(i => i.Left < r.Left && i.Right > r.Right)
                     orderby r.Right descending
                     select r;
 

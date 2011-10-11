@@ -319,18 +319,18 @@ namespace ObjectServer.Model
             foreach (var inheritInfo in this.Inheritances)
             {
                 var baseModel = (IModel)ctx.GetResource(inheritInfo.BaseModel);
-                var relatedFieldValue = existedRecord[inheritInfo.RelatedField] as object[];
-                if (relatedFieldValue == null)
+                var relatedFieldValueObj = existedRecord[inheritInfo.RelatedField];
+                if (relatedFieldValueObj == null || !(relatedFieldValueObj is long))
                 {
                     var msg = String.Format("The field [{0}.{1}] can not be null",
                         this.Name, inheritInfo.RelatedField);
                     throw new Exceptions.DataException(msg);
                 }
-                var baseId = (long)(relatedFieldValue.First());
+                var baseId = (long)relatedFieldValueObj;
 
                 //看用户提供的记录的字段是否涉及到基类
                 var baseFields = baseModel.Fields.Keys.Intersect(record.Keys);
-                if (baseFields.Count() > 0)
+                if (baseFields.Any())
                 {
                     var baseRecord = record.Where(p => baseFields.Contains(p.Key))
                         .ToDictionary(p => p.Key, p => p.Value);

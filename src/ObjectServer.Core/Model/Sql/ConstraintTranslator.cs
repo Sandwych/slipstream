@@ -312,14 +312,19 @@ namespace ObjectServer.Model
             var fieldParts = criterion.Field.Split('.');
 
             var firstPart = fieldParts.First();
-            var firstPartFieldInfo = this.rootModel.Fields[firstPart];
+            IField firstPartFieldInfo = null;
+            if (!this.rootModel.Fields.TryGetValue(firstPart, out firstPartFieldInfo)
+                || firstPartFieldInfo == null)
+            {
+                var msg = String.Format("Can not found field: [{0}.{1}]", this.rootModel.Name, firstPart);
+                throw new ArgumentException("criterion", msg);
+            }
 
             if (!firstPartFieldInfo.Selectable)
             {
                 return;
             }
 
-            //TODO 这里处理继承字段比较恶心
             if (firstPartFieldInfo.IsColumn || firstPartFieldInfo is InheritedField)
             {
                 var leafPart = fieldParts.Last();
@@ -333,7 +338,7 @@ namespace ObjectServer.Model
                         throw new ArgumentOutOfRangeException("criterion");
                     }
 
-                    if (this.IsInheritedField(lastModel, fieldPart))
+                    if (IsInheritedField(lastModel, fieldPart))
                     {
                         lastTableAlias = this.HandleInheritedFieldPart(lastModel, lastTableAlias, fieldPart, field);
                     }
@@ -350,7 +355,7 @@ namespace ObjectServer.Model
                 Debug.Assert(field != null);
                 Debug.Assert(lastModel != null);
 
-                if (this.IsInheritedField(lastModel, field.Name))
+                if (IsInheritedField(lastModel, field.Name))
                 {
                     field = ((InheritedField)field).BaseField;
                 }
@@ -376,7 +381,7 @@ namespace ObjectServer.Model
             Debug.Assert(!string.IsNullOrEmpty(lastTableAlias));
             Debug.Assert(!string.IsNullOrEmpty(fieldPart));
             Debug.Assert(field != null);
-            Debug.Assert(this.IsInheritedField(model, fieldPart));
+            Debug.Assert(IsInheritedField(model, fieldPart));
 
             var baseField = ((InheritedField)field).BaseField;
             var relatedField = model.Inheritances
@@ -571,7 +576,7 @@ namespace ObjectServer.Model
             return parent;
         }
 
-        private bool IsInheritedField(IModel mainModel, string field)
+        private static bool IsInheritedField(IModel mainModel, string field)
         {
             Debug.Assert(mainModel != null);
             Debug.Assert(!string.IsNullOrEmpty(field));
