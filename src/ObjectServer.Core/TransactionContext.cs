@@ -247,6 +247,23 @@ namespace ObjectServer
             }
         }
 
+        private readonly ILogger m_bizLogger = LoggerProvider.BizLogger;
+        public ILogger BizLogger
+        {
+            get
+            {
+                if (this.disposed)
+                {
+                    throw new ObjectDisposedException("TransactionContext");
+                }
+
+                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+                Debug.Assert(this.m_bizLogger != null);
+
+                return this.m_bizLogger;
+            }
+        }
+
         public Session Session { get; private set; }
 
 

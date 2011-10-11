@@ -17,5 +17,6 @@ namespace ObjectServer
         IDbContext DBContext { get; }
         IDbTransaction DbTransaction { get; }
         IResourceContainer Resources { get; }
+        ILogger BizLogger { get; }
     }
 }

@@ -47,6 +47,7 @@ namespace ObjectServer.Core
             var isRootUserExisted = UserExists(tc.DBContext, RootUserName);
             if (update && isRootUserExisted)
             {
+                tc.BizLogger.Info("Creating the [root] user...");
                 this.CreateRootUser(tc.DBContext);
             }
         }
@@ -67,8 +68,6 @@ namespace ObjectServer.Core
         private void CreateRootUser(IDbContext conn)
         {
             Debug.Assert(conn != null);
-
-            LoggerProvider.BizLogger.Info("Creating the Root user...");
 
             /*
                     insert into core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
@@ -115,8 +114,6 @@ namespace ObjectServer.Core
             conn.Execute(
                 sql, row[VersionFieldName], row["name"], row["login"], row["password"],
                 row["admin"], row["active"], row["_created_time"], row["salt"]);
-
-            LoggerProvider.BizLogger.Info("Root user has been created.");
         }
 
 
