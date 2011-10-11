@@ -59,7 +59,7 @@
             this.TabContainer.SelectedItem = tabPage;
 
             //先看看有没有已经打开同样的动作标签页了，如果有就跳转过去
-            var actWin = new Windows.TreeView.TreeWindow(menu.Action.Item2);
+            var actWin = new Windows.TreeView.WindowActionWindow(menu.Action.Item2);
 
             var actionName = menu.Action.Item1;
 

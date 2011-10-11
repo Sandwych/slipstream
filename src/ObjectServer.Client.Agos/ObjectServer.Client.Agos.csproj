@@ -211,8 +211,8 @@
     <Compile Include="Windows\ListView\TreeView.xaml.cs">
       <DependentUpon>TreeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ListView\TreeWindow.xaml.cs">
-      <DependentUpon>TreeWindow.xaml</DependentUpon>
+    <Compile Include="Windows\WindowActionWindow.xaml.cs">
+      <DependentUpon>WindowActionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ListView\QueryFieldControlFactory.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\BooleanQueryFieldControl.cs" />
@@ -248,7 +248,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Page Include="Windows\ListView\TreeWindow.xaml">
+    <Page Include="Windows\WindowActionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,4 @@
-﻿<UserControl xmlns:my="clr-namespace:ObjectServer.Client.Agos.Windows.TreeView"  x:Class="ObjectServer.Client.Agos.Windows.TreeView.TreeWindow"
+﻿<UserControl xmlns:my="clr-namespace:ObjectServer.Client.Agos.Windows.TreeView"  x:Class="ObjectServer.Client.Agos.Windows.TreeView.WindowActionWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

@@ -13,11 +13,11 @@ using System.Diagnostics;
 
 namespace ObjectServer.Client.Agos.Windows.TreeView
 {
-    public partial class TreeWindow : UserControl
+    public partial class WindowActionWindow : UserControl
     {
         private string modelName;
 
-        public TreeWindow(long actionID)
+        public WindowActionWindow(long actionID)
         {
             InitializeComponent();
 

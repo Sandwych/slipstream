@@ -52,9 +52,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
-    </Reference>
     <Reference Include="IronRuby">
       <HintPath>..\..\lib\ironruby\bin\IronRuby.dll</HintPath>
     </Reference>
