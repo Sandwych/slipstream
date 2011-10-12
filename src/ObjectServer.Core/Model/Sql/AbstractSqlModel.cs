@@ -40,7 +40,6 @@ namespace ObjectServer.Model
             CreatedUserFieldName,
             UpdatedTimeFieldName,
             UpdatedUserFieldName,
-            VersionFieldName,
             LeftFieldName,
             RightFieldName,
             ChildrenFieldName,

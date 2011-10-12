@@ -121,8 +121,8 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
         private void InitializeColumns(XDocument layoutDocument)
         {
             var app = (App)Application.Current;
-            var args = new object[] { this.modelName };
-            app.ClientService.BeginExecute("core.model", "GetFields", args, (result, error) =>
+            var args = new object[] { };
+            app.ClientService.BeginExecute(this.modelName, "GetFields", args, (result, error) =>
             {
                 var metaFields = ((object[])result).Select(r => (Dictionary<string, object>)r).ToArray();
                 var viewFields = layoutDocument.Elements("tree").Elements();

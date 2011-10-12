@@ -36,6 +36,12 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("userRecord");
             }
 
+            //强制检查客户端时候送来了版本字段
+            if (this.IsVersioned && !userRecord.ContainsKey(VersionFieldName))
+            {
+                throw new Exceptions.ConcurrencyException(
+                    string.Format("Model [{0}] is versioned, you must provider value of the [_version] field", this));
+            }
 
             var record = ClearUserRecord(userRecord);
             ModelValidator.ValidateRecordForWriting(this, record);
@@ -46,7 +52,7 @@ namespace ObjectServer.Model
 
 
             //处理版本字段与基类继承
-            if (userRecord.ContainsKey(VersionFieldName) || this.Inheritances.Count > 0 || this.Hierarchy)
+            if (this.IsVersioned || this.Inheritances.Count > 0 || this.Hierarchy)
             {
                 var fieldsToRead = new List<string>();
 
@@ -149,6 +155,15 @@ namespace ObjectServer.Model
             //先写入 many-to-many 字段
             this.PrewriteManyToManyFields(ctx, id, record, allFields);
 
+            long originVersion = 0;
+            //更新版本号
+            if (this.IsVersioned)
+            {
+                var version = (long)record[VersionFieldName];
+                originVersion = version;
+                record[VersionFieldName] = version + 1;
+            }
+
             this.SetModificationInfo(ctx, record);
 
             //所有可更新的字段
@@ -157,7 +172,6 @@ namespace ObjectServer.Model
                  let fieldInfo = this.Fields[f]
                  where fieldInfo.IsColumn && !fieldInfo.IsReadonly
                  select f).ToArray();
-            //TODO is InheritedField 不是太好
 
             this.ConvertFieldToColumn(ctx, record, updatableColumnFields);
 
@@ -189,7 +203,7 @@ namespace ObjectServer.Model
             sqlBuilder.Add("=");
             sqlBuilder.Add(id.ToString());
             sqlBuilder.Add(" and ");
-            sqlBuilder.Add(GetVersionExpression(record));
+            sqlBuilder.Add(this.GetVersionExpression(originVersion));
 
             var sql = sqlBuilder.ToSqlString();
             var rowsAffected = ctx.DBContext.Execute(sql, args);
@@ -354,22 +368,21 @@ namespace ObjectServer.Model
             }
         }
 
-        private static SqlString GetVersionExpression(IRecord record)
+        private SqlString GetVersionExpression(long originVersion)
         {
-            //如果存在 _version 字段就加入版本检查条件
-            //TODO: 是否强制要求客户端必须送来 _version 字段？
+            if (originVersion < 0)
+            {
+                throw new ArgumentOutOfRangeException("originVersin");
+            }
+
 
             SqlString verExp = null;
-            if (record.ContainsKey(VersionFieldName))
+            if (this.IsVersioned)
             {
-                var version = (long)record[VersionFieldName];
                 verExp = new SqlString(
                     DataProvider.Dialect.QuoteForColumnName(VersionFieldName),
                     "=",
-                    version.ToString()); //现存数据库的版本必须比用户提供的版本相同
-
-                //版本号也必须更新
-                record[VersionFieldName] = version + 1;
+                    originVersion.ToString()); //现存数据库的版本必须与用户提供的版本相同
             }
             else
             {

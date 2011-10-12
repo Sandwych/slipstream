@@ -28,55 +28,5 @@ namespace ObjectServer.Core
             Fields.OneToMany("fields", "core.field", "model").SetLabel("Fields");
         }
 
-        /// <summary>
-        /// 提供一个方便读取指定模型所有字段的方法
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="scope"></param>
-        /// <param name="modelName"></param>
-        /// <returns></returns>
-        [TransactionMethod("GetFields")]
-        public static Dictionary<string, object>[] GetFields(IModel model, ITransactionContext scope, string modelName)
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException("model");
-            }
-
-            if (scope == null)
-            {
-                throw new ArgumentNullException("scope");
-            }
-
-            var destModel = (AbstractModel)scope.GetResource(modelName);
-
-            var modelDomain = new object[] { new object[] { "name", "=", modelName } };
-            var modelIds = model.SearchInternal(scope, modelDomain, null, 0, 0);
-
-            //TODO 检查 IDS 错误，好好想一下要用数据库的字段信息还是用内存的字段信息
-
-            var fieldModel = (IModel)scope.GetResource("core.field");
-            var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
-            var fieldIds = fieldModel.SearchInternal(scope, fieldDomain, null, 0, 0);
-            var records = fieldModel.ReadInternal(scope, fieldIds, null);
-
-            foreach (var r in records)
-            {
-                var fieldName = (string)r["name"];
-                var field = destModel.Fields[fieldName];
-
-                if (field.Type == FieldType.Enumeration || field.Type == FieldType.Reference)
-                {
-                    r["options"] = field.Options;
-                }
-                else if (field.Type == FieldType.ManyToMany)
-                {
-                    r["related_field"] = field.RelatedField;
-                    r["origin_field"] = field.OriginField;
-                }
-            }
-
-            return records;
-        }
     }
 }

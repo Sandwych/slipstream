@@ -73,8 +73,9 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             var app = (App)Application.Current;
             var relatedFieldName = (string)this.metaField["related_field"];
-            var getFieldsArgs = new object[] { (string)this.metaField["relation"] };
-            app.ClientService.BeginExecute("core.model", "GetFields", getFieldsArgs, o =>
+            var getFieldsArgs = new object[] { };
+            var modelName = (string)this.metaField["relation"];
+            app.ClientService.BeginExecute(modelName, "GetFields", getFieldsArgs, o =>
             {
                 var fields = (object[])o;
                 var relatedField =
