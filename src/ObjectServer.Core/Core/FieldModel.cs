@@ -16,7 +16,6 @@ namespace ObjectServer.Core
         public FieldModel()
             : base(ModelName)
         {
-            this.AutoMigration = false;
             this.IsVersioned = false;
 
             Fields.ManyToOne("model", "core.model").SetLabel("Model")

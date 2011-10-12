@@ -34,8 +34,6 @@ namespace ObjectServer.Core
         public ModuleDependencyModel()
             : base(ModelName)
         {
-            this.AutoMigration = false;
-
             Fields.Chars("name").SetLabel("Name").Required().SetSize(128).Unique().Readonly();
             Fields.ManyToOne("module", "core.module").SetLabel("Module").Required().Readonly();
             Fields.Enumeration("state", StateOptions).SetLabel("State").Required().Readonly()

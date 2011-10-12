@@ -31,8 +31,6 @@ namespace ObjectServer.Core
         public ModelDataModel()
             : base(ModelName)
         {
-            this.AutoMigration = false;
-
             Fields.Chars("name").SetLabel("Key").Required().SetSize(128);
             Fields.Chars("module").SetLabel("Module").Required().SetSize(64);
             Fields.Chars("model").SetLabel("Model").Required().SetSize(64);
