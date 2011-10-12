@@ -5,12 +5,6 @@
 
 * SQLite 支持、Oracle 支持
 
-* 层次结构的实体
-	* 创建（完成）
-	* 查询 TODO
-	* 修改 TODO
-	* 删除 TODO
-
  * 数据库第一次加载的时候需要有状态指示，防止并发客户端在数据库加载的时候访问数据库
 
 * 定时任务调度器（待完成）
@@ -39,5 +33,3 @@
 * 给 BrowsableRecord 添加 IComparable
 
 * 字段要可以使用让客户定义来获取选项的方法，就是给 IField 加个 OptionsGetter
-
-* 模块的访问权限应该是在 RPC 检查，ReadInternal 这样的方法是不检查的

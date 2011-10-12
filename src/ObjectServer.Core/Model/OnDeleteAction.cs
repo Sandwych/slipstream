@@ -7,10 +7,8 @@ namespace ObjectServer.Model
 {
     public enum OnDeleteAction
     {
-        Restrict,
-        NoAction,
         Cascade,
+        Restrict,
         SetNull,
-        SetDefault
     }
 }

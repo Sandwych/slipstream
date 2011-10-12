@@ -18,7 +18,8 @@ namespace ObjectServer.Test
             : base("test.child")
         {
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
-            Fields.ManyToOne("master", "test.master").SetLabel("Master");
+            Fields.ManyToOne("master", "test.master").SetLabel("Master")
+                .NotRequired().OnDelete(OnDeleteAction.SetNull);
         }
     }
 

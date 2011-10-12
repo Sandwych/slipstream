@@ -18,6 +18,8 @@ namespace ObjectServer.Model
             : base(model, name, FieldType.ManyToOne)
         {
             this.Relation = masterModel;
+            this.Required();
+            this.OnDeleteAction = OnDeleteAction.Cascade;
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
@@ -40,14 +42,15 @@ namespace ObjectServer.Model
             {
                 var manyToOneFieldValues = rawRecords.ToDictionary(_ => (long)_[AbstractModel.IdFieldName]);
 
-                var availableRecords = from r in rawRecords
-                                       let mid = r[this.Name]
-                                       where !mid.IsNull()
-                                       select new
-                                       {
-                                           MasterId = (long)mid,
-                                           SelfId = (long)r[AbstractModel.IdFieldName]
-                                       };
+                var availableRecords =
+                    from r in rawRecords
+                    let mid = r[this.Name]
+                    where !mid.IsNull()
+                    select new
+                    {
+                        MasterId = (long)mid,
+                        SelfId = (long)r[AbstractModel.IdFieldName]
+                    };
 
                 if (availableRecords.Any())
                 {
@@ -138,7 +141,6 @@ namespace ObjectServer.Model
         {
             get
             {
-                Debug.Assert(this.OnDeleteAction != OnDeleteAction.SetNull);
                 return base.IsRequired;
             }
         }
@@ -187,6 +189,17 @@ namespace ObjectServer.Model
             set
             {
                 throw new NotSupportedException();
+            }
+        }
+
+        public override void VerifyDefinition()
+        {
+            base.VerifyDefinition();
+
+            if (this.IsRequired && this.OnDeleteAction == ObjectServer.Model.OnDeleteAction.SetNull)
+            {
+                throw new Exceptions.ResourceException(
+                    "The field can not set to be OnDeleteAction.SetNull, because it's required.");
             }
         }
     }

@@ -20,9 +20,7 @@ namespace ObjectServer.Data.Postgresql
             new Dictionary<OnDeleteAction, string>()
             {
                 { OnDeleteAction.SetNull, "SET NULL" },
-                { OnDeleteAction.SetDefault, "SET DEFAULT" },
                 { OnDeleteAction.Cascade, "CASCADE" },
-                { OnDeleteAction.NoAction, "NO ACTION" },
                 { OnDeleteAction.Restrict, "RESTRICT" },
             };
 
