@@ -1,7 +1,5 @@
 ﻿-- 注意，此文件中，除了语句结束以外不允许再有分号，而且所有语句结束后必须有分号
 
-CREATE LANGUAGE 'plpgsql';
-
 CREATE TABLE core_model (
     _id BIGSERIAL NOT NULL,
     "name" VARCHAR NOT NULL UNIQUE,

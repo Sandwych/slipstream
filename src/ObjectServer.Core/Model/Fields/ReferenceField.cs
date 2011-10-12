@@ -169,10 +169,6 @@ namespace ObjectServer.Model
             }
             set
             {
-                if (this.IsRequired && OnDeleteAction == OnDeleteAction.SetNull)
-                {
-                    throw new ArgumentException("不能同时设置为必填字段和可空");
-                }
                 this.refAct = value;
             }
         }
@@ -191,6 +187,16 @@ namespace ObjectServer.Model
                     throw new ArgumentNullException("value");
                 }
                 this.options = new Dictionary<string, string>(value);
+            }
+        }
+
+        public override void VerifyDefinition()
+        {
+            base.VerifyDefinition();
+
+            if (this.IsRequired && OnDeleteAction == OnDeleteAction.SetNull)
+            {
+                throw new ArgumentException("不能同时设置为必填字段和可空");
             }
         }
 

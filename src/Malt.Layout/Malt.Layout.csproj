@@ -57,6 +57,7 @@
     <Compile Include="IWidgetFactory.cs" />
     <Compile Include="LayoutEngine.cs" />
     <Compile Include="Models\AbstractContainer.cs" />
+    <Compile Include="Models\Button.cs" />
     <Compile Include="Models\Grid.cs" />
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\Notebook.cs" />
