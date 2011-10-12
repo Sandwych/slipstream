@@ -1,5 +1,7 @@
 ﻿-- 注意，此文件中，除了语句结束以外不允许再有分号，而且所有语句结束后必须有分号
 
+CREATE LANGUAGE 'plpgsql';
+
 CREATE TABLE core_model (
     _id BIGSERIAL NOT NULL,
     "name" VARCHAR NOT NULL UNIQUE,
@@ -76,7 +78,6 @@ CREATE TABLE core_model_data (
 	PRIMARY KEY(_id)
 );
 CREATE UNIQUE INDEX index_core_model_data_name ON core_model_data ("name");
-
 
 CREATE TABLE core_session (
 	_id BIGSERIAL NOT NULL,

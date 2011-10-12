@@ -49,9 +49,7 @@ namespace ObjectServer.Model
             Debug.Assert(name.Trim().Length != 0);
 
             this.Name = name;
-            this.Internal = name == AbstractModel.VersionFieldName
-                || name == AbstractModel.IdFieldName
-                || name == AbstractModel.ActiveFieldName;
+            this.Internal = AbstractSqlModel.SystemReadonlyFields.Contains(name);
         }
 
 

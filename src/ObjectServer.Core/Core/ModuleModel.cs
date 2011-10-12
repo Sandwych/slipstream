@@ -37,6 +37,7 @@ namespace ObjectServer.Core
             : base(ModelName)
         {
             this.AutoMigration = false;
+            this.IsVersioned = false;
 
             Fields.Chars("name").SetLabel("Name").Required().SetSize(128).Unique().Readonly();
             Fields.Chars("label").SetLabel("Short Description").SetSize(256).Readonly();

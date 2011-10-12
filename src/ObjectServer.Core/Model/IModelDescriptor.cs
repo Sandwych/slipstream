@@ -19,6 +19,7 @@ namespace ObjectServer.Model
         bool CanRead { get; }
         bool CanWrite { get; }
         bool CanDelete { get; }
+        bool IsVersioned { get; }
 
         bool LogCreation { get; }
         bool LogWriting { get; }

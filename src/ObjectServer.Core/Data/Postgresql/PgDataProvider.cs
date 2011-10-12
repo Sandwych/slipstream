@@ -103,6 +103,8 @@ select datname from pg_database
             get { return s_driver; }
         }
 
+        public bool IsSupportProcedure { get { return true; } }
+
         #endregion
     }
 }

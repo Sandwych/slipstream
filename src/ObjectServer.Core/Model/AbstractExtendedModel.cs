@@ -99,6 +99,11 @@ namespace ObjectServer.Model
             get { throw new NotSupportedException(); }
         }
 
+        public bool IsVersioned
+        {
+            get { throw new NotSupportedException(); }
+        }
+
         public bool LogCreation
         {
             get { throw new NotSupportedException(); }

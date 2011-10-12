@@ -17,6 +17,7 @@ namespace ObjectServer.Core
             : base(ModelName)
         {
             this.AutoMigration = false;
+            this.IsVersioned = false;
 
             Fields.ManyToOne("model", "core.model").SetLabel("Model")
                 .Required().OnDelete(OnDeleteAction.Cascade);

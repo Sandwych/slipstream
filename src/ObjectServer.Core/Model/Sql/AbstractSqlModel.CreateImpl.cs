@@ -204,9 +204,12 @@ namespace ObjectServer.Model
 
         private long CreateSelf(ITransactionContext ctx, IRecord values)
         {
+            Debug.Assert(ctx != null);
+            Debug.Assert(values != null);
+
             var serial = ctx.DBContext.NextSerial(this.SequenceName);
 
-            if (this.ContainsField(VersionFieldName))
+            if (this.ContainsField(VersionFieldName) && !values.ContainsKey(VersionFieldName))
             {
                 values.Add(VersionFieldName, 0);
             }

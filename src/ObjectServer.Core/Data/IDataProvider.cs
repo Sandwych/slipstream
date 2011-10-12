@@ -19,5 +19,6 @@ namespace ObjectServer.Data
 
         Dialect Dialect { get; }
         DriverBase Driver { get; }
+        bool IsSupportProcedure { get; }
     }
 }

@@ -19,6 +19,7 @@ namespace ObjectServer.Core
             : base(ModelName)
         {
             this.AutoMigration = false;
+            this.IsVersioned = false;
 
             Fields.Chars("name").SetLabel("Name").SetSize(256).Required().Unique().Readonly();
             Fields.Chars("label").SetLabel("Label").SetSize(256);

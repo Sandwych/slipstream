@@ -129,17 +129,5 @@ namespace ObjectServer.Model
             return field;
         }
 
-        public IField Version()
-        {
-            if (this.model.Fields.ContainsKey(AbstractModel.VersionFieldName))
-            {
-                throw new InvalidOperationException("You cannot to define more than one 'version' field");
-            }
-
-            var field = new ScalarField(this.model, AbstractModel.VersionFieldName, FieldType.BigInteger);
-            field.Required();
-            this.Add(field.Name, field);
-            return field;
-        }
     }
 }

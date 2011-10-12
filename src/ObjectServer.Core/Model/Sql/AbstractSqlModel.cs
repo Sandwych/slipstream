@@ -146,6 +146,12 @@ namespace ObjectServer.Model
                     this.AddHierarchyInternalFields();
                 }
             }
+
+            if (this.IsVersioned)
+            {
+                Fields.BigInteger(VersionFieldName).Required()
+                    .SetLabel("Row Version").SetDefaultValueGetter(v => 0);
+            }
         }
 
         private void AddHierarchyInternalFields()

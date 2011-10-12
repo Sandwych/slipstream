@@ -26,7 +26,5 @@ namespace ObjectServer.Model
 
         IField Enumeration(string name, IDictionary<string, string> options);
         IField Reference(string name);
-
-        IField Version();
     }
 }

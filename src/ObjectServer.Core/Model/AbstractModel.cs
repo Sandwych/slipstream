@@ -35,6 +35,7 @@ namespace ObjectServer.Model
         protected AbstractModel(string name)
             : base(name)
         {
+            this.IsVersioned = true;
             this.AutoMigration = true;
             this.fields = new FieldCollection(this);
             this.Inheritances = new InheritanceCollection();
@@ -587,6 +588,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public virtual bool CanRead { get; protected set; }
         public virtual bool CanWrite { get; protected set; }
         public virtual bool CanDelete { get; protected set; }
+        public virtual bool IsVersioned { get; protected set; }
 
         public bool AutoMigration { get; protected set; }
 
