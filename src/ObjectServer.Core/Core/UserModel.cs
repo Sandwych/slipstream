@@ -32,7 +32,7 @@ namespace ObjectServer.Core
             Fields.Boolean("admin").SetLabel("Administrator?").Required().SetDefaultValueGetter(r => false);
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
             Fields.ManyToMany("roles", "core.user_role", "user", "role").SetLabel("Roles");
-            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
+            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization").NotRequired();
             Fields.ManyToOne("home_action", "core.action").SetLabel("Home Action").NotRequired();
             Fields.Chars("email").SetLabel("Email").NotRequired().SetSize(256);
             Fields.Boolean("active").SetLabel("Active?").Required().SetDefaultValueGetter(r => true);

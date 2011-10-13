@@ -18,8 +18,8 @@ namespace ObjectServer.Model
             : base(model, name, FieldType.ManyToOne)
         {
             this.Relation = masterModel;
-            this.Required();
-            this.OnDeleteAction = OnDeleteAction.Cascade;
+            this.NotRequired();
+            this.OnDeleteAction = OnDeleteAction.SetNull;
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(

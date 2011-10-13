@@ -14,7 +14,7 @@
 
         <Border x:Name="ContentBorder" >
             <appControls:TransitionFrame x:Name="ContentFrame" 
-                  Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed" Background="#FF32302E">
+                  Navigated="ContentFrame_Navigated" NavigationFailed="ContentFrame_NavigationFailed" >
                 <appControls:TransitionFrame.UriMapper>
                     <uriMapper:UriMapper>
                         <uriMapper:UriMapping Uri="/{pageName}" MappedUri="/UI/{pageName}Page.xaml"/>
