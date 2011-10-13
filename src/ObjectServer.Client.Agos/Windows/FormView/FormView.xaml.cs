@@ -94,12 +94,30 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 form = (Malt.Layout.Models.Form)xs.Deserialize(sr);
             }
 
-            var factory = new FieldControlFactory(metaFields);
+            var factory = new FieldControlFactory(this.modelName, metaFields);
             var le = new Malt.Layout.LayoutEngine(factory);
             var layoutGrid = (UIElement)le.CreateLayout(form);
             this.fieldWidgets = factory.CreatedFieldWidgets;
             this.Content = layoutGrid;
 
+            //注册按钮的事件
+            foreach (var button in factory.CreatedButtons)
+            {
+                button.Click += new RoutedEventHandler(this.OnCommandButtonClicked);
+            }
+
+        }
+
+        private void OnCommandButtonClicked(object sender, RoutedEventArgs args)
+        {
+            var app = (App)App.Current;
+            var button = (ButtonControl)sender;
+
+            var rpcArgs = new object[] { new long[] { this.recordID } };
+            app.ClientService.BeginExecute(this.modelName, button.ButtonName, rpcArgs, (result, error) =>
+            {
+                this.LoadData();
+            });
         }
 
         private void LoadData()

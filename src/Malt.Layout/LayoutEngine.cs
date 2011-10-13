@@ -147,6 +147,11 @@ namespace Malt.Layout
                     var pageWidget = this.widgetFactory.CreatePageWidget(page, widget, pageContent);
                 }
             }
+            else if (placable is Button)
+            {
+                var button = placable as Button;
+                widget = this.widgetFactory.CreateButtonWidget(button);
+            }
             else if (placable is Input)
             {
                 var field = placable as Input;

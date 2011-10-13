@@ -161,6 +161,11 @@ namespace ObjectServer.Model
             throw new NotSupportedException();
         }
 
+        public dynamic BrowseMany(ITransactionContext scope, long[] ids)
+        {
+            throw new NotSupportedException();
+        }
+
         public virtual Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx)
         {
             throw new NotSupportedException();

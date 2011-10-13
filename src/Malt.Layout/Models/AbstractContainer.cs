@@ -19,6 +19,7 @@ namespace Malt.Layout.Models
 
         [XmlElement(ElementName = "label", IsNullable = true, Type = typeof(Label))]
         [XmlElement(ElementName = "input", IsNullable = true, Type = typeof(Input))]
+        [XmlElement(ElementName = "button", IsNullable = true, Type = typeof(Button))]
         [XmlElement(ElementName = "br", IsNullable = true, Type = typeof(NewLine))]
         [XmlElement(ElementName = "placeholder", IsNullable = true, Type = typeof(PlaceHolder))]
         [XmlElement(ElementName = "hr", IsNullable = true, Type = typeof(HorizontalLine))]

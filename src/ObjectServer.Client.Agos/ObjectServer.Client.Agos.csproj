@@ -179,6 +179,7 @@
     <Compile Include="UI\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\FormView\Fields\ButtonControl.cs" />
     <Compile Include="Windows\FormView\Fields\PageControl.cs" />
     <Compile Include="Windows\FormView\Fields\NotebookControl.cs" />
     <Compile Include="Windows\FormView\Fields\OneToManyFieldControl.cs" />

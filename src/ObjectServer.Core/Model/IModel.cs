@@ -18,5 +18,6 @@ namespace ObjectServer.Model
         void DeleteInternal(ITransactionContext ctx, long[] ids);
         Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx);
         dynamic Browse(ITransactionContext ctx, long id);
+        dynamic BrowseMany(ITransactionContext ctx, long[] ids);
     }
 }

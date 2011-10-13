@@ -22,6 +22,46 @@
     </field>
   </record>
 
+  <record model="core.view" key="module_form_view">
+    <field name="name">Modules</field>
+    <field name="model">core.module</field>
+    <field name="kind">form</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <form label="Modules">
+        <notebook>
+          <page label="General">
+                <label field="name" />
+                <input field="name" />
+                <label field="label" />
+                <input field="label" />
+                <label field="demo" />
+                <input field="demo" />
+                <label field="author" />
+                <input field="author" />
+                <label field="url" />
+                <input field="url" />
+                <label field="version" />
+                <input field="version" />
+                <label field="license" />
+                <input field="license" />
+                <br/>
+                <label field="state" />
+                <input field="state" />
+                <button name="ButtonMark" text="Mark for installation" target="transaction" />
+            </page>
+            <page label="Dependencies" >
+                <input field="depends" colspan="4" fill="true" />
+            </page>
+            <page label="Information" >
+                <input field="info" colspan="4" fill="true" />
+            </page>
+        </notebook>
+      </form>
+      ]]>
+    </field>
+  </record>
+
   <record  model="core.action_window" key="module_menu_action">
     <field name="name">Modules</field>
     <field name="type">core.action_window</field>

@@ -5,6 +5,8 @@ using System.Text;
 using System.Data;
 using System.IO;
 
+using NHibernate.SqlCommand;
+
 using ObjectServer.Model;
 using ObjectServer.Runtime;
 using ObjectServer.Data;
@@ -56,6 +58,46 @@ namespace ObjectServer.Core
             Fields.OneToMany("depends", "core.module_dependency", "module")
                 .SetLabel("Dependencies");
             Fields.Text("info").SetLabel("Information").Readonly();
+        }
+
+
+        [TransactionMethod("ButtonMark")]
+        public static void ButtonMark(dynamic model, ITransactionContext tc, dynamic ids)
+        {
+            if (ids == null)
+            {
+                throw new ArgumentNullException("ids");
+            }
+
+            var records = model.Read(tc, ids, null);
+            foreach (var r in records)
+            {
+                var originalState = (string)r["state"][0];
+                string newState = originalState;
+
+                if (originalState == States.Uninstalled || originalState == States.ToUninstall)
+                {
+                    newState = States.ToInstall;
+                }
+                else if (originalState == States.Installed)
+                {
+                    newState = States.ToUpgrade;
+                }
+
+                var newRecord = new Dictionary<string, object>()
+                {
+                    { "state", newState },
+                };
+
+                var sql = String.Format("update {0} set state=? where _id=?", model.TableName);
+                var id = (long)r[IdFieldName];
+                var rows = tc.DBContext.Execute(SqlString.Parse(sql), newState, id);
+                if (rows != 1)
+                {
+                    throw new Exceptions.DataException(
+                        string.Format("Failed to update table [{0}] with ID [{1}]", model.TableName, id));
+                }
+            }
         }
 
     }

@@ -256,11 +256,6 @@ where   hp._id=? and hc._id<>?
             }
         }
 
-        public override dynamic Browse(ITransactionContext ctx, long id)
-        {
-            return new BrowsableRecord(ctx, this, id);
-        }
-
         private IDictionary<long, string> DefaultNameGetter(
             ITransactionContext ctx, long[] ids)
         {

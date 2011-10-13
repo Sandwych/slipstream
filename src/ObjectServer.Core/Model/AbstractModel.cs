@@ -622,7 +622,22 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public abstract Record[] ReadInternal(
             ITransactionContext scope, long[] ids, string[] requiredFields);
         public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
-        public abstract dynamic Browse(ITransactionContext scope, long id);
+
+        public dynamic Browse(ITransactionContext ctx, long id)
+        {
+            return new BrowsableRecord(ctx, this, id);
+        }
+
+        public dynamic BrowseMany(ITransactionContext ctx, long[] ids)
+        {
+            var records = this.ReadInternal(ctx, ids, null);
+            dynamic browObjs = new dynamic[records.Length];
+            for (int i = 0; i < browObjs.Length; i++)
+            {
+                browObjs[i] = new BrowsableRecord(ctx, this, records[i]);
+            }
+            return browObjs;
+        }
 
         public IEnumerable<OrderExpression> Order { get; protected set; }
 

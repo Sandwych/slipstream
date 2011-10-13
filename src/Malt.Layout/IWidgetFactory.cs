@@ -21,6 +21,8 @@ namespace Malt.Layout
 
         object CreatePageWidget(Models.Page page, object parentWidget, object childContent);
 
+        object CreateButtonWidget(Models.Button button);
+
         /// <summary>
         /// 创建水平线控件
         /// </summary>

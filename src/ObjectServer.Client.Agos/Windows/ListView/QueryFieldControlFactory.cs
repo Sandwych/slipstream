@@ -91,5 +91,10 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
         {
             throw new NotSupportedException();
         }
+
+        public object CreateButtonWidget(Malt.Layout.Models.Button button)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

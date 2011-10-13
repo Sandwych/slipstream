@@ -35,13 +35,16 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 { "decimal", typeof(DecimalFieldControl) },
             };
 
+        private readonly string model;
         private IDictionary<string, object>[] metaFields;
         private IDictionary<string, IFieldWidget> createdFieldWidgets =
             new Dictionary<string, IFieldWidget>();
         private List<Label> createdLabels = new List<Label>();
+        private List<ButtonControl> createdButtons = new List<ButtonControl>();
 
-        public FieldControlFactory(IDictionary<string, object>[] fields)
+        public FieldControlFactory(string model, IDictionary<string, object>[] fields)
         {
+            this.model = model;
             this.metaFields = fields;
         }
 
@@ -86,6 +89,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             get { return this.createdFieldWidgets; }
         }
 
+        public IList<ButtonControl> CreatedButtons
+        {
+            get { return this.createdButtons; }
+        }
+
         public object CreateNotebookWidget(Malt.Layout.Models.Notebook notebook)
         {
             if (notebook == null)
@@ -113,6 +121,13 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var tabControl = (TabControl)parentWidget;
             tabControl.Items.Add(tabItem);
             return tabItem;
+        }
+
+        public object CreateButtonWidget(Malt.Layout.Models.Button button)
+        {
+            var buttonControl = new ButtonControl(button, this.model);
+            this.createdButtons.Add(buttonControl);
+            return buttonControl;
         }
     }
 }
