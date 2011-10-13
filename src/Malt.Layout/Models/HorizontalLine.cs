@@ -10,7 +10,7 @@ namespace Malt.Layout.Models
     {
         public HorizontalLine()
         {
-            this.ColumnSpan = 0;
+            this.ColumnSpan = 4;
             this.RowSpan = 1;
         }
 

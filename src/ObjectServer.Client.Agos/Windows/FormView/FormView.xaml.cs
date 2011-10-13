@@ -31,6 +31,8 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private long recordID;
         private string modelName;
         private FormModel formModel;
+        private bool hasVersion = false;
+        private long version;
 
         public FormView(string model, long recordID)
         {
@@ -64,6 +66,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 app.ClientService.BeginExecute(this.modelName, "GetFields", args, result =>
                 {
                     var metaFields = ((object[])result).Select(r => (IDictionary<string, object>)r).ToArray();
+                    this.hasVersion = metaFields.Any(f => (string)f["name"] == "_version");
 
                     this.LoadForm(metaFields);
 
@@ -131,18 +134,27 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var app = (App)Application.Current;
             var ids = new long[] { this.recordID };
 
-            var readArgs = new object[] { ids, this.fieldWidgets.Keys };
+            var fields = new List<string>(this.fieldWidgets.Count + 1);
+            fields.AddRange(this.fieldWidgets.Keys);
+            if (this.hasVersion)
+            {
+                fields.Add("_version");
+            }
+            var readArgs = new object[] { ids, fields };
             app.ClientService.BeginExecute(this.modelName, "Read", readArgs, (result) =>
             {
                 var objs = (object[])result;
                 var records = objs.Select(r => (Dictionary<string, object>)r).ToArray();
                 var record = records[0];
+                if (this.hasVersion)
+                {
+                    this.version = (long)record["_version"];
+                }
                 this.formModel = new FormModel(record);
                 foreach (var p in this.fieldWidgets)
                 {
                     p.Value.Value = record[p.Key];
                 }
-
             });
         }
 
@@ -152,6 +164,10 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             foreach (var p in this.fieldWidgets)
             {
                 record[p.Key] = p.Value.Value;
+            }
+            if (this.hasVersion)
+            {
+                record["_version"] = this.version;
             }
             return record;
         }
