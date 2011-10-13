@@ -14,7 +14,7 @@ namespace ObjectServer.Core.Test
     public sealed class RuleTest : TransactionTestCaseBase
     {
         [Test]
-        public void Test_search_with_rules()
+        public void CanSearchWithRules()
         {
             var expectedOrderNames1 = new string[] { "S/0001", "S/0004" };
             AssertSearchingOfSalesOrder("user1", "user1", expectedOrderNames1);

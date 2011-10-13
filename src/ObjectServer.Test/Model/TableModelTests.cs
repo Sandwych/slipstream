@@ -17,7 +17,7 @@ namespace ObjectServer.Model.Test
     public class TableModelTests : TransactionContextTestCaseBase
     {
         [Test]
-        public void Simple_fields_crud()
+        public void CheckCrud()
         {
             var modelName = "test.test_model";
             var dbName = this.SessionId;
@@ -64,7 +64,7 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
-        public void Create_and_read_related_fields()
+        public void CanCreateAndReadRelatedFields()
         {
             dynamic masterModel = this.GetResource("test.master");
             dynamic childModel = this.GetResource("test.child");
@@ -104,6 +104,7 @@ namespace ObjectServer.Model.Test
             //更新
             var masterId2 = (long)masterModel.Create(this.TransactionContext, masterPropBag);
             childPropBag["master"] = masterId2;
+            childPropBag[AbstractModel.VersionFieldName] = AbstractModel.FirstVersion;
             childModel.Write(this.TransactionContext, childId, childPropBag);
 
             dynamic children2 = childModel.Read(this.TransactionContext, new object[] { childId }, new object[] { "master" });
@@ -113,7 +114,7 @@ namespace ObjectServer.Model.Test
 
 
         [Test]
-        public void Read_nullable_one_to_many_field()
+        public void ReadNullableOneToManyField()
         {
             var masterFields = new object[] { "name", "children" };
             var master = new Dictionary<string, object>();

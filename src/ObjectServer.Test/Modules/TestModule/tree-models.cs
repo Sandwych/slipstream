@@ -15,7 +15,8 @@ namespace ObjectServer.Test
         public CategoryModel()
             : base("test.category")
         {
-            this.Hierarchy = true;
+            IsVersioned = false;
+            Hierarchy = true;
             Fields.Chars("name").SetLabel("Name").NotRequired().SetSize(64);
         }
     }

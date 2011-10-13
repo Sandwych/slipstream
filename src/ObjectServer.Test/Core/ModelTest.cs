@@ -8,10 +8,9 @@ using NUnit.Framework;
 namespace ObjectServer.Core.Test
 {
 
-    [TestFixture]
     public sealed class ModelTest : TransactionContextTestCaseBase
     {
-    
+
 
     }
 }

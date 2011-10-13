@@ -26,6 +26,7 @@ namespace ObjectServer.Model
         public const string CreatedUserFieldName = "_created_user";
         public const string UpdatedUserFieldName = "_updated_user";
         public const string ActiveFieldName = "_active";
+        public const long FirstVersion = 0;
         public readonly static OrderExpression[] DefaultOrder =
         new OrderExpression[] { new OrderExpression(IdFieldName, SortDirection.Ascend) };
 

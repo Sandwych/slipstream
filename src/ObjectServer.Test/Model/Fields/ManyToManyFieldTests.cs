@@ -106,8 +106,10 @@ namespace ObjectServer.Model.Fields.Test
             dynamic employeeModel = this.GetResource("test.employee");
             dynamic data = this.GenerateTestData();
 
+            dynamic r1 = employeeModel.Read(this.TransactionContext, new long[] { data.eid1 }, null)[0];
             dynamic e1 = new ExpandoObject();
             e1.departments = new long[] { data.did1, data.did2 };
+            e1._version = r1["_version"];
             employeeModel.Write(this.TransactionContext, data.eid1, e1);
 
             var fields = new string[] { "name", "departments" };

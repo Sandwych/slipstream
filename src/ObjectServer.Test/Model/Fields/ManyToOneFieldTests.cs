@@ -50,11 +50,14 @@ namespace ObjectServer.Model.Fields.Test
                 { "master", null },
             };
 
-            var childModel = (IModel)this.TransactionContext.GetResource("test.child");
+            dynamic childModel = this.TransactionContext.GetResource("test.child");
 
-            var id = childModel.CreateInternal(this.TransactionContext, child);
+            var id = childModel.Create(this.TransactionContext, child);
 
-            childModel.WriteInternal(this.TransactionContext, id, child);
+            var childRecord = childModel.Read(this.TransactionContext, new long[] { id }, null)[0];
+            child[AbstractModel.VersionFieldName] = childRecord[AbstractModel.VersionFieldName];
+
+            childModel.Write(this.TransactionContext, id, child);
         }
     }
 }

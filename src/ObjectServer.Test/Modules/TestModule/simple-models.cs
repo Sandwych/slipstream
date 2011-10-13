@@ -44,6 +44,7 @@ namespace ObjectServer.Test
         public TestModel()
             : base("test.test_model")
         {
+            IsVersioned = false;
 
             Fields.Chars("name").SetLabel("姓名").SetSize(64).Required();
             Fields.Chars("address").SetLabel("地址").SetSize(200).Required();

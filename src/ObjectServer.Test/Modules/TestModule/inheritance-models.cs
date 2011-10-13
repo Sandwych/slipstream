@@ -15,6 +15,7 @@ namespace ObjectServer.Test
         public SingleTableBaseModel()
             : base("test.single_table")
         {
+            IsVersioned = false;
             Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
         }
     }
@@ -48,6 +49,7 @@ namespace ObjectServer.Test
         public TestAnimalModel()
             : base("test.animal")
         {
+            IsVersioned = false;
             Fields.Chars("name").SetLabel("Name");
         }
     }
@@ -61,6 +63,7 @@ namespace ObjectServer.Test
         public TestDogModel()
             : base("test.dog")
         {
+            IsVersioned = false;
             Inherit("test.animal", "animal");
 
             Fields.ManyToOne("animal", "test.dog").Required().OnDelete(OnDeleteAction.Cascade)
@@ -78,6 +81,7 @@ namespace ObjectServer.Test
         public TestCockerModel()
             : base("test.cocker")
         {
+            IsVersioned = false;
             Inherit("test.dog", "dog");
 
             Fields.ManyToOne("dog", "test.dog").Required().OnDelete(OnDeleteAction.Cascade)
@@ -94,6 +98,7 @@ namespace ObjectServer.Test
         public TestFlyableModel()
             : base("test.flyable")
         {
+            IsVersioned = false;
             Fields.Integer("wings").SetLabel("Wings");
         }
     }
@@ -104,6 +109,7 @@ namespace ObjectServer.Test
         public TestBatModel()
             : base("test.bat")
         {
+            IsVersioned = false;
             Inherit("test.animal", "animal");
             Inherit("test.flyable", "flyable");
 
@@ -121,6 +127,7 @@ namespace ObjectServer.Test
         public TestBatManModel()
             : base("test.batman")
         {
+            IsVersioned = false;
             Inherit("test.bat", "bat");
 
             Fields.ManyToOne("bat", "test.bat").Required()
