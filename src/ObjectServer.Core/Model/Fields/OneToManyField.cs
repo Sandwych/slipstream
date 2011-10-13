@@ -133,5 +133,10 @@ namespace ObjectServer.Model
                 throw new NotSupportedException();
             }
         }
+
+        public override void VerifyDefinition()
+        {
+            base.VerifyDefinition();
+        }
     }
 }

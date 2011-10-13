@@ -368,7 +368,7 @@ namespace ObjectServer.Model
                 //CriterionConverter 返回的新条件不能包含字段本身，否则将递归
                 if (criteria.Count(cr => cr.Field == criterion.Field) > 0)
                 {
-                    throw new ArgumentException("CriterionConverter");
+                    throw new ResourceException("CriterionConverter");
                 }
 
                 this.AddCriteria(criteria);

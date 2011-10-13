@@ -16,7 +16,7 @@ namespace ObjectServer.Model.Test
         const string ReferenceFieldXmlResourcePath = "ObjectServer.Test.XmlFiles.reference-field-data.xml";
 
         [Test]
-        public void Test_simple_importing()
+        public void CanImportSimpleData()
         {
             this.ClearAllModelData();
             this.ClearTestModelTable();
@@ -56,7 +56,7 @@ namespace ObjectServer.Model.Test
 
 
         [Test]
-        public void Test_many2one_field_importing()
+        public void CanImportManyToOneField()
         {
             this.ClearMasterAndChildTable();
             this.ClearAllModelData();
@@ -84,7 +84,7 @@ namespace ObjectServer.Model.Test
 
 
         [Test]
-        public void Test_reference_field_importing()
+        public void CanImportReferenceField()
         {
             this.ClearMasterAndChildTable();
             this.ClearAllModelData();

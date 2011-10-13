@@ -152,7 +152,8 @@ namespace ObjectServer.Model
             {
                 if (string.IsNullOrEmpty(p.Key) || p.Key.Length > MaxSize || string.IsNullOrEmpty(p.Value))
                 {
-                    throw new ArgumentException("Bad enumeration options");
+                    throw new Exceptions.ResourceException(
+                        string.Format("Bad enumeration options in field {0}", this));
                 }
             }
         }

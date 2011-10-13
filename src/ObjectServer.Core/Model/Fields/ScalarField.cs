@@ -33,7 +33,6 @@ namespace ObjectServer.Model
             {
                 throw new ResourceException("提供的字段类型不是标量字段");
             }
-
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
@@ -86,6 +85,11 @@ namespace ObjectServer.Model
             {
                 throw new NotSupportedException();
             }
+        }
+
+        public override void VerifyDefinition()
+        {
+            base.VerifyDefinition();
         }
 
     }

@@ -172,10 +172,6 @@ namespace ObjectServer.Model
             }
             set
             {
-                if (this.IsRequired && OnDeleteAction == OnDeleteAction.SetNull)
-                {
-                    throw new ArgumentException("不能同时设置为必填字段和可空");
-                }
                 this.onDelete = value;
             }
         }
@@ -199,7 +195,7 @@ namespace ObjectServer.Model
             if (this.IsRequired && this.OnDeleteAction == ObjectServer.Model.OnDeleteAction.SetNull)
             {
                 throw new Exceptions.ResourceException(
-                    "The field can not set to be OnDeleteAction.SetNull, because it's required.");
+                    String.Format("Field [{0}] can not set to be OnDeleteAction.SetNull, because it's required.", this));
             }
         }
     }

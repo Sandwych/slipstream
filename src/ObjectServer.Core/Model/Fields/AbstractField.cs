@@ -35,6 +35,7 @@ namespace ObjectServer.Model
             this.Label = string.Empty;
             this.IsRequired = false;
             this.Lazy = false;
+            this.CriterionConverter = null;
         }
 
         public AbstractField(IModel model, string name, FieldType type)
@@ -112,7 +113,8 @@ namespace ObjectServer.Model
             //基础的验证
             if (this.DefaultProc != null && this.ValueGetter != null)
             {
-                throw new ArgumentException("Function field cannot have the DefaultProc property");
+                throw new Exceptions.ResourceException(
+                    string.Format("Function field [{0}] can not work with DefaultProc property", this));
             }
         }
 
@@ -312,5 +314,16 @@ namespace ObjectServer.Model
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return this.Model.Name + "." + this.Name;
+        }
+
+        protected static Criterion[] ThroughCriterionConverter(
+            ITransactionContext ctx, Criterion criterion)
+        {
+            return new Criterion[] { criterion };
+        }
     }
 }

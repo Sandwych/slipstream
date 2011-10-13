@@ -562,6 +562,14 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             model.DeleteInternal(ctx, ids);
         }
 
+        [TransactionMethod("GetFields")]
+        public static Dictionary<string, object>[] GetFields(IModel model, ITransactionContext ctx)
+        {
+            EnsureServiceMethodArgs(model, ctx);
+
+            return model.GetFieldsInternal(ctx);
+        }
+
 
         private static void EnsureServiceMethodArgs(IModel self, ITransactionContext ctx)
         {
@@ -611,7 +619,47 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
         public abstract dynamic Browse(ITransactionContext scope, long id);
 
+        public virtual Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx)
+        {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+            var modelModel = (IModel)ctx.GetResource("core.model");
+
+            var destModel = (AbstractModel)ctx.GetResource(this.Name);
+
+            var modelDomain = new object[] { new object[] { "name", "=", this.Name } };
+            var modelIds = modelModel.SearchInternal(ctx, modelDomain, null, 0, 0);
+
+            //TODO 检查 IDS 错误，好好想一下要用数据库的字段信息还是用内存的字段信息
+
+            var fieldModel = (IModel)ctx.GetResource("core.field");
+            var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
+            var fieldIds = fieldModel.SearchInternal(ctx, fieldDomain, null, 0, 0);
+            var records = fieldModel.ReadInternal(ctx, fieldIds, null);
+
+            foreach (var r in records)
+            {
+                var fieldName = (string)r["name"];
+                var field = destModel.Fields[fieldName];
+
+                if (field.Type == FieldType.Enumeration || field.Type == FieldType.Reference)
+                {
+                    r["options"] = field.Options;
+                }
+                else if (field.Type == FieldType.ManyToMany)
+                {
+                    r["related_field"] = field.RelatedField;
+                    r["origin_field"] = field.OriginField;
+                }
+            }
+
+            return records;
+        }
+
         #endregion
+
 
         protected static void VerifyFieldAccess(
             IModel model, ITransactionContext tc, string action, IEnumerable<string> fields)
