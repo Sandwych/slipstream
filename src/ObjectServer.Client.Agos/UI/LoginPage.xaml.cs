@@ -93,12 +93,14 @@ namespace ObjectServer.Client.Agos.UI
             var loginModel = (LoginModel)this.DataContext;
 
             var app = (App)Application.Current;
+            app.IsBusy = true;
 
             var client = new ObjectServerClient(new Uri(this.textServer.Text));
 
             client.BeginLogOn(loginModel.Database, loginModel.Login, loginModel.Password,
                 (sid, error) =>
                 {
+                    app.IsBusy = false;
                     if (error != null || string.IsNullOrEmpty(sid))
                     {
                         this.textMessage.Text = "登录失败，请检查用户名与密码是否正确";

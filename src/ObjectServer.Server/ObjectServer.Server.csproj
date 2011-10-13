@@ -52,6 +52,7 @@
     <Compile Include="AbstractWorker.cs" />
     <Compile Include="RpcDispatcher.cs" />
     <Compile Include="RpcHostWorker.cs" />
+    <Compile Include="ServerProcess.cs" />
     <Compile Include="Supervisor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

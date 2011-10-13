@@ -184,7 +184,17 @@ namespace ObjectServer
         {
             Debug.Assert(t != null);
 
-            var obj = Activator.CreateInstance(t) as AbstractResource;
+            AbstractResource obj;
+
+            try
+            {
+                obj = Activator.CreateInstance(t) as AbstractResource;
+            }
+            catch (TargetInvocationException ex)
+            {
+                throw ex.InnerException;
+            }
+
             if (obj == null)
             {
                 var msg = string.Format("类型 '{0}' 没有实现 IResource 接口", t.FullName);

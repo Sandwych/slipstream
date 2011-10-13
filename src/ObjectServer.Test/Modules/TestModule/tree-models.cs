@@ -16,8 +16,7 @@ namespace ObjectServer.Test
             : base("test.category")
         {
             this.Hierarchy = true;
-            Fields.Chars("name").SetLabel("Name").NotRequired()
-                .OnDelete(OnDeleteAction.SetNull).SetSize(64);
+            Fields.Chars("name").SetLabel("Name").NotRequired().SetSize(64);
         }
     }
 

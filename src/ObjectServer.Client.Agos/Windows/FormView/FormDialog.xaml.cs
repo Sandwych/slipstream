@@ -65,7 +65,15 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var args = new object[] { record };
             app.ClientService.BeginExecute(this.model, "Create", args, (result, error) =>
             {
-                this.Saved(this, new EventArgs());
+                if (error != null)
+                {
+                    ErrorWindow.CreateNew(error);
+                }
+                else
+                {
+                    this.Saved(this, new EventArgs());
+                }
+
                 this.DialogResult = true;
             });
         }
@@ -75,7 +83,15 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var args = new object[] { this.recordID, record };
             app.ClientService.BeginExecute(this.model, "Write", args, (result, error) =>
             {
-                this.Saved(this, new EventArgs());
+                if (error != null)
+                {
+                    ErrorWindow.CreateNew(error);
+                }
+                else
+                {
+                    this.Saved(this, new EventArgs());
+                }
+
                 this.DialogResult = true;
             });
         }

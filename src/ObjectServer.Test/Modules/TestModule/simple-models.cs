@@ -121,7 +121,7 @@ namespace ObjectServer.Test
         {
             Fields.Chars("name").SetLabel("Code");
             Fields.DateTime("order_date").SetLabel("Date");
-            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
+            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization").NotRequired();
         }
     }
 

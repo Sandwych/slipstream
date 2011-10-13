@@ -169,7 +169,7 @@ namespace ObjectServer.Model
             if (!Fields.ContainsKey(ParentFieldName))
             {
                 Fields.ManyToOne(ParentFieldName, this.Name)
-                    .SetLabel("Parent");
+                    .SetLabel("Parent").NotRequired().OnDelete(OnDeleteAction.SetNull);
             }
 
             Fields.OneToMany(ChildrenFieldName, this.Name, ParentFieldName)

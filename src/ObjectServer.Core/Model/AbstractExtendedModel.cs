@@ -165,5 +165,18 @@ namespace ObjectServer.Model
         {
             throw new NotSupportedException();
         }
+
+        public IEnumerable<OrderExpression> Order
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        public IModelDescriptor OrderBy(IEnumerable<OrderExpression> order)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

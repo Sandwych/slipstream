@@ -2,7 +2,7 @@
 <data noupdate="true">
 
   <record model="core.menu" key="menu_admin_root">
-    <field name="name">Administration</field>
+    <field name="name">System Administration</field>
     <field name="ordinal">9999</field>
   </record>
 
@@ -10,7 +10,6 @@
     <field name="name">Organization Structure</field>
     <field name="parent" ref-key="menu_admin_root" />
     <field name="ordinal">1000</field>
-    <field name="action" ref-model="core.action_window" ref-key="org_menu_action" />
   </record>
 
   <record model="core.menu" key="menu_admin_security">
@@ -19,30 +18,30 @@
     <field name="ordinal">9999</field>
   </record>
 
-  <record model="core.menu" key="menu_admin_module">
-    <field name="parent" ref-key="menu_admin_root" />
-    <field name="name">Module Management</field>
-    <field name="ordinal">0</field>
-    <field name="action" ref-model="core.action_window" ref-key="module_menu_action" />
-  </record>
-
   <record model="core.menu" key="menu_admin_base">
     <field name="parent" ref-key="menu_admin_root" />
     <field name="name">Base System</field>
     <field name="ordinal">0</field>
   </record>
 
+  <record model="core.menu" key="menu_admin_module">
+    <field name="parent" ref-key="menu_admin_base" />
+    <field name="name">Module Management</field>
+    <field name="ordinal">0</field>
+    <field name="action" ref-model="core.action_window" ref-key="module_menu_action" />
+  </record>
+
   <record model="core.menu" key="menu_base_model">
     <field name="parent" ref-key="menu_admin_base" />
     <field name="name">Models</field>
-    <field name="ordinal">0</field>
+    <field name="ordinal">1000</field>
     <field name="action" ref-model="core.action_window" ref-key="model_menu_action" />
   </record>
 
   <record model="core.menu" key="menu_base_view">
     <field name="parent" ref-key="menu_admin_base" />
     <field name="name">Views</field>
-    <field name="ordinal">1</field>
+    <field name="ordinal">2000</field>
     <field name="action" ref-model="core.action_window" ref-key="view_menu_action" />
   </record>
 

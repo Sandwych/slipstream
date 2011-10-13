@@ -39,6 +39,10 @@ namespace ObjectServer.Model
             {
                 translator.SetOrders(order);
             }
+            else
+            {
+                translator.SetOrders(this.Order);
+            }
 
             var querySql = translator.ToSqlString();
 

@@ -24,18 +24,48 @@ namespace ObjectServer.Server
 
             try
             {
-                var server = new ServerProcess();
-                server.Run();
+                using (var server = new ServerProcess())
+                {
+                    var serverThreadProc = new ThreadStart(delegate
+                    {
+                        server.Run();
+                    });
+
+                    var serverThread = new Thread(serverThreadProc);
+                    serverThread.Start();
+
+                    Console.WriteLine("开始等待客户端请求...");
+                    WaitToQuit();
+
+                    Console.WriteLine("开始广播停止命令...");
+                    server.BeginStop();
+                    Console.WriteLine("服务器终止进程启动...");
+                }
+
                 return 0;
             }
             catch (Exception ex)
             {
+                LoggerProvider.EnvironmentLogger.Error(
+                    "Uncached Exception: " + ex.Message, ex);
                 var oldColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("启动服务器失败，异常信息：[{0}]", ex.Message);
+                Console.WriteLine("未捕获的服务器异常：[{0}]", ex.Message);
                 Console.ForegroundColor = oldColor;
                 return -1;
             }
+            finally
+            {
+                Environment.Shutdown();
+            }
+        }
+
+        private static void WaitToQuit()
+        {
+            do
+            {
+                Console.WriteLine("按 'Q' 键终止服务");
+            } while (Char.ToUpperInvariant(Console.ReadKey(true).KeyChar) != 'Q');
         }
 
         private static void InitializeFramework()

@@ -11,6 +11,8 @@ namespace ObjectServer.Model
         ICollection<InheritanceInfo> Inheritances { get; }
         IFieldCollection Fields { get; }
         string TableName { get; }
+        IEnumerable<OrderExpression> Order { get; }
+        IModelDescriptor OrderBy(IEnumerable<OrderExpression> order);
 
         bool AutoMigration { get; }
 

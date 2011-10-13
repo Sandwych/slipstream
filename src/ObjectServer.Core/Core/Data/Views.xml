@@ -1,13 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data noupdate="true">
 
-  <!-- Organizations' action -->
-  <record  model="core.action_window" key="org_menu_action">
-    <field name="name">Organizations</field>
-    <field name="type">core.action_window</field>
-    <field name="model">core.organization</field>
-  </record>
-
   <!-- Modules's View -->
   <record model="core.view" key="module_tree_view">
     <field name="name">Modules</field>

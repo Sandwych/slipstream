@@ -71,7 +71,8 @@ namespace ObjectServer.Model
             }
             set
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException(
+                    string.Format("Scalar field [{0}] does not support OnDeleteAction", this));
             }
         }
 

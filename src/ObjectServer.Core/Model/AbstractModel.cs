@@ -26,6 +26,8 @@ namespace ObjectServer.Model
         public const string CreatedUserFieldName = "_created_user";
         public const string UpdatedUserFieldName = "_updated_user";
         public const string ActiveFieldName = "_active";
+        public readonly static OrderExpression[] DefaultOrder =
+        new OrderExpression[] { new OrderExpression(IdFieldName, SortDirection.Ascend) };
 
         private readonly IFieldCollection fields;
 
@@ -35,6 +37,7 @@ namespace ObjectServer.Model
         protected AbstractModel(string name)
             : base(name)
         {
+            this.Order = DefaultOrder;
             this.IsVersioned = true;
             this.AutoMigration = true;
             this.fields = new FieldCollection(this);
@@ -428,10 +431,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new SecurityException("Access denied");
             }
 
-
-
-            OrderExpression[] orderInfos = OrderExpression.GetDefaultOrders();
-
+            OrderExpression[] orderInfos = null;
             if (order != null)
             {
                 orderInfos = new OrderExpression[order.Length];
@@ -441,6 +441,10 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                     var so = SortDirectionParser.Parser((string)orderTuple[1]);
                     orderInfos[i] = new OrderExpression((string)orderTuple[0], so);
                 }
+            }
+            else
+            {
+                orderInfos = model.Order.ToArray();
             }
 
             return model.SearchInternal(ctx, constraint, orderInfos, offset, limit);
@@ -618,6 +622,20 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             ITransactionContext scope, long[] ids, string[] requiredFields);
         public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
         public abstract dynamic Browse(ITransactionContext scope, long id);
+
+        public IEnumerable<OrderExpression> Order { get; protected set; }
+
+        public IModelDescriptor OrderBy(IEnumerable<OrderExpression> order)
+        {
+            if (order == null)
+            {
+                throw new ArgumentNullException("order");
+            }
+
+            this.Order = order;
+
+            return this;
+        }
 
         public virtual Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx)
         {

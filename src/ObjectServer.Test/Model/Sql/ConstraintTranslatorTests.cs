@@ -39,8 +39,8 @@ namespace ObjectServer.Model.Test
 
             var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
             cb.AddCriteria(criteria);
-            cb.SetOrder(new OrderExpression("login", SortDirection.Ascend));
-            cb.SetOrder(new OrderExpression("name", SortDirection.Ascend));
+            cb.AddOrder(new OrderExpression("login", SortDirection.Ascend));
+            cb.AddOrder(new OrderExpression("name", SortDirection.Ascend));
 
             var sqlStr = cb.ToSqlString();
             Assert.AreEqual(

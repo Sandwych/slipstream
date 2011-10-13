@@ -62,7 +62,7 @@ namespace ObjectServer.Model
 
         }
 
-        public void SetOrder(OrderExpression oe)
+        public void AddOrder(OrderExpression oe)
         {
             if (oe == null)
             {
@@ -85,7 +85,7 @@ namespace ObjectServer.Model
 
             foreach (var oe in oes)
             {
-                this.SetOrder(oe);
+                this.AddOrder(oe);
             }
         }
 
