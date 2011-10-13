@@ -87,6 +87,11 @@ namespace ObjectServer
             //比如两个客户端，一个正在操作数据库，另一个要删除数据库
             //TODO 线程安全
 
+            if (!this.dbProfiles.ContainsKey(dbName))
+            {
+                throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
+            }
+
             var db = this.dbProfiles[dbName];
             this.dbProfiles.Remove(dbName);
         }
