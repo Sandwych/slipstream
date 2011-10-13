@@ -23,8 +23,8 @@ namespace ObjectServer.Server
     {
         private static readonly Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
         private static readonly IExportedService s_service = Environment.ExportedService;
-        private static readonly object lockObj = new object();
-        private static bool running = false;
+        private static readonly object s_lockObj = new object();
+        private static bool s_running = false;
 
         static RpcDispatcher()
         {
@@ -103,37 +103,36 @@ namespace ObjectServer.Server
                 throw new InvalidOperationException("无法启动 PRC-Handler 工人线程，请先初始化框架");
             }
 
-            var controllerUrl = Environment.Configuration.CommanderUrl;
+            var broadcastUrl = Environment.Configuration.BroadcastUrl;
             var rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
             LoggerProvider.EnvironmentLogger.Debug(
                 () => string.Format("Starting RpcHandler thread[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
 
-
-            using (var controller = new ZMQ.Socket(ZMQ.SocketType.SUB))
+            using (var broadcastSocket = new ZMQ.Socket(ZMQ.SocketType.SUB))
             using (var receiver = new ZMQ.Socket(ZMQ.SocketType.REP))
             {
-                controller.Connect(controllerUrl);
-                controller.Subscribe("STOP", Encoding.UTF8);
+                broadcastSocket.Connect(broadcastUrl);
+                broadcastSocket.Subscribe("STOP", Encoding.UTF8);
                 LoggerProvider.EnvironmentLogger.Debug(
-                    () => string.Format("RpcHandler thread[{0}] is connected to the Commander URL[{1}]", id, controllerUrl));
+                    () => string.Format("RpcHandler thread[{0}] is connected to the Commander URL[{1}]", id, broadcastUrl));
 
                 receiver.Connect(rpcHandlerUrl);
 
                 var items = new PollItem[2];
-                items[0] = controller.CreatePollItem(IOMultiPlex.POLLIN);
-                items[0].PollInHandler += new PollHandler(ControllerPollInHandler);
+                items[0] = broadcastSocket.CreatePollItem(IOMultiPlex.POLLIN);
+                items[0].PollInHandler += new PollHandler(SupervisorPollInHandler);
 
                 items[1] = receiver.CreatePollItem(IOMultiPlex.POLLIN);
                 items[1].PollInHandler += new PollHandler(ReceiverPollInHandler);
 
-                lock (lockObj)
+                lock (s_lockObj)
                 {
-                    running = true;
+                    s_running = true;
                 }
 
                 //  Process messages from both sockets
-                while (running)
+                while (s_running)
                 {
                     Context.Poller(items, -1);
                 }
@@ -143,23 +142,26 @@ namespace ObjectServer.Server
             }
         }
 
-        private static void ControllerPollInHandler(Socket socket, IOMultiPlex revents)
+        private static void SupervisorPollInHandler(Socket socket, IOMultiPlex revents)
         {
+            Debug.Assert(socket != null);
+
             var cmd = socket.Recv(Encoding.UTF8);
 
-            if (cmd == "STOP" && running)
+            if (cmd == "STOP" && s_running)
             {
                 LoggerProvider.EnvironmentLogger.Info("The [STOP] command received, try to stop all RPC-Handlers");
-                lock (lockObj)
+                lock (s_lockObj)
                 {
-                    running = false;
+                    s_running = false;
                 }
             }
         }
 
         private static void ReceiverPollInHandler(Socket socket, IOMultiPlex revents)
         {
-            //TODO 优化，避免转换
+            Debug.Assert(socket != null);
+
             var message = socket.Recv();
             var result = InvokeJsonRpc(message);
             socket.Send(result);
@@ -210,7 +212,7 @@ namespace ObjectServer.Server
                 var endTime = Stopwatch.GetTimestamp();
                 var costTime = endTime - startTime;
                 LoggerProvider.RpcLogger.Debug(
-                    () => String.Format("RPC cost time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
+                    () => String.Format("Transaction costed time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
             }
             catch (FatalException fex)
             {

@@ -17,7 +17,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
     [TemplatePart(Name = HLine.ElementRoot, Type = typeof(FrameworkElement))]
     [TemplatePart(Name = HLine.ElementHorizontalLine, Type = typeof(Rectangle))]
-    [TemplatePart(Name = HLine.ElementLabel, Type = typeof(Label))]
+    [TemplatePart(Name = HLine.ElementLabel, Type = typeof(TextBlock))]
     public class HLine : Control
     {
         public const string ElementRoot = "Root";
@@ -26,7 +26,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
         FrameworkElement root;
         Rectangle border;
-        Label label;
+        TextBlock label;
         private readonly string text;
 
         public HLine(string text)
@@ -40,11 +40,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
             this.border = this.GetTemplateChild(ElementHorizontalLine) as Rectangle;
-            this.label = this.GetTemplateChild(ElementLabel) as Label;
+            this.label = this.GetTemplateChild(ElementLabel) as TextBlock;
 
             if (this.label != null && !string.IsNullOrEmpty(this.text))
             {
-                this.label.Content = this.text;
+                this.label.Text = this.text;
             }
         }
 
@@ -54,7 +54,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             {
                 if (this.label != null)
                 {
-                    return (string)this.label.Content;
+                    return (string)this.label.Text;
                 }
                 else
                 {
@@ -65,7 +65,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             {
                 if (this.label != null)
                 {
-                    this.label.Content = value ?? string.Empty;
+                    this.label.Text = value ?? string.Empty;
                 }
             }
         }

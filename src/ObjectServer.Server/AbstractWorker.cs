@@ -9,14 +9,14 @@ namespace ObjectServer.Server
 {
     public abstract class AbstractWorker
     {
-        private readonly Socket controllerSocket = new Socket(SocketType.SUB);
+        private readonly Socket broadcastSocket = new Socket(SocketType.SUB);
 
         public AbstractWorker()
         {
             this.ID = Guid.NewGuid();
 
-            this.controllerSocket.Connect(Environment.Configuration.CommanderUrl);
-            this.controllerSocket.Subscribe("STOP", Encoding.UTF8);
+            this.broadcastSocket.Connect(Environment.Configuration.BroadcastUrl);
+            this.broadcastSocket.Subscribe("STOP", Encoding.UTF8);
         }
 
         public void Start()
@@ -40,7 +40,7 @@ namespace ObjectServer.Server
 
         protected string ReceiveControlCommand()
         {
-            return this.controllerSocket.Recv(Encoding.UTF8);
+            return this.broadcastSocket.Recv(Encoding.UTF8);
         }
     }
 }

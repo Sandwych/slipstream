@@ -8,23 +8,23 @@ using ZMQ;
 
 namespace ObjectServer.Server
 {
-    public sealed class WorkerCommander : IDisposable
+    public sealed class Supervisor : IDisposable
     {
-        private readonly Socket socket = new Socket(SocketType.PUB);
+        private readonly Socket broadcastSocket = new Socket(SocketType.PUB);
         private bool started = false;
         private bool disposed = false;
 
 
-        ~WorkerCommander()
+        ~Supervisor()
         {
             this.Dispose(false);
         }
 
         public void Start()
         {
-            var address = Environment.Configuration.CommanderUrl;
+            var address = Environment.Configuration.BroadcastUrl;
 
-            this.socket.Bind(address);
+            this.broadcastSocket.Bind(address);
             this.started = true;
         }
 
@@ -47,9 +47,9 @@ namespace ObjectServer.Server
             }
 
             LoggerProvider.EnvironmentLogger.Debug(
-                () => String.Format("Broadcasting command: [{0}]", command));
+                () => String.Format("Sending broadcast command: [{0}]", command));
 
-            this.socket.Send(command, Encoding.UTF8);
+            this.broadcastSocket.Send(command, Encoding.UTF8);
         }
 
         private void Dispose(bool isDisposing)
@@ -63,7 +63,7 @@ namespace ObjectServer.Server
 
                 //释放非托管资源
                 this.StopAll();
-                this.socket.Dispose();
+                this.broadcastSocket.Dispose();
 
                 this.disposed = true;
             }

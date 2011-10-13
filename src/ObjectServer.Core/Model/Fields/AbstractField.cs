@@ -205,13 +205,13 @@ namespace ObjectServer.Model
             return this;
         }
 
-        public IField Required()
+        public virtual IField Required()
         {
             this.IsRequired = true;
             return this;
         }
 
-        public IField NotRequired()
+        public virtual IField NotRequired()
         {
             this.IsRequired = false;
             return this;

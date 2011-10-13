@@ -18,8 +18,10 @@ namespace ObjectServer.Core
         {
             this.TableName = "core_rule_role_rel";
 
-            Fields.ManyToOne("role", "core.role").SetLabel("Role").Required();
-            Fields.ManyToOne("rule", "core.rule").SetLabel("Rule").Required();
+            Fields.ManyToOne("role", "core.role").SetLabel("Role")
+                .Required().OnDelete(OnDeleteAction.Cascade);
+            Fields.ManyToOne("rule", "core.rule").SetLabel("Rule")
+                .Required().OnDelete(OnDeleteAction.Cascade);
         }
 
         public override void Initialize(ITransactionContext tc, bool update)

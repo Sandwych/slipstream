@@ -12,9 +12,9 @@ namespace ObjectServer.Server
     {
         public void Run()
         {
-            using (var commander = new Server.WorkerCommander())
+            using (var supervisor = new Server.Supervisor())
             {
-                commander.Start();
+                supervisor.Start();
 
                 var cfg = Environment.Configuration;
                 if(cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Worker)
@@ -35,7 +35,7 @@ namespace ObjectServer.Server
                 } while (Char.ToUpperInvariant(Console.ReadKey(true).KeyChar) != 'Q');
 
                 Console.WriteLine("开始广播停止命令...");
-                commander.StopAll();
+                supervisor.StopAll();
 
                 Console.WriteLine("服务器已经终止");
             }
@@ -59,7 +59,7 @@ namespace ObjectServer.Server
             var serverThread = new Thread(() =>
             {
                 using (var cs = new ObjectServer.Http.AnnaHttpServer(
-                    Environment.Configuration.CommanderUrl,
+                    Environment.Configuration.BroadcastUrl,
                     Environment.Configuration.RpcHostUrl,
                     Environment.Configuration.HttpListenUrl))
                 {

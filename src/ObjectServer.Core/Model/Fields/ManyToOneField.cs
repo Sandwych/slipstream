@@ -17,9 +17,24 @@ namespace ObjectServer.Model
         public ManyToOneField(IModel model, string name, string masterModel)
             : base(model, name, FieldType.ManyToOne)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (string.IsNullOrEmpty(masterModel))
+            {
+                throw new ArgumentNullException("masterModel");
+            }
+
             this.Relation = masterModel;
-            this.NotRequired();
-            this.OnDeleteAction = OnDeleteAction.SetNull;
+            this.Required();
+            this.OnDeleteAction = OnDeleteAction.Cascade;
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
@@ -186,6 +201,26 @@ namespace ObjectServer.Model
             {
                 throw new NotSupportedException();
             }
+        }
+
+        public override IField Required()
+        {
+            if (this.OnDeleteAction == ObjectServer.Model.OnDeleteAction.SetNull)
+            {
+                this.OnDeleteAction = ObjectServer.Model.OnDeleteAction.Cascade;
+            }
+
+            return base.Required();
+        }
+
+        public override IField NotRequired()
+        {
+            if (this.OnDeleteAction != ObjectServer.Model.OnDeleteAction.SetNull)
+            {
+                this.OnDeleteAction = ObjectServer.Model.OnDeleteAction.SetNull;
+            }
+
+            return base.NotRequired();
         }
 
         public override void VerifyDefinition()

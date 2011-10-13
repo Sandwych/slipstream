@@ -21,7 +21,7 @@ namespace ObjectServer.Core
             Fields.Integer("ordinal").Required().SetLabel("Ordinal");
             Fields.ManyToOne("view", "core.view").SetLabel("Related View").Required();
             Fields.ManyToOne("window_action", "core.action_window")
-                .SetLabel("Related Window Action").Required();
+                .SetLabel("Related Window Action").Required().OnDelete(OnDeleteAction.Cascade);
         }
 
     }

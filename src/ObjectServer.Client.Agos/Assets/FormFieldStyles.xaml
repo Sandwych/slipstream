@@ -9,6 +9,10 @@
   xmlns:queryFields="clr-namespace:ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls"
   xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input">
 
+    <LinearGradientBrush x:Key="HLineBgBrush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FFF5FBFF" Offset="0.0" />
+        <GradientStop Color="#FFE2EBF3" Offset="1.0" />
+    </LinearGradientBrush>
 
     <!-- Form 控件样式 -->
     <Style TargetType="fields:FieldLabel">
@@ -151,14 +155,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="fields:HLine">
-                    <Grid x:Name="Root">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <sdk:Label x:Name="Label" Grid.Column="0" Margin="0,0,5,0" />
-                        <Rectangle x:Name="HorizontalLine" Grid.Column="1" Height="1" Fill="#FFA59D8F"  VerticalAlignment="Stretch" />
-                    </Grid>
+                    <Border BorderThickness="1" BorderBrush="#FF7D92B3" Padding="5,3,5,3"
+                            Background="{StaticResource HLineBgBrush}" >
+                        <Grid x:Name="Root">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="Label" Grid.Column="0" Margin="0,0,5,0" FontWeight="Bold" />
+                            <Rectangle x:Name="HorizontalLine" Grid.Column="1" Height="1" VerticalAlignment="Stretch" />
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

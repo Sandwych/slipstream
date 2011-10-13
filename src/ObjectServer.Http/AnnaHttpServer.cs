@@ -6,6 +6,9 @@ using System.Net;
 using System.Diagnostics;
 using System.Threading;
 
+using ZMQ;
+using ZMQ.ZMQExt;
+
 using ObjectServer;
 
 namespace ObjectServer.Http
@@ -25,20 +28,18 @@ namespace ObjectServer.Http
             "<allow-access-from domain=\"*\" />" +
             "</cross-domain-policy>";
 
-        private readonly ZMQ.Socket commandSocket = new ZMQ.Socket(ZMQ.SocketType.SUB);
+        private readonly ZMQ.Socket broadcastSocket = new ZMQ.Socket(ZMQ.SocketType.SUB);
         private readonly ZMQ.Socket senderSocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
         private readonly string rpcReqUrl;
         private readonly string httpHostUrl;
 
         private bool disposed = false;
 
-        public AnnaHttpServer(string controllerUrl, string rpcHostUrl, string httpUrl)
+        public AnnaHttpServer(string supervisorUrl, string rpcHostUrl, string httpUrl)
         {
-            LoggerProvider.EnvironmentLogger.Info("Starting HTTP Server...");
-
-            if (string.IsNullOrEmpty(controllerUrl))
+            if (string.IsNullOrEmpty(supervisorUrl))
             {
-                throw new ArgumentNullException("controllerUrl");
+                throw new ArgumentNullException("supervisorUrl");
             }
 
             if (string.IsNullOrEmpty(rpcHostUrl))
@@ -51,8 +52,10 @@ namespace ObjectServer.Http
                 throw new ArgumentNullException("httpUrl");
             }
 
-            commandSocket.Connect(controllerUrl);
-            commandSocket.Subscribe("STOP", Encoding.UTF8);
+            LoggerProvider.EnvironmentLogger.Info("Starting HTTP Server...");
+
+            broadcastSocket.Connect(supervisorUrl);
+            broadcastSocket.Subscribe("STOP", Encoding.UTF8);
 
             if (!httpUrl.EndsWith("/"))
             {
@@ -111,7 +114,7 @@ namespace ObjectServer.Http
 
             while (true)
             {
-                var cmd = this.commandSocket.Recv(Encoding.UTF8);
+                var cmd = this.broadcastSocket.Recv(Encoding.UTF8);
 
                 if (cmd == "STOP")
                 {
@@ -176,7 +179,7 @@ namespace ObjectServer.Http
             var endTime = Stopwatch.GetTimestamp();
             var costTime = endTime - startTime;
             LoggerProvider.RpcLogger.Debug(
-                () => String.Format("ZMQ RPC cost time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
+                () => String.Format("MQ RPC costed time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
 
             return rep;
         }
@@ -197,7 +200,7 @@ namespace ObjectServer.Http
                 //释放非托管资源
 
                 this.senderSocket.Dispose();
-                this.commandSocket.Dispose();
+                this.broadcastSocket.Dispose();
 
                 this.disposed = true;
             }

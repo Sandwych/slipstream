@@ -52,7 +52,7 @@ namespace ObjectServer
 #endif
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "inproc://rpc-entrance";
-            this.CommanderUrl = "inproc://controller";
+            this.BroadcastUrl = "inproc://broadcast";
             this.HttpListenUrl = "http://localhost:9287/";
 
             this.ModulePath = "Modules";
@@ -125,8 +125,8 @@ namespace ObjectServer
         [XmlElement("rpc-host-url")]
         public string RpcHostUrl { get; set; }
 
-        [XmlElement("controller-url")]
-        public string CommanderUrl { get; set; }
+        [XmlElement("broadcast-url")]
+        public string BroadcastUrl { get; set; }
 
         [XmlElement("http-listen-url")]
         public string HttpListenUrl { get; set; }
