@@ -12,13 +12,8 @@ namespace ObjectServer.Client.Model
         public const long IdForCreation = -1;
         private readonly IDictionary<string, IField> fields = new Dictionary<string, IField>();
 
-        public Entity(string modelName, long id, IEntityCollection owner)
+        internal Entity(IEntityCollection owner, long id)
         {
-            if (string.IsNullOrEmpty(modelName))
-            {
-                throw new ArgumentNullException("modelName");
-            }
-
             if (id <= 0)
             {
                 this.Id = IdForCreation;
@@ -29,13 +24,11 @@ namespace ObjectServer.Client.Model
             }
 
             this.Owner = owner;
-
-            Debug.Assert(!(this.Owner != null && modelName != this.Owner.ModelName));
         }
 
         #region IEntity Members
 
-        public string ModelName { get; private set; }
+        public string ModelName { get { return this.Owner.ModelName; } }
 
         public long Id { get; private set; }
 
@@ -53,43 +46,6 @@ namespace ObjectServer.Client.Model
         }
 
         #endregion
-
-        public void Load(IRemoteService service)
-        {
-            Debug.Assert(this.Id > 0);
-            if (service == null)
-            {
-                throw new ArgumentNullException("service");
-            }
-
-            //获取字段元信息
-            var args = new object[] { };
-            service.BeginExecute(this.ModelName, "GetFields", args, (result, error) =>
-            {
-                //读取字段值
-                var metaFields = ((object[])result).Select(r => (IDictionary<string, object>)r);
-                var fieldNames = metaFields.Select(mf => (string)mf["name"]);
-                args = LoadData(service, fieldNames);
-            });
-        }
-
-        private object[] LoadData(IRemoteService service, IEnumerable<string> fieldNames)
-        {
-            object[] args;
-            var ids = new long[] { this.Id };
-            args = new object[] { ids, fieldNames };
-            service.BeginExecute(this.ModelName, "Read", args, (result1, error1) =>
-            {
-                var objs = (object[])result1;
-                var records = objs.Select(r => (Dictionary<string, object>)r);
-                var record = records.First();
-                foreach (var p in record)
-                {
-                    this.fields[p.Key] = new Field(p.Key, p.Value);
-                }
-            });
-            return args;
-        }
 
         public void Save(IRemoteService service)
         {
@@ -123,6 +79,20 @@ namespace ObjectServer.Client.Model
             {
                 Debug.Assert(this.Owner != null);
                 return this.Owner.Parent;
+            }
+        }
+
+        public void SetFieldValues(IDictionary<string, object> record)
+        {
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
+            foreach (var p in record)
+            {
+                var field = new Field(p.Key, p.Value);
+                this.fields.Add(p.Key, field);
             }
         }
 

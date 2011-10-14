@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ObjectServer.Client.Model
 {
@@ -95,6 +96,30 @@ namespace ObjectServer.Client.Model
 
         #endregion
 
+        public void Load(IRemoteService service)
+        {
+        }
+
+        public void Load(IRemoteService service, long[] ids)
+        {
+            var fields = this.metaFields.Select(mf => (string)mf["name"]).ToArray();
+            var args = new object[] { ids, fields };
+            service.BeginExecute(this.ModelName, "Read", args, (result, error) =>
+            {
+                var records = ((object[])result).Cast<IDictionary<string, object>>();
+                foreach (var r in records)
+                {
+                    var entity = this.NewEntity();
+                    entity.SetFieldValues(r);
+                    this.entities.Add(entity);
+                }
+            });
+        }
+
+        public void Load(IRemoteService service, object[] constraint)
+        {
+        }
+
         public void Save(IRemoteService service)
         {
             if (service == null)
@@ -106,6 +131,11 @@ namespace ObjectServer.Client.Model
             {
                 e.Save(service);
             }
+        }
+
+        public IEntity NewEntity()
+        {
+            return new Entity(this, -1);
         }
     }
 }
