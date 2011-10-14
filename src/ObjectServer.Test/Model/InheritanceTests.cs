@@ -41,7 +41,7 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
-        public void CanCreateAndReadSingleTable()
+        public void CanOverrideSingleTableTransaction()
         {
             dynamic inheritedModel = this.TransactionContext.GetResource("test.single_table");
             Assert.True(inheritedModel.Fields.ContainsKey("age"));
