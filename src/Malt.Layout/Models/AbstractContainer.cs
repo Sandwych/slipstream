@@ -17,6 +17,33 @@ namespace Malt.Layout.Models
             this.ChildElements = EmptyChildElements;
         }
 
+        public IPlacable[] GetAllChildElements(Type eleType)
+        {
+            if (eleType == null)
+            {
+                throw new ArgumentNullException("eleType");
+            }
+            var result = new List<IPlacable>();
+            GetAllChildElements(result, eleType, this);
+            return result.ToArray();
+        }
+
+        private static void GetAllChildElements(IList<IPlacable> result, Type eleType, IContainer parent)
+        {
+            var parentContainer = parent as IContainer;
+            foreach (var e in parentContainer.Children)
+            {
+                if (e is IContainer)
+                {
+                    GetAllChildElements(result, eleType, (IContainer)e);
+                }
+                else if (e.GetType() == eleType)
+                {
+                    result.Add(e);
+                }
+            }
+        }
+
         [XmlElement(ElementName = "label", IsNullable = true, Type = typeof(Label))]
         [XmlElement(ElementName = "input", IsNullable = true, Type = typeof(Input))]
         [XmlElement(ElementName = "button", IsNullable = true, Type = typeof(Button))]

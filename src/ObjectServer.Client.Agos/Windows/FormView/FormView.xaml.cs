@@ -78,7 +78,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             });
         }
 
-        private void LoadForm(IDictionary<string, object>[] metaFields)
+        private void LoadForm(IDictionary<string, object>[] allMetaFields)
         {
             Debug.Assert(!string.IsNullOrEmpty(this.modelName));
             Debug.Assert(this.viewRecord != null);
@@ -97,7 +97,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 form = (Malt.Layout.Models.Form)xs.Deserialize(sr);
             }
 
-            var factory = new FieldControlFactory(this.modelName, metaFields);
+            var factory = new FieldControlFactory(this.modelName, allMetaFields);
             var le = new Malt.Layout.LayoutEngine(factory);
             var layoutGrid = (UIElement)le.CreateLayout(form);
             this.fieldWidgets = factory.CreatedFieldWidgets;

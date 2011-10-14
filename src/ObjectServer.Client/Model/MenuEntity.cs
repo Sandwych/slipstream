@@ -5,13 +5,13 @@ using System.Diagnostics;
 
 namespace ObjectServer.Client.Model
 {
-    public class MenuModel : IModel
+    public class MenuEntity
     {
-        public MenuModel()
+        public MenuEntity()
         {
         }
 
-        public MenuModel(IDictionary<string, object> record)
+        public MenuEntity(IDictionary<string, object> record)
         {
             if (record == null)
             {

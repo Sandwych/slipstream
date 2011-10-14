@@ -48,6 +48,6 @@ namespace ObjectServer.Client
 
         void DeleteModel(string objectName, long[] ids, Action resultCallback);
 
-        void ReadAllMenus(Action<MenuModel[]> resultCallback);
+        void ReadAllMenus(Action<MenuEntity[]> resultCallback);
     }
 }

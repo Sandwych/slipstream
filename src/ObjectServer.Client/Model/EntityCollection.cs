@@ -1,0 +1,111 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ObjectServer.Client.Model
+{
+    public class EntityCollection : IEntityCollection
+    {
+        private readonly List<IEntity> entities = new List<IEntity>();
+        private readonly IDictionary<string, object>[] metaFields;
+
+        public EntityCollection(string modelName,
+            IDictionary<string, object>[] metaFields, IEntity parent = null)
+        {
+            this.ModelName = modelName;
+            this.Parent = parent;
+
+            this.metaFields = metaFields;
+        }
+
+        public string ModelName { get; private set; }
+
+        public IEntity Parent { get; private set; }
+
+        #region ICollection<IEntity> Members
+
+        public void Add(IEntity item)
+        {
+            this.entities.Add(item);
+        }
+
+        public void Clear()
+        {
+            this.entities.Clear();
+        }
+
+        public bool Contains(IEntity item)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void CopyTo(IEntity[] array, int arrayIndex)
+        {
+            throw new NotSupportedException();
+        }
+
+        public int Count
+        {
+            get { return this.entities.Count; }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        public bool Remove(IEntity item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveById(long id)
+        {
+            int i = 0;
+            for (i = 0; i < this.entities.Count; i++)
+            {
+                if (this.entities[i].Id == id)
+                {
+                    break;
+                }
+            }
+
+            if (i < this.entities.Count)
+            {
+                this.entities.RemoveAt(i);
+            }
+        }
+
+        #endregion
+
+        #region IEnumerable<IEntity> Members
+
+        public System.Collections.Generic.IEnumerator<IEntity> GetEnumerator()
+        {
+            return this.entities.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return this.entities.GetEnumerator();
+        }
+
+        #endregion
+
+        public void Save(IRemoteService service)
+        {
+            if (service == null)
+            {
+                throw new ArgumentNullException("serive");
+            }
+
+            foreach (var e in this.entities)
+            {
+                e.Save(service);
+            }
+        }
+    }
+}

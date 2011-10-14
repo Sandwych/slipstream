@@ -43,13 +43,13 @@ namespace ObjectServer.Client.Agos.Controls
             });
         }
 
-        private void LoadAllMenus(IEnumerable<MenuModel> menus)
+        private void LoadAllMenus(IEnumerable<MenuEntity> menus)
         {
             this.Items.Clear();
             this.InsertMenus(menus);
         }
 
-        private void InsertMenus(IEnumerable<MenuModel> menus)
+        private void InsertMenus(IEnumerable<MenuEntity> menus)
         {
             var rootMenus =
                 from m in menus
@@ -66,7 +66,7 @@ namespace ObjectServer.Client.Agos.Controls
         }
 
 
-        private TreeViewItem InsertMenu(TreeViewItem parent, MenuModel menu)
+        private TreeViewItem InsertMenu(TreeViewItem parent, MenuEntity menu)
         {
             var node = new TreeViewItem();
             node.Header = menu.Name;
@@ -85,7 +85,7 @@ namespace ObjectServer.Client.Agos.Controls
         }
 
         private void InsertSubmenus(
-            IEnumerable<MenuModel> menus, MenuModel parentMenu, TreeViewItem parentNode)
+            IEnumerable<MenuEntity> menus, MenuEntity parentMenu, TreeViewItem parentNode)
         {
             //子菜单们
             var submenus =

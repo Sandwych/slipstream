@@ -41,7 +41,7 @@
             var app = App.Current as App;
 
             var tvi = this.Menu.SelectedItem as TreeViewItem;
-            var menu = tvi.DataContext as MenuModel;
+            var menu = tvi.DataContext as MenuEntity;
 
             if (menu.Action != null)
             {
@@ -50,7 +50,7 @@
         }
 
 
-        private void OpenActionTab(MenuModel menu)
+        private void OpenActionTab(MenuEntity menu)
         {
             var tabPage = new TabItem();
             tabPage.DataContext = menu.Action;
