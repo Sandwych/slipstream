@@ -29,6 +29,7 @@ namespace ObjectServer.Core
             Fields.Chars("help").SetLabel("Help").SetSize(256).NotRequired();
         }
 
+        //TODO 拦截 WriteInternal DeleteInternal CreateInternal
 
     }
 }

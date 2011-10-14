@@ -96,11 +96,19 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
             app.IsBusy = true;
-            app.ClientService.BeginDeleteDatabase(password, dbName, delegate
+            try
+            {
+                app.ClientService.BeginDeleteDatabase(password, dbName, delegate
+                {
+                    app.IsBusy = false;
+                    this.LoadDatabaseList();
+                });
+            }
+            catch (JsonRpcException jre)
             {
                 app.IsBusy = false;
-                this.LoadDatabaseList();
-            });
+                ErrorWindow.CreateNew(jre.Message);
+            }
         }
 
     }
