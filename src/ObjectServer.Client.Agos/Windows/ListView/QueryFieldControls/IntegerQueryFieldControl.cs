@@ -51,7 +51,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
             System.Diagnostics.Debug.Assert(!this.IsEmpty);
 
             var constraints = new List<QueryConstraint>(2);
-            if (this.highUpdown.Value.Value != null)
+            if (this.highUpdown.Value != null)
             {
                 constraints.Add(new QueryConstraint(this.FieldName, "<=", (int)this.highUpdown.Value));
             }
