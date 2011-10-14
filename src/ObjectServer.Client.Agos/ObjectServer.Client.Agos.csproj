@@ -363,9 +363,9 @@
       <Project>{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}</Project>
       <Name>Malt.Layout.SL4</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ObjectServer.Client\ObjectServer.SilverlightClient.csproj">
+    <ProjectReference Include="..\ObjectServer.Client\ObjectServer.Client.SL4.csproj">
       <Project>{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}</Project>
-      <Name>ObjectServer.SilverlightClient</Name>
+      <Name>ObjectServer.Client.SL4</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

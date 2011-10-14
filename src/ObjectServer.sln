@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Test", "Object
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client Side", "Client Side", "{C592BCB6-F941-4C5C-A109-03A40B3885FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.SilverlightClient", "ObjectServer.Client\ObjectServer.SilverlightClient.csproj", "{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Client.SL4", "ObjectServer.Client\ObjectServer.Client.SL4.csproj", "{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Client.Agos", "ObjectServer.Client.Agos\ObjectServer.Client.Agos.csproj", "{DB5364B7-F0EF-4FF0-98DB-FEF369B93933}"
 EndProject
