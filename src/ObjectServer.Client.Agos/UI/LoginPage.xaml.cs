@@ -47,28 +47,25 @@ namespace ObjectServer.Client.Agos.UI
                 app.ClientService = new ObjectServerClient(new Uri(loginModel.Address));
             }
 
-            app.ClientService.BeginListDatabases((dbs, error) =>
+            try
             {
-
-                if (error != null)
+                app.ClientService.BeginListDatabases((dbs) =>
                 {
-                    if (error is System.Security.SecurityException)
+                    this.listDatabases.ItemsSource = dbs;
+
+                    if (dbs.Length >= 1)
                     {
-                        ErrorWindow.CreateNew(
-                            "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
-                            StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+                        this.buttonSignIn.IsEnabled = true;
+                        this.listDatabases.SelectedIndex = 0;
                     }
-                    return;
-                }
-
-                this.listDatabases.ItemsSource = dbs;
-
-                if (dbs.Length >= 1)
-                {
-                    this.buttonSignIn.IsEnabled = true;
-                    this.listDatabases.SelectedIndex = 0;
-                }
-            });
+                });
+            }
+            catch (System.Security.SecurityException)
+            {
+                ErrorWindow.CreateNew(
+                    "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
+                    StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+            }
         }
 
         // Executes when the user navigates to this page.
@@ -97,20 +94,20 @@ namespace ObjectServer.Client.Agos.UI
 
             var client = new ObjectServerClient(new Uri(this.textServer.Text));
 
-            client.BeginLogOn(loginModel.Database, loginModel.Login, loginModel.Password,
-                (sid, error) =>
-                {
-                    app.IsBusy = false;
-                    if (error != null || string.IsNullOrEmpty(sid))
+            try
+            {
+                client.BeginLogOn(loginModel.Database, loginModel.Login, loginModel.Password,
+                    (sid) =>
                     {
-                        this.textMessage.Text = "登录失败，请检查用户名与密码是否正确";
-                    }
-                    else
-                    {
+                        app.IsBusy = false;
                         app.ClientService = client;
                         app.MainPage.NavigateToContentPage();
-                    }
-                });
+                    });
+            }
+            catch (JsonRpcException)
+            {
+                this.textMessage.Text = "登录失败，请检查用户名与密码是否正确";
+            }
 
         }
 

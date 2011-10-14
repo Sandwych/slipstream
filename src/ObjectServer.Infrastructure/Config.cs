@@ -26,6 +26,8 @@ namespace ObjectServer
             this.DBUser = "objectserver";
             this.DBPassword = "objectserver";
 
+            this.MaxRequestSize = 1024 * 1024 * 4;
+
             this.SessionTimeoutMinutes = 20;
 
             var defaultLogPath = Path.Combine(
@@ -130,5 +132,8 @@ namespace ObjectServer
 
         [XmlElement("http-listen-url")]
         public string HttpListenUrl { get; set; }
+
+        [XmlElement("max-request-size", IsNullable = false)]
+        public int MaxRequestSize { get; set; }
     }
 }

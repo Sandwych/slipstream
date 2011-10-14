@@ -117,7 +117,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var button = (ButtonControl)sender;
 
             var rpcArgs = new object[] { new long[] { this.recordID } };
-            app.ClientService.BeginExecute(this.modelName, button.ButtonName, rpcArgs, (result, error) =>
+            app.ClientService.BeginExecute(this.modelName, button.ButtonName, rpcArgs, (result) =>
             {
                 this.LoadData();
             });

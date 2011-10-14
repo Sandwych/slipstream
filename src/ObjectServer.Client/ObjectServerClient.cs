@@ -32,12 +32,12 @@ namespace ObjectServer.Client
 
         public bool Logged { get { return !string.IsNullOrEmpty(this.SessionId); } }
 
-        public void BeginGetVersion(Action<Version, Exception> resultCallback)
+        public void BeginGetVersion(Action<Version> resultCallback)
         {
-            this.jsonRpcClient.BeginInvoke("getVersion", null, (result, error) =>
+            this.jsonRpcClient.BeginInvoke("getVersion", null, (result) =>
             {
                 var version = Version.Parse((string)result);
-                resultCallback(version, error);
+                resultCallback(version);
             });
         }
 
@@ -53,16 +53,10 @@ namespace ObjectServer.Client
             return tcs.Task;
         }
 
-        public void BeginListDatabases(Action<string[], Exception> resultCallback)
+        public void BeginListDatabases(Action<string[]> resultCallback)
         {
-            this.jsonRpcClient.BeginInvoke("listDatabases", null, (o, error) =>
+            this.jsonRpcClient.BeginInvoke("listDatabases", null, (o) =>
             {
-                if (error != null)
-                {
-                    resultCallback(null, error);
-                    return;
-                }
-
                 object[] objs = (object[])o;
                 var result = new string[objs.Length];
                 for (int i = 0; i < result.Length; i++)
@@ -70,7 +64,7 @@ namespace ObjectServer.Client
                     result[i] = (string)objs[i];
                 }
 
-                resultCallback(result, error);
+                resultCallback(result);
             });
         }
 
@@ -97,58 +91,51 @@ namespace ObjectServer.Client
             return tcs.Task;
         }
 
-        public void BeginCreateDatabase(string serverPassword, string dbName, string adminPassword, Action<Exception> resultCallback)
+        public void BeginCreateDatabase(string serverPassword, string dbName, string adminPassword, Action resultCallback)
         {
             var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim(), adminPassword.Trim() };
-            this.jsonRpcClient.BeginInvoke("createDatabase", args, (result, error) =>
+            this.jsonRpcClient.BeginInvoke("createDatabase", args, (result) =>
             {
-                resultCallback(error);
+                resultCallback();
             });
         }
 
-        public void BeginDeleteDatabase(string serverPassword, string dbName, Action<Exception> resultCallback)
+        public void BeginDeleteDatabase(string serverPassword, string dbName, Action resultCallback)
         {
             var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim() };
-            this.jsonRpcClient.BeginInvoke("deleteDatabase", args, (result, exception) =>
+            this.jsonRpcClient.BeginInvoke("deleteDatabase", args, (result) =>
             {
-                resultCallback(exception);
+                resultCallback();
             });
         }
 
         public void BeginLogOn(
-            string dbName, string userName, string password, Action<string, Exception> resultCallback)
+            string dbName, string userName, string password, Action<string> resultCallback)
         {
             Debug.Assert(!this.Logged);
 
-            this.jsonRpcClient.BeginInvoke("logOn", new object[] { dbName, userName, password }, (result, error) =>
+            this.jsonRpcClient.BeginInvoke("logOn", new object[] { dbName, userName, password }, (result) =>
             {
-                if (error == null && result != null)
-                {
-                    var sid = (string)result;
-                    this.SessionId = sid;
-                    this.LoggedDatabase = dbName;
-                    this.LoggedUserName = userName;
-                    resultCallback(sid, null);
-                }
-                else
-                {
-                    resultCallback(null, error);
-                }
+                var sid = (string)result;
+                this.SessionId = sid;
+                this.LoggedDatabase = dbName;
+                this.LoggedUserName = userName;
+                resultCallback(sid);
             });
 
         }
 
-        public void BeginLogOff(Action<Exception> resultCallback)
+        public void BeginLogOff(Action resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.LoggedDatabase, this.SessionId };
-            this.jsonRpcClient.BeginInvoke("logOff", args, (result, error) =>
+            this.jsonRpcClient.BeginInvoke("logOff", args, (result) =>
             {
                 this.SessionId = null;
-                resultCallback(error);
+                resultCallback();
             });
         }
 
@@ -158,21 +145,9 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.LoggedDatabase, this.SessionId, objectName, method, parameters };
-            this.jsonRpcClient.BeginInvoke("execute", args, o =>
+            this.jsonRpcClient.BeginInvoke("execute", args, (result) =>
             {
-                resultCallback(o);
-            });
-        }
-
-        public void BeginExecute(
-            string objectName, string method, object[] parameters, Action<object, Exception> resultCallback)
-        {
-            Debug.Assert(this.Logged);
-
-            var args = new object[] { this.LoggedDatabase, this.SessionId, objectName, method, parameters };
-            this.jsonRpcClient.BeginInvoke("execute", args, (result, error) =>
-            {
-                resultCallback(result, error);
+                resultCallback(result);
             });
         }
 
@@ -193,28 +168,28 @@ namespace ObjectServer.Client
         }
 
         public void CountModel(
-            string objectName, object[][] constraints, Action<long, Exception> resultCallback)
+            string objectName, object[][] constraints, Action<long> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { constraints };
-            this.BeginExecute(objectName, "Count", args, (result, error) =>
+            this.BeginExecute(objectName, "Count", args, (result) =>
             {
-                resultCallback((long)result, error);
+                resultCallback((long)result);
             });
         }
 
         public void SearchModel(
             string objectName, object[][] constraints, object[][] order, long offset, long limit,
-            Action<long[], Exception> resultCallback)
+            Action<long[]> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { constraints, order, offset, limit };
-            this.BeginExecute(objectName, "Search", args, (result, error) =>
+            this.BeginExecute(objectName, "Search", args, (result) =>
             {
                 var ids = ((object[])result).Select(id => (long)id).ToArray();
-                resultCallback(ids, error);
+                resultCallback(ids);
             });
         }
 
@@ -274,7 +249,7 @@ namespace ObjectServer.Client
             Debug.Assert(this.Logged);
 
             this.SearchModel("core.menu", null, null, 0, 0,
-                (ids, error) =>
+                (ids) =>
                 {
                     this.ReadModel("core.menu", ids, null, records =>
                         {

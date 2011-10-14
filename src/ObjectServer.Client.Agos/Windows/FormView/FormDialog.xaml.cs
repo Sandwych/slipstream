@@ -63,16 +63,9 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private void CreateModel(App app, IDictionary<string, object> record)
         {
             var args = new object[] { record };
-            app.ClientService.BeginExecute(this.model, "Create", args, (result, error) =>
+            app.ClientService.BeginExecute(this.model, "Create", args, (result) =>
             {
-                if (error != null)
-                {
-                    ErrorWindow.CreateNew(error);
-                }
-                else
-                {
-                    this.Saved(this, new EventArgs());
-                }
+                this.Saved(this, new EventArgs());
 
                 this.DialogResult = true;
             });
@@ -81,16 +74,9 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private void WriteModel(App app, IDictionary<string, object> record)
         {
             var args = new object[] { this.recordID, record };
-            app.ClientService.BeginExecute(this.model, "Write", args, (result, error) =>
+            app.ClientService.BeginExecute(this.model, "Write", args, (result) =>
             {
-                if (error != null)
-                {
-                    ErrorWindow.CreateNew(error);
-                }
-                else
-                {
-                    this.Saved(this, new EventArgs());
-                }
+                this.Saved(this, new EventArgs());
 
                 this.DialogResult = true;
             });

@@ -104,7 +104,7 @@ namespace ObjectServer.Client.Model
         {
             var fields = this.metaFields.Select(mf => (string)mf["name"]).ToArray();
             var args = new object[] { ids, fields };
-            service.BeginExecute(this.ModelName, "Read", args, (result, error) =>
+            service.BeginExecute(this.ModelName, "Read", args, (result) =>
             {
                 var records = ((object[])result).Cast<IDictionary<string, object>>();
                 foreach (var r in records)

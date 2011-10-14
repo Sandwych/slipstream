@@ -84,6 +84,22 @@ namespace ObjectServer.Model.Test
             });
         }
 
+        [Test]
+        public void CanHandleCreationWithUnexistedColumn()
+        {
+            dynamic masterModel = this.GetResource("test.master");
+            this.ClearModel("test.master");
+
+            dynamic m1 = new ExpandoObject();
+            m1.name = "master1";
+            m1.age = 1;
+
+            Assert.Throws<ArgumentOutOfRangeException>(delegate
+            {
+                masterModel.Create(this.TransactionContext, m1);
+            });
+        }
+
         private Dictionary<string, object> GetMasterRecordByName(string name)
         {
             var fields = new string[] { "name", AbstractModel.VersionFieldName };

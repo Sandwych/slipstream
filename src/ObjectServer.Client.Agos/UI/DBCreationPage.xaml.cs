@@ -37,11 +37,12 @@ namespace ObjectServer.Client.Agos.UI
             var app = (App)Application.Current;
 
             app.IsBusy = true;
-            app.ClientService.BeginCreateDatabase(model.ServerPassword, model.DBName, model.AdminPassword, (error) =>
-            {
-                app.IsBusy = false;
-                app.MainPage.NavigateToByRelative("/DBManagement");
-            });
+            app.ClientService.BeginCreateDatabase(model.ServerPassword, model.DBName, model.AdminPassword,
+                delegate
+                {
+                    app.IsBusy = false;
+                    app.MainPage.NavigateToByRelative("/DBManagement");
+                });
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

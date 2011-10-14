@@ -28,10 +28,12 @@ namespace ObjectServer.Client
         /// <param name="args"></param>
         /// <param name="resultCallback"></param>
         /// <returns></returns>
-        public void BeginInvoke(string method, object[] args, Action<object> resultCallback)
+        /*
+        public void BeginInvoke(string method, object[] args, Action<object, Exception> resultCallback)
         {
-            this.BeginInvoke(method, args, (o, e) => resultCallback(o));
+            this.BeginInvoke(method, args, (o, e) => resultCallback(o, e));
         }
+        */
 
         /*
         public void BeginInvoke(string method, object[] args, Action<object, Exception> resultCallback)
@@ -55,7 +57,7 @@ namespace ObjectServer.Client
         }
         */
 
-        public void BeginInvoke(string method, object[] args, Action<object, Exception> resultCallback)
+        public void BeginInvoke(string method, object[] args, Action<object> resultCallback)
         {
             var jreq = new JsonRpcRequest(method, args);
             var syncCtx = SynchronizationContext.Current;
@@ -65,19 +67,18 @@ namespace ObjectServer.Client
                 {
                     if (postError != null)
                     {
-                        resultCallback(null, postError);
+                        throw postError;
                     }
                     else
                     {
                         if (jrep.Error == null)
                         {
-                            resultCallback(jrep.Result, null);
+                            resultCallback(jrep.Result);
                         }
                         else
                         {
                             var msg = String.Format("Failed to invoke JSON-RPC: {0}", jrep.Error);
-                            var error = new JsonRpcException(msg, jrep.Error);
-                            resultCallback(null, error);
+                            throw new JsonRpcException(msg, jrep.Error);
                         }
                     }
                 }, null);

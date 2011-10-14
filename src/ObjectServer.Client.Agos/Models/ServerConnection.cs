@@ -23,11 +23,11 @@ namespace ObjectServer.Client.Agos.Models
             this.Dispose();
         }
 
-        public void BeginConnect(Uri uri, Action<Exception> resultCallback)
+        public void BeginConnect(Uri uri, System.Action resultCallback)
         {
-            this.client.BeginGetVersion((ver, error) =>
+            this.client.BeginGetVersion((ver) =>
             {
-                resultCallback(error);
+                resultCallback();
             });
         }
 

@@ -41,24 +41,19 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
 
-            app.ClientService.BeginListDatabases((dbs, error) =>
+            try
             {
-
-                if (error != null)
-                {
-                    if (error is System.Security.SecurityException)
-                    {
-                        ErrorWindow.CreateNew(
-                            "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
-                            StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
-                    }
-                }
-                else
+                app.ClientService.BeginListDatabases((dbs) =>
                 {
                     this.databases.ItemsSource = dbs;
-                }
-
-            });
+                });
+            }
+            catch (System.Security.SecurityException)
+            {
+                ErrorWindow.CreateNew(
+                    "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
+                    StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+            }
         }
 
         private void buttonNew_Click(object sender, RoutedEventArgs e)
@@ -101,13 +96,9 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
             app.IsBusy = true;
-            app.ClientService.BeginDeleteDatabase(password, dbName, (error) =>
+            app.ClientService.BeginDeleteDatabase(password, dbName, delegate
             {
                 app.IsBusy = false;
-                if (error != null)
-                {
-                    ErrorWindow.CreateNew(error.ToString());
-                }
                 this.LoadDatabaseList();
             });
         }

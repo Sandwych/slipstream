@@ -69,7 +69,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             var app = (App)Application.Current;
 
             var getViewArgs = new object[] { this.modelName, "tree", viewID };
-            app.ClientService.BeginExecute("core.view", "GetView", getViewArgs, (result, error) =>
+            app.ClientService.BeginExecute("core.view", "GetView", getViewArgs, (result) =>
             {
                 this.viewRecord = (IDictionary<string, object>)result;
                 this.LoadInternal();
@@ -98,7 +98,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 }
             }
 
-            app.ClientService.SearchModel(this.modelName, constraints.ToArray(), null, offset, limit, (ids, error) =>
+            app.ClientService.SearchModel(this.modelName, constraints.ToArray(), null, offset, limit, (ids) =>
             {
                 app.ClientService.ReadModel(this.modelName, ids, this.fields, records =>
                 {
@@ -122,7 +122,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
         {
             var app = (App)Application.Current;
             var args = new object[] { };
-            app.ClientService.BeginExecute(this.modelName, "GetFields", args, (result, error) =>
+            app.ClientService.BeginExecute(this.modelName, "GetFields", args, (result) =>
             {
                 var metaFields = ((object[])result).Select(r => (Dictionary<string, object>)r).ToArray();
                 var viewFields = layoutDocument.Elements("tree").Elements();
