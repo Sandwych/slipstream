@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Server", "Obje
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.DemoModule", "ObjectServer.DemoModule\ObjectServer.DemoModule.csproj", "{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malt.Layout", "Malt.Layout\Malt.Layout.csproj", "{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malt.Layout.SL4", "Malt.Layout\Malt.Layout.SL4.csproj", "{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

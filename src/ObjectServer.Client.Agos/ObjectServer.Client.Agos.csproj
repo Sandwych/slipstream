@@ -359,9 +359,9 @@
     <Folder Include="Web\Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Malt.Layout\Malt.Layout.csproj">
+    <ProjectReference Include="..\Malt.Layout\Malt.Layout.SL4.csproj">
       <Project>{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}</Project>
-      <Name>Malt.Layout</Name>
+      <Name>Malt.Layout.SL4</Name>
     </ProjectReference>
     <ProjectReference Include="..\ObjectServer.Client\ObjectServer.SilverlightClient.csproj">
       <Project>{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}</Project>
