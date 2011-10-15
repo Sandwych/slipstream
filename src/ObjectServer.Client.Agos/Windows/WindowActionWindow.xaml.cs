@@ -30,7 +30,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             var app = (App)Application.Current;
             var actionIds = new long[] { actionID };
             var fields = new string[] { "_id", "name", "view", "model", "views" };
-            app.ClientService.ReadModel("core.action_window", actionIds, fields, actionRecords =>
+            app.ClientService.ReadModel("core.action_window", actionIds, fields, (actionRecords, error) =>
             {
                 var actionRecord = actionRecords[0];
                 this.modelName = (string)actionRecord["model"];
@@ -90,7 +90,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 var app = (App)Application.Current;
 
                 var args = new object[] { ids };
-                app.ClientService.BeginExecute(this.modelName, "Delete", args, result =>
+                app.ClientService.Execute(this.modelName, "Delete", args, (result, error) =>
                 {
                     this.TreeView.Query();
                 });

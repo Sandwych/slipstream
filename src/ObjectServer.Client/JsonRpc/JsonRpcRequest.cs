@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -18,6 +17,8 @@ namespace ObjectServer.Client
     [JsonObject]
     public class JsonRpcRequest
     {
+        public event JsonRequestCompletedHandler JsonRequestCompleted;
+
         public JsonRpcRequest(string method, params object[] args)
         {
             this.Method = method;
@@ -34,7 +35,24 @@ namespace ObjectServer.Client
         [JsonProperty("id")]
         public object Id { get; private set; }
 
-        public void BeginPost(Uri uri, Action<JsonRpcResponse, Exception> resultCallback)
+        public void PostAsync(Uri uri, object userState = null)
+        {
+            if (uri == null)
+            {
+                throw new ArgumentNullException("uri");
+            }
+
+            this.Post(uri, (result, error) =>
+            {
+                if (this.JsonRequestCompleted != null)
+                {
+                    var args = new JsonRequestCompletedEventArgs(result, error, userState);
+                    this.JsonRequestCompleted(this, args);
+                }
+            });
+        }
+
+        public void Post(Uri uri, Action<JsonRpcResponse, Exception> resultCallback)
         {
             if (uri == null)
             {
@@ -60,7 +78,9 @@ namespace ObjectServer.Client
             }
         }
 
-        public Task<JsonRpcResponse> PostAsync(Uri uri)
+#if TPL
+
+        public Task<JsonRpcResponse> PostTaskAsync(Uri uri)
         {
             if (uri == null)
             {
@@ -71,31 +91,26 @@ namespace ObjectServer.Client
             webReq.Method = "POST";
             webReq.ContentType = "text/json";
 
-            var tcs = new TaskCompletionSource<JsonRpcResponse>();
-            webReq.GetRequestStreamAsync().ContinueWith(t =>
-           {
-               var reqStream = t.Result;
-               try
-               {
-                   this.SerializeTo(reqStream);
-               }
-               catch (Exception ex)
-               {
-                   tcs.SetException(ex);
-               }
-
-               webReq.GetReponseAsync().ContinueWith(ca2 =>
-               {
-                   using (var repStream = ca2.Result.GetResponseStream())
-                   {
-                       var jsonRep = JsonRpcResponse.Deserialize(repStream);
-                       tcs.SetResult(jsonRep);
-                   }
-               });
-           });
-
-            return tcs.Task;
+            return webReq.GetRequestStreamAsync().ContinueWith(t =>
+            {
+                using (var reqStream = t.Result)
+                {
+                    this.SerializeTo(reqStream);
+                }
+            }).ContinueWith(t2 =>
+            {
+                return webReq.GetReponseAsync().ContinueWith<JsonRpcResponse>(ca2 =>
+                 {
+                     var webRep = ca2.Result;
+                     using (var repStream = webRep.GetResponseStream())
+                     {
+                         var jsonRep = JsonRpcResponse.Deserialize(repStream);
+                         return jsonRep;
+                     }
+                 }, TaskContinuationOptions.AttachedToParent).Result;
+            });
         }
+#endif //TPL
 
         private void SerializeTo(Stream reqStream)
         {

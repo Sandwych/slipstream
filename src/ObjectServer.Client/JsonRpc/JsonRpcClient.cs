@@ -4,7 +4,6 @@ using System.Threading;
 using System.Dynamic;
 using System.Text;
 using System.IO;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -14,6 +13,8 @@ namespace ObjectServer.Client
 
     public class JsonRpcClient
     {
+        public event JsonRpc.JsonRpcCompletedHandler JsonRpcCompleted;
+
         public JsonRpcClient(Uri uri)
         {
             this.Uri = uri;
@@ -56,63 +57,82 @@ namespace ObjectServer.Client
             });
         }
         */
-
-        public void BeginInvoke(string method, object[] args, Action<object> resultCallback)
+        public void InvokeAsync(string method, object[] args, object userState = null)
         {
             var jreq = new JsonRpcRequest(method, args);
+            jreq.JsonRequestCompleted += this.OnJsonRequestCompleted;
+            jreq.PostAsync(this.Uri, userState);
+        }
+
+        private void OnJsonRequestCompleted(object sender, JsonRpc.JsonRequestCompletedEventArgs args)
+        {
+            if (this.JsonRpcCompleted != null)
+            {
+                var rpcArgs = new JsonRpc.JsonRpcCompletedEventArgs(args.Result, args.Error, args.UserState);
+                this.JsonRpcCompleted(this, rpcArgs);
+            }
+        }
+
+        public void Invoke(string method, object[] args, Action<object, Exception> resultCallback)
+        {
+            if (string.IsNullOrEmpty(method))
+            {
+                throw new ArgumentNullException("method");
+            }
+
+            var jreq = new JsonRpcRequest(method, args);
             var syncCtx = SynchronizationContext.Current;
-            jreq.BeginPost(this.Uri, (jrep, postError) =>
+            jreq.Post(this.Uri, (jrep, postError) =>
             {
                 syncCtx.Post(delegate
                 {
                     if (postError != null)
                     {
-                        throw postError;
+                        resultCallback(null, postError);
+                        return;
                     }
                     else
                     {
                         if (jrep.Error == null)
                         {
-                            resultCallback(jrep.Result);
+                            resultCallback(jrep.Result, null);
                         }
                         else
                         {
                             var msg = String.Format("Failed to invoke JSON-RPC: {0}", jrep.Error);
-                            throw new JsonRpcException(msg, jrep.Error);
+                            var error = new JsonRpcException(msg, jrep.Error);
+                            resultCallback(null, error);
                         }
                     }
                 }, null);
             });
         }
 
-        public Task<object> InvokeAsync(string method, object[] args)
+#if TPL
+        public Task<object> InvokeTaskAsync(string method, object[] args)
         {
             var jreq = new JsonRpcRequest(method, args);
-            var tcs = new TaskCompletionSource<object>();
-            jreq.PostAsync(this.Uri).ContinueWith(task =>
+            var mainTask = jreq.PostTaskAsync(this.Uri).ContinueWith<object>(task =>
             {
-                if (task.IsFaulted)
-                {
-                    tcs.SetException(task.Exception);
-                    return;
-                }
-
                 var error = task.Result.Error;
                 if (error != null)
                 {
                     var ex = new JsonRpcException("调用JSON-RPC 失败", error);
-                    tcs.SetException(ex);
-                    return;
+                    throw ex;
                 }
-                tcs.SetResult(task.Result.Result);
+                else
+                {
+                    return task.Result;
+                }
             });
-            return tcs.Task;
+            return mainTask;
         }
 
         public Task<dynamic> InvokeDyanmicAsync(string method, object[] args)
         {
-            return this.InvokeAsync(method, args);
+            return this.InvokeTaskAsync(method, args);
         }
+#endif//TPL
 
     }
 }

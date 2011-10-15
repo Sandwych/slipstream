@@ -72,7 +72,7 @@
         {
             var app = (App)Application.Current;
 
-            app.ClientService.BeginLogOff(delegate
+            app.ClientService.LogOff(delegate
             {
                 this.TabContainer.Items.Clear();
                 app.PrepareToLogin();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Diagnostics;
 
 using ObjectServer.Client;
@@ -23,11 +22,11 @@ namespace ObjectServer.Client.Agos.Models
             this.Dispose();
         }
 
-        public void BeginConnect(Uri uri, System.Action resultCallback)
+        public void BeginConnect(Uri uri, System.Action<Exception> resultCallback)
         {
-            this.client.BeginGetVersion((ver) =>
+            this.client.GetVersion((ver, error) =>
             {
-                resultCallback();
+                resultCallback(error);
             });
         }
 

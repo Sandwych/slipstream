@@ -37,7 +37,7 @@ namespace ObjectServer.Client.Agos.Controls
         {
             var app = (App)Application.Current;
 
-            app.ClientService.ReadAllMenus(menus =>
+            app.ClientService.ReadAllMenus((menus, error) =>
             {
                 this.LoadAllMenus(menus);
             });

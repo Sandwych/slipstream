@@ -63,7 +63,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private void CreateModel(App app, IDictionary<string, object> record)
         {
             var args = new object[] { record };
-            app.ClientService.BeginExecute(this.model, "Create", args, (result) =>
+            app.ClientService.Execute(this.model, "Create", args, (result, error) =>
             {
                 this.Saved(this, new EventArgs());
 
@@ -74,7 +74,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
         private void WriteModel(App app, IDictionary<string, object> record)
         {
             var args = new object[] { this.recordID, record };
-            app.ClientService.BeginExecute(this.model, "Write", args, (result) =>
+            app.ClientService.Execute(this.model, "Write", args, (result, error) =>
             {
                 this.Saved(this, new EventArgs());
 

@@ -19,7 +19,7 @@ namespace ObjectServer.Client.Agos
         private readonly static object globalBusyLock = new object();
 
         private BusyIndicator busyIndicator;
-        private ObjectServerClient clientService;
+        private IObjectServerClient clientService;
 
         /// <summary>
         /// Creates a new <see cref="App"/> instance.
@@ -88,7 +88,7 @@ namespace ObjectServer.Client.Agos
             get { return (MainPage)this.busyIndicator.Content; }
         }
 
-        public ObjectServerClient ClientService
+        public IObjectServerClient ClientService
         {
             get
             {

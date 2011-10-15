@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Net;
-using System.Windows;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace ObjectServer.Client.JsonRpc
 {
+
+#if TPL
+using System.Threading.Tasks;
     public static class WebRequestExtensions
     {
         public static Task<WebResponse> GetReponseAsync(this WebRequest request)
@@ -29,13 +30,7 @@ namespace ObjectServer.Client.JsonRpc
                 {
                     tcs.SetException(ex);
                 }
-                finally
-                {
-                    if (rep != null)
-                    {
-                        rep.Close();
-                    }
-                }
+
             }, null);
 
             return tcs.Task;
@@ -62,17 +57,12 @@ namespace ObjectServer.Client.JsonRpc
                 {
                     tcs.SetException(ex);
                 }
-                finally
-                {
-                    if (stream != null)
-                    {
-                        stream.Close();
-                    }
-                }
+
             }, null);
 
             return tcs.Task;
 
         }
     }
+#endif //TPL
 }
