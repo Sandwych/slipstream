@@ -100,6 +100,27 @@ namespace ObjectServer.Model.Test
             });
         }
 
+        [Test]
+        public void CanHandleWritingWithUnexistedColumn()
+        {
+            dynamic masterModel = this.GetResource("test.master");
+            this.ClearModel("test.master");
+
+            dynamic m1 = new ExpandoObject();
+            m1.name = "master1";
+            long id = (long)masterModel.Create(this.TransactionContext, m1);
+            dynamic records = masterModel.Read(this.TransactionContext, new long[] { id }, null);
+
+            dynamic m2 = new ExpandoObject();
+            m2._version = records[0]["_version"];
+            m2.age = 12;
+
+            Assert.Throws<ArgumentOutOfRangeException>(delegate
+            {
+                masterModel.Write(this.TransactionContext, id, m2);
+            });
+        }
+
         private Dictionary<string, object> GetMasterRecordByName(string name)
         {
             var fields = new string[] { "name", AbstractModel.VersionFieldName };

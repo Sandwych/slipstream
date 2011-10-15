@@ -36,6 +36,12 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("userRecord");
             }
 
+            if (userRecord.Keys.Any(fn => !this.Fields.ContainsKey(fn)))
+            {
+                var msg = "Record contains one or more invalid field name";
+                throw new ArgumentOutOfRangeException(msg);
+            }
+
             //强制检查客户端时候送来了版本字段
             if (this.IsVersioned && !userRecord.ContainsKey(VersionFieldName))
             {

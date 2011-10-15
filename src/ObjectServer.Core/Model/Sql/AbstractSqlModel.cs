@@ -326,12 +326,12 @@ where   hp._id=? and hc._id<>?
         /// </summary>
         /// <param name="record"></param>
         /// <returns></returns>
-        private static Record ClearUserRecord(IRecord record)
+        private Record ClearUserRecord(IRecord record)
         {
             Debug.Assert(record != null);
 
-            return record.Where(p => !SystemReadonlyFields.Contains(p.Key))
-                .ToDictionary(p => p.Key, p => p.Value);
+            return record.Where(p =>
+                !SystemReadonlyFields.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
         }
     }
 }
