@@ -568,11 +568,11 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
         [TransactionMethod("GetFields")]
-        public static Dictionary<string, object>[] GetFields(IModel model, ITransactionContext ctx)
+        public static Dictionary<string, object>[] GetFields(IModel model, ITransactionContext ctx, string[] fields)
         {
             EnsureServiceMethodArgs(model, ctx);
 
-            return model.GetFieldsInternal(ctx);
+            return model.GetFieldsInternal(ctx, fields);
         }
 
 
@@ -653,7 +653,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return this;
         }
 
-        public virtual Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx)
+        public virtual Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx, string[] fields = null)
         {
             if (ctx == null)
             {
@@ -671,7 +671,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             var fieldModel = (IModel)ctx.GetResource("core.field");
             var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
             var fieldIds = fieldModel.SearchInternal(ctx, fieldDomain, null, 0, 0);
-            var records = fieldModel.ReadInternal(ctx, fieldIds, null);
+            var records = fieldModel.ReadInternal(ctx, fieldIds, fields);
 
             foreach (var r in records)
             {

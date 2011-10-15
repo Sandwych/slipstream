@@ -61,7 +61,7 @@ namespace SilverlightTable
         /// <summary>
         /// A property which is used for integrating with the binding framework.
         /// </summary>
-        public object Data
+        public object ColumnValue
         {
             get
             {

@@ -15,6 +15,8 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using System.Threading;
 
+
+using SilverlightTable;
 using ObjectServer.Client.Agos.Models;
 using ObjectServer.Client.Agos;
 using ObjectServer.Client.Agos.Controls;
@@ -23,23 +25,23 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
 {
     public partial class TreeView : UserControl
     {
-        private static Dictionary<string, Tuple<Type, IValueConverter>> COLUMN_TYPE_MAPPING
+        private static readonly Dictionary<string, Tuple<Type, IValueConverter>> ColumnTypeMapping
             = new Dictionary<string, Tuple<Type, IValueConverter>>()
         {
-            {"id", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"int32", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"int64", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"float8", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"decimal", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"text", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), null) },
-            {"boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), null) },
-            {"datetime", new Tuple<Type, IValueConverter>(typeof( DataGridTextColumn),  new DateTimeFieldConverter()) },
-            {"date", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new DateFieldConverter()) },
-            {"time", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new TimeFieldConverter()) },
-            {"many-to-one", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ManyToOneFieldConverter()) },
-            {"reference", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new ReferenceFieldConverter()) },
-            {"enum", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new EnumFieldConverter()) },
+            {"id", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter() ) },
+            {"int32", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
+            {"int64", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
+            {"float8", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
+            {"decimal", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
+            {"chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
+            {"text", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
+            {"boolean", new Tuple<Type, IValueConverter>(typeof(DataGridCheckBoxColumn), new RowIndexConverter()) },
+            {"datetime", new Tuple<Type, IValueConverter>(typeof( DataGridTextColumn), new RowIndexConverter(new DateTimeFieldConverter())) },
+            {"date", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter(new DateFieldConverter())) },
+            {"time", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter(new TimeFieldConverter())) },
+            {"many-to-one", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter(new ManyToOneFieldConverter())) },
+            {"reference", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter(new ReferenceFieldConverter())) },
+            {"enum", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter(new EnumFieldConverter())) },
         };
 
         private IDictionary<string, object> viewRecord;
@@ -69,7 +71,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             var app = (App)Application.Current;
 
             var getViewArgs = new object[] { this.modelName, "tree", viewID };
-            app.ClientService.BeginExecute("core.view", "GetView", getViewArgs, (result) =>
+            app.ClientService.Execute("core.view", "GetView", getViewArgs, (result) =>
             {
                 this.viewRecord = (IDictionary<string, object>)result;
                 this.LoadInternal();
@@ -103,7 +105,11 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 app.ClientService.ReadModel(this.modelName, ids, this.fields, records =>
                 {
                     //我们需要一个唯一的字符串型 ID
-                    this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records);
+                    //this.gridList.ItemsSource = new System.Collections.ObjectModel.ObservableCollection<Dictionary<string, object>>(records);
+                    //this.gridList.ItemsSource = DataSourceCreator.ToDataSource(records);
+                    var data = new SilverlightTable.SortableCollectionView(
+                        records.Select(r => new SilverlightTable.Row(r)));
+                    this.gridList.ItemsSource = data;
                 });
             });
         }
@@ -121,8 +127,8 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
         private void InitializeColumns(XDocument layoutDocument)
         {
             var app = (App)Application.Current;
-            var args = new object[] { };
-            app.ClientService.BeginExecute(this.modelName, "GetFields", args, (result) =>
+            var args = new object[] { null };
+            app.ClientService.Execute(this.modelName, "GetFields", args, (result) =>
             {
                 var metaFields = ((object[])result).Select(r => (Dictionary<string, object>)r).ToArray();
                 var viewFields = layoutDocument.Elements("tree").Elements();
@@ -214,15 +220,22 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             string fieldName, string fieldType, string fieldLabel, Visibility visibility = Visibility.Visible)
         {
             this.fields.Add(fieldName);
-            var tuple = COLUMN_TYPE_MAPPING[fieldType];
+            var tuple = ColumnTypeMapping[fieldType];
             var col = Activator.CreateInstance(tuple.Item1) as DataGridBoundColumn;
             col.Visibility = visibility;
             col.Header = fieldLabel;
-            col.Binding = new System.Windows.Data.Binding(fieldName);
-            if (tuple.Item2 != null)
+            col.CanUserSort = true;
+            col.CanUserResize = true;
+            col.CanUserReorder = true;
+            col.SortMemberPath = fieldName;
+
+            var binding = new System.Windows.Data.Binding("ColumnValue")
             {
-                col.Binding.Converter = tuple.Item2;
-            }
+                ConverterParameter = fieldName,
+                Converter = tuple.Item2,
+            };
+            col.Binding = binding;
+
             return col;
         }
 
@@ -246,7 +259,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 app.IsBusy = true;
 
                 var args = new object[] { ids };
-                app.ClientService.BeginExecute(this.modelName, "Delete", args, result =>
+                app.ClientService.Execute(this.modelName, "Delete", args, result =>
                 {
                     this.LoadData();
                     app.IsBusy = false;
@@ -324,7 +337,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             var ids = new List<long>();
             foreach (dynamic item in this.gridList.SelectedItems)
             {
-                var id = (long)item._id;
+                var id = (long)item.ColumnValue["_id"];
                 ids.Add(id);
             }
             return ids.ToArray();
