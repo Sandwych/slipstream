@@ -49,7 +49,7 @@ namespace ObjectServer.Client.Agos.UI
 
             try
             {
-                app.ClientService.BeginListDatabases((dbs) =>
+                app.ClientService.ListDatabases((dbs, error) =>
                 {
                     this.listDatabases.ItemsSource = dbs;
 
@@ -96,8 +96,8 @@ namespace ObjectServer.Client.Agos.UI
 
             try
             {
-                client.BeginLogOn(loginModel.Database, loginModel.Login, loginModel.Password,
-                    (sid) =>
+                client.LogOn(loginModel.Database, loginModel.Login, loginModel.Password,
+                    (sid, error) =>
                     {
                         app.IsBusy = false;
                         app.ClientService = client;

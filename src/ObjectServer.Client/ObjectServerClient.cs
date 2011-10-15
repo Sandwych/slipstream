@@ -4,14 +4,13 @@ using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using ObjectServer.Client.Model;
 using ObjectServer.Utility;
 
 namespace ObjectServer.Client
 {
-    public class ObjectServerClient : IRemoteService
+    public class ObjectServerClient : IObjectServerClient
     {
         public const string ServicePath = @"/jsonrpc";
 
@@ -32,30 +31,18 @@ namespace ObjectServer.Client
 
         public bool Logged { get { return !string.IsNullOrEmpty(this.SessionId); } }
 
-        public void BeginGetVersion(Action<Version> resultCallback)
+        public void GetVersion(Action<Version, Exception> resultCallback)
         {
-            this.jsonRpcClient.BeginInvoke("getVersion", null, (result) =>
+            this.jsonRpcClient.Invoke("getVersion", null, (result, error) =>
             {
                 var version = Version.Parse((string)result);
-                resultCallback(version);
+                resultCallback(version, error);
             });
         }
 
-        public Task<Version> GetVersionAsync()
+        public void ListDatabases(Action<string[], Exception> resultCallback)
         {
-            var tcs = new TaskCompletionSource<Version>();
-            this.jsonRpcClient.InvokeAsync("getVersion", null)
-                .ContinueWith(tk =>
-                {
-                    var VerStr = (string)tk.Result;
-                    tcs.SetResult(Version.Parse(VerStr));
-                });
-            return tcs.Task;
-        }
-
-        public void BeginListDatabases(Action<string[]> resultCallback)
-        {
-            this.jsonRpcClient.BeginInvoke("listDatabases", null, (o) =>
+            this.jsonRpcClient.Invoke("listDatabases", null, (o, error) =>
             {
                 object[] objs = (object[])o;
                 var result = new string[objs.Length];
@@ -64,199 +51,174 @@ namespace ObjectServer.Client
                     result[i] = (string)objs[i];
                 }
 
-                resultCallback(result);
+                resultCallback(result, error);
             });
         }
 
-        public Task<string[]> ListDatabasesAsync()
-        {
-            var tcs = new TaskCompletionSource<string[]>();
-            this.jsonRpcClient.InvokeDyanmicAsync("listDatabases", null)
-                .ContinueWith(tk =>
-                {
-                    if (tk.IsFaulted)
-                    {
-                        tcs.SetException(tk.Exception);
-                        return;
-                    }
-
-                    var result = new string[tk.Result.Length];
-                    for (int i = 0; i < tk.Result.Length; i++)
-                    {
-                        result[i] = (string)tk.Result[i];
-                    }
-                    tcs.SetResult(result);
-                });
-
-            return tcs.Task;
-        }
-
-        public void BeginCreateDatabase(string serverPassword, string dbName, string adminPassword, Action resultCallback)
+        public void CreateDatabase(
+            string serverPassword, string dbName, string adminPassword, Action<Exception> resultCallback)
         {
             var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim(), adminPassword.Trim() };
-            this.jsonRpcClient.BeginInvoke("createDatabase", args, (result) =>
+            this.jsonRpcClient.Invoke("createDatabase", args, (result, error) =>
             {
-                resultCallback();
+                resultCallback(error);
             });
         }
 
-        public void BeginDeleteDatabase(string serverPassword, string dbName, Action resultCallback)
+        public void DeleteDatabase(
+            string serverPassword, string dbName, Action<Exception> resultCallback)
         {
             var hashedRootPassword = serverPassword.Trim().ToSha();
             var args = new object[] { hashedRootPassword, dbName.Trim() };
-            this.jsonRpcClient.BeginInvoke("deleteDatabase", args, (result) =>
+            this.jsonRpcClient.Invoke("deleteDatabase", args, (result, error) =>
             {
-                resultCallback();
+                resultCallback(error);
             });
         }
 
-        public void BeginLogOn(
-            string dbName, string userName, string password, Action<string> resultCallback)
+        public void LogOn(
+            string dbName, string userName, string password, Action<string, Exception> resultCallback)
         {
             Debug.Assert(!this.Logged);
 
-            this.jsonRpcClient.BeginInvoke("logOn", new object[] { dbName, userName, password }, (result) =>
+            this.jsonRpcClient.Invoke("logOn", new object[] { dbName, userName, password }, (result, error) =>
             {
                 var sid = (string)result;
                 this.SessionId = sid;
                 this.LoggedDatabase = dbName;
                 this.LoggedUserName = userName;
-                resultCallback(sid);
+                resultCallback(sid, error);
             });
 
         }
 
-        public void BeginLogOff(Action resultCallback)
+        public void LogOff(Action<Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.LoggedDatabase, this.SessionId };
-            this.jsonRpcClient.BeginInvoke("logOff", args, (result) =>
+            this.jsonRpcClient.Invoke("logOff", args, (result, error) =>
             {
                 this.SessionId = null;
-                resultCallback();
+                resultCallback(error);
             });
         }
 
-        public void BeginExecute(
-            string objectName, string method, object[] parameters, Action<object> resultCallback)
+        public void Execute(
+            string objectName, string method, object[] parameters, Action<object, Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { this.LoggedDatabase, this.SessionId, objectName, method, parameters };
-            this.jsonRpcClient.BeginInvoke("execute", args, (result) =>
+            this.jsonRpcClient.Invoke("execute", args, (result, error) =>
             {
-                resultCallback(result);
+                resultCallback(result, error);
             });
-        }
-
-        public Task<object> ExecuteAsync(
-            string objectName, string method, object[] parameters)
-        {
-            Debug.Assert(this.Logged);
-
-            var tcs = new TaskCompletionSource<object>();
-            var args = new object[] { this.LoggedDatabase, this.SessionId, objectName, method, parameters };
-            this.jsonRpcClient.InvokeDyanmicAsync("execute", args)
-                .ContinueWith(tk =>
-                {
-                    tcs.SetResult(tk.Result);
-                });
-
-            return tcs.Task;
         }
 
         public void CountModel(
-            string objectName, object[][] constraints, Action<long> resultCallback)
+            string objectName, object[][] constraints, Action<long, Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { constraints };
-            this.BeginExecute(objectName, "Count", args, (result) =>
+            this.Execute(objectName, "Count", args, (result, error) =>
             {
-                resultCallback((long)result);
+                resultCallback((long)result, error);
             });
         }
 
         public void SearchModel(
             string objectName, object[][] constraints, object[][] order, long offset, long limit,
-            Action<long[]> resultCallback)
+            Action<long[], Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { constraints, order, offset, limit };
-            this.BeginExecute(objectName, "Search", args, (result) =>
+            this.Execute(objectName, "Search", args, (result, error) =>
             {
                 var ids = ((object[])result).Select(id => (long)id).ToArray();
-                resultCallback(ids);
+                resultCallback(ids, error);
             });
         }
 
         public void ReadModel(
             string objectName, IEnumerable<long> ids, IEnumerable<string> fields,
-            Action<Dictionary<string, object>[]> resultCallback)
+            Action<Dictionary<string, object>[], Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { ids, fields };
-            this.BeginExecute(objectName, "Read", args, o =>
+            this.Execute(objectName, "Read", args, (o, error) =>
             {
                 var objs = (object[])o;
                 var records = objs.Select(r => (Dictionary<string, object>)r);
-                resultCallback(records.ToArray());
+                resultCallback(records.ToArray(), error);
             });
         }
 
         public void CreateModel(
-            string objectName, IDictionary<string, object> fields, Action<long> resultCallback)
+            string objectName, IDictionary<string, object> fields, Action<long, Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { fields };
-            this.BeginExecute(objectName, "Create", args, o =>
+            this.Execute(objectName, "Create", args, (o, error) =>
             {
-                resultCallback((long)o);
+                resultCallback((long)o, error);
             });
         }
 
         public void WriteModel(
-            string objectName, long id, IDictionary<string, object> fields, Action resultCallback)
+            string objectName, long id, IDictionary<string, object> fields, Action<Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { id, fields };
-            this.BeginExecute(objectName, "Write", args, o =>
+            this.Execute(objectName, "Write", args, (o, error) =>
             {
-                resultCallback();
+                resultCallback(error);
             });
         }
 
         public void DeleteModel(
-            string objectName, long[] ids, Action resultCallback)
+            string objectName, long[] ids, Action<Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             var args = new object[] { ids };
-            this.BeginExecute(objectName, "Delete", args, n =>
+            this.Execute(objectName, "Delete", args, (o, error) =>
             {
-                resultCallback();
+                resultCallback(error);
             });
         }
 
-        public void ReadAllMenus(Action<MenuEntity[]> resultCallback)
+        public void ReadAllMenus(Action<MenuEntity[], Exception> resultCallback)
         {
             Debug.Assert(this.Logged);
 
             this.SearchModel("core.menu", null, null, 0, 0,
-                (ids) =>
+                (ids, searchError) =>
                 {
-                    this.ReadModel("core.menu", ids, null, records =>
-                        {
-                            var menus = records.Select(r => new MenuEntity(r));
+                    if (searchError != null)
+                    {
+                        resultCallback(null, searchError);
+                        return;
+                    }
 
-                            resultCallback(menus.ToArray());
-                        });
+                    this.ReadModel("core.menu", ids, null, (records, readError) =>
+                    {
+                        if (readError != null)
+                        {
+                            resultCallback(null, readError);
+                            return;
+                        }
+
+                        var menus = records.Select(r => new MenuEntity(r));
+
+                        resultCallback(menus.ToArray(), readError);
+                    });
                 });
         }
 

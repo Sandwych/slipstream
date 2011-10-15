@@ -103,7 +103,7 @@ namespace ObjectServer.Client.Model
         {
             var fields = this.metaFields.Keys.ToArray();
             var args = new object[] { ids, fields };
-            service.Execute(this.ModelName, "Read", args, (result) =>
+            service.Execute(this.ModelName, "Read", args, (result, error) =>
             {
                 var records = ((object[])result).Cast<IDictionary<string, object>>();
                 foreach (var r in records)

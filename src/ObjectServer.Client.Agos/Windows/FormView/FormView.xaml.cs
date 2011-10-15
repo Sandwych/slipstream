@@ -59,11 +59,11 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 new object[] { "model", "=", this.modelName },
             };
 
-            app.ClientService.BeginExecute("core.view", "GetView", new object[] { this.modelName, "form", null }, o =>
+            app.ClientService.Execute("core.view", "GetView", new object[] { this.modelName, "form", null }, (o, error1) =>
             {
                 this.viewRecord = (IDictionary<string, object>)o;
-                var args = new object[] { };
-                app.ClientService.BeginExecute(this.modelName, "GetFields", args, result =>
+                var args = new object[] { null };
+                app.ClientService.Execute(this.modelName, "GetFields", args, (result, error2) =>
                 {
                     var metaFields = ((object[])result).Select(r => (IDictionary<string, object>)r).ToArray();
                     this.hasVersion = metaFields.Any(f => (string)f["name"] == "_version");
@@ -117,7 +117,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             var button = (ButtonControl)sender;
 
             var rpcArgs = new object[] { new long[] { this.recordID } };
-            app.ClientService.BeginExecute(this.modelName, button.ButtonName, rpcArgs, (result) =>
+            app.ClientService.Execute(this.modelName, button.ButtonName, rpcArgs, (result, error) =>
             {
                 this.LoadData();
             });
@@ -141,7 +141,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 fields.Add("_version");
             }
             var readArgs = new object[] { ids, fields };
-            app.ClientService.BeginExecute(this.modelName, "Read", readArgs, (result) =>
+            app.ClientService.Execute(this.modelName, "Read", readArgs, (result, error) =>
             {
                 var objs = (object[])result;
                 var records = objs.Select(r => (Dictionary<string, object>)r).ToArray();

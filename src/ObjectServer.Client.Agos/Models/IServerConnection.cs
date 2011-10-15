@@ -13,7 +13,7 @@ namespace ObjectServer.Client.Agos.Models
 {
     public interface IServerConnection : IDisposable
     {
-        void BeginConnect(Uri uri, System.Action resultCallback);
+        void BeginConnect(Uri uri, System.Action<Exception> resultCallback);
         void Close();
     }
 }

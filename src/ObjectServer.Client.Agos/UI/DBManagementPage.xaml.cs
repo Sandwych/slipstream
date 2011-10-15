@@ -41,19 +41,24 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
 
-            try
+            app.ClientService.ListDatabases((dbs, error) =>
             {
-                app.ClientService.BeginListDatabases((dbs) =>
+                if (error != null)
                 {
-                    this.databases.ItemsSource = dbs;
-                });
-            }
-            catch (System.Security.SecurityException)
-            {
-                ErrorWindow.CreateNew(
-                    "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
-                    StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
-            }
+                    if (error is System.Security.SecurityException)
+                    {
+                        ErrorWindow.CreateNew(
+                            "安全错误：无法连接服务器，或服务器缺少 '/crossdomain.xml'文件。",
+                            StackTracePolicy.OnlyWhenDebuggingOrRunningLocally);
+                    }
+                    else
+                    {
+                        ErrorWindow.CreateNew(error);
+                    }
+                    return;
+                }
+                this.databases.ItemsSource = dbs;
+            });
         }
 
         private void buttonNew_Click(object sender, RoutedEventArgs e)
@@ -96,19 +101,18 @@ namespace ObjectServer.Client.Agos.UI
         {
             var app = (App)Application.Current;
             app.IsBusy = true;
-            try
-            {
-                app.ClientService.BeginDeleteDatabase(password, dbName, delegate
-                {
-                    app.IsBusy = false;
-                    this.LoadDatabaseList();
-                });
-            }
-            catch (JsonRpcException jre)
+
+            app.ClientService.DeleteDatabase(password, dbName, (error) =>
             {
                 app.IsBusy = false;
-                ErrorWindow.CreateNew(jre.Message);
-            }
+                if (error != null)
+                {
+                    ErrorWindow.CreateNew(error);
+                    return;
+                }
+
+                this.LoadDatabaseList();
+            });
         }
 
     }

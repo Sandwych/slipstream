@@ -50,15 +50,13 @@
     <Reference Include="Newtonsoft.Json.Silverlight">
       <HintPath>..\..\lib\Json\Silverlight\Newtonsoft.Json.Silverlight.dll</HintPath>
     </Reference>
-    <Reference Include="System.Threading.Tasks.SL4">
-      <HintPath>..\..\lib\tasks\silverlight\System.Threading.Tasks.SL4.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IObjectServerClient.cs" />
     <Compile Include="JsonRpc\JsonRpcCompletedHandler.cs" />
     <Compile Include="JsonRpc\JsonRpcCompletedEventArgs .cs" />
     <Compile Include="JsonRpc\JsonRequestCompletedEventArgs .cs" />
