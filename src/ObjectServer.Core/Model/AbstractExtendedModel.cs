@@ -166,7 +166,7 @@ namespace ObjectServer.Model
             throw new NotSupportedException();
         }
 
-        public virtual Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx)
+        public virtual Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx, string[] fields)
         {
             throw new NotSupportedException();
         }

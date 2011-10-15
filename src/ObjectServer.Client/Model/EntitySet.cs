@@ -4,18 +4,17 @@ using System.Linq;
 
 namespace ObjectServer.Client.Model
 {
-    public class EntityCollection : IEntityCollection
+    public class EntitySet : IEntityCollection
     {
         private readonly List<IEntity> entities = new List<IEntity>();
-        private readonly IDictionary<string, object>[] metaFields;
+        private readonly IDictionary<string, MetaField> metaFields = new Dictionary<string, MetaField>();
 
-        public EntityCollection(string modelName,
-            IDictionary<string, object>[] metaFields, IEntity parent = null)
+        public EntitySet(string modelName, IEnumerable<MetaField> metaFields, IEntity parent = null)
         {
             this.ModelName = modelName;
             this.Parent = parent;
 
-            this.metaFields = metaFields;
+            this.metaFields = metaFields.ToDictionary(i => i.Name);
         }
 
         public string ModelName { get; private set; }
@@ -102,9 +101,9 @@ namespace ObjectServer.Client.Model
 
         public void Load(IRemoteService service, long[] ids)
         {
-            var fields = this.metaFields.Select(mf => (string)mf["name"]).ToArray();
+            var fields = this.metaFields.Keys.ToArray();
             var args = new object[] { ids, fields };
-            service.BeginExecute(this.ModelName, "Read", args, (result) =>
+            service.Execute(this.ModelName, "Read", args, (result) =>
             {
                 var records = ((object[])result).Cast<IDictionary<string, object>>();
                 foreach (var r in records)

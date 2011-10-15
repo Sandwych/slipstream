@@ -42,7 +42,7 @@ namespace ObjectServer.Model.Test
         {
             var modelName = "core.user";
             dynamic userModel = this.GetResource(modelName);
-            var result = userModel.GetFields(this.TransactionContext);
+            var result = userModel.GetFields(this.TransactionContext, null);
             var records = ((object[])result).Select(i => (Dictionary<string, object>)i);
 
             Assert.IsTrue(records.Any());

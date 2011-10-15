@@ -16,7 +16,7 @@ namespace ObjectServer.Model
         void WriteInternal(ITransactionContext ctx, long id, IDictionary<string, object> record);
         Dictionary<string, object>[] ReadInternal(ITransactionContext ctx, long[] ids, string[] requiredFields);
         void DeleteInternal(ITransactionContext ctx, long[] ids);
-        Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx);
+        Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx, string[] fields);
         dynamic Browse(ITransactionContext ctx, long id);
         dynamic BrowseMany(ITransactionContext ctx, long[] ids);
     }
