@@ -202,6 +202,24 @@ namespace ObjectServer.Model.Test
         }
 
         [Test]
+        public void CanUseNotChildOfOperator()
+        {
+            dynamic catModel = this.GetResource("test.category");
+            dynamic data = this.PrepareTestingData();
+
+            var domain1 = new object[][] 
+            { 
+                new object[] { "_id", "!childof", data.id2 }
+            };
+
+            var orders = new object[] { new object[] { "_id", "ASC" } };
+            dynamic ids1 = catModel.Search(this.TransactionContext, domain1, orders, 0, 0);
+
+            Assert.AreEqual(1, ids1.Length);
+            Assert.AreEqual(data.id1, ids1[0]);
+        }
+
+        [Test]
         public void ShouldThrowsWhenWritingRecursived()
         {
             dynamic catModel = this.GetResource("test.category");
