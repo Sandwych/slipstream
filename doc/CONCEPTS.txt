@@ -1,8 +1,7 @@
 几个基础概念及术语：
+Transaction Method（交易方法）：可通过 RPC 远程调用的方法，如果是 CLR 类的话使用 TransactionMethodAttribute 标记，且必须为静态方法，对参数也有要求。
 
-Service Method（服务方法）：可通过 RPC 远程调用的方法，如果是 CLR 类的话使用 ServiceMethodAttribute 标记，且必须为静态方法，对参数也有要求。
-
-Resource（资源）：一个能够对外提供 RPC 服务的对象，可以包含多个 Service Methods，并实现 IResource 接口
+Resource（资源）：一个能够对外提供 RPC 服务的对象，可以包含多个 Transaction Methods，并实现 IResource 接口
 
 Model（模型）：Resource 的子类，能够拥有字段，并可以支持 Search、Count、Read、Write、Create、Delete 6种操作原语
 
