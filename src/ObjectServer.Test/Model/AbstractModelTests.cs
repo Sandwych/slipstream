@@ -121,6 +121,19 @@ namespace ObjectServer.Model.Test
             });
         }
 
+        [Test]
+        public void CheckGetFieldDefaultValues()
+        {
+            dynamic testModel = this.GetResource("test.test_model");
+            var booleanFieldName = "boolean_field";
+            var fields = new string[] { booleanFieldName };
+
+            var defaultValues = testModel.GetFieldDefaultValues(this.TransactionContext, fields);
+
+            Assert.AreEqual(1, defaultValues.Count);
+            Assert.AreEqual(true, defaultValues[booleanFieldName]);
+        }
+
         private Dictionary<string, object> GetMasterRecordByName(string name)
         {
             var fields = new string[] { "name", AbstractModel.VersionFieldName };

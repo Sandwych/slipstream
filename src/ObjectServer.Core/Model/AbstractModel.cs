@@ -397,6 +397,29 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         #region Service Methods
 
+        [TransactionMethod("GetFieldDefaultValues")]
+        public static Dictionary<string, object> GetFieldDefaultValues(
+            IModel model, ITransactionContext tc, object[] clientFields)
+        {
+            EnsureServiceMethodArgs(model, tc);
+
+            if (!model.CanRead)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (clientFields == null)
+            {
+                throw new ArgumentNullException("clientFields");
+            }
+
+            //这里不检查权限，也许是一个安全漏洞？
+            var strFields = clientFields.Cast<string>().ToArray();
+
+            return model.GetFieldDefaultValuesInternal(tc, strFields);
+        }
+
+
         [TransactionMethod("Count")]
         public static long Count(
             IModel model, ITransactionContext ctx, object[] constraint)
@@ -456,6 +479,11 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             IModel model, ITransactionContext ctx, dynamic clientIds, dynamic clientFields)
         {
             EnsureServiceMethodArgs(model, ctx);
+
+            if (clientIds == null)
+            {
+                throw new ArgumentNullException("clientIds");
+            }
 
             if (!model.CanRead)
             {
@@ -622,6 +650,33 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public abstract Record[] ReadInternal(
             ITransactionContext scope, long[] ids, string[] requiredFields);
         public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
+
+
+        public Dictionary<string, object> GetFieldDefaultValuesInternal(ITransactionContext tc, string[] fields)
+        {
+            if (fields == null)
+            {
+                throw new ArgumentNullException("fields");
+            }
+
+            var result = new Dictionary<string, object>(fields.Length);
+            foreach (var f in fields)
+            {
+                if (f == null || !this.Fields.ContainsKey(f))
+                {
+                    throw new ArgumentOutOfRangeException("fields");
+                }
+
+                var fi = this.Fields[f];
+
+                if (fi.DefaultProc != null)
+                {
+                    var dv = fi.DefaultProc(tc);
+                    result.Add(f, dv);
+                }
+            }
+            return result;
+        }
 
         public dynamic Browse(ITransactionContext ctx, long id)
         {

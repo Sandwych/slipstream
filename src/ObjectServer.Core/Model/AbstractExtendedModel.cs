@@ -59,6 +59,11 @@ namespace ObjectServer.Model
             throw new NotSupportedException();
         }
 
+        public Dictionary<string, object> GetFieldDefaultValuesInternal(ITransactionContext tc, string[] fields)
+        {
+            throw new NotSupportedException();
+        }
+
         public override string[] GetReferencedObjects()
         {
             throw new NotSupportedException();

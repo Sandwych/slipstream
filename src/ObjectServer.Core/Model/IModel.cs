@@ -9,7 +9,7 @@ namespace ObjectServer.Model
     public interface IModel : IResource, IModelDescriptor
     {
         IField[] GetAllStorableFields();
-
+        Dictionary<string, object> GetFieldDefaultValuesInternal(ITransactionContext tc, string[] fields);
         long CountInternal(ITransactionContext ctx, object[] constraint);
         long[] SearchInternal(ITransactionContext ctx, object[] constraint, OrderExpression[] orders, long offset, long limit);
         long CreateInternal(ITransactionContext ctx, IDictionary<string, object> propertyBag);
