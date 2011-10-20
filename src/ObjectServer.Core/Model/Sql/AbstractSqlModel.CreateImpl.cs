@@ -36,6 +36,13 @@ namespace ObjectServer.Model
                 throw new ArgumentException(msg, "propertyBag");
             }
 
+            //检查是否有不存在的字段
+            if (userRecord.Keys.Any(fn => !this.Fields.ContainsKey(fn)))
+            {
+                var msg = "Record contains one or more invalid field name";
+                throw new ArgumentOutOfRangeException(msg);
+            }
+
             var record = ClearUserRecord(userRecord);
 
             //处理用户没有给的默认值
