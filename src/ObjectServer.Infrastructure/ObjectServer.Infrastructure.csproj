@@ -31,8 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\lib\log4net.dll</HintPath>
+    <Reference Include="NLog">
+      <HintPath>..\..\lib\net40\nlog\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog.Extended">
+      <HintPath>..\..\lib\net40\nlog\NLog.Extended.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -46,9 +49,9 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="ConfigSectionHandler.cs" />
+    <Compile Include="NLogLogger.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="ILogger.cs" />
-    <Compile Include="Log4netLogger.cs" />
     <Compile Include="LoggerProvider.cs" />
     <Compile Include="NamingRule.cs" />
     <Compile Include="ObjectExtensions.cs" />

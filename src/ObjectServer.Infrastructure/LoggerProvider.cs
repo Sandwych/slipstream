@@ -5,11 +5,6 @@ using System.Text;
 using System.Diagnostics;
 using System.IO;
 
-using log4net;
-using log4net.Appender;
-using log4net.Layout;
-using log4net.Core;
-
 namespace ObjectServer
 {
     public sealed class LoggerProvider
@@ -18,32 +13,35 @@ namespace ObjectServer
         public const string BizLoggerName = "biz";
         public const string RpcLoggerName = "rpc";
 
-        public static readonly Dictionary<string, Level> LogLevelMapping =
-            new Dictionary<string, Level>()
+        private const string LogArchiveDirectoryName = "archives";
+        private const string LoggingLayout = "[${longdate}|${level:uppercase=true}|${logger}]${message}";
+
+        public static readonly Dictionary<string, NLog.LogLevel> LogLevelMapping =
+            new Dictionary<string, NLog.LogLevel>()
             {
-                { "all", Level.All },
-                { "debug", Level.Debug },
-                { "info", Level.Info },
-                { "warn", Level.Warn },
-                { "error", Level.Error },
-                { "fatal", Level.Fatal },
+                { "all", NLog.LogLevel.Trace },
+                { "debug", NLog.LogLevel.Debug },
+                { "info", NLog.LogLevel.Info },
+                { "warn", NLog.LogLevel.Warn },
+                { "error", NLog.LogLevel.Error },
+                { "fatal", NLog.LogLevel.Fatal },
             };
 
         private readonly static LoggerProvider s_instance = new LoggerProvider();
-        private readonly Log4netLogger envLogger;
-        private readonly Log4netLogger bizLogger;
-        private readonly Log4netLogger rpcLogger;
+        private readonly NLogLogger envLogger;
+        private readonly NLogLogger bizLogger;
+        private readonly NLogLogger rpcLogger;
 
         public LoggerProvider()
         {
-            var platformLog = LogManager.GetLogger(EnvironmentLoggerName);
-            this.envLogger = new Log4netLogger(platformLog);
+            var platformLog = NLog.LogManager.GetLogger(EnvironmentLoggerName);
+            this.envLogger = new NLogLogger(platformLog);
 
-            var bizLog = LogManager.GetLogger(BizLoggerName);
-            this.bizLogger = new Log4netLogger(bizLog);
+            var bizLog = NLog.LogManager.GetLogger(BizLoggerName);
+            this.bizLogger = new NLogLogger(bizLog);
 
-            var rpcLog = LogManager.GetLogger(RpcLoggerName);
-            this.rpcLogger = new Log4netLogger(rpcLog);
+            var rpcLog = NLog.LogManager.GetLogger(RpcLoggerName);
+            this.rpcLogger = new NLogLogger(rpcLog);
         }
 
         public static ObjectServer.ILogger EnvironmentLogger
@@ -79,27 +77,66 @@ namespace ObjectServer
 
             EnsureLoggingPathExist(cfg);
 
-            var layout = new PatternLayout(StaticSettings.LogPattern);
-
-            CreateFileAppenders(cfg, layout);
-
-            if (cfg.LogToConsole)
-            {
-                CreateColoredConsoleAppenders(cfg, layout);
-            }
-
-            var hierarchy = (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
+            var logCfg = new NLog.Config.LoggingConfiguration();
 
             if (cfg.Debug)
             {
-                var traceAppender = CreateTraceAppender(layout);
-                hierarchy.Root.AddAppender(traceAppender);
+                ConfigurateConsoleLogger(logCfg);
             }
 
-            var rootLevel = LogLevelMapping[cfg.LogLevel.ToLowerInvariant()];
-            hierarchy.Root.Level = rootLevel;
+            if (!string.IsNullOrEmpty(cfg.LogPath))
+            {
+                var logDir = Environment.ExpandEnvironmentVariables(cfg.LogPath);
 
-            hierarchy.Configured = true;
+                ConfigurateFileLogger(logDir, logCfg, EnvironmentLoggerName);
+                ConfigurateFileLogger(logDir, logCfg, RpcLoggerName);
+                ConfigurateFileLogger(logDir, logCfg, BizLoggerName);
+            }
+
+            NLog.LogManager.Configuration = logCfg;
+        }
+
+        private static void ConfigurateFileLogger(string logDir, NLog.Config.LoggingConfiguration logCfg, string loggerName)
+        {
+            var fileName = Path.Combine(logDir, loggerName + ".log");
+            var fileTarget = CreateFileTarget(loggerName, fileName);
+            logCfg.AddTarget(loggerName, fileTarget);
+            var rule = new NLog.Config.LoggingRule(loggerName, NLog.LogLevel.Trace, fileTarget);
+            logCfg.LoggingRules.Add(rule);
+        }
+
+        private static NLog.Targets.FileTarget CreateFileTarget(string targetName, string filePath)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(filePath));
+            var fileName = Path.GetFileName(filePath);
+            var archiveDir = Path.Combine(Path.GetDirectoryName(filePath), LogArchiveDirectoryName);
+            var archiveFile = Path.Combine(archiveDir, fileName);
+
+            var target = new NLog.Targets.FileTarget();
+            target.Layout = LoggingLayout;
+            target.FileName = filePath;
+            target.ArchiveFileName = archiveFile + ".{#####}";
+            target.ArchiveAboveSize = 4 * 1024 * 1024; // archive files greater than 4MB
+            target.ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Sequence;
+
+            // this speeds up things when no other processes are writing to the file
+            target.ConcurrentWrites = true;
+
+            return target;
+        }
+
+        private static void ConfigurateConsoleLogger(NLog.Config.LoggingConfiguration logCfg)
+        {
+            var consoleTarget = new NLog.Targets.ColoredConsoleTarget()
+            {
+                Name = "console",
+                Layout = LoggingLayout,
+            };
+
+            logCfg.AddTarget("console", consoleTarget);
+
+            var rule1 = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, consoleTarget);
+            logCfg.LoggingRules.Add(rule1);
         }
 
         private static void EnsureLoggingPathExist(Config cfg)
@@ -107,153 +144,19 @@ namespace ObjectServer
             if (!string.IsNullOrEmpty(cfg.LogPath))
             {
                 var logDir = Environment.ExpandEnvironmentVariables(cfg.LogPath);
-
                 if (!Directory.Exists(logDir))
                 {
                     Directory.CreateDirectory(logDir);
                 }
+
+                var archivesDir = Path.Combine(logDir, LogArchiveDirectoryName);
+                if (!Directory.Exists(archivesDir))
+                {
+                    Directory.CreateDirectory(archivesDir);
+                }
             }
-        }
-
-        private static void CreateColoredConsoleAppenders(Config cfg, PatternLayout layout)
-        {
-            //创建平台 appender
-            var platformAppender = CreateColoredConsoleAppender(layout);
-            AddAppender(EnvironmentLoggerName, platformAppender);
-
-            //创建网关 appender
-            var rpcAppender = CreateColoredConsoleAppender(layout);
-            AddAppender(RpcLoggerName, rpcAppender);
-
-            //创建业务 appender
-            var bizAppender = CreateColoredConsoleAppender(layout);
-            AddAppender(BizLoggerName, bizAppender);
-        }
-
-        private static void CreateFileAppenders(Config cfg, PatternLayout layout)
-        {
-            //创建文件 Appenders
-            if (!string.IsNullOrEmpty(cfg.LogPath))
-            {
-                var logDir = Environment.ExpandEnvironmentVariables(cfg.LogPath);
-
-                //创建平台 appender
-                var platformLogFilePath = Path.Combine(logDir, StaticSettings.PlatformLogFileName);
-                var platformFileAppender = CreateRollingFileAppender(layout, platformLogFilePath);
-                AddAppender(EnvironmentLoggerName, platformFileAppender);
-
-                //创建网关 appender
-                var gatewayLogFilePath = Path.Combine(logDir, StaticSettings.RpcLogFileName);
-                var gatewayFileAppender = CreateRollingFileAppender(layout, gatewayLogFilePath);
-                AddAppender(RpcLoggerName, gatewayFileAppender);
-
-                //创建业务 appender
-                var bizLogFilePath = Path.Combine(logDir, StaticSettings.BizLogFileName);
-                var bizFileAppender = CreateRollingFileAppender(layout, bizLogFilePath);
-                AddAppender(BizLoggerName, bizFileAppender);
-            }
-        }
-
-        private static log4net.Repository.Hierarchy.Logger GetLogger(string loggerName)
-        {
-            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(loggerName));
-
-            var log = LogManager.GetLogger(loggerName);
-            var logger = (log4net.Repository.Hierarchy.Logger)log.Logger;
-            return logger;
-        }
-
-        private static void AddAppender(string loggerName, IAppender appender)
-        {
-            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(loggerName));
-            System.Diagnostics.Debug.Assert(appender != null);
-
-            GetLogger(loggerName).AddAppender(appender);
-        }
-
-        private static void SetLevel(string loggerName, string levelName)
-        {
-            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(loggerName));
-            System.Diagnostics.Debug.Assert(!string.IsNullOrEmpty(levelName));
-
-            //TODO 检查 levelName
-
-            var log = LogManager.GetLogger(loggerName);
-            var l = (log4net.Repository.Hierarchy.Logger)log.Logger;
-
-            l.Level = l.Hierarchy.LevelMap[levelName];
-        }
-
-        private static IAppender CreateRollingFileAppender(PatternLayout layout, string logPath)
-        {
-            var fileAppender = new log4net.Appender.RollingFileAppender()
-            {
-                File = logPath,
-                AppendToFile = true,
-                RollingStyle = log4net.Appender.RollingFileAppender.RollingMode.Size,
-                Layout = layout,
-                Encoding = Encoding.UTF8,
-                StaticLogFileName = true,
-            };
-            fileAppender.ActivateOptions();
-            return fileAppender;
-        }
-
-        private static IAppender CreateTraceAppender(PatternLayout layout)
-        {
-            var ta = new TraceAppender()
-            {
-                Layout = layout,
-            };
-            ta.ActivateOptions();
-            return ta;
-        }
-
-        private static IAppender CreateColoredConsoleAppender(PatternLayout layout)
-        {
-            var cca = new ColoredConsoleAppender()
-            {
-                Layout = layout,
-            };
-
-            var debugColorMapping = new ColoredConsoleAppender.LevelColors()
-            {
-                Level = Level.Debug,
-                ForeColor = ColoredConsoleAppender.Colors.Green,
-            };
-
-            var infoColorMapping = new ColoredConsoleAppender.LevelColors()
-            {
-                Level = Level.Info,
-                ForeColor = ColoredConsoleAppender.Colors.White,
-            };
-
-            var warnColorMapping = new ColoredConsoleAppender.LevelColors()
-            {
-                Level = Level.Warn,
-                ForeColor = ColoredConsoleAppender.Colors.Yellow,
-            };
-
-            var errorColorMapping = new ColoredConsoleAppender.LevelColors()
-            {
-                Level = Level.Error,
-                ForeColor = ColoredConsoleAppender.Colors.Red,
-            };
-
-            var fatalColorMapping = new ColoredConsoleAppender.LevelColors()
-            {
-                Level = Level.Fatal,
-                ForeColor = ColoredConsoleAppender.Colors.Red,
-            };
-
-            cca.AddMapping(infoColorMapping);
-            cca.AddMapping(debugColorMapping);
-            cca.AddMapping(warnColorMapping);
-            cca.AddMapping(errorColorMapping);
-            cca.AddMapping(fatalColorMapping);
-
-            cca.ActivateOptions();
-            return cca;
         }
     }
+
+
 }

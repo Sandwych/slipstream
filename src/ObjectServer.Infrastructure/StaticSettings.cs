@@ -12,13 +12,6 @@ namespace ObjectServer
 
         public const string ModuleMetaDataFileName = "module.xml";
 
-        public const string PlatformLogFileName = "environment.log";
-        public const string BizLogFileName = "biz.log";
-        public const string RpcLogFileName = "rpc.log";
-
-        public const string LogPattern =
-            "[%date %-5level]: %message%newline";
-
         public static Version Version
         {
             get

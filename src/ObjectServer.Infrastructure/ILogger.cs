@@ -15,15 +15,12 @@ namespace ObjectServer
 
         void Debug(object msg);
         void Debug(Func<object> dg);
-        void Debug(object msg, Exception ex);
 
         void Info(object msg);
         void Info(Func<object> dg);
-        void Info(object msg, Exception ex);
 
         void Warn(object msg);
         void Warn(Func<object> dg);
-        void Warn(object msg, Exception ex);
 
         void Error(object msg);
         void Error(Func<object> dg);
