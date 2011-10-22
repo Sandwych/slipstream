@@ -82,6 +82,7 @@ namespace ObjectServer
             if (cfg.Debug)
             {
                 ConfigurateConsoleLogger(logCfg);
+                ConfigurateDebuggerLogger(logCfg);
             }
 
             if (!string.IsNullOrEmpty(cfg.LogPath))
@@ -127,6 +128,8 @@ namespace ObjectServer
 
         private static void ConfigurateConsoleLogger(NLog.Config.LoggingConfiguration logCfg)
         {
+            Debug.Assert(logCfg != null);
+
             var consoleTarget = new NLog.Targets.ColoredConsoleTarget()
             {
                 Name = "console",
@@ -137,6 +140,22 @@ namespace ObjectServer
 
             var rule1 = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, consoleTarget);
             logCfg.LoggingRules.Add(rule1);
+        }
+
+        private static void ConfigurateDebuggerLogger(NLog.Config.LoggingConfiguration logCfg)
+        {
+            Debug.Assert(logCfg != null);
+
+            var debuggerTarget = new NLog.Targets.OutputDebugStringTarget()
+            {
+                Name = "debugger",
+                Layout = LoggingLayout
+            };
+
+            logCfg.AddTarget("debugger", debuggerTarget);
+
+            var rule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, debuggerTarget);
+            logCfg.LoggingRules.Add(rule);
         }
 
         private static void EnsureLoggingPathExist(Config cfg)
