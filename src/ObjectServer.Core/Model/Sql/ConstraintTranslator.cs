@@ -15,10 +15,10 @@ namespace ObjectServer.Model
 {
     internal class ConstraintTranslator
     {
-        private static readonly string s_trueSql =
+        private static readonly string TrueSql =
             ' ' + DataProvider.Dialect.ToBooleanValueString(true) + ' ';
 
-        private static readonly string[] s_treeParentFields = new string[] { 
+        private static readonly string[] TreeParentFields = new string[] { 
                 AbstractSqlModel.LeftFieldName, AbstractSqlModel.RightFieldName };
 
         private readonly List<TableJoinInfo> outerJoins = new List<TableJoinInfo>();
@@ -269,7 +269,7 @@ namespace ObjectServer.Model
             }
             else
             {
-                this.AddWhereFragment(s_trueSql);
+                this.AddWhereFragment(TrueSql);
             }
         }
 
@@ -298,7 +298,7 @@ namespace ObjectServer.Model
             }
             else
             {
-                this.AddWhereFragment(s_trueSql);
+                this.AddWhereFragment(TrueSql);
             }
         }
 
@@ -435,12 +435,9 @@ namespace ObjectServer.Model
                     break;
 
                 case "childof":
-                    this.AddChildOfLeafCriterion(cr, lastTableAlias, model, field);
-                    break;
-
                 case "!childof":
-                    throw new NotImplementedException();
-
+                    this.AddChildOfLeafCriterion(cr, lastTableAlias, model, field, cr.Operator);
+                    break;
 
                 default:
                     throw new NotSupportedException();
@@ -523,8 +520,13 @@ namespace ObjectServer.Model
         }
 
         private void AddChildOfLeafCriterion(
-            Criterion cr, string lastTableAlias, IModel model, IField field)
+            Criterion cr, string lastTableAlias, IModel model, IField field, string opr)
         {
+            if (!(cr.Value is long || cr.Value is int)) //防止 SQL 注入
+            {
+                throw new ArgumentOutOfRangeException("cr");
+            }
+
             /* 生成的 SQL 形如：
              * SELECT mainTable._id 
              * FROM mainTable, category _category_parent_0, category AS _category_child_0
@@ -552,7 +554,7 @@ namespace ObjectServer.Model
             var childTableAlias = this.SetInnerJoin(joinModel.TableName, field.Name);
 
             //直接做一次查询
-            var parent = this.ReadSingleTreeModel(cr, joinModel);
+            var parent = this.ReadSingleTreeRecord(cr, joinModel);
 
             var parentLeft = parent[AbstractSqlModel.LeftFieldName].ToString();
             var parentRight = parent[AbstractSqlModel.RightFieldName].ToString();
@@ -568,23 +570,30 @@ namespace ObjectServer.Model
                 "<",
                 parentRight);
 
-            this.AddWhereFragment(new SqlString(leftExp, " and ", rightExp));
+            if (opr == "childof")
+            {
+                this.AddWhereFragment(new SqlString(leftExp, " and ", rightExp));
+            }
+            else
+            {
+                this.AddWhereFragment(new SqlString(" not (", leftExp, " and ", rightExp, ")"));
+            }
         }
 
-        private Dictionary<string, object> ReadSingleTreeModel(Criterion cr, IModel joinModel)
+        private Dictionary<string, object> ReadSingleTreeRecord(Criterion cr, IModel joinModel)
         {
-            var parentCriteria = new object[]{
-                new object[] { "_id", "=", cr.Value }
+            var parentCriteria = new object[] {
+                new object[] { AbstractModel.IdFieldName, "=", cr.Value }
             };
             var parentIDs = new long[] { (long)cr.Value };
-            var parents = joinModel.ReadInternal(this.serviceScope, parentIDs, s_treeParentFields);
+            var parents = joinModel.ReadInternal(this.serviceScope, parentIDs, TreeParentFields);
             if (parents.Length != 1)
             {
                 var msg = string.Format(
                     "Cannot found the record with ID=[{0}]", cr.Value.ToString());
                 throw new RecordNotFoundException(msg, joinModel.Name);
             }
-            var parent = parents[0];
+            var parent = parents.First();
             return parent;
         }
 

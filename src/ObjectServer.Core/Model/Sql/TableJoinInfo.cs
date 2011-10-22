@@ -11,6 +11,26 @@ namespace ObjectServer.Model
     {
         public TableJoinInfo(string table, string alias, string fkColumn, string pkColumn)
         {
+            if (string.IsNullOrEmpty(table))
+            {
+                throw new ArgumentNullException("table");
+            }
+
+            if (string.IsNullOrEmpty(alias))
+            {
+                throw new ArgumentNullException("alias");
+            }
+
+            if (string.IsNullOrEmpty(fkColumn))
+            {
+                throw new ArgumentNullException("fkColumn");
+            }
+
+            if (string.IsNullOrEmpty(pkColumn))
+            {
+                throw new ArgumentNullException("pkColumn");
+            }
+
             this.Table = table;
             this.Alias = alias;
             this.FkColumn = fkColumn;

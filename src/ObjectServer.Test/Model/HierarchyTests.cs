@@ -213,10 +213,11 @@ namespace ObjectServer.Model.Test
             };
 
             var orders = new object[] { new object[] { "_id", "ASC" } };
-            dynamic ids1 = catModel.Search(this.TransactionContext, domain1, orders, 0, 0);
+            var ids1 = (long[])catModel.Search(this.TransactionContext, domain1, orders, 0, 0);
 
-            Assert.AreEqual(1, ids1.Length);
+            Assert.AreEqual(2, ids1.Length);
             Assert.AreEqual(data.id1, ids1[0]);
+            Assert.AreEqual(data.id2, ids1[1]);
         }
 
         [Test]
