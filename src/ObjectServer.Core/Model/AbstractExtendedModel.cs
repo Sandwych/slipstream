@@ -59,7 +59,8 @@ namespace ObjectServer.Model
             throw new NotSupportedException();
         }
 
-        public Dictionary<string, object> GetFieldDefaultValuesInternal(ITransactionContext tc, string[] fields)
+        public Dictionary<string, object> GetFieldDefaultValuesInternal(
+            ITransactionContext ctx, string[] fields)
         {
             throw new NotSupportedException();
         }
@@ -151,7 +152,7 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<string, object>[] ReadInternal(
-            ITransactionContext scope, long[] ids, string[] fields)
+            ITransactionContext scope, long[] ids, string[] requiredFields)
         {
             throw new NotSupportedException();
         }

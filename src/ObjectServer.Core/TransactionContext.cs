@@ -43,7 +43,7 @@ namespace ObjectServer
 
             try
             {
-                var session = Session.GetByID(this.dbctx, sessionId);
+                var session = Session.GetById(this.dbctx, sessionId);
                 if (session == null || !session.IsActive)
                 {
                     //删掉无效的 Session

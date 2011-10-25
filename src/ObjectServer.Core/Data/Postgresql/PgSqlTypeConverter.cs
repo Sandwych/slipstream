@@ -17,7 +17,7 @@ namespace ObjectServer.Data
         private static readonly Dictionary<FieldType, Func<IFieldDescriptor, string>> mapping =
             new Dictionary<FieldType, Func<IFieldDescriptor, string>>()
             {
-                { FieldType.ID, f => "bigserial not null primary key" },
+                { FieldType.Identifier, f => "bigserial not null primary key" },
                 { FieldType.Boolean, f => "boolean" },
                 { FieldType.Integer, f => "int4"  },
                 { FieldType.BigInteger, f => "int8"  },

@@ -229,18 +229,18 @@ namespace ObjectServer.Core
         }
 
 
-        public Session LogOn(ITransactionContext tc,
+        public Session LogOn(ITransactionContext ctx,
             string database, string login, string password)
         {
             var constraint = new object[][] { new object[] { "login", "=", login } };
 
-            var userIds = base.SearchInternal(tc, constraint, null, 0, 0);
+            var userIds = base.SearchInternal(ctx, constraint, null, 0, 0);
             if (userIds.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);
             }
 
-            var user = base.ReadInternal(tc,
+            var user = base.ReadInternal(ctx,
                 new long[] { userIds[0] },
                 new string[] { "password", "salt" })[0];
 
@@ -249,31 +249,31 @@ namespace ObjectServer.Core
 
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
-                var session = this.FetchOrCreateSession(tc, database, login, user);
+                var session = this.FetchOrCreateSession(ctx, database, login, user);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged.", tc.DBContext.DatabaseName, login));
+                    String.Format("User[{0}.{1}] logged.", ctx.DBContext.DatabaseName, login));
                 return session;
             }
             else
             {
                 LoggerProvider.EnvironmentLogger.Warn(() =>
-                    String.Format("Failed to log on user: [{0}.{1}]", tc.DBContext.DatabaseName, login));
+                    String.Format("Failed to log on user: [{0}.{1}]", ctx.DBContext.DatabaseName, login));
                 throw new Exceptions.SecurityException("Failed to log on");
             }
         }
 
 
-        public void LogOff(ITransactionContext scope, string sessionId)
+        public void LogOff(ITransactionContext ctx, string sessionId)
         {
-            var session = Session.GetByID(scope.DBContext, sessionId);
+            var session = Session.GetById(ctx.DBContext, sessionId);
 
             if (session != null)
             {
-                Session.Remove(scope.DBContext, sessionId);
+                Session.Remove(ctx.DBContext, sessionId);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged out.", scope.DBContext.DatabaseName, session.Login));
+                    String.Format("User[{0}.{1}] logged out.", ctx.DBContext.DatabaseName, session.Login));
             }
             else
             {
@@ -323,7 +323,7 @@ namespace ObjectServer.Core
 
             var uid = (long)userFields[IdFieldName];
 
-            var oldSession = Session.GetByUserID(ctx.DBContext, uid);
+            var oldSession = Session.GetByUserId(ctx.DBContext, uid);
 
             if (oldSession == null)
             {

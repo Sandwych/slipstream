@@ -90,7 +90,7 @@ namespace ObjectServer.Model
         {
             Debug.Assert(!this.Fields.ContainsKey(IdFieldName));
 
-            var idField = new ScalarField(this, IdFieldName, FieldType.ID)
+            var idField = new ScalarField(this, IdFieldName, FieldType.Identifier)
                 .Required().Readonly();
             this.fields.Add(IdFieldName, idField);
         }
@@ -584,6 +584,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static void Write(
            IModel model, ITransactionContext ctx, object id, IRecord userRecord)
         {
+            //TODO 检查 id 类型
+
             if (model == null)
             {
                 throw new ArgumentNullException("model");
@@ -652,7 +654,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
         [TransactionMethod("GetFields")]
-        public static Dictionary<string, object>[] GetFields(IModel model, ITransactionContext ctx, string[] fields)
+        public static Dictionary<string, object>[] GetFields(
+            IModel model, ITransactionContext ctx, string[] fields)
         {
             if (ctx == null)
             {
@@ -702,24 +705,24 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
 
         public Dictionary<string, object> GetFieldDefaultValuesInternal(
-            ITransactionContext ctx, string[] fields)
+            ITransactionContext ctx, string[] fieldNames)
         {
             if (ctx == null)
             {
                 throw new ArgumentNullException("ctx");
             }
 
-            if (fields == null)
+            if (fieldNames == null)
             {
-                throw new ArgumentNullException("fields");
+                throw new ArgumentNullException("fieldNames");
             }
 
-            var result = new Dictionary<string, object>(fields.Length);
-            foreach (var f in fields)
+            var result = new Dictionary<string, object>(fieldNames.Length);
+            foreach (var f in fieldNames)
             {
                 if (f == null || !this.Fields.ContainsKey(f))
                 {
-                    throw new ArgumentOutOfRangeException("fields");
+                    throw new ArgumentOutOfRangeException("fieldNames");
                 }
 
                 var fi = this.Fields[f];
@@ -764,12 +767,13 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
         public virtual Dictionary<string, object>[] GetFieldsInternal(
-            ITransactionContext ctx, string[] fields)
+            ITransactionContext ctx, string[] fieldNames)
         {
             if (ctx == null)
             {
                 throw new ArgumentNullException("ctx");
             }
+
             var modelModel = (IModel)ctx.GetResource("core.model");
 
             var destModel = (AbstractModel)ctx.GetResource(this.Name);
@@ -782,7 +786,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             var fieldModel = (IModel)ctx.GetResource("core.field");
             var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
             var fieldIds = fieldModel.SearchInternal(ctx, fieldDomain, null, 0, 0);
-            var records = fieldModel.ReadInternal(ctx, fieldIds, fields);
+            var records = fieldModel.ReadInternal(ctx, fieldIds, fieldNames);
 
             foreach (var r in records)
             {

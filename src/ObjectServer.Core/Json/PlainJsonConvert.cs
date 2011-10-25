@@ -30,14 +30,14 @@ namespace ObjectServer.Json
             }
         }
 
-        public static object Parse(TextReader tr)
+        public static object Parse(TextReader reader)
         {
-            if (tr == null)
+            if (reader == null)
             {
-                throw new ArgumentNullException("tr");
+                throw new ArgumentNullException("reader");
             }
 
-            using (var jreader = new JsonTextReader(tr))
+            using (var jreader = new JsonTextReader(reader))
             {
                 return ParseInternal(jreader);
             }

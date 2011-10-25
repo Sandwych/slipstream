@@ -58,20 +58,26 @@ namespace ObjectServer.Core
         }
 
         public IDictionary<string, bool> GetFieldAccess(
-            ITransactionContext tc, string modelName, IEnumerable<string> fields, string action)
+            ITransactionContext ctx, string modelName, IEnumerable<string> fields, string action)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
             if (string.IsNullOrEmpty(modelName))
             {
                 throw new ArgumentNullException("modelName");
             }
+
             if (action != "read" && action != "write")
             {
                 throw new ArgumentOutOfRangeException("action");
             }
 
-            var modelModel = (IModel)tc.GetResource("core.model");
-            var fieldModel = (IModel)tc.GetResource("core.field");
-            var userRoleRelModel = (IModel)tc.GetResource("core.user_role");
+            var modelModel = (IModel)ctx.GetResource("core.model");
+            var fieldModel = (IModel)ctx.GetResource("core.field");
+            var userRoleRelModel = (IModel)ctx.GetResource("core.user_role");
             var sql = String.Format(CultureInfo.InvariantCulture,
                 "select f.name field_name, (max(case when a.allow_{0} then 1 else 0 end) > 0) allow " +
                 "from {1} a " +
@@ -82,9 +88,9 @@ namespace ObjectServer.Core
                 "group by f.name ",
                 action, this.TableName, fieldModel.TableName, modelModel.TableName, userRoleRelModel.TableName);
 
-            Debug.Assert(tc.Session != null);
-            var userId = tc.Session.UserId;
-            var records = tc.DBContext.QueryAsDictionary(SqlString.Parse(sql), modelName, userId);
+            Debug.Assert(ctx.Session != null);
+            var userId = ctx.Session.UserId;
+            var records = ctx.DBContext.QueryAsDictionary(SqlString.Parse(sql), modelName, userId);
             if (records.Count() == 0)
             {
                 return new Dictionary<string, bool>();
