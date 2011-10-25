@@ -38,16 +38,16 @@ namespace ObjectServer.Core
             Fields.Boolean("active").SetLabel("Active?").Required().SetDefaultValueGetter(r => true);
         }
 
-        public override void Initialize(ITransactionContext tc, bool update)
+        public override void Initialize(ITransactionContext ctx, bool update)
         {
-            base.Initialize(tc, update);
+            base.Initialize(ctx, update);
 
             //检测是否有 root 用户
-            var isRootUserExisted = UserExists(tc.DBContext, RootUserName);
+            var isRootUserExisted = UserExists(ctx.DBContext, RootUserName);
             if (update && isRootUserExisted)
             {
-                tc.BizLogger.Info("Creating the [root] user...");
-                this.CreateRootUser(tc.DBContext);
+                ctx.BizLogger.Info("Creating the [root] user...");
+                this.CreateRootUser(ctx.DBContext);
             }
         }
 
@@ -154,15 +154,41 @@ namespace ObjectServer.Core
         }
 
 
-        public override long CreateInternal(ITransactionContext scope, IDictionary<string, object> values)
+        public override long CreateInternal(ITransactionContext ctx, IDictionary<string, object> values)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (values == null || values.Count == 0)
+            {
+                throw new ArgumentNullException("values");
+            }
+
             IDictionary<string, object> values2 = HashPassword(values);
-            return base.CreateInternal(scope, values2);
+            return base.CreateInternal(ctx, values2);
         }
 
 
-        public override void WriteInternal(ITransactionContext scope, long id, IDictionary<string, object> record)
+        public override void WriteInternal(
+            ITransactionContext ctx, long id, IDictionary<string, object> record)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException("id");
+            }
+
             //更新用户记录业务是不能修改密码与 Salt 的
             var values2 = new Dictionary<string, object>(record);
             if (record.ContainsKey("password"))
@@ -174,16 +200,15 @@ namespace ObjectServer.Core
                 values2.Remove("salt");
             }
 
-            base.WriteInternal(scope, id, values2);
+            base.WriteInternal(ctx, id, values2);
 
             //TODO 通知 Session 缓存
         }
 
-
         public override Dictionary<string, object>[] ReadInternal(
-            ITransactionContext scope, long[] ids, string[] fields)
+            ITransactionContext ctx, long[] ids, string[] fields)
         {
-            var records = base.ReadInternal(scope, ids, fields);
+            var records = base.ReadInternal(ctx, ids, fields);
 
             //"salt" "password" 是敏感字段，不要让客户端获取
             foreach (var record in records)

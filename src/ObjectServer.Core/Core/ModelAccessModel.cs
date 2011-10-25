@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -65,7 +66,7 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
                 throw new ArgumentNullException("action");
             }
 
-            var sql = SqlString.Parse(String.Format(SqlToQuery, action));
+            var sql = SqlString.Parse(String.Format(CultureInfo.InvariantCulture, SqlToQuery, action));
             var result = ctx.DBContext.QueryValue(sql, model, ctx.Session.UserId);
 
             if (!result.IsNull())

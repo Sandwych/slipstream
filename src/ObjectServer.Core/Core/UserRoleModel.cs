@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Globalization;
 
 using ObjectServer.Model;
 using ObjectServer.Utility;
@@ -25,15 +26,20 @@ namespace ObjectServer.Core
 
         }
 
-        public override void Initialize(ITransactionContext tc, bool update)
+        public override void Initialize(ITransactionContext ctx, bool update)
         {
-            base.Initialize(tc, update);
+            base.Initialize(ctx, update);
 
-            var tableCtx = tc.DBContext.CreateTableContext(this.TableName);
+            var tableCtx = ctx.DBContext.CreateTableContext(this.TableName);
 
-            if (update && !tableCtx.ConstraintExists(tc.DBContext, UniqueConstraintName))
+            if (update && !tableCtx.ConstraintExists(ctx.DBContext, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(tc.DBContext, UniqueConstraintName, "UNIQUE(\"user\", \"role\")");
+                var userCol = DataProvider.Dialect.QuoteForColumnName("user");
+                var roleCol = DataProvider.Dialect.QuoteForColumnName("role");
+                var sql = string.Format(CultureInfo.InvariantCulture,
+                    "UNIQUE({0}, {1})", userCol, roleCol);
+
+                tableCtx.AddConstraint(ctx.DBContext, UniqueConstraintName, sql);
             }
         }
     }

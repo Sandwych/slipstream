@@ -399,9 +399,17 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         [TransactionMethod("GetFieldDefaultValues")]
         public static Dictionary<string, object> GetFieldDefaultValues(
-            IModel model, ITransactionContext tc, object[] clientFields)
+            IModel model, ITransactionContext ctx, object[] clientFields)
         {
-            EnsureServiceMethodArgs(model, tc);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
 
             if (!model.CanRead)
             {
@@ -416,7 +424,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             //这里不检查权限，也许是一个安全漏洞？
             var strFields = clientFields.Cast<string>().ToArray();
 
-            return model.GetFieldDefaultValuesInternal(tc, strFields);
+            return model.GetFieldDefaultValuesInternal(ctx, strFields);
         }
 
 
@@ -424,7 +432,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static long Count(
             IModel model, ITransactionContext ctx, object[] constraint)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
 
             if (!model.CanRead)
             {
@@ -443,7 +459,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static long[] Search(
             IModel model, ITransactionContext ctx, object[] constraint, object[] order, long offset, long limit)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
 
             if (!model.CanRead)
             {
@@ -478,7 +502,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static Record[] Read(
             IModel model, ITransactionContext ctx, dynamic clientIds, dynamic clientFields)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
 
             if (clientIds == null)
             {
@@ -523,7 +555,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static long Create(
             IModel model, ITransactionContext ctx, IRecord propertyBag)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
 
             if (!model.CanCreate)
             {
@@ -544,7 +584,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static void Write(
            IModel model, ITransactionContext ctx, object id, IRecord userRecord)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
 
             if (!model.CanWrite)
             {
@@ -565,7 +613,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         public static void Delete(
             IModel model, ITransactionContext ctx, dynamic clientIDs)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
 
             if (!model.CanDelete)
             {
@@ -598,25 +654,18 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         [TransactionMethod("GetFields")]
         public static Dictionary<string, object>[] GetFields(IModel model, ITransactionContext ctx, string[] fields)
         {
-            EnsureServiceMethodArgs(model, ctx);
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
 
             return model.GetFieldsInternal(ctx, fields);
         }
-
-
-        private static void EnsureServiceMethodArgs(IModel self, ITransactionContext ctx)
-        {
-            if (self == null)
-            {
-                throw new ArgumentNullException("self");
-            }
-
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("scope");
-            }
-        }
-
 
         #endregion
 
@@ -640,20 +689,26 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         public virtual NameGetter NameGetter { get; protected set; }
 
-        public abstract long CountInternal(ITransactionContext scope, object[] constraints);
+        public abstract long CountInternal(ITransactionContext ctx, object[] constraints);
         public abstract long[] SearchInternal(
-            ITransactionContext scope, object[] constraints, OrderExpression[] orders, long offset, long limit);
+            ITransactionContext ctx, object[] constraints, OrderExpression[] orders, long offset, long limit);
         public abstract long CreateInternal(
-            ITransactionContext scope, IRecord record);
+            ITransactionContext ctx, IRecord record);
         public abstract void WriteInternal(
-            ITransactionContext scope, long id, IRecord record);
+            ITransactionContext ctx, long id, IRecord record);
         public abstract Record[] ReadInternal(
-            ITransactionContext scope, long[] ids, string[] requiredFields);
+            ITransactionContext ctx, long[] ids, string[] requiredFields);
         public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
 
 
-        public Dictionary<string, object> GetFieldDefaultValuesInternal(ITransactionContext tc, string[] fields)
+        public Dictionary<string, object> GetFieldDefaultValuesInternal(
+            ITransactionContext ctx, string[] fields)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
             if (fields == null)
             {
                 throw new ArgumentNullException("fields");
@@ -671,7 +726,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
                 if (fi.DefaultProc != null)
                 {
-                    var dv = fi.DefaultProc(tc);
+                    var dv = fi.DefaultProc(ctx);
                     result.Add(f, dv);
                 }
             }
@@ -708,7 +763,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return this;
         }
 
-        public virtual Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx, string[] fields = null)
+        public virtual Dictionary<string, object>[] GetFieldsInternal(
+            ITransactionContext ctx, string[] fields)
         {
             if (ctx == null)
             {

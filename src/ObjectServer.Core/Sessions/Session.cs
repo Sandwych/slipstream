@@ -27,6 +27,11 @@ namespace ObjectServer
 
         public Session(IDictionary<string, object> record)
         {
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             this.Id = (string)record["sid"];
             this.Login = (string)record["login"];
             this.UserId = (long)record["userid"];

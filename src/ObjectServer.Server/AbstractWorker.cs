@@ -7,9 +7,10 @@ using ZMQ;
 
 namespace ObjectServer.Server
 {
-    public abstract class AbstractWorker
+    public abstract class AbstractWorker : IDisposable
     {
         private readonly Socket broadcastSocket = new Socket(SocketType.SUB);
+        private bool m_disposed = false;
 
         public AbstractWorker()
         {
@@ -17,6 +18,11 @@ namespace ObjectServer.Server
 
             this.broadcastSocket.Connect(Environment.Configuration.BroadcastUrl);
             this.broadcastSocket.Subscribe("STOP", Encoding.UTF8);
+        }
+
+        ~AbstractWorker()
+        {
+            this.Dispose(false);
         }
 
         public void Start()
@@ -42,5 +48,28 @@ namespace ObjectServer.Server
         {
             return this.broadcastSocket.Recv(Encoding.UTF8);
         }
+
+        #region IDisposable Members
+
+        public void Dispose(bool isDisposing)
+        {
+            if (!this.m_disposed)
+            {
+                if (isDisposing) //释放非托管资源
+                {
+                    this.broadcastSocket.Dispose();
+                }
+                //释放非托管资源
+
+                this.m_disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        #endregion
     }
 }

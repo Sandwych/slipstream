@@ -6,6 +6,7 @@ using System.Reflection;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -71,7 +72,8 @@ namespace ObjectServer
             Module result = this.allModules.SingleOrDefault(m => m.Name == moduleName);
             if (result == null)
             {
-                var msg = string.Format("Cannot found module: [{0}]", moduleName);
+                var msg = string.Format(CultureInfo.CurrentCulture, 
+                    "Cannot found module: [{0}]", moduleName);
                 throw new ModuleNotFoundException(msg, moduleName);
             }
             else
@@ -107,7 +109,9 @@ namespace ObjectServer
                 module.Path = moduleDir;
                 modules.Add(module);
 
-                LoggerProvider.EnvironmentLogger.Info(() => string.Format("Additional module found: [{0}], Path=[{1}]",
+                LoggerProvider.EnvironmentLogger.Info(() => string.Format(
+                    CultureInfo.CurrentCulture,
+                    "Additional module found: [{0}], Path=[{1}]",
                         module.Name, module.Path));
             }
 
@@ -182,6 +186,7 @@ namespace ObjectServer
                 {
                     this.UpdateModuleState(tc.DBContext, moduleId, ModuleModel.States.Uninstalled);
                     LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
+                        CultureInfo.CurrentCulture,
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
 

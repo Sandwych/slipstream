@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Data;
 using System.Reflection;
 using System.Dynamic;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -224,7 +225,7 @@ WHERE   hp._id = ? AND hc._id <> ?
                 AND hn._left BETWEEN hp._left AND hp._right
         ) <= 2
 ";
-            var sql = string.Format(sqlFmt, this.TableName);
+            var sql = string.Format(CultureInfo.InvariantCulture, sqlFmt, this.TableName);
             var ids = dbctx.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
 
             return ids.ToArray();
@@ -239,7 +240,7 @@ from    {0} hp
 join    {0} hc ON hc._left between hp._left and hp._right
 where   hp._id=? and hc._id<>?
 ";
-            var sql = string.Format(sqlFmt, this.quotedTableName);
+            var sql = string.Format(CultureInfo.InvariantCulture, sqlFmt, this.quotedTableName);
             var ids = dbctx.QueryAsArray<long>(SqlString.Parse(sql), parentID, parentID);
             return ids.ToArray();
         }

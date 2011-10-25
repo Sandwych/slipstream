@@ -125,14 +125,14 @@ namespace ObjectServer.Model
         }
 
         public long CountInternal(
-            ITransactionContext ctx, object[] constraints = null)
+            ITransactionContext ctx, object[] constraint)
         {
             throw new NotSupportedException();
         }
 
         public long[] SearchInternal(
-            ITransactionContext ctx, object[] constraints = null,
-            OrderExpression[] orders = null, long offset = 0, long limit = 0)
+            ITransactionContext ctx, object[] constraints,
+            OrderExpression[] orders, long offset, long limit)
         {
             throw new NotSupportedException();
 
@@ -151,7 +151,7 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<string, object>[] ReadInternal(
-            ITransactionContext scope, long[] ids, string[] fields = null)
+            ITransactionContext scope, long[] ids, string[] fields)
         {
             throw new NotSupportedException();
         }

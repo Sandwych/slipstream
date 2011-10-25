@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using System.Reflection;
 using System.Diagnostics;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -230,7 +231,7 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
-            var sql = string.Format(
+            var sql = string.Format(CultureInfo.InvariantCulture,
                 "alter table \"{0}\" drop column \"{1}\"",
                 this.Name, columnName);
             db.Execute(SqlString.Parse(sql));
@@ -254,7 +255,7 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var action = nullable ? "drop not null" : "set not null";
-            var sql = string.Format(
+            var sql = string.Format(CultureInfo.InvariantCulture,
                 "alter table \"{0}\" alter column \"{1}\" {2}",
                 this.Name, columnName, action);
             db.Execute(SqlString.Parse(sql));
@@ -277,7 +278,7 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
-            var sql = string.Format(
+            var sql = string.Format(CultureInfo.InvariantCulture,
                 "alter table \"{0}\" alter \"{1}\" type {2}",
                 this.Name, columnName, sqlType);
             db.Execute(SqlString.Parse(sql));
@@ -357,37 +358,49 @@ namespace ObjectServer.Data.Postgresql
             Debug.Assert(!string.IsNullOrEmpty(column));
 
             var constraintName = this.Name + "_" + column + "_unique";
-            var constraint = string.Format("UNIQUE(\"{0}\")", column);
+            var constraint = string.Format(CultureInfo.InvariantCulture, "UNIQUE(\"{0}\")", column);
             this.AddConstraint(db, constraintName, constraint);
         }
 
 
-        public void AddConstraint(IDbContext db, string constraintName, string constraint)
+        public void AddConstraint(IDbContext dbctx, string constraintName, string constraint)
         {
-            Debug.Assert(db != null);
-            Debug.Assert(!string.IsNullOrEmpty(constraintName));
-            Debug.Assert(!string.IsNullOrEmpty(constraint));
-
-            var sql = "alter table \"{0}\" add constraint \"{1}\" {2}";
-            sql = string.Format(sql, this.Name, constraintName, constraint);
-            db.Execute(SqlString.Parse(sql));
-        }
-
-        public void DeleteConstraint(IDbContext db, string constraintName)
-        {
-            if (db == null)
+            if (dbctx == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("dbctx");
             }
+
             if (string.IsNullOrEmpty(constraintName))
             {
                 throw new ArgumentNullException("constraintName");
             }
 
-            var sql = string.Format(
+            if (string.IsNullOrEmpty(constraint))
+            {
+                throw new ArgumentNullException("constraint");
+            }
+
+            var sql = "alter table \"{0}\" add constraint \"{1}\" {2}";
+            sql = string.Format(CultureInfo.InvariantCulture, sql, this.Name, constraintName, constraint);
+            dbctx.Execute(SqlString.Parse(sql));
+        }
+
+        public void DeleteConstraint(IDbContext dbctx, string constraintName)
+        {
+            if (dbctx == null)
+            {
+                throw new ArgumentNullException("db");
+            }
+
+            if (string.IsNullOrEmpty(constraintName))
+            {
+                throw new ArgumentNullException("constraintName");
+            }
+
+            var sql = string.Format(CultureInfo.InvariantCulture,
                 "alter table \"{0}\" drop constraint \"{1}\"",
                 this.Name, constraintName);
-            db.Execute(SqlString.Parse(sql));
+            dbctx.Execute(SqlString.Parse(sql));
         }
 
 
@@ -433,7 +446,7 @@ select coalesce(count(constraint_name), 0)
 
             var onDelete = OnDeleteMapping[act];
             var fkName = this.GenerateFkName(columnName);
-            var sql = string.Format(
+            var sql = string.Format(CultureInfo.InvariantCulture,
                 "alter table \"{0}\" add constraint \"{1}\" foreign key (\"{2}\") references \"{3}\" on delete {4}",
                 this.Name, fkName, columnName, refTable, onDelete);
 
@@ -495,7 +508,7 @@ select coalesce(count(constraint_name), 0)
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
-            return string.Format("{0}_{1}_fkey", this.Name, columnName);
+            return string.Format(CultureInfo.InvariantCulture, "{0}_{1}_fkey", this.Name, columnName);
         }
     }
 }
