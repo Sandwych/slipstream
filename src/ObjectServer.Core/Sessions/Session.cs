@@ -27,6 +27,11 @@ namespace ObjectServer
 
         public Session(IDictionary<string, object> record)
         {
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
             this.Id = (string)record["sid"];
             this.Login = (string)record["login"];
             this.UserId = (long)record["userid"];
@@ -115,7 +120,7 @@ namespace ObjectServer
             }
         }
 
-        public static Session GetByID(IDbContext db, string sid)
+        public static Session GetById(IDbContext db, string sid)
         {
             if (db == null)
             {
@@ -142,14 +147,14 @@ namespace ObjectServer
             }
         }
 
-        public static Session GetByUserID(IDbContext db, long uid)
+        public static Session GetByUserId(IDbContext db, long userId)
         {
             if (db == null)
             {
                 throw new ArgumentNullException("db");
             }
 
-            var records = db.QueryAsDictionary(SelectByUserIdSql, uid);
+            var records = db.QueryAsDictionary(SelectByUserIdSql, userId);
             if (records.Length > 1)
             {
                 throw new Exceptions.DataException("More than one user id in table [core_session]!");
@@ -165,21 +170,21 @@ namespace ObjectServer
             }
         }
 
-        public static void Put(IDbContext db, Session s)
+        public static void Put(IDbContext db, Session session)
         {
             if (db == null)
             {
                 throw new ArgumentNullException("db");
             }
 
-            if (s == null)
+            if (session == null)
             {
-                throw new ArgumentNullException("s");
+                throw new ArgumentNullException("session");
             }
 
             var sql = SqlString.Parse(
                 "insert into core_session(sid, start_time, last_activity_time, userid, login) values(?,?,?,?,?)");
-            var n = db.Execute(sql, s.Id, s.StartTime, s.LastActivityTime, s.UserId, s.Login);
+            var n = db.Execute(sql, session.Id, session.StartTime, session.LastActivityTime, session.UserId, session.Login);
             if (n != 1)
             {
                 throw new Exceptions.DataException("Failed to put session");
@@ -218,7 +223,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("sid");
             }
 
-            var s = GetByID(db, sid);
+            var s = GetById(db, sid);
             if (s.IsActive)
             {
                 var now = DateTime.Now;

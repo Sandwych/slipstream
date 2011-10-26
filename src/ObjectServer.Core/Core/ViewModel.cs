@@ -31,7 +31,7 @@ namespace ObjectServer.Core
 
         [TransactionMethod("GetView")]
         public static Dictionary<string, object> GetView(
-            IModel model, ITransactionContext ctx, string modelName, string viewKind = "form", long? viewId = null)
+            IModel model, ITransactionContext ctx, string modelName, string viewKind, long? viewId)
         {
             if (model == null)
             {

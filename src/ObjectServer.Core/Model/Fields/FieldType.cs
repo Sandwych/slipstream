@@ -11,7 +11,7 @@ namespace ObjectServer.Model
     public enum FieldType
     {
         [EnumStringValue("id")]
-        ID,
+        Identifier,
 
         [EnumStringValue("int32")]
         Integer,

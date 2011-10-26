@@ -132,7 +132,7 @@ namespace ObjectServer.Client
 
             yield return 1;
 
-            using (var reqStream = webReq.EndGetRequestStream(ae.DequeueAsyncResult()))
+            var reqStream = webReq.EndGetRequestStream(ae.DequeueAsyncResult());
             using (var sw = new StreamWriter(reqStream, Encoding.UTF8))
             {
                 var json = JsonConvert.SerializeObject(this, Formatting.None);

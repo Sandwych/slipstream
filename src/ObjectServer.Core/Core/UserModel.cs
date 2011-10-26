@@ -38,16 +38,16 @@ namespace ObjectServer.Core
             Fields.Boolean("active").SetLabel("Active?").Required().SetDefaultValueGetter(r => true);
         }
 
-        public override void Initialize(ITransactionContext tc, bool update)
+        public override void Initialize(ITransactionContext ctx, bool update)
         {
-            base.Initialize(tc, update);
+            base.Initialize(ctx, update);
 
             //检测是否有 root 用户
-            var isRootUserExisted = UserExists(tc.DBContext, RootUserName);
+            var isRootUserExisted = UserExists(ctx.DBContext, RootUserName);
             if (update && isRootUserExisted)
             {
-                tc.BizLogger.Info("Creating the [root] user...");
-                this.CreateRootUser(tc.DBContext);
+                ctx.BizLogger.Info("Creating the [root] user...");
+                this.CreateRootUser(ctx.DBContext);
             }
         }
 
@@ -154,15 +154,41 @@ namespace ObjectServer.Core
         }
 
 
-        public override long CreateInternal(ITransactionContext scope, IDictionary<string, object> values)
+        public override long CreateInternal(ITransactionContext ctx, IDictionary<string, object> values)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (values == null || values.Count == 0)
+            {
+                throw new ArgumentNullException("values");
+            }
+
             IDictionary<string, object> values2 = HashPassword(values);
-            return base.CreateInternal(scope, values2);
+            return base.CreateInternal(ctx, values2);
         }
 
 
-        public override void WriteInternal(ITransactionContext scope, long id, IDictionary<string, object> record)
+        public override void WriteInternal(
+            ITransactionContext ctx, long id, IDictionary<string, object> record)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException("id");
+            }
+
             //更新用户记录业务是不能修改密码与 Salt 的
             var values2 = new Dictionary<string, object>(record);
             if (record.ContainsKey("password"))
@@ -174,16 +200,15 @@ namespace ObjectServer.Core
                 values2.Remove("salt");
             }
 
-            base.WriteInternal(scope, id, values2);
+            base.WriteInternal(ctx, id, values2);
 
             //TODO 通知 Session 缓存
         }
 
-
         public override Dictionary<string, object>[] ReadInternal(
-            ITransactionContext scope, long[] ids, string[] fields)
+            ITransactionContext ctx, long[] ids, string[] fields)
         {
-            var records = base.ReadInternal(scope, ids, fields);
+            var records = base.ReadInternal(ctx, ids, fields);
 
             //"salt" "password" 是敏感字段，不要让客户端获取
             foreach (var record in records)
@@ -204,18 +229,18 @@ namespace ObjectServer.Core
         }
 
 
-        public Session LogOn(ITransactionContext tc,
+        public Session LogOn(ITransactionContext ctx,
             string database, string login, string password)
         {
             var constraint = new object[][] { new object[] { "login", "=", login } };
 
-            var userIds = base.SearchInternal(tc, constraint, null, 0, 0);
+            var userIds = base.SearchInternal(ctx, constraint, null, 0, 0);
             if (userIds.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);
             }
 
-            var user = base.ReadInternal(tc,
+            var user = base.ReadInternal(ctx,
                 new long[] { userIds[0] },
                 new string[] { "password", "salt" })[0];
 
@@ -224,31 +249,31 @@ namespace ObjectServer.Core
 
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
-                var session = this.FetchOrCreateSession(tc, database, login, user);
+                var session = this.FetchOrCreateSession(ctx, database, login, user);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged.", tc.DBContext.DatabaseName, login));
+                    String.Format("User[{0}.{1}] logged.", ctx.DBContext.DatabaseName, login));
                 return session;
             }
             else
             {
                 LoggerProvider.EnvironmentLogger.Warn(() =>
-                    String.Format("Failed to log on user: [{0}.{1}]", tc.DBContext.DatabaseName, login));
+                    String.Format("Failed to log on user: [{0}.{1}]", ctx.DBContext.DatabaseName, login));
                 throw new Exceptions.SecurityException("Failed to log on");
             }
         }
 
 
-        public void LogOff(ITransactionContext scope, string sessionId)
+        public void LogOff(ITransactionContext ctx, string sessionId)
         {
-            var session = Session.GetByID(scope.DBContext, sessionId);
+            var session = Session.GetById(ctx.DBContext, sessionId);
 
             if (session != null)
             {
-                Session.Remove(scope.DBContext, sessionId);
+                Session.Remove(ctx.DBContext, sessionId);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged out.", scope.DBContext.DatabaseName, session.Login));
+                    String.Format("User[{0}.{1}] logged out.", ctx.DBContext.DatabaseName, session.Login));
             }
             else
             {
@@ -298,7 +323,7 @@ namespace ObjectServer.Core
 
             var uid = (long)userFields[IdFieldName];
 
-            var oldSession = Session.GetByUserID(ctx.DBContext, uid);
+            var oldSession = Session.GetByUserId(ctx.DBContext, uid);
 
             if (oldSession == null)
             {

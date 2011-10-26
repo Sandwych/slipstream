@@ -6,6 +6,7 @@ using System.Reflection;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -71,7 +72,8 @@ namespace ObjectServer
             Module result = this.allModules.SingleOrDefault(m => m.Name == moduleName);
             if (result == null)
             {
-                var msg = string.Format("Cannot found module: [{0}]", moduleName);
+                var msg = string.Format(CultureInfo.CurrentCulture, 
+                    "Cannot found module: [{0}]", moduleName);
                 throw new ModuleNotFoundException(msg, moduleName);
             }
             else
@@ -107,7 +109,9 @@ namespace ObjectServer
                 module.Path = moduleDir;
                 modules.Add(module);
 
-                LoggerProvider.EnvironmentLogger.Info(() => string.Format("Additional module found: [{0}], Path=[{1}]",
+                LoggerProvider.EnvironmentLogger.Info(() => string.Format(
+                    CultureInfo.CurrentCulture,
+                    "Additional module found: [{0}], Path=[{1}]",
                         module.Name, module.Path));
             }
 
@@ -142,11 +146,11 @@ namespace ObjectServer
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadModules(ITransactionContext tc, bool isUpdate)
+        public void LoadModules(ITransactionContext ctx, bool isUpdate)
         {
-            if (tc == null)
+            if (ctx == null)
             {
-                throw new ArgumentNullException("tx");
+                throw new ArgumentNullException("ctx");
             }
 
             LoggerProvider.EnvironmentLogger.Info("Loading modules...");
@@ -160,7 +164,7 @@ namespace ObjectServer
             var sql = new SqlString("select _id, name, state from core_module");
 
             //TODO: 模块依赖排序
-            var modules = tc.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
+            var modules = ctx.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
 
             var coreModule = modules.Where(m => (string)m["name"] == "core");
             var sortedModules = modules.Where(m => (string)m["name"] != "core");
@@ -176,37 +180,38 @@ namespace ObjectServer
                 if (module != null)
                 {
                     var state = (string)m["state"];
-                    this.InstallOrUpgradeModule(tc, module, moduleId, state, isUpdate);
+                    this.InstallOrUpgradeModule(ctx, module, moduleId, state, isUpdate);
                 }
                 else
                 {
-                    this.UpdateModuleState(tc.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                    this.UpdateModuleState(ctx.DBContext, moduleId, ModuleModel.States.Uninstalled);
                     LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
+                        CultureInfo.CurrentCulture,
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
                 }
 
             }
         }
 
-        private void InstallOrUpgradeModule(ITransactionContext tx, Module module, long moduleId, string state, bool isUpdate)
+        private void InstallOrUpgradeModule(ITransactionContext ctx, Module module, long moduleId, string state, bool isUpdate)
         {
             if (isUpdate && state == ModuleModel.States.ToInstall)
             {
-                module.Load(tx, ModuleUpdateAction.ToInstall);
-                this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Installed);
+                module.Load(ctx, ModuleUpdateAction.ToInstall);
+                this.UpdateModuleState(ctx.DBContext, moduleId, ModuleModel.States.Installed);
             }
             else if (isUpdate && state == ModuleModel.States.ToUpgrade)
             {
-                module.Load(tx, ModuleUpdateAction.ToUpgrade);
-                this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Installed);
+                module.Load(ctx, ModuleUpdateAction.ToUpgrade);
+                this.UpdateModuleState(ctx.DBContext, moduleId, ModuleModel.States.Installed);
             }
             else if (isUpdate && state == ModuleModel.States.ToUninstall)
             {
-                this.UpdateModuleState(tx.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                this.UpdateModuleState(ctx.DBContext, moduleId, ModuleModel.States.Uninstalled);
             }
             else if (state == ModuleModel.States.Installed)
             {
-                module.Load(tx, ModuleUpdateAction.NoAction);
+                module.Load(ctx, ModuleUpdateAction.NoAction);
             }
             else
             {
@@ -214,15 +219,15 @@ namespace ObjectServer
             }
         }
 
-        private void UpdateModuleState(IDbContext db, long moduleID, string state)
+        private void UpdateModuleState(IDbContext dbctx, long moduleID, string state)
         {
             Debug.Assert(moduleID > 0);
-            Debug.Assert(db != null);
+            Debug.Assert(dbctx != null);
             Debug.Assert(!string.IsNullOrEmpty(state));
 
             var sql = new SqlString("update core_module set state=", Parameter.Placeholder,
                 " where _id=", Parameter.Placeholder);
-            db.Execute(sql, state, moduleID);
+            dbctx.Execute(sql, state, moduleID);
         }
 
     }

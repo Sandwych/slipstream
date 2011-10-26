@@ -18,9 +18,14 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("model");
             }
 
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
             if (!NamingRule.IsValidFieldName(name))
             {
-                throw new ArgumentException("name", "Invalid field name");
+                throw new ArgumentOutOfRangeException("name", "Invalid field name: " + name);
             }
 
             if (model.Fields.ContainsKey(name))
@@ -42,6 +47,21 @@ namespace ObjectServer.Model
             : this(model, name)
         {
             this.Type = type;
+
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (!NamingRule.IsValidFieldName(name))
+            {
+                throw new ArgumentOutOfRangeException("name", "Invalid field name: " + name);
+            }
         }
 
         private void SetName(string name)

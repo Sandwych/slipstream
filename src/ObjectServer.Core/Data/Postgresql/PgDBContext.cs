@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -30,6 +31,7 @@ namespace ObjectServer.Data.Postgresql
 
             var cfg = Environment.Configuration;
             string connectionString = string.Format(
+              CultureInfo.InvariantCulture,
               "Server={0};" +
               "Database={3};" +
               "Encoding=UNICODE;" +

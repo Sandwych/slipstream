@@ -15,7 +15,7 @@ namespace ObjectServer.Json
         {
         }
 
-        public JsonRpcError(string code, string message, object data = null)
+        public JsonRpcError(string code, string message, object data)
         {
             if (string.IsNullOrEmpty(code))
             {
@@ -30,6 +30,11 @@ namespace ObjectServer.Json
             this.Code = code;
             this.Message = message;
             this.Data = data;
+        }
+
+        public JsonRpcError(string code, string message)
+            : this(code, message, null)
+        {
         }
 
         [JsonProperty("data", Required = Required.Default)]

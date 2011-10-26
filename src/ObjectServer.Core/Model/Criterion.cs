@@ -75,22 +75,22 @@ namespace ObjectServer.Model
             this.Value = arr[2];
         }
 
-        public Criterion(string field, string opr, object value)
+        public Criterion(string field, string @operator, object value)
         {
             if (string.IsNullOrEmpty(field))
             {
                 throw new ArgumentNullException("field");
             }
 
-            if (string.IsNullOrEmpty(opr))
+            if (string.IsNullOrEmpty(@operator))
             {
                 throw new ArgumentNullException("opr");
             }
 
-            VerifyOperatorAndValue(opr, value);
+            VerifyOperatorAndValue(@operator, value);
 
             this.Field = field;
-            this.Operator = opr;
+            this.Operator = @operator;
             this.Value = value;
         }
 

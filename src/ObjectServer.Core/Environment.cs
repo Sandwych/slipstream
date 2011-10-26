@@ -75,11 +75,11 @@ namespace ObjectServer
         /// <summary>
         /// Do the real initialization job
         /// </summary>
-        /// <param name="cfg"></param>
+        /// <param name="config"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void Initialize(Config cfg)
+        public static void Initialize(Config config)
         {
-            s_instance.InitializeInternal(cfg);
+            s_instance.InitializeInternal(config);
         }
 
 

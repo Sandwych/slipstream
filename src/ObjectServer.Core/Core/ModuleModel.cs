@@ -62,14 +62,14 @@ namespace ObjectServer.Core
 
 
         [TransactionMethod("ButtonMark")]
-        public static void ButtonMark(dynamic model, ITransactionContext tc, dynamic ids)
+        public static void ButtonMark(dynamic model, ITransactionContext ctx, dynamic ids)
         {
             if (ids == null)
             {
                 throw new ArgumentNullException("ids");
             }
 
-            var records = model.Read(tc, ids, null);
+            var records = model.Read(ctx, ids, null);
             foreach (var r in records)
             {
                 var originalState = (string)r["state"][0];
@@ -91,7 +91,7 @@ namespace ObjectServer.Core
 
                 var sql = String.Format("update {0} set state=? where _id=?", model.TableName);
                 var id = (long)r[IdFieldName];
-                var rows = tc.DBContext.Execute(SqlString.Parse(sql), newState, id);
+                var rows = ctx.DBContext.Execute(SqlString.Parse(sql), newState, id);
                 if (rows != 1)
                 {
                     throw new Exceptions.DataException(

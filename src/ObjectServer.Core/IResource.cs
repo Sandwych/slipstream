@@ -25,9 +25,9 @@ namespace ObjectServer
         /// <summary>
         /// 初始化资源
         /// </summary>
-        /// <param name="tc"></param>
+        /// <param name="ctx"></param>
         /// <param name="update">是否进行涉及数据库等的更新动作</param>
-        void Initialize(ITransactionContext tc, bool update);
+        void Initialize(ITransactionContext ctx, bool update);
 
         //从另一个资源合并字段与业务方法
         void MergeFrom(IResource res);

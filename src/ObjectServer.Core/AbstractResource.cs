@@ -129,11 +129,14 @@ namespace ObjectServer
             }
         }
 
-        protected void RegisterAllServiceMethods(Type t)
+        protected void RegisterAllServiceMethods(Type resourceType)
         {
-            Debug.Assert(t != null);
+            if (resourceType == null)
+            {
+                throw new ArgumentNullException("resourceType");
+            }
 
-            var methods = t.GetMethods().Where(m => m.IsStatic && m.ReflectedType == t);
+            var methods = resourceType.GetMethods().Where(m => m.IsStatic && m.ReflectedType == resourceType);
             foreach (var m in methods)
             {
                 var attr = Attribute.GetCustomAttribute(

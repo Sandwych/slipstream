@@ -12,7 +12,7 @@ namespace ObjectServer.Model
         private static readonly HashSet<FieldType> ScalarFieldTypes =
             new HashSet<FieldType>()
             {
-                FieldType.ID,
+                FieldType.Identifier,
                 FieldType.Integer,
                 FieldType.BigInteger,
                 FieldType.Float,
@@ -48,6 +48,11 @@ namespace ObjectServer.Model
 
         public override object BrowseField(ITransactionContext ctx, IDictionary<string, object> record)
         {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
             if (record == null || record.Count == 0)
             {
                 throw new ArgumentNullException("record");
