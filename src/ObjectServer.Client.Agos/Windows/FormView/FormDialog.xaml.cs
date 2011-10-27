@@ -25,9 +25,6 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             this.recordID = recordID;
             this.model = model;
 
-            var app = (App)App.Current;
-            this.ParentLayoutRoot = app.MainPage.LayoutRoot;
-
             InitializeComponent();
 
             this.formView = new FormView(model, recordID);
