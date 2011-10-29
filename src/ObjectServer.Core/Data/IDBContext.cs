@@ -26,6 +26,7 @@ namespace ObjectServer.Data
         Dictionary<string, object>[] QueryAsDictionary(SqlString commandText, params object[] args);
         dynamic[] QueryAsDynamic(SqlString commandText, params object[] args);
         T[] QueryAsArray<T>(SqlString commandText, params object[] args);
+        IDataReader QueryAsReader(SqlString commandText, params object[] args);
         int Execute(SqlString commandText, params object[] args);
 
         ITableContext CreateTableContext(string tableName);

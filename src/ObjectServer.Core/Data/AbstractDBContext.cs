@@ -100,40 +100,29 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("commandText");
             }
 
-            this.EnsureConnectionOpened();
-
-            if (Environment.Configuration.LoggingSql)
+            using (var reader = this.QueryAsReader(commandText, args))
             {
-                LoggerProvider.EnvironmentLogger.Debug(() => ("SQL: " + commandText.ToString()));
-            }
-
-            using (var command = this.CreateCommand(commandText))
-            {
-                PrepareNamedParameters(command, args);
-                using (var reader = command.ExecuteReader())
+                var tb = new DataTable();
+                while (reader.Read())
                 {
-                    var tb = new DataTable();
-                    while (reader.Read())
+                    for (int i = 0; i < reader.FieldCount; ++i)
                     {
-                        for (int i = 0; i < reader.FieldCount; ++i)
+                        var columnName = reader.GetName(i);
+                        if (!tb.Columns.Contains(columnName))
                         {
-                            var columnName = reader.GetName(i);
-                            if (!tb.Columns.Contains(columnName))
-                            {
-                                tb.Columns.Add(columnName);
-                            }
+                            tb.Columns.Add(columnName);
                         }
-                        var row = tb.NewRow();
-                        for (int i = 0; i < reader.FieldCount; ++i)
-                        {
-                            row[i] = reader[i];
-                        }
-
-                        tb.Rows.Add(row);
-
                     }
-                    return tb;
+                    var row = tb.NewRow();
+                    for (int i = 0; i < reader.FieldCount; ++i)
+                    {
+                        row[i] = reader[i];
+                    }
+
+                    tb.Rows.Add(row);
                 }
+
+                return tb;
             }
 
         }
@@ -146,35 +135,23 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("commandText");
             }
 
-            EnsureConnectionOpened();
+            var rows = new List<Dictionary<string, object>>();
 
-            if (Environment.Configuration.LoggingSql)
+            using (var reader = this.QueryAsReader(commandText, args))
             {
-                LoggerProvider.EnvironmentLogger.Debug(() => "SQL: " + commandText);
-            }
-
-            using (var command = this.CreateCommand(commandText))
-            {
-                PrepareNamedParameters(command, args);
-
-                var rows = new List<Dictionary<string, object>>();
-
-                using (var reader = command.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    var fields = new Dictionary<string, object>();
+                    for (int i = 0; i < reader.FieldCount; ++i)
                     {
-                        var fields = new Dictionary<string, object>();
-                        for (int i = 0; i < reader.FieldCount; ++i)
-                        {
-                            var fieldName = reader.GetName(i);
-                            fields[fieldName] = reader.GetValue(i);
-                        }
-                        rows.Add(fields);
+                        var fieldName = reader.GetName(i);
+                        fields[fieldName] = reader.GetValue(i);
                     }
+                    rows.Add(fields);
                 }
-
-                return rows.ToArray();
             }
+
+            return rows.ToArray();
         }
 
         public virtual dynamic[] QueryAsDynamic(SqlString commandText, params object[] args)
@@ -197,6 +174,24 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("commandText");
             }
 
+            using (var reader = this.QueryAsReader(commandText, args))
+            {
+                var result = new List<T>();
+                while (reader.Read())
+                {
+                    result.Add((T)reader[0]);
+                }
+                return result.ToArray();
+            }
+        }
+
+        public virtual IDataReader QueryAsReader(SqlString commandText, params object[] args)
+        {
+            if (commandText == null)
+            {
+                throw new ArgumentNullException("commandText");
+            }
+
             this.EnsureConnectionOpened();
 
             if (Environment.Configuration.LoggingSql)
@@ -207,15 +202,7 @@ namespace ObjectServer.Data
             using (var command = this.CreateCommand(commandText))
             {
                 PrepareNamedParameters(command, args);
-                using (var reader = command.ExecuteReader())
-                {
-                    var result = new List<T>();
-                    while (reader.Read())
-                    {
-                        result.Add((T)reader[0]);
-                    }
-                    return result.ToArray();
-                }
+                return command.ExecuteReader();
             }
         }
 
@@ -259,24 +246,6 @@ namespace ObjectServer.Data
             command.CommandText = commandText;
 
             return command;
-        }
-
-        protected static void PrepareCommandParameters(DbCommand command, params object[] args)
-        {
-            Debug.Assert(command != null);
-
-            if (args == null || args.Length == 0)
-            {
-                return;
-            }
-
-            for (int i = 0; i < args.Length; i++)
-            {
-                var param = command.CreateParameter();
-                param.ParameterName = "@" + i.ToString();
-                param.Value = args[i];
-                command.Parameters.Add(param);
-            }
         }
 
         protected void EnsureConnectionOpened()
