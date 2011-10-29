@@ -85,7 +85,6 @@ namespace ObjectServer.Server
             {
                 var cfg = new Config();
                 cfg.LogToConsole = true;
-
                 Environment.Initialize(cfg);
             }
         }

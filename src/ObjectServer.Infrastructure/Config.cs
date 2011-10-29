@@ -32,7 +32,7 @@ namespace ObjectServer
 
             var defaultLogPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "ObjectServer", "log");
+                StaticSettings.AppDataDirectoryName, "log");
             this.LogPath = defaultLogPath;
             this.LoggingSql = false;
 
@@ -47,11 +47,8 @@ namespace ObjectServer
             this.LogToConsole = false;
 #endif
 
-#if DEBUG
             this.RpcHandlerMax = Environment.ProcessorCount;
-#else
-            this.RpcHandlerMax = Environment.ProcessorCount * 4;
-#endif
+
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcHostUrl = "inproc://rpc-entrance";
             this.BroadcastUrl = "inproc://broadcast";

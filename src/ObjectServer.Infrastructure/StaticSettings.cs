@@ -19,5 +19,7 @@ namespace ObjectServer
                 return Assembly.GetExecutingAssembly().GetName().Version;
             }
         }
+
+        public const string AppDataDirectoryName = "ObjectServer";
     }
 }
