@@ -28,13 +28,13 @@ namespace ObjectServer.Utility.Test
         public void Test_ToCommaList_Method()
         {
             var ints = new int[] { 11, 22, 33, 44, 55 };
-            Assert.AreEqual("11,22,33,44,55", ints.ToCommaList());
+            Assert.AreEqual("11,22,33,44,55", ints.ToCsv());
 
             var ints1 = new int[] { 11 };
-            Assert.AreEqual("11", ints1.ToCommaList());
+            Assert.AreEqual("11", ints1.ToCsv());
 
             var ints0 = new int[] { };
-            Assert.AreEqual("", ints0.ToCommaList());
+            Assert.AreEqual("", ints0.ToCsv());
         }
     }
 }

@@ -54,7 +54,7 @@ namespace ObjectServer.Model
                     " where ",
                     DataProvider.Dialect.QuoteForColumnName(AbstractModel.IdFieldName),
                     " in (",
-                    ids.ToCommaList(),
+                    ids.ToCsv(),
                     ")");
 
                 existedRecords = ctx.DBContext.QueryAsDictionary(sql);
@@ -145,7 +145,7 @@ namespace ObjectServer.Model
             {
                 var sql = new SqlString(
                     "delete from ", tableModel.quotedTableName,
-                    " where ", QuotedIdColumn, " in (", ids.ToCommaList(), ")");
+                    " where ", QuotedIdColumn, " in (", ids.ToCsv(), ")");
 
                 var rowCount = scope.DBContext.Execute(sql);
                 if (rowCount != ids.Count())
