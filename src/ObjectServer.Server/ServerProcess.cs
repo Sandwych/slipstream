@@ -27,11 +27,15 @@ namespace ObjectServer.Server
 
             this.m_supervisor.Start();
 
+            Thread.Sleep(1000 * 2);
+
             var cfg = Environment.Configuration;
             if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Worker)
             {
                 var rpcHostWorker = StartApplicationServer();
             }
+
+            Thread.Sleep(1000 * 2);
 
             if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.HttpServer)
             {

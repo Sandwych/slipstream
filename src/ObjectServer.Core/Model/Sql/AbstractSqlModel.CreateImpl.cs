@@ -69,6 +69,8 @@ namespace ObjectServer.Model
                 this.PostCreateHierarchy(scope.DBContext, selfId, record);
             }
 
+            this.UpdateOneToManyFields(scope, selfId, record);
+
             this.PostcreateManyToManyFields(scope, selfId, record);
 
             if (this.LogCreation)

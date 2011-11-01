@@ -149,11 +149,14 @@ namespace ObjectServer.Model
                 this.NodeMoveTo(ctx, nodeLeft, nodeRight, nodeWidth, newParentID);
             }
 
+            UpdateOneToManyFields(ctx, id, record);
+
             if (this.LogWriting)
             {
                 AuditLog(ctx, (long)id, this.Label + " updated");
             }
         }
+
 
         private int WriteSelf(ITransactionContext ctx, long id, Record record)
         {
@@ -397,18 +400,5 @@ namespace ObjectServer.Model
             return verExp;
         }
 
-        /// <summary>
-        /// 从用户提供的 record 里去掉系统只读的字段
-        /// 本来用户不应该指定更新这些字段的，但是我们宽大为怀，饶恕这些无耻客户端的罪孽
-        /// </summary>
-        /// <param name="record"></param>
-        /// <returns></returns>
-        private Record ClearUserRecord(IRecord record)
-        {
-            Debug.Assert(record != null);
-
-            return record.Where(p =>
-                !SystemReadonlyFields.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
-        }
     }
 }

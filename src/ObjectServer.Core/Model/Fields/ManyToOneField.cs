@@ -33,8 +33,8 @@ namespace ObjectServer.Model
             }
 
             this.Relation = masterModel;
-            this.Required();
             this.OnDeleteAction = OnDeleteAction.Cascade;
+            this.Required();
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
@@ -201,26 +201,6 @@ namespace ObjectServer.Model
             {
                 throw new NotSupportedException();
             }
-        }
-
-        public override IField Required()
-        {
-            if (this.OnDeleteAction == ObjectServer.Model.OnDeleteAction.SetNull)
-            {
-                this.OnDeleteAction = ObjectServer.Model.OnDeleteAction.Cascade;
-            }
-
-            return base.Required();
-        }
-
-        public override IField NotRequired()
-        {
-            if (this.OnDeleteAction != ObjectServer.Model.OnDeleteAction.SetNull)
-            {
-                this.OnDeleteAction = ObjectServer.Model.OnDeleteAction.SetNull;
-            }
-
-            return base.NotRequired();
         }
 
         public override void VerifyDefinition()

@@ -321,6 +321,50 @@ where   hp._id=? and hc._id<>?
         }
 
 
-    
+        /// <summary>
+        /// 从用户提供的 record 里去掉系统只读的字段
+        /// 本来用户不应该指定更新这些字段的，但是我们宽大为怀，饶恕这些无耻客户端的罪孽
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
+        private Record ClearUserRecord(IRecord record)
+        {
+            Debug.Assert(record != null);
+
+            return record.Where(p =>
+                !SystemReadonlyFields.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+        }
+
+        private void UpdateOneToManyFields(ITransactionContext ctx, long id, Record record)
+        {
+            Debug.Assert(ctx != null);
+            Debug.Assert(record != null);
+            Debug.Assert(id > 0);
+
+            //更新 OneToMany 指向的字段
+            var o2mFields =
+                from p in record
+                where (this.Fields.ContainsKey(p.Key))
+                    && (this.Fields[p.Key].Type == FieldType.OneToMany)
+                    && (p.Value != null)
+                select p;
+
+            //设置 One2Many 的值
+            var subRecord = new Dictionary<string, object>(1);
+            foreach (var p in o2mFields)
+            {
+                var fieldInfo = this.Fields[p.Key];
+                var subModel = (IModel)ctx.GetResource(fieldInfo.Relation);
+
+                //TODO 这里是否要检查其是否有修改子表权限？
+                subRecord[fieldInfo.RelatedField] = id;
+                var o2mIds = (p.Value as IEnumerable).Cast<long>();
+                foreach (var o2mId in o2mIds)
+                {
+                    subModel.WriteInternal(ctx, o2mId, subRecord);
+                }
+            }
+        }
+
     }
 }
