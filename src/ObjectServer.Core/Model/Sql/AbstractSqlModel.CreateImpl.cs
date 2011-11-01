@@ -43,7 +43,12 @@ namespace ObjectServer.Model
                 throw new ArgumentOutOfRangeException(msg);
             }
 
-            var record = ClearUserRecord(userRecord);
+            var record =
+                (from p in userRecord
+                 let f = this.Fields[p.Key]
+                 where (!SystemReadonlyFields.Contains(p.Key)) && (f.Type != FieldType.OneToMany)
+                 select p
+                ).ToDictionary(p => p.Key, p => p.Value);
 
             //处理用户没有给的默认值
             this.AddDefaultValuesForCreation(scope, record);
