@@ -69,6 +69,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 return;
             }
             var dlg = new FormView.FormDialog(this.modelName, ids.First());
+            dlg.ParentLayoutRoot = this.LayoutRoot;
             dlg.Saved += new EventHandler(this.OnSaved);
             dlg.ShowDialog();
         }
@@ -100,6 +101,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new FormView.FormDialog(this.modelName, -1);
+            dlg.ParentLayoutRoot = this.LayoutRoot;
             dlg.Saved += new EventHandler(this.OnSaved);
             dlg.ShowDialog();
         }
