@@ -50,33 +50,32 @@ namespace ObjectServer.Core
         /// 获取指定模型方法的访问规则
         /// </summary>
         /// <param name="model"></param>
-        /// <param name="scope"></param>
+        /// <param name="ctx"></param>
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static IList<Criterion[]> GetRuleConstraints(ITransactionContext scope, string modelName, string action)
+        internal static IList<Criterion[]> GetRuleConstraints(
+            ITransactionContext ctx, string modelName, string action)
         {
-            Debug.Assert(scope != null);
+            Debug.Assert(ctx != null);
             Debug.Assert(!string.IsNullOrEmpty(modelName));
             Debug.Assert(!string.IsNullOrEmpty(action));
             Debug.Assert(action == "read" || action == "write" || action == "delete" || action == "create");
 
-            //TODO 缓存
             var sql = new SqlString(
-                "SELECT DISTINCT r._id, r.name, r.constraint FROM core_rule r ",
-                "INNER JOIN core_model m ON (r.model=m._id) ",
-                "WHERE m.name=", Parameter.Placeholder,
-                    " AND r.on_", action, " AND (r.global OR (r._id IN ",
-                    "(SELECT rr.rule FROM core_rule_role_rel rr ",
-                        "INNER JOIN core_user_role_rel ur ON (rr.role = ur.role) ",
-                        "WHERE ur.user =", Parameter.Placeholder, " )))");
+                "select distinct r._id, r.name, r.constraint from core_rule r ",
+                "inner join core_model m on (r.model=m._id) ",
+                "where m.name=", Parameter.Placeholder,
+                    " and r.on_", action, " and (r.global or (r._id in ",
+                    "(select rr.rule from core_rule_role_rel rr ",
+                        "inner join core_user_role_rel ur on (rr.role = ur.role) ",
+                        "where ur.user =", Parameter.Placeholder, " )))");
 
-            var result = scope.DBContext.QueryAsDictionary(
-                sql, modelName, scope.Session.UserId);
+            var result = ctx.DBContext.QueryAsDictionary(sql, modelName, ctx.Session.UserId);
 
             if (result.Length > 0)
             {
-                return ConvertConstraints(scope, result);
+                return ConvertConstraints(ctx, result);
             }
             else
             {
@@ -85,9 +84,9 @@ namespace ObjectServer.Core
         }
 
         private static IList<Criterion[]> ConvertConstraints(
-            ITransactionContext scope, Dictionary<string, object>[] result)
+            ITransactionContext ctx, Dictionary<string, object>[] result)
         {
-            var scriptScope = CreateScriptScope(scope);
+            var scriptScope = CreateScriptScope(ctx);
 
             var constraints = new List<Criterion[]>();
             var cr = new List<Criterion>(4);

@@ -212,17 +212,17 @@ namespace ObjectServer.Model
         {
             var sqlFmt =
 @"
-SELECT  hc.*
-FROM    ""{0}"" hp
-JOIN    ""{0}"" hc
-ON      hc._left BETWEEN hp._left AND hp._right
-WHERE   hp._id = ? AND hc._id <> ?
-        AND
+select  hc.*
+from    ""{0}"" hp
+join    ""{0}"" hc
+on      hc._left between hp._left and hp._right
+where   hp._id = ? and hc._id <> ?
+        and
         (
-        SELECT  COUNT(hn._id)
-        FROM    ""{0}"" hn
-        WHERE   hc._left BETWEEN hn._left AND hn._right
-                AND hn._left BETWEEN hp._left AND hp._right
+        select  count(hn._id)
+        from    ""{0}"" hn
+        where   hc._left between hn._left and hn._right
+                and hn._left between hp._left and hp._right
         ) <= 2
 ";
             var sql = string.Format(CultureInfo.InvariantCulture, sqlFmt, this.TableName);
