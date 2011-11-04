@@ -19,7 +19,7 @@
   </record>
 
   <!-- 关联 demo 到 Normal Users 组 -->
-  <record model="core.user_role" >
+  <record model="core.user_role" key="core_user_role_ref" >
     <field name="user" ref-key="user_demo" />
     <field name="role" ref-key="role_user" />
   </record>

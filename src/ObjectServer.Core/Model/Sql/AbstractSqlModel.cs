@@ -25,6 +25,8 @@ namespace ObjectServer.Model
     /// </summary>
     public abstract partial class AbstractSqlModel : AbstractModel
     {
+
+        #region Constants
         public const string LeftFieldName = "_left";
         public const string RightFieldName = "_right";
         public const string ParentFieldName = "parent";
@@ -46,6 +48,8 @@ namespace ObjectServer.Model
             ChildrenFieldName,
             DescendantsFieldName,
         };
+
+        #endregion //Constants
 
         private string tableName = null;
         private string quotedTableName = null;
@@ -365,6 +369,9 @@ where   hp._id=? and hc._id<>?
                 }
             }
         }
+
+
+  
 
     }
 }

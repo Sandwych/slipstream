@@ -825,5 +825,59 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             }
         }
 
+        public virtual void ImportRecord(
+              ITransactionContext ctx, bool noUpdate, IDictionary<string, object> record, string key)
+        {
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+
+            if (record == null)
+            {
+                throw new ArgumentNullException("record");
+            }
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException("key");
+            }
+
+            //查找 key 指定的记录看是否存在
+            long? existedId = null;
+            if (!string.IsNullOrEmpty(key))
+            {
+                existedId = Core.ModelDataModel.TryLookupResourceId(
+                    ctx.DBContext, this.Name, key);
+            }
+
+            if (existedId == null) // Create
+            {
+                existedId = (long)this.CreateInternal(ctx, record);
+                if (!string.IsNullOrEmpty(key))
+                {
+                    Core.ModelDataModel.Create(
+                        ctx.DBContext, this.Module, this.Name, key, existedId.Value);
+                }
+            }
+            else if (existedId != null && !noUpdate) //Update 
+            {
+                if (this.Fields.ContainsKey(AbstractModel.VersionFieldName)) //处理版本
+                {
+                    var fields = new string[] { AbstractModel.VersionFieldName };
+                    var read = this.ReadInternal(ctx, new long[] { existedId.Value }, fields)[0];
+                    record[AbstractModel.VersionFieldName] = read[AbstractModel.VersionFieldName];
+                }
+
+                this.WriteInternal(ctx, existedId.Value, record);
+                Core.ModelDataModel.UpdateResourceId(
+                    ctx.DBContext, this.Name, key, existedId.Value);
+            }
+            else
+            {
+                //忽略此记录
+            }
+        }
+
     }
 }
