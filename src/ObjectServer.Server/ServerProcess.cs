@@ -11,7 +11,7 @@ namespace ObjectServer.Server
     public sealed class ServerProcess : IDisposable
     {
         private bool disposed = false;
-        private readonly Server.Supervisor m_supervisor = new Server.Supervisor();
+        private Server.Supervisor m_supervisor = null;
 
         ~ServerProcess()
         {
@@ -25,32 +25,70 @@ namespace ObjectServer.Server
                 throw new ObjectDisposedException("ServerProcess");
             }
 
-            this.m_supervisor.Start();
-
-            Thread.Sleep(1000 * 2);
-
             var cfg = Environment.Configuration;
+
+            if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Supervisor)
+            {
+                this.m_supervisor = new Supervisor();
+                this.m_supervisor.Start();
+            }
+
+            Thread.Sleep(1000); //去掉此处，改为回报模式
             if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Worker)
             {
                 var rpcHostWorker = StartApplicationServer();
             }
 
-            Thread.Sleep(1000 * 2);
-
+            Thread.Sleep(1000); //去掉此处，改为回报模式
             if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.HttpServer)
             {
                 var httpThread = StartHttpServer();
             }
         }
 
-        public void BeginStop()
+        public void BeginStopAll()
         {
             if (this.disposed)
             {
                 throw new ObjectDisposedException("ServerProcess");
             }
 
-            this.m_supervisor.StopAll();
+            if (this.m_supervisor == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            this.m_supervisor.BeginStopAll();
+        }
+
+        public void BeginStopRpcWorkers()
+        {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("ServerProcess");
+            }
+
+            if (this.m_supervisor == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            this.m_supervisor.BeginStopRpcWorkers();
+        }
+
+        public void BeginStopHttpServer()
+        {
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException("ServerProcess");
+            }
+
+            if (this.m_supervisor == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            this.m_supervisor.BeginStopHttpServer();
         }
 
         private static RpcHostWorker StartApplicationServer()
@@ -76,7 +114,6 @@ namespace ObjectServer.Server
                     Environment.Configuration.HttpListenUrl))
                 {
                     cs.Start();
-
                 }
             });
             serverThread.Start();
@@ -101,7 +138,11 @@ namespace ObjectServer.Server
                 }
 
                 //释放托管资源
-                this.m_supervisor.Dispose();
+                var role = Environment.Configuration.Role;
+                if (role == ServerRoles.Standalone || role == ServerRoles.Supervisor)
+                {
+                    this.m_supervisor.Dispose();
+                }
 
                 this.disposed = true;
             }

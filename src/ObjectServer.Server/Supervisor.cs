@@ -28,12 +28,29 @@ namespace ObjectServer.Server
             this.started = true;
         }
 
-        public void StopAll()
+        public void BeginStopAll()
         {
             if (this.started)
             {
-                this.Broadcast("STOP");
+                this.BeginStopRpcWorkers();
+                this.BeginStopHttpServer();
                 this.started = false;
+            }
+        }
+
+        public void BeginStopRpcWorkers()
+        {
+            if (this.started)
+            {
+                this.Broadcast("STOP-RPC");
+            }
+        }
+
+        public void BeginStopHttpServer()
+        {
+            if (this.started)
+            {
+                this.Broadcast("STOP-HTTPD");
             }
         }
 
@@ -62,7 +79,7 @@ namespace ObjectServer.Server
                 }
 
                 //释放非托管资源
-                this.StopAll();
+                this.BeginStopAll();
                 this.broadcastSocket.Dispose();
 
                 this.disposed = true;

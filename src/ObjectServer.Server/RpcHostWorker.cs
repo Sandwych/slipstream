@@ -12,7 +12,7 @@ namespace ObjectServer.Server
         private Thread workerThread = null;
 
         public RpcHostWorker()
-            : base()
+            : base("STOP-RPC")
         {
 
             if (!Environment.Initialized)
@@ -69,11 +69,11 @@ namespace ObjectServer.Server
             while (true)
             {
                 var cmd = base.ReceiveControlCommand();
-                if (cmd == "STOP" && pool.IsRunning)
+                if (cmd == "STOP-RPC" && pool.IsRunning)
                 {
 
                     LoggerProvider.EnvironmentLogger.Info(
-                        "'STOP' command received, try to stop the WorkerPool...");
+                        "'STOP-RPC' command received, try to stop the WorkerPool...");
                     StopWorkerPool(pool);
                     break;
                 }

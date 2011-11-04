@@ -38,8 +38,21 @@ namespace ObjectServer.Server
                     WaitToQuit();
 
                     Console.WriteLine("开始广播停止命令...");
-                    server.BeginStop();
-                    Console.WriteLine("服务器终止进程启动...");
+                    var role = Environment.Configuration.Role;
+                    if (role == ServerRoles.Standalone || role == ServerRoles.Supervisor)
+                    {
+                        server.BeginStopAll();
+                    }
+                    else if (role == ServerRoles.HttpServer)
+                    {
+                        server.BeginStopHttpServer();
+                    }
+                    else if (role == ServerRoles.Worker)
+                    {
+                        server.BeginStopRpcWorkers();
+                    }
+
+                    Console.WriteLine("服务器终止进程开始...");
                 }
 
                 return 0;

@@ -12,12 +12,12 @@ namespace ObjectServer.Server
         private readonly Socket broadcastSocket = new Socket(SocketType.SUB);
         private bool m_disposed = false;
 
-        public AbstractWorker()
+        public AbstractWorker(string stopCommand)
         {
             this.ID = Guid.NewGuid();
 
             this.broadcastSocket.Connect(Environment.Configuration.BroadcastUrl);
-            this.broadcastSocket.Subscribe("STOP", Encoding.UTF8);
+            this.broadcastSocket.Subscribe(stopCommand, Encoding.UTF8);
         }
 
         ~AbstractWorker()
