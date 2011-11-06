@@ -43,7 +43,12 @@ namespace ObjectServer.Model
                 throw new ArgumentOutOfRangeException(msg);
             }
 
-            var record = ClearUserRecord(userRecord);
+            var record =
+                (from p in userRecord
+                 let f = this.Fields[p.Key]
+                 where (!SystemReadonlyFields.Contains(p.Key)) && (f.Type != FieldType.OneToMany)
+                 select p
+                ).ToDictionary(p => p.Key, p => p.Value);
 
             //处理用户没有给的默认值
             this.AddDefaultValuesForCreation(scope, record);
@@ -61,8 +66,10 @@ namespace ObjectServer.Model
 
             if (this.Hierarchy)
             {
-                this.PostCreateHierarchy(scope.DBContext, selfId, record);
+                this.UpdateTreeForCreation(scope.DBContext, selfId, record);
             }
+
+            this.UpdateOneToManyFields(scope, selfId, record);
 
             this.PostcreateManyToManyFields(scope, selfId, record);
 
@@ -128,7 +135,27 @@ namespace ObjectServer.Model
             }
         }
 
-        private void PostCreateHierarchy(IDbContext dbctx, long id, Record record)
+        #region 处理层次表的创建事宜
+        private void UpdateTreeForCreation(IDbContext dbctx, long id, Record record)
+        {
+            //如果支持存储过程就用存储/函数，那么直接调用预定义的存储过程或函数来处理
+            if (DataProvider.IsSupportProcedure)
+            {
+                this.UpdateTreeForCreationBySqlFunction(dbctx, id, record);
+            }
+            else
+            {
+                this.UpdateTreeForCreationBySqlStatements(dbctx, id, record);
+            }
+        }
+
+        /// <summary>
+        /// 使用多条语句更新层次表，一般用于 SQLite 等不支持用户自定义存储过程或函数的数据库
+        /// </summary>
+        /// <param name="dbctx"></param>
+        /// <param name="id"></param>
+        /// <param name="record"></param>
+        private void UpdateTreeForCreationBySqlStatements(IDbContext dbctx, long id, Record record)
         {
             //处理层次表
             long rhsValue = 0;
@@ -208,6 +235,46 @@ namespace ObjectServer.Model
                 "update \"{0}\" set _left=?, _right=? where (_id=?) ", this.TableName);
             dbctx.Execute(SqlString.Parse(sqlUpdate3), rhsValue + 1, rhsValue + 2, id);
         }
+
+        /// <summary>
+        /// 如果数据库支持用户定义函数或存储过程的话就是用预定义函数或存储过程来更新表
+        /// </summary>
+        /// <param name="dbctx"></param>
+        /// <param name="id"></param>
+        /// <param name="record"></param>
+        private void UpdateTreeForCreationBySqlFunction(IDbContext dbctx, long id, Record record)
+        {
+            using (var cmd = dbctx.CreateCommand(new SqlString("tree_update_for_creation")))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                var paramTableName = cmd.CreateParameter();
+                paramTableName.ParameterName = "table_name";
+                paramTableName.Value = this.TableName;
+                cmd.Parameters.Add(paramTableName);
+
+                var paramSelfId = cmd.CreateParameter();
+                paramTableName.ParameterName = "self_id";
+                paramSelfId.Value = id;
+                cmd.Parameters.Add(paramSelfId);
+
+                var paramParentId = cmd.CreateParameter();
+                paramParentId.ParameterName = "parent_id";
+                object parentId = null;
+                if (record.TryGetValue(ParentFieldName, out parentId) && parentId != null)
+                {
+                    paramParentId.Value = parentId;
+                }
+                else
+                {
+                    paramParentId.Value = null;
+                }
+                cmd.Parameters.Add(paramParentId);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        #endregion
 
         private long CreateSelf(ITransactionContext ctx, IRecord values)
         {

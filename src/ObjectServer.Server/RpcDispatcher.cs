@@ -113,7 +113,7 @@ namespace ObjectServer.Server
             using (var receiver = new ZMQ.Socket(ZMQ.SocketType.REP))
             {
                 broadcastSocket.Connect(broadcastUrl);
-                broadcastSocket.Subscribe("STOP", Encoding.UTF8);
+                broadcastSocket.Subscribe("STOP-RPC", Encoding.UTF8);
                 LoggerProvider.EnvironmentLogger.Debug(
                     () => string.Format("RpcHandler thread[{0}] is connected to the Commander URL[{1}]", id, broadcastUrl));
 
@@ -148,9 +148,9 @@ namespace ObjectServer.Server
 
             var cmd = socket.Recv(Encoding.UTF8);
 
-            if (cmd == "STOP" && s_running)
+            if (cmd == "STOP-RPC" && s_running)
             {
-                LoggerProvider.EnvironmentLogger.Info("The [STOP] command received, try to stop all RPC-Handlers");
+                LoggerProvider.EnvironmentLogger.Info("The [STOP-RPC] command received, try to stop all RPC-Handlers");
                 lock (s_lockObj)
                 {
                     s_running = false;

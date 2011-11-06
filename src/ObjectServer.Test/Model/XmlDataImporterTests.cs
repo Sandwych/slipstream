@@ -42,7 +42,7 @@ namespace ObjectServer.Model.Test
                 Assert.AreEqual(1, ids.Length);
             }
 
-            //再导入一遍，现在应该是更新3条，插入一条,因此 test_test_model 里的记录总数是4条
+            //再倒入一遍
             using (var xmlStream = Assembly.GetExecutingAssembly()
              .GetManifestResourceStream(TestModelXmlResourcePath))
             {
@@ -51,7 +51,7 @@ namespace ObjectServer.Model.Test
             }
 
             var ids2 = testObjectModel.SearchInternal(this.TransactionContext, null, null, 0, 0);
-            Assert.AreEqual(4, ids2.Length);
+            Assert.AreEqual(3, ids2.Length);
         }
 
 

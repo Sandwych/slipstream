@@ -107,5 +107,13 @@ namespace ObjectServer.Data
             }
         }
 
+        public static bool IsSupportProcedure
+        {
+            get
+            {
+                return concreteDataProvider.IsSupportProcedure;
+            }
+        }
+
     }
 }

@@ -15,6 +15,9 @@ namespace ObjectServer
         Worker,
 
         [XmlEnum("httpd")]
-        HttpServer
+        HttpServer,
+
+        [XmlEnum("supervisor")]
+        Supervisor
     }
 }

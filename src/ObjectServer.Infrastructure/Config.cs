@@ -132,5 +132,45 @@ namespace ObjectServer
 
         [XmlElement("max-request-size", IsNullable = false)]
         public int MaxRequestSize { get; set; }
+
+        public static Config Load(string filepath)
+        {
+            if (string.IsNullOrEmpty(filepath))
+            {
+                throw new ArgumentNullException("filepath");
+            }
+
+            using (var fs = File.OpenRead(filepath))
+            {
+                return Load(fs);
+            }
+        }
+
+        public static Config Load(Stream stream)
+        {
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            XmlSerializer xs = new XmlSerializer(typeof(Config));
+            var obj = (Config)xs.Deserialize(stream);
+            return obj;
+        }
+
+        public static Config Load(XmlNode node)
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException("node");
+            }
+
+            XmlSerializer xs = new XmlSerializer(typeof(Config));
+            using (var reader = new XmlNodeReader(node))
+            {
+                var obj = (Config)xs.Deserialize(reader);
+                return obj;
+            }
+        }
     }
 }

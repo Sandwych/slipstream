@@ -11,17 +11,9 @@ namespace ObjectServer
 {
     public sealed class ConfigSectionHandler : IConfigurationSectionHandler
     {
-        public object Create(
-             object parent,
-             object configContext,
-             System.Xml.XmlNode section)
+        public object Create(object parent, object configContext, XmlNode section)
         {
-            XmlSerializer xs = new XmlSerializer(typeof(Config));
-            using (var reader = new XmlNodeReader(section))
-            {
-                var obj = xs.Deserialize(reader);
-                return obj;
-            }
+            return Config.Load(section);
         }
     }
 }

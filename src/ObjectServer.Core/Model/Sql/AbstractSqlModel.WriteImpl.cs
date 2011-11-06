@@ -45,17 +45,18 @@ namespace ObjectServer.Model
             //强制检查客户端时候送来了版本字段
             if (this.IsVersioned && !userRecord.ContainsKey(VersionFieldName))
             {
-                throw new Exceptions.ConcurrencyException(
-                    string.Format("Model [{0}] is versioned, you must provider value of the [_version] field", this));
+                throw new ArgumentException(
+                    string.Format("Model [{0}] is versioned, you must provider a value of the [_version] field", this),
+                    "userRecord");
             }
 
             var record = ClearUserRecord(userRecord);
+
             ModelValidator.ValidateRecordForWriting(this, record);
 
             var isParentChanged = false;
             long? oldParentID = null;
             IRecord existedRecord = null;
-
 
             //处理版本字段与基类继承
             if (this.IsVersioned || this.Inheritances.Count > 0 || this.Hierarchy)
@@ -148,11 +149,14 @@ namespace ObjectServer.Model
                 this.NodeMoveTo(ctx, nodeLeft, nodeRight, nodeWidth, newParentID);
             }
 
+            UpdateOneToManyFields(ctx, id, record);
+
             if (this.LogWriting)
             {
                 AuditLog(ctx, (long)id, this.Label + " updated");
             }
         }
+
 
         private int WriteSelf(ITransactionContext ctx, long id, Record record)
         {
@@ -209,7 +213,7 @@ namespace ObjectServer.Model
             sqlBuilder.Add("=");
             sqlBuilder.Add(id.ToString());
             sqlBuilder.Add(" and ");
-            sqlBuilder.Add(this.GetVersionExpression(originVersion));
+            sqlBuilder.Add(this.BuildVersionExpression(originVersion));
 
             var sql = sqlBuilder.ToSqlString();
             var rowsAffected = ctx.DBContext.Execute(sql, args);
@@ -218,6 +222,8 @@ namespace ObjectServer.Model
 
         private void NodeMoveTo(ITransactionContext ctx, long nodeLeft, long nodeRight, long nodeWidth, long newParentID)
         {
+            Debug.Assert(ctx != null);
+
             //TODO 检查父节点不存在的异常
             long insertPos = 0;
 
@@ -242,11 +248,13 @@ namespace ObjectServer.Model
 
             //nested-set 的算法就是把一个二维树转换成一维的线段
             sql = String.Format(
+                CultureInfo.InvariantCulture,
                 "update {0} set _left=_left+{1} where _left>={2}",
                 this.quotedTableName, nodeWidth, insertPos);
             ctx.DBContext.Execute(SqlString.Parse(sql));
 
             sql = String.Format(
+                CultureInfo.InvariantCulture,
                 "update {0} set _right=_right+{1} where _right>={2}",
                 this.quotedTableName, nodeWidth, insertPos);
             ctx.DBContext.Execute(SqlString.Parse(sql));
@@ -255,6 +263,7 @@ namespace ObjectServer.Model
             {
                 long moveDistance = insertPos - nodeLeft;
                 sql = String.Format(
+                    CultureInfo.InvariantCulture,
                     "update {0} set _left=_left+{1}, _right=_right+{1} where _left>={2} and _left<{3}",
                     this.quotedTableName, moveDistance, nodeLeft, nodeRight);
                 ctx.DBContext.Execute(SqlString.Parse(sql));
@@ -263,6 +272,7 @@ namespace ObjectServer.Model
             {
                 long moveDistance = nodeLeft - insertPos;
                 sql = String.Format(
+                    CultureInfo.InvariantCulture,
                     "update {0} set _left=_left-{1}, _right=_right-{1} where _left>={2} and _left<{3}",
                     this.quotedTableName, moveDistance + nodeWidth, nodeLeft + nodeWidth, nodeRight + nodeWidth);
                 ctx.DBContext.Execute(SqlString.Parse(sql));
@@ -374,13 +384,12 @@ namespace ObjectServer.Model
             }
         }
 
-        private SqlString GetVersionExpression(long originVersion)
+        private SqlString BuildVersionExpression(long originVersion)
         {
             if (originVersion < 0)
             {
                 throw new ArgumentOutOfRangeException("originVersin");
             }
-
 
             SqlString verExp = null;
             if (this.IsVersioned)
@@ -396,5 +405,6 @@ namespace ObjectServer.Model
             }
             return verExp;
         }
+
     }
 }

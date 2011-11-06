@@ -49,7 +49,8 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
         /// <param name="model"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static bool CheckForCurrentUser(ITransactionContext ctx, string model, string action)
+        public static bool CheckForCurrentUser(
+            ITransactionContext ctx, string model, string action)
         {
             if (ctx == null)
             {
@@ -66,8 +67,9 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
                 throw new ArgumentNullException("action");
             }
 
-            var sql = SqlString.Parse(String.Format(CultureInfo.InvariantCulture, SqlToQuery, action));
-            var result = ctx.DBContext.QueryValue(sql, model, ctx.Session.UserId);
+            var sql = String.Format(CultureInfo.InvariantCulture, SqlToQuery, action);
+            var sqlStr = SqlString.Parse(sql);
+            var result = ctx.DBContext.QueryValue(sqlStr, model, ctx.Session.UserId);
 
             if (!result.IsNull())
             {
@@ -82,25 +84,35 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
         /// <summary>
         /// TODO 更新缓存
         /// </summary>
-        /// <param name="scope"></param>
+        /// <param name="ctx"></param>
         /// <param name="userRecord"></param>
         /// <returns></returns>
-        public override long CreateInternal(ITransactionContext scope, IDictionary<string, object> userRecord)
+        public override long CreateInternal(
+            ITransactionContext ctx, IDictionary<string, object> userRecord)
         {
-            return base.CreateInternal(scope, userRecord);
+            return base.CreateInternal(ctx, userRecord);
         }
 
         /// <summary>
         /// TODO 更新缓存
         /// </summary>
-        /// <param name="scope"></param>
+        /// <param name="ctx"></param>
         /// <param name="id"></param>
         /// <param name="userRecord"></param>
-        public override void WriteInternal(ITransactionContext scope, long id, IDictionary<string, object> userRecord)
+        public override void WriteInternal(
+            ITransactionContext ctx, long id, IDictionary<string, object> userRecord)
         {
-            base.WriteInternal(scope, id, userRecord);
+            base.WriteInternal(ctx, id, userRecord);
         }
 
-
+        /// <summary>
+        /// TODO 更新缓存
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="ids"></param>
+        public override void DeleteInternal(ITransactionContext ctx, long[] ids)
+        {
+            base.DeleteInternal(ctx, ids);
+        }
     }
 }

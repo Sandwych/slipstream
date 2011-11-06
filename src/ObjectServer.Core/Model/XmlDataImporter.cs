@@ -84,57 +84,22 @@ namespace ObjectServer.Model
         private void ReadRecordElement(XmlReader reader, bool noUpdate)
         {
             var modelName = reader["model"];
+            if (string.IsNullOrEmpty(modelName))
+            {
+                //TODO 英文异常,详细位置
+                throw new DataException("记录必须指定“model”属性");
+            }
+
             dynamic model = this.context.GetResource(modelName);
             var key = reader["key"];
-
-            if (model == null)
+            if (string.IsNullOrEmpty(key))
             {
-                throw new DataException("We need a fucking 'model' attribute");
+                throw new DataException("记录必须指定“key”属性");
             }
 
             var record = new Dictionary<string, object>();
             this.ReadRecordFields(reader, model, record);
-
-            this.ImportRecord(noUpdate, model, record, key);
-        }
-
-        private void ImportRecord(
-            bool noUpdate, dynamic model, Dictionary<string, object> record, string key = null)
-        {
-            //查找 key 指定的记录看是否存在
-            long? existedId = null;
-            if (!string.IsNullOrEmpty(key))
-            {
-                existedId = ModelDataModel.TryLookupResourceId(
-                    this.context.DBContext, model.Name, key);
-            }
-
-            if (existedId == null) // Create
-            {
-                existedId = (long)model.Create(this.context, record);
-                if (!string.IsNullOrEmpty(key))
-                {
-                    ModelDataModel.Create(
-                        this.context.DBContext, this.currentModule, model.Name, key, existedId.Value);
-                }
-            }
-            else if (existedId != null && !noUpdate) //Update 
-            {
-                if (model.Fields.ContainsKey(AbstractModel.VersionFieldName)) //处理版本
-                {
-                    var fields = new string[] { AbstractModel.VersionFieldName };
-                    var read = model.Read(this.context, new long[] { existedId.Value }, fields)[0];
-                    record[AbstractModel.VersionFieldName] = read[AbstractModel.VersionFieldName];
-                }
-
-                model.Write(this.context, existedId.Value, record);
-                ModelDataModel.UpdateResourceId(
-                    this.context.DBContext, model.Name, key, existedId.Value);
-            }
-            else
-            {
-                //忽略此记录
-            }
+            model.ImportRecord(this.context, noUpdate, record, key);
         }
 
         private void ReadRecordFields(XmlReader reader, dynamic model, Dictionary<string, object> record)

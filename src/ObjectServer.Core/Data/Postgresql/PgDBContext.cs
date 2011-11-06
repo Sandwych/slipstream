@@ -95,13 +95,23 @@ namespace ObjectServer.Data.Postgresql
             using (var resStream = assembly.GetManifestResourceStream(INITDB))
             using (var sr = new StreamReader(resStream, Encoding.UTF8))
             {
-                var text = sr.ReadToEnd();
-                var lines = text.Split(';');
-                foreach (var line in lines)
+                string line = null;
+                var sb = new SqlStringBuilder();
+                while ((line = sr.ReadLine()) != null)
                 {
-                    if (!string.IsNullOrEmpty(line) && line.Trim().Length > 0)
+                    if (string.IsNullOrEmpty(line) || line.Trim().Length == 0)
                     {
-                        this.Execute(SqlString.Parse(line));
+                        continue;
+                    }
+
+                    if (line.Trim().ToUpperInvariant() == "GO")
+                    {
+                        this.Execute(sb.ToSqlString());
+                        sb.Clear();
+                    }
+                    else
+                    {
+                        sb.Add(line + '\n');
                     }
                 }
             }

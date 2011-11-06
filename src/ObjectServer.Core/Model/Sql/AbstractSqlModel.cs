@@ -25,6 +25,8 @@ namespace ObjectServer.Model
     /// </summary>
     public abstract partial class AbstractSqlModel : AbstractModel
     {
+
+        #region Constants
         public const string LeftFieldName = "_left";
         public const string RightFieldName = "_right";
         public const string ParentFieldName = "parent";
@@ -46,6 +48,8 @@ namespace ObjectServer.Model
             ChildrenFieldName,
             DescendantsFieldName,
         };
+
+        #endregion //Constants
 
         private string tableName = null;
         private string quotedTableName = null;
@@ -212,17 +216,17 @@ namespace ObjectServer.Model
         {
             var sqlFmt =
 @"
-SELECT  hc.*
-FROM    ""{0}"" hp
-JOIN    ""{0}"" hc
-ON      hc._left BETWEEN hp._left AND hp._right
-WHERE   hp._id = ? AND hc._id <> ?
-        AND
+select  hc.*
+from    ""{0}"" hp
+join    ""{0}"" hc
+on      hc._left between hp._left and hp._right
+where   hp._id = ? and hc._id <> ?
+        and
         (
-        SELECT  COUNT(hn._id)
-        FROM    ""{0}"" hn
-        WHERE   hc._left BETWEEN hn._left AND hn._right
-                AND hn._left BETWEEN hp._left AND hp._right
+        select  count(hn._id)
+        from    ""{0}"" hn
+        where   hc._left between hn._left and hn._right
+                and hn._left between hp._left and hp._right
         ) <= 2
 ";
             var sql = string.Format(CultureInfo.InvariantCulture, sqlFmt, this.TableName);
@@ -334,5 +338,40 @@ where   hp._id=? and hc._id<>?
             return record.Where(p =>
                 !SystemReadonlyFields.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
         }
+
+        private void UpdateOneToManyFields(ITransactionContext ctx, long id, Record record)
+        {
+            Debug.Assert(ctx != null);
+            Debug.Assert(record != null);
+            Debug.Assert(id > 0);
+
+            //更新 OneToMany 指向的字段
+            var o2mFields =
+                from p in record
+                where (this.Fields.ContainsKey(p.Key))
+                    && (this.Fields[p.Key].Type == FieldType.OneToMany)
+                    && (p.Value != null)
+                select p;
+
+            //设置 One2Many 的值
+            var subRecord = new Dictionary<string, object>(1);
+            foreach (var p in o2mFields)
+            {
+                var fieldInfo = this.Fields[p.Key];
+                var subModel = (IModel)ctx.GetResource(fieldInfo.Relation);
+
+                //TODO 这里是否要检查其是否有修改子表权限？
+                subRecord[fieldInfo.RelatedField] = id;
+                var o2mIds = (p.Value as IEnumerable).Cast<long>();
+                foreach (var o2mId in o2mIds)
+                {
+                    subModel.WriteInternal(ctx, o2mId, subRecord);
+                }
+            }
+        }
+
+
+  
+
     }
 }

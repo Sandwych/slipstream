@@ -55,7 +55,7 @@ namespace ObjectServer.Http
             LoggerProvider.EnvironmentLogger.Info("Starting HTTP Server...");
 
             broadcastSocket.Connect(supervisorUrl);
-            broadcastSocket.Subscribe("STOP", Encoding.UTF8);
+            broadcastSocket.Subscribe("STOP-HTTPD", Encoding.UTF8);
 
             if (!httpUrl.EndsWith("/"))
             {
@@ -116,10 +116,10 @@ namespace ObjectServer.Http
             {
                 var cmd = this.broadcastSocket.Recv(Encoding.UTF8);
 
-                if (cmd == "STOP")
+                if (cmd == "STOP-HTTPD")
                 {
                     LoggerProvider.EnvironmentLogger.Info(
-                        "'STOP' command received, try to stop the HTTP Server...");
+                        "Received command [STOP-HTTPD], try to stop HTTP Server...");
                     break;
                 }
             }

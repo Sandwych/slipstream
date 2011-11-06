@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 
@@ -7,14 +8,14 @@ namespace ObjectServer.Utility
 {
     public static class EnumerableExtensions
     {
-        public static string ToCsv<T>(this IEnumerable<T> items)
+        public static string ToCsv(this IEnumerable items)
         {
             if (items == null)
             {
                 throw new ArgumentNullException("items");
             }
 
-            var sb = new StringBuilder(items.Count() * 4);
+            var sb = new StringBuilder();
             var flag = true;
             foreach (var item in items)
             {

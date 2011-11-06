@@ -19,5 +19,6 @@ namespace ObjectServer.Model
         Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx, string[] fields);
         dynamic Browse(ITransactionContext ctx, long id);
         dynamic BrowseMany(ITransactionContext ctx, long[] ids);
+        void ImportRecord(ITransactionContext ctx, bool noUpdate, IDictionary<string, object> record, string key);
     }
 }
