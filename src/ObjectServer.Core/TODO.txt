@@ -28,8 +28,6 @@
 
 * 字段的合法性检查
 
-* Silverlight 端的界面生成与管理
-
 * 给 BrowsableRecord 添加 IComparable
 
 * 字段要可以使用让客户定义来获取选项的方法，就是给 IField 加个 OptionsGetter

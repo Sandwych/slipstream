@@ -179,7 +179,6 @@ namespace ObjectServer.Model
                 var records = dbctx.QueryAsDictionary(sql, parentID);
                 if (records.Length == 0)
                 {
-                    //TODO 使用合适的异常
                     throw new RecordNotFoundException("Cannot found hierarchy record(s)", this.Name);
                 }
 

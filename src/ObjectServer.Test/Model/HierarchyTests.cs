@@ -92,8 +92,8 @@ namespace ObjectServer.Model.Test
             dynamic data = this.PrepareTestingData();
             dynamic catModel = this.GetResource("test.category");
 
-            //删掉 3 和 1
-            catModel.Delete(this.TransactionContext, new long[] { data.id3, data.id1 });
+            //删掉 3, 5 和 1
+            catModel.Delete(this.TransactionContext, new long[] { data.id3, data.id5, data.id1 });
 
             this.AssertChildren(data.id2, data.id4);
             this.AssertDescendants(data.id2, data.id4);

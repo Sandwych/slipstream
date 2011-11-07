@@ -1,6 +1,8 @@
 ﻿-- 注意，此文件中，尽管“GO”语句不是 PostgreSQL 支持的 SQL 语言的一部分，
 -- 但是每个 SQL 语句之后仍然需要一个 GO 命令将其与其它语句隔开
 
+CREATE LANGUAGE plpgsql;
+
 CREATE TABLE core_model (
     _id BIGSERIAL NOT NULL,
     "name" VARCHAR NOT NULL UNIQUE,
@@ -145,6 +147,32 @@ BEGIN
     EXECUTE 'UPDATE ' || table_name::regclass || ' SET _left=' || rhs_value + 1
         || ', _right=' || rhs_value + 2 || ' WHERE _id=' || self_id;
         
+END;
+$$ LANGUAGE plpgsql;
+GO
+
+-- 删除树形表的节点并更新表
+CREATE OR REPLACE FUNCTION tree_update_for_deletion(table_name VARCHAR, ids BIGINT ARRAY)
+RETURNS VOID AS $$
+DECLARE
+    width BIGINT NOT NULL := 0;
+    node RECORD;
+BEGIN    
+    EXECUTE 'LOCK TABLE ' || table_name::regclass;
+
+    FOR node IN EXECUTE 'SELECT _id, _left, _right FROM ' || table_name::regclass || 
+        ' WHERE _id = ANY($1) ORDER BY _right - _left ASC, _right DESC' USING ids LOOP      
+        width := node._right - node._left;
+        EXECUTE 'DELETE FROM ' || table_name::regclass || 
+            ' WHERE _left BETWEEN ' || node._left || ' AND ' || node._right; 
+
+        EXECUTE 'UPDATE ' || table_name::regclass || ' SET _right = _right - ' || width + 1 ||
+            ' WHERE _right > ' || node._right;
+
+        EXECUTE 'UPDATE ' || table_name::regclass || ' SET _left = _left - ' || width + 1 ||
+            ' WHERE _left > ' || node._left;
+
+    END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 GO
