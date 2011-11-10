@@ -30,12 +30,12 @@
         <Setter Property="Height" Value="24" />
     </Style>
 
-    <Style TargetType="queryFields:IntegerQueryFieldControl">
+    <Style TargetType="queryFields:Int32QueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
         <Setter Property="Height" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="queryFields:IntegerQueryFieldControl">
+                <ControlTemplate TargetType="queryFields:Int32QueryFieldControl">
                     <Grid x:Name="Root">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -51,7 +51,29 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="queryFields:DecimalQueryFieldControl">
+    <Style TargetType="queryFields:Int64QueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="queryFields:Int64QueryFieldControl">
+                    <Grid x:Name="Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <appControls:NullableInt64UpDown x:Name="LowUpDown" Grid.Column="0"  />
+                        <!-- TODO 国际化 -->
+                        <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
+                        <appControls:NullableInt64UpDown x:Name="HighUpDown" Grid.Column="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="queryFields:DecimalQueryFieldControl">
         <Setter Property="Margin" Value="5,3,5,3" />
         <Setter Property="Height" Value="24" />
         <Setter Property="Template">
@@ -67,6 +89,28 @@
                         <!-- TODO 国际化 -->
                         <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
                         <appControls:NullableDecimalUpDown x:Name="HighUpDown" Grid.Column="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="queryFields:FloatQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="queryFields:FloatQueryFieldControl">
+                    <Grid x:Name="Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <appControls:NullableFloatUpDown x:Name="LowUpDown" Grid.Column="0"  />
+                        <!-- TODO 国际化 -->
+                        <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
+                        <appControls:NullableFloatUpDown x:Name="HighUpDown" Grid.Column="2" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

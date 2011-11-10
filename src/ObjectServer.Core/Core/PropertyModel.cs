@@ -18,14 +18,14 @@ namespace ObjectServer.Core
             Fields.Enumeration("type", new Dictionary<string, string>()
             {
                 { "integer", "Integer" },
-                { "float", "Float"},
+                { "double", "Double"},
                 { "binary", "Binary"},
                 { "datetime", "Date Time"},
                 { "text", "Text"},
             }).SetLabel("Type").Required();
 
             Fields.Binary("value_binary").NotReadonly().SetLabel("Binary Value");
-            Fields.Float("value_float").NotReadonly().SetLabel("Float Value");
+            Fields.Double("value_float").NotReadonly().SetLabel("Double Float Value");
             Fields.BigInteger("value_integer").NotReadonly().SetLabel("Integer Value");
             Fields.DateTime("value_datetime").NotReadonly().SetLabel("Datetime Value");
             Fields.Text("value_text").NotReadonly().SetLabel("Text Value");

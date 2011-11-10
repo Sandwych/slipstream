@@ -54,7 +54,7 @@ namespace ObjectServer.Test
             Fields.BigInteger("big_int_field").SetLabel("Bit Int Field");
             Fields.Boolean("boolean_field").SetLabel("Boolean Field").Required().SetDefaultValueGetter(s => true);
             Fields.Text("text_field").SetLabel("Text Field");
-            Fields.Float("float_field").SetLabel("Float Field");
+            Fields.Double("double_field").SetLabel("Double Field");
             Fields.Decimal("money_field").SetLabel("Decimal Field");
 
             Fields.Enumeration("enum_field",
@@ -110,7 +110,7 @@ namespace ObjectServer.Test
             : base("test.product")
         {
             Fields.Chars("name").SetLabel("Name");
-            Fields.Float("quantity").BeProperty().SetLabel("Quantity");
+            Fields.Double("quantity").BeProperty().SetLabel("Quantity");
         }
     }
 

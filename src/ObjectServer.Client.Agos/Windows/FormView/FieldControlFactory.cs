@@ -31,7 +31,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 { "reference", typeof(ReferenceFieldControl) },
                 { "datetime", typeof(DateTimeFieldControl) },
                 { "date", typeof(DateFieldControl) },
-                { "float8", typeof(FloatFieldControl) },
+                { "double", typeof(FloatFieldControl) },
                 { "decimal", typeof(DecimalFieldControl) },
             };
 

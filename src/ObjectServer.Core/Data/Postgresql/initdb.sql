@@ -58,8 +58,8 @@ GO
 
 CREATE TABLE core_module_dependency (
     _id BIGSERIAL NOT NULL,
-    name VARCHAR(128),
-    module BIGINT,
+    name VARCHAR(128) NOT NULL,
+    module BIGINT NOT NULL,
     PRIMARY KEY(_id),
     FOREIGN KEY (module) REFERENCES core_module ON DELETE CASCADE
 );

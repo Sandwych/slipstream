@@ -19,8 +19,8 @@ namespace ObjectServer.Model
         [EnumStringValue("int64")]
         BigInteger,
 
-        [EnumStringValue("float8")]
-        Float,
+        [EnumStringValue("double")]
+        Double,
 
         [EnumStringValue("datetime")]
         DateTime,

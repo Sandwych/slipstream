@@ -15,10 +15,10 @@ using ObjectServer.Client.Agos.Controls;
 
 namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
 {
-    [TemplatePart(Name = IntegerQueryFieldControl.ElementRoot, Type = typeof(FrameworkElement))]
-    [TemplatePart(Name = IntegerQueryFieldControl.ElementLowUpDown, Type = typeof(NullableInt32UpDown))]
-    [TemplatePart(Name = IntegerQueryFieldControl.ElementHighUpDown, Type = typeof(NullableInt32UpDown))]
-    public class IntegerQueryFieldControl : Control, IQueryField
+    [TemplatePart(Name = Int64QueryFieldControl.ElementRoot, Type = typeof(FrameworkElement))]
+    [TemplatePart(Name = Int64QueryFieldControl.ElementLowUpDown, Type = typeof(NullableInt64UpDown))]
+    [TemplatePart(Name = Int64QueryFieldControl.ElementHighUpDown, Type = typeof(NullableInt64UpDown))]
+    public class Int64QueryFieldControl : Control, IQueryField
     {
         public const string ElementRoot = "Root";
         public const string ElementLowUpDown = "LowUpDown";
@@ -27,10 +27,10 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
         private readonly IDictionary<string, object> metaField;
 
         private FrameworkElement root;
-        private NullableInt32UpDown lowUpdown;
-        private NullableInt32UpDown highUpdown;
+        private NullableInt64UpDown lowUpdown;
+        private NullableInt64UpDown highUpdown;
 
-        public IntegerQueryFieldControl(object metaField)
+        public Int64QueryFieldControl(object metaField)
             : base()
         {
             this.metaField = (IDictionary<string, object>)metaField;
@@ -42,8 +42,8 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
             base.OnApplyTemplate();
 
             this.root = this.GetTemplateChild(ElementRoot) as FrameworkElement;
-            this.lowUpdown = this.GetTemplateChild(ElementLowUpDown) as NullableInt32UpDown;
-            this.highUpdown = this.GetTemplateChild(ElementHighUpDown) as NullableInt32UpDown;
+            this.lowUpdown = this.GetTemplateChild(ElementLowUpDown) as NullableInt64UpDown;
+            this.highUpdown = this.GetTemplateChild(ElementHighUpDown) as NullableInt64UpDown;
         }
 
         public QueryConstraint[] GetConstraints()
@@ -53,12 +53,12 @@ namespace ObjectServer.Client.Agos.Windows.TreeView.QueryFieldControls
             var constraints = new List<QueryConstraint>(2);
             if (this.highUpdown.Value != null)
             {
-                constraints.Add(new QueryConstraint(this.FieldName, "<=", (int)this.highUpdown.Value));
+                constraints.Add(new QueryConstraint(this.FieldName, "<=", (long)this.highUpdown.Value));
             }
 
             if (this.lowUpdown.Value != null)
             {
-                constraints.Add(new QueryConstraint(this.FieldName, ">=", (int)this.lowUpdown.Value));
+                constraints.Add(new QueryConstraint(this.FieldName, ">=", (long)this.lowUpdown.Value));
             }
 
             return constraints.ToArray();

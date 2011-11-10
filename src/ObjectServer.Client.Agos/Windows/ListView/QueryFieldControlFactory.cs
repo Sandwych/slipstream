@@ -22,8 +22,9 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
                 { "chars", typeof(QueryFieldControls.StringQueryFieldControl) },
                 { "text", typeof(QueryFieldControls.StringQueryFieldControl) },
                 { "enum", typeof(QueryFieldControls.EnumerationQueryFieldControl) },
-                { "int32", typeof(QueryFieldControls.IntegerQueryFieldControl) },
+                { "int32", typeof(QueryFieldControls.Int32QueryFieldControl) },
                 { "decimal", typeof(QueryFieldControls.DecimalQueryFieldControl) },
+                { "double", typeof(QueryFieldControls.FloatQueryFieldControl) },
                 { "date", typeof(QueryFieldControls.DateQueryFieldControl) },
                 { "datetime", typeof(QueryFieldControls.DateQueryFieldControl) },
             };

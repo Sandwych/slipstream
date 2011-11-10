@@ -153,7 +153,7 @@ namespace ObjectServer.Model
                     fieldValue = reader.ReadElementContentAsBoolean();
                     break;
 
-                case FieldType.Float:
+                case FieldType.Double:
                     fieldValue = reader.ReadElementContentAsDouble();
                     break;
 

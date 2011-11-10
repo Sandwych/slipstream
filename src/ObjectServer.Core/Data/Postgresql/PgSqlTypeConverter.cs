@@ -24,7 +24,7 @@ namespace ObjectServer.Data
                 { FieldType.DateTime, f => "timestamp" },
                 { FieldType.Date, f => "date" },
                 { FieldType.Time, f => "time" },
-                { FieldType.Float, f => "float8" },
+                { FieldType.Double, f => "float8" },
                 { FieldType.Decimal, f => "decimal" },
                 { FieldType.Text, f => "text" },
                 { FieldType.Binary, f =>  "bytea" },

@@ -31,7 +31,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             {"id", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter() ) },
             {"int32", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
             {"int64", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
-            {"float8", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
+            {"double", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
             {"decimal", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
             {"chars", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },
             {"text", new Tuple<Type, IValueConverter>(typeof(DataGridTextColumn), new RowIndexConverter()) },

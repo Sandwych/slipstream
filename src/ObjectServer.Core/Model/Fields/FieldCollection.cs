@@ -28,9 +28,9 @@ namespace ObjectServer.Model
             return field;
         }
 
-        public IField Float(string name)
+        public IField Double(string name)
         {
-            var field = new ScalarField(this.model, name, FieldType.Float);
+            var field = new ScalarField(this.model, name, FieldType.Double);
             this.Add(name, field);
             return field;
         }

@@ -99,6 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\NullableFloatUpDown.cs" />
     <Compile Include="Controls\NullableDecimalUpDown.cs" />
     <Compile Include="Controls\NullableInt64UpDown.cs" />
     <Compile Include="Controls\NullableInt32UpDown.cs" />
@@ -207,6 +208,8 @@
     <Compile Include="Windows\FormView\IFieldWidget.cs" />
     <Compile Include="Controls\RecordsSelectedEventArgs.cs" />
     <Compile Include="Windows\ListView\IQueryField.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\Int64QueryFieldControl.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\FloatQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\DecimalQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\TreeView.xaml.cs">
       <DependentUpon>TreeView.xaml</DependentUpon>
@@ -217,7 +220,7 @@
     <Compile Include="Windows\ListView\QueryFieldControlFactory.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\BooleanQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\DateQueryFieldControl.cs" />
-    <Compile Include="Windows\ListView\QueryFieldControls\IntegerQueryFieldControl.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\Int32QueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\EnumerationQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\QueryFieldControls\StringQueryFieldControl.cs" />
     <Compile Include="Data\TimeFieldConverter.cs" />
@@ -238,10 +241,6 @@
     <Page Include="Controls\SelectionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="system-search.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Resource Include="Assets\FormFieldStyles.xaml">
       <Generator>MSBuild:Compile</Generator>

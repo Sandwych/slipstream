@@ -15,7 +15,7 @@ namespace ObjectServer.Model
                 FieldType.Identifier,
                 FieldType.Integer,
                 FieldType.BigInteger,
-                FieldType.Float,
+                FieldType.Double,
                 FieldType.DateTime,
                 FieldType.Date,
                 FieldType.Time,
