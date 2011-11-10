@@ -99,6 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\NullableDecimalUpDown.cs" />
     <Compile Include="Controls\NullableInt64UpDown.cs" />
     <Compile Include="Controls\NullableInt32UpDown.cs" />
     <Compile Include="Controls\SelectionDialog.xaml.cs">
@@ -206,6 +207,7 @@
     <Compile Include="Windows\FormView\IFieldWidget.cs" />
     <Compile Include="Controls\RecordsSelectedEventArgs.cs" />
     <Compile Include="Windows\ListView\IQueryField.cs" />
+    <Compile Include="Windows\ListView\QueryFieldControls\DecimalQueryFieldControl.cs" />
     <Compile Include="Windows\ListView\TreeView.xaml.cs">
       <DependentUpon>TreeView.xaml</DependentUpon>
     </Compile>

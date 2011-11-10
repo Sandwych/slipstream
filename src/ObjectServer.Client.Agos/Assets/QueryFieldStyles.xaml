@@ -51,5 +51,25 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <Style TargetType="queryFields:DecimalQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="queryFields:DecimalQueryFieldControl">
+                    <Grid x:Name="Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <appControls:NullableDecimalUpDown x:Name="LowUpDown" Grid.Column="0"  />
+                        <!-- TODO 国际化 -->
+                        <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
+                        <appControls:NullableDecimalUpDown x:Name="HighUpDown" Grid.Column="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
