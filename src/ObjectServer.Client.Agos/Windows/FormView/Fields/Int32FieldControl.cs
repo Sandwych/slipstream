@@ -14,11 +14,11 @@ using ObjectServer.Client.Agos.Models;
 
 namespace ObjectServer.Client.Agos.Windows.FormView
 {
-    public class IntegerFieldControl : UpDownBase<Int64?>, IFieldWidget
+    public class Int32FieldControl : UpDownBase<Int32?>, IFieldWidget
     {
         private readonly IDictionary<string, object> metaField;
 
-        public IntegerFieldControl(object metaField)
+        public Int32FieldControl(object metaField)
         {
             this.metaField = (IDictionary<string, object>)metaField;
             this.FieldName = (string)this.metaField["name"];
@@ -38,7 +38,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             {
                 if (value != null)
                 {
-                    base.Value = (Int64)value;
+                    base.Value = (Int32)value;
                 }
                 else
                 {
@@ -76,7 +76,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             base.Value = value++;
         }
 
-        protected override Int64? ParseValue(string text)
+        protected override Int32? ParseValue(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -84,7 +84,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             }
             else
             {
-                return Int64.Parse(text);
+                return Int32.Parse(text);
             }
         }
     }

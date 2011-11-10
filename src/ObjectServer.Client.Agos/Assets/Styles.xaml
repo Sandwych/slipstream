@@ -1301,5 +1301,4 @@
         <Setter Property="MinWidth"  Value="75" />
     </Style>
 
-  
 </ResourceDictionary>

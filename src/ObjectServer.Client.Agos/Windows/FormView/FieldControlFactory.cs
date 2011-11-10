@@ -24,7 +24,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
                 { "boolean", typeof(BooleanFieldControl) },
                 { "enum", typeof(EnumerationFieldControl) },
                 { "text", typeof(TextFieldControl) },
-                { "int32", typeof(IntegerFieldControl) },
+                { "int32", typeof(Int32FieldControl) },
                 { "many-to-one", typeof(ManyToOneFieldControl) },
                 { "one-to-many", typeof(OneToManyFieldControl) },
                 { "many-to-many", typeof(ManyToManyFieldControl) },

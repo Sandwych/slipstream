@@ -192,7 +192,7 @@
     <Compile Include="Windows\FormView\Fields\DateTimeFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\ReferenceFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\ManyToOneFieldControl.cs" />
-    <Compile Include="Windows\FormView\Fields\IntegerFieldControl.cs" />
+    <Compile Include="Windows\FormView\Fields\Int32FieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\TextFieldControl.cs" />
     <Compile Include="Windows\FormView\Fields\EnumerationFieldControl.cs" />
     <Compile Include="Windows\FormView\FieldControlFactory.cs" />

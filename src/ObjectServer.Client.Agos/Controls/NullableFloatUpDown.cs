@@ -14,6 +14,11 @@ namespace ObjectServer.Client.Agos.Controls
 {
     public sealed class NullableFloatUpDown : UpDownBase<float?>
     {
+        public NullableFloatUpDown()
+            : base()
+        {
+        }
+
         protected override string FormatValue()
         {
             return this.Value == null ? string.Empty : this.Value.Value.ToString(); //TODO 国际化
