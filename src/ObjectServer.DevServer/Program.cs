@@ -4,11 +4,56 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Configuration;
+using System.Diagnostics;
+
+using Mono.Options;
 
 namespace ObjectServer.Server
 {
     class DevServerProgram
     {
+        private static Config CreateConfigViaProgramArgs(string[] args)
+        {
+            bool isShowHelp = false;
+            bool isShowVersion = false;
+            string configPath = null;
+            var p = new OptionSet() {
+                { "h|?|help",  v => isShowHelp = v != null },
+                { "version",   v => isShowVersion = v != null },
+                { "c|config=", v => configPath = v },
+            };
+
+            var extra = p.Parse(args);
+
+            if (isShowHelp)
+            {
+                //TODO 显示帮助                
+                Console.WriteLine("Usage:");
+                Console.WriteLine("[mono] osdevsvr.exe [Options]");
+                Console.WriteLine();
+                Console.WriteLine("Options:");
+                Console.WriteLine("-c <CFG_FILE>:\t\tLoad configuration from <CFG_FILE>");
+                Console.WriteLine("--version:\t\tShow version information");
+                Console.WriteLine("-h|-?|--help:\t\tShow this help text");
+                System.Environment.Exit(0);
+            }
+
+            if (isShowVersion)
+            {
+                //TODO 显示版本
+                System.Environment.Exit(0);
+            }
+
+            if (string.IsNullOrEmpty(configPath))
+            {
+                return new Config();
+            }
+            else
+            {
+                return Config.Load(configPath);
+            }
+        }
+
         private static void OnExit(object sender, EventArgs args)
         {
             Console.WriteLine("ObjectServer 开发服务器进程已经终止.");
@@ -18,12 +63,11 @@ namespace ObjectServer.Server
         {
             Console.WriteLine("ObjectServer 开发服务器\n");
 
-            InitializeFramework();
-
-            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnExit);
-
             try
             {
+                InitializeFramework(args);
+                AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnExit);
+
                 using (var server = new ServerProcess())
                 {
                     var serverThreadProc = new ThreadStart(delegate
@@ -57,6 +101,13 @@ namespace ObjectServer.Server
 
                 return 0;
             }
+            catch (OptionException ex)
+            {
+                Console.WriteLine("Bad argument(s): ");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Try `osdevsvr.exe --help' for more information.");
+                return -1;
+            }
             catch (Exception ex)
             {
                 LoggerProvider.EnvironmentLogger.Error(
@@ -81,10 +132,17 @@ namespace ObjectServer.Server
             } while (Char.ToUpperInvariant(Console.ReadKey(true).KeyChar) != 'Q');
         }
 
-        private static void InitializeFramework()
+        private static void InitializeFramework(string[] args)
         {
+
+            Debug.Assert(!Environment.Initialized);
+
+            var cfg = CreateConfigViaProgramArgs(args);
+            cfg.LogToConsole = true;
+
             Console.WriteLine("正在初始化 ObjectServer 框架 ...");
-            EnsureFrameworkInitialized();
+            Environment.Initialize(cfg);
+
             Console.WriteLine("ObjectServer 框架已经成功初始化");
 
             Console.WriteLine("日志文件目录=[{0}]，应用服务器主机 URL=[{1}]",
@@ -92,14 +150,5 @@ namespace ObjectServer.Server
                 Environment.Configuration.RpcHostUrl);
         }
 
-        private static void EnsureFrameworkInitialized()
-        {
-            if (!Environment.Initialized)
-            {
-                var cfg = new Config();
-                cfg.LogToConsole = true;
-                Environment.Initialize(cfg);
-            }
-        }
     }
 }

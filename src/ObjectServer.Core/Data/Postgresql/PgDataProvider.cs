@@ -41,7 +41,7 @@ select datname from pg_database
 
         public string[] ListDatabases()
         {
-            var dbUser = Environment.Configuration.DBUser;
+            var dbUser = Environment.Configuration.DbUser;
 
             using (var ctx = this.CreateDataContext())
             {

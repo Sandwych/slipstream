@@ -11,6 +11,7 @@ namespace ObjectServer
 {
     /// <summary>
     /// 配置类
+    /// TODO 缺少校验配置函数
     /// <remarks>多个线程将会读取此类实例的字段</remarks>
     /// </summary>
     [Serializable]
@@ -19,20 +20,22 @@ namespace ObjectServer
     {
         public Config()
         {
+            this.AppDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                StaticSettings.AppDataDirectoryName);
+
             this.Role = ServerRoles.Standalone;
             this.DbType = "postgres";
-            this.DBHost = "localhost";
-            this.DBPort = 5432;
-            this.DBUser = "objectserver";
-            this.DBPassword = "objectserver";
+            this.DbHost = "localhost";
+            this.DbPort = 5432;
+            this.DbUser = "objectserver";
+            this.DbPassword = "objectserver";
 
             this.MaxRequestSize = 1024 * 1024 * 4;
 
             this.SessionTimeoutMinutes = 20;
 
-            var defaultLogPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                StaticSettings.AppDataDirectoryName, "log");
+            var defaultLogPath = Path.Combine(this.AppDataPath, "log");
             this.LogPath = defaultLogPath;
             this.LoggingSql = false;
 
@@ -64,6 +67,9 @@ namespace ObjectServer
         [XmlIgnore]
         public string ConfigurationPath { get; set; }
 
+        [XmlElement("app-data-path", IsNullable = false)]
+        public string AppDataPath { get; set; }
+
         [XmlElement("role")]
         public ServerRoles Role { get; set; }
 
@@ -71,16 +77,16 @@ namespace ObjectServer
         public string DbType { get; set; }
 
         [XmlElement("db-host")]
-        public string DBHost { get; set; }
+        public string DbHost { get; set; }
 
         [XmlElement("db-port")]
-        public int DBPort { get; set; }
+        public int DbPort { get; set; }
 
         [XmlElement("db-user")]
-        public string DBUser { get; set; }
+        public string DbUser { get; set; }
 
         [XmlElement("db-password")]
-        public string DBPassword { get; set; }
+        public string DbPassword { get; set; }
 
         /// <summary>
         /// 指定连接的数据库名，如果没有指定，则可以连接到用户所属的多个数据库。
@@ -142,7 +148,9 @@ namespace ObjectServer
 
             using (var fs = File.OpenRead(filepath))
             {
-                return Load(fs);
+                var cfg = Load(fs);
+                cfg.ConfigurationPath = filepath;
+                return cfg;
             }
         }
 

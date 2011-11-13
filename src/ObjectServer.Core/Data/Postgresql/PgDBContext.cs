@@ -37,7 +37,7 @@ namespace ObjectServer.Data.Postgresql
               "Encoding=UNICODE;" +
               "User ID={1};" +
               "Password={2};",
-              cfg.DBHost, cfg.DBUser, cfg.DBPassword, dbName);
+              cfg.DbHost, cfg.DbUser, cfg.DbPassword, dbName);
             var dbc = DataProvider.Driver.CreateConnection();
             dbc.ConnectionString = connectionString;
             //this.conn = new NpgsqlConnection(connectionString);
@@ -56,7 +56,7 @@ namespace ObjectServer.Data.Postgresql
         {
             EnsureConnectionOpened();
 
-            var dbUser = Environment.Configuration.DBUser;
+            var dbUser = Environment.Configuration.DbUser;
 
             return this.QueryAsArray<string>(SqlToListDBs, dbUser);
         }
