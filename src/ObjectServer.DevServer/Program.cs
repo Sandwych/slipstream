@@ -29,12 +29,12 @@ namespace ObjectServer.Server
             {
                 //TODO 显示帮助                
                 Console.WriteLine("Usage:");
-                Console.WriteLine("[mono] osdevsvr.exe [Options]");
+                Console.WriteLine("  osdevsvr.exe [Options]");
                 Console.WriteLine();
                 Console.WriteLine("Options:");
-                Console.WriteLine("-c <CFG_FILE>:\t\tLoad configuration from <CFG_FILE>");
-                Console.WriteLine("--version:\t\tShow version information");
-                Console.WriteLine("-h|-?|--help:\t\tShow this help text");
+                Console.WriteLine("  -c CONF_FILE\t\tLoad settings from CONF_FILE");
+                Console.WriteLine("  --version\t\tShow version information");
+                Console.WriteLine("  -h|-?|--help\t\tShow this help text");
                 System.Environment.Exit(0);
             }
 
@@ -56,12 +56,12 @@ namespace ObjectServer.Server
 
         private static void OnExit(object sender, EventArgs args)
         {
-            Console.WriteLine("ObjectServer 开发服务器进程已经终止.");
+            Console.WriteLine("ObjectServer Server was existed successfully.");
         }
 
         static int Main(string[] args)
         {
-            Console.WriteLine("ObjectServer 开发服务器\n");
+            Console.WriteLine("ObjectServer Development Server\n");
 
             try
             {
