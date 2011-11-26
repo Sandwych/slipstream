@@ -91,11 +91,11 @@ namespace ObjectServer.Server
             this.m_supervisor.BeginStopHttpServer();
         }
 
-        private static RpcHostWorker StartApplicationServer()
+        private static RpcBusWorker StartApplicationServer()
         {
             LoggerProvider.EnvironmentLogger.Info("Starting application server...");
 
-            var rpcHostWorker = new RpcHostWorker();
+            var rpcHostWorker = new RpcBusWorker();
             rpcHostWorker.Start();
 
             Console.WriteLine("Application server is started.");
@@ -110,7 +110,7 @@ namespace ObjectServer.Server
             {
                 using (var cs = new ObjectServer.Http.AnnaHttpServer(
                     Environment.Configuration.BroadcastUrl,
-                    Environment.Configuration.RpcHostUrl,
+                    Environment.Configuration.RpcBusUrl,
                     Environment.Configuration.HttpListenUrl))
                 {
                     cs.Start();

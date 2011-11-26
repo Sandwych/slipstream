@@ -147,7 +147,7 @@ namespace ObjectServer.Server
 
             Console.WriteLine("日志文件目录=[{0}]，应用服务器主机 URL=[{1}]",
                 Environment.Configuration.LogPath,
-                Environment.Configuration.RpcHostUrl);
+                Environment.Configuration.RpcBusUrl);
         }
 
     }

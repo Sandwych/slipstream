@@ -7,11 +7,11 @@ using System.Diagnostics;
 
 namespace ObjectServer.Server
 {
-    public sealed class RpcHostWorker : AbstractWorker
+    public sealed class RpcBusWorker : AbstractWorker
     {
         private Thread workerThread = null;
 
-        public RpcHostWorker()
+        public RpcBusWorker()
             : base("STOP-RPC")
         {
 
@@ -27,7 +27,7 @@ namespace ObjectServer.Server
 
             this.RpcHandlerMax = Environment.Configuration.RpcHandlerMax;
             this.RpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
-            this.RpcHostUrl = Environment.Configuration.RpcHostUrl;
+            this.RpcHostUrl = Environment.Configuration.RpcBusUrl;
         }
 
         public int RpcHandlerMax { get; private set; }

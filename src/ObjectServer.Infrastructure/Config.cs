@@ -53,7 +53,7 @@ namespace ObjectServer
             this.RpcHandlerMax = Environment.ProcessorCount;
 
             this.RpcHandlerUrl = "inproc://rpc-handlers";
-            this.RpcHostUrl = "inproc://rpc-entrance";
+            this.RpcBusUrl = "inproc://rpc-entrance";
             this.BroadcastUrl = "inproc://broadcast";
             this.HttpListenUrl = "http://localhost:9287/";
 
@@ -127,8 +127,8 @@ namespace ObjectServer
         [XmlElement("rpc-handler-url")]
         public string RpcHandlerUrl { get; set; }
 
-        [XmlElement("rpc-host-url")]
-        public string RpcHostUrl { get; set; }
+        [XmlElement("rpc-bus-url")]
+        public string RpcBusUrl { get; set; }
 
         [XmlElement("broadcast-url")]
         public string BroadcastUrl { get; set; }
