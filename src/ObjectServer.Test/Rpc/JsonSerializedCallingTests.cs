@@ -12,7 +12,7 @@ namespace ObjectServer.Test.Web
     public class JsonSerializedCallingTests : RpcTestBase
     {
         [Ignore]
-        public void Test_json_serialized_CRUD()
+        public void CrudShouldBeSuccessfully()
         {
             var constraints = new object[][] 
             { 

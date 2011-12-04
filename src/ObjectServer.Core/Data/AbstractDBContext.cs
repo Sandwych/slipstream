@@ -14,9 +14,10 @@ namespace ObjectServer.Data
 {
     internal abstract class AbstractDbContext : IDbContext
     {
-        protected IDbConnection conn;
-        private bool opened = false;
-        private bool disposed = false;
+        protected IDbConnection _conn;
+        private bool _opened = false;
+        private bool _disposed = false;
+        private IDbTransaction _transaction;
 
         public AbstractDbContext()
         {
@@ -29,19 +30,19 @@ namespace ObjectServer.Data
 
         public void Open()
         {
-            if (!this.opened)
+            if (!this._opened)
             {
-                this.conn.Open();
-                this.opened = true;
+                this._conn.Open();
+                this._opened = true;
             }
         }
 
         public void Close()
         {
-            if (this.opened)
+            if (this._opened)
             {
-                this.conn.Close();
-                this.opened = false;
+                this._conn.Close();
+                this._opened = false;
             }
         }
 
@@ -219,7 +220,7 @@ namespace ObjectServer.Data
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!this._disposed)
             {
                 //释放非托管资源
                 if (disposing)
@@ -228,9 +229,9 @@ namespace ObjectServer.Data
 
                 //释放托管资源
                 this.Close();
-                this.conn.Dispose();
+                this._conn.Dispose();
 
-                this.disposed = true;
+                this._disposed = true;
             }
         }
 
@@ -239,10 +240,10 @@ namespace ObjectServer.Data
         protected IDbCommand PrepareCommand(string commandText)
         {
             Debug.Assert(!string.IsNullOrEmpty(commandText));
-            Debug.Assert(this.opened);
-            Debug.Assert(!this.disposed);
+            Debug.Assert(this._opened);
+            Debug.Assert(!this._disposed);
 
-            var command = this.conn.CreateCommand();
+            var command = this._conn.CreateCommand();
             command.CommandText = commandText;
 
             return command;
@@ -276,20 +277,36 @@ namespace ObjectServer.Data
             throw new NotImplementedException();
         }
 
+        public IDbTransaction Transaction
+        {
+            get
+            {
+                if (this._transaction == null)
+                {
+                    this._transaction = _conn.BeginTransaction();
+                }
+                return this._transaction;
+            }
+        }
+
         public virtual IDbTransaction BeginTransaction()
         {
-            Debug.Assert(this.opened);
+            Debug.Assert(this._opened);
 
-            return conn.BeginTransaction();
+            return this.Transaction;
         }
 
         public IDbCommand CreateCommand(SqlString sql)
         {
-            Debug.Assert(this.opened);
+            Debug.Assert(this._opened);
 
             var sqlCommand = DataProvider.Driver.GenerateCommand(
                 CommandType.Text, sql, new NHibernate.SqlTypes.SqlType[] { });
-            sqlCommand.Connection = this.conn;
+            sqlCommand.Connection = this._conn;
+            if (this._transaction != null)
+            {
+                sqlCommand.Transaction = this._transaction;
+            }
 
             return sqlCommand;
         }

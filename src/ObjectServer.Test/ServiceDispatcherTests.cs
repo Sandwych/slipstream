@@ -11,8 +11,8 @@ namespace ObjectServer.Test
     [TestFixture]
     public class ServiceDispatcherTests
     {
-        [Test]
-        public void Test_create_and_delete_database()
+        [Ignore]
+        public void CreateAndDeleteDatabaseShouldBeSuccessfully()
         {
             var cfg = new Config();
 

@@ -20,7 +20,7 @@ namespace ObjectServer.Data
         bool IsInitialized();
 
         string DatabaseName { get; }
-                
+
         object QueryValue(SqlString commandText, params object[] args);
         DataTable QueryAsDataTable(SqlString commandText, params object[] args);
         Dictionary<string, object>[] QueryAsDictionary(SqlString commandText, params object[] args);
@@ -36,6 +36,7 @@ namespace ObjectServer.Data
         void LockTable(string tableName);
 
         IDbCommand CreateCommand(SqlString sql);
+        IDbTransaction Transaction { get; }
         IDbTransaction BeginTransaction();
     }
 }

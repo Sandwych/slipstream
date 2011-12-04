@@ -1,8 +1,6 @@
 ﻿-- 注意，此文件中，尽管“GO”语句不是 PostgreSQL 支持的 SQL 语言的一部分，
 -- 但是每个 SQL 语句之后仍然需要一个 GO 命令将其与其它语句隔开
 
-CREATE LANGUAGE plpgsql;
-
 CREATE TABLE core_model (
     _id BIGSERIAL NOT NULL,
     "name" VARCHAR NOT NULL UNIQUE,
@@ -110,6 +108,30 @@ CREATE UNIQUE INDEX index_core_sessionid ON core_session("sid");
 GO
 
 -- 下面全部是存储过程/函数
+
+-- 一个小技巧，如果没有安装 pl/sql 就安装，否则忽略
+
+CREATE OR REPLACE FUNCTION make_plpgsql()
+RETURNS VOID
+LANGUAGE SQL
+AS $$
+CREATE LANGUAGE plpgsql;
+$$;
+GO
+ 
+SELECT
+    CASE
+    WHEN EXISTS(
+        SELECT 1
+        FROM pg_catalog.pg_language
+        WHERE lanname='plpgsql'
+    )
+    THEN NULL
+    ELSE make_plpgsql() END;
+GO
+ 
+DROP FUNCTION make_plpgsql();
+GO
 
 -- 处理树的函数
 

@@ -41,7 +41,7 @@ namespace ObjectServer.Data.Postgresql
             var dbc = DataProvider.Driver.CreateConnection();
             dbc.ConnectionString = connectionString;
             //this.conn = new NpgsqlConnection(connectionString);
-            this.conn = dbc;
+            this._conn = dbc;
             this.DatabaseName = dbName;
         }
 
