@@ -17,14 +17,14 @@ namespace ObjectServer
     /// <summary>
     /// Singleton
     /// </summary>
-    internal sealed class DbProfileManager : IGlobalObject, IDisposable
+    internal sealed class DbDomainManager : IGlobalObject, IDisposable
     {
         private Config config;
-        private Dictionary<string, IDbProfile> dbProfiles =
-            new Dictionary<string, IDbProfile>();
+        private Dictionary<string, IDbDomain> dbProfiles =
+            new Dictionary<string, IDbDomain>();
         private bool disposed = false;
 
-        ~DbProfileManager()
+        ~DbDomainManager()
         {
             this.Dispose(false);
         }
@@ -63,12 +63,12 @@ namespace ObjectServer
                 throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
             }
 
-            var db = new DbProfile(dbName);
+            var db = new DbDomain(dbName);
             db.Initialize(isUpdate);
             this.dbProfiles.Add(dbName, db);
         }
 
-        public IDbProfile GetDbProfile(string dbName)
+        public IDbDomain GetDbProfile(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 

@@ -23,7 +23,7 @@ namespace ObjectServer
         private bool disposed = false;
         private Config config;
         private bool initialized;
-        private DbProfileManager databaseProfiles = new DbProfileManager();
+        private DbDomainManager databaseProfiles = new DbDomainManager();
         private ModuleManager modules = new ModuleManager();
         private IExportedService exportedService = ServiceDispatcher.CreateDispatcher();
 
@@ -151,7 +151,7 @@ namespace ObjectServer
         }
 
 
-        internal static DbProfileManager DBProfiles
+        internal static DbDomainManager DBProfiles
         {
             get
             {
