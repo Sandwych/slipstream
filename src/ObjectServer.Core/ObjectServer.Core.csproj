@@ -77,7 +77,6 @@
     </Reference>
     <Reference Include="System">
     </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="System.Runtime.Remoting">
@@ -214,7 +213,7 @@
     <Compile Include="Module\Module.cs" />
     <Compile Include="ServiceDispatcher.cs" />
     <Compile Include="Environment.cs" />
-    <Compile Include="DbProfileCollection.cs" />
+    <Compile Include="DbProfileManager.cs" />
     <Compile Include="Core\UserModel.cs" />
     <Compile Include="ITransactionContext.cs" />
     <Compile Include="Core\FieldModel.cs" />
@@ -228,7 +227,7 @@
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />
-    <Compile Include="Module\ModuleCollection.cs" />
+    <Compile Include="Module\ModuleManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\Postgresql\initdb.sql" />

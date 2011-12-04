@@ -17,14 +17,14 @@ namespace ObjectServer
     /// <summary>
     /// Singleton
     /// </summary>
-    internal sealed class DbProfileCollection : IGlobalObject, IDisposable
+    internal sealed class DbProfileManager : IGlobalObject, IDisposable
     {
         private Config config;
         private Dictionary<string, IDbProfile> dbProfiles =
             new Dictionary<string, IDbProfile>();
         private bool disposed = false;
 
-        ~DbProfileCollection()
+        ~DbProfileManager()
         {
             this.Dispose(false);
         }

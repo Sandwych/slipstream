@@ -22,7 +22,7 @@ namespace ObjectServer
     /// <summary>
     /// </summary>
     [Serializable]
-    public sealed class ModuleCollection : IGlobalObject
+    public sealed class ModuleManager : IGlobalObject
     {
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace ObjectServer
         /// </summary>
         private List<Module> allModules = new List<Module>();
 
-        public ModuleCollection()
+        public ModuleManager()
         {
             this.allModules.Add(Module.CoreModule);
         }

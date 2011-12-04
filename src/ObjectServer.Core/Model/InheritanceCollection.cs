@@ -7,7 +7,5 @@ namespace ObjectServer.Model
 {
     public sealed class InheritanceCollection : List<InheritanceInfo>
     {
-
-     
     }
 }
