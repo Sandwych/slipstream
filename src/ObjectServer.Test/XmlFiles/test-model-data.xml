@@ -4,25 +4,25 @@
   <record model="test.test_model" key="tm1">
     <field name="name">name1</field>
     <field name="address">address1</field>
-    <field name="float_field">11.0</field>
+    <field name="double_field">11.0</field>
   </record> 
 
   <record model="test.test_model" key="tm2">
     <field name="name">name2</field>
     <field name="address">address2</field>
-    <field name="float_field">22.0</field>
+    <field name="double_field">22.0</field>
   </record> 
 
   <record model="test.test_model" key="tm3">
     <field name="name">name3</field>
     <field name="address">address3</field>
-    <field name="float_field">33.0</field>
+    <field name="double_field">33.0</field>
   </record>
 
   <record model="test.test_model" key="tm1">
     <field name="name">name_changed</field>
     <field name="address">address1</field>
-    <field name="float_field">11.0</field>
+    <field name="double_field">11.0</field>
   </record>
 
 
