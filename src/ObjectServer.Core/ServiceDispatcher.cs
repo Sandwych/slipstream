@@ -38,7 +38,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("password");
             }
 
-            using (var ctx = new TransactionContext(dbName))
+            using (var ctx = new ServiceContext(dbName))
             {
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
@@ -60,7 +60,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("sessionId");
             }
 
-            using (var ctx = new TransactionContext(db, sessionId))
+            using (var ctx = new ServiceContext(db, sessionId))
             {
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
@@ -90,11 +90,15 @@ namespace ObjectServer
                 throw new ArgumentNullException("resource");
             }
 
-            using (var scope = new TransactionContext(db, sessionId))
+            //加入事务
+            using (var txScope = new System.Transactions.TransactionScope())
+            using (var svcCtx = new ServiceContext(db, sessionId))
             {
-                dynamic res = scope.GetResource(resource);
+                dynamic res = svcCtx.GetResource(resource);
                 var svc = res.GetService(method);
-                return svc.Invoke(res, scope, args);
+                var result = svc.Invoke(res, svcCtx, args);
+                txScope.Complete();
+                return result;
             }
         }
 

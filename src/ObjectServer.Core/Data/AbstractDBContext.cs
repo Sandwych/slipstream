@@ -15,7 +15,6 @@ namespace ObjectServer.Data
     internal abstract class AbstractDbContext : IDbContext
     {
         protected IDbConnection _conn;
-        private bool _opened = false;
         private bool _disposed = false;
         private IDbTransaction _transaction;
 
@@ -28,22 +27,9 @@ namespace ObjectServer.Data
             this.Dispose(false);
         }
 
-        public void Open()
-        {
-            if (!this._opened)
-            {
-                this._conn.Open();
-                this._opened = true;
-            }
-        }
-
         public void Close()
         {
-            if (this._opened)
-            {
-                this._conn.Close();
-                this._opened = false;
-            }
+            this._conn.Close();
         }
 
         public string DatabaseName { get; protected set; }
@@ -56,8 +42,6 @@ namespace ObjectServer.Data
             {
                 throw new ArgumentNullException("commandText");
             }
-
-            this.EnsureConnectionOpened();
 
             if (Environment.Configuration.LoggingSql)
             {
@@ -78,8 +62,6 @@ namespace ObjectServer.Data
             {
                 throw new ArgumentNullException("commandText");
             }
-
-            this.EnsureConnectionOpened();
 
             if (Environment.Configuration.LoggingSql)
             {
@@ -193,8 +175,6 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("commandText");
             }
 
-            this.EnsureConnectionOpened();
-
             if (Environment.Configuration.LoggingSql)
             {
                 LoggerProvider.EnvironmentLogger.Debug(() => ("SQL: " + commandText));
@@ -240,18 +220,12 @@ namespace ObjectServer.Data
         protected IDbCommand PrepareCommand(string commandText)
         {
             Debug.Assert(!string.IsNullOrEmpty(commandText));
-            Debug.Assert(this._opened);
             Debug.Assert(!this._disposed);
 
             var command = this._conn.CreateCommand();
             command.CommandText = commandText;
 
             return command;
-        }
-
-        protected void EnsureConnectionOpened()
-        {
-            this.Open();
         }
 
         public abstract bool IsInitialized();
@@ -291,15 +265,11 @@ namespace ObjectServer.Data
 
         public virtual IDbTransaction BeginTransaction()
         {
-            Debug.Assert(this._opened);
-
             return this.Transaction;
         }
 
         public IDbCommand CreateCommand(SqlString sql)
         {
-            Debug.Assert(this._opened);
-
             var sqlCommand = DataProvider.Driver.GenerateCommand(
                 CommandType.Text, sql, new NHibernate.SqlTypes.SqlType[] { });
             sqlCommand.Connection = this._conn;

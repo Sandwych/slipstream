@@ -29,9 +29,9 @@ namespace ObjectServer.Core
             Fields.Text("layout").SetLabel("Layout");
         }
 
-        [TransactionMethod("GetView")]
+        [ServiceMethod("GetView")]
         public static Dictionary<string, object> GetView(
-            IModel model, ITransactionContext ctx, string modelName, string viewKind, long? viewId)
+            IModel model, IServiceContext ctx, string modelName, string viewKind, long? viewId)
         {
             if (model == null)
             {

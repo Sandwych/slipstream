@@ -12,14 +12,13 @@ using ObjectServer.Utility;
 namespace ObjectServer.Data.Test
 {
     [TestFixture]
-    public class DataContextTests : TransactionContextTestCaseBase
+    public class DataContextTests : ServiceContextTestCaseBase
     {
         [Test]
         public void Query_as_dictionary()
         {
-            using (var db = DataProvider.CreateDataContext(TestingDatabaseName))
+            using (var db = DataProvider.OpenDataContext(TestingDatabaseName))
             {
-                db.Open();
                 var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
                 var rows = db.QueryAsDictionary(sql, "core.model");
                 Assert.NotNull(rows);
@@ -31,10 +30,8 @@ namespace ObjectServer.Data.Test
         [Test]
         public void Query_as_datatable()
         {
-            using (var db = DataProvider.CreateDataContext(TestingDatabaseName))
+            using (var db = DataProvider.OpenDataContext(TestingDatabaseName))
             {
-                db.Open();
-
                 var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
                 var dt = db.QueryAsDataTable(sql, "core.model");
                 Assert.NotNull(dt);
@@ -51,10 +48,8 @@ namespace ObjectServer.Data.Test
         [Test]
         public void Query_as_dynamic()
         {
-            using (var db = DataProvider.CreateDataContext(TestingDatabaseName))
+            using (var db = DataProvider.OpenDataContext(TestingDatabaseName))
             {
-                db.Open();
-
                 var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
                 var records = db.QueryAsDynamic(sql, "core.model");
                 Assert.NotNull(records);
@@ -68,10 +63,8 @@ namespace ObjectServer.Data.Test
         [Test]
         public void Query_as_array()
         {
-            using (var db = DataProvider.CreateDataContext(TestingDatabaseName))
+            using (var db = DataProvider.OpenDataContext(TestingDatabaseName))
             {
-                db.Open();
-
                 var sql = SqlString.Parse("SELECT name FROM core_model WHERE name=?");
                 var names = db.QueryAsArray<string>(sql, "core.model");
 

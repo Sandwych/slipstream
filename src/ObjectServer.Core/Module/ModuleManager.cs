@@ -146,7 +146,7 @@ namespace ObjectServer
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void LoadModules(ITransactionContext ctx, bool isUpdate)
+        public void LoadModules(IServiceContext ctx, bool isUpdate)
         {
             if (ctx == null)
             {
@@ -193,7 +193,7 @@ namespace ObjectServer
             }
         }
 
-        private void InstallOrUpgradeModule(ITransactionContext ctx, Module module, long moduleId, string state, bool isUpdate)
+        private void InstallOrUpgradeModule(IServiceContext ctx, Module module, long moduleId, string state, bool isUpdate)
         {
             if (isUpdate && state == ModuleModel.States.ToInstall)
             {

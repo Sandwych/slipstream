@@ -24,7 +24,7 @@ namespace ObjectServer.Core
                 .Required().OnDelete(OnDeleteAction.Cascade);
         }
 
-        public override void Initialize(ITransactionContext tc, bool update)
+        public override void Initialize(IServiceContext tc, bool update)
         {
             if (tc == null)
             {

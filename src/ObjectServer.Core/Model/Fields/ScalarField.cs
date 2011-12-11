@@ -36,17 +36,17 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-            ITransactionContext session, ICollection<Dictionary<string, object>> records)
+            IServiceContext session, ICollection<Dictionary<string, object>> records)
         {
             return records.ExtractFieldValues(this.Name);
         }
 
-        protected override object OnSetFieldValue(ITransactionContext scope, object value)
+        protected override object OnSetFieldValue(IServiceContext scope, object value)
         {
             return value;
         }
 
-        public override object BrowseField(ITransactionContext ctx, IDictionary<string, object> record)
+        public override object BrowseField(IServiceContext ctx, IDictionary<string, object> record)
         {
             if (ctx == null)
             {

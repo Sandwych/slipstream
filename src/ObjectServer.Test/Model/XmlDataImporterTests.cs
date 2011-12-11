@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class XmlDataImporterTests : TransactionContextTestCaseBase
+    public class XmlDataImporterTests : ServiceContextTestCaseBase
     {
         const string TestModelXmlResourcePath = "ObjectServer.Test.XmlFiles.test-model-data.xml";
         const string MasterChildXmlResourcePath = "ObjectServer.Test.XmlFiles.master-child-data.xml";
@@ -22,7 +22,7 @@ namespace ObjectServer.Model.Test
             this.ClearTestModelTable();
 
             //删除所有记录
-            dynamic testObjectModel = this.TransactionContext.GetResource("test.test_model");
+            dynamic testObjectModel = this.Context.GetResource("test.test_model");
 
             var constraints = new object[][] { new object[] { "model", "=", "test.test_model" } };
 
@@ -30,15 +30,15 @@ namespace ObjectServer.Model.Test
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(TestModelXmlResourcePath))
             {
-                var importer = new XmlDataImporter(this.TransactionContext, "test");
+                var importer = new XmlDataImporter(this.Context, "test");
 
                 importer.Import(xmlStream);
 
-                var ids = testObjectModel.SearchInternal(this.TransactionContext, null, null, 0, 0);
+                var ids = testObjectModel.SearchInternal(this.Context, null, null, 0, 0);
                 Assert.AreEqual(3, ids.Length);
 
                 var domain1 = new object[][] { new object[] { "name", "=", "name_changed" } };
-                ids = testObjectModel.SearchInternal(this.TransactionContext, domain1, null, 0, 0);
+                ids = testObjectModel.SearchInternal(this.Context, domain1, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
             }
 
@@ -46,11 +46,11 @@ namespace ObjectServer.Model.Test
             using (var xmlStream = Assembly.GetExecutingAssembly()
              .GetManifestResourceStream(TestModelXmlResourcePath))
             {
-                var importer = new XmlDataImporter(this.TransactionContext, "test");
+                var importer = new XmlDataImporter(this.Context, "test");
                 importer.Import(xmlStream);
             }
 
-            var ids2 = testObjectModel.SearchInternal(this.TransactionContext, null, null, 0, 0);
+            var ids2 = testObjectModel.SearchInternal(this.Context, null, null, 0, 0);
             Assert.AreEqual(3, ids2.Length);
         }
 
@@ -62,22 +62,22 @@ namespace ObjectServer.Model.Test
             this.ClearAllModelData();
             //删除所有导入记录
 
-            dynamic childModel = this.TransactionContext.GetResource("test.child");
-            dynamic masterModel = this.TransactionContext.GetResource("test.master");
+            dynamic childModel = this.Context.GetResource("test.child");
+            dynamic masterModel = this.Context.GetResource("test.master");
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(MasterChildXmlResourcePath))
             {
-                var importer = new XmlDataImporter(this.TransactionContext, "test");
+                var importer = new XmlDataImporter(this.Context, "test");
 
                 importer.Import(xmlStream);
 
                 object[][] constraints;
 
                 constraints = new object[][] { new object[] { "name", "=", "master1" } };
-                var ids = masterModel.Search(this.TransactionContext, constraints, null, 0, 0);
+                var ids = masterModel.Search(this.Context, constraints, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
-                dynamic master1 = masterModel.Browse(this.TransactionContext, ids[0]);
+                dynamic master1 = masterModel.Browse(this.Context, ids[0]);
                 Assert.AreEqual(2, master1.children.Length);
             }
         }
@@ -90,30 +90,30 @@ namespace ObjectServer.Model.Test
             this.ClearAllModelData();
             //删除所有导入记录
 
-            dynamic testModel = this.TransactionContext.GetResource("test.test_model");
-            dynamic masterModel = this.TransactionContext.GetResource("test.master");
+            dynamic testModel = this.Context.GetResource("test.test_model");
+            dynamic masterModel = this.Context.GetResource("test.master");
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(ReferenceFieldXmlResourcePath))
             {
-                var importer = new XmlDataImporter(this.TransactionContext, "test");
+                var importer = new XmlDataImporter(this.Context, "test");
 
                 importer.Import(xmlStream);
 
-                var masterIds = masterModel.Search(this.TransactionContext, null, null, 0, 0);
+                var masterIds = masterModel.Search(this.Context, null, null, 0, 0);
                 Assert.AreEqual(1, masterIds.Length);
 
-                var testModelIds = testModel.Search(this.TransactionContext, null, null, 0, 0);
+                var testModelIds = testModel.Search(this.Context, null, null, 0, 0);
                 Assert.AreEqual(1, testModelIds.Length);
 
-                dynamic testModelRecord = testModel.Browse(this.TransactionContext, testModelIds[0]);
+                dynamic testModelRecord = testModel.Browse(this.Context, testModelIds[0]);
                 Assert.AreEqual("master1", testModelRecord.reference_field.name);
             }
         }
 
         private void ClearAllModelData()
         {
-            var model = (IModel)this.TransactionContext.GetResource("core.model_data");
+            var model = (IModel)this.Context.GetResource("core.model_data");
 
             ClearAllModelData(model, "test.master");
             ClearAllModelData(model, "test.child");
@@ -127,10 +127,10 @@ namespace ObjectServer.Model.Test
         private void ClearAllModelData(IModel model, string modelName)
         {
             var constraints = new object[][] { new object[] { "model", "=", modelName } };
-            var ids = model.SearchInternal(this.TransactionContext, constraints, null, 0, 0);
+            var ids = model.SearchInternal(this.Context, constraints, null, 0, 0);
             if (ids != null && ids.Length > 0)
             {
-                model.DeleteInternal(this.TransactionContext, ids);
+                model.DeleteInternal(this.Context, ids);
             }
         }
 

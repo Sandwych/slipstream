@@ -5,12 +5,12 @@ using System.Text;
 
 namespace ObjectServer
 {
-    public interface ITransaction
+    public interface IService
     {
         IResource Resource { get; }
         string Name { get; }
         string Help { get; }
 
-        object Invoke(IResource self, ITransactionContext scope, params object[] args);
+        object Invoke(IResource self, IServiceContext scope, params object[] args);
     }
 }

@@ -11,8 +11,6 @@ namespace ObjectServer.Data
 {
     public interface IDbContext : IDisposable
     {
-
-        void Open();
         void Close();
 
         void Initialize();

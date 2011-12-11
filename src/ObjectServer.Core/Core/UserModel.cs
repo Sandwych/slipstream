@@ -38,7 +38,7 @@ namespace ObjectServer.Core
             Fields.Boolean("active").SetLabel("Active?").Required().SetDefaultValueGetter(r => true);
         }
 
-        public override void Initialize(ITransactionContext ctx, bool update)
+        public override void Initialize(IServiceContext ctx, bool update)
         {
             base.Initialize(ctx, update);
 
@@ -154,7 +154,7 @@ namespace ObjectServer.Core
         }
 
 
-        public override long CreateInternal(ITransactionContext ctx, IDictionary<string, object> values)
+        public override long CreateInternal(IServiceContext ctx, IDictionary<string, object> values)
         {
             if (ctx == null)
             {
@@ -172,7 +172,7 @@ namespace ObjectServer.Core
 
 
         public override void WriteInternal(
-            ITransactionContext ctx, long id, IDictionary<string, object> record)
+            IServiceContext ctx, long id, IDictionary<string, object> record)
         {
             if (ctx == null)
             {
@@ -206,7 +206,7 @@ namespace ObjectServer.Core
         }
 
         public override Dictionary<string, object>[] ReadInternal(
-            ITransactionContext ctx, long[] ids, string[] fields)
+            IServiceContext ctx, long[] ids, string[] fields)
         {
             var records = base.ReadInternal(ctx, ids, fields);
 
@@ -229,7 +229,7 @@ namespace ObjectServer.Core
         }
 
 
-        public Session LogOn(ITransactionContext ctx,
+        public Session LogOn(IServiceContext ctx,
             string database, string login, string password)
         {
             var constraint = new object[][] { new object[] { "login", "=", login } };
@@ -264,7 +264,7 @@ namespace ObjectServer.Core
         }
 
 
-        public void LogOff(ITransactionContext ctx, string sessionId)
+        public void LogOff(IServiceContext ctx, string sessionId)
         {
             var session = Session.GetById(ctx.DBContext, sessionId);
 
@@ -282,9 +282,9 @@ namespace ObjectServer.Core
             }
         }
 
-        [TransactionMethod("ChangePassword")]
+        [ServiceMethod("ChangePassword")]
         public static void ChangePassword(
-            IModel model, ITransactionContext ctx, string newPassword)
+            IModel model, IServiceContext ctx, string newPassword)
         {
             if (model == null)
             {
@@ -316,7 +316,7 @@ namespace ObjectServer.Core
 
 
         private Session FetchOrCreateSession(
-            ITransactionContext ctx, string dbName, string login, IDictionary<string, object> userFields)
+            IServiceContext ctx, string dbName, string login, IDictionary<string, object> userFields)
         {
             Debug.Assert(ctx != null);
             Debug.Assert(userFields.ContainsKey("password"));

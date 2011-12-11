@@ -50,7 +50,7 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
         /// <param name="userId"></param>
         /// <returns></returns>
         public static bool CheckForCurrentUser(
-            ITransactionContext ctx, string model, string action)
+            IServiceContext ctx, string model, string action)
         {
             if (ctx == null)
             {
@@ -88,7 +88,7 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
         /// <param name="userRecord"></param>
         /// <returns></returns>
         public override long CreateInternal(
-            ITransactionContext ctx, IDictionary<string, object> userRecord)
+            IServiceContext ctx, IDictionary<string, object> userRecord)
         {
             return base.CreateInternal(ctx, userRecord);
         }
@@ -100,7 +100,7 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
         /// <param name="id"></param>
         /// <param name="userRecord"></param>
         public override void WriteInternal(
-            ITransactionContext ctx, long id, IDictionary<string, object> userRecord)
+            IServiceContext ctx, long id, IDictionary<string, object> userRecord)
         {
             base.WriteInternal(ctx, id, userRecord);
         }
@@ -110,7 +110,7 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="ids"></param>
-        public override void DeleteInternal(ITransactionContext ctx, long[] ids)
+        public override void DeleteInternal(IServiceContext ctx, long[] ids)
         {
             base.DeleteInternal(ctx, ids);
         }

@@ -130,11 +130,11 @@ namespace ObjectServer
 
         #endregion
 
-        public void Load(ITransactionContext ctx, ModuleUpdateAction action)
+        public void Load(IServiceContext ctx, ModuleUpdateAction action)
         {
             if (ctx == null)
             {
-                throw new ArgumentNullException("scope");
+                throw new ArgumentNullException("svcCtx");
             }
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format("Loading module: [{0}]", this.Name));
@@ -162,7 +162,7 @@ namespace ObjectServer
             }
         }
 
-        private void LoadAdditionalModule(ITransactionContext scope, ModuleUpdateAction action)
+        private void LoadAdditionalModule(IServiceContext scope, ModuleUpdateAction action)
         {
             Debug.Assert(scope != null);
 
@@ -186,7 +186,7 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
         }
 
-        private void LoadCoreModule(ITransactionContext tc, ModuleUpdateAction action)
+        private void LoadCoreModule(IServiceContext tc, ModuleUpdateAction action)
         {
             Debug.Assert(tc != null);
 
@@ -211,7 +211,7 @@ namespace ObjectServer
             }
         }
 
-        private void InitializeResources(ITransactionContext tc, IEnumerable<IResource> resources, ModuleUpdateAction action)
+        private void InitializeResources(IServiceContext tc, IEnumerable<IResource> resources, ModuleUpdateAction action)
         {
             //注册并初始化所有资源
             var standaloneResources = new List<IResource>();
@@ -232,7 +232,7 @@ namespace ObjectServer
             }
         }
 
-        private void LoadModuleData(ITransactionContext scope, ModuleUpdateAction action)
+        private void LoadModuleData(IServiceContext scope, ModuleUpdateAction action)
         {
             Debug.Assert(scope != null);
 
@@ -253,7 +253,7 @@ namespace ObjectServer
             }
         }
 
-        private void ImportDataFiles(ITransactionContext scope, string[] files)
+        private void ImportDataFiles(IServiceContext scope, string[] files)
         {
             var importer = new Model.XmlDataImporter(scope, this.Name);
             foreach (var dataFile in files)

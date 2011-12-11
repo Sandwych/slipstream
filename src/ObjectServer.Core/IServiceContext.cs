@@ -8,14 +8,13 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    public interface ITransactionContext : IDisposable, IEquatable<ITransactionContext>
+    public interface IServiceContext : IDisposable, IEquatable<IServiceContext>
     {
         Session Session { get; }
 
         IResource GetResource(string resName);
         int GetResourceDependencyWeight(string resName);
         IDbContext DBContext { get; }
-        IDbTransaction DbTransaction { get; }
         IResourceContainer Resources { get; }
         ILogger BizLogger { get; }
     }

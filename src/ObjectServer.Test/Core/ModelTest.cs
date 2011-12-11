@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace ObjectServer.Core.Test
 {
 
-    public sealed class ModelTest : TransactionContextTestCaseBase
+    public sealed class ModelTest : ServiceContextTestCaseBase
     {
 
 

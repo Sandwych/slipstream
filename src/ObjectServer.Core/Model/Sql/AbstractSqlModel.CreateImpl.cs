@@ -23,7 +23,7 @@ namespace ObjectServer.Model
 
     public abstract partial class AbstractSqlModel : AbstractModel
     {
-        public override long CreateInternal(ITransactionContext scope, IRecord userRecord)
+        public override long CreateInternal(IServiceContext scope, IRecord userRecord)
         {
             if (!this.CanCreate)
             {
@@ -82,7 +82,7 @@ namespace ObjectServer.Model
             return selfId;
         }
 
-        private void PrecreateBaseRecords(ITransactionContext scope, IRecord record)
+        private void PrecreateBaseRecords(IServiceContext scope, IRecord record)
         {
             foreach (var i in this.Inheritances)
             {
@@ -109,7 +109,7 @@ namespace ObjectServer.Model
         /// <param name="tc"></param>
         /// <param name="record"></param>
         /// <param name="id"></param>
-        private void PostcreateManyToManyFields(ITransactionContext tc, long id, IRecord record)
+        private void PostcreateManyToManyFields(IServiceContext tc, long id, IRecord record)
         {
 
             //处理 Many-to-many 字段
@@ -275,7 +275,7 @@ namespace ObjectServer.Model
 
         #endregion
 
-        private long CreateSelf(ITransactionContext ctx, IRecord values)
+        private long CreateSelf(IServiceContext ctx, IRecord values)
         {
             Debug.Assert(ctx != null);
             Debug.Assert(values != null);
@@ -338,7 +338,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValuesForCreation(ITransactionContext ctx, IRecord propertyBag)
+        private void AddDefaultValuesForCreation(IServiceContext ctx, IRecord propertyBag)
         {
             var defaultFields =
                 this.Fields.Values.Where(

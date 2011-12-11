@@ -24,7 +24,7 @@ namespace ObjectServer.Model
     {
         private static readonly string[] SearchParentNodeFields = new string[] { IdFieldName, LeftFieldName, RightFieldName };
 
-        public override void WriteInternal(ITransactionContext ctx, long id, IRecord userRecord)
+        public override void WriteInternal(IServiceContext ctx, long id, IRecord userRecord)
         {
             if (ctx == null)
             {
@@ -158,7 +158,7 @@ namespace ObjectServer.Model
         }
 
 
-        private int WriteSelf(ITransactionContext ctx, long id, Record record)
+        private int WriteSelf(IServiceContext ctx, long id, Record record)
         {
             var allFields = record.Keys; //记录中的所有字段
 
@@ -220,7 +220,7 @@ namespace ObjectServer.Model
             return rowsAffected;
         }
 
-        private void NodeMoveTo(ITransactionContext ctx, long nodeLeft, long nodeRight, long nodeWidth, long newParentID)
+        private void NodeMoveTo(IServiceContext ctx, long nodeLeft, long nodeRight, long nodeWidth, long newParentID)
         {
             Debug.Assert(ctx != null);
 
@@ -281,7 +281,7 @@ namespace ObjectServer.Model
             //最后一步不需要执行了，之前已经更新过 parent
         }
 
-        private void SetModificationInfo(ITransactionContext scope, IRecord record)
+        private void SetModificationInfo(IServiceContext scope, IRecord record)
         {
             //处理最近更新用户与最近更新时间字段            
             if (this.ContainsField(UpdatedTimeFieldName))
@@ -297,7 +297,7 @@ namespace ObjectServer.Model
         }
 
         private void PrewriteManyToManyFields(
-            ITransactionContext scope, long id, IRecord record, ICollection<string> allFields)
+            IServiceContext scope, long id, IRecord record, ICollection<string> allFields)
         {
             //过滤所有可以更新的 many2many 字段
             var writableManyToManyFields =
@@ -313,7 +313,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private static void PrewriteManyToManyField(ITransactionContext scope, long id, IRecord record, IField f)
+        private static void PrewriteManyToManyField(IServiceContext scope, long id, IRecord record, IField f)
         {
             var relModel = (IModel)scope.GetResource(f.Relation);
             var constraints = new object[][]  
@@ -338,7 +338,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void PrewriteBaseModels(ITransactionContext ctx, IRecord record, IRecord existedRecord)
+        private void PrewriteBaseModels(IServiceContext ctx, IRecord record, IRecord existedRecord)
         {
             //处理继承表的策略
             //继承表写入的策略是这样的：

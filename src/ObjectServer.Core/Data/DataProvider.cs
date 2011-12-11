@@ -40,19 +40,19 @@ namespace ObjectServer.Data
             }
         }
 
-        public static IDbContext CreateDataContext(string dbName)
+        public static IDbContext OpenDataContext(string dbName)
         {
             if (dbName == null)
             {
                 throw new ArgumentNullException("dbName");
             }
 
-            return concreteDataProvider.CreateDataContext(dbName);
+            return concreteDataProvider.OpenDataContext(dbName);
         }
 
         public static IDbContext CreateDataContext()
         {
-            return concreteDataProvider.CreateDataContext();
+            return concreteDataProvider.OpenDataContext();
         }
 
         public static string[] ListDatabases()
@@ -71,7 +71,7 @@ namespace ObjectServer.Data
             LoggerProvider.EnvironmentLogger.Info(msg);
 
             concreteDataProvider.CreateDatabase(dbName);
-            using (var ctx = concreteDataProvider.CreateDataContext(dbName))
+            using (var ctx = concreteDataProvider.OpenDataContext(dbName))
             {
                 LoggerProvider.EnvironmentLogger.Info("Initializing Database...");
                 ctx.Initialize();

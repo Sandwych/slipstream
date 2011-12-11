@@ -12,7 +12,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Test
 {
     [TestFixture]
-    public sealed class ServiceConcurrencyTests : TransactionTestCaseBase
+    public sealed class ServiceConcurrencyTests : ServiceTestCaseBase
     {
         [Test]
         public void TestMultithreadRead()

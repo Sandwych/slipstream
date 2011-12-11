@@ -121,7 +121,7 @@
     <Compile Include="Data\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Data\Postgresql\PgTableContext.cs" />
     <Compile Include="Caching\CachedMethodAttribute.cs" />
-    <Compile Include="ClrTransaction.cs" />
+    <Compile Include="ClrService.cs" />
     <Compile Include="Core\RuleRoleModel.cs" />
     <Compile Include="Exceptions\SecurityException.cs" />
     <Compile Include="Exceptions\DataException.cs" />
@@ -145,7 +145,7 @@
     <Compile Include="Core\UserRoleModel.cs" />
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
-    <Compile Include="ITransaction.cs" />
+    <Compile Include="IService.cs" />
     <Compile Include="Json\JsonRpcProtocol.cs" />
     <Compile Include="Json\JsonRpcResponse.cs" />
     <Compile Include="Model\AbstractExtendedModel.cs" />
@@ -215,15 +215,15 @@
     <Compile Include="Environment.cs" />
     <Compile Include="DbDomainManager.cs" />
     <Compile Include="Core\UserModel.cs" />
-    <Compile Include="ITransactionContext.cs" />
+    <Compile Include="IServiceContext.cs" />
     <Compile Include="Core\FieldModel.cs" />
     <Compile Include="Core\ModelModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\CompilerProvider.cs" />
     <Compile Include="Runtime\CSharpCompiler.cs" />
     <Compile Include="Runtime\ICompiler.cs" />
-    <Compile Include="TransactionMethodAttribute.cs" />
-    <Compile Include="TransactionContext.cs" />
+    <Compile Include="ServiceMethodAttribute.cs" />
+    <Compile Include="ServiceContext.cs" />
     <Compile Include="Model\Fields\AbstractField.cs" />
     <Compile Include="Model\Fields\FieldValueGetter.cs" />
     <Compile Include="Model\Fields\FieldType.cs" />

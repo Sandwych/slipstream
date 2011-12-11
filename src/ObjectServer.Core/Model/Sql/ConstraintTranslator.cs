@@ -35,13 +35,13 @@ namespace ObjectServer.Model
         public const string MainTableAlias = "_t0";
 
         IModel rootModel;
-        ITransactionContext serviceScope;
+        IServiceContext serviceScope;
 
-        public ConstraintTranslator(ITransactionContext scope, IModel rootModel)
+        public ConstraintTranslator(IServiceContext scope, IModel rootModel)
         {
             if (scope == null)
             {
-                throw new ArgumentNullException("scope");
+                throw new ArgumentNullException("svcCtx");
             }
 
             if (rootModel == null)
@@ -56,7 +56,7 @@ namespace ObjectServer.Model
             this.fromJoins.Add(rootFormClause);
         }
 
-        public ConstraintTranslator(ITransactionContext scope, string rootModelName)
+        public ConstraintTranslator(IServiceContext scope, string rootModelName)
             : this(scope, (IModel)scope.GetResource(rootModelName))
         {
 

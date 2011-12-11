@@ -40,7 +40,7 @@ namespace ObjectServer.Core
         /// <param name="userRecord"></param>
         /// <returns></returns>
         public override long CreateInternal(
-            ITransactionContext ctx, IDictionary<string, object> userRecord)
+            IServiceContext ctx, IDictionary<string, object> userRecord)
         {
             return base.CreateInternal(ctx, userRecord);
         }
@@ -52,13 +52,13 @@ namespace ObjectServer.Core
         /// <param name="id"></param>
         /// <param name="userRecord"></param>
         public override void WriteInternal(
-            ITransactionContext ctx, long id, IDictionary<string, object> userRecord)
+            IServiceContext ctx, long id, IDictionary<string, object> userRecord)
         {
             base.WriteInternal(ctx, id, userRecord);
         }
 
         public IDictionary<string, bool> GetFieldAccess(
-            ITransactionContext ctx, string modelName, IEnumerable<string> fields, string action)
+            IServiceContext ctx, string modelName, IEnumerable<string> fields, string action)
         {
             if (ctx == null)
             {

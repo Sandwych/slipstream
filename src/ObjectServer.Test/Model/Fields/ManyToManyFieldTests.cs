@@ -12,11 +12,11 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class ManyToManyFieldTests : TransactionContextTestCaseBase
+    public class ManyToManyFieldTests : ServiceContextTestCaseBase
     {
         private void ClearManyToManyModels()
         {
-            Debug.Assert(this.TransactionContext != null);
+            Debug.Assert(this.Context != null);
             this.ClearModel("test.department_employee");
             this.ClearModel("test.department");
             this.ClearModel("test.employee");
@@ -29,7 +29,7 @@ namespace ObjectServer.Model.Fields.Test
             dynamic ids = this.GenerateTestData();
 
             dynamic employeeModel = this.GetResource("test.employee");
-            dynamic e1 = employeeModel.Browse(this.TransactionContext, ids.eid1);
+            dynamic e1 = employeeModel.Browse(this.Context, ids.eid1);
 
             //TODO: 这里要排序再比较
             Assert.AreEqual(3, e1.departments.Length);
@@ -37,7 +37,7 @@ namespace ObjectServer.Model.Fields.Test
             Assert.AreEqual(e1.departments[1]._id, ids.did3);
             Assert.AreEqual(e1.departments[2]._id, ids.did4);
 
-            dynamic e2 = employeeModel.Browse(this.TransactionContext, ids.eid2);
+            dynamic e2 = employeeModel.Browse(this.Context, ids.eid2);
             Assert.AreEqual(2, e2.departments.Length);
             Assert.AreEqual(e2.departments[0]._id, ids.did3);
             Assert.AreEqual(e2.departments[1]._id, ids.did4);
@@ -53,7 +53,7 @@ namespace ObjectServer.Model.Fields.Test
             var ids = new object[] { data.eid1, data.eid2 };
 
             var employees = employeeModel.Read(
-                this.TransactionContext, ids, new object[] { "name", "departments" });
+                this.Context, ids, new object[] { "name", "departments" });
 
             Assert.AreEqual(2, employees.Length);
             var employee1 = employees[0];
@@ -82,10 +82,10 @@ namespace ObjectServer.Model.Fields.Test
             dynamic e = new ExpandoObject();
             e.name = "test-employee";
             e.departments = new long[] { data.did1, data.did2, data.did3 };
-            var eid = employeeModel.Create(this.TransactionContext, e);
+            var eid = employeeModel.Create(this.Context, e);
 
             var fields = new string[] { "name", "departments" };
-            var record = employeeModel.Read(this.TransactionContext, new object[] { eid }, fields)[0];
+            var record = employeeModel.Read(this.Context, new object[] { eid }, fields)[0];
 
             var departments = (long[])record["departments"];
 
@@ -106,15 +106,15 @@ namespace ObjectServer.Model.Fields.Test
             dynamic employeeModel = this.GetResource("test.employee");
             dynamic data = this.GenerateTestData();
 
-            dynamic r1 = employeeModel.Read(this.TransactionContext, new long[] { data.eid1 }, null)[0];
+            dynamic r1 = employeeModel.Read(this.Context, new long[] { data.eid1 }, null)[0];
             dynamic e1 = new ExpandoObject();
             e1.departments = new long[] { data.did1, data.did2 };
             e1._version = r1["_version"];
-            employeeModel.Write(this.TransactionContext, data.eid1, e1);
+            employeeModel.Write(this.Context, data.eid1, e1);
 
             var fields = new string[] { "name", "departments" };
             var record = employeeModel.Read(
-                this.TransactionContext, new object[] { data.eid1 }, fields)[0];
+                this.Context, new object[] { data.eid1 }, fields)[0];
 
             var departments = (long[])record["departments"];
             Assert.AreEqual(2, departments.Length);
@@ -134,32 +134,32 @@ namespace ObjectServer.Model.Fields.Test
             dynamic depEmployeeModel = this.GetResource("test.department_employee");
 
             e.name = "employee";
-            ids.eid1 = employeeModel.Create(this.TransactionContext, e);
-            ids.eid2 = employeeModel.Create(this.TransactionContext, e);
-            ids.eid3 = employeeModel.Create(this.TransactionContext, e);
-            ids.eid4 = employeeModel.Create(this.TransactionContext, e);
-            ids.eid5 = employeeModel.Create(this.TransactionContext, e);
+            ids.eid1 = employeeModel.Create(this.Context, e);
+            ids.eid2 = employeeModel.Create(this.Context, e);
+            ids.eid3 = employeeModel.Create(this.Context, e);
+            ids.eid4 = employeeModel.Create(this.Context, e);
+            ids.eid5 = employeeModel.Create(this.Context, e);
 
             dynamic dept = new ExpandoObject();
             dept.name = "department";
-            ids.did1 = depModel.Create(this.TransactionContext, dept);
-            ids.did2 = depModel.Create(this.TransactionContext, dept);
-            ids.did3 = depModel.Create(this.TransactionContext, dept);
-            ids.did4 = depModel.Create(this.TransactionContext, dept);
-            ids.did5 = depModel.Create(this.TransactionContext, dept);
+            ids.did1 = depModel.Create(this.Context, dept);
+            ids.did2 = depModel.Create(this.Context, dept);
+            ids.did3 = depModel.Create(this.Context, dept);
+            ids.did4 = depModel.Create(this.Context, dept);
+            ids.did5 = depModel.Create(this.Context, dept);
 
             //设置e1 对应 did2, did3, did4
-            depEmployeeModel.Create(this.TransactionContext,
+            depEmployeeModel.Create(this.Context,
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did2 }, });
-            depEmployeeModel.Create(this.TransactionContext,
+            depEmployeeModel.Create(this.Context,
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did3 }, });
-            depEmployeeModel.Create(this.TransactionContext,
+            depEmployeeModel.Create(this.Context,
                 new Dictionary<string, object>() { { "eid", ids.eid1 }, { "did", ids.did4 }, });
 
             //设置 e2  对应 did3 did4
-            depEmployeeModel.Create(this.TransactionContext,
+            depEmployeeModel.Create(this.Context,
                 new Dictionary<string, object>() { { "eid", ids.eid2 }, { "did", ids.did3 }, });
-            depEmployeeModel.Create(this.TransactionContext,
+            depEmployeeModel.Create(this.Context,
                 new Dictionary<string, object>() { { "eid", ids.eid2 }, { "did", ids.did4 }, });
 
             return ids;

@@ -55,7 +55,7 @@ namespace ObjectServer.Core
         /// <param name="action"></param>
         /// <returns></returns>
         internal static IList<Criterion[]> GetRuleConstraints(
-            ITransactionContext ctx, string modelName, string action)
+            IServiceContext ctx, string modelName, string action)
         {
             Debug.Assert(ctx != null);
             Debug.Assert(!string.IsNullOrEmpty(modelName));
@@ -84,7 +84,7 @@ namespace ObjectServer.Core
         }
 
         private static IList<Criterion[]> ConvertConstraints(
-            ITransactionContext ctx, Dictionary<string, object>[] result)
+            IServiceContext ctx, Dictionary<string, object>[] result)
         {
             var scriptScope = CreateScriptScope(ctx);
 
@@ -110,7 +110,7 @@ namespace ObjectServer.Core
             return constraints;
         }
 
-        private static ScriptScope CreateScriptScope(ITransactionContext scope)
+        private static ScriptScope CreateScriptScope(IServiceContext scope)
         {
             var userModel = (UserModel)scope.GetResource("core.user");
             dynamic user = userModel.Browse(scope, scope.Session.UserId);
@@ -128,7 +128,7 @@ namespace ObjectServer.Core
         /// <param name="modelName"></param>
         /// <param name="action"></param>
         /// <returns></returns>
-        internal static Criterion[] GetRuleConstraintsCached(ITransactionContext scope, string modelName, string action)
+        internal static Criterion[] GetRuleConstraintsCached(IServiceContext scope, string modelName, string action)
         {
             throw new NotImplementedException();
         }

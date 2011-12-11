@@ -14,7 +14,7 @@ namespace ObjectServer
     /// <summary>
     /// 但凡是需要 RPC 的方法都需要用此类包裹
     /// </summary>
-    internal sealed class TransactionContext : ITransactionContext
+    internal sealed class ServiceContext : IServiceContext
     {
         private bool disposed = false;
         private readonly IResourceContainer resources;
@@ -24,7 +24,7 @@ namespace ObjectServer
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public TransactionContext(string dbName, string sessionId)
+        public ServiceContext(string dbName, string sessionId)
         {
             if (string.IsNullOrEmpty(dbName))
             {
@@ -37,9 +37,7 @@ namespace ObjectServer
 
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-            this.dbctx = DataProvider.CreateDataContext(dbName);
-
-            this.DBContext.Open();
+            this.dbctx = DataProvider.OpenDataContext(dbName);
 
             try
             {
@@ -78,12 +76,12 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        public TransactionContext(string dbName)
+        public ServiceContext(string dbName)
             : this(dbName, Environment.DBProfiles.GetDbProfile(dbName))
         {
         }
 
-        public TransactionContext(string dbName, IResourceContainer resourceContainer)
+        public ServiceContext(string dbName, IResourceContainer resourceContainer)
         {
             if (string.IsNullOrEmpty(dbName))
             {
@@ -92,8 +90,7 @@ namespace ObjectServer
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
             this.resources = resourceContainer;
-            this.dbctx = DataProvider.CreateDataContext(dbName);
-            this.DBContext.Open();
+            this.dbctx = DataProvider.OpenDataContext(dbName);
 
             try
             {
@@ -123,7 +120,7 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="db"></param>
-        public TransactionContext(IDbContext db)
+        public ServiceContext(IDbContext db)
         {
             if (db == null)
             {
@@ -132,8 +129,7 @@ namespace ObjectServer
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
             this.resources = Environment.DBProfiles.GetDbProfile(db.DatabaseName);
-            this.dbctx = DataProvider.CreateDataContext(db.DatabaseName);
-            this.DBContext.Open();
+            this.dbctx = DataProvider.OpenDataContext(db.DatabaseName);
 
             try
             {
@@ -158,7 +154,7 @@ namespace ObjectServer
             }
         }
 
-        ~TransactionContext()
+        ~ServiceContext()
         {
             this.Dispose(false);
         }
@@ -188,7 +184,7 @@ namespace ObjectServer
 
             if (this.disposed)
             {
-                throw new ObjectDisposedException("TransactionContext");
+                throw new ObjectDisposedException("ServiceContext");
             }
 
             Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
@@ -203,7 +199,7 @@ namespace ObjectServer
             {
                 if (this.disposed)
                 {
-                    throw new ObjectDisposedException("TransactionContext");
+                    throw new ObjectDisposedException("ServiceContext");
                 }
 
                 Debug.Assert(this.dbctx != null);
@@ -219,7 +215,7 @@ namespace ObjectServer
             {
                 if (this.disposed)
                 {
-                    throw new ObjectDisposedException("TransactionContext");
+                    throw new ObjectDisposedException("ServiceContext");
                 }
 
                 Debug.Assert(this.resources != null);
@@ -237,7 +233,7 @@ namespace ObjectServer
             {
                 if (this.disposed)
                 {
-                    throw new ObjectDisposedException("TransactionContext");
+                    throw new ObjectDisposedException("ServiceContext");
                 }
 
                 Debug.Assert(this.dbctx != null);
@@ -254,7 +250,7 @@ namespace ObjectServer
             {
                 if (this.disposed)
                 {
-                    throw new ObjectDisposedException("TransactionContext");
+                    throw new ObjectDisposedException("ServiceContext");
                 }
 
                 Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
@@ -312,7 +308,7 @@ namespace ObjectServer
 
         #region IEquatable<IContext> 成员
 
-        public bool Equals(ITransactionContext other)
+        public bool Equals(IServiceContext other)
         {
             if (other == null)
             {
@@ -325,4 +321,5 @@ namespace ObjectServer
         #endregion
 
     }
+
 }

@@ -40,6 +40,7 @@ namespace ObjectServer.Data.Postgresql
               cfg.DbHost, cfg.DbUser, cfg.DbPassword, dbName);
             var dbc = DataProvider.Driver.CreateConnection();
             dbc.ConnectionString = connectionString;
+            dbc.Open();
             //this.conn = new NpgsqlConnection(connectionString);
             this._conn = dbc;
             this.DatabaseName = dbName;
@@ -54,8 +55,6 @@ namespace ObjectServer.Data.Postgresql
 
         public override string[] List()
         {
-            EnsureConnectionOpened();
-
             var dbUser = Environment.Configuration.DbUser;
 
             return this.QueryAsArray<string>(SqlToListDBs, dbUser);
@@ -69,20 +68,15 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentNullException("dbName");
             }
 
-            EnsureConnectionOpened();
-
             LoggerProvider.EnvironmentLogger.Info(String.Format("Creating Database [{0}]...", dbName));
 
-            var sqlBuilder = new SqlStringBuilder();
-            sqlBuilder.Add("create database ");
-            sqlBuilder.Add(DataProvider.Dialect.QuoteForSchemaName(dbName));
-            sqlBuilder.Add(" template template0 encoding 'unicode' ");
+            var sql = string.Format(CultureInfo.InvariantCulture,
+                @"create database ""{0}"" template ""template0"" encoding 'unicode' ", dbName);
 
-            var sql = sqlBuilder.ToSqlString();
+            this.Execute(SqlString.Parse(sql));
 
-            this.Execute(sql);
-
-            LoggerProvider.EnvironmentLogger.Info(String.Format("Database [{0}] has been created.", dbName));
+            LoggerProvider.EnvironmentLogger.Info(
+                String.Format("Database [{0}] has been created.", dbName));
         }
 
         public override void Initialize()

@@ -13,9 +13,9 @@ namespace ObjectServer.Model
     internal class TableMigrator
     {
         private AbstractSqlModel model;
-        private ITransactionContext context;
+        private IServiceContext context;
 
-        public TableMigrator(ITransactionContext tc, AbstractSqlModel model)
+        public TableMigrator(IServiceContext tc, AbstractSqlModel model)
         {
             if (tc == null)
             {

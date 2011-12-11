@@ -27,7 +27,7 @@ namespace ObjectServer.Model
             this.fields = new FieldCollection(this);
         }
 
-        public override void Initialize(ITransactionContext tc, bool update)
+        public override void Initialize(IServiceContext tc, bool update)
         {
             if (tc == null)
             {
@@ -60,7 +60,7 @@ namespace ObjectServer.Model
         }
 
         public Dictionary<string, object> GetFieldDefaultValuesInternal(
-            ITransactionContext ctx, string[] fields)
+            IServiceContext ctx, string[] fields)
         {
             throw new NotSupportedException();
         }
@@ -126,13 +126,13 @@ namespace ObjectServer.Model
         }
 
         public long CountInternal(
-            ITransactionContext ctx, object[] constraint)
+            IServiceContext ctx, object[] constraint)
         {
             throw new NotSupportedException();
         }
 
         public long[] SearchInternal(
-            ITransactionContext ctx, object[] constraints,
+            IServiceContext ctx, object[] constraints,
             OrderExpression[] orders, long offset, long limit)
         {
             throw new NotSupportedException();
@@ -140,45 +140,45 @@ namespace ObjectServer.Model
         }
 
         public long CreateInternal(
-            ITransactionContext ctx, IDictionary<string, object> propertyBag)
+            IServiceContext ctx, IDictionary<string, object> propertyBag)
         {
             throw new NotSupportedException();
         }
 
         public void WriteInternal(
-            ITransactionContext scope, long id, IDictionary<string, object> record)
+            IServiceContext scope, long id, IDictionary<string, object> record)
         {
             throw new NotSupportedException();
         }
 
         public Dictionary<string, object>[] ReadInternal(
-            ITransactionContext scope, long[] ids, string[] requiredFields)
+            IServiceContext scope, long[] ids, string[] requiredFields)
         {
             throw new NotSupportedException();
         }
 
-        public void DeleteInternal(ITransactionContext scope, long[] ids)
+        public void DeleteInternal(IServiceContext scope, long[] ids)
         {
             throw new NotSupportedException();
         }
 
-        public dynamic Browse(ITransactionContext scope, long id)
+        public dynamic Browse(IServiceContext scope, long id)
         {
             throw new NotSupportedException();
         }
 
-        public dynamic BrowseMany(ITransactionContext scope, long[] ids)
+        public dynamic BrowseMany(IServiceContext scope, long[] ids)
         {
             throw new NotSupportedException();
         }
 
         public void ImportRecord(
-              ITransactionContext ctx, bool noUpdate, IDictionary<string, object> record, string key)
+              IServiceContext ctx, bool noUpdate, IDictionary<string, object> record, string key)
         {
             throw new NotSupportedException();
         }
 
-        public Dictionary<string, object>[] GetFieldsInternal(ITransactionContext ctx, string[] fields)
+        public Dictionary<string, object>[] GetFieldsInternal(IServiceContext ctx, string[] fields)
         {
             throw new NotSupportedException();
         }

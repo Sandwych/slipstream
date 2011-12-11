@@ -24,11 +24,11 @@ namespace ObjectServer.Model
         private static readonly Criterion[] EmptyConstraint = { };
 
         public override long[] SearchInternal(
-            ITransactionContext tc, object[] constraint, OrderExpression[] order, long offset, long limit)
+            IServiceContext tc, object[] constraint, OrderExpression[] order, long offset, long limit)
         {
             if (tc == null)
             {
-                throw new ArgumentNullException("scope");
+                throw new ArgumentNullException("svcCtx");
             }
 
             var translator = new ConstraintTranslator(tc, this);
@@ -56,11 +56,11 @@ namespace ObjectServer.Model
         }
 
 
-        public override long CountInternal(ITransactionContext tx, object[] constraint)
+        public override long CountInternal(IServiceContext tx, object[] constraint)
         {
             if (tx == null)
             {
-                throw new ArgumentNullException("scope");
+                throw new ArgumentNullException("svcCtx");
             }
 
             var translator = new ConstraintTranslator(tx, this);
@@ -71,7 +71,7 @@ namespace ObjectServer.Model
             return (long)tx.DBContext.QueryValue(querySql, translator.Values);
         }
 
-        private void TranslateConstraint(ITransactionContext tc, object[] constraint, ConstraintTranslator translator)
+        private void TranslateConstraint(IServiceContext tc, object[] constraint, ConstraintTranslator translator)
         {
             //处理查询约束
             IEnumerable<Criterion> userConstraint = null;
@@ -93,7 +93,7 @@ namespace ObjectServer.Model
         }
 
 
-        private void GenerateReadingRuleConstraints(ITransactionContext scope, ConstraintTranslator translator)
+        private void GenerateReadingRuleConstraints(IServiceContext scope, ConstraintTranslator translator)
         {
             Debug.Assert(scope != null);
             Debug.Assert(translator != null);

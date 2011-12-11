@@ -16,8 +16,8 @@ namespace ObjectServer
     /// </summary>
     public abstract class AbstractResource : DynamicObject, IResource
     {
-        private readonly IDictionary<string, ITransaction> services =
-            new Dictionary<string, ITransaction>();
+        private readonly IDictionary<string, IService> services =
+            new Dictionary<string, IService>();
 
         protected AbstractResource(string name)
         {
@@ -45,14 +45,14 @@ namespace ObjectServer
             }
         }
 
-        public ITransaction GetService(string name)
+        public IService GetService(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException("name");
             }
 
-            ITransaction service;
+            IService service;
             if (!this.services.TryGetValue(name, out service))
             {
                 var msg = String.Format("Cannot found service: [{0}]", name);
@@ -72,10 +72,10 @@ namespace ObjectServer
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             result = null;
-            ITransaction service;
+            IService service;
 
             Debug.Assert(args.Length > 0);
-            var scope = (ITransactionContext)args[0];
+            var scope = (IServiceContext)args[0];
             var userArgs = new object[args.Length - 1];
             Array.Copy(args, 1, userArgs, 0, args.Length - 1);
 
@@ -99,7 +99,7 @@ namespace ObjectServer
             Debug.Assert(!string.IsNullOrEmpty(name));
 
             this.VerifyMethod(mi);
-            var clrSvc = new ClrTransaction(this, name, mi);
+            var clrSvc = new ClrService(this, name, mi);
             this.services.Add(clrSvc.Name, clrSvc);
         }
 
@@ -118,7 +118,7 @@ namespace ObjectServer
 
             var parameters = mi.GetParameters();
             if (parameters.Length < 2
-                || parameters[1].ParameterType != typeof(ITransactionContext)
+                || parameters[1].ParameterType != typeof(IServiceContext)
                 || !mi.IsPublic)
             {
                 var msg = string.Format(
@@ -140,7 +140,7 @@ namespace ObjectServer
             foreach (var m in methods)
             {
                 var attr = Attribute.GetCustomAttribute(
-                    m, typeof(TransactionMethodAttribute), false) as TransactionMethodAttribute;
+                    m, typeof(ServiceMethodAttribute), false) as ServiceMethodAttribute;
                 if (attr != null)
                 {
                     this.RegisterServiceMethod(attr.Name, m);
@@ -148,7 +148,7 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Initialize(ITransactionContext tc, bool update)
+        public virtual void Initialize(IServiceContext tc, bool update)
         {
             if (tc == null)
             {
@@ -176,7 +176,7 @@ namespace ObjectServer
 
         public abstract string[] GetReferencedObjects();
 
-        public ICollection<ITransaction> Services
+        public ICollection<IService> Services
         {
             get { return this.services.Values; }
         }

@@ -9,9 +9,9 @@ using ObjectServer.Utility;
 
 namespace ObjectServer
 {
-    internal class ClrTransaction : ITransaction
+    internal class ClrService : IService
     {
-        public ClrTransaction(IResource res, string name, MethodInfo mi)
+        public ClrService(IResource res, string name, MethodInfo mi)
         {
             Debug.Assert(!string.IsNullOrEmpty(name));
             Debug.Assert(mi != null);
@@ -23,7 +23,7 @@ namespace ObjectServer
 
         #region IService Members
 
-        public object Invoke(IResource self, ITransactionContext tc, params object[] parameters)
+        public object Invoke(IResource self, IServiceContext tc, params object[] parameters)
         {
             if (self == null)
             {

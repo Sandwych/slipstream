@@ -26,7 +26,7 @@ namespace ObjectServer.Core
 
         }
 
-        public override void Initialize(ITransactionContext ctx, bool update)
+        public override void Initialize(IServiceContext ctx, bool update)
         {
             base.Initialize(ctx, update);
 

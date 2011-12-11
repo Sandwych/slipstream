@@ -46,12 +46,12 @@ namespace ObjectServer
 
         public void Initialize(bool isUpdate)
         {
-            using (var ctx = new TransactionContext(this.DatabaseName, this))
+            using (var ctx = new ServiceContext(this.DatabaseName, this))
             {
                 Environment.Modules.UpdateModuleList(ctx.DBContext);
             }
 
-            using (var ctx = new TransactionContext(this.DatabaseName, this))
+            using (var ctx = new ServiceContext(this.DatabaseName, this))
             {
 
                 //加载其它模块

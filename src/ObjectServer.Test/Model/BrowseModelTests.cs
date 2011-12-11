@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class BrowseModelTests : TransactionContextTestCaseBase
+    public class BrowseModelTests : ServiceContextTestCaseBase
     {
         [Test]
         public void CanBrowseManyToOneAndOneToManyFields()
@@ -21,18 +21,18 @@ namespace ObjectServer.Model.Test
             {
                 { "name", "master-obj" },
             };
-            var masterId = (long)masterModel.Create(this.TransactionContext, masterPropBag);
+            var masterId = (long)masterModel.Create(this.Context, masterPropBag);
             var childRecord = new Dictionary<string, object>()
             {
                 { "name", "child-obj" },
                 { "master", masterId },
             };
-            var childId = (long)childModel.Create(this.TransactionContext, childRecord);
+            var childId = (long)childModel.Create(this.Context, childRecord);
 
-            dynamic dynamicChild = childModel.Browse(this.TransactionContext, childId);
+            dynamic dynamicChild = childModel.Browse(this.Context, childId);
             Assert.AreEqual("master-obj", dynamicChild.master.name);
 
-            dynamic dynamicMaster = masterModel.Browse(this.TransactionContext, masterId);
+            dynamic dynamicMaster = masterModel.Browse(this.Context, masterId);
             Assert.AreEqual(1, dynamicMaster.children.Length);
             Assert.AreEqual("child-obj", dynamicMaster.children[0].name);
         }

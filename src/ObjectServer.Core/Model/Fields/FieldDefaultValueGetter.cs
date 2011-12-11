@@ -6,5 +6,5 @@ using System.Text;
 namespace ObjectServer.Model
 {
     public delegate object
-       FieldDefaultValueGetter(ITransactionContext ctx);
+       FieldDefaultValueGetter(IServiceContext ctx);
 }

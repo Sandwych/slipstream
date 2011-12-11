@@ -11,7 +11,7 @@ namespace ObjectServer.Core.Test
 {
 
     [TestFixture]
-    public sealed class RuleTest : TransactionTestCaseBase
+    public sealed class RuleTest : ServiceTestCaseBase
     {
         [Test]
         public void CanSearchWithRules()
@@ -37,11 +37,11 @@ namespace ObjectServer.Core.Test
                 var orders = new OrderExpression[] {
                         new OrderExpression("name", SortDirection.Ascend) 
                     };
-                var ids = (long[])services.Execute(TransactionContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Search",
+                var ids = (long[])services.Execute(ServiceContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Search",
                     null, null, 0, 0);
                 Assert.AreEqual(expectedOrderNames.Length, ids.Length);
                 var records = (Dictionary<string, object>[])services.Execute(
-                    TransactionContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Read",
+                    ServiceContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Read",
                     ids, null);
                 var names = records.Select(r => (string)r["name"]).ToArray();
                 Assert.AreEqual(expectedOrderNames.Length, names.Length);

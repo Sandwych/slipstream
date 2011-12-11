@@ -52,7 +52,7 @@ namespace ObjectServer.Model
         /// 此函数要允许多次调用
         /// </summary>
         /// <param name="tc"></param>
-        public override void Initialize(ITransactionContext tc, bool update)
+        public override void Initialize(IServiceContext tc, bool update)
         {
             if (tc == null)
             {
@@ -99,7 +99,7 @@ namespace ObjectServer.Model
         /// 初始化继承设置
         /// </summary>
         /// <param name="db"></param>
-        private void InitializeInheritances(ITransactionContext tc)
+        private void InitializeInheritances(IServiceContext tc)
         {
             //验证继承声明
             //这里可以安全地访问 many-to-one 指向的 ResourceContainer 里的对象，因为依赖排序的原因
@@ -397,9 +397,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         #region Service Methods
 
-        [TransactionMethod("GetFieldDefaultValues")]
+        [ServiceMethod("GetFieldDefaultValues")]
         public static Dictionary<string, object> GetFieldDefaultValues(
-            IModel model, ITransactionContext ctx, object[] clientFields)
+            IModel model, IServiceContext ctx, object[] clientFields)
         {
             if (model == null)
             {
@@ -428,9 +428,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
 
-        [TransactionMethod("Count")]
+        [ServiceMethod("Count")]
         public static long Count(
-            IModel model, ITransactionContext ctx, object[] constraint)
+            IModel model, IServiceContext ctx, object[] constraint)
         {
             if (model == null)
             {
@@ -455,9 +455,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.CountInternal(ctx, constraint);
         }
 
-        [TransactionMethod("Search")]
+        [ServiceMethod("Search")]
         public static long[] Search(
-            IModel model, ITransactionContext ctx, object[] constraint, object[] order, long offset, long limit)
+            IModel model, IServiceContext ctx, object[] constraint, object[] order, long offset, long limit)
         {
             if (model == null)
             {
@@ -498,9 +498,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.SearchInternal(ctx, constraint, orderInfos, offset, limit);
         }
 
-        [TransactionMethod("Read")]
+        [ServiceMethod("Read")]
         public static Record[] Read(
-            IModel model, ITransactionContext ctx, dynamic clientIds, dynamic clientFields)
+            IModel model, IServiceContext ctx, dynamic clientIds, dynamic clientFields)
         {
             if (model == null)
             {
@@ -551,9 +551,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.ReadInternal(ctx, ids, strFields);
         }
 
-        [TransactionMethod("Create")]
+        [ServiceMethod("Create")]
         public static long Create(
-            IModel model, ITransactionContext ctx, IRecord propertyBag)
+            IModel model, IServiceContext ctx, IRecord propertyBag)
         {
             if (model == null)
             {
@@ -580,9 +580,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return model.CreateInternal(ctx, propertyBag);
         }
 
-        [TransactionMethod("Write")]
+        [ServiceMethod("Write")]
         public static void Write(
-           IModel model, ITransactionContext ctx, object id, IRecord userRecord)
+           IModel model, IServiceContext ctx, object id, IRecord userRecord)
         {
             //TODO 检查 id 类型
 
@@ -611,9 +611,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             model.WriteInternal(ctx, (long)id, userRecord);
         }
 
-        [TransactionMethod("Delete")]
+        [ServiceMethod("Delete")]
         public static void Delete(
-            IModel model, ITransactionContext ctx, dynamic clientIDs)
+            IModel model, IServiceContext ctx, dynamic clientIDs)
         {
             if (model == null)
             {
@@ -653,9 +653,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             model.DeleteInternal(ctx, ids);
         }
 
-        [TransactionMethod("GetFields")]
+        [ServiceMethod("GetFields")]
         public static Dictionary<string, object>[] GetFields(
-            IModel model, ITransactionContext ctx, string[] fields)
+            IModel model, IServiceContext ctx, string[] fields)
         {
             if (ctx == null)
             {
@@ -692,20 +692,20 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         public virtual NameGetter NameGetter { get; protected set; }
 
-        public abstract long CountInternal(ITransactionContext ctx, object[] constraints);
+        public abstract long CountInternal(IServiceContext ctx, object[] constraints);
         public abstract long[] SearchInternal(
-            ITransactionContext ctx, object[] constraints, OrderExpression[] orders, long offset, long limit);
+            IServiceContext ctx, object[] constraints, OrderExpression[] orders, long offset, long limit);
         public abstract long CreateInternal(
-            ITransactionContext ctx, IRecord record);
+            IServiceContext ctx, IRecord record);
         public abstract void WriteInternal(
-            ITransactionContext ctx, long id, IRecord record);
+            IServiceContext ctx, long id, IRecord record);
         public abstract Record[] ReadInternal(
-            ITransactionContext ctx, long[] ids, string[] requiredFields);
-        public abstract void DeleteInternal(ITransactionContext scope, long[] ids);
+            IServiceContext ctx, long[] ids, string[] requiredFields);
+        public abstract void DeleteInternal(IServiceContext scope, long[] ids);
 
 
         public Dictionary<string, object> GetFieldDefaultValuesInternal(
-            ITransactionContext ctx, string[] fieldNames)
+            IServiceContext ctx, string[] fieldNames)
         {
             if (ctx == null)
             {
@@ -736,12 +736,12 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return result;
         }
 
-        public dynamic Browse(ITransactionContext ctx, long id)
+        public dynamic Browse(IServiceContext ctx, long id)
         {
             return new BrowsableRecord(ctx, this, id);
         }
 
-        public dynamic BrowseMany(ITransactionContext ctx, long[] ids)
+        public dynamic BrowseMany(IServiceContext ctx, long[] ids)
         {
             var records = this.ReadInternal(ctx, ids, null);
             dynamic browObjs = new dynamic[records.Length];
@@ -767,7 +767,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
         public virtual Dictionary<string, object>[] GetFieldsInternal(
-            ITransactionContext ctx, string[] fieldNames)
+            IServiceContext ctx, string[] fieldNames)
         {
             if (ctx == null)
             {
@@ -811,7 +811,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
 
         protected static void VerifyFieldAccess(
-            IModel model, ITransactionContext tc, string action, IEnumerable<string> fields)
+            IModel model, IServiceContext tc, string action, IEnumerable<string> fields)
         {
             var availableFields = fields.Where(k => model.Fields.ContainsKey(k));
             var fam = (Core.FieldAccessModel)tc.GetResource("core.field_access");
@@ -826,7 +826,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
         public virtual void ImportRecord(
-              ITransactionContext ctx, bool noUpdate, IDictionary<string, object> record, string key)
+              IServiceContext ctx, bool noUpdate, IDictionary<string, object> record, string key)
         {
             if (ctx == null)
             {

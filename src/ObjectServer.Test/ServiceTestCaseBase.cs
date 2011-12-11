@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace ObjectServer
 {
-    public abstract class TransactionTestCaseBase
+    public abstract class ServiceTestCaseBase
     {
         public const string TestingDatabaseName = "osdb_test";
 

@@ -42,7 +42,7 @@ namespace ObjectServer.Model
 
 
         protected override Dictionary<long, object> OnGetFieldValues(
-            ITransactionContext session, ICollection<Dictionary<string, object>> records)
+            IServiceContext session, ICollection<Dictionary<string, object>> records)
         {
             if (session == null)
             {
@@ -82,11 +82,11 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override object OnSetFieldValue(ITransactionContext scope, object value)
+        protected override object OnSetFieldValue(IServiceContext scope, object value)
         {
             if (scope == null)
             {
-                throw new ArgumentNullException("scope");
+                throw new ArgumentNullException("svcCtx");
             }
             if (value == null)
             {
@@ -97,11 +97,11 @@ namespace ObjectServer.Model
             return value;
         }
 
-        public override object BrowseField(ITransactionContext scope, IDictionary<string, object> record)
+        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
         {
             if (scope == null)
             {
-                throw new ArgumentNullException("scope");
+                throw new ArgumentNullException("svcCtx");
             }
 
             if (record == null)

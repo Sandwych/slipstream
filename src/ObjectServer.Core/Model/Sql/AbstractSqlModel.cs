@@ -99,7 +99,7 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(ITransactionContext tc, bool update)
+        public override void Initialize(IServiceContext tc, bool update)
         {
             this.AddInternalFields();
 
@@ -250,7 +250,7 @@ where   hp._id=? and hc._id<>?
         }
 
         private void ConvertFieldToColumn(
-            ITransactionContext ctx, IRecord record, string[] updatableColumnFields)
+            IServiceContext ctx, IRecord record, string[] updatableColumnFields)
         {
 
             foreach (var f in updatableColumnFields)
@@ -262,7 +262,7 @@ where   hp._id=? and hc._id<>?
         }
 
         private IDictionary<long, string> DefaultNameGetter(
-            ITransactionContext ctx, long[] ids)
+            IServiceContext ctx, long[] ids)
         {
             var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))
@@ -285,7 +285,7 @@ where   hp._id=? and hc._id<>?
             return result;
         }
 
-        private void AuditLog(ITransactionContext ctx, long id, string msg)
+        private void AuditLog(IServiceContext ctx, long id, string msg)
         {
             var logRecord = new Record()
                 {
@@ -339,7 +339,7 @@ where   hp._id=? and hc._id<>?
                 !SystemReadonlyFields.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
         }
 
-        private void UpdateOneToManyFields(ITransactionContext ctx, long id, Record record)
+        private void UpdateOneToManyFields(IServiceContext ctx, long id, Record record)
         {
             Debug.Assert(ctx != null);
             Debug.Assert(record != null);

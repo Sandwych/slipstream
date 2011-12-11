@@ -9,17 +9,17 @@ namespace ObjectServer.Core.Test
 {
 
     [TestFixture]
-    public sealed class UserTest : TransactionContextTestCaseBase
+    public sealed class UserTest : ServiceContextTestCaseBase
     {
         [Test]
         public void CanNotGetPasswordAndSalt()
         {
             dynamic userModel = this.GetResource("core.user");
             var searchDomain = new object[][] { new object[] { "login", "=", "test" } };
-            var ids = userModel.Search(this.TransactionContext, searchDomain, null, 0, 0);
+            var ids = userModel.Search(this.Context, searchDomain, null, 0, 0);
             if (ids.Length > 0)
             {
-                userModel.Delete(this.TransactionContext, ids);
+                userModel.Delete(this.Context, ids);
             }
 
             var userRecord = new Dictionary<string, object>()
@@ -32,8 +32,8 @@ namespace ObjectServer.Core.Test
 
             var fields = new string[] { "name", "login", "password", "salt" };
 
-            var uid = userModel.Create(this.TransactionContext, userRecord);
-            dynamic records = userModel.Read(this.TransactionContext, new object[] { uid }, fields);
+            var uid = userModel.Create(this.Context, userRecord);
+            dynamic records = userModel.Read(this.Context, new object[] { uid }, fields);
             var user1 = records[0];
             var salt = (string)user1["salt"];
             Assert.IsNull(salt);

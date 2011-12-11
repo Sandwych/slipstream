@@ -14,11 +14,11 @@ namespace ObjectServer.Model
         void VerifyDefinition();
 
         Dictionary<long, object> GetFieldValues(
-            ITransactionContext scope, ICollection<Dictionary<string, object>> records);
+            IServiceContext scope, ICollection<Dictionary<string, object>> records);
 
-        object SetFieldValue(ITransactionContext scope, object value);
+        object SetFieldValue(IServiceContext scope, object value);
 
-        object BrowseField(ITransactionContext scope, IDictionary<string, object> record);
+        object BrowseField(IServiceContext scope, IDictionary<string, object> record);
 
         #region Fluent interface
 

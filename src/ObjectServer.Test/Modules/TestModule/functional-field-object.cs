@@ -24,7 +24,7 @@ namespace ObjectServer.Test
                 .SetCriterionConverter(this.ConvertSumFieldCriterion);
         }
 
-        private Dictionary<long, object> GetSum(ITransactionContext ctx, IEnumerable<long> ids)
+        private Dictionary<long, object> GetSum(IServiceContext ctx, IEnumerable<long> ids)
         {
             var fields = new string[] { "field1", "field2" };
             var records = this.ReadInternal(ctx, ids.ToArray(), fields);
@@ -40,7 +40,7 @@ namespace ObjectServer.Test
             return result;
         }
 
-        private Criterion[] ConvertSumFieldCriterion(ITransactionContext ctx, Criterion cr)
+        private Criterion[] ConvertSumFieldCriterion(IServiceContext ctx, Criterion cr)
         {
             var ids = (long[])this.SearchInternal(ctx, null, null, 0, 0);
             var values = GetSum(ctx, ids);
@@ -61,7 +61,7 @@ namespace ObjectServer.Test
             }
         }
 
-        private Dictionary<long, object> GetUser(ITransactionContext ctx, IEnumerable<long> ids)
+        private Dictionary<long, object> GetUser(IServiceContext ctx, IEnumerable<long> ids)
         {
             var userModel = (IModel)ctx.GetResource("core.user");
             var constraints = new object[][] { new object[] { "login", "=", "root" } };

@@ -43,7 +43,7 @@ namespace ObjectServer.Core
 
         }
 
-        private static Dictionary<long, object> StateGetter(ITransactionContext tc, long[] ids)
+        private static Dictionary<long, object> StateGetter(IServiceContext tc, long[] ids)
         {
             if (tc == null)
             {

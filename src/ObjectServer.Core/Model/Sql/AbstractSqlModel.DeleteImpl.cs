@@ -22,7 +22,7 @@ namespace ObjectServer.Model
         private static readonly string[] HierarchyFields =
             new string[] { IdFieldName, LeftFieldName, RightFieldName };
 
-        public override void DeleteInternal(ITransactionContext ctx, long[] ids)
+        public override void DeleteInternal(IServiceContext ctx, long[] ids)
         {
             if (ctx == null)
             {
@@ -64,7 +64,7 @@ namespace ObjectServer.Model
             this.ProcessBaseModelsDeletion(ctx, existedRecords);
         }
 
-        private void ProcessBaseModelsDeletion(ITransactionContext scope, Dictionary<string, object>[] existedRecords)
+        private void ProcessBaseModelsDeletion(IServiceContext scope, Dictionary<string, object>[] existedRecords)
         {
             Debug.Assert(scope != null);
 
@@ -90,7 +90,7 @@ namespace ObjectServer.Model
         }
 
         private static void DeleteRows(
-            ITransactionContext ctx, long[] ids, AbstractSqlModel tableModel)
+            IServiceContext ctx, long[] ids, AbstractSqlModel tableModel)
         {
             Debug.Assert(ctx != null);
             Debug.Assert(ids != null);
@@ -116,7 +116,7 @@ namespace ObjectServer.Model
         }
 
         private static void UpdateTreeForDeletion(
-            ITransactionContext ctx, long[] ids, AbstractSqlModel tableModel)
+            IServiceContext ctx, long[] ids, AbstractSqlModel tableModel)
         {
             var records =
                 from r in tableModel.ReadInternal(ctx, ids, HierarchyFields)

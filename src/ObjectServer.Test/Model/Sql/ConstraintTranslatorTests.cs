@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public sealed class ConstraintTranslatorTests : TransactionContextTestCaseBase
+    public sealed class ConstraintTranslatorTests : ServiceContextTestCaseBase
     {
         [TestFixtureSetUp]
         public void TestFixtureSetup()
@@ -37,7 +37,7 @@ namespace ObjectServer.Model.Test
                 "where  ( _t0.login = ?  and  _t1.name = ?  and  _t1.code = ? ) ",
                 "order by  _t0.login ASC,  _t0.name ASC");
 
-            var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
+            var cb = new ConstraintTranslator(this.Context, "core.user");
             cb.AddCriteria(criteria);
             cb.AddOrder(new OrderExpression("login", SortDirection.Ascend));
             cb.AddOrder(new OrderExpression("name", SortDirection.Ascend));
@@ -61,7 +61,7 @@ namespace ObjectServer.Model.Test
                 new Criterion("login", "in", new string[] {})
             };
 
-            var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
+            var cb = new ConstraintTranslator(this.Context, "core.user");
             Assert.Throws<ArgumentException>(delegate { cb.AddCriteria(criteria); });
         }
 
@@ -72,7 +72,7 @@ namespace ObjectServer.Model.Test
                 new Criterion("login", "!in", new string[] {})
             };
 
-            var cb = new ConstraintTranslator(this.TransactionContext, "core.user");
+            var cb = new ConstraintTranslator(this.Context, "core.user");
             Assert.Throws<ArgumentException>(delegate { cb.AddCriteria(criteria); });
         }
     }

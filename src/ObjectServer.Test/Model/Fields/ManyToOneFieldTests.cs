@@ -11,7 +11,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class ManyToOneFieldTests : TransactionContextTestCaseBase
+    public class ManyToOneFieldTests : ServiceContextTestCaseBase
     {
 
         [Test]
@@ -26,12 +26,12 @@ namespace ObjectServer.Model.Fields.Test
                 { "master", null },
             };
 
-            var childModel = (IModel)this.TransactionContext.GetResource("test.child");
+            var childModel = (IModel)this.Context.GetResource("test.child");
 
-            var id = childModel.CreateInternal(this.TransactionContext, child);
+            var id = childModel.CreateInternal(this.Context, child);
 
             var children = childModel.ReadInternal(
-                this.TransactionContext, new long[] { id }, new string[] { "name", "master" });
+                this.Context, new long[] { id }, new string[] { "name", "master" });
             var record = children[0];
 
             Assert.True(record["master"].IsNull());
@@ -50,14 +50,14 @@ namespace ObjectServer.Model.Fields.Test
                 { "master", null },
             };
 
-            dynamic childModel = this.TransactionContext.GetResource("test.child");
+            dynamic childModel = this.Context.GetResource("test.child");
 
-            var id = childModel.Create(this.TransactionContext, child);
+            var id = childModel.Create(this.Context, child);
 
-            var childRecord = childModel.Read(this.TransactionContext, new long[] { id }, null)[0];
+            var childRecord = childModel.Read(this.Context, new long[] { id }, null)[0];
             child[AbstractModel.VersionFieldName] = childRecord[AbstractModel.VersionFieldName];
 
-            childModel.Write(this.TransactionContext, id, child);
+            childModel.Write(this.Context, id, child);
         }
     }
 }

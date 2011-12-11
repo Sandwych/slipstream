@@ -11,28 +11,28 @@ namespace ObjectServer.Model
     internal static class ModelSecurityExtensions
     {
 
-        public static bool CanCreateModel(this ITransactionContext scope, string model)
+        public static bool CanCreateModel(this IServiceContext scope, string model)
         {
             return scope.IsDeniedModelServiceMethod(model, "create");
         }
 
-        public static bool CanReadModel(this ITransactionContext scope, string model)
+        public static bool CanReadModel(this IServiceContext scope, string model)
         {
             return scope.IsDeniedModelServiceMethod(model, "read");
         }
 
-        public static bool CanWriteModel(this ITransactionContext scope, string model)
+        public static bool CanWriteModel(this IServiceContext scope, string model)
         {
             return scope.IsDeniedModelServiceMethod(model, "write");
         }
 
-        public static bool CanDeleteModel(this ITransactionContext scope, string model)
+        public static bool CanDeleteModel(this IServiceContext scope, string model)
         {
             return scope.IsDeniedModelServiceMethod(model, "delete");
         }
 
         private static bool IsDeniedModelServiceMethod(
-            this ITransactionContext scope, string model, string action)
+            this IServiceContext scope, string model, string action)
         {
             Debug.Assert(scope != null);
             Debug.Assert(!string.IsNullOrEmpty(model));

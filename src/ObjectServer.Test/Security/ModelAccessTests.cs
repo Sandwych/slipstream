@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class ModelAccessTests : TransactionContextTestCaseBase
+    public class ModelAccessTests : ServiceContextTestCaseBase
     {
         [Test]
         public void ExpectAccessDenied()
@@ -17,7 +17,7 @@ namespace ObjectServer.Model.Test
             var service = ObjectServer.Environment.ExportedService;
             var sessionId = service.LogOn(TestingDatabaseName, "testuser", "testuser");
 
-            using (var scope = new TransactionContext(TestingDatabaseName, sessionId))
+            using (var scope = new ServiceContext(TestingDatabaseName, sessionId))
             {
                 var userModel = this.GetResource("core.user");
 

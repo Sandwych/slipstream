@@ -24,12 +24,12 @@ select datname from pg_database
 
         #region IDataProvider 成员
 
-        public IDbContext CreateDataContext()
+        public IDbContext OpenDataContext()
         {
             return new PgDBContext();
         }
 
-        public IDbContext CreateDataContext(string dbName)
+        public IDbContext OpenDataContext(string dbName)
         {
             if (string.IsNullOrEmpty(dbName))
             {
@@ -43,9 +43,8 @@ select datname from pg_database
         {
             var dbUser = Environment.Configuration.DbUser;
 
-            using (var ctx = this.CreateDataContext())
+            using (var ctx = this.OpenDataContext())
             {
-                ctx.Open();
                 var result = ctx.QueryAsDictionary(ListDatabasesSql, dbUser);
                 ctx.Close();
 
@@ -67,7 +66,6 @@ select datname from pg_database
 
             using (var conn = new PgDBContext())
             {
-                conn.Open();
                 conn.Execute(sql);
                 conn.Close();
             }
@@ -85,9 +83,8 @@ select datname from pg_database
                   DataProvider.Dialect.QuoteForSchemaName(dbName));
 
             Npgsql.NpgsqlConnection.ClearAllPools();
-            using (var conn = this.CreateDataContext())
+            using (var conn = this.OpenDataContext())
             {
-                conn.Open();
                 conn.Execute(sql);
                 conn.Close();
             }

@@ -61,8 +61,8 @@ namespace ObjectServer.Core
         }
 
 
-        [TransactionMethod("ButtonMark")]
-        public static void ButtonMark(dynamic model, ITransactionContext ctx, dynamic ids)
+        [ServiceMethod("ButtonMark")]
+        public static void ButtonMark(dynamic model, IServiceContext ctx, dynamic ids)
         {
             if (ids == null)
             {

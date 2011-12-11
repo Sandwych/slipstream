@@ -6,9 +6,9 @@ using System.Text;
 namespace ObjectServer
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class TransactionMethodAttribute : Attribute
+    public sealed class ServiceMethodAttribute : Attribute
     {
-        public TransactionMethodAttribute(string name)
+        public ServiceMethodAttribute(string name)
         {
             if (string.IsNullOrEmpty(name))
             {

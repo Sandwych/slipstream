@@ -11,13 +11,13 @@ using ObjectServer.Model;
 namespace ObjectServer.Model.Fields.Test
 {
     [TestFixture]
-    public class BinaryFieldTests : TransactionContextTestCaseBase
+    public class BinaryFieldTests : ServiceContextTestCaseBase
     {
         [Test]
         public void CanWriteAndReadBinaryField()
         {
             this.ClearTestModelTable();
-            dynamic testModel = this.TransactionContext.GetResource("test.test_model");
+            dynamic testModel = this.Context.GetResource("test.test_model");
             var fieldData = new byte[] { 33, 44, 55, 66, 77 };
             var record = new Dictionary<string, object>()
                 {
@@ -25,9 +25,9 @@ namespace ObjectServer.Model.Fields.Test
                     { "address", "address1" },
                     { "binary_field", fieldData },
                 };
-            var id = (long)testModel.Create(this.TransactionContext, record);
+            var id = (long)testModel.Create(this.Context, record);
 
-            record = testModel.Read(this.TransactionContext, new object[] { id }, null)[0];
+            record = testModel.Read(this.Context, new object[] { id }, null)[0];
 
             var field = record["binary_field"] as byte[];
             Assert.NotNull(field);
@@ -40,7 +40,7 @@ namespace ObjectServer.Model.Fields.Test
         public void CanSearchAndCountBinaryField()
         {
             this.ClearTestModelTable();
-            dynamic testModel = this.TransactionContext.GetResource("test.test_model");
+            dynamic testModel = this.Context.GetResource("test.test_model");
             var fieldData1 = new byte[] { 33, 44, 55, 66, 77 };
             var fieldData2 = new byte[] { 44, 44, 55, 66, 77 };
 
@@ -48,22 +48,22 @@ namespace ObjectServer.Model.Fields.Test
             record1.name = "name1";
             record1.address = "address1";
             record1.binary_field = fieldData1;
-            var id1 = (long)testModel.Create(this.TransactionContext, record1);
+            var id1 = (long)testModel.Create(this.Context, record1);
 
             dynamic record2 = new ExpandoObject();
             record2.name = "name2";
             record2.address = "address2";
             record2.binary_field = fieldData2;
-            var id2 = (long)testModel.Create(this.TransactionContext, record2);
+            var id2 = (long)testModel.Create(this.Context, record2);
 
             var constraints = new object[][] {
                 new object[] { "binary_field", "=", fieldData1 },
             };
 
-            var n = testModel.Count(this.TransactionContext, constraints);
+            var n = testModel.Count(this.Context, constraints);
             Assert.AreEqual(1, n);
 
-            var ids = testModel.Search(this.TransactionContext, constraints, null, 0, 0);
+            var ids = testModel.Search(this.Context, constraints, null, 0, 0);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id1, ids[0]);
         }
