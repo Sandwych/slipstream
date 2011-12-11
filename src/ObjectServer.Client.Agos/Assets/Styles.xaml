@@ -26,8 +26,8 @@
     <SolidColorBrush x:Key="LineBrush">#FFCCCCCC</SolidColorBrush>
 
     <LinearGradientBrush x:Key="ToolBarBgBrush" EndPoint="0,1" StartPoint="0,0">
-        <GradientStop Color="#FFE8EBED" Offset="0.0" />
-        <GradientStop Color="#FFA8ABAD" Offset="1.0" />
+        <GradientStop Color="#FFFFFFFF" Offset="0.0" />
+        <GradientStop Color="#FFF0F0FB" Offset="1.0" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="ToolBarButtonBgActive" EndPoint="0,1" StartPoint="0,0">
@@ -43,7 +43,7 @@
     <LinearGradientBrush x:Key="DeactivatedTabHeaderBgBrush" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFC4BDB2" Offset="0.0" />
         <GradientStop Color="#FFBDB6AA" Offset="1.0" />
-    </LinearGradientBrush>    
+    </LinearGradientBrush>
 
     <!-- ******MAIN PAGE STYLES****** -->
 
@@ -1299,6 +1299,52 @@
     <Style x:Key="CommandButtonStyle" TargetType="Button">
         <Setter Property="Padding"  Value="8,5,8,5" />
         <Setter Property="MinWidth"  Value="75" />
+    </Style>
+
+    <Style x:Key="FlatButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="Margin" Value="2,2,2,2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommomStates">
+
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0.25" To="#fffdeeb3"
+                                                        Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle"/>
+                                        <ColorAnimation Duration="0:0:0.25" To="#fff1c43f"
+                                                        Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0" To="#ffedcea3"
+                                                        Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle"/>
+                                        <ColorAnimation Duration="0" To="#ffe1b42f"
+                                                        Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled" >
+                                    <Storyboard>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Rectangle x:Name="rectangle" Fill="#00fdeeb3" StrokeThickness="1" Stroke="#00f1c43f" RadiusX="2"  RadiusY="2"/>
+                        <!--#FFF4F4F4light gray shade-->
+                        <!--#7d9fb4-->
+                        <Border Padding="4">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="ButtonContent" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

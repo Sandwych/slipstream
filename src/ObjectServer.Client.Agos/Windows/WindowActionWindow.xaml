@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0" x:Name="Toolbar" Style="{StaticResource ToolbarStyle}">
             <StackPanel Orientation="Horizontal" >
-                <Button Name="NewButton" Height="25" Click="NewButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
+                <Button Name="NewButton" Height="25" Click="NewButton_Click" Style="{StaticResource FlatButtonStyle}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/document-new.png" />
@@ -23,7 +23,7 @@
                     </Button.Content>
                 </Button>
                 <Rectangle Width="3"/>
-                <Button Name="EditButton" Height="25" Click="EditButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
+                <Button Name="EditButton" Height="25" Click="EditButton_Click" Style="{StaticResource FlatButtonStyle}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/accessories-text-editor.png" />
@@ -33,7 +33,7 @@
                     </Button.Content>
                 </Button>
                 <Rectangle Width="3"/>
-                <Button Height="25" Name="DeleteButton" Click="DeleteButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
+                <Button Height="25" Name="DeleteButton" Click="DeleteButton_Click" Style="{StaticResource FlatButtonStyle}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/user-trash.png" />
@@ -43,7 +43,7 @@
                     </Button.Content>
                 </Button>
                 <Rectangle Width="15" />
-                <Button Height="25" Name="QueryButton" Click="QueryButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
+                <Button Height="25" Name="QueryButton" Click="QueryButton_Click" Style="{StaticResource FlatButtonStyle}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/system-search.png" />
@@ -53,7 +53,7 @@
                     </Button.Content>
                 </Button>
                 <Rectangle Width="3"/>
-                <Button Height="25" Name="ClearConstraintsButton" Click="ClearConstraintsButton_Click" Background="{StaticResource ToolBarButtonBgActive}">
+                <Button Height="25" Name="ClearConstraintsButton" Click="ClearConstraintsButton_Click" Style="{StaticResource FlatButtonStyle}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
