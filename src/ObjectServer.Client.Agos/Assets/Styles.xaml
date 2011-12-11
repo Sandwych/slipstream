@@ -1315,17 +1315,17 @@
                                 <VisualState x:Name="Normal"/>
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ColorAnimation Duration="0:0:0.25" To="#fffdeeb3"
+                                        <ColorAnimation Duration="0:0:0.25" To="#ffffecb5"
                                                         Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle"/>
-                                        <ColorAnimation Duration="0:0:0.25" To="#fff1c43f"
+                                        <ColorAnimation Duration="0:0:0.25" To="#ffe5c365"
                                                         Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle"/>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
-                                        <ColorAnimation Duration="0" To="#ffedcea3"
+                                        <ColorAnimation Duration="0" To="#ffffe8a6"
                                                         Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle"/>
-                                        <ColorAnimation Duration="0" To="#ffe1b42f"
+                                        <ColorAnimation Duration="0" To="#ffe5c365"
                                                         Storyboard.TargetProperty="(Shape.Stroke).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle"/>
                                     </Storyboard>
                                 </VisualState>
@@ -1335,7 +1335,7 @@
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Rectangle x:Name="rectangle" Fill="#00fdeeb3" StrokeThickness="1" Stroke="#00f1c43f" RadiusX="2"  RadiusY="2"/>
+                        <Rectangle x:Name="rectangle" Fill="#00ffecb5" StrokeThickness="1" Stroke="#00e5c365" RadiusX="2"  RadiusY="2"/>
                         <!--#FFF4F4F4light gray shade-->
                         <!--#7d9fb4-->
                         <Border Padding="4">

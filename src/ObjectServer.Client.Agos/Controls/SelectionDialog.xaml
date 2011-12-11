@@ -13,11 +13,11 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Style="{StaticResource ToolbarStyle}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                <Button x:Name="NewButton" Content="新建" Style="{StaticResource CommandButtonStyle}" />
+                <Button x:Name="NewButton" Content="新建" Style="{StaticResource FlatButtonStyle}" />
                 <Rectangle Width="10"/>
-                <Button x:Name="ClearButton" Content="清除" Style="{StaticResource CommandButtonStyle}" Click="ClearButton_Click" />
+                <Button x:Name="ClearButton" Content="清除" Style="{StaticResource FlatButtonStyle}" Click="ClearButton_Click" />
                 <Rectangle Width="10"/>
-                <Button x:Name="QueryButton" Content="查询" Style="{StaticResource CommandButtonStyle}" Click="QueryButton_Click" />
+                <Button x:Name="QueryButton" Content="查询" Style="{StaticResource FlatButtonStyle}" Click="QueryButton_Click" />
             </StackPanel>
         </Border>
 
