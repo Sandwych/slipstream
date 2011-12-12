@@ -6,32 +6,32 @@ using System.Diagnostics;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Data
+namespace ObjectServer.Data.Mssql
 {
-    internal sealed class PgSqlTypeConverter
+    internal sealed class MssqlSqlTypeConverter
     {
-        private PgSqlTypeConverter()
+        private MssqlSqlTypeConverter()
         {
         }
 
         private static readonly Dictionary<FieldType, Func<IFieldDescriptor, string>> mapping =
             new Dictionary<FieldType, Func<IFieldDescriptor, string>>()
             {
-                { FieldType.Identifier, f => "bigserial not null primary key" },
-                { FieldType.Boolean, f => "boolean" },
-                { FieldType.Integer, f => "integer"  },
+                { FieldType.Identifier, f => "bigint identity(1,1) primary key" },
+                { FieldType.Boolean, f => "bit" },
+                { FieldType.Integer, f => "int"  },
                 { FieldType.BigInteger, f => "bigint"  },
-                { FieldType.DateTime, f => "timestamp" },
+                { FieldType.DateTime, f => "datetime" },
                 { FieldType.Date, f => "date" },
                 { FieldType.Time, f => "time" },
-                { FieldType.Double, f => "float8" },
+                { FieldType.Double, f => "float" },
                 { FieldType.Decimal, f => "decimal" },
-                { FieldType.Text, f => "text" },
-                { FieldType.Binary, f =>  "bytea" },
-                { FieldType.ManyToOne, f => "int8" },
-                { FieldType.Chars, f => f.Size > 0 ? string.Format("varchar({0})", f.Size) : "varchar" },
-                { FieldType.Enumeration, f => string.Format("varchar({0})", f.Size) },
-                { FieldType.Reference, f => "varchar(128)" },
+                { FieldType.Text, f => "ntext" },
+                { FieldType.Binary, f =>  "varbinary(max)" },
+                { FieldType.ManyToOne, f => "bigint" },
+                { FieldType.Chars, f => f.Size > 0 ? string.Format("nvarchar({0})", f.Size) : "nvarchar(max)" },
+                { FieldType.Enumeration, f => string.Format("nvarchar({0})", f.Size) },
+                { FieldType.Reference, f => "nvarchar(128)" },
             };
 
         public static string GetSqlType(IFieldDescriptor field)
@@ -47,14 +47,16 @@ namespace ObjectServer.Data
             sb.Append(func(field));
             if (field.IsRequired)
             {
-                sb.Append(' ');
-                sb.Append("not null");
+                sb.Append(" not null");
+            }
+            else
+            {
+                sb.Append(" null");
             }
 
             if (field.IsUnique)
             {
-                sb.Append(' ');
-                sb.Append("unique");
+                sb.Append(" unique");
             }
             return sb.ToString();
         }

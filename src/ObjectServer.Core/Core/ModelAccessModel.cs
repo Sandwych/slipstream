@@ -19,11 +19,11 @@ namespace ObjectServer.Core
         public const string ModelName = "core.model_access";
 
         private const string SqlToQuery = @"
-select max(case when a.allow_{0} then 1 else 0 end) > 0
-    from core_model_access a 
-    join core_model m on (a.model = m._id) 
-    left join core_user_role_rel ur on (ur.role = a.role) 
-    where m.name = ? and (ur.user = ? or a.role is null)
+select max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)
+    from ""core_model_access"" ""a"" 
+    join ""core_model"" ""m"" on (""a"".""model"" = ""m"".""_id"") 
+    left join ""core_user_role_rel"" ""ur"" on (""ur"".""role"" = ""a"".""role"") 
+    where ""m"".""name"" = ? and (""ur"".""user"" = ? or ""a"".""role"" is null)
 ";
 
         public ModelAccessModel()
@@ -73,7 +73,7 @@ select max(case when a.allow_{0} then 1 else 0 end) > 0
 
             if (!result.IsNull())
             {
-                return (bool)result;
+                return (Convert.ToInt32(result) > 0);
             }
             else
             {

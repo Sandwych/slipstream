@@ -383,7 +383,7 @@ namespace ObjectServer.Model
                 }
             }
         }
-
+        
         private SqlString BuildVersionExpression(long originVersion)
         {
             if (originVersion < 0)
@@ -401,7 +401,8 @@ namespace ObjectServer.Model
             }
             else
             {
-                verExp = new SqlString(DataProvider.Dialect.ToBooleanValueString(true));
+                //TODO 优化
+                verExp = new SqlString("(1=1)");
             }
             return verExp;
         }

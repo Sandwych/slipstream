@@ -67,7 +67,7 @@ namespace ObjectServer.Model
                 if (f.IsColumn && f.Type == FieldType.ManyToOne)
                 {
                     var refModel = (IModel)this.context.GetResource(f.Relation);
-                    table.AddFK(this.context.DBContext, f.Name, refModel.TableName, OnDeleteAction.SetNull);
+                    table.AddFK(this.context.DBContext, f.Name, refModel.TableName, OnDeleteAction.NoAction);
                 }
             }
         }
@@ -177,14 +177,14 @@ namespace ObjectServer.Model
             else
             {
                 LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
-                    "unable alter table '{0}' column '{1}' to not nullable", table.Name, field.Name));
+                    "Unable alter table '{0}' column '{1}' to not nullable", table.Name, field.Name));
             }
         }
 
         private bool TableHasRow(string tableName)
         {
             var sql = new SqlString("select count(*) from ", '"' + tableName + '"');
-            var rowCount = (long)this.context.DBContext.QueryValue(sql);
+            var rowCount = Convert.ToInt32(this.context.DBContext.QueryValue(sql));
             return rowCount > 0;
         }
 

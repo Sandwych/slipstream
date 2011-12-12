@@ -229,22 +229,11 @@ namespace ObjectServer.Data
         }
 
         public abstract bool IsInitialized();
-        public abstract string[] List();
         public abstract void Create(string dbName);
         public abstract void Initialize();
         public abstract ITableContext CreateTableContext(string tableName);
         public abstract void LockTable(string tableName);
-
-        public virtual long NextSerial(string sequenceName)
-        {
-            if (string.IsNullOrEmpty(sequenceName))
-            {
-                throw new ArgumentNullException("sequenceName");
-            }
-
-            var sql = new SqlString(DataProvider.Dialect.GetSequenceNextValString(sequenceName));
-            return (long)this.QueryValue(sql);
-        }
+        public abstract long GetLastIdentity(string sequenceName);
 
         public virtual bool IsValidDatabase()
         {
@@ -291,7 +280,7 @@ namespace ObjectServer.Data
                 var value = args[i];
                 var param = sqlCommand.CreateParameter();
                 param.ParameterName = 'p' + i.ToString();
-                param.Value = value;
+                param.Value = value == null ? DBNull.Value : value;
                 sqlCommand.Parameters.Add(param);
             }
         }

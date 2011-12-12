@@ -54,13 +54,10 @@ namespace ObjectServer.Core
         private static bool UserExists(IDataContext dbctx, string login)
         {
             var sql = new SqlString(
-                "select count(*) from ",
-                DataProvider.Dialect.QuoteForTableName("core_user"),
-                "where ",
-                DataProvider.Dialect.QuoteForColumnName("login"), "=", Parameter.Placeholder);
+                @"select count(*) from ""core_user"" where ""login"" = ", Parameter.Placeholder);
 
             var rowCount = dbctx.QueryValue(sql, login);
-            var isRootUserExisted = rowCount.IsNull() || (long)rowCount <= 0;
+            var isRootUserExisted = rowCount.IsNull() || Convert.ToInt32(rowCount) <= 0;
             return isRootUserExisted;
         }
 
@@ -74,18 +71,8 @@ namespace ObjectServer.Core
              */
 
             var sql = new SqlString(
-                "insert into ",
-                DataProvider.Dialect.QuoteForTableName("core_user"),
-                "(",
-                DataProvider.Dialect.QuoteForColumnName(VersionFieldName), ",",
-                DataProvider.Dialect.QuoteForColumnName("name"), ",",
-                DataProvider.Dialect.QuoteForColumnName("login"), ",",
-                DataProvider.Dialect.QuoteForColumnName("password"), ",",
-                DataProvider.Dialect.QuoteForColumnName("admin"), ",",
-                DataProvider.Dialect.QuoteForColumnName("active"), ",",
-                DataProvider.Dialect.QuoteForColumnName(CreatedTimeFieldName), ",",
-                DataProvider.Dialect.QuoteForColumnName("salt"),
-                ") values(",
+                @"insert into ""core_user""( ""_version"", ""name"", ""login"", ""password"", ""admin"", ""active"", ""_created_time"", ""salt"")",
+                @" values(",
                 Parameter.Placeholder, ",",
                 Parameter.Placeholder, ",",
                 Parameter.Placeholder, ",",

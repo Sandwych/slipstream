@@ -8,40 +8,37 @@ using System.Globalization;
 
 using NHibernate.SqlCommand;
 
-namespace ObjectServer.Data.Postgresql
+namespace ObjectServer.Data.Mssql
 {
-    internal sealed class PgDBContext : AbstractDbContext, IDataContext
+    internal sealed class MssqlDataContext : AbstractDbContext, IDataContext
     {
-        private readonly static Type pgt = typeof(Npgsql.NpgsqlCommand);
+        private readonly static Type sbc = typeof(System.Data.SqlClient.SqlBulkCopy);
 
-        private const string INITDB = "ObjectServer.Data.Postgresql.initdb.sql";
+        private const string INITDB = "ObjectServer.Data.Mssql.initdb.sql";
 
-        public PgDBContext(string dbName)
+        public MssqlDataContext(string dbName)
         {
             if (string.IsNullOrEmpty(dbName))
             {
                 throw new ArgumentNullException("dbName");
             }
-
             var cfg = Environment.Configuration;
             string connectionString = string.Format(
               CultureInfo.InvariantCulture,
-              "Server={0};" +
-              "Database={3};" +
-              "Encoding=UNICODE;" +
-              "User ID={1};" +
+              "Data Source={0};" +
+              "Initial Catalog={3};" +
+              "User Id={1};" +
               "Password={2};",
               cfg.DbHost, cfg.DbUser, cfg.DbPassword, dbName);
             var dbc = DataProvider.Driver.CreateConnection();
             dbc.ConnectionString = connectionString;
-            dbc.Open();
-            //this.conn = new NpgsqlConnection(connectionString);
             this._conn = dbc;
+            dbc.Open();
             this.DatabaseName = dbName;
         }
 
-        public PgDBContext()
-            : this("template1")
+        public MssqlDataContext()
+            : this("master")
         {
         }
 
@@ -56,13 +53,16 @@ namespace ObjectServer.Data.Postgresql
 
             LoggerProvider.EnvironmentLogger.Info(String.Format("Creating Database [{0}]...", dbName));
 
-            var sql = string.Format(CultureInfo.InvariantCulture,
-                @"create database ""{0}"" template ""template0"" encoding 'unicode' ", dbName);
+            var sqlBuilder = new SqlStringBuilder();
+            sqlBuilder.Add("create database ");
+            sqlBuilder.Add('"' + dbName + '"');
+            sqlBuilder.Add(";");
 
-            this.Execute(SqlString.Parse(sql));
+            var sql = sqlBuilder.ToSqlString();
 
-            LoggerProvider.EnvironmentLogger.Info(
-                String.Format("Database [{0}] has been created.", dbName));
+            this.Execute(sql);
+
+            LoggerProvider.EnvironmentLogger.Info(String.Format("Database [{0}] has been created.", dbName));
         }
 
         public override void Initialize()
@@ -107,7 +107,7 @@ select distinct count(table_name)
     from information_schema.tables 
     where table_name in ('core_module', 'core_model', 'core_field')
 ");
-            var rowCount = (long)this.QueryValue(sql);
+            var rowCount = Convert.ToInt32(this.QueryValue(sql));
             return rowCount == 3;
         }
 
@@ -120,7 +120,7 @@ select distinct count(table_name)
                 throw new ArgumentNullException("tableName");
             }
 
-            return new PgTableContext(this, tableName);
+            return new MssqlTableContext(this, tableName);
         }
 
         public override void LockTable(string tableName)
@@ -130,8 +130,10 @@ select distinct count(table_name)
                 throw new ArgumentNullException("tableName");
             }
 
-            var sql = new SqlString("lock ", DataProvider.Dialect.QuoteForTableName(tableName));
-            this.Execute(sql);
+            //TODO
+            //SQL Server 的锁需要研究一下
+            //var sql = new SqlString("lock ", DataProvider.Dialect.QuoteForTableName(tableName));
+            //this.Execute(sql);
         }
 
         public override long GetLastIdentity(string tableName)
@@ -141,10 +143,9 @@ select distinct count(table_name)
                 throw new ArgumentNullException("tableName");
             }
 
-            var sql = string.Format(CultureInfo.InvariantCulture,
-                @"select currval('{0}__id_seq')", tableName);
-
-            return Convert.ToInt64(this.QueryValue(new SqlString(sql)));
+            var sql = new SqlString("SELECT CAST(IDENT_CURRENT('", tableName, "') AS BIGINT)");
+            var value = this.QueryValue(sql);
+            return (long)value;
         }
 
     }

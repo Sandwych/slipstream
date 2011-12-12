@@ -15,8 +15,7 @@ namespace ObjectServer.Model
 {
     internal class ConstraintTranslator
     {
-        private static readonly string TrueSql =
-            ' ' + DataProvider.Dialect.ToBooleanValueString(true) + ' ';
+        private static readonly string TrueSql = " (1=1) ";
 
         private static readonly string[] TreeParentFields = new string[] { 
                 AbstractSqlModel.LeftFieldName, AbstractSqlModel.RightFieldName };

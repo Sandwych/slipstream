@@ -12,21 +12,21 @@ using NHibernate.SqlCommand;
 using ObjectServer.Model;
 using ObjectServer.Utility;
 
-namespace ObjectServer.Data.Postgresql
+namespace ObjectServer.Data.Mssql
 {
-    internal sealed class PgTableContext : ITableContext
+    internal sealed class MssqlTableContext : ITableContext
     {
         private IDictionary<string, IColumnMetadata> columns = new Dictionary<string, IColumnMetadata>();
         private readonly static IDictionary<OnDeleteAction, string> OnDeleteMapping =
             new Dictionary<OnDeleteAction, string>()
             {
+                { OnDeleteAction.NoAction, "NO ACTION" },
                 { OnDeleteAction.SetNull, "SET NULL" },
                 { OnDeleteAction.Cascade, "CASCADE" },
                 { OnDeleteAction.Restrict, "RESTRICT" },
-                { OnDeleteAction.NoAction, "NO ACTION" },
             };
 
-        public PgTableContext(IDataContext db, string tableName)
+        public MssqlTableContext(IDataContext db, string tableName)
         {
             if (db == null)
             {
@@ -70,10 +70,10 @@ namespace ObjectServer.Data.Postgresql
             var sql = new SqlString(
                 "select coalesce(count(table_name), 0) ",
                 "from information_schema.tables ",
-                "where table_type='BASE TABLE' and table_schema='public' and table_name=",
+                "where table_type='BASE TABLE' and table_schema='dbo' and table_name=",
                 Parameter.Placeholder);
 
-            var n = (long)db.QueryValue(sql, tableName);
+            var n = Convert.ToInt32(db.QueryValue(sql, tableName));
             return n > 0;
         }
 
@@ -96,9 +96,9 @@ namespace ObjectServer.Data.Postgresql
             var fieldsWithoutId = model.Fields.Values.Where(f => f.IsColumn);
 
             var sb = new SqlStringBuilder();
-            sb.Add("create table ");
-            sb.Add('"' + tableName + '"');
-            sb.Add("(");
+            sb.Add("create table [");
+            sb.Add(tableName);
+            sb.Add("] (");
 
             var commaNeeded = false;
             foreach (var f in fieldsWithoutId)
@@ -109,18 +109,19 @@ namespace ObjectServer.Data.Postgresql
                 }
                 commaNeeded = true;
 
-                sb.Add(DataProvider.Dialect.QuoteForColumnName(f.Name));
+                sb.Add("[" + f.Name + "]");
                 sb.Add(" ");
-                var sqlType = PgSqlTypeConverter.GetSqlType(f);
+                var sqlType = MssqlSqlTypeConverter.GetSqlType(f);
                 sb.Add(sqlType);
             }
 
-            sb.Add(") without oids");
+            sb.Add(") ");
 
             var sql = sb.ToSqlString();
             db.Execute(sql);
 
-            SetTableComment(db, tableName, label);
+            //TODO 支持表注释
+            //SetTableComment(db, tableName, label);
         }
 
         public void CreateTable(IDataContext db, string tableName, string label)
@@ -144,20 +145,17 @@ namespace ObjectServer.Data.Postgresql
 
             tableName = tableName.SqlEscape();
             var sb = new SqlStringBuilder();
-            sb.Add("create table ");
-            sb.Add(DataProvider.Dialect.QuoteForTableName(tableName));
-            sb.Add("(");
-            sb.Add("_id");
-            sb.Add(" ");
-            sb.Add("bigserial not null, ");
-            sb.Add("primary key(");
-            sb.Add("_id");
-            sb.Add(")) without oids");
+            sb.Add("create table [");
+            sb.Add(tableName);
+            sb.Add("] (");
+            sb.Add("[_id] bigint not null identity(1,1), ");
+            sb.Add("primary key([_id]))");
 
             var sql = sb.ToSqlString();
             db.Execute(sql);
 
-            SetTableComment(db, tableName, label);
+            //TODO
+            // SetTableComment(db, tableName, label);
         }
 
         private static void SetTableComment(IDataContext db, string tableName, string label)
@@ -165,10 +163,11 @@ namespace ObjectServer.Data.Postgresql
             if (!String.IsNullOrEmpty(label))
             {
                 label = label.SqlEscape();
-                var sql = String.Format(CultureInfo.InvariantCulture,
-                    @"comment on table ""{0}"" is '{1}'", tableName, label.SqlEscape());
+                var sql = new SqlString("comment on table [",
+                    tableName,
+                    "] is '", label.SqlEscape(), "'");
 
-                db.Execute(SqlString.Parse(sql));
+                db.Execute(sql);
             }
         }
 
@@ -184,14 +183,16 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentNullException("field");
             }
 
-            var sqlType = PgSqlTypeConverter.GetSqlType(field);
-            var sql = String.Format(CultureInfo.InvariantCulture,
-                @"alter table ""{0}"" add column ""{1}"" {2}",
-                this.Name, field.Name, sqlType);
+            var sqlType = MssqlSqlTypeConverter.GetSqlType(field);
+            var sql = new SqlString("alter table [",
+                this.Name,
+                "] add [",
+                field.Name, "] ", sqlType);
 
-            db.Execute(SqlString.Parse(sql));
+            db.Execute(sql);
 
-            this.SetColumnComment(db, field);
+            //TODO
+            //this.SetColumnComment(db, field);
 
             if (field.IsUnique)
             {
@@ -204,10 +205,13 @@ namespace ObjectServer.Data.Postgresql
             if (!string.IsNullOrEmpty(field.Label))
             {
                 //添加注释
-                var commentSql = String.Format(CultureInfo.InvariantCulture,
-                     @"comment on column ""{0}"".""{1}"" is '{2}'",
-                     this.Name, field.Name, field.Label.SqlEscape());
-                db.Execute(SqlString.Parse(commentSql));
+                var commentSql = new SqlString(
+                     "comment on column [",
+                     this.Name,
+                     "].[",
+                     field.Name,
+                     "] is '", field.Label.SqlEscape(), "'");
+                db.Execute(commentSql);
             }
         }
 
@@ -228,7 +232,7 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sql = string.Format(CultureInfo.InvariantCulture,
-                "alter table \"{0}\" drop column \"{1}\"",
+                "alter table [{0}] drop [{1}]",
                 this.Name, columnName);
             db.Execute(SqlString.Parse(sql));
         }
@@ -250,11 +254,14 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
-            var action = nullable ? "drop not null" : "set not null";
+            //TODO
+            //DO nothing
+            /*
             var sql = string.Format(CultureInfo.InvariantCulture,
-                "alter table \"{0}\" alter column \"{1}\" {2}",
-                this.Name, columnName, action);
+                "alter table [{0}] alter column [{1}] {2}",
+                this.Name, columnName, sqlType);
             db.Execute(SqlString.Parse(sql));
+            */
         }
 
         public void AlterColumnType(IDataContext db, string columnName, string sqlType)
@@ -275,7 +282,7 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sql = string.Format(CultureInfo.InvariantCulture,
-                "alter table \"{0}\" alter \"{1}\" type {2}",
+                "alter table [{0}] alter column [{1}] {2}",
                 this.Name, columnName, sqlType);
             db.Execute(SqlString.Parse(sql));
         }
@@ -342,7 +349,7 @@ namespace ObjectServer.Data.Postgresql
             this.columns.Clear();
             foreach (var r in records)
             {
-                var column = new PgColumnMetadata(r);
+                var column = new MssqlColumnMetadata(r);
                 this.columns.Add(column.Name, column);
             }
 
@@ -354,7 +361,7 @@ namespace ObjectServer.Data.Postgresql
             Debug.Assert(!string.IsNullOrEmpty(column));
 
             var constraintName = this.Name + "_" + column + "_unique";
-            var constraint = string.Format(CultureInfo.InvariantCulture, "UNIQUE(\"{0}\")", column);
+            var constraint = string.Format(CultureInfo.InvariantCulture, "UNIQUE([{0}])", column);
             this.AddConstraint(db, constraintName, constraint);
         }
 
@@ -376,7 +383,7 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentNullException("constraint");
             }
 
-            var sql = "alter table \"{0}\" add constraint \"{1}\" {2}";
+            var sql = "alter table [{0}] add constraint [{1}] {2}";
             sql = string.Format(CultureInfo.InvariantCulture, sql, this.Name, constraintName, constraint);
             dbctx.Execute(SqlString.Parse(sql));
         }
@@ -394,7 +401,7 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sql = string.Format(CultureInfo.InvariantCulture,
-                "alter table \"{0}\" drop constraint \"{1}\"",
+                "alter table [{0}] drop constraint [{1}]",
                 this.Name, constraintName);
             dbctx.Execute(SqlString.Parse(sql));
         }
@@ -415,9 +422,9 @@ namespace ObjectServer.Data.Postgresql
             var sql = SqlString.Parse(@"
 select coalesce(count(constraint_name), 0)
     from information_schema.table_constraints
-    where table_catalog=? and constraint_schema = 'public' and constraint_name=?");
+    where table_catalog=? and constraint_schema = 'dbo' and constraint_name=?");
 
-            var n = (long)db.QueryValue(sql, db.DatabaseName, constraintName);
+            var n = Convert.ToInt32(db.QueryValue(sql, db.DatabaseName, constraintName));
             return n > 0;
         }
 
@@ -443,7 +450,7 @@ select coalesce(count(constraint_name), 0)
             var onDelete = OnDeleteMapping[act];
             var fkName = this.GenerateFkName(columnName);
             var sql = string.Format(CultureInfo.InvariantCulture,
-                "alter table \"{0}\" add constraint \"{1}\" foreign key (\"{2}\") references \"{3}\" on delete {4}",
+                "alter table [{0}] add constraint [{1}] foreign key ([{2}]) references [{3}] on delete {4}",
                 this.Name, fkName, columnName, refTable, onDelete);
 
             db.Execute(SqlString.Parse(sql));
@@ -487,9 +494,9 @@ select coalesce(count(constraint_name), 0)
             var sql = SqlString.Parse(@"
 select coalesce(count(constraint_name), 0)
     from information_schema.key_column_usage 
-    where constraint_schema='public' and table_name=? and column_name=?
+    where constraint_schema='dbo' and table_name=? and column_name=?
 ");
-            var n = (long)db.QueryValue(sql, this.Name, columnName);
+            var n = Convert.ToInt32(db.QueryValue(sql, this.Name, columnName));
             return n > 0;
         }
 

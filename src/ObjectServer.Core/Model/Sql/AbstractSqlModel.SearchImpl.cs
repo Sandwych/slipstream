@@ -68,7 +68,7 @@ namespace ObjectServer.Model
 
             var querySql = translator.ToSqlString(true);
 
-            return (long)tx.DBContext.QueryValue(querySql, translator.Values);
+            return Convert.ToInt64(tx.DBContext.QueryValue(querySql, translator.Values));
         }
 
         private void TranslateConstraint(IServiceContext tc, object[] constraint, ConstraintTranslator translator)

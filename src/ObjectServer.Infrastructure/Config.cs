@@ -26,8 +26,7 @@ namespace ObjectServer
 
             this.Role = ServerRoles.Standalone;
             this.DbType = "postgres";
-            this.DbHost = "localhost";
-            this.DbPort = 5432;
+            this.DbHost = @"localhost";
             this.DbUser = "objectserver";
             this.DbPassword = "objectserver";
 
@@ -78,9 +77,6 @@ namespace ObjectServer
 
         [XmlElement("db-host")]
         public string DbHost { get; set; }
-
-        [XmlElement("db-port")]
-        public int DbPort { get; set; }
 
         [XmlElement("db-user")]
         public string DbUser { get; set; }

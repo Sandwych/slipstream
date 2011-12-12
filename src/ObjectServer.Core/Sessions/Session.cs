@@ -15,11 +15,11 @@ namespace ObjectServer
     public sealed class Session
     {
         private static readonly SqlString SelectByIdSql =
-            new SqlString("select * from core_session where sid=", Parameter.Placeholder);
+            new SqlString(@"select * from ""core_session"" where ""sid"" = ", Parameter.Placeholder);
         private static readonly SqlString SelectByUserIdSql =
-            new SqlString("select * from core_session where userid=", Parameter.Placeholder);
+            new SqlString(@"select * from ""core_session"" where ""userid"" = ", Parameter.Placeholder);
         private static readonly SqlString UpdateLastActivityTimeSql = SqlString.Parse(
-            "update core_session set last_activity_time=? where last_activity_time<? and sid=?");
+            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""sid"" = ?");
 
         public const int IdLength = 16;
         public const string SystemUserName = "system";
@@ -183,7 +183,7 @@ namespace ObjectServer
             }
 
             var sql = SqlString.Parse(
-                "insert into core_session(sid, start_time, last_activity_time, userid, login) values(?,?,?,?,?)");
+                @"insert into ""core_session""(""sid"", ""start_time"", ""last_activity_time"", ""userid"", ""login"") values(?,?,?,?,?)");
             var n = db.Execute(sql, session.Id, session.StartTime, session.LastActivityTime, session.UserId, session.Login);
             if (n != 1)
             {

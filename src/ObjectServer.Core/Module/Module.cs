@@ -42,9 +42,12 @@ namespace ObjectServer
             s_coreModule = new Module()
             {
                 Name = StaticSettings.CoreModuleName,
+                Label = "Core Module",
                 Requires = new string[] { },
                 AutoLoad = true,
                 Version = asm.GetName().Version,
+                Info = "Core Module",
+                Author = string.Empty,
             };
 
             var asmAttrs = asm.GetCustomAttributes(false);
@@ -371,11 +374,11 @@ namespace ObjectServer
                 state = ModuleModel.States.ToInstall;
             }
 
-            var serial = dbctx.NextSerial(ModuleModel.DbSequenceName);
             var insertSql = SqlString.Parse(
-                "insert into core_module(_id, name, state, label, version, demo, author, info) values(?,?,?,?,?,?,?,?)");
+                "insert into core_module(name, state, label, version, demo, author, info) values(?,?,?,?,?,?,?)");
             dbctx.Execute(insertSql,
-                serial, this.Name, state, this.Label, this.Version.ToString(), this.IsDemo, this.Author, this.Info);
+                this.Name, state, this.Label, this.Version.ToString(), this.IsDemo, this.Author, this.Info);
+            var serial = dbctx.GetLastIdentity("core_module");
 
             //插入依赖
             var insertDependSql = SqlString.Parse(

@@ -14,7 +14,8 @@ namespace ObjectServer.Data
         private static readonly Dictionary<string, Type>
             dbTypeMapping = new Dictionary<string, Type>()
         {
-            { "postgres", typeof(Postgresql.PgDataProvider) },
+            { "postgres",   typeof(Postgresql.PgDataProvider) },
+            { "mssql",      typeof(Mssql.MssqlDataProvider) },
         };
 
         static DataProvider()

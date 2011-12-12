@@ -32,7 +32,7 @@ namespace ObjectServer.Data
 
         ITableContext CreateTableContext(string tableName);
 
-        long NextSerial(string sequenceName);
+        long GetLastIdentity(string sequenceName);
         bool IsValidDatabase();
         void LockTable(string tableName);
 

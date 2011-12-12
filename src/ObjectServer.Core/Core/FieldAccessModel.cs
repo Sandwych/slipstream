@@ -79,13 +79,13 @@ namespace ObjectServer.Core
             var fieldModel = (IModel)ctx.GetResource("core.field");
             var userRoleRelModel = (IModel)ctx.GetResource("core.user_role");
             var sql = String.Format(CultureInfo.InvariantCulture,
-                "select f.name field_name, (max(case when a.allow_{0} then 1 else 0 end) > 0) allow " +
-                "from {1} a " +
-                "inner join {2} f on (a.field = f._id) " +
-                "inner join {3} m on (f.model = m._id) " +
-                "left join {4} ur on (ur.role = a.role) " +
-                "where m.name = ? and (ur.user = ? or a.role is null) " +
-                "group by f.name ",
+                @"select ""f"".""name"" ""field_name"", (max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)) ""allow"" " +
+                @"from ""{1}"" ""a"" " +
+                @"inner join ""{2}"" ""f"" on (""a"".""field"" = ""f"".""_id"") " +
+                @"inner join ""{3}"" ""m"" on (""f"".""model"" = ""m"".""_id"") " +
+                @"left join ""{4}"" ""ur"" on (""ur"".""role"" = ""a"".""role"") " +
+                @"where ""m"".""name"" = ? and (""ur"".""user"" = ? or ""a"".""role"" is null) " +
+                @"group by ""f"".""name"" ",
                 action, this.TableName, fieldModel.TableName, modelModel.TableName, userRoleRelModel.TableName);
 
             Debug.Assert(ctx.Session != null);
@@ -101,7 +101,7 @@ namespace ObjectServer.Core
                 foreach (var r in records)
                 {
                     var name = (string)r["field_name"];
-                    var value = (bool)r["allow"];
+                    var value = (int)r["allow"] > 0;
                     result.Add(name, value);
                 }
                 return result;

@@ -268,7 +268,6 @@ namespace ObjectServer.Model
             Debug.Assert(ctx != null);
             Debug.Assert(values != null);
 
-            var serial = ctx.DBContext.NextSerial(this.SequenceName);
 
             if (this.ContainsField(VersionFieldName) && !values.ContainsKey(VersionFieldName))
             {
@@ -277,38 +276,12 @@ namespace ObjectServer.Model
 
             var allColumnNames = from f in values.Keys
                                  let fieldInfo = this.Fields[f]
-                                 where fieldInfo.IsColumn
+                                 where fieldInfo.IsColumn && fieldInfo.Name != IdFieldName
                                  select f;
 
             var colValues = new object[allColumnNames.Count()];
 
-            // "insert into <tableName> (_id, cols... ) values (<id>, ?, ?, ?... );",
-            var sqlBuilder = new SqlStringBuilder();
-            sqlBuilder.Add("insert into ");
-            sqlBuilder.Add(quotedTableName);
-            sqlBuilder.Add(@"(""_id""");
-
-            var index = 0;
-            foreach (var f in allColumnNames)
-            {
-                colValues[index] = values[f];
-                sqlBuilder.Add(",");
-                sqlBuilder.Add('"' + f + '"');
-                index++;
-            }
-
-            sqlBuilder.Add(") values (");
-            sqlBuilder.Add(serial.ToString());
-
-            for (int i = 0; i < allColumnNames.Count(); i++)
-            {
-                sqlBuilder.Add(",");
-                sqlBuilder.Add(Parameter.Placeholder);
-            }
-
-            sqlBuilder.Add(")");
-
-            var sql = sqlBuilder.ToSqlString();
+            var sql = this.BuildInsertStatement(values, allColumnNames, colValues);
 
             var rows = ctx.DBContext.Execute(sql, colValues);
             if (rows != 1)
@@ -317,7 +290,42 @@ namespace ObjectServer.Model
                 throw new ObjectServer.Exceptions.DataException(msg);
             }
 
-            return serial;
+            return ctx.DBContext.GetLastIdentity(this.TableName);
+        }
+
+        private SqlString BuildInsertStatement(IRecord values, IEnumerable<string> allColumnNames, object[] colValues)
+        {
+            // "insert into <tableName> (_id, cols... ) values (<id>, ?, ?, ?... );",
+            var sqlBuilder = new SqlStringBuilder();
+            sqlBuilder.Add("insert into ");
+            sqlBuilder.Add(quotedTableName);
+            sqlBuilder.Add("(");
+
+            var index = 0;
+            foreach (var f in allColumnNames)
+            {
+                colValues[index] = values[f];
+                if (index != 0)
+                {
+                    sqlBuilder.Add(",");
+                }
+                sqlBuilder.Add('"' + f + '"');
+                index++;
+            }
+
+            sqlBuilder.Add(") values (");
+
+            for (int i = 0; i < allColumnNames.Count(); i++)
+            {
+                if (i != 0)
+                {
+                    sqlBuilder.Add(",");
+                }
+                sqlBuilder.Add(Parameter.Placeholder);
+            }
+
+            sqlBuilder.Add(")");
+            return sqlBuilder.ToSqlString();
         }
 
         /// <summary>

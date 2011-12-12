@@ -108,6 +108,11 @@
     <Compile Include="Core\FieldAccessModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Data\AbstractDbContext.cs" />
+    <Compile Include="Data\Mssql\MssqlColumnMetadata.cs" />
+    <Compile Include="Data\Mssql\MssqlDataProvider.cs" />
+    <Compile Include="Data\Mssql\MssqlDataContext.cs" />
+    <Compile Include="Data\Mssql\MssqlSqlTypeConverter.cs" />
+    <Compile Include="Data\Mssql\MssqlTableContext.cs" />
     <Compile Include="Data\DatabaseType.cs" />
     <Compile Include="Data\DataProvider.cs" />
     <Compile Include="Data\DynamicRecord.cs" />
@@ -241,6 +246,7 @@
     <EmbeddedResource Include="Core\Data\Security.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Data\Mssql\initdb.sql" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
