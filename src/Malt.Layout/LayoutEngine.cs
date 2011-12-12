@@ -21,7 +21,7 @@ namespace Malt.Layout
             this.widgetFactory = factory;
         }
 
-        public ITableLayoutWidget CreateLayout(IContainer container)
+        public ITableLayoutWidget BuildLayout(IContainer container)
         {
             if (container == null)
             {
@@ -143,7 +143,7 @@ namespace Malt.Layout
                 foreach (Page page in nb.Pages)
                 {
                     var le = new LayoutEngine(this.widgetFactory);
-                    var pageContent = le.CreateLayout(page);
+                    var pageContent = le.BuildLayout(page);
                     var pageWidget = this.widgetFactory.CreatePageWidget(page, widget, pageContent);
                 }
             }

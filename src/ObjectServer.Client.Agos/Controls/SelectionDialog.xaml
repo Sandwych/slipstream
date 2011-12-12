@@ -13,15 +13,36 @@
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Style="{StaticResource ToolbarStyle}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
-                <Button x:Name="NewButton" Content="新建" Style="{StaticResource FlatButtonStyle}" />
+                <Button x:Name="NewButton" Style="{StaticResource FlatButtonStyle}" >
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/document-new.png" />
+                            <TextBlock>新建</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
                 <Rectangle Width="10"/>
-                <Button x:Name="ClearButton" Content="清除" Style="{StaticResource FlatButtonStyle}" Click="ClearButton_Click" />
+                <Button x:Name="QueryButton" Style="{StaticResource FlatButtonStyle}" Click="QueryButton_Click" >
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/system-search.png" />
+                            <TextBlock>查询</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
                 <Rectangle Width="10"/>
-                <Button x:Name="QueryButton" Content="查询" Style="{StaticResource FlatButtonStyle}" Click="QueryButton_Click" />
+                <Button x:Name="ClearButton" Style="{StaticResource FlatButtonStyle}" Click="ClearButton_Click" >
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/ObjectServer.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
+                            <TextBlock>清除</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
             </StackPanel>
         </Border>
 
-        <my:TreeView Grid.Row="1" x:Name="treeView1" BorderThickness="1" BorderBrush="#FF999999"  />
+        <my:TreeView Grid.Row="1" x:Name="treeView1" />
 
         <Rectangle Grid.Row="2" Fill="#FF999999" Height="1" Margin="0,5,0,5" />
 

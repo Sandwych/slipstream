@@ -99,7 +99,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
 
             var factory = new FieldControlFactory(this.modelName, allMetaFields);
             var le = new Malt.Layout.LayoutEngine(factory);
-            var layoutGrid = (UIElement)le.CreateLayout(form);
+            var layoutGrid = (UIElement)le.BuildLayout(form);
             this.fieldWidgets = factory.CreatedFieldWidgets;
             this.Content = layoutGrid;
 

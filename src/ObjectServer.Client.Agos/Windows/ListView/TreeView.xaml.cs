@@ -205,7 +205,7 @@ namespace ObjectServer.Client.Agos.Windows.TreeView
             basicQueryForm.ChildElements = basicQueryFormChildren.ToArray();
 
             var layoutEngine = new Malt.Layout.LayoutEngine(factory);
-            var basicQueryGrid = layoutEngine.CreateLayout(basicQueryForm);
+            var basicQueryGrid = layoutEngine.BuildLayout(basicQueryForm);
 
             foreach (var p in factory.CreatedQueryFields)
             {

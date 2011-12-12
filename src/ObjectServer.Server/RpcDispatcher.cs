@@ -100,7 +100,8 @@ namespace ObjectServer.Server
         {
             if (!Environment.Initialized)
             {
-                throw new InvalidOperationException("无法启动 PRC-Handler 工人线程，请先初始化框架");
+                throw new InvalidOperationException(
+                    "Unable to start PRC-Handler thread, please initialize the environment first.");
             }
 
             var broadcastUrl = Environment.Configuration.BroadcastUrl;
@@ -216,7 +217,7 @@ namespace ObjectServer.Server
             }
             catch (FatalException fex)
             {
-                LoggerProvider.EnvironmentLogger.Fatal("系统发生了致命错误", fex);
+                LoggerProvider.EnvironmentLogger.Fatal("FatalError", fex);
                 throw fex; //接着抛出异常，让系统结束运行
             }
             catch (ArgumentException ex)
