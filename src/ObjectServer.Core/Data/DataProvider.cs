@@ -6,10 +6,11 @@ using System.Text;
 namespace ObjectServer.Data
 {
     //重构此类
+    //此类最终会被去掉
     public static class DataProvider
     {
         private static object dataProviderLock = new object();
-        private static readonly IDataProvider concreteDataProvider;
+        private static IDataProvider concreteDataProvider;
 
         private static readonly Dictionary<string, Type>
             dbTypeMapping = new Dictionary<string, Type>()
@@ -51,6 +52,7 @@ namespace ObjectServer.Data
             LoggerProvider.EnvironmentLogger.Info(
                 String.Format("Concrete DataProvider: [{0}]", providerType.FullName));
             var instance = Activator.CreateInstance(providerType) as IDataProvider;
+            concreteDataProvider = instance;
             return instance;
         }
 

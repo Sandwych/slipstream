@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 
+using Autofac;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Model;
@@ -13,7 +14,7 @@ using ObjectServer.Model;
 namespace ObjectServer.Data
 {
     internal abstract class AbstractDataContext : IDataContext
-    {
+    {        
         protected IDbConnection _conn;
         private bool _disposed = false;
         private IDbTransaction _transaction;
@@ -258,8 +259,10 @@ namespace ObjectServer.Data
         }
 
         public IDbCommand CreateCommand(SqlString sql)
-        {
-            var sqlCommand = DataProvider.Driver.GenerateCommand(
+        {           
+            //TODO 改成依赖的
+            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
+            var sqlCommand = dataProvider.Driver.GenerateCommand(
                 CommandType.Text, sql, new NHibernate.SqlTypes.SqlType[] { });
             sqlCommand.Connection = this._conn;
             if (this._transaction != null)

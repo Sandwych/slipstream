@@ -63,7 +63,7 @@ namespace ObjectServer
                 throw new ArgumentException("_dbName");
             }
 
-            var dbNames = DataProvider.ListDatabases();
+            var dbNames = this._dataProvider.ListDatabases();
             if (!dbNames.Contains(dbName))
             {
                 throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);

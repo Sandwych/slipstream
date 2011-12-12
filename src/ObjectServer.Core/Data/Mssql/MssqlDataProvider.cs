@@ -12,8 +12,8 @@ namespace ObjectServer.Data.Mssql
 {
     internal class MssqlDataProvider : IDataProvider
     {
-        private static readonly Dialect s_dialect = new MsSql2005Dialect();
-        private static readonly DriverBase s_driver = new SqlClientDriver();
+        private readonly Dialect _dialect = new MsSql2005Dialect();
+        private readonly DriverBase _driver = new SqlClientDriver();
 
         private static readonly SqlString ListDatabasesSql = SqlString.Parse(@"
 select db.name from sys.sysdatabases db
@@ -60,8 +60,7 @@ order by l.name asc
             }
 
             var sql = new SqlString(
-                "create database ",
-                DataProvider.Dialect.QuoteForSchemaName(dbName));
+                "create database ", '"' + dbName + '"');
 
             using (var conn = new MssqlDataContext())
             {
@@ -77,9 +76,7 @@ order by l.name asc
                 throw new ArgumentNullException("_dbName");
             }
 
-            var sql = new SqlString(
-                  "drop database ",
-                  DataProvider.Dialect.QuoteForSchemaName(dbName));
+            var sql = new SqlString("drop database ", '"' + dbName + '"');
 
             System.Data.SqlClient.SqlConnection.ClearAllPools();
             using (var conn = this.OpenDataContext())
@@ -91,12 +88,12 @@ order by l.name asc
 
         public Dialect Dialect
         {
-            get { return s_dialect; }
+            get { return _dialect; }
         }
 
         public IDriver Driver
         {
-            get { return s_driver; }
+            get { return _driver; }
         }
 
         public bool IsSupportProcedure { get { return false; } }
