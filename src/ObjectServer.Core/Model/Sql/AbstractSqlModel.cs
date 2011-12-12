@@ -212,7 +212,7 @@ namespace ObjectServer.Model
         /// <param name="dbctx"></param>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        private long[] GetChildrenIDs(IDbContext dbctx, long parentID)
+        private long[] GetChildrenIDs(IDataContext dbctx, long parentID)
         {
             var sqlFmt =
 @"
@@ -235,7 +235,7 @@ where   hp._id = ? and hc._id <> ?
             return ids.ToArray();
         }
 
-        private long[] GetDescendantIDs(IDbContext dbctx, long parentID)
+        private long[] GetDescendantIDs(IDataContext dbctx, long parentID)
         {
             var sqlFmt =
 @"

@@ -49,13 +49,9 @@ namespace ObjectServer.Model
             if (this.Inheritances.Count > 0)
             {
                 var sql = new SqlString(
-                    "select * from ",
-                    DataProvider.Dialect.QuoteForTableName(this.TableName),
-                    " where ",
-                    DataProvider.Dialect.QuoteForColumnName(AbstractModel.IdFieldName),
-                    " in (",
-                    ids.ToCsv(),
-                    ")");
+                    " select * from ", '"' + this.TableName + '"',
+                    " where ", '"' + AbstractModel.IdFieldName + '"',
+                    " in (", ids.ToCsv(), ")");
 
                 existedRecords = ctx.DBContext.QueryAsDictionary(sql);
             }
@@ -104,7 +100,7 @@ namespace ObjectServer.Model
             {
                 var sql = new SqlString(
                     "delete from ", tableModel.quotedTableName,
-                    " where ", QuotedIdColumn, " in (", ids.ToCsv(), ")");
+                    @" where ""_id"" in (", ids.ToCsv(), ")");
 
                 var rowCount = ctx.DBContext.Execute(sql);
                 if (rowCount != ids.Count())

@@ -32,8 +32,7 @@ namespace ObjectServer.Model
 
         private readonly IFieldCollection fields;
 
-        public static readonly string QuotedIdColumn =
-            DataProvider.Dialect.QuoteForColumnName(IdFieldName);
+        public static readonly string QuotedIdColumn = '"' + IdFieldName + '"';
 
         protected AbstractModel(string name)
             : base(name)
@@ -158,7 +157,7 @@ namespace ObjectServer.Model
         /// 同步代码定义的模型到数据库
         /// </summary>
         /// <param name="db"></param>
-        private void SyncModel(IDbContext db)
+        private void SyncModel(IDataContext db)
         {
             Debug.Assert(db != null);
 
@@ -179,7 +178,7 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="db"></param>
         /// <param name="modelId"></param>
-        private void SyncFields(IDbContext db, long modelId)
+        private void SyncFields(IDataContext db, long modelId)
         {
             Debug.Assert(db != null);
 
@@ -233,7 +232,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         /// <param name="dbField"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        private void SyncSingleField(IDbContext db, IRecord dbField, string fieldName)
+        private void SyncSingleField(IDataContext db, IRecord dbField, string fieldName)
         {
             Debug.Assert(db != null);
             Debug.Assert(dbField != null);
@@ -274,18 +273,13 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             }
         }
 
-        private long? FindExistedModelInDb(IDbContext db)
+        private long? FindExistedModelInDb(IDataContext db)
         {
             Debug.Assert(db != null);
 
             //var sql = "SELECT MAX(\"_id\") FROM core_model WHERE name=@0";
             var sql = new SqlString(
-                "select max(",
-                QuotedIdColumn,
-                ") from ",
-                DataProvider.Dialect.QuoteForTableName("core_model"),
-                " where ",
-                DataProvider.Dialect.QuoteForColumnName("name"), "=", Parameter.Placeholder);
+                @"select max(""_id"") from ""core_model"" where ""name""=", Parameter.Placeholder);
             var o = db.QueryValue(sql, this.Name);
             if (o.IsNull())
             {
@@ -297,7 +291,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             }
         }
 
-        private void CreateModel(IDbContext db)
+        private void CreateModel(IDataContext db)
         {
             Debug.Assert(db != null);
 
@@ -314,14 +308,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             }
 
             sql = new SqlString(
-                "select max(",
-                QuotedIdColumn,
-                ") from ",
-                DataProvider.Dialect.QuoteForTableName("core_model"),
-                " where ",
-                DataProvider.Dialect.QuoteForColumnName("name"), "=", Parameter.Placeholder,
-                " and ",
-                DataProvider.Dialect.QuoteForColumnName("module"), "=", Parameter.Placeholder);
+                @"select max(""_id"") from ""core_model""  where ""name"" =", Parameter.Placeholder,
+                @" and ""module""=", Parameter.Placeholder);
 
             var modelId = (long)db.QueryValue(sql, this.Name, this.Module);
 

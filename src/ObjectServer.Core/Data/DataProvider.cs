@@ -40,7 +40,7 @@ namespace ObjectServer.Data
             }
         }
 
-        public static IDbContext OpenDataContext(string dbName)
+        public static IDataContext OpenDataContext(string dbName)
         {
             if (dbName == null)
             {
@@ -50,7 +50,7 @@ namespace ObjectServer.Data
             return concreteDataProvider.OpenDataContext(dbName);
         }
 
-        public static IDbContext CreateDataContext()
+        public static IDataContext CreateDataContext()
         {
             return concreteDataProvider.OpenDataContext();
         }

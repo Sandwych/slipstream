@@ -10,7 +10,7 @@ using NHibernate.SqlCommand;
 
 namespace ObjectServer.Data.Postgresql
 {
-    internal sealed class PgDBContext : AbstractDbContext, IDbContext
+    internal sealed class PgDBContext : AbstractDbContext, IDataContext
     {
         private readonly static Type pgt = typeof(Npgsql.NpgsqlCommand);
 

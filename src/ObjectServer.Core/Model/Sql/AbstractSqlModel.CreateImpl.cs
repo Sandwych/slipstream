@@ -136,7 +136,7 @@ namespace ObjectServer.Model
         }
 
         #region 处理层次表的创建事宜
-        private void UpdateTreeForCreation(IDbContext dbctx, long id, Record record)
+        private void UpdateTreeForCreation(IDataContext dbctx, long id, Record record)
         {
             //如果支持存储过程就用存储/函数，那么直接调用预定义的存储过程或函数来处理
             if (DataProvider.IsSupportProcedure)
@@ -155,7 +155,7 @@ namespace ObjectServer.Model
         /// <param name="dbctx"></param>
         /// <param name="id"></param>
         /// <param name="record"></param>
-        private void UpdateTreeForCreationBySqlStatements(IDbContext dbctx, long id, Record record)
+        private void UpdateTreeForCreationBySqlStatements(IDataContext dbctx, long id, Record record)
         {
             //处理层次表
             long rhsValue = 0;
@@ -165,16 +165,8 @@ namespace ObjectServer.Model
             {
                 var parentID = (long)parentIDObj;
                 var sql = new SqlString(
-                    "select ",
-                    DataProvider.Dialect.QuoteForColumnName(AbstractSqlModel.LeftFieldName),
-                    ",",
-                    DataProvider.Dialect.QuoteForColumnName(AbstractSqlModel.RightFieldName),
-                    " from ",
-                    DataProvider.Dialect.QuoteForTableName(this.TableName),
-                    " where ",
-                    DataProvider.Dialect.QuoteForColumnName(AbstractModel.IdFieldName),
-                    "=",
-                    Parameter.Placeholder);
+                    @" select ""_left"", ""_right"" from ", '"' + this.TableName + '"',
+                    @" where ""_id""  = ", Parameter.Placeholder);
 
                 var records = dbctx.QueryAsDictionary(sql, parentID);
                 if (records.Length == 0)
@@ -199,13 +191,9 @@ namespace ObjectServer.Model
             {
                 //"SELECT MAX(_right) FROM <TableName> WHERE _left >= 0"
                 var sql = new SqlString(
-                    "select max(",
-                    DataProvider.Dialect.QuoteForColumnName(RightFieldName),
-                    ") from ",
-                    DataProvider.Dialect.QuoteForTableName(this.TableName),
-                    " where ",
-                    DataProvider.Dialect.QuoteForColumnName(LeftFieldName),
-                    ">=0");
+                    @" select max(""_right"")",
+                    @" from ", '"' + this.TableName + '"',
+                    @" where ", '"' + LeftFieldName + '"', ">=0");
 
                 var value = dbctx.QueryValue(sql);
                 if (!value.IsNull())
@@ -241,7 +229,7 @@ namespace ObjectServer.Model
         /// <param name="dbctx"></param>
         /// <param name="id"></param>
         /// <param name="record"></param>
-        private void UpdateTreeForCreationBySqlFunction(IDbContext dbctx, long id, Record record)
+        private void UpdateTreeForCreationBySqlFunction(IDataContext dbctx, long id, Record record)
         {
             using (var cmd = dbctx.CreateCommand(new SqlString("tree_update_for_creation")))
             {
@@ -298,15 +286,14 @@ namespace ObjectServer.Model
             var sqlBuilder = new SqlStringBuilder();
             sqlBuilder.Add("insert into ");
             sqlBuilder.Add(quotedTableName);
-            sqlBuilder.Add("(");
-            sqlBuilder.Add(QuotedIdColumn);
+            sqlBuilder.Add(@"(""_id""");
 
             var index = 0;
             foreach (var f in allColumnNames)
             {
                 colValues[index] = values[f];
                 sqlBuilder.Add(",");
-                sqlBuilder.Add(DataProvider.Dialect.QuoteForColumnName(f));
+                sqlBuilder.Add('"' + f + '"');
                 index++;
             }
 

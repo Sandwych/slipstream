@@ -88,14 +88,12 @@ namespace ObjectServer.Model
                 }
                 commaNeeded = true;
 
-                var quotedColumn = DataProvider.Dialect.QuoteForColumnName(col);
-                selectStmt.Add(quotedColumn);
+                selectStmt.Add('"' + col + '"');
             }
 
             selectStmt.Add(" from ");
             selectStmt.Add(this.TableName);
-            var idColumn = DataProvider.Dialect.QuoteForColumnName(AbstractModel.IdFieldName);
-            selectStmt.Add(" where " + idColumn + " in (");
+            selectStmt.Add(@" where ""_id"" in (");
 
             commaNeeded = false;
             foreach (var id in ids)

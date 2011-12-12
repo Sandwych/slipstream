@@ -41,7 +41,7 @@ namespace ObjectServer.Core
         }
 
         internal static void Create(
-            IDbContext dbctx, string module, string model, string key, long resId)
+            IDataContext dbctx, string module, string model, string key, long resId)
         {
             var rows = dbctx.Execute(SqlToCreate, key, module, model, resId);
             if (rows != 1)
@@ -51,7 +51,7 @@ namespace ObjectServer.Core
             }
         }
 
-        internal static long? TryLookupResourceId(IDbContext conn, string model, string key)
+        internal static long? TryLookupResourceId(IDataContext conn, string model, string key)
         {
             if (conn == null)
             {
@@ -77,7 +77,7 @@ namespace ObjectServer.Core
             return (long)rows[0];
         }
 
-        internal static void UpdateResourceId(IDbContext dbctx, string model, string key, long refId)
+        internal static void UpdateResourceId(IDataContext dbctx, string model, string key, long refId)
         {
             if (dbctx == null)
             {

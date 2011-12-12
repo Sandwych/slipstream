@@ -168,10 +168,9 @@ namespace ObjectServer.Model
             if (hasRow && field.DefaultProc != null)
             {
                 var defaultValue = field.DefaultProc(this.context);
-                var sql = new SqlString("update ",
-                    dialect.QuoteForTableName(table.Name),
-                    " set ",
-                    dialect.QuoteForColumnName(field.Name), "=", Parameter.Placeholder);
+                var sql = new SqlString(
+                    " update ", '"' + table.Name + '"',
+                    " set ", '"' + field.Name + '"', " = ", Parameter.Placeholder);
                 this.context.DBContext.Execute(sql, defaultValue);
                 table.AlterColumnNullable(this.context.DBContext, field.Name, false);
             }
@@ -184,8 +183,7 @@ namespace ObjectServer.Model
 
         private bool TableHasRow(string tableName)
         {
-            var sql = new SqlString("select count(*) from ",
-                DataProvider.Dialect.QuoteForTableName(tableName));
+            var sql = new SqlString("select count(*) from ", '"' + tableName + '"');
             var rowCount = (long)this.context.DBContext.QueryValue(sql);
             return rowCount > 0;
         }

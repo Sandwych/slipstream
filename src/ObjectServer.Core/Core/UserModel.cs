@@ -38,20 +38,20 @@ namespace ObjectServer.Core
             Fields.Boolean("active").SetLabel("Active?").Required().SetDefaultValueGetter(r => true);
         }
 
-        public override void Initialize(IServiceContext ctx, bool update)
+        public override void Initialize(IServiceContext svcctx, bool update)
         {
-            base.Initialize(ctx, update);
+            base.Initialize(svcctx, update);
 
             //检测是否有 root 用户
-            var isRootUserExisted = UserExists(ctx.DBContext, RootUserName);
+            var isRootUserExisted = UserExists(svcctx.DBContext, RootUserName);
             if (update && isRootUserExisted)
             {
-                ctx.BizLogger.Info("Creating the [root] user...");
-                this.CreateRootUser(ctx.DBContext);
+                svcctx.BizLogger.Info("Creating the [root] user...");
+                this.CreateRootUser(svcctx.DBContext);
             }
         }
 
-        private static bool UserExists(IDbContext db, string login)
+        private static bool UserExists(IDataContext dbctx, string login)
         {
             var sql = new SqlString(
                 "select count(*) from ",
@@ -59,14 +59,14 @@ namespace ObjectServer.Core
                 "where ",
                 DataProvider.Dialect.QuoteForColumnName("login"), "=", Parameter.Placeholder);
 
-            var rowCount = db.QueryValue(sql, login);
+            var rowCount = dbctx.QueryValue(sql, login);
             var isRootUserExisted = rowCount.IsNull() || (long)rowCount <= 0;
             return isRootUserExisted;
         }
 
-        private void CreateRootUser(IDbContext conn)
+        private void CreateRootUser(IDataContext dbctx)
         {
-            Debug.Assert(conn != null);
+            Debug.Assert(dbctx != null);
 
             /*
                     insert into core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
@@ -110,7 +110,7 @@ namespace ObjectServer.Core
             };
             var row = HashPassword(user);
 
-            conn.Execute(
+            dbctx.Execute(
                 sql, row[VersionFieldName], row["name"], row["login"], row["password"],
                 row["admin"], row["active"], row["_created_time"], row["salt"]);
         }

@@ -9,7 +9,10 @@ using NHibernate.SqlCommand;
 
 namespace ObjectServer.Data
 {
-    public interface IDbContext : IDisposable
+    /// <summary>
+    /// 核心数据库访问接口
+    /// </summary>
+    public interface IDataContext : IDisposable
     {
         void Close();
 

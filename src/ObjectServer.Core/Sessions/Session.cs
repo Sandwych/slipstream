@@ -120,7 +120,7 @@ namespace ObjectServer
             }
         }
 
-        public static Session GetById(IDbContext db, string sid)
+        public static Session GetById(IDataContext db, string sid)
         {
             if (db == null)
             {
@@ -147,7 +147,7 @@ namespace ObjectServer
             }
         }
 
-        public static Session GetByUserId(IDbContext db, long userId)
+        public static Session GetByUserId(IDataContext db, long userId)
         {
             if (db == null)
             {
@@ -170,7 +170,7 @@ namespace ObjectServer
             }
         }
 
-        public static void Put(IDbContext db, Session session)
+        public static void Put(IDataContext db, Session session)
         {
             if (db == null)
             {
@@ -191,7 +191,7 @@ namespace ObjectServer
             }
         }
 
-        public static void Remove(IDbContext db, string sid)
+        public static void Remove(IDataContext db, string sid)
         {
             if (db == null)
             {
@@ -211,7 +211,7 @@ namespace ObjectServer
             }
         }
 
-        public static void Pulse(IDbContext db, string sid)
+        public static void Pulse(IDataContext db, string sid)
         {
             if (db == null)
             {

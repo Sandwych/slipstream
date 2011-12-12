@@ -44,13 +44,9 @@ namespace ObjectServer.Model
                 var selfId = (long)rec[AbstractModel.IdFieldName];
                 //中间表没有记录，返回空
                 var sql = new SqlString(
-                    "select ",
-                    DataProvider.Dialect.QuoteForColumnName(this.RelatedField),
-                    " from ",
-                    DataProvider.Dialect.QuoteForTableName(relationModel.TableName),
-                    " where ",
-                    DataProvider.Dialect.QuoteForColumnName(this.OriginField),
-                    "=", Parameter.Placeholder);
+                    " select ", '"' + this.RelatedField + '"',
+                    " from ", '"' + relationModel.TableName + '"',
+                    " where ", '"' + this.OriginField + '"', "=", Parameter.Placeholder);
                 var targetIds = ctx.DBContext.QueryAsArray<object>(sql, selfId);
                 result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }

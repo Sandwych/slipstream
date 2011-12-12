@@ -111,7 +111,7 @@
     <Compile Include="Data\DatabaseType.cs" />
     <Compile Include="Data\DataProvider.cs" />
     <Compile Include="Data\DynamicRecord.cs" />
-    <Compile Include="Data\IDbContext.cs" />
+    <Compile Include="Data\IDataContext.cs" />
     <Compile Include="Data\IDataProvider.cs" />
     <Compile Include="Data\ITableContext.cs" />
     <Compile Include="Data\IColumnMetadata.cs" />

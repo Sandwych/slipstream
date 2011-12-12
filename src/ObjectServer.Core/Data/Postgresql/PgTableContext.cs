@@ -25,7 +25,7 @@ namespace ObjectServer.Data.Postgresql
                 { OnDeleteAction.Restrict, "RESTRICT" },
             };
 
-        public PgTableContext(IDbContext db, string tableName)
+        public PgTableContext(IDataContext db, string tableName)
         {
             if (db == null)
             {
@@ -48,7 +48,7 @@ namespace ObjectServer.Data.Postgresql
 
         public string Name { get; private set; }
 
-        public bool TableExists(IDbContext db, string tableName)
+        public bool TableExists(IDataContext db, string tableName)
         {
             if (db == null)
             {
@@ -76,7 +76,7 @@ namespace ObjectServer.Data.Postgresql
             return n > 0;
         }
 
-        public void CreateTable(IDbContext db, IModelDescriptor model, string label)
+        public void CreateTable(IDataContext db, IModelDescriptor model, string label)
         {
             if (db == null)
             {
@@ -96,7 +96,7 @@ namespace ObjectServer.Data.Postgresql
 
             var sb = new SqlStringBuilder();
             sb.Add("create table ");
-            sb.Add(DataProvider.Dialect.QuoteForTableName(tableName));
+            sb.Add('"' + tableName + '"');
             sb.Add("(");
 
             var commaNeeded = false;
@@ -122,7 +122,7 @@ namespace ObjectServer.Data.Postgresql
             SetTableComment(db, tableName, label);
         }
 
-        public void CreateTable(IDbContext db, string tableName, string label)
+        public void CreateTable(IDataContext db, string tableName, string label)
         {
             if (db == null)
             {
@@ -159,20 +159,19 @@ namespace ObjectServer.Data.Postgresql
             SetTableComment(db, tableName, label);
         }
 
-        private static void SetTableComment(IDbContext db, string tableName, string label)
+        private static void SetTableComment(IDataContext db, string tableName, string label)
         {
             if (!String.IsNullOrEmpty(label))
             {
                 label = label.SqlEscape();
-                var sql = new SqlString("comment on table ",
-                    DataProvider.Dialect.QuoteForTableName(tableName),
-                    " is '", label.SqlEscape(), "'");
+                var sql = String.Format(CultureInfo.InvariantCulture,
+                    @"comment on table ""{0}"" is '{1}'", tableName, label.SqlEscape());
 
-                db.Execute(sql);
+                db.Execute(SqlString.Parse(sql));
             }
         }
 
-        public void AddColumn(IDbContext db, IFieldDescriptor field)
+        public void AddColumn(IDataContext db, IFieldDescriptor field)
         {
             if (db == null)
             {
@@ -185,12 +184,11 @@ namespace ObjectServer.Data.Postgresql
             }
 
             var sqlType = PgSqlTypeConverter.GetSqlType(field);
-            var sql = new SqlString("alter table ",
-                DataProvider.Dialect.QuoteForTableName(this.Name),
-                " add column ",
-                DataProvider.Dialect.QuoteForColumnName(field.Name), " ", sqlType);
+            var sql = String.Format(CultureInfo.InvariantCulture,
+                @"alter table ""{0}"" add column ""{1}"" {2}",
+                this.Name, field.Name, sqlType);
 
-            db.Execute(sql);
+            db.Execute(SqlString.Parse(sql));
 
             this.SetColumnComment(db, field);
 
@@ -200,22 +198,19 @@ namespace ObjectServer.Data.Postgresql
             }
         }
 
-        private void SetColumnComment(IDbContext db, IFieldDescriptor field)
+        private void SetColumnComment(IDataContext db, IFieldDescriptor field)
         {
             if (!string.IsNullOrEmpty(field.Label))
             {
                 //添加注释
-                var commentSql = new SqlString(
-                     "comment on column ",
-                     DataProvider.Dialect.QuoteForTableName(this.Name),
-                     ".",
-                     DataProvider.Dialect.QuoteForColumnName(field.Name),
-                     " is '", field.Label.SqlEscape(), "'");
-                db.Execute(commentSql);
+                var commentSql = String.Format(CultureInfo.InvariantCulture,
+                     @"comment on column ""{0}"".""{1}"" is '{2}'",
+                     this.Name, field.Name, field.Label.SqlEscape());
+                db.Execute(SqlString.Parse(commentSql));
             }
         }
 
-        public void DeleteColumn(IDbContext db, string columnName)
+        public void DeleteColumn(IDataContext db, string columnName)
         {
             if (db == null)
             {
@@ -237,7 +232,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void AlterColumnNullable(IDbContext db, string columnName, bool nullable)
+        public void AlterColumnNullable(IDataContext db, string columnName, bool nullable)
         {
             if (db == null)
             {
@@ -261,7 +256,7 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void AlterColumnType(IDbContext db, string columnName, string sqlType)
+        public void AlterColumnType(IDataContext db, string columnName, string sqlType)
         {
             if (db == null)
             {
@@ -321,7 +316,7 @@ namespace ObjectServer.Data.Postgresql
             return this.columns.Values.ToArray();
         }
 
-        private void LoadColumns(IDbContext db, string tableName)
+        private void LoadColumns(IDataContext db, string tableName)
         {
             if (db == null)
             {
@@ -352,7 +347,7 @@ namespace ObjectServer.Data.Postgresql
 
         }
 
-        private void AddUniqueConstraint(IDbContext db, string column)
+        private void AddUniqueConstraint(IDataContext db, string column)
         {
             Debug.Assert(db != null);
             Debug.Assert(!string.IsNullOrEmpty(column));
@@ -363,7 +358,7 @@ namespace ObjectServer.Data.Postgresql
         }
 
 
-        public void AddConstraint(IDbContext dbctx, string constraintName, string constraint)
+        public void AddConstraint(IDataContext dbctx, string constraintName, string constraint)
         {
             if (dbctx == null)
             {
@@ -385,7 +380,7 @@ namespace ObjectServer.Data.Postgresql
             dbctx.Execute(SqlString.Parse(sql));
         }
 
-        public void DeleteConstraint(IDbContext dbctx, string constraintName)
+        public void DeleteConstraint(IDataContext dbctx, string constraintName)
         {
             if (dbctx == null)
             {
@@ -404,7 +399,7 @@ namespace ObjectServer.Data.Postgresql
         }
 
 
-        public bool ConstraintExists(IDbContext db, string constraintName)
+        public bool ConstraintExists(IDataContext db, string constraintName)
         {
             //TODO ESCAPE SQL
             if (db == null)
@@ -425,7 +420,7 @@ select coalesce(count(constraint_name), 0)
             return n > 0;
         }
 
-        public void AddFK(IDbContext db, string columnName, string refTable, OnDeleteAction act)
+        public void AddFK(IDataContext db, string columnName, string refTable, OnDeleteAction act)
         {
             if (db == null)
             {
@@ -454,7 +449,7 @@ select coalesce(count(constraint_name), 0)
         }
 
 
-        public void DeleteFK(IDbContext db, string columnName)
+        public void DeleteFK(IDataContext db, string columnName)
         {
             if (db == null)
             {
@@ -473,7 +468,7 @@ select coalesce(count(constraint_name), 0)
             this.DeleteConstraint(db, fkName);
         }
 
-        public bool FKExists(IDbContext db, string columnName)
+        public bool FKExists(IDataContext db, string columnName)
         {
             if (db == null)
             {

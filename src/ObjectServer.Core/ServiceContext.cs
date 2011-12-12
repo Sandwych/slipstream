@@ -120,7 +120,7 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="db"></param>
-        public ServiceContext(IDbContext db)
+        public ServiceContext(IDataContext db)
         {
             if (db == null)
             {
@@ -192,8 +192,8 @@ namespace ObjectServer
             return this.resources.GetResourceDependencyWeight(resName);
         }
 
-        private readonly IDbContext dbctx;
-        public IDbContext DBContext
+        private readonly IDataContext dbctx;
+        public IDataContext DBContext
         {
             get
             {

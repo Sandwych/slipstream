@@ -358,7 +358,7 @@ namespace ObjectServer
             return module;
         }
 
-        public void AddToDatabase(IDbContext dbctx)
+        public void AddToDatabase(IDataContext dbctx)
         {
             if (dbctx == null)
             {

@@ -121,7 +121,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void UpdateModuleList(IDbContext dbctx)
+        public void UpdateModuleList(IDataContext dbctx)
         {
             if (dbctx == null)
             {
@@ -219,7 +219,7 @@ namespace ObjectServer
             }
         }
 
-        private void UpdateModuleState(IDbContext dbctx, long moduleID, string state)
+        private void UpdateModuleState(IDataContext dbctx, long moduleID, string state)
         {
             Debug.Assert(moduleID > 0);
             Debug.Assert(dbctx != null);
