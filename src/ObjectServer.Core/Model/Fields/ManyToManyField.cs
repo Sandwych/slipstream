@@ -47,7 +47,7 @@ namespace ObjectServer.Model
                     " select ", '"' + this.RelatedField + '"',
                     " from ", '"' + relationModel.TableName + '"',
                     " where ", '"' + this.OriginField + '"', "=", Parameter.Placeholder);
-                var targetIds = ctx.DBContext.QueryAsArray<object>(sql, selfId);
+                var targetIds = ctx.DataContext.QueryAsArray<object>(sql, selfId);
                 result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }
 

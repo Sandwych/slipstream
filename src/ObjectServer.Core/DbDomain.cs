@@ -48,7 +48,7 @@ namespace ObjectServer
         {
             using (var ctx = new ServiceContext(this.DatabaseName, this))
             {
-                Environment.Modules.UpdateModuleList(ctx.DBContext);
+                Environment.Modules.UpdateModuleList(ctx.DataContext);
             }
 
             using (var ctx = new ServiceContext(this.DatabaseName, this))

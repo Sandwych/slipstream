@@ -180,7 +180,7 @@ namespace ObjectServer.Model
                             "Reference field must have 'ref-key' and 'ref-model' attributes");
                     }
                     var recordId = ModelDataModel.TryLookupResourceId(
-                        this.context.DBContext, refModel, refKey);
+                        this.context.DataContext, refModel, refKey);
                     if (recordId == null)
                     {
                         var msg = string.Format(
@@ -196,7 +196,7 @@ namespace ObjectServer.Model
                         throw new DataException("Many-to-one field must have a 'ref-key' attribute");
                     }
                     fieldValue = ModelDataModel.TryLookupResourceId(
-                        this.context.DBContext, metaField.Relation, refKey);
+                        this.context.DataContext, metaField.Relation, refKey);
                     if (fieldValue == null)
                     {
                         throw new DataException("Cannot found model for ref-key: " + refKey);

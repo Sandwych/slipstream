@@ -112,7 +112,7 @@ namespace ObjectServer.Model
             var sql = selectStmt.ToSqlString();
 
             //先查找表里的简单字段数据
-            var records = scope.DBContext.QueryAsDictionary(sql);
+            var records = scope.DataContext.QueryAsDictionary(sql);
 
             this.ReadBaseModels(scope, allFields, records);
 

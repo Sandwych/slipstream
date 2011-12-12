@@ -164,7 +164,7 @@ namespace ObjectServer
             var sql = new SqlString("select _id, name, state from core_module");
 
             //TODO: 模块依赖排序
-            var modules = ctx.DBContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
+            var modules = ctx.DataContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
 
             var coreModule = modules.Where(m => (string)m["name"] == "core");
             var sortedModules = modules.Where(m => (string)m["name"] != "core");
@@ -184,7 +184,7 @@ namespace ObjectServer
                 }
                 else
                 {
-                    this.UpdateModuleState(ctx.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                    this.UpdateModuleState(ctx.DataContext, moduleId, ModuleModel.States.Uninstalled);
                     LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
                         CultureInfo.CurrentCulture,
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
@@ -198,16 +198,16 @@ namespace ObjectServer
             if (isUpdate && state == ModuleModel.States.ToInstall)
             {
                 module.Load(ctx, ModuleUpdateAction.ToInstall);
-                this.UpdateModuleState(ctx.DBContext, moduleId, ModuleModel.States.Installed);
+                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleModel.States.Installed);
             }
             else if (isUpdate && state == ModuleModel.States.ToUpgrade)
             {
                 module.Load(ctx, ModuleUpdateAction.ToUpgrade);
-                this.UpdateModuleState(ctx.DBContext, moduleId, ModuleModel.States.Installed);
+                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleModel.States.Installed);
             }
             else if (isUpdate && state == ModuleModel.States.ToUninstall)
             {
-                this.UpdateModuleState(ctx.DBContext, moduleId, ModuleModel.States.Uninstalled);
+                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleModel.States.Uninstalled);
             }
             else if (state == ModuleModel.States.Installed)
             {

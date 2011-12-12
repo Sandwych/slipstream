@@ -33,11 +33,11 @@ namespace ObjectServer.Core
 
             base.Initialize(tc, update);
 
-            var tableCtx = tc.DBContext.CreateTableContext(this.TableName);
+            var tableCtx = tc.DataContext.CreateTableContext(this.TableName);
 
-            if (update && !tableCtx.ConstraintExists(tc.DBContext, UniqueConstraintName))
+            if (update && !tableCtx.ConstraintExists(tc.DataContext, UniqueConstraintName))
             {
-                tableCtx.AddConstraint(tc.DBContext, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
+                tableCtx.AddConstraint(tc.DataContext, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
             }
         }
     }

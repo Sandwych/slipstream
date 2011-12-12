@@ -14,7 +14,7 @@ namespace ObjectServer
 
         IResource GetResource(string resName);
         int GetResourceDependencyWeight(string resName);
-        IDataContext DBContext { get; }
+        IDataContext DataContext { get; }
         IResourceContainer Resources { get; }
         ILogger BizLogger { get; }
     }

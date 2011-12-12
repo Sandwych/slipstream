@@ -30,16 +30,16 @@ namespace ObjectServer.Core
         {
             base.Initialize(ctx, update);
 
-            var tableCtx = ctx.DBContext.CreateTableContext(this.TableName);
+            var tableCtx = ctx.DataContext.CreateTableContext(this.TableName);
 
-            if (update && !tableCtx.ConstraintExists(ctx.DBContext, UniqueConstraintName))
+            if (update && !tableCtx.ConstraintExists(ctx.DataContext, UniqueConstraintName))
             {
                 var userCol = DataProvider.Dialect.QuoteForColumnName("user");
                 var roleCol = DataProvider.Dialect.QuoteForColumnName("role");
                 var sql = string.Format(CultureInfo.InvariantCulture,
                     "UNIQUE({0}, {1})", userCol, roleCol);
 
-                tableCtx.AddConstraint(ctx.DBContext, UniqueConstraintName, sql);
+                tableCtx.AddConstraint(ctx.DataContext, UniqueConstraintName, sql);
             }
         }
     }

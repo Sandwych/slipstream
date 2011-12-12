@@ -90,7 +90,7 @@ namespace ObjectServer.Core
 
             Debug.Assert(ctx.Session != null);
             var userId = ctx.Session.UserId;
-            var records = ctx.DBContext.QueryAsDictionary(SqlString.Parse(sql), modelName, userId);
+            var records = ctx.DataContext.QueryAsDictionary(SqlString.Parse(sql), modelName, userId);
             if (records.Count() == 0)
             {
                 return new Dictionary<string, bool>();

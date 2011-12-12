@@ -53,7 +53,7 @@ namespace ObjectServer.Model
                     " where ", '"' + AbstractModel.IdFieldName + '"',
                     " in (", ids.ToCsv(), ")");
 
-                existedRecords = ctx.DBContext.QueryAsDictionary(sql);
+                existedRecords = ctx.DataContext.QueryAsDictionary(sql);
             }
 
             DeleteRows(ctx, ids, this);
@@ -102,7 +102,7 @@ namespace ObjectServer.Model
                     "delete from ", tableModel.quotedTableName,
                     @" where ""_id"" in (", ids.ToCsv(), ")");
 
-                var rowCount = ctx.DBContext.Execute(sql);
+                var rowCount = ctx.DataContext.Execute(sql);
                 if (rowCount != ids.Count())
                 {
                     var msg = string.Format("Failed to delete model '{0}'", tableModel.Name);
@@ -132,7 +132,7 @@ namespace ObjectServer.Model
                 orderby r.Right descending
                 select r;
 
-            ctx.DBContext.LockTable(tableModel.TableName);
+            ctx.DataContext.LockTable(tableModel.TableName);
 
             foreach (var record in parentRecords)
             {
@@ -143,7 +143,7 @@ namespace ObjectServer.Model
                     "delete from ", tableModel.quotedTableName,
                     " where ", LeftFieldName,
                     " between ", Parameter.Placeholder, " and ", Parameter.Placeholder);
-                ctx.DBContext.Execute(sql, record.Left, record.Right);
+                ctx.DataContext.Execute(sql, record.Left, record.Right);
 
                 //更新所有右边节点的 _left 与 _right
                 var sqlUpdate1 = String.Format(CultureInfo.InvariantCulture,
@@ -154,8 +154,8 @@ namespace ObjectServer.Model
                     "update {0} set _left = _left - {1} where _left > {2}",
                     tableModel.quotedTableName, width + 1, record.Left);
 
-                ctx.DBContext.Execute(SqlString.Parse(sqlUpdate1));
-                ctx.DBContext.Execute(SqlString.Parse(sqlUpdate2));
+                ctx.DataContext.Execute(SqlString.Parse(sqlUpdate1));
+                ctx.DataContext.Execute(SqlString.Parse(sqlUpdate2));
             }
         }
     }

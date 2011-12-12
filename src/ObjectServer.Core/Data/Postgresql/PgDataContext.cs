@@ -10,13 +10,13 @@ using NHibernate.SqlCommand;
 
 namespace ObjectServer.Data.Postgresql
 {
-    internal sealed class PgDBContext : AbstractDbContext, IDataContext
+    internal sealed class PgDataContext : AbstractDataContext, IDataContext
     {
         private readonly static Type pgt = typeof(Npgsql.NpgsqlCommand);
 
         private const string INITDB = "ObjectServer.Data.Postgresql.initdb.sql";
 
-        public PgDBContext(string dbName)
+        public PgDataContext(string dbName)
         {
             if (string.IsNullOrEmpty(dbName))
             {
@@ -40,7 +40,7 @@ namespace ObjectServer.Data.Postgresql
             this.DatabaseName = dbName;
         }
 
-        public PgDBContext()
+        public PgDataContext()
             : this("template1")
         {
         }

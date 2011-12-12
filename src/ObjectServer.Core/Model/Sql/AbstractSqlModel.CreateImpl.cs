@@ -66,7 +66,7 @@ namespace ObjectServer.Model
 
             if (this.Hierarchy)
             {
-                this.UpdateTreeForCreation(scope.DBContext, selfId, record);
+                this.UpdateTreeForCreation(scope.DataContext, selfId, record);
             }
 
             this.UpdateOneToManyFields(scope, selfId, record);
@@ -283,14 +283,14 @@ namespace ObjectServer.Model
 
             var sql = this.BuildInsertStatement(values, allColumnNames, colValues);
 
-            var rows = ctx.DBContext.Execute(sql, colValues);
+            var rows = ctx.DataContext.Execute(sql, colValues);
             if (rows != 1)
             {
                 var msg = string.Format("Failed to insert row, SQL: {0}", sql);
                 throw new ObjectServer.Exceptions.DataException(msg);
             }
 
-            return ctx.DBContext.GetLastIdentity(this.TableName);
+            return ctx.DataContext.GetLastIdentity(this.TableName);
         }
 
         private SqlString BuildInsertStatement(IRecord values, IEnumerable<string> allColumnNames, object[] colValues)

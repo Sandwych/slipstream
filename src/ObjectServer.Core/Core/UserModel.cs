@@ -43,11 +43,11 @@ namespace ObjectServer.Core
             base.Initialize(svcctx, update);
 
             //检测是否有 root 用户
-            var isRootUserExisted = UserExists(svcctx.DBContext, RootUserName);
+            var isRootUserExisted = UserExists(svcctx.DataContext, RootUserName);
             if (update && isRootUserExisted)
             {
                 svcctx.BizLogger.Info("Creating the [root] user...");
-                this.CreateRootUser(svcctx.DBContext);
+                this.CreateRootUser(svcctx.DataContext);
             }
         }
 
@@ -239,13 +239,13 @@ namespace ObjectServer.Core
                 var session = this.FetchOrCreateSession(ctx, database, login, user);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged.", ctx.DBContext.DatabaseName, login));
+                    String.Format("User[{0}.{1}] logged.", ctx.DataContext.DatabaseName, login));
                 return session;
             }
             else
             {
                 LoggerProvider.EnvironmentLogger.Warn(() =>
-                    String.Format("Failed to log on user: [{0}.{1}]", ctx.DBContext.DatabaseName, login));
+                    String.Format("Failed to log on user: [{0}.{1}]", ctx.DataContext.DatabaseName, login));
                 throw new Exceptions.SecurityException("Failed to log on");
             }
         }
@@ -253,14 +253,14 @@ namespace ObjectServer.Core
 
         public void LogOff(IServiceContext ctx, string sessionId)
         {
-            var session = Session.GetById(ctx.DBContext, sessionId);
+            var session = Session.GetById(ctx.DataContext, sessionId);
 
             if (session != null)
             {
-                Session.Remove(ctx.DBContext, sessionId);
+                Session.Remove(ctx.DataContext, sessionId);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
-                    String.Format("User[{0}.{1}] logged out.", ctx.DBContext.DatabaseName, session.Login));
+                    String.Format("User[{0}.{1}] logged out.", ctx.DataContext.DatabaseName, session.Login));
             }
             else
             {
@@ -310,24 +310,24 @@ namespace ObjectServer.Core
 
             var uid = (long)userFields[IdFieldName];
 
-            var oldSession = Session.GetByUserId(ctx.DBContext, uid);
+            var oldSession = Session.GetByUserId(ctx.DataContext, uid);
 
             if (oldSession == null)
             {
                 var newSession = new Session(login, uid);
-                Session.Put(ctx.DBContext, newSession);
+                Session.Put(ctx.DataContext, newSession);
                 return newSession;
             }
             else if (!oldSession.IsActive)
             {
-                Session.Remove(ctx.DBContext, oldSession.Id);
+                Session.Remove(ctx.DataContext, oldSession.Id);
                 var newSession = new Session(login, uid);
-                Session.Put(ctx.DBContext, newSession);
+                Session.Put(ctx.DataContext, newSession);
                 return newSession;
             }
             else
             {
-                Session.Pulse(ctx.DBContext, oldSession.Id);
+                Session.Pulse(ctx.DataContext, oldSession.Id);
                 return oldSession;
             }
         }

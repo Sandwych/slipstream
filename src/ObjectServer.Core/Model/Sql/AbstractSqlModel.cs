@@ -184,7 +184,7 @@ namespace ObjectServer.Model
                     var result = new Dictionary<long, object>(ids.Length);
                     foreach (var id in ids)
                     {
-                        var children = this.GetChildrenIDs(scope.DBContext, id);
+                        var children = this.GetChildrenIDs(scope.DataContext, id);
                         result.Add(id, children);
                     }
                     return result;
@@ -198,7 +198,7 @@ namespace ObjectServer.Model
                     var result = new Dictionary<long, object>(ids.Length);
                     foreach (var id in ids)
                     {
-                        var children = this.GetDescendantIDs(scope.DBContext, id);
+                        var children = this.GetDescendantIDs(scope.DataContext, id);
                         result.Add(id, children);
                     }
                     return result;

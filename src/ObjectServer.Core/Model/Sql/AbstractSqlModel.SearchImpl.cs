@@ -52,7 +52,7 @@ namespace ObjectServer.Model
                     querySql, new SqlString(offset.ToString()), new SqlString(limit.ToString()));
             }
 
-            return tc.DBContext.QueryAsArray<long>(querySql, translator.Values);
+            return tc.DataContext.QueryAsArray<long>(querySql, translator.Values);
         }
 
 
@@ -68,7 +68,7 @@ namespace ObjectServer.Model
 
             var querySql = translator.ToSqlString(true);
 
-            return Convert.ToInt64(tx.DBContext.QueryValue(querySql, translator.Values));
+            return Convert.ToInt64(tx.DataContext.QueryValue(querySql, translator.Values));
         }
 
         private void TranslateConstraint(IServiceContext tc, object[] constraint, ConstraintTranslator translator)

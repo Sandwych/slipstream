@@ -91,7 +91,7 @@ namespace ObjectServer.Core
 
                 var sql = String.Format("update {0} set state=? where _id=?", model.TableName);
                 var id = (long)r[IdFieldName];
-                var rows = ctx.DBContext.Execute(SqlString.Parse(sql), newState, id);
+                var rows = ctx.DataContext.Execute(SqlString.Parse(sql), newState, id);
                 if (rows != 1)
                 {
                     throw new Exceptions.DataException(

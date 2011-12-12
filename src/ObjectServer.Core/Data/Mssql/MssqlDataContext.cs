@@ -10,7 +10,7 @@ using NHibernate.SqlCommand;
 
 namespace ObjectServer.Data.Mssql
 {
-    internal sealed class MssqlDataContext : AbstractDbContext, IDataContext
+    internal sealed class MssqlDataContext : AbstractDataContext, IDataContext
     {
         private readonly static Type sbc = typeof(System.Data.SqlClient.SqlBulkCopy);
 

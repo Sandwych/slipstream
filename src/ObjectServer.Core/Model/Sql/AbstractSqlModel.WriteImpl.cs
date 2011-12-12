@@ -145,7 +145,7 @@ namespace ObjectServer.Model
                     newParentID = (long)newParentIDObj;
                 }
 
-                ctx.DBContext.LockTable(this.TableName); //层次表移动节点的时候需要锁表，因为涉及不止一行
+                ctx.DataContext.LockTable(this.TableName); //层次表移动节点的时候需要锁表，因为涉及不止一行
                 this.NodeMoveTo(ctx, nodeLeft, nodeRight, nodeWidth, newParentID);
             }
 
@@ -216,7 +216,7 @@ namespace ObjectServer.Model
             sqlBuilder.Add(this.BuildVersionExpression(originVersion));
 
             var sql = sqlBuilder.ToSqlString();
-            var rowsAffected = ctx.DBContext.Execute(sql, args);
+            var rowsAffected = ctx.DataContext.Execute(sql, args);
             return rowsAffected;
         }
 
@@ -251,13 +251,13 @@ namespace ObjectServer.Model
                 CultureInfo.InvariantCulture,
                 "update {0} set _left=_left+{1} where _left>={2}",
                 this.quotedTableName, nodeWidth, insertPos);
-            ctx.DBContext.Execute(SqlString.Parse(sql));
+            ctx.DataContext.Execute(SqlString.Parse(sql));
 
             sql = String.Format(
                 CultureInfo.InvariantCulture,
                 "update {0} set _right=_right+{1} where _right>={2}",
                 this.quotedTableName, nodeWidth, insertPos);
-            ctx.DBContext.Execute(SqlString.Parse(sql));
+            ctx.DataContext.Execute(SqlString.Parse(sql));
 
             if (nodeLeft < insertPos) //往左移动
             {
@@ -266,7 +266,7 @@ namespace ObjectServer.Model
                     CultureInfo.InvariantCulture,
                     "update {0} set _left=_left+{1}, _right=_right+{1} where _left>={2} and _left<{3}",
                     this.quotedTableName, moveDistance, nodeLeft, nodeRight);
-                ctx.DBContext.Execute(SqlString.Parse(sql));
+                ctx.DataContext.Execute(SqlString.Parse(sql));
             }
             else //往右移动
             {
@@ -275,7 +275,7 @@ namespace ObjectServer.Model
                     CultureInfo.InvariantCulture,
                     "update {0} set _left=_left-{1}, _right=_right-{1} where _left>={2} and _left<{3}",
                     this.quotedTableName, moveDistance + nodeWidth, nodeLeft + nodeWidth, nodeRight + nodeWidth);
-                ctx.DBContext.Execute(SqlString.Parse(sql));
+                ctx.DataContext.Execute(SqlString.Parse(sql));
             }
 
             //最后一步不需要执行了，之前已经更新过 parent

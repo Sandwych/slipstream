@@ -107,7 +107,7 @@
     <Compile Include="Core\ModuleDependencyModule.cs" />
     <Compile Include="Core\FieldAccessModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
-    <Compile Include="Data\AbstractDbContext.cs" />
+    <Compile Include="Data\AbstractDataContext.cs" />
     <Compile Include="Data\Mssql\MssqlColumnMetadata.cs" />
     <Compile Include="Data\Mssql\MssqlDataProvider.cs" />
     <Compile Include="Data\Mssql\MssqlDataContext.cs" />
@@ -121,7 +121,7 @@
     <Compile Include="Data\ITableContext.cs" />
     <Compile Include="Data\IColumnMetadata.cs" />
     <Compile Include="Data\Postgresql\PgColumnMetadata.cs" />
-    <Compile Include="Data\Postgresql\PgDBContext.cs" />
+    <Compile Include="Data\Postgresql\PgDataContext.cs" />
     <Compile Include="Data\Postgresql\PgDataProvider.cs" />
     <Compile Include="Data\Postgresql\PgSqlTypeConverter.cs" />
     <Compile Include="Data\Postgresql\PgTableContext.cs" />

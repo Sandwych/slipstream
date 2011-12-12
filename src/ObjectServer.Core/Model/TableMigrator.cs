@@ -35,9 +35,9 @@ namespace ObjectServer.Model
         {
             Debug.Assert(this.context != null);
 
-            var table = this.context.DBContext.CreateTableContext(this.model.TableName);
+            var table = this.context.DataContext.CreateTableContext(this.model.TableName);
 
-            if (!table.TableExists(this.context.DBContext, this.model.TableName))
+            if (!table.TableExists(this.context.DataContext, this.model.TableName))
             {
                 this.CreateTable(table);
             }
@@ -49,7 +49,7 @@ namespace ObjectServer.Model
 
         private void CreateTable(ITableContext table)
         {
-            table.CreateTable(this.context.DBContext, this.model, this.model.Name);
+            table.CreateTable(this.context.DataContext, this.model, this.model.Name);
 
             CreateForeignKeys(table, this.model.Fields.Values);
 
@@ -67,7 +67,7 @@ namespace ObjectServer.Model
                 if (f.IsColumn && f.Type == FieldType.ManyToOne)
                 {
                     var refModel = (IModel)this.context.GetResource(f.Relation);
-                    table.AddFK(this.context.DBContext, f.Name, refModel.TableName, OnDeleteAction.NoAction);
+                    table.AddFK(this.context.DataContext, f.Name, refModel.TableName, OnDeleteAction.NoAction);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace ObjectServer.Model
                 {
                     if (!table.ColumnExists(field.Name))
                     {
-                        table.AddColumn(this.context.DBContext, field);
+                        table.AddColumn(this.context.DataContext, field);
                     }
                     else
                     {
@@ -118,7 +118,7 @@ namespace ObjectServer.Model
                 {
                     if (!c.Nullable && columnsToDelete.Contains(c.Name))
                     {
-                        table.AlterColumnNullable(this.context.DBContext, c.Name, true);
+                        table.AlterColumnNullable(this.context.DataContext, c.Name, true);
                     }
                 }
             }
@@ -126,7 +126,7 @@ namespace ObjectServer.Model
             {
                 foreach (var c in columnsToDelete)
                 {
-                    table.DeleteColumn(this.context.DBContext, c);
+                    table.DeleteColumn(this.context.DataContext, c);
                 }
             }
 
@@ -142,7 +142,7 @@ namespace ObjectServer.Model
             {
                 //TODO:转换成可移植数据库类型    
                 var sqlType = string.Format("VARCHAR({0})", field.Size);
-                table.AlterColumnType(this.context.DBContext, field.Name, sqlType);
+                table.AlterColumnType(this.context.DataContext, field.Name, sqlType);
             }
 
 
@@ -158,7 +158,7 @@ namespace ObjectServer.Model
 
         private void SetColumnNullable(ITableContext table, IField field)
         {
-            table.AlterColumnNullable(this.context.DBContext, field.Name, true);
+            table.AlterColumnNullable(this.context.DataContext, field.Name, true);
         }
 
         private void SetColumnNotNullable(ITableContext table, IField field, bool hasRow)
@@ -171,8 +171,8 @@ namespace ObjectServer.Model
                 var sql = new SqlString(
                     " update ", '"' + table.Name + '"',
                     " set ", '"' + field.Name + '"', " = ", Parameter.Placeholder);
-                this.context.DBContext.Execute(sql, defaultValue);
-                table.AlterColumnNullable(this.context.DBContext, field.Name, false);
+                this.context.DataContext.Execute(sql, defaultValue);
+                table.AlterColumnNullable(this.context.DataContext, field.Name, false);
             }
             else
             {
@@ -184,7 +184,7 @@ namespace ObjectServer.Model
         private bool TableHasRow(string tableName)
         {
             var sql = new SqlString("select count(*) from ", '"' + tableName + '"');
-            var rowCount = Convert.ToInt32(this.context.DBContext.QueryValue(sql));
+            var rowCount = Convert.ToInt32(this.context.DataContext.QueryValue(sql));
             return rowCount > 0;
         }
 

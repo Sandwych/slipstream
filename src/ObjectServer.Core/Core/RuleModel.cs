@@ -71,7 +71,7 @@ namespace ObjectServer.Core
                         @"inner join ""core_user_role_rel"" ""ur"" on (""rr"".""role"" = ""ur"".""role"") ",
                         @"where ""ur"".""user"" =", Parameter.Placeholder, @" )))");
 
-            var result = ctx.DBContext.QueryAsDictionary(sql, modelName, ctx.Session.UserId);
+            var result = ctx.DataContext.QueryAsDictionary(sql, modelName, ctx.Session.UserId);
 
             if (result.Length > 0)
             {

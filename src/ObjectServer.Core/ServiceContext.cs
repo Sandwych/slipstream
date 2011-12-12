@@ -49,7 +49,7 @@ namespace ObjectServer
                     throw new ObjectServer.Exceptions.SecurityException("Not logged!");
                 }
 
-                this.dbtx = this.DBContext.BeginTransaction();
+                this.dbtx = this.DataContext.BeginTransaction();
                 try
                 {
                     Session.Pulse(this.dbctx, sessionId);
@@ -65,7 +65,7 @@ namespace ObjectServer
             }
             catch
             {
-                this.DBContext.Close();
+                this.DataContext.Close();
                 this.disposed = true;
                 throw;
             }
@@ -94,7 +94,7 @@ namespace ObjectServer
 
             try
             {
-                this.dbtx = this.DBContext.BeginTransaction();
+                this.dbtx = this.DataContext.BeginTransaction();
                 try
                 {
                     this.Session = Session.CreateSystemUserSession();
@@ -110,7 +110,7 @@ namespace ObjectServer
             }
             catch
             {
-                this.DBContext.Close();
+                this.DataContext.Close();
                 this.disposed = true;
                 throw;
             }
@@ -133,7 +133,7 @@ namespace ObjectServer
 
             try
             {
-                this.dbtx = this.DBContext.BeginTransaction();
+                this.dbtx = this.DataContext.BeginTransaction();
                 try
                 {
                     this.Session = Session.CreateSystemUserSession();
@@ -148,7 +148,7 @@ namespace ObjectServer
             }
             catch
             {
-                this.DBContext.Close();
+                this.DataContext.Close();
                 this.disposed = true;
                 throw;
             }
@@ -193,7 +193,7 @@ namespace ObjectServer
         }
 
         private readonly IDataContext dbctx;
-        public IDataContext DBContext
+        public IDataContext DataContext
         {
             get
             {
@@ -291,7 +291,7 @@ namespace ObjectServer
                 finally
                 {
                     this.DbTransaction.Dispose();
-                    this.DBContext.Close();
+                    this.DataContext.Close();
                     this.disposed = true;
                 }
 

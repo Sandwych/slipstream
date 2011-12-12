@@ -26,7 +26,7 @@ select datname from pg_database
 
         public IDataContext OpenDataContext()
         {
-            return new PgDBContext();
+            return new PgDataContext();
         }
 
         public IDataContext OpenDataContext(string dbName)
@@ -36,7 +36,7 @@ select datname from pg_database
                 throw new ArgumentNullException("dbName");
             }
 
-            return new PgDBContext(dbName);
+            return new PgDataContext(dbName);
         }
 
         public string[] ListDatabases()
@@ -64,7 +64,7 @@ select datname from pg_database
                 DataProvider.Dialect.QuoteForSchemaName(dbName),
                 " template template0 encoding 'unicode'");
 
-            using (var conn = new PgDBContext())
+            using (var conn = new PgDataContext())
             {
                 conn.Execute(sql);
                 conn.Close();

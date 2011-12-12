@@ -12,17 +12,17 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Data
 {
-    internal abstract class AbstractDbContext : IDataContext
+    internal abstract class AbstractDataContext : IDataContext
     {
         protected IDbConnection _conn;
         private bool _disposed = false;
         private IDbTransaction _transaction;
 
-        public AbstractDbContext()
+        public AbstractDataContext()
         {
         }
 
-        ~AbstractDbContext()
+        ~AbstractDataContext()
         {
             this.Dispose(false);
         }

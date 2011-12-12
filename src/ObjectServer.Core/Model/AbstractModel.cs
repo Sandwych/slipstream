@@ -64,7 +64,7 @@ namespace ObjectServer.Model
 
             if (update)
             {
-                this.SyncModel(tc.DBContext);
+                this.SyncModel(tc.DataContext);
             }
         }
 
@@ -836,7 +836,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             if (!string.IsNullOrEmpty(key))
             {
                 existedId = Core.ModelDataModel.TryLookupResourceId(
-                    ctx.DBContext, this.Name, key);
+                    ctx.DataContext, this.Name, key);
             }
 
             if (existedId == null) // Create
@@ -845,7 +845,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 if (!string.IsNullOrEmpty(key))
                 {
                     Core.ModelDataModel.Create(
-                        ctx.DBContext, this.Module, this.Name, key, existedId.Value);
+                        ctx.DataContext, this.Module, this.Name, key, existedId.Value);
                 }
             }
             else if (existedId != null && !noUpdate) //Update 
@@ -859,7 +859,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
                 this.WriteInternal(ctx, existedId.Value, record);
                 Core.ModelDataModel.UpdateResourceId(
-                    ctx.DBContext, this.Name, key, existedId.Value);
+                    ctx.DataContext, this.Name, key, existedId.Value);
             }
             else
             {
