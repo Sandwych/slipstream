@@ -52,6 +52,15 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\net40\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\..\lib\net40\autofac\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mef">
+      <HintPath>..\..\lib\net40\autofac\Autofac.Integration.Mef.dll</HintPath>
+    </Reference>
     <Reference Include="IronRuby">
       <HintPath>..\..\lib\ironruby\bin\IronRuby.dll</HintPath>
     </Reference>

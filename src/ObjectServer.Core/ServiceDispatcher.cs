@@ -17,10 +17,6 @@ namespace ObjectServer
 
     internal sealed class ServiceDispatcher : IExportedService
     {
-        private ServiceDispatcher()
-        {
-        }
-
         public string LogOn(string dbName, string username, string password)
         {
             if (string.IsNullOrEmpty(dbName))

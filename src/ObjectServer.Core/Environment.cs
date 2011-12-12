@@ -7,8 +7,10 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Reflection;
 
-using ObjectServer.Exceptions;
+using Autofac;
 using Newtonsoft.Json;
+
+using ObjectServer.Exceptions;
 
 namespace ObjectServer
 {
@@ -20,15 +22,31 @@ namespace ObjectServer
     {
         private static readonly Environment s_instance = new Environment();
 
-        private bool disposed = false;
-        private Config config;
-        private bool initialized;
-        private DbDomainManager databaseProfiles = new DbDomainManager();
-        private ModuleManager modules = new ModuleManager();
-        private IExportedService exportedService = ServiceDispatcher.CreateDispatcher();
+        private bool _disposed = false;
+        private readonly Autofac.IContainer _rootContainer;
+        private readonly DbDomainManager _dbDomains;
+        private readonly ModuleManager _modules;
+        private Config _config;
+        private bool _initialized;
+        private readonly IExportedService _exportedService;
 
         private Environment()
         {
+            var containerBuilder = new Autofac.ContainerBuilder();
+            RegisterInsideComponents(containerBuilder);
+
+            this._rootContainer = containerBuilder.Build();
+
+            this._dbDomains = this._rootContainer.Resolve<DbDomainManager>();
+            this._modules = this._rootContainer.Resolve<ModuleManager>();
+            this._exportedService = this._rootContainer.Resolve<IExportedService>();
+        }
+
+        private static void RegisterInsideComponents(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterInstance<DbDomainManager>(new DbDomainManager()).SingleInstance();
+            containerBuilder.RegisterInstance<ModuleManager>(new ModuleManager()).SingleInstance();
+            containerBuilder.RegisterType<ServiceDispatcher>().As<IExportedService>().SingleInstance();
         }
 
         ~Environment()
@@ -40,7 +58,7 @@ namespace ObjectServer
 
         private void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!this._disposed)
             {
                 if (disposing)
                 {
@@ -48,9 +66,9 @@ namespace ObjectServer
                 }
 
                 //处置非托管资源
-                this.databaseProfiles.Dispose();
+                this._rootContainer.Dispose();
 
-                disposed = true;
+                _disposed = true;
                 LoggerProvider.EnvironmentLogger.Info("The platform environment has been closed.");
             }
         }
@@ -89,7 +107,7 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Initialize()
         {
-            if (s_instance.initialized)
+            if (s_instance._initialized)
             {
                 return;
             }
@@ -113,29 +131,29 @@ namespace ObjectServer
 
             //We must initialize the logging subsystem first
             ConfigurateLogger(cfg);
-            LoggerProvider.EnvironmentLogger.Info("The Logging Subsystem has been initialized");
+            LoggerProvider.EnvironmentLogger.Info("The Logging Subsystem has been _initialized");
 
             //查找所有模块并加载模块元信息
             LoggerProvider.EnvironmentLogger.Info(() => "Module Management Subsystem Initializing...");
             if (!string.IsNullOrEmpty(cfg.ModulePath))
             {
-                s_instance.modules.Initialize(cfg);
+                s_instance._modules.Initialize(cfg);
             }
 
-            s_instance.config = cfg;
-            s_instance.initialized = true;
-            LoggerProvider.EnvironmentLogger.Info(() => "The environment has been initialized.");
+            s_instance._config = cfg;
+            s_instance._initialized = true;
+            LoggerProvider.EnvironmentLogger.Info(() => "The environment has been _initialized.");
 
             LoggerProvider.EnvironmentLogger.Info(() => "Initializing databases...");
-            s_instance.databaseProfiles.Initialize(cfg);
+            s_instance._dbDomains.Initialize(cfg);
 
-            LoggerProvider.EnvironmentLogger.Info(() => "Runtime environment successfully initialized.");
+            LoggerProvider.EnvironmentLogger.Info(() => "Runtime environment successfully _initialized.");
         }
 
         public static void Shutdown()
         {
             LoggerProvider.EnvironmentLogger.Info("The whole system will be halt...");
-            if (s_instance.initialized)
+            if (s_instance._initialized)
             {
                 s_instance.Dispose(true);
             }
@@ -146,7 +164,7 @@ namespace ObjectServer
         {
             get
             {
-                return s_instance.initialized;
+                return s_instance._initialized;
             }
         }
 
@@ -155,7 +173,7 @@ namespace ObjectServer
         {
             get
             {
-                return Instance.databaseProfiles;
+                return Instance._dbDomains;
             }
         }
 
@@ -163,7 +181,7 @@ namespace ObjectServer
         {
             get
             {
-                return Instance.modules;
+                return Instance._modules;
             }
         }
 
@@ -187,7 +205,7 @@ namespace ObjectServer
         {
             get
             {
-                return Instance.config;
+                return Instance._config;
             }
         }
 
@@ -195,16 +213,21 @@ namespace ObjectServer
         {
             get
             {
-                return Instance.exportedService;
+                return Instance._exportedService;
 
             }
+        }
+
+        public static Autofac.IContainer RootContainer
+        {
+            get { return Instance._rootContainer; }
         }
 
         private static Environment Instance
         {
             get
             {
-                if (!s_instance.initialized)
+                if (!s_instance._initialized)
                 {
                     throw new Exception(
                         "尚未初始化系统，请调用 ObjectServerStarter.Initialize() 初始化");

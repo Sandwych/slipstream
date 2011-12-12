@@ -97,7 +97,7 @@ namespace ObjectServer.Data.Mssql
             }
 
             //创建数据库只执行到这里，安装核心模块是外部的事情
-            LoggerProvider.EnvironmentLogger.Info("The database scheme has been initialized.");
+            LoggerProvider.EnvironmentLogger.Info("The database scheme has been _initialized.");
         }
 
         public override bool IsInitialized()

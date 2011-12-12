@@ -20,7 +20,7 @@ namespace ObjectServer.Server
             var p = new OptionSet() {
                 { "h|?|help",  v => isShowHelp = v != null },
                 { "version",   v => isShowVersion = v != null },
-                { "c|config=", v => configPath = v },
+                { "c|_config=", v => configPath = v },
             };
 
             var extra = p.Parse(args);

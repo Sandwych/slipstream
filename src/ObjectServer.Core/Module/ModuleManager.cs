@@ -128,7 +128,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("dbctx");
             }
 
-            LoggerProvider.EnvironmentLogger.Info("Updating modules list...");
+            LoggerProvider.EnvironmentLogger.Info("Updating _modules list...");
 
             var cfg = Environment.Configuration;
             this.LookupAllModules(cfg.ModulePath);
@@ -153,7 +153,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("ctx");
             }
 
-            LoggerProvider.EnvironmentLogger.Info("Loading modules...");
+            LoggerProvider.EnvironmentLogger.Info("Loading _modules...");
 
             //加载的策略是：
             //1. 加载状态为 "installed" 的模块
