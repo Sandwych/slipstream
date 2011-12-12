@@ -20,10 +20,10 @@ namespace ObjectServer.Data.Postgresql
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
-            var cfg = Environment.Configuration;
+            var cfg = SlipstreamEnvironment.Configuration;
             string connectionString = string.Format(
               CultureInfo.InvariantCulture,
               "Server={0};" +
@@ -32,8 +32,7 @@ namespace ObjectServer.Data.Postgresql
               "User ID={1};" +
               "Password={2};",
               cfg.DbHost, cfg.DbUser, cfg.DbPassword, dbName);
-            var dbc = DataProvider.Driver.CreateConnection();
-            dbc.ConnectionString = connectionString;
+            var dbc = new Npgsql.NpgsqlConnection(connectionString);
             dbc.Open();
             //this.conn = new NpgsqlConnection(connectionString);
             this._conn = dbc;
@@ -51,7 +50,7 @@ namespace ObjectServer.Data.Postgresql
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             LoggerProvider.EnvironmentLogger.Info(String.Format("Creating Database [{0}]...", dbName));

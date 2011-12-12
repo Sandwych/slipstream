@@ -16,9 +16,9 @@ namespace ObjectServer.Model.Test
         [TestFixtureSetUp]
         public void TestFixtureSetup()
         {
-            if (!Environment.Initialized)
+            if (!SlipstreamEnvironment.Initialized)
             {
-                Environment.Initialize();
+                SlipstreamEnvironment.Initialize();
             }
         }
 

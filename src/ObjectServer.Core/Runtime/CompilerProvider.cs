@@ -13,7 +13,7 @@ namespace ObjectServer.Runtime
     {
         static readonly CompilerProvider s_instance = new CompilerProvider();
 
-        Dictionary<string, ICompiler> compilers = new Dictionary<string, ICompiler>()
+        readonly Dictionary<string, ICompiler> compilers = new Dictionary<string, ICompiler>()
         {
             { "csharp", new CSharpCompiler() },
         };

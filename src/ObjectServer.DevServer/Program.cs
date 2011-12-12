@@ -82,7 +82,7 @@ namespace ObjectServer.Server
                     WaitToQuit();
 
                     Console.WriteLine("开始广播停止命令...");
-                    var role = Environment.Configuration.Role;
+                    var role = SlipstreamEnvironment.Configuration.Role;
                     if (role == ServerRoles.Standalone || role == ServerRoles.Supervisor)
                     {
                         server.BeginStopAll();
@@ -120,7 +120,7 @@ namespace ObjectServer.Server
             }
             finally
             {
-                Environment.Shutdown();
+                SlipstreamEnvironment.Shutdown();
             }
         }
 
@@ -135,19 +135,19 @@ namespace ObjectServer.Server
         private static void InitializeFramework(string[] args)
         {
 
-            Debug.Assert(!Environment.Initialized);
+            Debug.Assert(!SlipstreamEnvironment.Initialized);
 
             var cfg = CreateConfigViaProgramArgs(args);
             cfg.LogToConsole = true;
 
             Console.WriteLine("正在初始化 ObjectServer 框架 ...");
-            Environment.Initialize(cfg);
+            SlipstreamEnvironment.Initialize(cfg);
 
             Console.WriteLine("ObjectServer 框架已经成功初始化");
 
             Console.WriteLine("日志文件目录=[{0}]，应用服务器主机 URL=[{1}]",
-                Environment.Configuration.LogPath,
-                Environment.Configuration.RpcBusUrl);
+                SlipstreamEnvironment.Configuration.LogPath,
+                SlipstreamEnvironment.Configuration.RpcBusUrl);
         }
 
     }

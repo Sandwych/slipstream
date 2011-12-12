@@ -33,7 +33,7 @@ order by l.name asc
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             return new MssqlDataContext(dbName);
@@ -41,7 +41,7 @@ order by l.name asc
 
         public string[] ListDatabases()
         {
-            var dbUser = Environment.Configuration.DbUser;
+            var dbUser = SlipstreamEnvironment.Configuration.DbUser;
 
             using (var ctx = this.OpenDataContext())
             {
@@ -56,7 +56,7 @@ order by l.name asc
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             var sql = new SqlString(
@@ -74,7 +74,7 @@ order by l.name asc
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             var sql = new SqlString(
@@ -94,7 +94,7 @@ order by l.name asc
             get { return s_dialect; }
         }
 
-        public DriverBase Driver
+        public IDriver Driver
         {
             get { return s_driver; }
         }

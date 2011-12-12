@@ -43,7 +43,7 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("commandText");
             }
 
-            if (Environment.Configuration.LoggingSql)
+            if (SlipstreamEnvironment.Configuration.LoggingSql)
             {
                 LoggerProvider.EnvironmentLogger.Debug(() => "SQL: " + commandText);
             }
@@ -63,7 +63,7 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("commandText");
             }
 
-            if (Environment.Configuration.LoggingSql)
+            if (SlipstreamEnvironment.Configuration.LoggingSql)
             {
                 LoggerProvider.EnvironmentLogger.Debug(() => "SQL: " + commandText);
             }
@@ -175,7 +175,7 @@ namespace ObjectServer.Data
                 throw new ArgumentNullException("commandText");
             }
 
-            if (Environment.Configuration.LoggingSql)
+            if (SlipstreamEnvironment.Configuration.LoggingSql)
             {
                 LoggerProvider.EnvironmentLogger.Debug(() => ("SQL: " + commandText));
             }

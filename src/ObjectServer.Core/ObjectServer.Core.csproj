@@ -137,6 +137,7 @@
     <Compile Include="Caching\CachedMethodAttribute.cs" />
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\RuleRoleModel.cs" />
+    <Compile Include="Data\ScopedTransaction.cs" />
     <Compile Include="Exceptions\SecurityException.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />
@@ -204,7 +205,7 @@
     <Compile Include="Model\Fields\FieldCollection.cs" />
     <Compile Include="Model\Fields\ReferenceField.cs" />
     <Compile Include="Model\Fields\EnumerationField.cs" />
-    <Compile Include="IExportedService.cs" />
+    <Compile Include="ISlipstreamService.cs" />
     <Compile Include="IResource.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="Model\NameGetter.cs" />
@@ -225,8 +226,8 @@
     <Compile Include="Model\Sql\AbstractSqlModel.cs" />
     <Compile Include="Core\ModuleModel.cs" />
     <Compile Include="Module\Module.cs" />
-    <Compile Include="ServiceDispatcher.cs" />
-    <Compile Include="Environment.cs" />
+    <Compile Include="SlipstreamService.cs" />
+    <Compile Include="SlipstreamEnvironment.cs" />
     <Compile Include="DbDomainManager.cs" />
     <Compile Include="Core\UserModel.cs" />
     <Compile Include="IServiceContext.cs" />

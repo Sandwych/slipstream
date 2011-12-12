@@ -39,7 +39,7 @@ namespace ObjectServer.Test
 
         private void TestProc()
         {
-            var service = Environment.ExportedService;
+            var service = SlipstreamEnvironment.RootService;
             var ids = (long[])service.Execute(TestingDatabaseName,
                 base.SessionId, "core.menu", "Search",
                 null, null, 0, 0);

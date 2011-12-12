@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Dynamic;
 
+using Autofac;
 using NUnit.Framework;
 
 namespace ObjectServer.Model.Test
@@ -14,10 +15,11 @@ namespace ObjectServer.Model.Test
         [Test]
         public void ExpectAccessDenied()
         {
-            var service = ObjectServer.Environment.ExportedService;
+            var service = ObjectServer.SlipstreamEnvironment.RootService;
             var sessionId = service.LogOn(TestingDatabaseName, "testuser", "testuser");
+            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<Data.IDataProvider>();
 
-            using (var scope = new ServiceContext(TestingDatabaseName, sessionId))
+            using (var scope = new ServiceContext(dataProvider, TestingDatabaseName, sessionId))
             {
                 var userModel = this.GetResource("core.user");
 

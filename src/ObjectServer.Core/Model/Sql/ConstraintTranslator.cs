@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
+using Autofac;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Exceptions;
@@ -174,7 +175,8 @@ namespace ObjectServer.Model
 
         public SqlString ToSqlString(bool isCount = false)
         {
-            var qs = new QuerySelect(Data.DataProvider.Dialect);
+            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
+            var qs = new QuerySelect(dataProvider.Dialect);
 
             SqlString columnsFragment = null;
             if (isCount)

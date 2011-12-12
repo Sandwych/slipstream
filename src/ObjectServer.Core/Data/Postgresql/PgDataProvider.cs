@@ -12,8 +12,8 @@ namespace ObjectServer.Data.Postgresql
 {
     internal class PgDataProvider : IDataProvider
     {
-        private static readonly Dialect s_dialect = new PostgreSQL82Dialect();
-        private static readonly DriverBase s_driver = new NpgsqlDriver();
+        private readonly Dialect _dialect = new PostgreSQL82Dialect();
+        private readonly DriverBase _driver = new NpgsqlDriver();
 
         private static readonly SqlString ListDatabasesSql = SqlString.Parse(@"
 select datname from pg_database  
@@ -33,7 +33,7 @@ select datname from pg_database
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             return new PgDataContext(dbName);
@@ -41,7 +41,7 @@ select datname from pg_database
 
         public string[] ListDatabases()
         {
-            var dbUser = Environment.Configuration.DbUser;
+            var dbUser = SlipstreamEnvironment.Configuration.DbUser;
 
             using (var ctx = this.OpenDataContext())
             {
@@ -56,7 +56,7 @@ select datname from pg_database
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             var sql = new SqlString(
@@ -75,7 +75,7 @@ select datname from pg_database
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             var sql = new SqlString(
@@ -92,12 +92,12 @@ select datname from pg_database
 
         public Dialect Dialect
         {
-            get { return s_dialect; }
+            get { return _dialect; }
         }
 
-        public DriverBase Driver
+        public IDriver Driver
         {
-            get { return s_driver; }
+            get { return _driver; }
         }
 
         public bool IsSupportProcedure { get { return true; } }

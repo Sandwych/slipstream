@@ -20,9 +20,22 @@ using ObjectServer.Utility;
 namespace ObjectServer
 {
     /// <summary>
+    /// 
+    /// </summary>
+    public interface IModuleManager : IGlobalObject
+    {
+        bool Contains(string moduleName);
+        Module GetModule(string moduleName);
+        void LookupAllModules(string modulePath);
+        void UpdateModuleList(IDataContext dbctx);
+        void LoadModules(IServiceContext ctx, bool isUpdate);
+    }
+
+
+    /// <summary>
     /// </summary>
     [Serializable]
-    public sealed class ModuleManager : IGlobalObject
+    public sealed class ModuleManager : IModuleManager
     {
 
         /// <summary>
@@ -72,7 +85,7 @@ namespace ObjectServer
             Module result = this.allModules.SingleOrDefault(m => m.Name == moduleName);
             if (result == null)
             {
-                var msg = string.Format(CultureInfo.CurrentCulture, 
+                var msg = string.Format(CultureInfo.CurrentCulture,
                     "Cannot found module: [{0}]", moduleName);
                 throw new ModuleNotFoundException(msg, moduleName);
             }
@@ -130,7 +143,7 @@ namespace ObjectServer
 
             LoggerProvider.EnvironmentLogger.Info("Updating _modules list...");
 
-            var cfg = Environment.Configuration;
+            var cfg = SlipstreamEnvironment.Configuration;
             this.LookupAllModules(cfg.ModulePath);
 
             var sql = new SqlString("select name from core_module");

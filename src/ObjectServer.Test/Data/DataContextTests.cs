@@ -78,10 +78,10 @@ namespace ObjectServer.Data.Test
         public void Create_and_delete_database()
         {
             var dbName = "oo_testdb";
-            Environment.Initialize();
-            var hash = Environment.Configuration.ServerPassword.ToSha();
+            SlipstreamEnvironment.Initialize();
+            var hash = SlipstreamEnvironment.Configuration.ServerPassword.ToSha();
 
-            var service = ServiceDispatcher.CreateDispatcher();
+            var service = SlipstreamEnvironment.RootService;
             service.CreateDatabase(hash, dbName, "admin");
             service.DeleteDatabase(hash, dbName);
 

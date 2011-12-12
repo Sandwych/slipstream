@@ -23,6 +23,12 @@ namespace ObjectServer
         private Dictionary<string, IDbDomain> dbProfiles =
             new Dictionary<string, IDbDomain>();
         private bool disposed = false;
+        private readonly IDataProvider _dataProvider;
+
+        public DbDomainManager(IDataProvider dataProvider)
+        {
+            this._dataProvider = dataProvider;
+        }
 
         ~DbDomainManager()
         {
@@ -46,7 +52,7 @@ namespace ObjectServer
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             var msg = String.Format("Loading database profile: [{0}]", dbName);
@@ -54,7 +60,7 @@ namespace ObjectServer
 
             if (this.dbProfiles.ContainsKey(dbName))
             {
-                throw new ArgumentException("dbName");
+                throw new ArgumentException("_dbName");
             }
 
             var dbNames = DataProvider.ListDatabases();
@@ -63,7 +69,7 @@ namespace ObjectServer
                 throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
             }
 
-            var db = new DbDomain(dbName);
+            var db = new DbDomain(this._dataProvider, dbName);
             db.Initialize(isUpdate);
             this.dbProfiles.Add(dbName, db);
         }

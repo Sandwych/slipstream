@@ -22,7 +22,7 @@ namespace ObjectServer.Server
 
         public void Start()
         {
-            var address = Environment.Configuration.BroadcastUrl;
+            var address = SlipstreamEnvironment.Configuration.BroadcastUrl;
 
             this.broadcastSocket.Bind(address);
             this.started = true;

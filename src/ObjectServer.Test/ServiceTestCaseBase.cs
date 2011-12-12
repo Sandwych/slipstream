@@ -19,19 +19,19 @@ namespace ObjectServer
             var cfg = new Config();
             cfg.DbName = TestingDatabaseName;
 
-            if (!Environment.Initialized)
+            if (!SlipstreamEnvironment.Initialized)
             {
-                Environment.Initialize(cfg);
+                SlipstreamEnvironment.Initialize(cfg);
             }
 
-            var service = Environment.ExportedService;
+            var service = SlipstreamEnvironment.RootService;
 
-            var dbs = Environment.ExportedService.ListDatabases();
+            var dbs = SlipstreamEnvironment.RootService.ListDatabases();
             if (!dbs.Contains(TestingDatabaseName))
             {
                 var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(
-                    Environment.Configuration.ServerPassword);
-                Environment.ExportedService.CreateDatabase(hashedRootPassword, TestingDatabaseName, "root");
+                    SlipstreamEnvironment.Configuration.ServerPassword);
+                SlipstreamEnvironment.RootService.CreateDatabase(hashedRootPassword, TestingDatabaseName, "root");
             }
 
             this.SessionId = service.LogOn(TestingDatabaseName, "root", "root");
@@ -40,7 +40,7 @@ namespace ObjectServer
         [TestFixtureTearDown]
         public virtual void DisposeFramework()
         {
-            var service = Environment.ExportedService;
+            var service = SlipstreamEnvironment.RootService;
             service.LogOff(TestingDatabaseName, this.SessionId);
         }
 

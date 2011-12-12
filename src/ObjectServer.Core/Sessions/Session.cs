@@ -95,11 +95,11 @@ namespace ObjectServer
         {
             get
             {
-                if (!Environment.Initialized)
+                if (!SlipstreamEnvironment.Initialized)
                 {
                     throw new InvalidOperationException("Framework uninitialized");
                 }
-                var timeout = new TimeSpan(0, Environment.Configuration.SessionTimeoutMinutes, 0);
+                var timeout = new TimeSpan(0, SlipstreamEnvironment.Configuration.SessionTimeoutMinutes, 0);
                 return this.LastActivityTime + timeout;
             }
         }

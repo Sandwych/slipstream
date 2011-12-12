@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 using System.Globalization;
+using System.Data.SqlClient;
 
 using NHibernate.SqlCommand;
 
@@ -20,9 +21,9 @@ namespace ObjectServer.Data.Mssql
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
-            var cfg = Environment.Configuration;
+            var cfg = SlipstreamEnvironment.Configuration;
             string connectionString = string.Format(
               CultureInfo.InvariantCulture,
               "Data Source={0};" +
@@ -30,8 +31,7 @@ namespace ObjectServer.Data.Mssql
               "User Id={1};" +
               "Password={2};",
               cfg.DbHost, cfg.DbUser, cfg.DbPassword, dbName);
-            var dbc = DataProvider.Driver.CreateConnection();
-            dbc.ConnectionString = connectionString;
+            var dbc = new SqlConnection(connectionString);
             this._conn = dbc;
             dbc.Open();
             this.DatabaseName = dbName;
@@ -48,7 +48,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             LoggerProvider.EnvironmentLogger.Info(String.Format("Creating Database [{0}]...", dbName));

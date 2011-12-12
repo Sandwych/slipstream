@@ -15,13 +15,24 @@ namespace ObjectServer
     using IRecord = IDictionary<string, object>;
     using Record = Dictionary<string, object>;
 
-    internal sealed class ServiceDispatcher : IExportedService
+    internal sealed class SlipstreamService : ISlipstreamService
     {
+        private readonly IDataProvider _dataProvider;
+
+        public SlipstreamService(IDataProvider dataProvider)
+        {
+            if (dataProvider == null)
+            {
+                throw new ArgumentNullException("dataProvider");
+            }
+            this._dataProvider = dataProvider;
+        }
+
         public string LogOn(string dbName, string username, string password)
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             if (string.IsNullOrEmpty(username))
@@ -34,7 +45,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("password");
             }
 
-            using (var ctx = new ServiceContext(dbName))
+            using (var ctx = new ServiceContext(this._dataProvider, dbName))
             {
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 Session session = userModel.LogOn(ctx, dbName, username, password);
@@ -56,7 +67,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("sessionId");
             }
 
-            using (var ctx = new ServiceContext(db, sessionId))
+            using (var ctx = new ServiceContext(this._dataProvider, db, sessionId))
             {
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
@@ -88,7 +99,7 @@ namespace ObjectServer
 
             //加入事务
             using (var txScope = new System.Transactions.TransactionScope())
-            using (var svcCtx = new ServiceContext(db, sessionId))
+            using (var svcCtx = new ServiceContext(this._dataProvider, db, sessionId))
             {
                 dynamic res = svcCtx.GetResource(resource);
                 var svc = res.GetService(method);
@@ -102,28 +113,28 @@ namespace ObjectServer
 
         public string[] ListDatabases()
         {
-            return DataProvider.ListDatabases();
+            return this._dataProvider.ListDatabases();
         }
 
         public void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword)
         {
             VerifyRootPassword(rootPasswordHash);
 
-            DataProvider.CreateDatabase(dbName);
-            Environment.DBProfiles.Register(dbName, true);
+            this._dataProvider.CreateDatabase(dbName);
+            SlipstreamEnvironment.DBProfiles.Register(dbName, true);
         }
 
         public void DeleteDatabase(string rootPasswordHash, string dbName)
         {
             VerifyRootPassword(rootPasswordHash);
 
-            DataProvider.DeleteDatabase(dbName); //删除实际数据库
-            Environment.DBProfiles.Remove(dbName); //删除数据库上下文
+            this._dataProvider.DeleteDatabase(dbName); //删除实际数据库
+            SlipstreamEnvironment.DBProfiles.Remove(dbName); //删除数据库上下文
         }
 
         private static void VerifyRootPassword(string rootPasswordHash)
         {
-            var cfgRootPasswordHash = Environment.Configuration.ServerPassword.ToSha();
+            var cfgRootPasswordHash = SlipstreamEnvironment.Configuration.ServerPassword.ToSha();
             if (rootPasswordHash != cfgRootPasswordHash)
             {
                 throw new ObjectServer.Exceptions.SecurityException("Invalid password of root user");
@@ -169,12 +180,5 @@ namespace ObjectServer
 
         #endregion
 
-
-        //Factory method
-
-        public static IExportedService CreateDispatcher()
-        {
-            return new ServiceDispatcher();
-        }
     }
 }

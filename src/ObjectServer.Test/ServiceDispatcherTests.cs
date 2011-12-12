@@ -16,16 +16,16 @@ namespace ObjectServer.Test
         {
             var cfg = new Config();
 
-            if (!Environment.Initialized)
+            if (!SlipstreamEnvironment.Initialized)
             {
-                Environment.Initialize(cfg);
+                SlipstreamEnvironment.Initialize(cfg);
             }
 
             var dbName = "os-testdb";
             var adminPassword = "root";
-            var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(Environment.Configuration.ServerPassword);
+            var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(SlipstreamEnvironment.Configuration.ServerPassword);
 
-            var service = Environment.ExportedService;
+            var service = SlipstreamEnvironment.RootService;
 
             Assert.DoesNotThrow(() =>
             {

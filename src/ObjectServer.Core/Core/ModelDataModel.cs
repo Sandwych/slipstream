@@ -20,13 +20,13 @@ namespace ObjectServer.Core
         public const string ModelName = "core.model_data";
 
         private readonly static SqlString SqlToUpdate = SqlString.Parse(
-            "update core_model_data set ref_id=? where model=? and name=?");
+            @"update ""core_model_data"" set ""ref_id""=? where ""model""=? and ""name""=?");
 
         private readonly static SqlString SqlToCreate = SqlString.Parse(
-            "insert into core_model_data(name, module, model, ref_id) values(?,?,?,?)");
+            @"insert into ""core_model_data""(""name"", ""module"", ""model"", ""ref_id"") values(?,?,?,?)");
 
         private readonly static SqlString SqlToLookupResourceId = SqlString.Parse(
-            "select ref_id FROM core_model_data where model=? and name= ?");
+            @"select ""ref_id"" from ""core_model_data"" where ""model""=? and ""name""= ?");
 
         public ModelDataModel()
             : base(ModelName)

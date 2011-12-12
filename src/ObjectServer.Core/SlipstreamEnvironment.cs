@@ -18,38 +18,50 @@ namespace ObjectServer
     /// SINGLETON
     /// 平台的全局入口点
     /// </summary>
-    public sealed class Environment : IDisposable
+    public sealed class SlipstreamEnvironment : IDisposable
     {
-        private static readonly Environment s_instance = new Environment();
+        private static SlipstreamEnvironment s_instance;
 
         private bool _disposed = false;
         private readonly Autofac.IContainer _rootContainer;
         private readonly DbDomainManager _dbDomains;
-        private readonly ModuleManager _modules;
+        private readonly IModuleManager _modules;
         private Config _config;
         private bool _initialized;
-        private readonly IExportedService _exportedService;
+        private readonly ISlipstreamService _exportedService;
 
-        private Environment()
+        private SlipstreamEnvironment(Config cfg)
         {
             var containerBuilder = new Autofac.ContainerBuilder();
-            RegisterInsideComponents(containerBuilder);
+            RegisterInsideComponents(containerBuilder, cfg);
 
             this._rootContainer = containerBuilder.Build();
 
             this._dbDomains = this._rootContainer.Resolve<DbDomainManager>();
-            this._modules = this._rootContainer.Resolve<ModuleManager>();
-            this._exportedService = this._rootContainer.Resolve<IExportedService>();
+            this._modules = this._rootContainer.Resolve<IModuleManager>();
+            this._exportedService = this._rootContainer.Resolve<ISlipstreamService>();
         }
 
-        private static void RegisterInsideComponents(ContainerBuilder containerBuilder)
+        private static void RegisterInsideComponents(ContainerBuilder containerBuilder, Config cfg)
         {
-            containerBuilder.RegisterInstance<DbDomainManager>(new DbDomainManager()).SingleInstance();
-            containerBuilder.RegisterInstance<ModuleManager>(new ModuleManager()).SingleInstance();
-            containerBuilder.RegisterType<ServiceDispatcher>().As<IExportedService>().SingleInstance();
+            containerBuilder.RegisterType<DbDomainManager>().SingleInstance();
+            containerBuilder.RegisterType<ModuleManager>().As<IModuleManager>().SingleInstance();
+            containerBuilder.RegisterType<SlipstreamService>().As<ISlipstreamService>().SingleInstance();
+            containerBuilder.RegisterInstance<Data.IDataProvider>(Data.DataProvider.CreateDataProvider(cfg.DbType))
+                .SingleInstance();
+
+            //加载内置的 DataProviders
+            /*
+            var assemblies = new Assembly[] {
+                Assembly.GetExecutingAssembly() 
+            };
+            containerBuilder.RegisterAssemblyTypes(assemblies)
+                .Where(t => t.Name.EndsWith("DataProvider"))
+                .AsImplementedInterfaces();
+            */
         }
 
-        ~Environment()
+        ~SlipstreamEnvironment()
         {
             Dispose(false);
         }
@@ -87,7 +99,7 @@ namespace ObjectServer
         {
             var json = File.ReadAllText(configPath, Encoding.UTF8);
             var cfg = JsonConvert.DeserializeObject<Config>(json);
-            s_instance.InitializeInternal(cfg);
+            TryInitialize(cfg);
         }
 
         /// <summary>
@@ -97,7 +109,7 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Initialize(Config config)
         {
-            s_instance.InitializeInternal(config);
+            TryInitialize(config);
         }
 
 
@@ -113,12 +125,6 @@ namespace ObjectServer
             }
 
             var cfg = new Config();
-            s_instance.InitializeInternal(cfg);
-        }
-
-
-        private void InitializeInternal(Config cfg)
-        {
             TryInitialize(cfg);
         }
 
@@ -132,6 +138,11 @@ namespace ObjectServer
             //We must initialize the logging subsystem first
             ConfigurateLogger(cfg);
             LoggerProvider.EnvironmentLogger.Info("The Logging Subsystem has been _initialized");
+
+            var env = new SlipstreamEnvironment(cfg);
+            s_instance = env;
+
+
 
             //查找所有模块并加载模块元信息
             LoggerProvider.EnvironmentLogger.Info(() => "Module Management Subsystem Initializing...");
@@ -164,7 +175,7 @@ namespace ObjectServer
         {
             get
             {
-                return s_instance._initialized;
+                return s_instance != null && s_instance._initialized;
             }
         }
 
@@ -177,7 +188,7 @@ namespace ObjectServer
             }
         }
 
-        internal static ModuleManager Modules
+        internal static IModuleManager Modules
         {
             get
             {
@@ -209,7 +220,7 @@ namespace ObjectServer
             }
         }
 
-        public static IExportedService ExportedService
+        public static ISlipstreamService RootService
         {
             get
             {
@@ -223,7 +234,7 @@ namespace ObjectServer
             get { return Instance._rootContainer; }
         }
 
-        private static Environment Instance
+        private static SlipstreamEnvironment Instance
         {
             get
             {

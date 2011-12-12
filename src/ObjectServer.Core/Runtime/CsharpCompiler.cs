@@ -63,7 +63,7 @@ namespace ObjectServer.Runtime
             options.ReferencedAssemblies.Add(infrastructureAssembly.Location);
             options.GenerateInMemory = true;
             options.GenerateExecutable = false;
-            options.IncludeDebugInformation = Environment.Configuration.Debug;
+            options.IncludeDebugInformation = SlipstreamEnvironment.Configuration.Debug;
 
             return options;
         }

@@ -8,7 +8,7 @@ using NHibernate.Driver;
 
 namespace ObjectServer.Data
 {
-    internal interface IDataProvider
+    public interface IDataProvider
     {
         IDataContext OpenDataContext();
         IDataContext OpenDataContext(string dbName);
@@ -18,7 +18,7 @@ namespace ObjectServer.Data
         void DeleteDatabase(string dbName);
 
         Dialect Dialect { get; }
-        DriverBase Driver { get; }
+        IDriver Driver { get; }
         bool IsSupportProcedure { get; }
     }
 }

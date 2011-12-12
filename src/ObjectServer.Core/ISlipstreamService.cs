@@ -7,10 +7,11 @@ namespace ObjectServer
 {
     using IRecord = IDictionary<string, object>;
     using Record = Dictionary<string, object>;
+
     /// <summary>
-    /// 对外服务接口
+    /// 核心对外服务接口
     /// </summary>
-    public interface IExportedService
+    public interface ISlipstreamService
     {
         #region common services
 

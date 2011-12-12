@@ -24,19 +24,26 @@ namespace ObjectServer
             new Dictionary<string, IResource>();
         private bool disposed = false;
         private readonly ReaderWriterLockSlim resourcesLock = new ReaderWriterLockSlim();
-        private readonly string dbName;
+        private readonly string _dbName;
+        private readonly IDataProvider _dataProvider;
 
         /// <summary>
         /// 初始化一个数据库环境
         /// </summary>
-        public DbDomain(string db)
+        public DbDomain(IDataProvider dataProvider, string db)
         {
             if (string.IsNullOrEmpty(db))
             {
                 throw new ArgumentNullException("db");
             }
 
-            this.dbName = db;
+            if (dataProvider == null)
+            {
+                throw new ArgumentNullException("dataProvider");
+            }
+
+            this._dataProvider = dataProvider;
+            this._dbName = db;
         }
 
         ~DbDomain()
@@ -46,16 +53,16 @@ namespace ObjectServer
 
         public void Initialize(bool isUpdate)
         {
-            using (var ctx = new ServiceContext(this.DatabaseName, this))
+            using (var ctx = new ServiceContext(this._dataProvider, this.DatabaseName, this))
             {
-                Environment.Modules.UpdateModuleList(ctx.DataContext);
+                SlipstreamEnvironment.Modules.UpdateModuleList(ctx.DataContext);
             }
 
-            using (var ctx = new ServiceContext(this.DatabaseName, this))
+            using (var ctx = new ServiceContext(this._dataProvider, this.DatabaseName, this))
             {
 
                 //加载其它模块
-                Environment.Modules.LoadModules(ctx, isUpdate);
+                SlipstreamEnvironment.Modules.LoadModules(ctx, isUpdate);
             }
         }
 
@@ -193,8 +200,8 @@ namespace ObjectServer
         {
             get
             {
-                Debug.Assert(!string.IsNullOrEmpty(this.dbName));
-                return this.dbName;
+                Debug.Assert(!string.IsNullOrEmpty(this._dbName));
+                return this._dbName;
             }
         }
     }

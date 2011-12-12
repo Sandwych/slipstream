@@ -83,7 +83,7 @@ namespace ObjectServer.Core
                 Parameter.Placeholder, ")");
 
             //创建 root 用户
-            var rootPassword = Environment.Configuration.ServerPassword;
+            var rootPassword = SlipstreamEnvironment.Configuration.ServerPassword;
             var user = new Dictionary<string, object>()
             {
                 { "name", "Root User" },

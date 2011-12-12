@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Dynamic;
 
+using Autofac;
 using NUnit.Framework;
 
 namespace ObjectServer
@@ -23,7 +24,7 @@ namespace ObjectServer
             }
         }
 
-        public IExportedService Service { get; private set; }
+        public ISlipstreamService Service { get; private set; }
 
         public IServiceContext Context { get; private set; }
 
@@ -38,7 +39,8 @@ namespace ObjectServer
             Debug.Assert(this.Context == null);
             Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
 
-            this.Context = new ServiceContext(TestingDatabaseName, this.SessionId);
+            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<Data.IDataProvider>();
+            this.Context = new ServiceContext(dataProvider, TestingDatabaseName, this.SessionId);
         }
 
         [TearDown]

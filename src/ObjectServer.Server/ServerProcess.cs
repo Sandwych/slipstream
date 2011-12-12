@@ -25,7 +25,7 @@ namespace ObjectServer.Server
                 throw new ObjectDisposedException("ServerProcess");
             }
 
-            var cfg = Environment.Configuration;
+            var cfg = SlipstreamEnvironment.Configuration;
 
             if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Supervisor)
             {
@@ -109,9 +109,9 @@ namespace ObjectServer.Server
             var serverThread = new Thread(() =>
             {
                 using (var cs = new ObjectServer.Http.AnnaHttpServer(
-                    Environment.Configuration.BroadcastUrl,
-                    Environment.Configuration.RpcBusUrl,
-                    Environment.Configuration.HttpListenUrl))
+                    SlipstreamEnvironment.Configuration.BroadcastUrl,
+                    SlipstreamEnvironment.Configuration.RpcBusUrl,
+                    SlipstreamEnvironment.Configuration.HttpListenUrl))
                 {
                     cs.Start();
                 }
@@ -138,7 +138,7 @@ namespace ObjectServer.Server
                 }
 
                 //释放托管资源
-                var role = Environment.Configuration.Role;
+                var role = SlipstreamEnvironment.Configuration.Role;
                 if (role == ServerRoles.Standalone || role == ServerRoles.Supervisor)
                 {
                     this.m_supervisor.Dispose();

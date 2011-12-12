@@ -15,19 +15,19 @@ namespace ObjectServer.Server
             : base("STOP-RPC")
         {
 
-            if (!Environment.Initialized)
+            if (!SlipstreamEnvironment.Initialized)
             {
                 throw new InvalidOperationException("无法应用启动服务器，请先初始化框架");
             }
 
-            if (Environment.Configuration.RpcHandlerMax <= 0)
+            if (SlipstreamEnvironment.Configuration.RpcHandlerMax <= 0)
             {
                 throw new IndexOutOfRangeException("无效的工人数量");
             }
 
-            this.RpcHandlerMax = Environment.Configuration.RpcHandlerMax;
-            this.RpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
-            this.RpcHostUrl = Environment.Configuration.RpcBusUrl;
+            this.RpcHandlerMax = SlipstreamEnvironment.Configuration.RpcHandlerMax;
+            this.RpcHandlerUrl = SlipstreamEnvironment.Configuration.RpcHandlerUrl;
+            this.RpcHostUrl = SlipstreamEnvironment.Configuration.RpcBusUrl;
         }
 
         public int RpcHandlerMax { get; private set; }

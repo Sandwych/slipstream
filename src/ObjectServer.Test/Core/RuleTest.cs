@@ -26,7 +26,7 @@ namespace ObjectServer.Core.Test
 
         private void AssertSearchingOfSalesOrder(string login, string password, string[] expectedOrderNames)
         {
-            var services = Environment.ExportedService;
+            var services = SlipstreamEnvironment.RootService;
 
             var sid = services.LogOn(TestingDatabaseName, login, password);
             //var ruleModel = (RuleModel)this.TransactionContext.GetResource("core.rule");

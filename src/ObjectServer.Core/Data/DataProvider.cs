@@ -21,9 +21,26 @@ namespace ObjectServer.Data
         static DataProvider()
         {
             LoggerProvider.EnvironmentLogger.Info("Initializing DataProvider...");
+            string dbTypeName;
+            if (SlipstreamEnvironment.Initialized)
+            {
+                dbTypeName = SlipstreamEnvironment.Configuration.DbType;
+            }
+            else
+            {
+                dbTypeName = "postgres";
+            }
 
-            var dbTypeName = Environment.Configuration.DbType;
+            var instance = CreateDataProvider(dbTypeName);
 
+            lock (dataProviderLock)
+            {
+                concreteDataProvider = instance;
+            }
+        }
+
+        public static IDataProvider CreateDataProvider(string dbTypeName)
+        {
             if (!dbTypeMapping.ContainsKey(dbTypeName))
             {
                 var msg = String.Format("Unsupported database type: [{0}]", dbTypeName);
@@ -31,21 +48,17 @@ namespace ObjectServer.Data
             }
 
             var providerType = dbTypeMapping[dbTypeName];
-
             LoggerProvider.EnvironmentLogger.Info(
                 String.Format("Concrete DataProvider: [{0}]", providerType.FullName));
-
-            lock (dataProviderLock)
-            {
-                concreteDataProvider = Activator.CreateInstance(providerType) as IDataProvider;
-            }
+            var instance = Activator.CreateInstance(providerType) as IDataProvider;
+            return instance;
         }
 
         public static IDataContext OpenDataContext(string dbName)
         {
             if (dbName == null)
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             return concreteDataProvider.OpenDataContext(dbName);
@@ -65,7 +78,7 @@ namespace ObjectServer.Data
         {
             if (dbName == null)
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             var msg = String.Format("Creating Database: [{0}]...", dbName);
@@ -83,7 +96,7 @@ namespace ObjectServer.Data
         {
             if (dbName == null)
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
 
             var msg = String.Format("Deleting Database: [{0}]...", dbName);
@@ -100,7 +113,7 @@ namespace ObjectServer.Data
             }
         }
 
-        public static NHibernate.Driver.DriverBase Driver
+        public static NHibernate.Driver.IDriver Driver
         {
             get
             {

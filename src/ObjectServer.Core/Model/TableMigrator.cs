@@ -163,7 +163,6 @@ namespace ObjectServer.Model
 
         private void SetColumnNotNullable(ITableContext table, IField field, bool hasRow)
         {
-            var dialect = DataProvider.Dialect;
             //先看有没有行，有行要先设置默认值，如果没有默认值就报错了
             if (hasRow && field.DefaultProc != null)
             {

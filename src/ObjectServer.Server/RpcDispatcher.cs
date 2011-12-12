@@ -22,7 +22,7 @@ namespace ObjectServer.Server
     public static class RpcDispatcher
     {
         private static readonly Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
-        private static readonly IExportedService s_service = Environment.ExportedService;
+        private static readonly ISlipstreamService s_service = SlipstreamEnvironment.RootService;
         private static readonly object s_lockObj = new object();
         private static bool s_running = false;
 
@@ -98,14 +98,14 @@ namespace ObjectServer.Server
 
         public static void ProcessingLoop()
         {
-            if (!Environment.Initialized)
+            if (!SlipstreamEnvironment.Initialized)
             {
                 throw new InvalidOperationException(
                     "Unable to start PRC-Handler thread, please initialize the environment first.");
             }
 
-            var broadcastUrl = Environment.Configuration.BroadcastUrl;
-            var rpcHandlerUrl = Environment.Configuration.RpcHandlerUrl;
+            var broadcastUrl = SlipstreamEnvironment.Configuration.BroadcastUrl;
+            var rpcHandlerUrl = SlipstreamEnvironment.Configuration.RpcHandlerUrl;
             var id = Guid.NewGuid();
             LoggerProvider.EnvironmentLogger.Debug(
                 () => string.Format("Starting RpcHandler thread[{0}] URL=[{1}] ...", id, rpcHandlerUrl));

@@ -6,6 +6,7 @@ using System.Data;
 using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
+using Autofac;
 
 using ObjectServer.Data;
 
@@ -24,11 +25,11 @@ namespace ObjectServer
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionId"></param>
-        public ServiceContext(string dbName, string sessionId)
+        public ServiceContext(IDataProvider dataProvider, string dbName, string sessionId)
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
             if (string.IsNullOrEmpty(sessionId))
             {
@@ -36,8 +37,7 @@ namespace ObjectServer
             }
 
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
-
-            this.dbctx = DataProvider.OpenDataContext(dbName);
+            this.dbctx = dataProvider.OpenDataContext(dbName);
 
             try
             {
@@ -53,7 +53,7 @@ namespace ObjectServer
                 try
                 {
                     Session.Pulse(this.dbctx, sessionId);
-                    this.resources = Environment.DBProfiles.GetDbProfile(dbName);
+                    this.resources = SlipstreamEnvironment.DBProfiles.GetDbProfile(dbName);
                     this.Session = session;
                 }
                 catch
@@ -76,21 +76,22 @@ namespace ObjectServer
         /// 直接建立  context，忽略 session 、登录等
         /// </summary>
         /// <param name="dbName"></param>
-        public ServiceContext(string dbName)
-            : this(dbName, Environment.DBProfiles.GetDbProfile(dbName))
+        public ServiceContext(IDataProvider dataProvider, string dbName)
+            : this(dataProvider, dbName, SlipstreamEnvironment.DBProfiles.GetDbProfile(dbName))
         {
         }
 
-        public ServiceContext(string dbName, IResourceContainer resourceContainer)
+        public ServiceContext(IDataProvider dataProviderm, string dbName, IResourceContainer resourceContainer)
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("dbName");
+                throw new ArgumentNullException("_dbName");
             }
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
             this.resources = resourceContainer;
-            this.dbctx = DataProvider.OpenDataContext(dbName);
+            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
+            this.dbctx = dataProvider.OpenDataContext(dbName);
 
             try
             {
@@ -120,7 +121,7 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="db"></param>
-        public ServiceContext(IDataContext db)
+        public ServiceContext(IDataProvider dataProvider, IDataContext db)
         {
             if (db == null)
             {
@@ -128,8 +129,8 @@ namespace ObjectServer
             }
             this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-            this.resources = Environment.DBProfiles.GetDbProfile(db.DatabaseName);
-            this.dbctx = DataProvider.OpenDataContext(db.DatabaseName);
+            this.resources = SlipstreamEnvironment.DBProfiles.GetDbProfile(db.DatabaseName);
+            this.dbctx = dataProvider.OpenDataContext(db.DatabaseName);
 
             try
             {
