@@ -139,11 +139,11 @@ namespace ObjectServer.Model
 
                 Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
                     .NotRequired().Readonly()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
+                    .SetDefaultValueGetter(ctx => ctx.UserSession.UserId > 0 ? (object)ctx.UserSession.UserId : null);
 
                 Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Modifier")
                     .NotRequired()
-                    .SetDefaultValueGetter(ctx => ctx.Session.UserId > 0 ? (object)ctx.Session.UserId : null);
+                    .SetDefaultValueGetter(ctx => ctx.UserSession.UserId > 0 ? (object)ctx.UserSession.UserId : null);
 
                 if (this.Hierarchy)
                 {
@@ -289,7 +289,7 @@ where   hp._id=? and hc._id<>?
         {
             var logRecord = new Record()
                 {
-                    { "user", ctx.Session.UserId },
+                    { "user", ctx.UserSession.UserId },
                     { "resource", this.Name },
                     { "resource_id", id },
                     { "description", msg }

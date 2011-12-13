@@ -88,8 +88,8 @@ namespace ObjectServer.Core
                 @"group by ""f"".""name"" ",
                 action, this.TableName, fieldModel.TableName, modelModel.TableName, userRoleRelModel.TableName);
 
-            Debug.Assert(ctx.Session != null);
-            var userId = ctx.Session.UserId;
+            Debug.Assert(ctx.UserSession != null);
+            var userId = ctx.UserSession.UserId;
             var records = ctx.DataContext.QueryAsDictionary(SqlString.Parse(sql), modelName, userId);
             if (records.Count() == 0)
             {

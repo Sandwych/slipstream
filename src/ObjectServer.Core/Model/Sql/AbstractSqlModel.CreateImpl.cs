@@ -139,8 +139,9 @@ namespace ObjectServer.Model
         #region 处理层次表的创建事宜
         private void UpdateTreeForCreation(IDataContext dbctx, long id, Record record)
         {
-            //如果支持存储过程就用存储/函数，那么直接调用预定义的存储过程或函数来处理           
-            if (DataProvider.IsSupportProcedure)
+            //如果支持存储过程就用存储/函数，那么直接调用预定义的存储过程或函数来处理
+            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
+            if (dataProvider.IsSupportProcedure)
             {
                 this.UpdateTreeForCreationBySqlFunction(dbctx, id, record);
             }
@@ -363,9 +364,9 @@ namespace ObjectServer.Model
                 {
                     propertyBag[UpdatedUserFieldName] = propertyBag[CreatedUserFieldName];
                 }
-                else if (!ctx.Session.IsSystemUser)
+                else if (!ctx.UserSession.IsSystemUser)
                 {
-                    propertyBag[UpdatedUserFieldName] = ctx.Session.UserId;
+                    propertyBag[UpdatedUserFieldName] = ctx.UserSession.UserId;
                 }
             }
         }

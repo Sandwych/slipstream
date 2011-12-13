@@ -138,7 +138,7 @@ namespace ObjectServer
         {
             if (dbctx == null)
             {
-                throw new ArgumentNullException("dbctx");
+                throw new ArgumentNullException("_datactx");
             }
 
             LoggerProvider.EnvironmentLogger.Info("Updating _modules list...");

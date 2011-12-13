@@ -289,10 +289,10 @@ namespace ObjectServer.Model
                 record[UpdatedTimeFieldName] = DateTime.Now;
             }
             if (this.ContainsField(UpdatedUserFieldName) &&
-                scope.Session != null &&
-                scope.Session.UserId > 0)
+                scope.UserSession != null &&
+                scope.UserSession.UserId > 0)
             {
-                record[UpdatedUserFieldName] = scope.Session.UserId;
+                record[UpdatedUserFieldName] = scope.UserSession.UserId;
             }
         }
 

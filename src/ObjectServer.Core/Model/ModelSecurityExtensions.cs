@@ -38,7 +38,7 @@ namespace ObjectServer.Model
             Debug.Assert(!string.IsNullOrEmpty(model));
             Debug.Assert(!string.IsNullOrEmpty(action));
 
-            if (!scope.Session.IsSystemUser)
+            if (!scope.UserSession.IsSystemUser)
             {
                 return ModelAccessModel.CheckForCurrentUser(scope, model, action);
             }

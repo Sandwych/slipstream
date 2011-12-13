@@ -12,7 +12,7 @@ using ObjectServer.Data;
 namespace ObjectServer
 {
     [Serializable]
-    public sealed class Session
+    public sealed class UserSession
     {
         private static readonly SqlString SelectByIdSql =
             new SqlString(@"select * from ""core_session"" where ""sid"" = ", Parameter.Placeholder);
@@ -25,7 +25,7 @@ namespace ObjectServer
         public const string SystemUserName = "system";
         public const long SystemUserId = 0;
 
-        public Session(IDictionary<string, object> record)
+        public UserSession(IDictionary<string, object> record)
         {
             if (record == null)
             {
@@ -40,7 +40,7 @@ namespace ObjectServer
         }
 
 
-        public Session(string login, long userId)
+        public UserSession(string login, long userId)
             : this()
         {
 
@@ -58,7 +58,7 @@ namespace ObjectServer
             this.UserId = userId;
         }
 
-        private Session()
+        private UserSession()
         {
             this.UserId = 0;
             this.Id = GenerateSessionId();
@@ -66,9 +66,9 @@ namespace ObjectServer
             this.LastActivityTime = this.StartTime;
         }
 
-        public static Session CreateSystemUserSession()
+        public static UserSession CreateSystemUserSession()
         {
-            var s = new Session();
+            var s = new UserSession();
             s.Login = SystemUserName;
             s.UserId = SystemUserId;
             return s;
@@ -120,11 +120,11 @@ namespace ObjectServer
             }
         }
 
-        public static Session GetById(IDataContext db, string sid)
+        public static UserSession GetById(IDataContext db, string sid)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
             if (string.IsNullOrEmpty(sid))
             {
@@ -143,15 +143,15 @@ namespace ObjectServer
             else
             {
                 var record = records[0];
-                return new Session(record);
+                return new UserSession(record);
             }
         }
 
-        public static Session GetByUserId(IDataContext db, long userId)
+        public static UserSession GetByUserId(IDataContext db, long userId)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             var records = db.QueryAsDictionary(SelectByUserIdSql, userId);
@@ -166,15 +166,15 @@ namespace ObjectServer
             else
             {
                 var record = records[0];
-                return new Session(record);
+                return new UserSession(record);
             }
         }
 
-        public static void Put(IDataContext db, Session session)
+        public static void Put(IDataContext db, UserSession session)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (session == null)
@@ -195,7 +195,7 @@ namespace ObjectServer
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(sid))
@@ -215,7 +215,7 @@ namespace ObjectServer
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(sid))
@@ -235,12 +235,5 @@ namespace ObjectServer
             }
         }
 
-        /// <summary>
-        /// 清理所有无效的 Sessions
-        /// </summary>
-        public static void Clear()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

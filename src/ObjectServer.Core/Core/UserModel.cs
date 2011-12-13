@@ -216,7 +216,7 @@ namespace ObjectServer.Core
         }
 
 
-        public Session LogOn(IServiceContext ctx,
+        public UserSession LogOn(IServiceContext ctx,
             string database, string login, string password)
         {
             var constraint = new object[][] { new object[] { "login", "=", login } };
@@ -253,11 +253,11 @@ namespace ObjectServer.Core
 
         public void LogOff(IServiceContext ctx, string sessionId)
         {
-            var session = Session.GetById(ctx.DataContext, sessionId);
+            var session = UserSession.GetById(ctx.DataContext, sessionId);
 
             if (session != null)
             {
-                Session.Remove(ctx.DataContext, sessionId);
+                UserSession.Remove(ctx.DataContext, sessionId);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
                     String.Format("User[{0}.{1}] logged out.", ctx.DataContext.DatabaseName, session.Login));
@@ -293,7 +293,7 @@ namespace ObjectServer.Core
                 { "password", newPassword },
             };
             HashPassword(record);
-            model.WriteInternal(ctx, ctx.Session.UserId, record);
+            model.WriteInternal(ctx, ctx.UserSession.UserId, record);
         }
 
         public static Dictionary<string, object>[] GetAllModelAccessEntries(long userId)
@@ -302,7 +302,7 @@ namespace ObjectServer.Core
         }
 
 
-        private Session FetchOrCreateSession(
+        private UserSession FetchOrCreateSession(
             IServiceContext ctx, string dbName, string login, IDictionary<string, object> userFields)
         {
             Debug.Assert(ctx != null);
@@ -310,24 +310,24 @@ namespace ObjectServer.Core
 
             var uid = (long)userFields[IdFieldName];
 
-            var oldSession = Session.GetByUserId(ctx.DataContext, uid);
+            var oldSession = UserSession.GetByUserId(ctx.DataContext, uid);
 
             if (oldSession == null)
             {
-                var newSession = new Session(login, uid);
-                Session.Put(ctx.DataContext, newSession);
+                var newSession = new UserSession(login, uid);
+                UserSession.Put(ctx.DataContext, newSession);
                 return newSession;
             }
             else if (!oldSession.IsActive)
             {
-                Session.Remove(ctx.DataContext, oldSession.Id);
-                var newSession = new Session(login, uid);
-                Session.Put(ctx.DataContext, newSession);
+                UserSession.Remove(ctx.DataContext, oldSession.Id);
+                var newSession = new UserSession(login, uid);
+                UserSession.Put(ctx.DataContext, newSession);
                 return newSession;
             }
             else
             {
-                Session.Pulse(ctx.DataContext, oldSession.Id);
+                UserSession.Pulse(ctx.DataContext, oldSession.Id);
                 return oldSession;
             }
         }

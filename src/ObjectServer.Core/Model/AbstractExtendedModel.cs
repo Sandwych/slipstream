@@ -31,7 +31,7 @@ namespace ObjectServer.Model
         {
             if (tc == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             var baseModel = tc.GetResource(Name);

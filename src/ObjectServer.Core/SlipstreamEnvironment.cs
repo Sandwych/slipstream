@@ -24,7 +24,7 @@ namespace ObjectServer
 
         private bool _disposed = false;
         private readonly Autofac.IContainer _rootContainer;
-        private readonly DbDomainManager _dbDomains;
+        private readonly IDbDomainManager _dbDomains;
         private readonly IModuleManager _modules;
         private Config _config;
         private bool _initialized;
@@ -37,16 +37,19 @@ namespace ObjectServer
 
             this._rootContainer = containerBuilder.Build();
 
-            this._dbDomains = this._rootContainer.Resolve<DbDomainManager>();
+            this._dbDomains = this._rootContainer.Resolve<IDbDomainManager>();
             this._modules = this._rootContainer.Resolve<IModuleManager>();
             this._exportedService = this._rootContainer.Resolve<ISlipstreamService>();
         }
 
         private static void RegisterInsideComponents(ContainerBuilder containerBuilder, Config cfg)
         {
-            containerBuilder.RegisterType<DbDomainManager>().SingleInstance();
-            containerBuilder.RegisterType<ModuleManager>().As<IModuleManager>().SingleInstance();
-            containerBuilder.RegisterType<SlipstreamService>().As<ISlipstreamService>().SingleInstance();
+            containerBuilder.RegisterType<DbDomainManager>()
+                .As<IDbDomainManager>().SingleInstance();
+            containerBuilder.RegisterType<ModuleManager>()
+                .As<IModuleManager>().SingleInstance();
+            containerBuilder.RegisterType<SlipstreamService>()
+                .As<ISlipstreamService>().SingleInstance();
             containerBuilder.RegisterInstance<Data.IDataProvider>(Data.DataProvider.CreateDataProvider(cfg.DbType))
                 .SingleInstance();
 
@@ -119,13 +122,15 @@ namespace ObjectServer
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Initialize()
         {
-            if (s_instance._initialized)
+            if (s_instance != null && s_instance._initialized)
             {
                 return;
             }
-
-            var cfg = new Config();
-            TryInitialize(cfg);
+            else
+            {
+                var cfg = new Config();
+                TryInitialize(cfg);
+            }
         }
 
         private static void TryInitialize(Config cfg)
@@ -180,7 +185,7 @@ namespace ObjectServer
         }
 
 
-        internal static DbDomainManager DBProfiles
+        internal static IDbDomainManager DbDomains
         {
             get
             {
@@ -241,7 +246,7 @@ namespace ObjectServer
                 if (!s_instance._initialized)
                 {
                     throw new Exception(
-                        "尚未初始化系统，请调用 ObjectServerStarter.Initialize() 初始化");
+                        "尚未初始化系统，请调用 ObjectServerStarter.Setup() 初始化");
                 }
 
                 return s_instance;

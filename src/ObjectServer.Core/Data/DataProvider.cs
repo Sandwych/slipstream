@@ -76,50 +76,11 @@ namespace ObjectServer.Data
             return concreteDataProvider.ListDatabases();
         }
 
-        public static void CreateDatabase(string dbName)
-        {
-            if (dbName == null)
-            {
-                throw new ArgumentNullException("_dbName");
-            }
-
-            var msg = String.Format("Creating Database: [{0}]...", dbName);
-            LoggerProvider.EnvironmentLogger.Info(msg);
-
-            concreteDataProvider.CreateDatabase(dbName);
-            using (var ctx = concreteDataProvider.OpenDataContext(dbName))
-            {
-                LoggerProvider.EnvironmentLogger.Info("Initializing Database...");
-                ctx.Initialize();
-            }
-        }
-
-        public static void DeleteDatabase(string dbName)
-        {
-            if (dbName == null)
-            {
-                throw new ArgumentNullException("_dbName");
-            }
-
-            var msg = String.Format("Deleting Database: [{0}]...", dbName);
-            LoggerProvider.EnvironmentLogger.Info(msg);
-
-            concreteDataProvider.DeleteDatabase(dbName);
-        }
-
         public static NHibernate.Dialect.Dialect Dialect
         {
             get
             {
                 return concreteDataProvider.Dialect;
-            }
-        }
-
-        public static NHibernate.Driver.IDriver Driver
-        {
-            get
-            {
-                return concreteDataProvider.Driver;
             }
         }
 

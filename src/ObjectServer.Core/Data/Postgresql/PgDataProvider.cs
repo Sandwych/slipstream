@@ -59,16 +59,24 @@ select datname from pg_database
                 throw new ArgumentNullException("_dbName");
             }
 
-            var sql = new SqlString(
-                "create database ",
-                DataProvider.Dialect.QuoteForSchemaName(dbName),
-                " template template0 encoding 'unicode'");
+            var msg = String.Format("Creating Database: [{0}]...", dbName);
+            LoggerProvider.EnvironmentLogger.Info(msg);
 
             using (var conn = new PgDataContext())
             {
+                var sql = new SqlString(
+                    " create database ", '"' + dbName + '"',
+                    " template template0 encoding 'unicode'");
                 conn.Execute(sql);
-                conn.Close();
             }
+
+            using (var conn = new PgDataContext(dbName))
+            {
+                LoggerProvider.EnvironmentLogger.Info("Initializing Database...");
+                conn.Setup();
+            }
+
+
         }
 
         public void DeleteDatabase(string dbName)

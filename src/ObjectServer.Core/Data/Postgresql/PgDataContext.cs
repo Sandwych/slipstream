@@ -64,7 +64,7 @@ namespace ObjectServer.Data.Postgresql
                 String.Format("Database [{0}] has been created.", dbName));
         }
 
-        public override void Initialize()
+        public override void Setup()
         {
             LoggerProvider.EnvironmentLogger.Info(
                 String.Format("Executing the database initialization script [{0}]...", INITDB));

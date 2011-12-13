@@ -5,13 +5,15 @@ using System.Text;
 using System.Data;
 
 using ObjectServer.Data;
+using ObjectServer.Runtime;
 
 namespace ObjectServer
 {
     public interface IServiceContext : IDisposable, IEquatable<IServiceContext>
     {
-        Session Session { get; }
-
+        UserSession UserSession { get; }
+        IRuleConstraintEvaluator RuleConstraintEvaluator { get; }
+        IUserSessionService UserSessionService { get; }
         IResource GetResource(string resName);
         int GetResourceDependencyWeight(string resName);
         IDataContext DataContext { get; }

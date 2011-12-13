@@ -152,7 +152,7 @@ namespace ObjectServer
         {
             if (tc == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             LoggerProvider.EnvironmentLogger.Info(

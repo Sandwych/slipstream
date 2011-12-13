@@ -99,7 +99,7 @@ namespace ObjectServer.Model
             Debug.Assert(translator != null);
 
             //系统用户不检查访问规则
-            if (scope.Session.IsSystemUser)
+            if (scope.UserSession.IsSystemUser)
             {
                 translator.AddConstraint(EmptyRules);
             }

@@ -55,7 +55,7 @@ namespace ObjectServer.Model
         {
             if (tc == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             base.Initialize(tc, update);

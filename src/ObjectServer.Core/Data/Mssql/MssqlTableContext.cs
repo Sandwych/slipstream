@@ -30,7 +30,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(tableName))
@@ -53,7 +53,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (tableName == null)
@@ -81,7 +81,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (model == null)
@@ -128,7 +128,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(tableName))
@@ -175,7 +175,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (field == null)
@@ -219,7 +219,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
             if (string.IsNullOrEmpty(columnName))
             {
@@ -241,7 +241,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(columnName))
@@ -268,7 +268,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(columnName))
@@ -328,7 +328,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
             if (string.IsNullOrEmpty(tableName))
             {
@@ -370,7 +370,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (dbctx == null)
             {
-                throw new ArgumentNullException("dbctx");
+                throw new ArgumentNullException("_datactx");
             }
 
             if (string.IsNullOrEmpty(constraintName))
@@ -392,7 +392,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (dbctx == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(constraintName))
@@ -412,7 +412,7 @@ namespace ObjectServer.Data.Mssql
             //TODO ESCAPE SQL
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
             if (string.IsNullOrEmpty(constraintName))
             {
@@ -432,7 +432,7 @@ select coalesce(count(constraint_name), 0)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
             if (string.IsNullOrEmpty(columnName))
             {
@@ -461,7 +461,7 @@ select coalesce(count(constraint_name), 0)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
             if (string.IsNullOrEmpty(columnName))
             {
@@ -480,7 +480,7 @@ select coalesce(count(constraint_name), 0)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
             if (string.IsNullOrEmpty(columnName))
             {

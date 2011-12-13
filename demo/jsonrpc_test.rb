@@ -116,7 +116,7 @@ puts "列出系统方法:"
 puts proxy.listMethods()
 
 #尝试登录
-proxy.logOn("objectserver", "root", "root")
+proxy.logOn("osdb", "root", "root")
 
 #尝试查询模块表里的核心模块
 domain = [["name","like","core%"]]

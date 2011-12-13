@@ -279,7 +279,7 @@ namespace ObjectServer
             Debug.Assert(assembly != null);
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format(
-                "Registering all resources in DLL[{0}], Path=[{1}]...", assembly.FullName, assembly.Location));
+                "Registering all _resources in DLL[{0}], Path=[{1}]...", assembly.FullName, assembly.Location));
 
             var types = GetStaticResourceTypesFromAssembly(assembly);
 
@@ -365,7 +365,7 @@ namespace ObjectServer
         {
             if (dbctx == null)
             {
-                throw new ArgumentNullException("dbctx");
+                throw new ArgumentNullException("_datactx");
             }
 
             var state = ModuleModel.States.Uninstalled;

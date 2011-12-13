@@ -141,6 +141,7 @@
     <Compile Include="Exceptions\SecurityException.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />
+    <Compile Include="IDbDomainManager.cs" />
     <Compile Include="Model\Fields\CriterionConverter.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Module\ModuleUpdateAction.cs" />
@@ -220,7 +221,11 @@
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Runtime\CompileException.cs" />
-    <Compile Include="Sessions\Session.cs" />
+    <Compile Include="Runtime\IRuleConstraintEvaluator.cs" />
+    <Compile Include="Runtime\RubyRuleConstraintEvaluator.cs" />
+    <Compile Include="Sessions\DbUserSessionService.cs" />
+    <Compile Include="Sessions\IUserSessionService.cs" />
+    <Compile Include="Sessions\UserSession.cs" />
     <Compile Include="AbstractResource.cs" />
     <Compile Include="ResourceAttribute.cs" />
     <Compile Include="Model\Sql\AbstractSqlModel.cs" />

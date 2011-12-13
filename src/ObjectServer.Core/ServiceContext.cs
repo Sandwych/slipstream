@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using Autofac;
 
+using ObjectServer.Runtime;
 using ObjectServer.Data;
 
 namespace ObjectServer
@@ -18,43 +19,43 @@ namespace ObjectServer
     internal sealed class ServiceContext : IServiceContext
     {
         private bool disposed = false;
-        private readonly IResourceContainer resources;
-        private readonly int currentThreadID;
+        private readonly IResourceContainer _resources;
+        private readonly int _currentThreadID;
 
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
-        /// <param name="sessionId"></param>
-        public ServiceContext(IDataProvider dataProvider, string dbName, string sessionId)
+        /// <param name="userSessionId"></param>
+        public ServiceContext(IDataProvider dataProvider, string dbName, string userSessionId)
         {
             if (string.IsNullOrEmpty(dbName))
             {
                 throw new ArgumentNullException("_dbName");
             }
-            if (string.IsNullOrEmpty(sessionId))
+            if (string.IsNullOrEmpty(userSessionId))
             {
-                throw new ArgumentNullException("sessionId");
+                throw new ArgumentNullException("userSessionId");
             }
 
-            this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
-            this.dbctx = dataProvider.OpenDataContext(dbName);
+            this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
+            this._datactx = dataProvider.OpenDataContext(dbName);
 
             try
             {
-                var session = Session.GetById(this.dbctx, sessionId);
+                var session = UserSession.GetById(this._datactx, userSessionId);
                 if (session == null || !session.IsActive)
                 {
                     //删掉无效的 Session
-                    Session.Remove(this.dbctx, session.Id);
+                    UserSession.Remove(this._datactx, session.Id);
                     throw new ObjectServer.Exceptions.SecurityException("Not logged!");
                 }
 
-                this.dbtx = this.DataContext.BeginTransaction();
+                this._transaction = this.DataContext.BeginTransaction();
                 try
                 {
-                    Session.Pulse(this.dbctx, sessionId);
-                    this.resources = SlipstreamEnvironment.DBProfiles.GetDbProfile(dbName);
-                    this.Session = session;
+                    UserSession.Pulse(this._datactx, userSessionId);
+                    this._resources = SlipstreamEnvironment.DbDomains.GetDbProfile(dbName);
+                    this.UserSession = session;
                 }
                 catch
                 {
@@ -77,7 +78,7 @@ namespace ObjectServer
         /// </summary>
         /// <param name="dbName"></param>
         public ServiceContext(IDataProvider dataProvider, string dbName)
-            : this(dataProvider, dbName, SlipstreamEnvironment.DBProfiles.GetDbProfile(dbName))
+            : this(dataProvider, dbName, SlipstreamEnvironment.DbDomains.GetDbProfile(dbName))
         {
         }
 
@@ -87,19 +88,19 @@ namespace ObjectServer
             {
                 throw new ArgumentNullException("_dbName");
             }
-            this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
+            this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-            this.resources = resourceContainer;
+            this._resources = resourceContainer;
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
-            this.dbctx = dataProvider.OpenDataContext(dbName);
+            this._datactx = dataProvider.OpenDataContext(dbName);
 
             try
             {
-                this.dbtx = this.DataContext.BeginTransaction();
+                this._transaction = this.DataContext.BeginTransaction();
                 try
                 {
-                    this.Session = Session.CreateSystemUserSession();
-                    Session.Put(dbctx, this.Session);
+                    this.UserSession = UserSession.CreateSystemUserSession();
+                    UserSession.Put(_datactx, this.UserSession);
                 }
                 catch
                 {
@@ -120,25 +121,29 @@ namespace ObjectServer
         /// <summary>
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
-        /// <param name="db"></param>
-        public ServiceContext(IDataProvider dataProvider, IDataContext db)
+        /// <param name="ctx"></param>
+        public ServiceContext(IDataProvider dataProvider, IDataContext ctx)
         {
-            if (db == null)
+            if (dataProvider == null)
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("dataProvider");
             }
-            this.currentThreadID = Thread.CurrentThread.ManagedThreadId;
+            if (ctx == null)
+            {
+                throw new ArgumentNullException("ctx");
+            }
+            this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-            this.resources = SlipstreamEnvironment.DBProfiles.GetDbProfile(db.DatabaseName);
-            this.dbctx = dataProvider.OpenDataContext(db.DatabaseName);
+            this._resources = SlipstreamEnvironment.DbDomains.GetDbProfile(ctx.DatabaseName);
+            this._datactx = ctx;
 
             try
             {
-                this.dbtx = this.DataContext.BeginTransaction();
+                this._transaction = this.DataContext.BeginTransaction();
                 try
                 {
-                    this.Session = Session.CreateSystemUserSession();
-                    Session.Put(this.dbctx, this.Session);
+                    this.UserSession = UserSession.CreateSystemUserSession();
+                    UserSession.Put(this._datactx, this.UserSession);
                 }
                 catch
                 {
@@ -171,9 +176,9 @@ namespace ObjectServer
             {
                 throw new ObjectDisposedException("ServiceContext");
             }
-            Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+            Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-            return this.resources.GetResource(resName);
+            return this._resources.GetResource(resName);
         }
 
         public int GetResourceDependencyWeight(string resName)
@@ -188,12 +193,12 @@ namespace ObjectServer
                 throw new ObjectDisposedException("ServiceContext");
             }
 
-            Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+            Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-            return this.resources.GetResourceDependencyWeight(resName);
+            return this._resources.GetResourceDependencyWeight(resName);
         }
 
-        private readonly IDataContext dbctx;
+        private readonly IDataContext _datactx;
         public IDataContext DataContext
         {
             get
@@ -203,10 +208,10 @@ namespace ObjectServer
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
-                Debug.Assert(this.dbctx != null);
-                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+                Debug.Assert(this._datactx != null);
+                Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-                return this.dbctx;
+                return this._datactx;
             }
         }
 
@@ -219,15 +224,15 @@ namespace ObjectServer
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
-                Debug.Assert(this.resources != null);
-                Debug.Assert(this.dbctx != null);
-                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+                Debug.Assert(this._resources != null);
+                Debug.Assert(this._datactx != null);
+                Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-                return this.resources;
+                return this._resources;
             }
         }
 
-        private readonly IDbTransaction dbtx;
+        private readonly IDbTransaction _transaction;
         public IDbTransaction DbTransaction
         {
             get
@@ -237,10 +242,10 @@ namespace ObjectServer
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
-                Debug.Assert(this.dbctx != null);
-                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+                Debug.Assert(this._datactx != null);
+                Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-                return this.dbtx;
+                return this._transaction;
             }
         }
 
@@ -254,15 +259,34 @@ namespace ObjectServer
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
-                Debug.Assert(this.currentThreadID == Thread.CurrentThread.ManagedThreadId);
+                Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
                 Debug.Assert(this.m_bizLogger != null);
 
                 return this.m_bizLogger;
             }
         }
 
-        public Session Session { get; private set; }
+        public UserSession UserSession { get; private set; }
 
+        private readonly Lazy<IRuleConstraintEvaluator> _ruleConstraintEvaluator =
+            new Lazy<IRuleConstraintEvaluator>(() => new RubyRuleConstraintEvaluator(), false);
+        public IRuleConstraintEvaluator RuleConstraintEvaluator
+        {
+            get
+            {
+                return _ruleConstraintEvaluator.Value;
+            }
+        }
+
+        private readonly Lazy<IUserSessionService> _userSessionService =
+            new Lazy<IUserSessionService>(() => new DbUserSessionService(null), false);
+        public IUserSessionService UserSessionService
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+        }
 
         #region IDisposable 成员
 
@@ -278,9 +302,9 @@ namespace ObjectServer
                 try
                 {
                     //处置非托管对象
-                    if (this.Session.IsSystemUser)
+                    if (this.UserSession.IsSystemUser)
                     {
-                        Session.Remove(this.dbctx, this.Session.Id);
+                        UserSession.Remove(this._datactx, this.UserSession.Id);
                     }
 
                     this.DbTransaction.Commit();
@@ -316,7 +340,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("other");
             }
 
-            return this.Session.Id == other.Session.Id;
+            return this.UserSession.Id == other.UserSession.Id;
         }
 
         #endregion

@@ -17,7 +17,7 @@ namespace ObjectServer
     /// <summary>
     /// Singleton
     /// </summary>
-    internal sealed class DbDomainManager : IGlobalObject, IDisposable
+    internal sealed class DbDomainManager : IDbDomainManager
     {
         private Config config;
         private Dictionary<string, IDbDomain> dbProfiles =
@@ -35,8 +35,6 @@ namespace ObjectServer
             this.Dispose(false);
         }
 
-        #region IGlobalObject 成员
-
         public void Initialize(Config cfg)
         {
             Debug.Assert(cfg != null);
@@ -45,8 +43,6 @@ namespace ObjectServer
 
             LoggerProvider.EnvironmentLogger.Info("DbProfileCollection has been loaded.");
         }
-
-        #endregion
 
         public void Register(string dbName, bool isUpdate)
         {

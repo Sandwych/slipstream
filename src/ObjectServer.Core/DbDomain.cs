@@ -34,7 +34,7 @@ namespace ObjectServer
         {
             if (string.IsNullOrEmpty(db))
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (dataProvider == null)
@@ -60,7 +60,6 @@ namespace ObjectServer
 
             using (var ctx = new ServiceContext(this._dataProvider, this.DatabaseName, this))
             {
-
                 //加载其它模块
                 SlipstreamEnvironment.Modules.LoadModules(ctx, isUpdate);
             }

@@ -231,7 +231,7 @@ namespace ObjectServer.Data
 
         public abstract bool IsInitialized();
         public abstract void Create(string dbName);
-        public abstract void Initialize();
+        public abstract void Setup();
         public abstract ITableContext CreateTableContext(string tableName);
         public abstract void LockTable(string tableName);
         public abstract long GetLastIdentity(string sequenceName);

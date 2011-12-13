@@ -16,8 +16,8 @@ namespace ObjectServer.Data.Mssql
         private readonly DriverBase _driver = new SqlClientDriver();
 
         private static readonly SqlString ListDatabasesSql = SqlString.Parse(@"
-select db.name from sys.sysdatabases db
-inner join sys.syslogins l on l.sid = db.sid
+select ctx.name from sys.sysdatabases ctx
+inner join sys.syslogins l on l.sid = ctx.sid
 where l.name = ?
 order by l.name asc
 ");
@@ -58,6 +58,8 @@ order by l.name asc
             {
                 throw new ArgumentNullException("_dbName");
             }
+            var msg = String.Format("Creating Database: [{0}]...", dbName);
+            LoggerProvider.EnvironmentLogger.Info(msg);
 
             var sql = new SqlString(
                 "create database ", '"' + dbName + '"');
@@ -65,7 +67,13 @@ order by l.name asc
             using (var conn = new MssqlDataContext())
             {
                 conn.Execute(sql);
-                conn.Close();
+            }
+
+            using (var conn = new MssqlDataContext(dbName))
+            {
+
+                LoggerProvider.EnvironmentLogger.Info("Initializing Database...");
+                conn.Setup();
             }
         }
 

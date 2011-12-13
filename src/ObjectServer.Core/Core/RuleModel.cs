@@ -14,6 +14,7 @@ using Microsoft.Scripting.Hosting;
 using IronRuby;
 
 using ObjectServer.Model;
+using ObjectServer.Runtime;
 
 namespace ObjectServer.Core
 {
@@ -21,11 +22,6 @@ namespace ObjectServer.Core
     public sealed class RuleModel : AbstractSqlModel
     {
         private static readonly Criterion[][] EmptyConstraints = new Criterion[][] { };
-        //为了让 VS 复制 IronRuby.Libraries.dll 
-        private static readonly Type _rubyHashOpsType = typeof(IronRuby.Builtins.HashOps);
-
-        private static ScriptRuntime s_runtime = Ruby.CreateRuntime();
-        private static ScriptEngine s_engine = Ruby.GetEngine(s_runtime);
 
         public RuleModel()
             : base("core.rule")
@@ -48,6 +44,7 @@ namespace ObjectServer.Core
 
         /// <summary>
         /// 获取指定模型方法的访问规则
+        /// 此方法把数据库里的规则表达式转换成查询约束
         /// </summary>
         /// <param name="model"></param>
         /// <param name="ctx"></param>
@@ -71,7 +68,7 @@ namespace ObjectServer.Core
                         @"inner join ""core_user_role_rel"" ""ur"" on (""rr"".""role"" = ""ur"".""role"") ",
                         @"where ""ur"".""user"" =", Parameter.Placeholder, @" )))");
 
-            var result = ctx.DataContext.QueryAsDictionary(sql, modelName, ctx.Session.UserId);
+            var result = ctx.DataContext.QueryAsDictionary(sql, modelName, ctx.UserSession.UserId);
 
             if (result.Length > 0)
             {
@@ -86,7 +83,11 @@ namespace ObjectServer.Core
         private static IList<Criterion[]> ConvertConstraints(
             IServiceContext ctx, Dictionary<string, object>[] result)
         {
-            var scriptScope = CreateScriptScope(ctx);
+            var userModel = (UserModel)ctx.GetResource("core.user");
+            dynamic user = userModel.Browse(ctx, ctx.UserSession.UserId);
+
+            var evaluator = ctx.RuleConstraintEvaluator;
+            evaluator.SetVariable("user", user);
 
             var constraints = new List<Criterion[]>();
             var cr = new List<Criterion>(4);
@@ -94,30 +95,16 @@ namespace ObjectServer.Core
             {
                 cr.Clear();
                 var constraintExp = (string)row["constraint"];
-                var scriptSource = s_engine.CreateScriptSourceFromString(
-                    constraintExp, SourceCodeKind.Expression);
-                var compiledCode = scriptSource.Compile();
-                var dynObj = compiledCode.Execute(scriptScope);
+                var ruleObj = evaluator.Evaluate(constraintExp);
 
-                foreach (dynamic d in dynObj)
+                foreach (dynamic d in ruleObj)
                 {
-                    var c = new Criterion(
-                        (string)d[0], (string)d[1], d[2]);
+                    var c = new Criterion((string)d[0], (string)d[1], d[2]);
                     cr.Add(c);
                 }
                 constraints.Add(cr.ToArray());
             }
             return constraints;
-        }
-
-        private static ScriptScope CreateScriptScope(IServiceContext scope)
-        {
-            var userModel = (UserModel)scope.GetResource("core.user");
-            dynamic user = userModel.Browse(scope, scope.Session.UserId);
-
-            var scriptScope = s_engine.CreateScope();
-            scriptScope.SetVariable("user", user);
-            return scriptScope;
         }
 
         /// <summary>

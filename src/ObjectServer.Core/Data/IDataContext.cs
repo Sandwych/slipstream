@@ -16,7 +16,7 @@ namespace ObjectServer.Data
     {
         void Close();
 
-        void Initialize();
+        void Setup();
 
         bool IsInitialized();
 

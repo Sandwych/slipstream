@@ -48,7 +48,7 @@ namespace ObjectServer
             using (var ctx = new ServiceContext(this._dataProvider, dbName))
             {
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
-                Session session = userModel.LogOn(ctx, dbName, username, password);
+                UserSession session = userModel.LogOn(ctx, dbName, username, password);
                 Debug.Assert(session != null);
                 return session.Id.ToString();
             }
@@ -59,12 +59,12 @@ namespace ObjectServer
         {
             if (string.IsNullOrEmpty(db))
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(sessionId))
             {
-                throw new ArgumentNullException("sessionId");
+                throw new ArgumentNullException("userSessionId");
             }
 
             using (var ctx = new ServiceContext(this._dataProvider, db, sessionId))
@@ -84,12 +84,12 @@ namespace ObjectServer
         {
             if (string.IsNullOrEmpty(db))
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(sessionId))
             {
-                throw new ArgumentNullException("sessionId");
+                throw new ArgumentNullException("userSessionId");
             }
 
             if (string.IsNullOrEmpty(resource))
@@ -121,7 +121,7 @@ namespace ObjectServer
             VerifyRootPassword(rootPasswordHash);
 
             this._dataProvider.CreateDatabase(dbName);
-            SlipstreamEnvironment.DBProfiles.Register(dbName, true);
+            SlipstreamEnvironment.DbDomains.Register(dbName, true);
         }
 
         public void DeleteDatabase(string rootPasswordHash, string dbName)
@@ -129,7 +129,7 @@ namespace ObjectServer
             VerifyRootPassword(rootPasswordHash);
 
             this._dataProvider.DeleteDatabase(dbName); //删除实际数据库
-            SlipstreamEnvironment.DBProfiles.Remove(dbName); //删除数据库上下文
+            SlipstreamEnvironment.DbDomains.Remove(dbName); //删除数据库上下文
         }
 
         private static void VerifyRootPassword(string rootPasswordHash)
