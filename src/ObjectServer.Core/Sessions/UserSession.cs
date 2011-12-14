@@ -81,8 +81,11 @@ namespace ObjectServer
             {
                 rng.GetBytes(bytes);
             }
-            var hash = bytes.ToSha();
-            return Convert.ToBase64String(hash);
+            using (var sha = SHA1.Create())
+            {
+                var hash = sha.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
         }
 
         public string Id { get; set; }

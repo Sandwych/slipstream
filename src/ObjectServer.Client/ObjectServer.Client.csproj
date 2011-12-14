@@ -5,19 +5,20 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E4B0FE62-1C42-4CFE-ACF0-8C9FDFC81951}</ProjectGuid>
+    <ProjectGuid>{78641DA5-A3F5-4F5E-8BF8-4DF113C12679}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectServer.Server</RootNamespace>
-    <AssemblyName>ObjectServer.Server</AssemblyName>
+    <RootNamespace>ObjectServer.Client</RootNamespace>
+    <AssemblyName>ObjectServer.Client</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\Net\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,19 +26,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release\Net\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="clrzmq">
-      <HintPath>..\..\lib\zmq\clrzmq.dll</HintPath>
-    </Reference>
-    <Reference Include="clrzmq-ext">
-      <HintPath>..\..\lib\zmq\clrzmq-ext.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
+    <Reference Include="Newtonsoft.Json, Version=4.0.2.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Json\Net4\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -49,29 +45,40 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractWorker.cs" />
-    <Compile Include="RpcDispatcher.cs" />
-    <Compile Include="RpcBusWorker.cs" />
-    <Compile Include="ServerProcess.cs" />
-    <Compile Include="Supervisor.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.Net40.cs" />
+    <Compile Include="IObjectServerClient.cs" />
+    <Compile Include="IRemoteService.cs" />
+    <Compile Include="JsonRpc\JsonRequestCompletedEventArgs .cs" />
+    <Compile Include="JsonRpc\JsonRequestCompletedHandler.cs" />
+    <Compile Include="JsonRpc\JsonRpcClient.cs" />
+    <Compile Include="JsonRpc\JsonRpcCompletedEventArgs .cs" />
+    <Compile Include="JsonRpc\JsonRpcCompletedHandler.cs" />
+    <Compile Include="JsonRpc\JsonRpcError.cs" />
+    <Compile Include="JsonRpc\JsonRpcException.cs" />
+    <Compile Include="JsonRpc\JsonRpcRequest.cs" />
+    <Compile Include="JsonRpc\JsonRpcResponse.cs" />
+    <Compile Include="JsonRpc\WebRequestExtensions.cs" />
+    <Compile Include="Model\Entity.cs" />
+    <Compile Include="Model\EntitySet.cs" />
+    <Compile Include="Model\Field.cs" />
+    <Compile Include="Model\FieldAttribute.cs" />
+    <Compile Include="Model\IEntity.cs" />
+    <Compile Include="Model\IEntityCollection.cs" />
+    <Compile Include="Model\IField.cs" />
+    <Compile Include="Model\MenuEntity.cs" />
+    <Compile Include="Model\MetaField.cs" />
+    <Compile Include="Model\ModelHelper.cs" />
+    <Compile Include="ObjectServerClient.cs" />
+    <Compile Include="Threading\AsyncEnumerator.cs" />
+    <Compile Include="Threading\InterlockedEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Object.Common\ObjectServer.Common.csproj">
       <Project>{854177F0-7005-4980-9C76-24F32BE3F3F0}</Project>
       <Name>ObjectServer.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ObjectServer.Core\ObjectServer.Core.csproj">
-      <Project>{443BAECA-181D-45B8-9EB8-FCA3A35051E1}</Project>
-      <Name>ObjectServer.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ObjectServer.Http\ObjectServer.Http.csproj">
-      <Project>{8272D46C-F350-4329-9E07-8B49A234C749}</Project>
-      <Name>ObjectServer.Http</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ObjectServer.Infrastructure\ObjectServer.Infrastructure.csproj">
-      <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
-      <Name>ObjectServer.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

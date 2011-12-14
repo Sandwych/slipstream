@@ -49,7 +49,7 @@ namespace ObjectServer.Client
         {
             using (var reader = new StreamReader(input, Encoding.UTF8))
             {
-                var propBag = (Dictionary<string, object>)PlainJsonConvert.Deserialize(reader);
+                var propBag = (Dictionary<string, object>)PlainJsonConvert.Parse(reader);
                 return new JsonRpcResponse(propBag);
             }
         }

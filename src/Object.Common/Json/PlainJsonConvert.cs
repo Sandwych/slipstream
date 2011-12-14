@@ -9,6 +9,11 @@ using Newtonsoft.Json;
 
 namespace ObjectServer.Json
 {
+    /// <summary>
+    /// 一个很重要的类
+    /// JSON 中的对象如果不指定 CLR 类型的话，Json.NET 类库会把它解析成 JObject。
+    /// 而此类会解析成 Dictionary<string, object>
+    /// </summary>
     public static class PlainJsonConvert
     {
         public static string Generate(object value)

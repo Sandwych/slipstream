@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ObjectServer.Client</RootNamespace>
+    <AssemblyName>ObjectServer.Client.Silverlight</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug\Silverlight\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release\Silverlight\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json.Silverlight">
+      <HintPath>..\..\lib\Json\Silverlight\Newtonsoft.Json.Silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IObjectServerClient.cs" />
+    <Compile Include="JsonRpc\JsonRpcCompletedHandler.cs" />
+    <Compile Include="JsonRpc\JsonRpcCompletedEventArgs .cs" />
+    <Compile Include="JsonRpc\JsonRequestCompletedEventArgs .cs" />
+    <Compile Include="JsonRpc\JsonRequestCompletedHandler.cs" />
+    <Compile Include="JsonRpc\JsonRpcError.cs" />
+    <Compile Include="JsonRpc\JsonRpcException.cs" />
+    <Compile Include="JsonRpc\WebRequestExtensions.cs" />
+    <Compile Include="Model\Entity.cs" />
+    <Compile Include="Model\EntitySet.cs" />
+    <Compile Include="Model\Field.cs" />
+    <Compile Include="Model\FieldAttribute.cs" />
+    <Compile Include="Model\IEntityCollection.cs" />
+    <Compile Include="Model\IField.cs" />
+    <Compile Include="Model\MetaField.cs" />
+    <Compile Include="Threading\AsyncEnumerator.cs" />
+    <Compile Include="Threading\InterlockedEx.cs" />
+    <Compile Include="IRemoteService.cs" />
+    <Compile Include="JsonRpc\JsonRpcClient.cs" />
+    <Compile Include="JsonRpc\JsonRpcRequest.cs" />
+    <Compile Include="JsonRpc\JsonRpcResponse.cs" />
+    <Compile Include="Model\IEntity.cs" />
+    <Compile Include="Model\MenuEntity.cs" />
+    <Compile Include="Model\ModelHelper.cs" />
+    <Compile Include="ObjectServerClient.cs" />
+    <Compile Include="AssemblyInfo.Silverlight.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Object.Common\ObjectServer.Common.Silverlight.csproj">
+      <Project>{073A04A8-05F5-424D-BEB5-0BA61365F891}</Project>
+      <Name>ObjectServer.Common.Silverlight</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

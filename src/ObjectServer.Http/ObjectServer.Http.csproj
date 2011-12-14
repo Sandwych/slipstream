@@ -69,6 +69,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Object.Common\ObjectServer.Common.csproj">
+      <Project>{854177F0-7005-4980-9C76-24F32BE3F3F0}</Project>
+      <Name>ObjectServer.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObjectServer.Infrastructure\ObjectServer.Infrastructure.csproj">
       <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
       <Name>ObjectServer.Infrastructure</Name>

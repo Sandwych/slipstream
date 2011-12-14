@@ -189,6 +189,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Object.Common\ObjectServer.Common.csproj">
+      <Project>{854177F0-7005-4980-9C76-24F32BE3F3F0}</Project>
+      <Name>ObjectServer.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObjectServer.Core\ObjectServer.Core.csproj">
       <Project>{443BAECA-181D-45B8-9EB8-FCA3A35051E1}</Project>
       <Name>ObjectServer.Core</Name>

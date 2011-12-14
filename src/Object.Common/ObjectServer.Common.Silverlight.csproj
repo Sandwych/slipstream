@@ -5,12 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0F1350CA-2DE0-4EC6-9535-7609B3DFB90D}</ProjectGuid>
-    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{073A04A8-05F5-424D-BEB5-0BA61365F891}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectServer.Client</RootNamespace>
-    <AssemblyName>ObjectServer.Client.SL4</AssemblyName>
+    <RootNamespace>ObjectServer</RootNamespace>
+    <AssemblyName>ObjectServer.Common.SL4</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>false</SilverlightApplication>
@@ -27,7 +28,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Bin\Debug</OutputPath>
+    <OutputPath>Bin\Debug\Silverlight\</OutputPath>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -37,7 +38,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>Bin\Release</OutputPath>
+    <OutputPath>Bin\Release\Silverlight\</OutputPath>
     <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -45,45 +46,31 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json.Silverlight">
       <HintPath>..\..\lib\Json\Silverlight\Newtonsoft.Json.Silverlight.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
-    <Reference Include="System" />
+    <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IObjectServerClient.cs" />
-    <Compile Include="JsonRpc\JsonRpcCompletedHandler.cs" />
-    <Compile Include="JsonRpc\JsonRpcCompletedEventArgs .cs" />
-    <Compile Include="JsonRpc\JsonRequestCompletedEventArgs .cs" />
-    <Compile Include="JsonRpc\JsonRequestCompletedHandler.cs" />
-    <Compile Include="JsonRpc\JsonRpcError.cs" />
-    <Compile Include="JsonRpc\JsonRpcException.cs" />
-    <Compile Include="JsonRpc\WebRequestExtensions.cs" />
-    <Compile Include="Model\Entity.cs" />
-    <Compile Include="Model\EntitySet.cs" />
-    <Compile Include="Model\Field.cs" />
-    <Compile Include="Model\FieldAttribute.cs" />
-    <Compile Include="Model\IEntityCollection.cs" />
-    <Compile Include="Model\IField.cs" />
-    <Compile Include="Model\MetaField.cs" />
-    <Compile Include="Threading\AsyncEnumerator.cs" />
-    <Compile Include="Threading\InterlockedEx.cs" />
-    <Compile Include="IRemoteService.cs" />
-    <Compile Include="JsonRpc\JsonRpcClient.cs" />
-    <Compile Include="JsonRpc\JsonRpcRequest.cs" />
-    <Compile Include="JsonRpc\JsonRpcResponse.cs" />
-    <Compile Include="JsonRpc\PlainJsonConvert.cs" />
-    <Compile Include="Model\IEntity.cs" />
-    <Compile Include="Model\MenuEntity.cs" />
-    <Compile Include="Model\ModelHelper.cs" />
-    <Compile Include="ObjectServerClient.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sha.cs" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.Silverlight.cs" />
+    <Compile Include="CollectionExtensions.cs" />
+    <Compile Include="Utility\EnumerableExtensions.cs" />
+    <Compile Include="Utility\EnumExtensions.cs" />
+    <Compile Include="Json\PlainJsonConvert.cs" />
+    <Compile Include="Utility\DependencySorter.cs" />
+    <Compile Include="Utility\EnumStringValueAttribute.cs" />
+    <Compile Include="Utility\Sha.cs" />
+    <Compile Include="Utility\StringExtension.cs" />
+    <Compile Include="Utility\TopologicalSorter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
