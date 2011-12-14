@@ -47,9 +47,10 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.Net40.cs" />
+    <Compile Include="AssemblyInfo.Net.cs" />
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
+    <Compile Include="Utility\Hash.cs" />
     <Compile Include="Utility\Sha.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />

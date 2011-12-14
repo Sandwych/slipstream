@@ -56,7 +56,7 @@ namespace ObjectServer.Utility
             while (_numVerts > 0) // while vertices remain,
             {
                 // get a vertex with no successors, or -1
-                int currentVertex = noSuccessors();
+                int currentVertex = NoSuccessors();
                 if (currentVertex == -1) // must be a cycle                
                 {
                     throw new InvalidOperationException("Graph has cycles");
@@ -65,7 +65,7 @@ namespace ObjectServer.Utility
                 // insert vertex label in sorted array (start at end)
                 _sortedArray[_numVerts - 1] = _vertices[currentVertex];
 
-                deleteVertex(currentVertex); // delete vertex
+                DeleteVertex(currentVertex); // delete vertex
             }
 
             // vertices all gone; return sortedArray
@@ -77,7 +77,7 @@ namespace ObjectServer.Utility
         #region - Private Helper Methods -
 
         // returns vert with no successors (or -1 if no such verts)
-        private int noSuccessors()
+        private int NoSuccessors()
         {
             for (int row = 0; row < _numVerts; row++)
             {
@@ -98,7 +98,7 @@ namespace ObjectServer.Utility
             return -1; // no
         }
 
-        private void deleteVertex(int delVert)
+        private void DeleteVertex(int delVert)
         {
             // if not last vertex, delete from vertexList
             if (delVert != _numVerts - 1)
@@ -110,18 +110,18 @@ namespace ObjectServer.Utility
 
                 for (int row = delVert; row < _numVerts - 1; row++)
                 {
-                    moveRowUp(row, _numVerts);
+                    MoveRowUp(row, _numVerts);
                 }
 
                 for (int col = delVert; col < _numVerts - 1; col++)
                 {
-                    moveColLeft(col, _numVerts - 1);
+                    MoveColLeft(col, _numVerts - 1);
                 }
             }
             _numVerts--; // one less vertex
         }
 
-        private void moveRowUp(int row, int length)
+        private void MoveRowUp(int row, int length)
         {
             for (int col = 0; col < length; col++)
             {
@@ -129,7 +129,7 @@ namespace ObjectServer.Utility
             }
         }
 
-        private void moveColLeft(int col, int length)
+        private void MoveColLeft(int col, int length)
         {
             for (int row = 0; row < length; row++)
             {

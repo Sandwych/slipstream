@@ -68,6 +68,7 @@
     <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="Utility\DependencySorter.cs" />
     <Compile Include="Utility\EnumStringValueAttribute.cs" />
+    <Compile Include="Utility\Hash.cs" />
     <Compile Include="Utility\Sha.cs" />
     <Compile Include="Utility\StringExtension.cs" />
     <Compile Include="Utility\TopologicalSorter.cs" />

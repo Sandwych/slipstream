@@ -48,7 +48,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.Net40.cs" />
+    <Compile Include="AssemblyInfo.Net.cs" />
     <Compile Include="IObjectServerClient.cs" />
     <Compile Include="IRemoteService.cs" />
     <Compile Include="JsonRpc\JsonRequestCompletedEventArgs .cs" />
