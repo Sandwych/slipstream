@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace ObjectServer.Model.Test
 {
     [TestFixture]
-    public class ModelAccessTests : ServiceContextTestCaseBase
+    public class ModelAccessTests : ServiceTestCaseBase
     {
         [Test]
         public void ExpectAccessDenied()
@@ -21,7 +21,7 @@ namespace ObjectServer.Model.Test
 
             using (var scope = new ServiceContext(dataProvider, TestingDatabaseName, sessionId))
             {
-                var userModel = this.GetResource("core.user");
+                dynamic userModel = scope.GetResource("core.user");
 
                 Assert.DoesNotThrow(() =>
                 {

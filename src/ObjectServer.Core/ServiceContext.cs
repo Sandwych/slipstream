@@ -39,21 +39,22 @@ namespace ObjectServer
 
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
             this._datactx = dataProvider.OpenDataContext(dbName);
+            this.UserSessionService = new DbUserSessionService(this._datactx);
 
             try
             {
-                var session = UserSession.GetById(this._datactx, userSessionId);
+                var session = this.UserSessionService.GetById(userSessionId);
                 if (session == null || !session.IsActive)
                 {
                     //删掉无效的 Session
-                    UserSession.Remove(this._datactx, session.Id);
+                    this.UserSessionService.Remove(session.Id);
                     throw new ObjectServer.Exceptions.SecurityException("Not logged!");
                 }
 
                 this._transaction = this.DataContext.BeginTransaction();
                 try
                 {
-                    UserSession.Pulse(this._datactx, userSessionId);
+                    this.UserSessionService.Pulse(userSessionId);
                     this._resources = SlipstreamEnvironment.DbDomains.GetDbProfile(dbName);
                     this.UserSession = session;
                 }
@@ -93,6 +94,7 @@ namespace ObjectServer
             this._resources = resourceContainer;
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
             this._datactx = dataProvider.OpenDataContext(dbName);
+            this.UserSessionService = new DbUserSessionService(this._datactx);
 
             try
             {
@@ -100,7 +102,7 @@ namespace ObjectServer
                 try
                 {
                     this.UserSession = UserSession.CreateSystemUserSession();
-                    UserSession.Put(_datactx, this.UserSession);
+                    this.UserSessionService.Put(this.UserSession);
                 }
                 catch
                 {
@@ -136,6 +138,7 @@ namespace ObjectServer
 
             this._resources = SlipstreamEnvironment.DbDomains.GetDbProfile(ctx.DatabaseName);
             this._datactx = ctx;
+            this.UserSessionService = new DbUserSessionService(this._datactx);
 
             try
             {
@@ -143,7 +146,7 @@ namespace ObjectServer
                 try
                 {
                     this.UserSession = UserSession.CreateSystemUserSession();
-                    UserSession.Put(this._datactx, this.UserSession);
+                    this.UserSessionService.Put(this.UserSession);
                 }
                 catch
                 {
@@ -278,15 +281,7 @@ namespace ObjectServer
             }
         }
 
-        private readonly Lazy<IUserSessionService> _userSessionService =
-            new Lazy<IUserSessionService>(() => new DbUserSessionService(null), false);
-        public IUserSessionService UserSessionService
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
+        public IUserSessionService UserSessionService { get; private set; }
 
         #region IDisposable 成员
 
@@ -304,7 +299,7 @@ namespace ObjectServer
                     //处置非托管对象
                     if (this.UserSession.IsSystemUser)
                     {
-                        UserSession.Remove(this._datactx, this.UserSession.Id);
+                        this.UserSessionService.Remove(this.UserSession.Id);
                     }
 
                     this.DbTransaction.Commit();

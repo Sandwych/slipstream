@@ -253,11 +253,11 @@ namespace ObjectServer.Core
 
         public void LogOff(IServiceContext ctx, string sessionId)
         {
-            var session = UserSession.GetById(ctx.DataContext, sessionId);
+            var session = ctx.UserSessionService.GetById(sessionId);
 
             if (session != null)
             {
-                UserSession.Remove(ctx.DataContext, sessionId);
+                ctx.UserSessionService.Remove(sessionId);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
                     String.Format("User[{0}.{1}] logged out.", ctx.DataContext.DatabaseName, session.Login));
@@ -310,24 +310,24 @@ namespace ObjectServer.Core
 
             var uid = (long)userFields[IdFieldName];
 
-            var oldSession = UserSession.GetByUserId(ctx.DataContext, uid);
+            var oldSession = ctx.UserSessionService.GetByUserId(uid);
 
             if (oldSession == null)
             {
                 var newSession = new UserSession(login, uid);
-                UserSession.Put(ctx.DataContext, newSession);
+                ctx.UserSessionService.Put(newSession);
                 return newSession;
             }
             else if (!oldSession.IsActive)
             {
-                UserSession.Remove(ctx.DataContext, oldSession.Id);
+                ctx.UserSessionService.Remove(oldSession.Id);
                 var newSession = new UserSession(login, uid);
-                UserSession.Put(ctx.DataContext, newSession);
+                ctx.UserSessionService.Put(newSession);
                 return newSession;
             }
             else
             {
-                UserSession.Pulse(ctx.DataContext, oldSession.Id);
+                ctx.UserSessionService.Pulse(oldSession.Id);
                 return oldSession;
             }
         }
