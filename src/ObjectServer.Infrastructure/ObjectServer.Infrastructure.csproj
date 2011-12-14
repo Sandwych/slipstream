@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Json\Net4\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog">
       <HintPath>..\..\lib\net40\nlog\NLog.dll</HintPath>
     </Reference>
@@ -49,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="ConfigSectionHandler.cs" />
+    <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="NLogLogger.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="ILogger.cs" />
@@ -59,13 +63,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerRoles.cs" />
     <Compile Include="StaticSettings.cs" />
-    <Compile Include="Utility\DependencySorter.cs" />
+    <Compile Include="Utility\DependencySorter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\EnumExtensions.cs" />
     <Compile Include="Utility\EnumStringValueAttribute.cs" />
     <Compile Include="Utility\Sha.cs" />
     <Compile Include="Utility\StringExtension.cs" />
-    <Compile Include="Utility\TopologicalSorter.cs" />
+    <Compile Include="Utility\TopologicalSorter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="WeakReferenceCache.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

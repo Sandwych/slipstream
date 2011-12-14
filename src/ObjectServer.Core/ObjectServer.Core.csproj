@@ -152,7 +152,7 @@
     <Compile Include="Model\Sql\TableJoinInfo.cs" />
     <Compile Include="Exceptions\RecordNotFoundException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
-    <Compile Include="Json\JsonRpcError.cs" />
+    <Compile Include="Protocol\Json\JsonRpcError.cs" />
     <Compile Include="Core\AttachmentModel.cs" />
     <Compile Include="Core\ModelAccessModel.cs" />
     <Compile Include="Core\OrganizationModel.cs" />
@@ -162,8 +162,8 @@
     <Compile Include="Exceptions\FatalException.cs" />
     <Compile Include="Exceptions\InitializationException.cs" />
     <Compile Include="IService.cs" />
-    <Compile Include="Json\JsonRpcProtocol.cs" />
-    <Compile Include="Json\JsonRpcResponse.cs" />
+    <Compile Include="Protocol\Json\JsonRpcProtocol.cs" />
+    <Compile Include="Protocol\Json\JsonRpcResponse.cs" />
     <Compile Include="Model\AbstractExtendedModel.cs" />
     <Compile Include="Model\Sql\AbstractSqlModel.CreateImpl.cs" />
     <Compile Include="Model\Sql\AbstractSqlModel.ReadImpl.cs" />
@@ -208,7 +208,6 @@
     <Compile Include="Model\Fields\EnumerationField.cs" />
     <Compile Include="ISlipstreamService.cs" />
     <Compile Include="IResource.cs" />
-    <Compile Include="Json\PlainJsonConvert.cs" />
     <Compile Include="Model\NameGetter.cs" />
     <Compile Include="Model\Fields\FieldDefaultValueGetter.cs" />
     <Compile Include="Model\Fields\ManyToOneField.cs" />
