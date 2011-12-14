@@ -98,6 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerTestBase.cs" />
     <Compile Include="MonoOptionsTests.cs" />
     <Compile Include="Model\AbstractModelTests.cs" />
     <Compile Include="ServiceTestCaseBase.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceDispatcherTests.cs" />
     <Compile Include="ServiceContextTestCaseBase.cs" />
+    <Compile Include="Sessions\DbUserSessionServiceTests.cs" />
     <Compile Include="Utility\EnumerableExtensionsTest.cs" />
     <Compile Include="Utility\DependencySorterTest.cs" />
     <Compile Include="Rpc\JsonSerializedCallingTests.cs" />

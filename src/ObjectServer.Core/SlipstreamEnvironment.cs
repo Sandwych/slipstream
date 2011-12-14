@@ -243,10 +243,10 @@ namespace ObjectServer
         {
             get
             {
-                if (!s_instance._initialized)
+                if (s_instance == null || !s_instance._initialized)
                 {
                     throw new Exception(
-                        "尚未初始化系统，请调用 ObjectServerStarter.Setup() 初始化");
+                        "尚未初始化系统，请调用 SlipstreamEnvironment.Initialize() 初始化");
                 }
 
                 return s_instance;

@@ -98,13 +98,14 @@ namespace ObjectServer
             }
 
             //加入事务
-            using (var txScope = new System.Transactions.TransactionScope())
+            //REVIEW
+            //using (var txScope = new System.Transactions.TransactionScope())
             using (var svcCtx = new ServiceContext(this._dataProvider, db, sessionId))
             {
                 dynamic res = svcCtx.GetResource(resource);
                 var svc = res.GetService(method);
                 var result = svc.Invoke(res, svcCtx, args);
-                txScope.Complete();
+                //txScope.Complete();
                 return result;
             }
         }

@@ -402,7 +402,6 @@ namespace ObjectServer.Data.Postgresql
 
         public bool ConstraintExists(IDataContext db, string constraintName)
         {
-            //TODO ESCAPE SQL
             if (db == null)
             {
                 throw new ArgumentNullException("ctx");
