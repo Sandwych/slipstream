@@ -8,11 +8,34 @@ using Newtonsoft.Json;
 namespace ObjectServer.Json
 {
     [JsonObject("error")]
-    [Serializable]
     public sealed class JsonRpcError
     {
         public JsonRpcError()
         {
+        }
+
+        public JsonRpcError(IDictionary<string, object> propBag)
+        {
+            if (propBag == null)
+            {
+                throw new ArgumentNullException("propBag");
+            }
+
+            if (propBag.ContainsKey("data"))
+            {
+                this.Data = propBag["data"];
+            }
+
+            if (propBag.ContainsKey("message"))
+            {
+                this.Message = propBag["message"] as string;
+            }
+
+            if (propBag.ContainsKey("code"))
+            {
+                this.Code = propBag["code"] as string;
+            }
+
         }
 
         public JsonRpcError(string code, string message, object data)

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace ObjectServer.Client.JsonRpc
+
+namespace ObjectServer.Json
 {
     public sealed class JsonRequestCompletedEventArgs : AsyncCompletedEventArgs
     {

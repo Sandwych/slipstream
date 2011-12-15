@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ObjectServer.Client
+namespace ObjectServer.Json
 {
     public class JsonRpcException : Exception
     {

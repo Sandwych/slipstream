@@ -2,7 +2,7 @@
 using System.ComponentModel;
 
 
-namespace ObjectServer.Client.JsonRpc
+namespace ObjectServer.Json
 {
     public delegate void JsonRpcCompletedHandler(object sender, JsonRpcCompletedEventArgs args);
 }

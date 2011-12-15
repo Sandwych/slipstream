@@ -57,13 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IObjectServerClient.cs" />
-    <Compile Include="JsonRpc\JsonRpcCompletedHandler.cs" />
-    <Compile Include="JsonRpc\JsonRpcCompletedEventArgs .cs" />
-    <Compile Include="JsonRpc\JsonRequestCompletedEventArgs .cs" />
-    <Compile Include="JsonRpc\JsonRequestCompletedHandler.cs" />
-    <Compile Include="JsonRpc\JsonRpcError.cs" />
-    <Compile Include="JsonRpc\JsonRpcException.cs" />
-    <Compile Include="JsonRpc\WebRequestExtensions.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\EntitySet.cs" />
     <Compile Include="Model\Field.cs" />
@@ -71,12 +64,7 @@
     <Compile Include="Model\IEntityCollection.cs" />
     <Compile Include="Model\IField.cs" />
     <Compile Include="Model\MetaField.cs" />
-    <Compile Include="Threading\AsyncEnumerator.cs" />
-    <Compile Include="Threading\InterlockedEx.cs" />
     <Compile Include="IRemoteService.cs" />
-    <Compile Include="JsonRpc\JsonRpcClient.cs" />
-    <Compile Include="JsonRpc\JsonRpcRequest.cs" />
-    <Compile Include="JsonRpc\JsonRpcResponse.cs" />
     <Compile Include="Model\IEntity.cs" />
     <Compile Include="Model\MenuEntity.cs" />
     <Compile Include="Model\ModelHelper.cs" />

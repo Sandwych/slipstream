@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 using ObjectServer.Threading;
-using ObjectServer.Client.JsonRpc;
+using ObjectServer.Json;
 
-namespace ObjectServer.Client
+namespace ObjectServer.Json
 {
 
     [JsonObject]

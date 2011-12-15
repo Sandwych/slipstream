@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace ObjectServer.Client.JsonRpc
+namespace ObjectServer.Json
 {
     public sealed class JsonRpcCompletedEventArgs : AsyncCompletedEventArgs
     {

@@ -16,6 +16,7 @@ using System.ComponentModel.DataAnnotations;
 
 using ObjectServer.Client.Agos.Controls;
 using ObjectServer.Client.Agos.Models;
+using ObjectServer.Json;
 
 namespace ObjectServer.Client.Agos.UI
 {

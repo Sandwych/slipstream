@@ -8,6 +8,8 @@ using System.Linq;
 using ObjectServer.Client.Model;
 using ObjectServer.Utility;
 
+using ObjectServer.Json;
+
 namespace ObjectServer.Client
 {
     public class ObjectServerClient : IObjectServerClient

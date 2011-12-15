@@ -63,7 +63,20 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.Silverlight.cs" />
     <Compile Include="CollectionExtensions.cs" />
+    <Compile Include="Json\JsonRequestCompletedEventArgs .cs" />
+    <Compile Include="Json\JsonRequestCompletedHandler.cs" />
+    <Compile Include="Json\JsonRpcClient.cs" />
+    <Compile Include="Json\JsonRpcCompletedEventArgs .cs" />
+    <Compile Include="Json\JsonRpcCompletedHandler.cs" />
+    <Compile Include="Json\JsonRpcError.cs" />
+    <Compile Include="Json\JsonRpcException.cs" />
+    <Compile Include="Json\JsonRpcProtocol.cs" />
+    <Compile Include="Json\JsonRpcRequest.cs" />
+    <Compile Include="Json\JsonRpcResponse.cs" />
+    <Compile Include="Json\WebRequestExtensions.cs" />
     <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="Threading\AsyncEnumerator.cs" />
+    <Compile Include="Threading\InterlockedEx.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\EnumExtensions.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />

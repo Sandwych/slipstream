@@ -7,13 +7,13 @@ using System.IO;
 
 using Newtonsoft.Json;
 
-namespace ObjectServer.Client
+namespace ObjectServer.Json
 {
     public delegate void JsonRpcCallCompleteCallback(JsonRpcResponse response, Action<object, Exception> resultHandler);
 
     public class JsonRpcClient
     {
-        public event JsonRpc.JsonRpcCompletedHandler JsonRpcCompleted;
+        public event JsonRpcCompletedHandler JsonRpcCompleted;
 
         public JsonRpcClient(Uri uri)
         {
@@ -64,11 +64,11 @@ namespace ObjectServer.Client
             jreq.PostAsync(this.Uri, userState);
         }
 
-        private void OnJsonRequestCompleted(object sender, JsonRpc.JsonRequestCompletedEventArgs args)
+        private void OnJsonRequestCompleted(object sender, JsonRequestCompletedEventArgs args)
         {
             if (this.JsonRpcCompleted != null)
             {
-                var rpcArgs = new JsonRpc.JsonRpcCompletedEventArgs(args.Result, args.Error, args.UserState);
+                var rpcArgs = new JsonRpcCompletedEventArgs(args.Result, args.Error, args.UserState);
                 this.JsonRpcCompleted(this, rpcArgs);
             }
         }

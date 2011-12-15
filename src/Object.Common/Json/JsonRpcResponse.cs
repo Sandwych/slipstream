@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Net;
-using System.Text;
-using System.IO;
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using System.Text;
 
 using Newtonsoft.Json;
 
-using ObjectServer.Json;
-
-namespace ObjectServer.Client
+namespace ObjectServer.Json
 {
     [JsonObject]
     public sealed class JsonRpcResponse
