@@ -18,11 +18,13 @@ namespace ObjectServer
     [XmlRoot("objectserver-config")]
     public sealed class Config
     {
+        public const string AppDataDirectoryName = "ObjectServer";
+
         public Config()
         {
             this.AppDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                StaticSettings.AppDataDirectoryName);
+                AppDataDirectoryName);
 
             this.Role = ServerRoles.Standalone;
             this.DbType = "mssql";

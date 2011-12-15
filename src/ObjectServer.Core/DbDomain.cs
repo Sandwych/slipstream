@@ -26,15 +26,16 @@ namespace ObjectServer
         private readonly ReaderWriterLockSlim resourcesLock = new ReaderWriterLockSlim();
         private readonly string _dbName;
         private readonly IDataProvider _dataProvider;
+        private readonly IModuleManager _modules;
 
         /// <summary>
         /// 初始化一个数据库环境
         /// </summary>
-        public DbDomain(IDataProvider dataProvider, string db)
+        public DbDomain(IDataProvider dataProvider, IModuleManager moduleManager, string dbName)
         {
-            if (string.IsNullOrEmpty(db))
+            if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("dbName");
             }
 
             if (dataProvider == null)
@@ -42,8 +43,14 @@ namespace ObjectServer
                 throw new ArgumentNullException("dataProvider");
             }
 
+            if (moduleManager == null)
+            {
+                throw new ArgumentNullException("moduleManager");
+            }
+
             this._dataProvider = dataProvider;
-            this._dbName = db;
+            this._dbName = dbName;
+            this._modules = moduleManager;
         }
 
         ~DbDomain()
@@ -55,13 +62,13 @@ namespace ObjectServer
         {
             using (var ctx = new ServiceContext(this._dataProvider, this.DatabaseName, this))
             {
-                SlipstreamEnvironment.Modules.UpdateModuleList(ctx.DataContext);
+                this._modules.UpdateModuleList(ctx.DataContext);
             }
 
             using (var ctx = new ServiceContext(this._dataProvider, this.DatabaseName, this))
             {
                 //加载其它模块
-                SlipstreamEnvironment.Modules.LoadModules(ctx, isUpdate);
+                this._modules.LoadModules(ctx, isUpdate);
             }
         }
 

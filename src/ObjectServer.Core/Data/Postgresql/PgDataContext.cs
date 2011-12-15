@@ -104,7 +104,7 @@ namespace ObjectServer.Data.Postgresql
             var sql = SqlString.Parse(@"
 select distinct count(table_name) 
     from information_schema.tables 
-    where table_name in ('core_module', 'core_model', 'core_field')
+    where table_name in ('core_module', 'core_model', 'core_field', 'core_session')
 ");
             var rowCount = (long)this.QueryValue(sql);
             return rowCount == 3;

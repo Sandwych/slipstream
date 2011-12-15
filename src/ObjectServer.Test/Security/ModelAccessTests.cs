@@ -19,34 +19,34 @@ namespace ObjectServer.Model.Test
             var sessionId = service.LogOn(TestingDatabaseName, "testuser", "testuser");
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<Data.IDataProvider>();
 
-            using (var scope = new ServiceContext(dataProvider, TestingDatabaseName, sessionId))
+            using (var ctx = new ServiceContext(dataProvider, TestingDatabaseName, sessionId))
             {
-                dynamic userModel = scope.GetResource("core.user");
+                dynamic userModel = ctx.GetResource("core.user");
 
                 Assert.DoesNotThrow(() =>
                 {
-                    var ids = userModel.Search(scope, null, null, 0, 0);
+                    var ids = userModel.Search(ctx, null, null, 0, 0);
                     Assert.True(ids.Length > 0);
-                    userModel.Read(scope, ids, null);
+                    userModel.Read(ctx, ids, null);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
                     record.login = "login";
-                    userModel.Create(scope, record);
+                    userModel.Create(ctx, record);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
                     record.login = "login";
-                    userModel.Write(scope, (long)1, record);
+                    userModel.Write(ctx, (long)1, record);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
-                    userModel.Delete(scope, new long[] { (long)1 });
+                    userModel.Delete(ctx, new long[] { (long)1 });
                 });
 
             }

@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.Silverlight.cs" />
     <Compile Include="CollectionExtensions.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
     <Compile Include="Utility\EnumExtensions.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />

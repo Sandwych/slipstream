@@ -8,10 +8,6 @@ namespace ObjectServer
 {
     public static class StaticSettings
     {
-        public const string CoreModuleName = "core";
-
-        public const string ModuleMetaDataFileName = "module.xml";
-
         public static Version Version
         {
             get
@@ -20,6 +16,5 @@ namespace ObjectServer
             }
         }
 
-        public const string AppDataDirectoryName = "ObjectServer";
     }
 }

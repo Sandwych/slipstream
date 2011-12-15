@@ -136,7 +136,8 @@ namespace ObjectServer
                 throw new ArgumentNullException("resourceType");
             }
 
-            var methods = resourceType.GetMethods().Where(m => m.IsStatic && m.ReflectedType == resourceType);
+            var methods = resourceType.GetMethods()
+                .Where(m => m.IsStatic && m.ReflectedType == resourceType);
             foreach (var m in methods)
             {
                 var attr = Attribute.GetCustomAttribute(

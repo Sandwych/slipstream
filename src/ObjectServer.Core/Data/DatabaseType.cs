@@ -8,13 +8,14 @@ namespace ObjectServer.Data
 {
     public enum DatabaseType
     {
-        //Mssql,
+        [XmlEnum("mssql")]
+        Mssql,
 
-        [XmlEnum("postgresql")]
-        Postgresql,
+        [XmlEnum("postgres")]
+        Postgres,
 
-        [XmlEnum("oracle")]
-        Oracle,
+        //[XmlEnum("oracle")]
+        //Oracle,
 
         //Sqlite
     }

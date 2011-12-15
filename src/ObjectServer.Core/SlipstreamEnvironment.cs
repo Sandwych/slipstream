@@ -193,14 +193,6 @@ namespace ObjectServer
             }
         }
 
-        internal static IModuleManager Modules
-        {
-            get
-            {
-                return Instance._modules;
-            }
-        }
-
         /*
         public static SessionStore SessionStore
         {

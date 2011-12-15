@@ -41,7 +41,7 @@ namespace ObjectServer
             var asm = Assembly.GetExecutingAssembly();
             s_coreModule = new Module()
             {
-                Name = StaticSettings.CoreModuleName,
+                Name = "core",
                 Label = "Core Module",
                 Requires = new string[] { },
                 AutoLoad = true,

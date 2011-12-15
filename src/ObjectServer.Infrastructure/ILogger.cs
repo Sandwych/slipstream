@@ -25,6 +25,7 @@ namespace ObjectServer
         void Error(object msg);
         void Error(Func<object> dg);
         void Error(object msg, Exception ex);
+        void ErrorFormat(string format, params object[] args);
 
         void Fatal(object msg);
         void Fatal(Func<object> dg);

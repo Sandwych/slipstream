@@ -38,7 +38,7 @@ namespace ObjectServer.Client.Agos.Windows.FormView
             {
                 if (value != null)
                 {
-                    base.Value = (Int32)value;
+                    base.Value = Convert.ToInt32(value);
                 }
                 else
                 {

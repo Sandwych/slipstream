@@ -95,6 +95,15 @@ namespace ObjectServer
             }
         }
 
+        public void ErrorFormat(string format, params object[] args)
+        {
+            if (this.IsErrorEnabled)
+            {
+                var msg = string.Format(format, args);
+                this.log.Error(msg);
+            }
+        }
+
         public void Fatal(object msg)
         {
             if (this.IsFatalEnabled)

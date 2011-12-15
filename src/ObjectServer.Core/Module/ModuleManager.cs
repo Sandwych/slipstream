@@ -37,6 +37,7 @@ namespace ObjectServer
     [Serializable]
     public sealed class ModuleManager : IModuleManager
     {
+        private const string ModuleMetaDataFileName = "module.xml";
 
         /// <summary>
         /// 整个系统中发现的所有模块
@@ -114,8 +115,7 @@ namespace ObjectServer
             var moduleDirs = Directory.GetDirectories(modulePath);
             foreach (var moduleDir in moduleDirs)
             {
-                var moduleFilePath = System.IO.Path.Combine(
-                    moduleDir, StaticSettings.ModuleMetaDataFileName);
+                var moduleFilePath = System.IO.Path.Combine(moduleDir, ModuleMetaDataFileName);
 
                 var module = Module.Deserialize(moduleFilePath);
 

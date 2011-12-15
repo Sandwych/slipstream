@@ -9,7 +9,7 @@ namespace ObjectServer
     {
         void Initialize(Config cfg);
         void Register(string dbName, bool isUpdate);
-        IDbDomain GetDbProfile(string dbName);
+        IDbDomain GetDbDomain(string dbName);
         void Remove(string dbName);
     }
 }

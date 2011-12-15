@@ -24,10 +24,12 @@ namespace ObjectServer
             new Dictionary<string, IDbDomain>();
         private bool disposed = false;
         private readonly IDataProvider _dataProvider;
+        private readonly IModuleManager _modules;
 
-        public DbDomainManager(IDataProvider dataProvider)
+        public DbDomainManager(IDataProvider dataProvider, IModuleManager modules)
         {
             this._dataProvider = dataProvider;
+            this._modules = modules;
         }
 
         ~DbDomainManager()
@@ -65,12 +67,12 @@ namespace ObjectServer
                 throw new DatabaseNotFoundException("Cannot found database: " + dbName, dbName);
             }
 
-            var db = new DbDomain(this._dataProvider, dbName);
+            var db = new DbDomain(this._dataProvider, this._modules, dbName);
             db.Initialize(isUpdate);
             this.dbProfiles.Add(dbName, db);
         }
 
-        public IDbDomain GetDbProfile(string dbName)
+        public IDbDomain GetDbDomain(string dbName)
         {
             Debug.Assert(!string.IsNullOrEmpty(dbName));
 

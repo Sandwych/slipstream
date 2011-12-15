@@ -38,8 +38,8 @@ namespace ObjectServer
             }
 
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
-            this._datactx = dataProvider.OpenDataContext(dbName);
-            this.UserSessionService = new DbUserSessionService(this._datactx);
+            this._dataContext = dataProvider.OpenDataContext(dbName);
+            this.UserSessionService = new DbUserSessionService(this._dataContext);
 
             try
             {
@@ -55,7 +55,7 @@ namespace ObjectServer
                 try
                 {
                     this.UserSessionService.Pulse(userSessionId);
-                    this._resources = SlipstreamEnvironment.DbDomains.GetDbProfile(dbName);
+                    this._resources = SlipstreamEnvironment.DbDomains.GetDbDomain(dbName);
                     this.UserSession = session;
                 }
                 catch
@@ -79,7 +79,7 @@ namespace ObjectServer
         /// </summary>
         /// <param name="dbName"></param>
         public ServiceContext(IDataProvider dataProvider, string dbName)
-            : this(dataProvider, dbName, SlipstreamEnvironment.DbDomains.GetDbProfile(dbName))
+            : this(dataProvider, dbName, SlipstreamEnvironment.DbDomains.GetDbDomain(dbName))
         {
         }
 
@@ -93,8 +93,8 @@ namespace ObjectServer
 
             this._resources = resourceContainer;
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
-            this._datactx = dataProvider.OpenDataContext(dbName);
-            this.UserSessionService = new DbUserSessionService(this._datactx);
+            this._dataContext = dataProvider.OpenDataContext(dbName);
+            this.UserSessionService = new DbUserSessionService(this._dataContext);
 
             try
             {
@@ -136,9 +136,9 @@ namespace ObjectServer
             }
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-            this._resources = SlipstreamEnvironment.DbDomains.GetDbProfile(ctx.DatabaseName);
-            this._datactx = ctx;
-            this.UserSessionService = new DbUserSessionService(this._datactx);
+            this._resources = SlipstreamEnvironment.DbDomains.GetDbDomain(ctx.DatabaseName);
+            this._dataContext = ctx;
+            this.UserSessionService = new DbUserSessionService(this._dataContext);
 
             try
             {
@@ -201,7 +201,7 @@ namespace ObjectServer
             return this._resources.GetResourceDependencyWeight(resName);
         }
 
-        private readonly IDataContext _datactx;
+        private readonly IDataContext _dataContext;
         public IDataContext DataContext
         {
             get
@@ -211,10 +211,10 @@ namespace ObjectServer
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
-                Debug.Assert(this._datactx != null);
+                Debug.Assert(this._dataContext != null);
                 Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-                return this._datactx;
+                return this._dataContext;
             }
         }
 
@@ -228,7 +228,7 @@ namespace ObjectServer
                 }
 
                 Debug.Assert(this._resources != null);
-                Debug.Assert(this._datactx != null);
+                Debug.Assert(this._dataContext != null);
                 Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
                 return this._resources;
@@ -245,7 +245,7 @@ namespace ObjectServer
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
-                Debug.Assert(this._datactx != null);
+                Debug.Assert(this._dataContext != null);
                 Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
                 return this._transaction;

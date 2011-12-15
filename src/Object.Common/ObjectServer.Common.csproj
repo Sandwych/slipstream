@@ -50,6 +50,8 @@
     <Compile Include="AssemblyInfo.Net.cs" />
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="Json\PlainJsonConvert.cs" />
+    <Compile Include="ObjectExtensions.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Utility\Hash.cs" />
     <Compile Include="Utility\Sha.cs" />
     <Compile Include="Utility\DependencySorter.cs" />

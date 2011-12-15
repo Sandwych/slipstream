@@ -51,6 +51,7 @@ namespace ObjectServer.Runtime
         {
             var selfAssembly = Assembly.GetExecutingAssembly();
             var infrastructureAssembly = typeof(Config).Assembly;
+            var commonAssembly = typeof(ObjectExtensions).Assembly;
 
             //设置编译参数，加入所需的组件 
             var options = new CompilerParameters();
@@ -59,8 +60,9 @@ namespace ObjectServer.Runtime
             options.ReferencedAssemblies.Add("Microsoft.CSharp.dll");
             options.ReferencedAssemblies.Add("System.Data.dll");
             options.ReferencedAssemblies.Add("System.Transactions.dll");
-            options.ReferencedAssemblies.Add(selfAssembly.Location);
             options.ReferencedAssemblies.Add(infrastructureAssembly.Location);
+            options.ReferencedAssemblies.Add(commonAssembly.Location);
+            options.ReferencedAssemblies.Add(selfAssembly.Location);
             options.GenerateInMemory = true;
             options.GenerateExecutable = false;
             options.IncludeDebugInformation = SlipstreamEnvironment.Configuration.Debug;
@@ -73,7 +75,7 @@ namespace ObjectServer.Runtime
         private static void LogErrors(CompilerErrorCollection errors)
         {
             Debug.Assert(errors != null);
-               
+
             foreach (CompilerError error in errors)
             {
                 var msg = string.Format("{0}({1},{2}): {3}",
