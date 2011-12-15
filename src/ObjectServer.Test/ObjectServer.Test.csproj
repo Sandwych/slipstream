@@ -166,11 +166,6 @@
     <Content Include="ObjectServer.PartCover.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ObjectServer.Test.nunit">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Runtime\" />
   </ItemGroup>
   <ItemGroup>
