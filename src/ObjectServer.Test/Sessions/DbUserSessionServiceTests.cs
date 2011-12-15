@@ -18,7 +18,10 @@ namespace ObjectServer.Sessions.Test
         [SetUp]
         public void Init()
         {
-            this._dataContext = ObjectServer.Data.DataProvider.CreateDataContext();
+            SlipstreamEnvironment.Initialize();
+
+            this._dataContext = ObjectServer.Data.DataProvider
+                .OpenDataContext(ServiceContextTestCaseBase.TestingDatabaseName);
         }
 
         [TearDown]

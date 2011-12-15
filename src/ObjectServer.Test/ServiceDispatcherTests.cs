@@ -6,6 +6,8 @@ using System.Dynamic;
 
 using NUnit.Framework;
 
+using ObjectServer.Utility;
+
 namespace ObjectServer.Test
 {
     [TestFixture]
@@ -23,7 +25,7 @@ namespace ObjectServer.Test
 
             var dbName = "os-testdb";
             var adminPassword = "root";
-            var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(SlipstreamEnvironment.Settings.ServerPassword);
+            var hashedRootPassword = SlipstreamEnvironment.Settings.ServerPassword.ToSha();
 
             var service = SlipstreamEnvironment.RootService;
 

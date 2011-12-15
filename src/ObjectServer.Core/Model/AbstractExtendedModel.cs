@@ -40,7 +40,7 @@ namespace ObjectServer.Model
 
         }
 
-        public ICollection<InheritanceInfo> Inheritances
+        public ICollection<InheritanceDescriptor> Inheritances
         {
             get { throw new NotSupportedException(); }
         }

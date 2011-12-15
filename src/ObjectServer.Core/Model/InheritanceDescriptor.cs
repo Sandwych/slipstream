@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public sealed class InheritanceInfo
+    public sealed class InheritanceDescriptor
     {
-        public InheritanceInfo(string baseModel, string relatedField)
+        public InheritanceDescriptor(string baseModel, string relatedField)
         {
             if (string.IsNullOrEmpty(baseModel))
             {

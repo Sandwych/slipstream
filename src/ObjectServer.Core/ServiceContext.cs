@@ -83,7 +83,7 @@ namespace ObjectServer
         {
         }
 
-        public ServiceContext(IDataProvider dataProviderm, string dbName, IResourceContainer resourceContainer)
+        public ServiceContext(IDataProvider dataProvider, string dbName, IResourceContainer resourceContainer)
         {
             if (string.IsNullOrEmpty(dbName))
             {
@@ -92,7 +92,6 @@ namespace ObjectServer
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
             this._resources = resourceContainer;
-            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
             this._dataContext = dataProvider.OpenDataContext(dbName);
             this.UserSessionService = new DbUserSessionService(this._dataContext);
 

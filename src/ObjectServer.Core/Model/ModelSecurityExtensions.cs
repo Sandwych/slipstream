@@ -10,7 +10,6 @@ namespace ObjectServer.Model
 {
     internal static class ModelSecurityExtensions
     {
-
         public static bool CanCreateModel(this IServiceContext scope, string model)
         {
             return scope.IsDeniedModelServiceMethod(model, "create");

@@ -8,7 +8,7 @@ namespace ObjectServer.Model
     public interface IModelDescriptor
     {
         NameGetter NameGetter { get; }
-        ICollection<InheritanceInfo> Inheritances { get; }
+        ICollection<InheritanceDescriptor> Inheritances { get; }
         IFieldCollection Fields { get; }
         string TableName { get; }
         IEnumerable<OrderExpression> Order { get; }

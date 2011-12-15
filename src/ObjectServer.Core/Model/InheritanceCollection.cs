@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ObjectServer.Model
 {
-    public sealed class InheritanceCollection : List<InheritanceInfo>
+    public sealed class InheritanceCollection : List<InheritanceDescriptor>
     {
     }
 }

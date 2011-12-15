@@ -174,7 +174,7 @@
     <Compile Include="Model\Fields\InheritedField.cs" />
     <Compile Include="Model\IModelDescriptor.cs" />
     <Compile Include="Model\InheritanceCollection.cs" />
-    <Compile Include="Model\InheritanceInfo.cs" />
+    <Compile Include="Model\InheritanceDescriptor.cs" />
     <Compile Include="Model\ModelSecurityExtensions.cs" />
     <Compile Include="Model\RecordExtensions.cs" />
     <Compile Include="Model\ViewBuilder.cs" />

@@ -135,11 +135,11 @@ namespace ObjectServer.Model
 
         #region Inheritance staff
 
-        public ICollection<InheritanceInfo> Inheritances { get; private set; }
+        public ICollection<InheritanceDescriptor> Inheritances { get; private set; }
 
         protected AbstractModel Inherit(string modelName, string relatedField)
         {
-            var ii = new InheritanceInfo(modelName, relatedField);
+            var ii = new InheritanceDescriptor(modelName, relatedField);
             if (this.Inheritances.Select(i => i.BaseModel).Contains(modelName))
             {
                 var msg = string.Format("Duplicated inheritance: '{0}'", modelName);
