@@ -50,28 +50,28 @@ namespace ObjectServer
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
                 UserSession session = userModel.LogOn(ctx, dbName, username, password);
                 Debug.Assert(session != null);
-                return session.Id.ToString();
+                return session.Token.ToString();
             }
         }
 
 
-        public void LogOff(string db, string sessionId)
+        public void LogOff(string db, string sessionToken)
         {
             if (string.IsNullOrEmpty(db))
             {
                 throw new ArgumentNullException("ctx");
             }
 
-            if (string.IsNullOrEmpty(sessionId))
+            if (string.IsNullOrEmpty(sessionToken))
             {
-                throw new ArgumentNullException("userSessionId");
+                throw new ArgumentNullException("sessionToken");
             }
 
-            using (var ctx = new ServiceContext(this._dataProvider, db, sessionId))
+            using (var ctx = new ServiceContext(this._dataProvider, db, sessionToken))
             {
 
                 dynamic userModel = ctx.GetResource(UserModel.ModelName);
-                userModel.LogOff(ctx, sessionId);
+                userModel.LogOff(ctx, sessionToken);
             }
         }
 
@@ -80,14 +80,14 @@ namespace ObjectServer
             return StaticSettings.Version.ToString();
         }
 
-        public object Execute(string db, string sessionId, string resource, string method, params object[] args)
+        public object Execute(string db, string sessionToken, string resource, string method, params object[] args)
         {
             if (string.IsNullOrEmpty(db))
             {
                 throw new ArgumentNullException("ctx");
             }
 
-            if (string.IsNullOrEmpty(sessionId))
+            if (string.IsNullOrEmpty(sessionToken))
             {
                 throw new ArgumentNullException("userSessionId");
             }
@@ -100,7 +100,7 @@ namespace ObjectServer
             //加入事务
             //REVIEW
             //using (var txScope = new System.Transactions.TransactionScope())
-            using (var svcCtx = new ServiceContext(this._dataProvider, db, sessionId))
+            using (var svcCtx = new ServiceContext(this._dataProvider, db, sessionToken))
             {
                 dynamic res = svcCtx.GetResource(resource);
                 var svc = res.GetService(method);
@@ -147,36 +147,36 @@ namespace ObjectServer
 
         #region Model methods
 
-        public long CreateModel(string db, string sessionId, string modelName, IRecord record)
+        public long CreateModel(string db, string sessionToken, string modelName, IRecord record)
         {
-            return (long)Execute(db, sessionId, modelName, "Create", new object[] { record });
+            return (long)Execute(db, sessionToken, modelName, "Create", new object[] { record });
         }
 
-        public long CountModel(string db, string sessionId, string modelName, object[] constraints)
+        public long CountModel(string db, string sessionToken, string modelName, object[] constraints)
         {
-            return (long)Execute(db, sessionId, modelName, "Count", new object[] { constraints });
+            return (long)Execute(db, sessionToken, modelName, "Count", new object[] { constraints });
         }
 
         public long[] SearchModel(
-            string db, string sessionId, string modelName, object[] constraints, object[] order, long offset, long limit)
+            string db, string sessionToken, string modelName, object[] constraints, object[] order, long offset, long limit)
         {
-            return (long[])Execute(db, sessionId, modelName, "Search", new object[] { constraints, order, offset, limit });
+            return (long[])Execute(db, sessionToken, modelName, "Search", new object[] { constraints, order, offset, limit });
         }
 
-        public Record[] ReadModel(string db, string sessionId, string modelName, object[] ids, object[] fields)
+        public Record[] ReadModel(string db, string sessionToken, string modelName, object[] ids, object[] fields)
         {
-            return (Record[])Execute(db, sessionId, modelName, "Read", new object[] { ids, fields });
+            return (Record[])Execute(db, sessionToken, modelName, "Read", new object[] { ids, fields });
         }
 
         public void WriteModel(
-            string db, string sessionId, string modelName, object id, IRecord record)
+            string db, string sessionToken, string modelName, object id, IRecord record)
         {
-            Execute(db, sessionId, modelName, "Write", new object[] { id, record });
+            Execute(db, sessionToken, modelName, "Write", new object[] { id, record });
         }
 
-        public void DeleteModel(string db, string sessionId, string modelName, object[] ids)
+        public void DeleteModel(string db, string sessionToken, string modelName, object[] ids)
         {
-            Execute(db, sessionId, modelName, "Delete", new object[] { ids });
+            Execute(db, sessionToken, modelName, "Delete", new object[] { ids });
         }
 
         #endregion

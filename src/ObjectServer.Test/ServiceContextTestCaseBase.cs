@@ -37,10 +37,10 @@ namespace ObjectServer
         public void BeforeTest()
         {
             Debug.Assert(this.Context == null);
-            Debug.Assert(!string.IsNullOrEmpty(this.SessionId));
+            Debug.Assert(!string.IsNullOrEmpty(this.SessionToken));
 
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<Data.IDataProvider>();
-            this.Context = new ServiceContext(dataProvider, TestingDatabaseName, this.SessionId);
+            this.Context = new ServiceContext(dataProvider, TestingDatabaseName, this.SessionToken);
         }
 
         [TearDown]

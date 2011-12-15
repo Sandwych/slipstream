@@ -20,7 +20,7 @@ namespace ObjectServer.Model.Test
         public void CheckCrud()
         {
             var modelName = "test.test_model";
-            var dbName = this.SessionId;
+            var dbName = this.SessionToken;
 
             dynamic testModel = this.GetResource(modelName);
 

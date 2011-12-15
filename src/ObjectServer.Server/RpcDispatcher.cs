@@ -63,9 +63,9 @@ namespace ObjectServer.Server
             return s_service.LogOn(dbName, userName, password);
         }
 
-        public static void LogOff(string db, string sessionId)
+        public static void LogOff(string db, string sessionToken)
         {
-            s_service.LogOff(db, sessionId);
+            s_service.LogOff(db, sessionToken);
         }
 
         public static string GetVersion()
@@ -88,10 +88,10 @@ namespace ObjectServer.Server
             s_service.DeleteDatabase(hashedRootPassword, dbName);
         }
 
-        public static object Execute(string db, string sessionId, string objectName, string method, object[] parameters)
+        public static object Execute(string db, string sessionToken, string objectName, string method, object[] parameters)
         {
             return s_service.Execute(
-                db, sessionId, objectName, method, parameters);
+                db, sessionToken, objectName, method, parameters);
         }
 
         #endregion

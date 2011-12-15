@@ -38,8 +38,8 @@ namespace ObjectServer.Sessions.Test
             var sess = new UserSession("session_test", 9999);
             svc.Put(sess);
 
-            var newSess = svc.GetById(sess.Id);
-            Assert.AreEqual(sess.Id, newSess.Id);
+            var newSess = svc.GetByToken(sess.Token);
+            Assert.AreEqual(sess.Token, newSess.Token);
             Assert.AreEqual(9999, newSess.UserId);
             Assert.AreEqual("session_test", newSess.Login);
             Assert.That(!newSess.IsSystemUser);
@@ -52,7 +52,7 @@ namespace ObjectServer.Sessions.Test
             var svc = new DbUserSessionService(this._dataContext);
             var sess = new UserSession("session_test", 9999);
             svc.Put(sess);
-            svc.Pulse(sess.Id);
+            svc.Pulse(sess.Token);
         }
     }
 }

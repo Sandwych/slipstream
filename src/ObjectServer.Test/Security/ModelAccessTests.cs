@@ -16,10 +16,10 @@ namespace ObjectServer.Model.Test
         public void ExpectAccessDenied()
         {
             var service = ObjectServer.SlipstreamEnvironment.RootService;
-            var sessionId = service.LogOn(TestingDatabaseName, "testuser", "testuser");
+            var sessionToken = service.LogOn(TestingDatabaseName, "testuser", "testuser");
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<Data.IDataProvider>();
 
-            using (var ctx = new ServiceContext(dataProvider, TestingDatabaseName, sessionId))
+            using (var ctx = new ServiceContext(dataProvider, TestingDatabaseName, sessionToken))
             {
                 dynamic userModel = ctx.GetResource("core.user");
 
@@ -51,7 +51,7 @@ namespace ObjectServer.Model.Test
 
             }
 
-            service.LogOff(TestingDatabaseName, sessionId);
+            service.LogOff(TestingDatabaseName, sessionToken);
 
         }
     }

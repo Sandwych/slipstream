@@ -19,7 +19,7 @@ namespace ObjectServer.Test.Web
                 new object[] { "name", "=", "core.model"}
             };
 
-            var result = JsonRpc("Execute", this.SessionId, "core.model", "Search", constraints, 0, 0);
+            var result = JsonRpc("Execute", this.SessionToken, "core.model", "Search", constraints, 0, 0);
             var ids = (object[])result["result"];
 
             Assert.AreEqual(1, ids.Length);

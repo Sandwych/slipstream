@@ -25,16 +25,16 @@ namespace ObjectServer
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
-        /// <param name="userSessionId"></param>
-        public ServiceContext(IDataProvider dataProvider, string dbName, string userSessionId)
+        /// <param name="sessionToken"></param>
+        public ServiceContext(IDataProvider dataProvider, string dbName, string sessionToken)
         {
             if (string.IsNullOrEmpty(dbName))
             {
                 throw new ArgumentNullException("_dbName");
             }
-            if (string.IsNullOrEmpty(userSessionId))
+            if (string.IsNullOrEmpty(sessionToken))
             {
-                throw new ArgumentNullException("userSessionId");
+                throw new ArgumentNullException("sessionToken");
             }
 
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
@@ -43,18 +43,18 @@ namespace ObjectServer
 
             try
             {
-                var session = this.UserSessionService.GetById(userSessionId);
+                var session = this.UserSessionService.GetByToken(sessionToken);
                 if (session == null || !session.IsActive)
                 {
                     //删掉无效的 Session
-                    this.UserSessionService.Remove(session.Id);
+                    this.UserSessionService.Remove(session.Token);
                     throw new ObjectServer.Exceptions.SecurityException("Not logged!");
                 }
 
                 this._transaction = this.DataContext.BeginTransaction();
                 try
                 {
-                    this.UserSessionService.Pulse(userSessionId);
+                    this.UserSessionService.Pulse(sessionToken);
                     this._resources = SlipstreamEnvironment.DbDomains.GetDbDomain(dbName);
                     this.UserSession = session;
                 }
@@ -299,7 +299,7 @@ namespace ObjectServer
                     //处置非托管对象
                     if (this.UserSession.IsSystemUser)
                     {
-                        this.UserSessionService.Remove(this.UserSession.Id);
+                        this.UserSessionService.Remove(this.UserSession.Token);
                     }
 
                     this.DbTransaction.Commit();
@@ -335,7 +335,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("other");
             }
 
-            return this.UserSession.Id == other.UserSession.Id;
+            return this.UserSession.Token == other.UserSession.Token;
         }
 
         #endregion

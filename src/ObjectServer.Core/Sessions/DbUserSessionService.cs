@@ -13,11 +13,11 @@ namespace ObjectServer
     internal class DbUserSessionService : IUserSessionService
     {
         private static readonly SqlString SelectByIdSql =
-                 new SqlString(@"select * from ""core_session"" where ""sid"" = ", Parameter.Placeholder);
+                 new SqlString(@"select * from ""core_session"" where ""token"" = ", Parameter.Placeholder);
         private static readonly SqlString SelectByUserIdSql =
             new SqlString(@"select * from ""core_session"" where ""userid"" = ", Parameter.Placeholder);
         private static readonly SqlString UpdateLastActivityTimeSql = SqlString.Parse(
-            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""sid"" = ?");
+            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""token"" = ?");
 
         private readonly IDataContext _dataContext;
 
@@ -26,14 +26,14 @@ namespace ObjectServer
             this._dataContext = dataContext;
         }
 
-        public UserSession GetById(string sid)
+        public UserSession GetByToken(string token)
         {
-            if (string.IsNullOrEmpty(sid))
+            if (string.IsNullOrEmpty(token))
             {
-                throw new ArgumentNullException("sid");
+                throw new ArgumentNullException("token");
             }
 
-            var records = this._dataContext.QueryAsDictionary(SelectByIdSql, sid);
+            var records = this._dataContext.QueryAsDictionary(SelectByIdSql, token);
             if (records.Length > 1)
             {
                 throw new Exceptions.DataException("More than one session id in table [core_session]!");
@@ -77,45 +77,45 @@ namespace ObjectServer
 
             //TODO 移为静态变量
             var sql = SqlString.Parse(
-                @"insert into ""core_session""(""sid"", ""start_time"", ""last_activity_time"", ""userid"", ""login"") values(?,?,?,?,?)");
-            var n = this._dataContext.Execute(sql, session.Id, session.StartTime, session.LastActivityTime, session.UserId, session.Login);
+                @"insert into ""core_session""(""token"", ""start_time"", ""last_activity_time"", ""userid"", ""login"") values(?,?,?,?,?)");
+            var n = this._dataContext.Execute(sql, session.Token, session.StartTime, session.LastActivityTime, session.UserId, session.Login);
             if (n != 1)
             {
                 throw new Exceptions.DataException("Failed to put session");
             }
         }
 
-        public void Remove(string sid)
+        public void Remove(string token)
         {
-            if (string.IsNullOrEmpty(sid))
+            if (string.IsNullOrEmpty(token))
             {
-                throw new ArgumentNullException("sid");
+                throw new ArgumentNullException("token");
             }
 
-            var sql = SqlString.Parse("delete from core_session where sid=?");
-            var n = this._dataContext.Execute(sql, sid);
+            var sql = SqlString.Parse("delete from core_session where token=?");
+            var n = this._dataContext.Execute(sql, token);
             if (n != 1)
             {
                 throw new Exceptions.DataException("Failed to remove session");
             }
         }
 
-        public void Pulse(string sid)
+        public void Pulse(string token)
         {
-            if (string.IsNullOrEmpty(sid))
+            if (string.IsNullOrEmpty(token))
             {
-                throw new ArgumentNullException("sid");
+                throw new ArgumentNullException("token");
             }
 
-            var s = this.GetById(sid);
+            var s = this.GetByToken(token);
             if (s.IsActive)
             {
                 var now = DateTime.Now;
-                this._dataContext.Execute(UpdateLastActivityTimeSql, now, now, sid);
+                this._dataContext.Execute(UpdateLastActivityTimeSql, now, now, token);
             }
             else
             {
-                this.Remove(sid);
+                this.Remove(token);
             }
         }
     }

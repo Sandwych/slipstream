@@ -15,13 +15,13 @@ namespace ObjectServer
     public sealed class UserSession
     {
         private static readonly SqlString SelectByIdSql =
-            new SqlString(@"select * from ""core_session"" where ""sid"" = ", Parameter.Placeholder);
+            new SqlString(@"select * from ""core_session"" where ""token"" = ", Parameter.Placeholder);
         private static readonly SqlString SelectByUserIdSql =
             new SqlString(@"select * from ""core_session"" where ""userid"" = ", Parameter.Placeholder);
         private static readonly SqlString UpdateLastActivityTimeSql = SqlString.Parse(
-            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""sid"" = ?");
+            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""token"" = ?");
 
-        public const int IdLength = 16;
+        public const int TokenLength = 16;
         public const string SystemUserName = "system";
         public const long SystemUserId = 0;
 
@@ -32,7 +32,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("record");
             }
 
-            this.Id = (string)record["sid"];
+            this.Token = (string)record["token"];
             this.Login = (string)record["login"];
             this.UserId = (long)record["userid"];
             this.LastActivityTime = (DateTime)record["last_activity_time"];
@@ -61,7 +61,7 @@ namespace ObjectServer
         private UserSession()
         {
             this.UserId = 0;
-            this.Id = GenerateSessionId();
+            this.Token = GenerateSessionId();
             this.StartTime = DateTime.Now;
             this.LastActivityTime = this.StartTime;
         }
@@ -76,7 +76,7 @@ namespace ObjectServer
 
         private static string GenerateSessionId()
         {
-            var bytes = new byte[IdLength];
+            var bytes = new byte[TokenLength];
             using (var rng = RNGCryptoServiceProvider.Create())
             {
                 rng.GetBytes(bytes);
@@ -88,7 +88,7 @@ namespace ObjectServer
             }
         }
 
-        public string Id { get; set; }
+        public string Token { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime LastActivityTime { get; set; }
         public string Login { get; set; }

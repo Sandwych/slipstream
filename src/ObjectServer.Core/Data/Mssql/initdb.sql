@@ -90,18 +90,18 @@ GO
 CREATE UNIQUE INDEX index_core_model_data_name ON core_model_data ([name]);
 GO
 
-CREATE TABLE core_session (
-	_id BIGINT NOT NULL IDENTITY(1,1),
-	sid NVARCHAR(128) NOT NULL,
-	start_time DATETIME NOT NULL,
-	last_activity_time DATETIME NOT NULL,
-	userid BIGINT NOT NULL,
+CREATE TABLE [core_session] (
+	[_id] BIGINT NOT NULL IDENTITY(1,1),
+	[token] NVARCHAR(128) NOT NULL,
+	[start_time] DATETIME NOT NULL,
+	[last_activity_time] DATETIME NOT NULL,
+	[userid] BIGINT NOT NULL,
 	[login] NVARCHAR(128) NOT NULL,
 	PRIMARY KEY(_id)
 );
 GO
 
-CREATE UNIQUE INDEX index_core_sessionid ON core_session([sid]);
+CREATE UNIQUE INDEX [index_core_sessionid] ON [core_session]([token]);
 GO
 
 -- 下面全部是存储过程/函数

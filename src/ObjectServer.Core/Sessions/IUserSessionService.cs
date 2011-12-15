@@ -9,10 +9,10 @@ namespace ObjectServer
 {
     public interface IUserSessionService
     {
-        UserSession GetById(string sid);
+        UserSession GetByToken(string token);
         UserSession GetByUserId(long userId);
         void Put(UserSession session);
-        void Remove(string sid);
-        void Pulse(string sid);
+        void Remove(string token);
+        void Pulse(string token);
     }
 }

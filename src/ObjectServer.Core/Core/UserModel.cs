@@ -251,13 +251,13 @@ namespace ObjectServer.Core
         }
 
 
-        public void LogOff(IServiceContext ctx, string sessionId)
+        public void LogOff(IServiceContext ctx, string sessionToken)
         {
-            var session = ctx.UserSessionService.GetById(sessionId);
+            var session = ctx.UserSessionService.GetByToken(sessionToken);
 
             if (session != null)
             {
-                ctx.UserSessionService.Remove(sessionId);
+                ctx.UserSessionService.Remove(sessionToken);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
                     String.Format("User[{0}.{1}] logged out.", ctx.DataContext.DatabaseName, session.Login));
@@ -265,7 +265,7 @@ namespace ObjectServer.Core
             else
             {
                 LoggerProvider.EnvironmentLogger.Warn(() =>
-                    String.Format("One connection try to log off a unexisted session: {0}", sessionId));
+                    String.Format("One connection try to log off a unexisted session: {0}", sessionToken));
             }
         }
 
@@ -320,14 +320,14 @@ namespace ObjectServer.Core
             }
             else if (!oldSession.IsActive)
             {
-                ctx.UserSessionService.Remove(oldSession.Id);
+                ctx.UserSessionService.Remove(oldSession.Token);
                 var newSession = new UserSession(login, uid);
                 ctx.UserSessionService.Put(newSession);
                 return newSession;
             }
             else
             {
-                ctx.UserSessionService.Pulse(oldSession.Id);
+                ctx.UserSessionService.Pulse(oldSession.Token);
                 return oldSession;
             }
         }

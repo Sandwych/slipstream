@@ -95,7 +95,7 @@ GO
 
 CREATE TABLE core_session (
 	_id BIGSERIAL NOT NULL,
-	sid VARCHAR(128) NOT NULL,
+	"token" VARCHAR(128) NOT NULL,
 	start_time TIMESTAMP NOT NULL,
 	last_activity_time TIMESTAMP NOT NULL,
 	userid BIGINT NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE core_session (
 );
 GO
 
-CREATE UNIQUE INDEX index_core_sessionid ON core_session("sid");
+CREATE UNIQUE INDEX index_core_sessionid ON core_session("token");
 GO
 
 -- 下面全部是存储过程/函数

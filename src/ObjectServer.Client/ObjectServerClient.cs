@@ -23,13 +23,13 @@ namespace ObjectServer.Client
             this.jsonRpcClient = new JsonRpcClient(this.Uri);
         }
 
-        public string SessionId { get; private set; }
+        public string SessionToken { get; private set; }
         public string LoggedUserName { get; private set; }
         public string LoggedDatabase { get; private set; }
         public Uri Uri { get; private set; }
         public Uri ServerAddress { get; private set; }
 
-        public bool Logged { get { return !string.IsNullOrEmpty(this.SessionId); } }
+        public bool Logged { get { return !string.IsNullOrEmpty(this.SessionToken); } }
 
         public void GetVersion(Action<Version, Exception> resultCallback)
         {
@@ -85,7 +85,7 @@ namespace ObjectServer.Client
             this.jsonRpcClient.Invoke("logOn", new object[] { dbName, userName, password }, (result, error) =>
             {
                 var sid = (string)result;
-                this.SessionId = sid;
+                this.SessionToken = sid;
                 this.LoggedDatabase = dbName;
                 this.LoggedUserName = userName;
                 resultCallback(sid, error);
@@ -97,10 +97,10 @@ namespace ObjectServer.Client
         {
             Debug.Assert(this.Logged);
 
-            var args = new object[] { this.LoggedDatabase, this.SessionId };
+            var args = new object[] { this.LoggedDatabase, this.SessionToken };
             this.jsonRpcClient.Invoke("logOff", args, (result, error) =>
             {
-                this.SessionId = null;
+                this.SessionToken = null;
                 resultCallback(error);
             });
         }
@@ -110,7 +110,7 @@ namespace ObjectServer.Client
         {
             Debug.Assert(this.Logged);
 
-            var args = new object[] { this.LoggedDatabase, this.SessionId, objectName, method, parameters };
+            var args = new object[] { this.LoggedDatabase, this.SessionToken, objectName, method, parameters };
             this.jsonRpcClient.Invoke("execute", args, (result, error) =>
             {
                 resultCallback(result, error);

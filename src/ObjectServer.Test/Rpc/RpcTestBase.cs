@@ -19,10 +19,10 @@ namespace ObjectServer
         {
             var args = new object[] { "objectserver", "root", "root" };
             var result = JsonRpc("LogOn", args);
-            this.SessionId = (string)result["result"];
+            this.SessionToken = (string)result["result"];
         }
 
-        public string SessionId { get; private set; }
+        public string SessionToken { get; private set; }
 
         public static IDictionary<string, object> JsonRpc(string method, params object[] args)
         {

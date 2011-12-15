@@ -34,16 +34,16 @@ namespace ObjectServer
                 SlipstreamEnvironment.RootService.CreateDatabase(hashedRootPassword, TestingDatabaseName, "root");
             }
 
-            this.SessionId = service.LogOn(TestingDatabaseName, "root", "root");
+            this.SessionToken = service.LogOn(TestingDatabaseName, "root", "root");
         }
 
         [TestFixtureTearDown]
         public virtual void DisposeFramework()
         {
             var service = SlipstreamEnvironment.RootService;
-            service.LogOff(TestingDatabaseName, this.SessionId);
+            service.LogOff(TestingDatabaseName, this.SessionToken);
         }
 
-        public string SessionId { get; private set; }
+        public string SessionToken { get; private set; }
     }
 }
