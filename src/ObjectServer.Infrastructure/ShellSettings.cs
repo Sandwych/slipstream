@@ -16,11 +16,11 @@ namespace ObjectServer
     /// </summary>
     [Serializable]
     [XmlRoot("objectserver-config")]
-    public sealed class Config
+    public sealed class ShellSettings
     {
         public const string AppDataDirectoryName = "ObjectServer";
 
-        public Config()
+        public ShellSettings()
         {
             this.AppDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -41,17 +41,18 @@ namespace ObjectServer
             this.LoggingSql = false;
 
 #if DEBUG
+            this.RpcHandlerMax = Environment.ProcessorCount;
             this.Debug = true;
             this.LogLevel = "debug";
             this.LogToConsole = true;
 #else
+            this.RpcHandlerMax = Math.Max(Environment.ProcessorCount, 25);
             this.Debug = false;
             this.LogLevel = "info";
             this.LoggingSql = false;
             this.LogToConsole = false;
 #endif
 
-            this.RpcHandlerMax = Environment.ProcessorCount;
 
             this.RpcHandlerUrl = "inproc://rpc-handlers";
             this.RpcBusUrl = "inproc://rpc-entrance";
@@ -137,7 +138,7 @@ namespace ObjectServer
         [XmlElement("max-request-size", IsNullable = false)]
         public int MaxRequestSize { get; set; }
 
-        public static Config Load(string filepath)
+        public static ShellSettings Load(string filepath)
         {
             if (string.IsNullOrEmpty(filepath))
             {
@@ -152,29 +153,29 @@ namespace ObjectServer
             }
         }
 
-        public static Config Load(Stream stream)
+        public static ShellSettings Load(Stream stream)
         {
             if (stream == null)
             {
                 throw new ArgumentNullException("stream");
             }
 
-            XmlSerializer xs = new XmlSerializer(typeof(Config));
-            var obj = (Config)xs.Deserialize(stream);
+            XmlSerializer xs = new XmlSerializer(typeof(ShellSettings));
+            var obj = (ShellSettings)xs.Deserialize(stream);
             return obj;
         }
 
-        public static Config Load(XmlNode node)
+        public static ShellSettings Load(XmlNode node)
         {
             if (node == null)
             {
                 throw new ArgumentNullException("node");
             }
 
-            XmlSerializer xs = new XmlSerializer(typeof(Config));
+            XmlSerializer xs = new XmlSerializer(typeof(ShellSettings));
             using (var reader = new XmlNodeReader(node))
             {
-                var obj = (Config)xs.Deserialize(reader);
+                var obj = (ShellSettings)xs.Deserialize(reader);
                 return obj;
             }
         }

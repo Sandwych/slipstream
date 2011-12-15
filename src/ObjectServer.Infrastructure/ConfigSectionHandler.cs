@@ -13,7 +13,7 @@ namespace ObjectServer
     {
         public object Create(object parent, object configContext, XmlNode section)
         {
-            return Config.Load(section);
+            return ShellSettings.Load(section);
         }
     }
 }

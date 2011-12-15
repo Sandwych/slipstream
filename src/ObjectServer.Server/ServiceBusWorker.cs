@@ -7,11 +7,11 @@ using System.Diagnostics;
 
 namespace ObjectServer.Server
 {
-    public sealed class RpcBusWorker : AbstractWorker
+    public sealed class ServiceBusWorker : AbstractWorker
     {
         private Thread workerThread = null;
 
-        public RpcBusWorker()
+        public ServiceBusWorker()
             : base("STOP-RPC")
         {
 
@@ -20,14 +20,14 @@ namespace ObjectServer.Server
                 throw new InvalidOperationException("无法应用启动服务器，请先初始化框架");
             }
 
-            if (SlipstreamEnvironment.Configuration.RpcHandlerMax <= 0)
+            if (SlipstreamEnvironment.Settings.RpcHandlerMax <= 0)
             {
                 throw new IndexOutOfRangeException("无效的工人数量");
             }
 
-            this.RpcHandlerMax = SlipstreamEnvironment.Configuration.RpcHandlerMax;
-            this.RpcHandlerUrl = SlipstreamEnvironment.Configuration.RpcHandlerUrl;
-            this.RpcHostUrl = SlipstreamEnvironment.Configuration.RpcBusUrl;
+            this.RpcHandlerMax = SlipstreamEnvironment.Settings.RpcHandlerMax;
+            this.RpcHandlerUrl = SlipstreamEnvironment.Settings.RpcHandlerUrl;
+            this.RpcHostUrl = SlipstreamEnvironment.Settings.RpcBusUrl;
         }
 
         public int RpcHandlerMax { get; private set; }
@@ -58,7 +58,7 @@ namespace ObjectServer.Server
                 hostUrl, workersUrl));
 
             using (var pool = new ZMQ.ZMQDevice.WorkerPool(
-                hostUrl, workersUrl, RpcDispatcher.ProcessingLoop, (short)this.RpcHandlerMax))
+                hostUrl, workersUrl, ServiceDispatcher.ProcessingLoop, (short)this.RpcHandlerMax))
             {
                 this.WaitToStop(pool);
             }

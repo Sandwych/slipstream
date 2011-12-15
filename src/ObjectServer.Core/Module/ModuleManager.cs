@@ -22,7 +22,7 @@ namespace ObjectServer
     /// <summary>
     /// 
     /// </summary>
-    public interface IModuleManager : IGlobalObject
+    public interface IModuleManager
     {
         bool Contains(string moduleName);
         Module GetModule(string moduleName);
@@ -39,30 +39,20 @@ namespace ObjectServer
     {
         private const string ModuleMetaDataFileName = "module.xml";
 
+        private readonly ShellSettings _shellSettings;
+
         /// <summary>
         /// 整个系统中发现的所有模块
         /// </summary>
         private List<Module> allModules = new List<Module>();
 
-        public ModuleManager()
+        public ModuleManager(ShellSettings shellSettings)
         {
+            LoggerProvider.EnvironmentLogger.Info(() => "Module Management Subsystem Initializing...");
+
+            this._shellSettings = shellSettings;
             this.allModules.Add(Module.CoreModule);
         }
-
-
-        #region IGlobalObject 成员
-
-        public void Initialize(Config cfg)
-        {
-            if (cfg == null)
-            {
-                throw new ArgumentNullException("cfg");
-            }
-
-            this.LookupAllModules(cfg.ModulePath);
-        }
-
-        #endregion
 
 
         public bool Contains(string moduleName)
@@ -143,8 +133,7 @@ namespace ObjectServer
 
             LoggerProvider.EnvironmentLogger.Info("Updating _modules list...");
 
-            var cfg = SlipstreamEnvironment.Configuration;
-            this.LookupAllModules(cfg.ModulePath);
+            this.LookupAllModules(this._shellSettings.ModulePath);
 
             var sql = new SqlString("select name from core_module");
             var moduleNames = new HashSet<string>(dbctx.QueryAsArray<string>(sql));

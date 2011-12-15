@@ -16,7 +16,7 @@ namespace ObjectServer
         [TestFixtureSetUp()]
         public virtual void InitFramework()
         {
-            var cfg = new Config();
+            var cfg = new ShellSettings();
             cfg.DbName = TestingDatabaseName;
 
             if (!SlipstreamEnvironment.Initialized)
@@ -30,7 +30,7 @@ namespace ObjectServer
             if (!dbs.Contains(TestingDatabaseName))
             {
                 var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(
-                    SlipstreamEnvironment.Configuration.ServerPassword);
+                    SlipstreamEnvironment.Settings.ServerPassword);
                 SlipstreamEnvironment.RootService.CreateDatabase(hashedRootPassword, TestingDatabaseName, "root");
             }
 

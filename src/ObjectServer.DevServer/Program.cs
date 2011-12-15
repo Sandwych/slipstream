@@ -12,7 +12,7 @@ namespace ObjectServer.Server
 {
     class DevServerProgram
     {
-        private static Config CreateConfigViaProgramArgs(string[] args)
+        private static ShellSettings CreateConfigViaProgramArgs(string[] args)
         {
             bool isShowHelp = false;
             bool isShowVersion = false;
@@ -20,7 +20,7 @@ namespace ObjectServer.Server
             var p = new OptionSet() {
                 { "h|?|help",  v => isShowHelp = v != null },
                 { "version",   v => isShowVersion = v != null },
-                { "c|_config=", v => configPath = v },
+                { "c|_shellSettings=", v => configPath = v },
             };
 
             var extra = p.Parse(args);
@@ -32,7 +32,7 @@ namespace ObjectServer.Server
                 Console.WriteLine("  osdevsvr.exe [Options]");
                 Console.WriteLine();
                 Console.WriteLine("Options:");
-                Console.WriteLine("  -c CONF_FILE\t\tLoad settings from CONF_FILE");
+                Console.WriteLine("  -c CONF_FILE\t\tLoad shellSettings from CONF_FILE");
                 Console.WriteLine("  --version\t\tShow version information");
                 Console.WriteLine("  -h|-?|--help\t\tShow this help text");
                 System.Environment.Exit(0);
@@ -46,11 +46,11 @@ namespace ObjectServer.Server
 
             if (string.IsNullOrEmpty(configPath))
             {
-                return new Config();
+                return new ShellSettings();
             }
             else
             {
-                return Config.Load(configPath);
+                return ShellSettings.Load(configPath);
             }
         }
 
@@ -82,8 +82,8 @@ namespace ObjectServer.Server
                     WaitToQuit();
 
                     Console.WriteLine("开始广播停止命令...");
-                    var role = SlipstreamEnvironment.Configuration.Role;
-                    if (role == ServerRoles.Standalone || role == ServerRoles.Supervisor)
+                    var role = SlipstreamEnvironment.Settings.Role;
+                    if (role == ServerRoles.Standalone || role == ServerRoles.Controller)
                     {
                         server.BeginStopAll();
                     }
@@ -146,8 +146,8 @@ namespace ObjectServer.Server
             Console.WriteLine("ObjectServer 框架已经成功初始化");
 
             Console.WriteLine("日志文件目录=[{0}]，应用服务器主机 URL=[{1}]",
-                SlipstreamEnvironment.Configuration.LogPath,
-                SlipstreamEnvironment.Configuration.RpcBusUrl);
+                SlipstreamEnvironment.Settings.LogPath,
+                SlipstreamEnvironment.Settings.RpcBusUrl);
         }
 
     }

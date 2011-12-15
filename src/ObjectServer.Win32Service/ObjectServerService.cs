@@ -25,7 +25,7 @@ namespace ObjectServer.Server
         {
             Debug.Assert(this.serverThread == null);
 
-            var cs = new RpcBusWorker();
+            var cs = new ServiceBusWorker();
             this.serverThread = new Thread(cs.Start);
             this.serverThread.Start();
         }

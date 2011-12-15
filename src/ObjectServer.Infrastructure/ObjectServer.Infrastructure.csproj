@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
+    <Compile Include="ShellSettings.cs" />
     <Compile Include="ConfigSectionHandler.cs" />
     <Compile Include="NLogLogger.cs" />
     <Compile Include="ILogger.cs" />

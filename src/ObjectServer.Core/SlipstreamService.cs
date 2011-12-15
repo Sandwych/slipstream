@@ -135,7 +135,7 @@ namespace ObjectServer
 
         private static void VerifyRootPassword(string rootPasswordHash)
         {
-            var cfgRootPasswordHash = SlipstreamEnvironment.Configuration.ServerPassword.ToSha();
+            var cfgRootPasswordHash = SlipstreamEnvironment.Settings.ServerPassword.ToSha();
             if (rootPasswordHash != cfgRootPasswordHash)
             {
                 throw new ObjectServer.Exceptions.SecurityException("Invalid password of root user");

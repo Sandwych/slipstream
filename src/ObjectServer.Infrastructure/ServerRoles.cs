@@ -17,7 +17,7 @@ namespace ObjectServer
         [XmlEnum("httpd")]
         HttpServer,
 
-        [XmlEnum("supervisor")]
-        Supervisor
+        [XmlEnum("controller")]
+        Controller
     }
 }

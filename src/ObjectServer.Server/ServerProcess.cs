@@ -11,7 +11,7 @@ namespace ObjectServer.Server
     public sealed class ServerProcess : IDisposable
     {
         private bool disposed = false;
-        private Server.Supervisor m_supervisor = null;
+        private Server.BusController _busController = null;
 
         ~ServerProcess()
         {
@@ -25,12 +25,12 @@ namespace ObjectServer.Server
                 throw new ObjectDisposedException("ServerProcess");
             }
 
-            var cfg = SlipstreamEnvironment.Configuration;
+            var cfg = SlipstreamEnvironment.Settings;
 
-            if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Supervisor)
+            if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Controller)
             {
-                this.m_supervisor = new Supervisor();
-                this.m_supervisor.Start();
+                this._busController = new BusController();
+                this._busController.Start();
             }
 
             Thread.Sleep(1000); //去掉此处，改为回报模式
@@ -53,12 +53,12 @@ namespace ObjectServer.Server
                 throw new ObjectDisposedException("ServerProcess");
             }
 
-            if (this.m_supervisor == null)
+            if (this._busController == null)
             {
                 throw new InvalidOperationException();
             }
 
-            this.m_supervisor.BeginStopAll();
+            this._busController.BeginStopAll();
         }
 
         public void BeginStopRpcWorkers()
@@ -68,12 +68,12 @@ namespace ObjectServer.Server
                 throw new ObjectDisposedException("ServerProcess");
             }
 
-            if (this.m_supervisor == null)
+            if (this._busController == null)
             {
                 throw new InvalidOperationException();
             }
 
-            this.m_supervisor.BeginStopRpcWorkers();
+            this._busController.BeginStopRpcWorkers();
         }
 
         public void BeginStopHttpServer()
@@ -83,19 +83,19 @@ namespace ObjectServer.Server
                 throw new ObjectDisposedException("ServerProcess");
             }
 
-            if (this.m_supervisor == null)
+            if (this._busController == null)
             {
                 throw new InvalidOperationException();
             }
 
-            this.m_supervisor.BeginStopHttpServer();
+            this._busController.BeginStopHttpServer();
         }
 
-        private static RpcBusWorker StartApplicationServer()
+        private static ServiceBusWorker StartApplicationServer()
         {
             LoggerProvider.EnvironmentLogger.Info("Starting application server...");
 
-            var rpcHostWorker = new RpcBusWorker();
+            var rpcHostWorker = new ServiceBusWorker();
             rpcHostWorker.Start();
 
             Console.WriteLine("Application server is started.");
@@ -109,9 +109,9 @@ namespace ObjectServer.Server
             var serverThread = new Thread(() =>
             {
                 using (var cs = new ObjectServer.Http.AnnaHttpServer(
-                    SlipstreamEnvironment.Configuration.BroadcastUrl,
-                    SlipstreamEnvironment.Configuration.RpcBusUrl,
-                    SlipstreamEnvironment.Configuration.HttpListenUrl))
+                    SlipstreamEnvironment.Settings.BroadcastUrl,
+                    SlipstreamEnvironment.Settings.RpcBusUrl,
+                    SlipstreamEnvironment.Settings.HttpListenUrl))
                 {
                     cs.Start();
                 }
@@ -138,10 +138,10 @@ namespace ObjectServer.Server
                 }
 
                 //释放托管资源
-                var role = SlipstreamEnvironment.Configuration.Role;
-                if (role == ServerRoles.Standalone || role == ServerRoles.Supervisor)
+                var role = SlipstreamEnvironment.Settings.Role;
+                if (role == ServerRoles.Standalone || role == ServerRoles.Controller)
                 {
-                    this.m_supervisor.Dispose();
+                    this._busController.Dispose();
                 }
 
                 this.disposed = true;

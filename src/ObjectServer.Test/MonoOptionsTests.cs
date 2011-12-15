@@ -50,7 +50,7 @@ namespace ObjectServer.Test
             var p = new OptionSet() {
                 { "h|?|help",  v => {} },
                 { "version",   v => {} },
-                { "c|cfg=",   v => { cfgItems.Add(v.Trim()); } },
+                { "c|shellSettings=",   v => { cfgItems.Add(v.Trim()); } },
             };
 
             var extras = p.Parse(args);

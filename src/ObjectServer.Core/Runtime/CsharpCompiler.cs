@@ -50,7 +50,7 @@ namespace ObjectServer.Runtime
         private static CompilerParameters CreateCompilerParameters()
         {
             var selfAssembly = Assembly.GetExecutingAssembly();
-            var infrastructureAssembly = typeof(Config).Assembly;
+            var infrastructureAssembly = typeof(ShellSettings).Assembly;
             var commonAssembly = typeof(ObjectExtensions).Assembly;
 
             //设置编译参数，加入所需的组件 
@@ -65,7 +65,7 @@ namespace ObjectServer.Runtime
             options.ReferencedAssemblies.Add(selfAssembly.Location);
             options.GenerateInMemory = true;
             options.GenerateExecutable = false;
-            options.IncludeDebugInformation = SlipstreamEnvironment.Configuration.Debug;
+            options.IncludeDebugInformation = SlipstreamEnvironment.Settings.Debug;
 
             return options;
         }

@@ -102,7 +102,7 @@ namespace ObjectServer
                 {
                     throw new InvalidOperationException("Framework uninitialized");
                 }
-                var timeout = new TimeSpan(0, SlipstreamEnvironment.Configuration.SessionTimeoutMinutes, 0);
+                var timeout = new TimeSpan(0, SlipstreamEnvironment.Settings.SessionTimeoutMinutes, 0);
                 return this.LastActivityTime + timeout;
             }
         }

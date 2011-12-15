@@ -35,11 +35,11 @@ namespace ObjectServer.Http
 
         private bool disposed = false;
 
-        public AnnaHttpServer(string supervisorUrl, string rpcHostUrl, string httpUrl)
+        public AnnaHttpServer(string busControllerUrl, string rpcHostUrl, string httpUrl)
         {
-            if (string.IsNullOrEmpty(supervisorUrl))
+            if (string.IsNullOrEmpty(busControllerUrl))
             {
-                throw new ArgumentNullException("supervisorUrl");
+                throw new ArgumentNullException("busControllerUrl");
             }
 
             if (string.IsNullOrEmpty(rpcHostUrl))
@@ -54,7 +54,7 @@ namespace ObjectServer.Http
 
             LoggerProvider.EnvironmentLogger.Info("Starting HTTP Server...");
 
-            broadcastSocket.Connect(supervisorUrl);
+            broadcastSocket.Connect(busControllerUrl);
             broadcastSocket.Subscribe("STOP-HTTPD", Encoding.UTF8);
 
             if (!httpUrl.EndsWith("/"))

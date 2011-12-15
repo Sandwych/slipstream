@@ -25,7 +25,7 @@ namespace ObjectServer.Data
             string dbTypeName;
             if (SlipstreamEnvironment.Initialized)
             {
-                dbTypeName = SlipstreamEnvironment.Configuration.DbType;
+                dbTypeName = SlipstreamEnvironment.Settings.DbType;
             }
             else
             {

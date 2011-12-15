@@ -41,7 +41,7 @@ order by l.name asc
 
         public string[] ListDatabases()
         {
-            var dbUser = SlipstreamEnvironment.Configuration.DbUser;
+            var dbUser = SlipstreamEnvironment.Settings.DbUser;
 
             using (var ctx = this.OpenDataContext())
             {

@@ -26,24 +26,26 @@ namespace ObjectServer
         private readonly Autofac.IContainer _rootContainer;
         private readonly IDbDomainManager _dbDomains;
         private readonly IModuleManager _modules;
-        private Config _config;
+        private ShellSettings _shellSettings;
         private bool _initialized;
         private readonly ISlipstreamService _exportedService;
 
-        private SlipstreamEnvironment(Config cfg)
+        private SlipstreamEnvironment(ShellSettings cfg)
         {
             var containerBuilder = new Autofac.ContainerBuilder();
             RegisterInsideComponents(containerBuilder, cfg);
 
             this._rootContainer = containerBuilder.Build();
 
+            this._shellSettings = this._rootContainer.Resolve<ShellSettings>();
             this._dbDomains = this._rootContainer.Resolve<IDbDomainManager>();
             this._modules = this._rootContainer.Resolve<IModuleManager>();
             this._exportedService = this._rootContainer.Resolve<ISlipstreamService>();
         }
 
-        private static void RegisterInsideComponents(ContainerBuilder containerBuilder, Config cfg)
+        private static void RegisterInsideComponents(ContainerBuilder containerBuilder, ShellSettings cfg)
         {
+            containerBuilder.RegisterInstance(cfg).SingleInstance();
             containerBuilder.RegisterType<DbDomainManager>()
                 .As<IDbDomainManager>().SingleInstance();
             containerBuilder.RegisterType<ModuleManager>()
@@ -101,7 +103,7 @@ namespace ObjectServer
         public static void Initialize(string configPath)
         {
             var json = File.ReadAllText(configPath, Encoding.UTF8);
-            var cfg = JsonConvert.DeserializeObject<Config>(json);
+            var cfg = JsonConvert.DeserializeObject<ShellSettings>(json);
             TryInitialize(cfg);
         }
 
@@ -110,7 +112,7 @@ namespace ObjectServer
         /// </summary>
         /// <param name="config"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void Initialize(Config config)
+        public static void Initialize(ShellSettings config)
         {
             TryInitialize(config);
         }
@@ -128,42 +130,28 @@ namespace ObjectServer
             }
             else
             {
-                var cfg = new Config();
+                var cfg = new ShellSettings();
                 TryInitialize(cfg);
             }
         }
 
-        private static void TryInitialize(Config cfg)
+        private static void TryInitialize(ShellSettings shellSettings)
         {
-            if (cfg == null)
+            if (shellSettings == null)
             {
-                throw new ArgumentNullException("cfg");
+                throw new ArgumentNullException("shellSettings");
             }
 
             //We must initialize the logging subsystem first
-            ConfigurateLogger(cfg);
+            ConfigurateLogger(shellSettings);
             LoggerProvider.EnvironmentLogger.Info("The Logging Subsystem has been _initialized");
 
-            var env = new SlipstreamEnvironment(cfg);
+            var env = new SlipstreamEnvironment(shellSettings);
             s_instance = env;
 
-
-
-            //查找所有模块并加载模块元信息
-            LoggerProvider.EnvironmentLogger.Info(() => "Module Management Subsystem Initializing...");
-            if (!string.IsNullOrEmpty(cfg.ModulePath))
-            {
-                s_instance._modules.Initialize(cfg);
-            }
-
-            s_instance._config = cfg;
+            s_instance._shellSettings = shellSettings;
             s_instance._initialized = true;
-            LoggerProvider.EnvironmentLogger.Info(() => "The environment has been _initialized.");
-
-            LoggerProvider.EnvironmentLogger.Info(() => "Initializing databases...");
-            s_instance._dbDomains.Initialize(cfg);
-
-            LoggerProvider.EnvironmentLogger.Info(() => "Runtime environment successfully _initialized.");
+            LoggerProvider.EnvironmentLogger.Info(() => "Runtime environment successfully initialized.");
         }
 
         public static void Shutdown()
@@ -203,17 +191,17 @@ namespace ObjectServer
         }
         */
 
-        private static void ConfigurateLogger(Config cfg)
+        private static void ConfigurateLogger(ShellSettings cfg)
         {
             LoggerProvider.Configurate(cfg);
         }
 
 
-        public static Config Configuration
+        public static ShellSettings Settings
         {
             get
             {
-                return Instance._config;
+                return Instance._shellSettings;
             }
         }
 

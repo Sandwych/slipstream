@@ -7,7 +7,6 @@ namespace ObjectServer
 {
     public interface IDbDomainManager : IDisposable
     {
-        void Initialize(Config cfg);
         void Register(string dbName, bool isUpdate);
         IDbDomain GetDbDomain(string dbName);
         void Remove(string dbName);

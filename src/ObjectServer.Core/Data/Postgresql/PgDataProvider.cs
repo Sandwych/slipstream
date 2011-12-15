@@ -41,7 +41,7 @@ select datname from pg_database
 
         public string[] ListDatabases()
         {
-            var dbUser = SlipstreamEnvironment.Configuration.DbUser;
+            var dbUser = SlipstreamEnvironment.Settings.DbUser;
 
             using (var ctx = this.OpenDataContext())
             {

@@ -79,7 +79,7 @@ namespace ObjectServer.Data.Test
         {
             var dbName = "oo_testdb";
             SlipstreamEnvironment.Initialize();
-            var hash = SlipstreamEnvironment.Configuration.ServerPassword.ToSha();
+            var hash = SlipstreamEnvironment.Settings.ServerPassword.ToSha();
 
             var service = SlipstreamEnvironment.RootService;
             service.CreateDatabase(hash, dbName, "admin");

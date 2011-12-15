@@ -16,7 +16,7 @@ namespace ObjectServer.Server
         {
             this.ID = Guid.NewGuid();
 
-            this.broadcastSocket.Connect(SlipstreamEnvironment.Configuration.BroadcastUrl);
+            this.broadcastSocket.Connect(SlipstreamEnvironment.Settings.BroadcastUrl);
             this.broadcastSocket.Subscribe(stopCommand, Encoding.UTF8);
         }
 

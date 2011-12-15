@@ -19,17 +19,17 @@ namespace ObjectServer.Server
     /// <summary>
     /// 处理 JSON-RPC 的 分发器
     /// </summary>
-    public static class RpcDispatcher
+    public static class ServiceDispatcher
     {
         private static readonly Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
         private static readonly ISlipstreamService s_service = SlipstreamEnvironment.RootService;
         private static readonly object s_lockObj = new object();
         private static bool s_running = false;
 
-        static RpcDispatcher()
+        static ServiceDispatcher()
         {
             //注册自己的所有方法
-            var selfType = typeof(RpcDispatcher);
+            var selfType = typeof(ServiceDispatcher);
             s_methods.Add("system.echo", selfType.GetMethod("Echo"));
             s_methods.Add("system.listMethods", selfType.GetMethod("ListMethods"));
 
@@ -104,8 +104,8 @@ namespace ObjectServer.Server
                     "Unable to start PRC-Handler thread, please initialize the environment first.");
             }
 
-            var broadcastUrl = SlipstreamEnvironment.Configuration.BroadcastUrl;
-            var rpcHandlerUrl = SlipstreamEnvironment.Configuration.RpcHandlerUrl;
+            var broadcastUrl = SlipstreamEnvironment.Settings.BroadcastUrl;
+            var rpcHandlerUrl = SlipstreamEnvironment.Settings.RpcHandlerUrl;
             var id = Guid.NewGuid();
             LoggerProvider.EnvironmentLogger.Debug(
                 () => string.Format("Starting RpcHandler thread[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
@@ -122,7 +122,7 @@ namespace ObjectServer.Server
 
                 var items = new PollItem[2];
                 items[0] = broadcastSocket.CreatePollItem(IOMultiPlex.POLLIN);
-                items[0].PollInHandler += new PollHandler(SupervisorPollInHandler);
+                items[0].PollInHandler += new PollHandler(BusControllerPollInHandler);
 
                 items[1] = receiver.CreatePollItem(IOMultiPlex.POLLIN);
                 items[1].PollInHandler += new PollHandler(ReceiverPollInHandler);
@@ -143,7 +143,7 @@ namespace ObjectServer.Server
             }
         }
 
-        private static void SupervisorPollInHandler(Socket socket, IOMultiPlex revents)
+        private static void BusControllerPollInHandler(Socket socket, IOMultiPlex revents)
         {
             Debug.Assert(socket != null);
 

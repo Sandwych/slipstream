@@ -19,31 +19,24 @@ namespace ObjectServer
     /// </summary>
     internal sealed class DbDomainManager : IDbDomainManager
     {
-        private Config config;
+        private ShellSettings _shellSettings;
         private Dictionary<string, IDbDomain> dbProfiles =
             new Dictionary<string, IDbDomain>();
         private bool disposed = false;
         private readonly IDataProvider _dataProvider;
         private readonly IModuleManager _modules;
 
-        public DbDomainManager(IDataProvider dataProvider, IModuleManager modules)
+        public DbDomainManager(IDataProvider dataProvider, IModuleManager modules, ShellSettings settings)
         {
+            LoggerProvider.EnvironmentLogger.Info(() => "Initializing databases...");
             this._dataProvider = dataProvider;
             this._modules = modules;
+            this._shellSettings = settings;
         }
 
         ~DbDomainManager()
         {
             this.Dispose(false);
-        }
-
-        public void Initialize(Config cfg)
-        {
-            Debug.Assert(cfg != null);
-
-            this.config = cfg;
-
-            LoggerProvider.EnvironmentLogger.Info("DbProfileCollection has been loaded.");
         }
 
         public void Register(string dbName, bool isUpdate)

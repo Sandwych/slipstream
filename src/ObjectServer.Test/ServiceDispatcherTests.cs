@@ -14,7 +14,7 @@ namespace ObjectServer.Test
         [Ignore]
         public void CreateAndDeleteDatabaseShouldBeSuccessfully()
         {
-            var cfg = new Config();
+            var cfg = new ShellSettings();
 
             if (!SlipstreamEnvironment.Initialized)
             {
@@ -23,7 +23,7 @@ namespace ObjectServer.Test
 
             var dbName = "os-testdb";
             var adminPassword = "root";
-            var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(SlipstreamEnvironment.Configuration.ServerPassword);
+            var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(SlipstreamEnvironment.Settings.ServerPassword);
 
             var service = SlipstreamEnvironment.RootService;
 

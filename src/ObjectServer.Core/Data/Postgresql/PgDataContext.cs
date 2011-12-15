@@ -23,7 +23,7 @@ namespace ObjectServer.Data.Postgresql
                 throw new ArgumentNullException("_dbName");
             }
 
-            var cfg = SlipstreamEnvironment.Configuration;
+            var cfg = SlipstreamEnvironment.Settings;
             string connectionString = string.Format(
               CultureInfo.InvariantCulture,
               "Server={0};" +

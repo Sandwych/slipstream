@@ -68,7 +68,7 @@ namespace ObjectServer
             }
         }
 
-        public static void Configurate(Config cfg)
+        public static void Configurate(ShellSettings cfg)
         {
             if (cfg == null)
             {
@@ -158,7 +158,7 @@ namespace ObjectServer
             logCfg.LoggingRules.Add(rule);
         }
 
-        private static void EnsureLoggingPathExist(Config cfg)
+        private static void EnsureLoggingPathExist(ShellSettings cfg)
         {
             if (!string.IsNullOrEmpty(cfg.LogPath))
             {

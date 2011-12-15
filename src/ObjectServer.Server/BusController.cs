@@ -8,21 +8,21 @@ using ZMQ;
 
 namespace ObjectServer.Server
 {
-    public sealed class Supervisor : IDisposable
+    public sealed class BusController : IDisposable
     {
         private readonly Socket broadcastSocket = new Socket(SocketType.PUB);
         private bool started = false;
         private bool disposed = false;
 
 
-        ~Supervisor()
+        ~BusController()
         {
             this.Dispose(false);
         }
 
         public void Start()
         {
-            var address = SlipstreamEnvironment.Configuration.BroadcastUrl;
+            var address = SlipstreamEnvironment.Settings.BroadcastUrl;
 
             this.broadcastSocket.Bind(address);
             this.started = true;
