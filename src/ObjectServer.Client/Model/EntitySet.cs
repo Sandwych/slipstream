@@ -95,11 +95,11 @@ namespace ObjectServer.Client.Model
 
         #endregion
 
-        public void Load(IRemoteService service)
+        public void Load(IRootService service)
         {
         }
 
-        public void Load(IRemoteService service, long[] ids)
+        public void Load(IRootService service, long[] ids)
         {
             var fields = this.metaFields.Keys.ToArray();
             var args = new object[] { ids, fields };
@@ -115,11 +115,11 @@ namespace ObjectServer.Client.Model
             });
         }
 
-        public void Load(IRemoteService service, object[] constraint)
+        public void Load(IRootService service, object[] constraint)
         {
         }
 
-        public void Save(IRemoteService service)
+        public void Save(IRootService service)
         {
             if (service == null)
             {

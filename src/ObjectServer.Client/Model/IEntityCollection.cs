@@ -9,11 +9,11 @@ namespace ObjectServer.Client.Model
         string ModelName { get; }
         IEntity Parent { get; }
 
-        void Load(IRemoteService service);
-        void Load(IRemoteService service, object[] constraint);
-        void Load(IRemoteService service, long[] ids);
+        void Load(IRootService service);
+        void Load(IRootService service, object[] constraint);
+        void Load(IRootService service, long[] ids);
 
-        void Save(IRemoteService service);
+        void Save(IRootService service);
 
         IEntity NewEntity();
     }

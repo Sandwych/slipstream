@@ -6,7 +6,7 @@ using ObjectServer.Client.Model;
 
 namespace ObjectServer.Client
 {
-    public interface IRemoteService
+    public interface IRootService
     {
 
         void GetVersion(Action<Version, Exception> resultCallback);

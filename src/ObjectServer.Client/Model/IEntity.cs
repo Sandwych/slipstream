@@ -14,7 +14,7 @@ namespace ObjectServer.Client.Model
 
         IField this[string fieldName] { get; set; }
 
-        void Save(IRemoteService service);
+        void Save(IRootService service);
 
         void SetFieldValues(IDictionary<string, object> record);
     }

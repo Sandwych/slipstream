@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.Net.cs" />
     <Compile Include="IObjectServerClient.cs" />
-    <Compile Include="IRemoteService.cs" />
+    <Compile Include="IRootService.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\EntitySet.cs" />
     <Compile Include="Model\Field.cs" />

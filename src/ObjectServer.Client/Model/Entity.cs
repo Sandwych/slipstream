@@ -47,7 +47,7 @@ namespace ObjectServer.Client.Model
 
         #endregion
 
-        public void Save(IRemoteService service)
+        public void Save(IRootService service)
         {
             if (service == null)
             {

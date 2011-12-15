@@ -4,7 +4,7 @@ using System.Net;
 
 namespace ObjectServer.Client
 {
-    public interface IObjectServerClient : IRemoteService
+    public interface IObjectServerClient : IRootService
     {
         string SessionToken { get; }
         string LoggedUserName { get; }

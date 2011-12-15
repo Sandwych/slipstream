@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IObjectServerClient.cs" />
+    <Compile Include="IRootService.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\EntitySet.cs" />
     <Compile Include="Model\Field.cs" />
@@ -64,7 +65,6 @@
     <Compile Include="Model\IEntityCollection.cs" />
     <Compile Include="Model\IField.cs" />
     <Compile Include="Model\MetaField.cs" />
-    <Compile Include="IRemoteService.cs" />
     <Compile Include="Model\IEntity.cs" />
     <Compile Include="Model\MenuEntity.cs" />
     <Compile Include="Model\ModelHelper.cs" />
