@@ -9,15 +9,14 @@ namespace ObjectServer.Server
 {
     public abstract class AbstractWorker : IDisposable
     {
-        private readonly Socket broadcastSocket = new Socket(SocketType.SUB);
-        private bool m_disposed = false;
+        private readonly Socket _broadcastSocket = new Socket(SocketType.SUB);
+        private bool _disposed = false;
 
         public AbstractWorker(string stopCommand)
         {
             this.ID = Guid.NewGuid();
-
-            this.broadcastSocket.Connect(SlipstreamEnvironment.Settings.BroadcastUrl);
-            this.broadcastSocket.Subscribe(stopCommand, Encoding.UTF8);
+            this._broadcastSocket.Connect(SlipstreamEnvironment.Settings.BroadcastUrl);
+            this._broadcastSocket.Subscribe(stopCommand, Encoding.UTF8);
         }
 
         ~AbstractWorker()
@@ -46,22 +45,22 @@ namespace ObjectServer.Server
 
         protected string ReceiveControlCommand()
         {
-            return this.broadcastSocket.Recv(Encoding.UTF8);
+            return this._broadcastSocket.Recv(Encoding.UTF8);
         }
 
         #region IDisposable Members
 
         public void Dispose(bool isDisposing)
         {
-            if (!this.m_disposed)
+            if (!this._disposed)
             {
                 if (isDisposing) //释放非托管资源
                 {
-                    this.broadcastSocket.Dispose();
+                    this._broadcastSocket.Dispose();
                 }
                 //释放非托管资源
 
-                this.m_disposed = true;
+                this._disposed = true;
             }
         }
 

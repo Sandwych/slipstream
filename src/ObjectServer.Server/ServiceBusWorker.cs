@@ -7,9 +7,9 @@ using System.Diagnostics;
 
 namespace ObjectServer.Server
 {
-    public sealed class ServiceBusWorker : AbstractWorker
+    public class ServiceBusWorker : AbstractWorker
     {
-        private Thread workerThread = null;
+        private Thread _workThread = null;
 
         public ServiceBusWorker()
             : base("STOP-RPC")
@@ -36,16 +36,16 @@ namespace ObjectServer.Server
 
         protected override void OnStart()
         {
-            this.workerThread = new Thread(new ThreadStart(this.WorkerProc));
-            this.workerThread.Start();
+            this._workThread = new Thread(new ThreadStart(this.WorkerProc));
+            this._workThread.Start();
         }
 
         protected override void OnAbort()
         {
-            Debug.Assert(this.workerThread != null);
+            Debug.Assert(this._workThread != null);
 
-            this.workerThread.Abort();
-            this.workerThread = null;
+            this._workThread.Abort();
+            this._workThread = null;
         }
 
         private void WorkerProc()

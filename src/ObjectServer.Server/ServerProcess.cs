@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Reflection;
 
 using ObjectServer;
 
@@ -33,6 +34,7 @@ namespace ObjectServer.Server
                 this._busController.Start();
             }
 
+            //REVIEW
             Thread.Sleep(1000); //去掉此处，改为回报模式
             if (cfg.Role == ServerRoles.Standalone || cfg.Role == ServerRoles.Worker)
             {
@@ -91,18 +93,19 @@ namespace ObjectServer.Server
             this._busController.BeginStopHttpServer();
         }
 
-        private static ServiceBusWorker StartApplicationServer()
+        private ServiceBusWorker StartApplicationServer()
         {
             LoggerProvider.EnvironmentLogger.Info("Starting application server...");
 
             var rpcHostWorker = new ServiceBusWorker();
+
             rpcHostWorker.Start();
 
             Console.WriteLine("Application server is started.");
             return rpcHostWorker;
         }
 
-        private static Thread StartHttpServer()
+        private Thread StartHttpServer()
         {
             LoggerProvider.EnvironmentLogger.Info("Starting HTTP server...");
 
