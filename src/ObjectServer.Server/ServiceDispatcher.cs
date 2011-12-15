@@ -217,48 +217,48 @@ namespace ObjectServer.Server
             }
             catch (FatalException fex)
             {
-                LoggerProvider.EnvironmentLogger.Fatal("FatalError", fex);
+                LoggerProvider.EnvironmentLogger.FatalException("FatalError", fex);
                 throw fex; //接着抛出异常，让系统结束运行
             }
             catch (ArgumentException ex)
             {
                 error = JsonRpcError.RpcArgumentError;
-                LoggerProvider.EnvironmentLogger.Error("ArgumentException", ex);
+                LoggerProvider.EnvironmentLogger.ErrorException("ArgumentException", ex);
             }
             catch (ValidationException ex)
             {
                 error = JsonRpcError.ValidationError;
-                LoggerProvider.EnvironmentLogger.Error("ValidationException", ex);
+                LoggerProvider.EnvironmentLogger.ErrorException("ValidationException", ex);
             }
             catch (SecurityException ex)
             {
                 error = JsonRpcError.SecurityError;
-                LoggerProvider.EnvironmentLogger.Error("SecurityError", ex);
+                LoggerProvider.EnvironmentLogger.ErrorException("SecurityError", ex);
             }
             catch (ResourceNotFoundException ex)
             {
                 error = JsonRpcError.ResourceNotFound;
-                LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", ex);
+                LoggerProvider.EnvironmentLogger.ErrorException("ResourceNotFoundException", ex);
             }
             catch (RecordNotFoundException ex)
             {
                 error = JsonRpcError.ResourceNotFound;
-                LoggerProvider.EnvironmentLogger.Error("ResourceNotFoundException", ex);
+                LoggerProvider.EnvironmentLogger.ErrorException("ResourceNotFoundException", ex);
             }
             catch (DataException ex)
             {
                 error = JsonRpcError.BadData;
-                LoggerProvider.EnvironmentLogger.Error("BadData", ex);
+                LoggerProvider.EnvironmentLogger.ErrorException("BadData", ex);
             }
             catch (System.Data.Common.DbException ex)
             {
                 error = JsonRpcError.DBError;
-                LoggerProvider.EnvironmentLogger.Error("DBError", ex);
+                LoggerProvider.EnvironmentLogger.ErrorException("DBError", ex);
             }
             catch (System.Exception ex)
             {
                 error = JsonRpcError.ServerInternalError;
-                LoggerProvider.EnvironmentLogger.Error("RPCHandler Error", ex);
+                LoggerProvider.EnvironmentLogger.ErrorException("RPCHandler Error", ex);
                 throw ex; //未知异常，与致命异常同样处理，直接抛出，让系统结束运行
             }
 

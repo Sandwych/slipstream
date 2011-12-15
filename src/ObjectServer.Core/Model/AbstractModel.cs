@@ -115,7 +115,7 @@ namespace ObjectServer.Model
                 {
                     var ex = new Exceptions.ResourceException(
                         "多表继承必须包含指向父表的 ManyToOne 字段，且必须满足：不能为空，级联删除");
-                    LoggerProvider.EnvironmentLogger.Error(ex.Message, ex);
+                    LoggerProvider.EnvironmentLogger.ErrorException(ex.Message, ex);
                     throw ex;
                 }
 

@@ -31,11 +31,11 @@ namespace ObjectServer
             }
         }
 
-        public void Debug(Func<object> dg)
+        public void DebugException(string msg, Exception ex)
         {
             if (this.IsDebugEnabled)
             {
-                this.log.Debug(dg());
+                this.log.DebugException(msg, ex);
             }
         }
 
@@ -47,11 +47,11 @@ namespace ObjectServer
             }
         }
 
-        public void Info(Func<object> dg)
+        public void InfoException(string msg, Exception ex)
         {
             if (this.IsInfoEnabled)
             {
-                this.log.Info(dg());
+                this.log.InfoException(msg, ex);
             }
         }
 
@@ -59,15 +59,15 @@ namespace ObjectServer
         {
             if (this.IsWarnEnabled)
             {
-                this.log.Warn(msg);
+                this.log.Warn(msg.ToString());
             }
         }
 
-        public void Warn(Func<object> dg)
+        public void WarnException(string msg, Exception ex)
         {
             if (this.IsWarnEnabled)
             {
-                this.log.Warn(dg());
+                this.log.WarnException(msg, ex);
             }
         }
 
@@ -79,28 +79,11 @@ namespace ObjectServer
             }
         }
 
-        public void Error(Func<object> dg)
+        public void ErrorException(string msg, Exception ex)
         {
             if (this.IsErrorEnabled)
             {
-                this.log.Error(dg());
-            }
-        }
-
-        public void Error(object msg, Exception ex)
-        {
-            if (this.IsErrorEnabled)
-            {
-                this.log.ErrorException(msg.ToString(), ex);
-            }
-        }
-
-        public void ErrorFormat(string format, params object[] args)
-        {
-            if (this.IsErrorEnabled)
-            {
-                var msg = string.Format(format, args);
-                this.log.Error(msg);
+                this.log.ErrorException(msg, ex);
             }
         }
 
@@ -112,19 +95,11 @@ namespace ObjectServer
             }
         }
 
-        public void Fatal(Func<object> dg)
+        public void FatalException(string msg, Exception ex)
         {
             if (this.IsFatalEnabled)
             {
-                this.log.Fatal(dg());
-            }
-        }
-
-        public void Fatal(object msg, Exception ex)
-        {
-            if (this.IsFatalEnabled)
-            {
-                this.log.FatalException(msg.ToString(), ex);
+                this.log.FatalException(msg, ex);
             }
         }
     }

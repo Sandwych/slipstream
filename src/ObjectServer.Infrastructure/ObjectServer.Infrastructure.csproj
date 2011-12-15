@@ -50,11 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logging\LoggerExtensions.cs" />
     <Compile Include="ShellSettings.cs" />
     <Compile Include="ConfigSectionHandler.cs" />
-    <Compile Include="NLogLogger.cs" />
-    <Compile Include="ILogger.cs" />
-    <Compile Include="LoggerProvider.cs" />
+    <Compile Include="Logging\NLogLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LoggerProvider.cs" />
     <Compile Include="NamingRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerRoles.cs" />

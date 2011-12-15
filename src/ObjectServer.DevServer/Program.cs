@@ -110,7 +110,7 @@ namespace ObjectServer.Server
             }
             catch (Exception ex)
             {
-                LoggerProvider.EnvironmentLogger.Error(
+                LoggerProvider.EnvironmentLogger.ErrorException(
                     "Uncached Exception: " + ex.Message, ex);
                 var oldColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;

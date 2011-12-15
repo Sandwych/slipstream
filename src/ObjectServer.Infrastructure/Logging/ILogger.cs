@@ -14,22 +14,19 @@ namespace ObjectServer
         bool IsFatalEnabled { get; }
 
         void Debug(object msg);
-        void Debug(Func<object> dg);
+        void DebugException(string msg, Exception ex);
 
         void Info(object msg);
-        void Info(Func<object> dg);
+        void InfoException(string msg, Exception ex);
 
         void Warn(object msg);
-        void Warn(Func<object> dg);
+        void WarnException(string msg, Exception ex);
 
         void Error(object msg);
-        void Error(Func<object> dg);
-        void Error(object msg, Exception ex);
-        void ErrorFormat(string format, params object[] args);
+        void ErrorException(string msg, Exception ex);
 
         void Fatal(object msg);
-        void Fatal(Func<object> dg);
-        void Fatal(object msg, Exception ex);
+        void FatalException(string msg, Exception ex);
 
     }
 }
