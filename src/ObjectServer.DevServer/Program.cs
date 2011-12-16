@@ -12,7 +12,7 @@ namespace ObjectServer.Server
 {
     class DevServerProgram
     {
-        private static ShellSettings CreateConfigViaProgramArgs(string[] args)
+        private static ShellSettings CreateSettingsFromProgramArgs(string[] args)
         {
             bool isShowHelp = false;
             bool isShowVersion = false;
@@ -27,12 +27,11 @@ namespace ObjectServer.Server
 
             if (isShowHelp)
             {
-                //TODO 显示帮助                
                 Console.WriteLine("Usage:");
-                Console.WriteLine("  osdevsvr.exe [Options]");
+                Console.WriteLine("  slipserver.exe [Options]");
                 Console.WriteLine();
                 Console.WriteLine("Options:");
-                Console.WriteLine("  -c CONF_FILE\t\tLoad shellSettings from CONF_FILE");
+                Console.WriteLine("  -c CONF_FILE\t\tLoad settings from CONF_FILE");
                 Console.WriteLine("  --version\t\tShow version information");
                 Console.WriteLine("  -h|-?|--help\t\tShow this help text");
                 System.Environment.Exit(0);
@@ -137,7 +136,7 @@ namespace ObjectServer.Server
 
             Debug.Assert(!SlipstreamEnvironment.Initialized);
 
-            var cfg = CreateConfigViaProgramArgs(args);
+            var cfg = CreateSettingsFromProgramArgs(args);
             cfg.LogToConsole = true;
 
             Console.WriteLine("正在初始化 ObjectServer 框架 ...");

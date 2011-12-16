@@ -27,7 +27,7 @@ namespace ObjectServer
                 AppDataDirectoryName);
 
             this.Role = ServerRoles.Standalone;
-            this.DbType = "mssql";
+            this.DbType = "postgres";
             this.DbHost = @"localhost";
             this.DbUser = "objectserver";
             this.DbPassword = "objectserver";
