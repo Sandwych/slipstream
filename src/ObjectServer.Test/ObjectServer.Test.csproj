@@ -99,14 +99,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContainerTestBase.cs" />
-    <Compile Include="MonoOptionsTests.cs" />
     <Compile Include="Model\AbstractModelTests.cs" />
     <Compile Include="ServiceTestCaseBase.cs" />
     <Compile Include="Data\DataContextTests.cs" />
     <Compile Include="Core\RuleTest.cs" />
     <Compile Include="Core\ModelTest.cs" />
     <Compile Include="Core\UserTest.cs" />
-    <Compile Include="JsonTest.cs" />
     <Compile Include="Model\BrowseModelTests.cs" />
     <Compile Include="ServiceConcurrencyTests.cs" />
     <Compile Include="Model\Fields\BinaryFieldTests.cs" />
@@ -160,8 +158,6 @@
     <Compile Include="ServiceContextTestCaseBase.cs" />
     <Compile Include="Sessions\DbUserSessionServiceTests.cs" />
     <Compile Include="Sessions\InMemoryUserSessionServiceTests.cs" />
-    <Compile Include="Utility\EnumerableExtensionsTest.cs" />
-    <Compile Include="Utility\DependencySorterTest.cs" />
     <Compile Include="Rpc\JsonSerializedCallingTests.cs" />
     <Compile Include="Rpc\RpcTestBase.cs" />
     <Content Include="ObjectServer.PartCover.xml" />

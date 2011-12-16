@@ -7,8 +7,6 @@ using System.Dynamic;
 using Malt.Utility;
 using NUnit.Framework;
 
-using ObjectServer.Utility;
-
 namespace ObjectServer.Test
 {
     [TestFixture]

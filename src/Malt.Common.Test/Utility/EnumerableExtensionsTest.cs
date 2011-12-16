@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
-using Malt.Utility;
 
-namespace ObjectServer.Utility.Test
+namespace Malt.Utility.Test
 {
     [TestFixture]
     public class EnumerableExtensionsTest

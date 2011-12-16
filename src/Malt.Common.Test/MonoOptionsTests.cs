@@ -8,7 +8,7 @@ using Mono.Options;
 
 using NUnit.Framework;
 
-namespace ObjectServer.Test
+namespace Malt.Test
 {
     [TestFixture]
     public class MonoOptionsTests

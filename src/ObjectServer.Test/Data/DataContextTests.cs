@@ -9,7 +9,7 @@ using Malt.Utility;
 using Malt;
 
 using ObjectServer.Data;
-using ObjectServer.Utility;
+using Malt.Utility;
 
 namespace ObjectServer.Data.Test
 {
