@@ -1,7 +1,7 @@
 #!env ruby
 #encoding: utf-8
 #
-require 'ffi-rzmq'
+#require 'ffi-rzmq'
 require 'json'
 require 'benchmark'
 require 'rpcjson'
@@ -27,6 +27,7 @@ class HttpProxy
 
 end
 
+=begin
 class ZmqProxy
 
   def initialize(url)
@@ -55,6 +56,7 @@ class ZmqProxy
   end
 
 end
+=end
 
 class ServiceProxy
 

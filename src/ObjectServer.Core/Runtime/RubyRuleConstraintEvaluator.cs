@@ -14,14 +14,13 @@ namespace ObjectServer.Runtime
     internal class RubyRuleConstraintEvaluator : IRuleConstraintEvaluator
     {
         private readonly static Type _rubyHashOpsType = typeof(IronRuby.Builtins.HashOps);
-        private readonly ScriptRuntime _runtime;
+        private readonly static ScriptRuntime s_runtime = Ruby.CreateRuntime();
         private readonly ScriptEngine _engine;
         private readonly ScriptScope _scope;
 
         public RubyRuleConstraintEvaluator()
         {
-            this._runtime = Ruby.CreateRuntime();
-            this._engine = Ruby.GetEngine(this._runtime);
+            this._engine = Ruby.GetEngine(s_runtime);
             this._scope = this._engine.CreateScope();
         }
 

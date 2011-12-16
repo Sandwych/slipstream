@@ -21,7 +21,7 @@ namespace ObjectServer.Test
             var threadProc = new ThreadStart(this.TestProc);
 
             //启动多个线程并发测试
-            const int ThreadCount = 20;
+            const int ThreadCount = 50;
             var threads = new List<Thread>();
             for (int i = 0; i < ThreadCount; i++)
             {
