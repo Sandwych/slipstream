@@ -12,7 +12,7 @@ Json.NET makes working with JSON formatted data in .NET simple. Quickly read and
 -LINQ to JSON for reading and writing JSON 
 -Writes indented, easy to read JSON 
 -Convert JSON to and from XML 
--Supports Silverlight and the Windows Phone
+-Supports Silverlight and Windows Phone
 
 
 
