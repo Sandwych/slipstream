@@ -9,13 +9,14 @@ using System.Diagnostics;
 using System.Globalization;
 
 using NHibernate.SqlCommand;
+using Malt;
+using Malt.Utility;
 
 using ObjectServer.Exceptions;
 using ObjectServer.Model;
 using ObjectServer.Runtime;
 using ObjectServer.Data;
 using ObjectServer.Core;
-using ObjectServer.Utility;
 
 namespace ObjectServer
 {

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 
 using NHibernate.SqlCommand;
-using ObjectServer.Utility;
 
 using ObjectServer.Data;
 

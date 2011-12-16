@@ -13,7 +13,6 @@ using NHibernate.SqlCommand;
 
 using ObjectServer.Exceptions;
 using ObjectServer.Data;
-using ObjectServer.Utility;
 
 namespace ObjectServer.Model
 {

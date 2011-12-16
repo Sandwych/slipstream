@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 
 using NHibernate.SqlCommand;
 
-using ObjectServer.Utility;
 using ObjectServer.Data;
 
 namespace ObjectServer

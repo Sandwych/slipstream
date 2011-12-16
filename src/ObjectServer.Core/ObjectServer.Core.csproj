@@ -145,9 +145,7 @@
     <Compile Include="Model\Fields\CriterionConverter.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Module\ModuleUpdateAction.cs" />
-    <Compile Include="Model\OrderExpression.cs" />
     <Compile Include="Model\Sql\ConstraintTranslator.cs" />
-    <Compile Include="Model\Sql\SortDirection.cs" />
     <Compile Include="Model\Sql\SqlStringExtensions.cs" />
     <Compile Include="Model\Sql\TableJoinInfo.cs" />
     <Compile Include="Exceptions\RecordNotFoundException.cs" />
@@ -167,7 +165,6 @@
     <Compile Include="Model\Sql\AbstractSqlModel.WriteImpl.cs" />
     <Compile Include="Model\Sql\AbstractSqlModel.SearchImpl.cs" />
     <Compile Include="Model\Sql\AbstractSqlModel.DeleteImpl.cs" />
-    <Compile Include="Model\Criterion.cs" />
     <Compile Include="Model\Fields\IFieldDescriptor.cs" />
     <Compile Include="Model\Fields\IField.cs" />
     <Compile Include="Model\Fields\IFieldCollection.cs" />
@@ -283,13 +280,17 @@
     <Folder Include="Workflow\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Object.Common\ObjectServer.Common.csproj">
+    <ProjectReference Include="..\Malt.Common\Malt.Common.csproj">
       <Project>{854177F0-7005-4980-9C76-24F32BE3F3F0}</Project>
-      <Name>ObjectServer.Common</Name>
+      <Name>Malt.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ObjectServer.Infrastructure\ObjectServer.Infrastructure.csproj">
       <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
       <Name>ObjectServer.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectServer.Shared\ObjectServer.Shared.csproj">
+      <Project>{6E237B53-C579-48BC-A946-E7D9F5EC289A}</Project>
+      <Name>ObjectServer.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -7,10 +7,11 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Globalization;
 
+using Malt;
+using Malt.Utility;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Model;
-using ObjectServer.Utility;
 
 namespace ObjectServer.Data.Mssql
 {

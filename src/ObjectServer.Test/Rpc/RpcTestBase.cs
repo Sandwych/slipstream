@@ -8,7 +8,7 @@ using System.IO;
 
 using NUnit.Framework;
 
-using ObjectServer.Json;
+using Malt.Json;
 
 namespace ObjectServer
 {

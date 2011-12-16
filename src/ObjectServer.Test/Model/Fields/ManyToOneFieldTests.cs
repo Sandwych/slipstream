@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Dynamic;
 
+using Malt;
 using NUnit.Framework;
 
 using ObjectServer.Model;

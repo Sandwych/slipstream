@@ -9,10 +9,11 @@ using System.Reflection;
 using System.Dynamic;
 using System.Globalization;
 
+using Malt;
+using Malt.Utility;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Data;
-using ObjectServer.Utility;
 using ObjectServer.Exceptions;
 
 namespace ObjectServer.Model

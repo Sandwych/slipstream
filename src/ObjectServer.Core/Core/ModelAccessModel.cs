@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Globalization;
 
+using Malt;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Model;

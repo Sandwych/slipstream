@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-using ObjectServer.Utility;
+using Malt.Utility;
 
 namespace ObjectServer.Model
 {

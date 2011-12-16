@@ -5,8 +5,6 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 
-using ObjectServer.Utility;
-
 namespace ObjectServer
 {
     internal class ClrService : IService

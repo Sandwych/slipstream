@@ -73,6 +73,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SizeType.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Malt.Common\Malt.Common.Silverlight.csproj">
+      <Project>{073A04A8-05F5-424D-BEB5-0BA61365F891}</Project>
+      <Name>Malt.Common.Silverlight</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

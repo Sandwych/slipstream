@@ -13,7 +13,6 @@ using NHibernate.SqlTypes;
 
 using ObjectServer.Core;
 using ObjectServer.Data;
-using ObjectServer.Utility;
 
 namespace ObjectServer.Model
 {

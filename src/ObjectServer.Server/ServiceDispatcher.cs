@@ -10,9 +10,8 @@ using ZMQ;
 using ZMQ.ZMQExt;
 using Newtonsoft.Json;
 
-using ObjectServer.Utility;
 using ObjectServer.Exceptions;
-using ObjectServer.Json;
+using Malt.Json;
 
 namespace ObjectServer.Server
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Dynamic;
 
+using Malt.Utility;
 using NUnit.Framework;
 
 using ObjectServer.Utility;

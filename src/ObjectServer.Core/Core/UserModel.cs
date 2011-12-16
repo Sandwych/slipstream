@@ -5,10 +5,11 @@ using System.Text;
 using System.Diagnostics;
 using System.Security.Cryptography;
 
+using Malt.Utility;
+using Malt;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Model;
-using ObjectServer.Utility;
 using ObjectServer.Data;
 using ObjectServer.Exceptions;
 

@@ -47,9 +47,6 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json.Silverlight">
-      <HintPath>..\..\lib\Json\Silverlight\Newtonsoft.Json.Silverlight.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
@@ -75,9 +72,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Object.Common\ObjectServer.Common.Silverlight.csproj">
+    <ProjectReference Include="..\Malt.Common\Malt.Common.Silverlight.csproj">
       <Project>{073A04A8-05F5-424D-BEB5-0BA61365F891}</Project>
-      <Name>ObjectServer.Common.Silverlight</Name>
+      <Name>Malt.Common.Silverlight</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

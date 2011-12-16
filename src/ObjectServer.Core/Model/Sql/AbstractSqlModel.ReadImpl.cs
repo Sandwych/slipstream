@@ -11,7 +11,6 @@ using System.Dynamic;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Data;
-using ObjectServer.Utility;
 
 namespace ObjectServer.Model
 {

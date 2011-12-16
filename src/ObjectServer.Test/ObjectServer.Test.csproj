@@ -187,9 +187,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Object.Common\ObjectServer.Common.csproj">
+    <ProjectReference Include="..\Malt.Common\Malt.Common.csproj">
       <Project>{854177F0-7005-4980-9C76-24F32BE3F3F0}</Project>
-      <Name>ObjectServer.Common</Name>
+      <Name>Malt.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ObjectServer.Core\ObjectServer.Core.csproj">
       <Project>{443BAECA-181D-45B8-9EB8-FCA3A35051E1}</Project>
@@ -198,6 +198,10 @@
     <ProjectReference Include="..\ObjectServer.Infrastructure\ObjectServer.Infrastructure.csproj">
       <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
       <Name>ObjectServer.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ObjectServer.Shared\ObjectServer.Shared.csproj">
+      <Project>{6E237B53-C579-48BC-A946-E7D9F5EC289A}</Project>
+      <Name>ObjectServer.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

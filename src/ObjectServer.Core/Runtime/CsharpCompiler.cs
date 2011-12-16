@@ -7,6 +7,7 @@ using System.CodeDom.Compiler;
 using System.Reflection;
 using System.Diagnostics;
 
+using Malt;
 using Microsoft.CSharp;
 
 namespace ObjectServer.Runtime
@@ -51,7 +52,8 @@ namespace ObjectServer.Runtime
         {
             var selfAssembly = Assembly.GetExecutingAssembly();
             var infrastructureAssembly = typeof(ShellSettings).Assembly;
-            var commonAssembly = typeof(ObjectExtensions).Assembly;
+            var sharedAssembly = typeof(ObjectServer.Model.Criterion).Assembly;
+            var maltAssembly = typeof(ObjectExtensions).Assembly;
 
             //设置编译参数，加入所需的组件 
             var options = new CompilerParameters();
@@ -61,7 +63,8 @@ namespace ObjectServer.Runtime
             options.ReferencedAssemblies.Add("System.Data.dll");
             options.ReferencedAssemblies.Add("System.Transactions.dll");
             options.ReferencedAssemblies.Add(infrastructureAssembly.Location);
-            options.ReferencedAssemblies.Add(commonAssembly.Location);
+            options.ReferencedAssemblies.Add(sharedAssembly.Location);
+            options.ReferencedAssemblies.Add(maltAssembly.Location);
             options.ReferencedAssemblies.Add(selfAssembly.Location);
             options.GenerateInMemory = true;
             options.GenerateExecutable = false;

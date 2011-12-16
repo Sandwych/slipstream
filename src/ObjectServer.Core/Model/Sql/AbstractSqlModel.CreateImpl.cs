@@ -12,9 +12,9 @@ using System.Globalization;
 using Autofac;
 using ObjectServer.Exceptions;
 using NHibernate.SqlCommand;
+using Malt;
 
 using ObjectServer.Data;
-using ObjectServer.Utility;
 using ObjectServer.Core;
 
 namespace ObjectServer.Model

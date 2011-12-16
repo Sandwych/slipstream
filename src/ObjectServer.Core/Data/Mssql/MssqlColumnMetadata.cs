@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Malt;
+
 namespace ObjectServer.Data.Mssql
 {
     internal sealed class MssqlColumnMetadata : IColumnMetadata

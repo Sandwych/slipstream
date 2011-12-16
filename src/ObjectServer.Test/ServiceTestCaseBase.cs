@@ -5,6 +5,8 @@ using System.Text;
 using System.Diagnostics;
 using System.Dynamic;
 
+using Malt.Utility;
+using Malt;
 using NUnit.Framework;
 
 namespace ObjectServer
@@ -29,8 +31,7 @@ namespace ObjectServer
             var dbs = SlipstreamEnvironment.RootService.ListDatabases();
             if (!dbs.Contains(TestingDatabaseName))
             {
-                var hashedRootPassword = ObjectServer.Utility.Sha.ToSha(
-                    SlipstreamEnvironment.Settings.ServerPassword);
+                var hashedRootPassword = SlipstreamEnvironment.Settings.ServerPassword.ToSha();
                 SlipstreamEnvironment.RootService.CreateDatabase(hashedRootPassword, TestingDatabaseName, "root");
             }
 

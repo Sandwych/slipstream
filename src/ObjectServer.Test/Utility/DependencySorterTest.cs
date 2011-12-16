@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
+using Malt.Utility;
+using Malt;
 
 namespace ObjectServer.Utility.Test
 {

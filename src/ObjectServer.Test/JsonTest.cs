@@ -8,7 +8,7 @@ using System.Data;
 using NUnit.Framework;
 
 using Newtonsoft.Json;
-using ObjectServer.Json;
+using Malt.Json;
 
 namespace ObjectServer.Test
 {

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Data;
 
 using NHibernate.SqlCommand;
+using Malt;
 
 using ObjectServer.Exceptions;
 using ObjectServer.Data;

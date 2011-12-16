@@ -8,12 +8,13 @@ using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 
+using Malt;
+using Malt.Utility;
 using NHibernate.SqlCommand;
 
 using ObjectServer.Runtime;
 using ObjectServer.Data;
 using ObjectServer.Core;
-using ObjectServer.Utility;
 
 namespace ObjectServer
 {

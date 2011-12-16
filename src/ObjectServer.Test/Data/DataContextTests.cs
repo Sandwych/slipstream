@@ -5,6 +5,8 @@ using System.Text;
 
 using NHibernate.SqlCommand;
 using NUnit.Framework;
+using Malt.Utility;
+using Malt;
 
 using ObjectServer.Data;
 using ObjectServer.Utility;

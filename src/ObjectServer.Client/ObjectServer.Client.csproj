@@ -64,9 +64,9 @@
     <Compile Include="ObjectServerClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Object.Common\ObjectServer.Common.csproj">
+    <ProjectReference Include="..\Malt.Common\Malt.Common.csproj">
       <Project>{854177F0-7005-4980-9C76-24F32BE3F3F0}</Project>
-      <Name>ObjectServer.Common</Name>
+      <Name>Malt.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

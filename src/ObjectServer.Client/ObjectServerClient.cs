@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using ObjectServer.Client.Model;
-using ObjectServer.Utility;
+using Malt;
+using Malt.Utility;
 
-using ObjectServer.Json;
+using Malt.Json;
 
 namespace ObjectServer.Client
 {

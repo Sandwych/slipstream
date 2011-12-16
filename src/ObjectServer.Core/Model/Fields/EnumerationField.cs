@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
+using Malt;
+
 namespace ObjectServer.Model
 {
     internal sealed class EnumerationField : AbstractField

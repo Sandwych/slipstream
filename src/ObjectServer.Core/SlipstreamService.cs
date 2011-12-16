@@ -6,9 +6,10 @@ using System.Transactions;
 using System.Reflection;
 using System.Diagnostics;
 
+using Malt.Utility;
+using Malt;
 using ObjectServer.Data;
 using ObjectServer.Core;
-using ObjectServer.Utility;
 
 namespace ObjectServer
 {

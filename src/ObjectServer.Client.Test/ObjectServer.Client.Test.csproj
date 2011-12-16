@@ -46,10 +46,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Object.Common\ObjectServer.Common.csproj">
-      <Project>{854177F0-7005-4980-9C76-24F32BE3F3F0}</Project>
-      <Name>ObjectServer.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ObjectServer.Client\ObjectServer.Client.csproj">
       <Project>{78641DA5-A3F5-4F5E-8BF8-4DF113C12679}</Project>
       <Name>ObjectServer.Client</Name>

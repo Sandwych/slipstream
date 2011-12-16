@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Threading;
 
 using ObjectServer.Exceptions;
-using ObjectServer.Utility;
 using ObjectServer.Data;
 
 namespace ObjectServer
