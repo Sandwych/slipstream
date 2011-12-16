@@ -159,6 +159,7 @@
     <Compile Include="ServiceDispatcherTests.cs" />
     <Compile Include="ServiceContextTestCaseBase.cs" />
     <Compile Include="Sessions\DbUserSessionServiceTests.cs" />
+    <Compile Include="Sessions\InMemoryUserSessionServiceTests.cs" />
     <Compile Include="Utility\EnumerableExtensionsTest.cs" />
     <Compile Include="Utility\DependencySorterTest.cs" />
     <Compile Include="Rpc\JsonSerializedCallingTests.cs" />

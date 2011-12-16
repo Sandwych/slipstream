@@ -219,6 +219,7 @@
     <Compile Include="Runtime\IRuleConstraintEvaluator.cs" />
     <Compile Include="Runtime\RubyRuleConstraintEvaluator.cs" />
     <Compile Include="Sessions\DbUserSessionService.cs" />
+    <Compile Include="Sessions\InMemoryUserSessionService.cs" />
     <Compile Include="Sessions\IUserSessionService.cs" />
     <Compile Include="Sessions\UserSession.cs" />
     <Compile Include="AbstractResource.cs" />
