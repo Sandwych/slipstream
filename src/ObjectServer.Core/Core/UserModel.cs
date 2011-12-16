@@ -236,7 +236,7 @@ namespace ObjectServer.Core
 
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
-                var session = this.FetchOrCreateSession(ctx, database, login, user);
+                var session = this.FetchOrCreateSession(ctx.UserSessionService, database, login, user);
 
                 LoggerProvider.EnvironmentLogger.Info(() =>
                     String.Format("User[{0}.{1}] logged.", ctx.DataContext.DatabaseName, login));
@@ -303,31 +303,31 @@ namespace ObjectServer.Core
 
 
         private UserSession FetchOrCreateSession(
-            IServiceContext ctx, string dbName, string login, IDictionary<string, object> userFields)
+            IUserSessionService sessionService, string dbName, string login, IDictionary<string, object> userFields)
         {
-            Debug.Assert(ctx != null);
+            Debug.Assert(sessionService != null);
             Debug.Assert(userFields.ContainsKey("password"));
 
             var uid = (long)userFields[IdFieldName];
 
-            var oldSession = ctx.UserSessionService.GetByUserId(uid);
+            var oldSession = sessionService.GetByUserId(uid);
 
             if (oldSession == null)
             {
                 var newSession = new UserSession(login, uid);
-                ctx.UserSessionService.Put(newSession);
+                sessionService.Put(newSession);
                 return newSession;
             }
             else if (!oldSession.IsActive)
             {
-                ctx.UserSessionService.Remove(oldSession.Token);
+                sessionService.Remove(oldSession.Token);
                 var newSession = new UserSession(login, uid);
-                ctx.UserSessionService.Put(newSession);
+                sessionService.Put(newSession);
                 return newSession;
             }
             else
             {
-                ctx.UserSessionService.Pulse(oldSession.Token);
+                sessionService.Pulse(oldSession.Token);
                 return oldSession;
             }
         }

@@ -41,16 +41,16 @@ namespace ObjectServer
             this._dataContext = dataProvider.OpenDataContext(dbName);
             this.UserSessionService = new DbUserSessionService(this._dataContext);
 
+            var session = this.UserSessionService.GetByToken(sessionToken);
+            if (session == null || !session.IsActive)
+            {
+                //删掉无效的 Session
+                this.UserSessionService.Remove(session.Token);
+                throw new ObjectServer.Exceptions.SecurityException("Not logged!");
+            }
+
             try
             {
-                var session = this.UserSessionService.GetByToken(sessionToken);
-                if (session == null || !session.IsActive)
-                {
-                    //删掉无效的 Session
-                    this.UserSessionService.Remove(session.Token);
-                    throw new ObjectServer.Exceptions.SecurityException("Not logged!");
-                }
-
                 this._transaction = this.DataContext.BeginTransaction();
                 try
                 {
