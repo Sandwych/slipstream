@@ -2,7 +2,10 @@
 
 namespace Malt.Json
 {
-    public class JsonRpcException : Exception
+#if !SILVERLIGHT
+    [Serializable]
+#endif
+    public sealed class JsonRpcException : Exception
     {
         public JsonRpcException(string msg, JsonRpcError error)
             : base(msg)

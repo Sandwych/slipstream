@@ -11,6 +11,9 @@ namespace ObjectServer.Model
     /// <summary>
     /// 用于表示三元组形式的约束表达式： (field,"=", value)
     /// </summary>
+#if !SILVERLIGHT
+    [Serializable]
+#endif
     [JsonArray(false)]
     public class Criterion
     {

@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 
 namespace ObjectServer.Model
 {
+
+#if !SILVERLIGHT
+    [Serializable]
+#endif
     [JsonArray]
     public class OrderExpression
     {

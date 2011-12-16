@@ -6,12 +6,18 @@ using System.Runtime.Serialization;
 
 namespace ObjectServer.Model
 {
+#if !SILVERLIGHT
+    [Serializable]
+#endif
     public enum SortDirection
     {
         Ascend,
         Descend
     }
 
+#if !SILVERLIGHT
+    [Serializable]
+#endif
     public static class SortDirectionParser
     {
         public static SortDirection Parser(string value)
