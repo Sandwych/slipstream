@@ -30,7 +30,7 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("svcCtx");
             }
 
-            var translator = new ConstraintTranslator(tc, this);
+            var translator = new SqlQueryBuilder(tc, this);
             this.TranslateConstraint(tc, constraint, translator);
 
             //处理排序
@@ -62,7 +62,7 @@ namespace ObjectServer.Model
                 throw new ArgumentNullException("svcCtx");
             }
 
-            var translator = new ConstraintTranslator(tx, this);
+            var translator = new SqlQueryBuilder(tx, this);
             this.TranslateConstraint(tx, constraint, translator);
 
             var querySql = translator.ToSqlString(true);
@@ -70,7 +70,7 @@ namespace ObjectServer.Model
             return Convert.ToInt64(tx.DataContext.QueryValue(querySql, translator.Values));
         }
 
-        private void TranslateConstraint(IServiceContext tc, object[] constraint, ConstraintTranslator translator)
+        private void TranslateConstraint(IServiceContext tc, object[] constraint, SqlQueryBuilder translator)
         {
             //处理查询约束
             IEnumerable<Criterion> userConstraint = null;
@@ -92,7 +92,7 @@ namespace ObjectServer.Model
         }
 
 
-        private void GenerateReadingRuleConstraints(IServiceContext scope, ConstraintTranslator translator)
+        private void GenerateReadingRuleConstraints(IServiceContext scope, SqlQueryBuilder translator)
         {
             Debug.Assert(scope != null);
             Debug.Assert(translator != null);

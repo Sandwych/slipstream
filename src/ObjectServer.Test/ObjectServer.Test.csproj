@@ -109,7 +109,7 @@
     <Compile Include="ServiceConcurrencyTests.cs" />
     <Compile Include="Model\Fields\BinaryFieldTests.cs" />
     <Compile Include="Model\ModelValidatorTests.cs" />
-    <Compile Include="Model\Sql\ConstraintTranslatorTests.cs" />
+    <Compile Include="Model\Sql\SqlQueryBuilderTests.cs" />
     <Compile Include="Model\HierarchyTests.cs" />
     <Compile Include="Modules\TestModule\tree-models.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

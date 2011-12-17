@@ -145,7 +145,7 @@
     <Compile Include="Model\Fields\CriterionConverter.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Module\ModuleUpdateAction.cs" />
-    <Compile Include="Model\Sql\ConstraintTranslator.cs" />
+    <Compile Include="Model\Sql\SqlQueryBuilder.cs" />
     <Compile Include="Model\Sql\SqlStringExtensions.cs" />
     <Compile Include="Model\Sql\TableJoinInfo.cs" />
     <Compile Include="Exceptions\RecordNotFoundException.cs" />

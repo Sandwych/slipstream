@@ -15,7 +15,7 @@ using ObjectServer.Model;
 
 namespace ObjectServer.Model
 {
-    internal class ConstraintTranslator
+    internal class SqlQueryBuilder
     {
         private static readonly string TrueSql = " (1=1) ";
 
@@ -38,7 +38,7 @@ namespace ObjectServer.Model
         IModel rootModel;
         IServiceContext serviceScope;
 
-        public ConstraintTranslator(IServiceContext scope, IModel rootModel)
+        public SqlQueryBuilder(IServiceContext scope, IModel rootModel)
         {
             if (scope == null)
             {
@@ -57,7 +57,7 @@ namespace ObjectServer.Model
             this.fromJoins.Add(rootFormClause);
         }
 
-        public ConstraintTranslator(IServiceContext scope, string rootModelName)
+        public SqlQueryBuilder(IServiceContext scope, string rootModelName)
             : this(scope, (IModel)scope.GetResource(rootModelName))
         {
 
@@ -174,73 +174,6 @@ namespace ObjectServer.Model
             this.whereRestrictions.Add(whereFragment);
         }
 
-        public SqlString ToSqlString(bool isCount = false)
-        {
-            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
-            var qs = new QuerySelect(dataProvider.Dialect);
-
-            SqlString columnsFragment = null;
-            if (isCount)
-            {
-                columnsFragment = new SqlString("count(", MainTableAlias + '.' + AbstractModel.IdFieldName, ")");
-            }
-            else
-            {
-                columnsFragment = new SqlString(MainTableAlias + '.' + AbstractModel.IdFieldName);
-            }
-            qs.AddSelectFragmentString(columnsFragment);
-            qs.Distinct = false;
-
-            var fromClauseBuilder = new SqlStringBuilder();
-            for (int i = 0; i < this.fromJoins.Count; i++)
-            {
-                if (this.fromJoins.Count > 1 && i > 0)
-                {
-                    fromClauseBuilder.Add(", ");
-                }
-                else
-                {
-                    fromClauseBuilder.Add(" ");
-                }
-                fromClauseBuilder.Add(this.fromJoins[i]);
-                fromClauseBuilder.Add(" ");
-            }
-            var fromClause = fromClauseBuilder.ToSqlString();
-            qs.JoinFragment.AddJoins(fromClause, SqlString.Empty);
-
-            foreach (var innerJoin in this.innerJoins)
-            {
-                qs.JoinFragment.AddJoin(
-                    innerJoin.Table, innerJoin.Alias,
-                    new string[] { innerJoin.FkColumn },
-                    new string[] { innerJoin.PkColumn }, JoinType.InnerJoin);
-            }
-
-            foreach (var outerJoin in this.outerJoins)
-            {
-                qs.JoinFragment.AddJoin(
-                    outerJoin.Table, outerJoin.Alias,
-                    new string[] { outerJoin.FkColumn },
-                    new string[] { outerJoin.PkColumn }, JoinType.LeftOuterJoin);
-            }
-
-            if (this.whereRestrictions.Count > 0)
-            {
-                var whereTokens = new SqlString[] { this.whereRestrictions.ToSqlString() };
-                qs.SetWhereTokens((ICollection)whereTokens);
-            }
-
-            if (!isCount)
-            {
-                foreach (var o in this.orders)
-                {
-                    var orderBySql = ' ' + MainTableAlias + '.' + o.Field + ' ' + o.Order.ToSql();
-                    qs.AddOrderBy(orderBySql);
-                }
-            }
-
-            return qs.ToQuerySqlString();
-        }
 
         /// <summary>
         /// 每组之间使用 OR 连接，一组中的元素之间使用 AND 连接
@@ -622,6 +555,74 @@ namespace ObjectServer.Model
             {
                 return false;
             }
+        }
+
+        public SqlString ToSqlString(bool isCount = false)
+        {
+            var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
+            var qs = new QuerySelect(dataProvider.Dialect);
+
+            SqlString columnsFragment = null;
+            if (isCount)
+            {
+                columnsFragment = new SqlString("count(", MainTableAlias + '.' + AbstractModel.IdFieldName, ")");
+            }
+            else
+            {
+                columnsFragment = new SqlString(MainTableAlias + '.' + AbstractModel.IdFieldName);
+            }
+            qs.AddSelectFragmentString(columnsFragment);
+            qs.Distinct = false;
+
+            var fromClauseBuilder = new SqlStringBuilder();
+            for (int i = 0; i < this.fromJoins.Count; i++)
+            {
+                if (this.fromJoins.Count > 1 && i > 0)
+                {
+                    fromClauseBuilder.Add(", ");
+                }
+                else
+                {
+                    fromClauseBuilder.Add(" ");
+                }
+                fromClauseBuilder.Add(this.fromJoins[i]);
+                fromClauseBuilder.Add(" ");
+            }
+            var fromClause = fromClauseBuilder.ToSqlString();
+            qs.JoinFragment.AddJoins(fromClause, SqlString.Empty);
+
+            foreach (var innerJoin in this.innerJoins)
+            {
+                qs.JoinFragment.AddJoin(
+                    innerJoin.Table, innerJoin.Alias,
+                    new string[] { innerJoin.FkColumn },
+                    new string[] { innerJoin.PkColumn }, JoinType.InnerJoin);
+            }
+
+            foreach (var outerJoin in this.outerJoins)
+            {
+                qs.JoinFragment.AddJoin(
+                    outerJoin.Table, outerJoin.Alias,
+                    new string[] { outerJoin.FkColumn },
+                    new string[] { outerJoin.PkColumn }, JoinType.LeftOuterJoin);
+            }
+
+            if (this.whereRestrictions.Count > 0)
+            {
+                var whereTokens = new SqlString[] { this.whereRestrictions.ToSqlString() };
+                qs.SetWhereTokens((ICollection)whereTokens);
+            }
+
+            if (!isCount)
+            {
+                foreach (var o in this.orders)
+                {
+                    var orderBySql = ' ' + MainTableAlias + '.' + o.Field + ' ' + o.Order.ToSql();
+                    qs.AddOrderBy(orderBySql);
+                }
+            }
+
+            return qs.ToQuerySqlString();
         }
     }
 }
