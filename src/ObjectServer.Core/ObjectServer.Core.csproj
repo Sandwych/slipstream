@@ -70,6 +70,11 @@
     <Reference Include="IronRuby.Libraries.Yaml">
       <HintPath>..\..\lib\ironruby\bin\IronRuby.Libraries.Yaml.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.CSharp">
     </Reference>
     <Reference Include="Microsoft.Dynamic">
@@ -213,7 +218,9 @@
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Runtime\CompileException.cs" />
+    <Compile Include="Runtime\IProjectBuildEngine.cs" />
     <Compile Include="Runtime\IRuleConstraintEvaluator.cs" />
+    <Compile Include="Runtime\MSBuildProjectBuildEngine.cs" />
     <Compile Include="Runtime\RubyRuleConstraintEvaluator.cs" />
     <Compile Include="Sessions\DbUserSessionService.cs" />
     <Compile Include="Sessions\InMemoryUserSessionService.cs" />

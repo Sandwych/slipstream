@@ -25,6 +25,7 @@ namespace ObjectServer
             this.AppDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 AppDataDirectoryName);
+            this.ModulePath = Path.Combine(Environment.CurrentDirectory, "Modules");
 
             this.Role = ServerRoles.Standalone;
             this.DbType = "postgres";
@@ -59,7 +60,6 @@ namespace ObjectServer
             this.BroadcastUrl = "inproc://broadcast";
             this.HttpListenUrl = "http://localhost:9287/";
 
-            this.ModulePath = "Modules";
             this.ServerPassword = "root";
         }
 

@@ -100,6 +100,9 @@ namespace ObjectServer
         [XmlArrayItem("file")]
         public string[] SourceFiles { get; set; }
 
+        [XmlElement("project-file", IsNullable = true)]
+        public string ProjectFile { get; set; }
+
         /// <summary>
         /// 模块初安装的时候导入的文件
         /// </summary>
@@ -195,7 +198,7 @@ namespace ObjectServer
             Debug.Assert(tc != null);
 
             var a = typeof(ObjectServer.Core.ModuleModel).Assembly;
-            var resources = this.GetResourcesWithinAssembly(a);
+            var resources = this.GetResourcesInAssembly(a);
             this.InitializeResources(tc, resources, action);
 
             //加载核心模块数据
@@ -270,12 +273,25 @@ namespace ObjectServer
 
         private IResource[] LoadDynamicAssembly()
         {
-            var a = CompileSourceFiles(this.Path);
-            this.AllAssemblies.Add(a);
-            return this.GetResourcesWithinAssembly(a);
+            var resources = new List<IResource>();
+
+            if (this.SourceFiles != null && this.SourceFiles.Length > 0)
+            {
+                var a = this.CompileSourceFiles();
+                resources.AddRange(this.GetResourcesInAssembly(a));
+                this.AllAssemblies.Add(a);
+            }
+
+            if (!string.IsNullOrEmpty(this.ProjectFile))
+            {
+                var a = this.BuildProjectFile();
+                resources.AddRange(this.GetResourcesInAssembly(a));
+                this.AllAssemblies.Add(a);
+            }
+            return resources.ToArray();
         }
 
-        private IResource[] GetResourcesWithinAssembly(Assembly assembly)
+        private IResource[] GetResourcesInAssembly(Assembly assembly)
         {
             Debug.Assert(assembly != null);
 
@@ -320,7 +336,7 @@ namespace ObjectServer
             {
                 var a = Assembly.LoadFile(dll);
                 this.allAssembly.Add(a);
-                var res = this.GetResourcesWithinAssembly(a);
+                var res = this.GetResourcesInAssembly(a);
                 resources.AddRange(res);
             }
             return resources.ToArray();
@@ -392,20 +408,18 @@ namespace ObjectServer
 
         public static Module CoreModule { get { return s_coreModule; } }
 
-        private Assembly CompileSourceFiles(string moduleDir)
+        private Assembly CompileSourceFiles()
         {
-            Debug.Assert(!string.IsNullOrEmpty(moduleDir));
-
             LoggerProvider.EnvironmentLogger.Info(String.Format(
                 "Compiling source files of the module [{0}]...", this.Name));
 
             var sourceFiles = new List<string>();
             foreach (var file in this.SourceFiles)
             {
-                sourceFiles.Add(System.IO.Path.Combine(moduleDir, file));
+                sourceFiles.Add(System.IO.Path.Combine(this.Path, file));
             }
 
-            //编译模块程序并注册所有对象
+            //编译模块程序
             var compiler = CompilerProvider.GetCompiler(this.SourceLanguage);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -416,6 +430,23 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Info(String.Format(
                 "The module [{0}] has been compiled successfully.", this.Name));
             return a;
+        }
+
+        private Assembly BuildProjectFile()
+        {
+            LoggerProvider.EnvironmentLogger.InfoFormat("Building project: [{0}]", this.ProjectFile);
+            var msbuild = new MSBuildProjectBuildEngine();
+            var outDir = System.IO.Path.Combine(this.Path, "bin");
+            var modulePath = SlipstreamEnvironment.Settings.ModulePath;
+            var projPath = System.IO.Path.Combine(modulePath, this.Path, this.ProjectFile);
+            var buildResult = msbuild.Build(projPath, outDir);
+            if (!buildResult)
+            {
+                throw new CompileException("Failed to compile", null);
+            }
+            var assemblyName = this.Name.Trim() + ".dll";
+            var assemblyPath = System.IO.Path.Combine(outDir, assemblyName);
+            return Assembly.LoadFile(assemblyPath);
         }
 
         private static void ResourceDependencySort(IList<IResource> resList)

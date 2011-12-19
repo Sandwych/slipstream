@@ -11,11 +11,7 @@
   <author>Wei Li [oldrev@gmail.com]</author>
   <version>0.01</version>
   <auto-load>true</auto-load>
-  <source-language>csharp</source-language>
-  <sources>
-    <file>EmployeeModel.cs</file>
-  </sources>
-
+  <project-file>ObjectServer.DemoModule.csproj</project-file>
   <init-files>
     <file>ui.xml</file>
     <file>demo-data.xml</file>

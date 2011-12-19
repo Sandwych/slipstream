@@ -28,8 +28,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Win32Service",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Server", "ObjectServer.Server\ObjectServer.Server.csproj", "{E4B0FE62-1C42-4CFE-ACF0-8C9FDFC81951}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.DemoModule", "ObjectServer.DemoModule\ObjectServer.DemoModule.csproj", "{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malt.Layout.Silverlight", "Malt.Layout\Malt.Layout.Silverlight.csproj", "{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{6140E963-D95A-4D21-9BCC-EA8D7D3776C0}"
@@ -47,6 +45,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.Shared.Silverlight", "ObjectServer.Shared\ObjectServer.Shared.Silverlight.csproj", "{83539D44-6EB9-4236-812D-8014EF1269E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Malt.Common.Test", "Malt.Common.Test\Malt.Common.Test.csproj", "{70C3A717-8119-42B0-975A-F8D0935DE8A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectServer.DemoModule", "ObjectServer.DemoModule\ObjectServer.DemoModule.csproj", "{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -148,16 +148,6 @@ Global
 		{E4B0FE62-1C42-4CFE-ACF0-8C9FDFC81951}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E4B0FE62-1C42-4CFE-ACF0-8C9FDFC81951}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E4B0FE62-1C42-4CFE-ACF0-8C9FDFC81951}.Release|x86.ActiveCfg = Release|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1B0C1E7-6225-46AD-A14C-A5EC2C0CF9DF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -238,6 +228,16 @@ Global
 		{70C3A717-8119-42B0-975A-F8D0935DE8A4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{70C3A717-8119-42B0-975A-F8D0935DE8A4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{70C3A717-8119-42B0-975A-F8D0935DE8A4}.Release|x86.ActiveCfg = Release|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{990DCDE7-6C29-452C-BEC7-1B814CBAEC7B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
