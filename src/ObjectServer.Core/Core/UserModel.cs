@@ -39,16 +39,16 @@ namespace ObjectServer.Core
             Fields.Boolean("active").SetLabel("Active?").Required().SetDefaultValueGetter(r => true);
         }
 
-        public override void Initialize(IServiceContext svcctx, bool update)
+        public override void Initialize(bool update)
         {
-            base.Initialize(svcctx, update);
+            base.Initialize(update);
 
             //检测是否有 root 用户
-            var isRootUserExisted = UserExists(svcctx.DataContext, RootUserName);
+            var isRootUserExisted = UserExists(this.DbDomain.CurrentSession.DataContext, RootUserName);
             if (update && isRootUserExisted)
             {
-                svcctx.BizLogger.Info("Creating the [root] user...");
-                this.CreateRootUser(svcctx.DataContext);
+                this.DbDomain.CurrentSession.BizLogger.Info("Creating the [root] user...");
+                this.CreateRootUser(this.DbDomain.CurrentSession.DataContext);
             }
         }
 
@@ -142,31 +142,20 @@ namespace ObjectServer.Core
         }
 
 
-        public override long CreateInternal(IServiceContext ctx, IDictionary<string, object> values)
+        public override long CreateInternal(IDictionary<string, object> values)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (values == null || values.Count == 0)
             {
                 throw new ArgumentNullException("values");
             }
 
             IDictionary<string, object> values2 = HashPassword(values);
-            return base.CreateInternal(ctx, values2);
+            return base.CreateInternal(values2);
         }
 
 
-        public override void WriteInternal(
-            IServiceContext ctx, long id, IDictionary<string, object> record)
+        public override void WriteInternal(long id, IDictionary<string, object> record)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (record == null)
             {
                 throw new ArgumentNullException("record");
@@ -188,15 +177,14 @@ namespace ObjectServer.Core
                 values2.Remove("salt");
             }
 
-            base.WriteInternal(ctx, id, values2);
+            base.WriteInternal(id, values2);
 
             //TODO 通知 Session 缓存
         }
 
-        public override Dictionary<string, object>[] ReadInternal(
-            IServiceContext ctx, long[] ids, string[] fields)
+        public override Dictionary<string, object>[] ReadInternal(long[] ids, string[] fields)
         {
-            var records = base.ReadInternal(ctx, ids, fields);
+            var records = base.ReadInternal(ids, fields);
 
             //"salt" "password" 是敏感字段，不要让客户端获取
             foreach (var record in records)
@@ -217,24 +205,24 @@ namespace ObjectServer.Core
         }
 
 
-        public UserSession LogOn(IServiceContext ctx,
-            string database, string login, string password)
+        public UserSession LogOn(string database, string login, string password)
         {
             var constraint = new object[][] { new object[] { "login", "=", login } };
 
-            var userIds = base.SearchInternal(ctx, constraint, null, 0, 0);
+            var userIds = base.SearchInternal(constraint, null, 0, 0);
             if (userIds.Length != 1)
             {
                 throw new UserDoesNotExistException("Cannot found user: " + login, login);
             }
 
-            var user = base.ReadInternal(ctx,
+            var user = base.ReadInternal(
                 new long[] { userIds[0] },
                 new string[] { "password", "salt" })[0];
 
             var hashedPassword = (string)user["password"];
             var salt = (string)user["salt"];
 
+            var ctx = this.DbDomain.CurrentSession;
             if (IsPasswordMatched(hashedPassword, salt, password))
             {
                 var session = this.FetchOrCreateSession(ctx.UserSessionService, database, login, user);
@@ -252,8 +240,9 @@ namespace ObjectServer.Core
         }
 
 
-        public void LogOff(IServiceContext ctx, string sessionToken)
+        public void LogOff(string sessionToken)
         {
+            var ctx = this.DbDomain.CurrentSession;
             var session = ctx.UserSessionService.GetByToken(sessionToken);
 
             if (session != null)
@@ -294,7 +283,7 @@ namespace ObjectServer.Core
                 { "password", newPassword },
             };
             HashPassword(record);
-            model.WriteInternal(ctx, ctx.UserSession.UserId, record);
+            model.WriteInternal(ctx.UserSession.UserId, record);
         }
 
         public static Dictionary<string, object>[] GetAllModelAccessEntries(long userId)

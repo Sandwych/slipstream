@@ -8,7 +8,7 @@ using NHibernate.SqlCommand;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Model.Test
+namespace ObjectServer.Model
 {
     [TestFixture]
     public sealed class SqlQueryBuilderTests : ServiceContextTestCaseBase

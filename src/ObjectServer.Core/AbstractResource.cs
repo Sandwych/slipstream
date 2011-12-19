@@ -45,6 +45,8 @@ namespace ObjectServer
             }
         }
 
+        public IDbDomain DbDomain { get; set; }
+
         public IService GetService(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -75,13 +77,10 @@ namespace ObjectServer
             IService service;
 
             Debug.Assert(args.Length > 0);
-            var scope = (IServiceContext)args[0];
-            var userArgs = new object[args.Length - 1];
-            Array.Copy(args, 1, userArgs, 0, args.Length - 1);
 
             if (this.services.TryGetValue(binder.Name, out service))
             {
-                result = service.Invoke(this, scope, userArgs);
+                result = service.Invoke(this, args);
                 return true;
             }
             else
@@ -117,9 +116,7 @@ namespace ObjectServer
             }
 
             var parameters = mi.GetParameters();
-            if (parameters.Length < 2
-                || parameters[1].ParameterType != typeof(IServiceContext)
-                || !mi.IsPublic)
+            if (parameters.Length < 1 || !mi.IsPublic)
             {
                 var msg = string.Format(
                     "The method [{1}] of resource [{0}] must have an IContext parameter at second position.",
@@ -149,13 +146,8 @@ namespace ObjectServer
             }
         }
 
-        public virtual void Initialize(IServiceContext tc, bool update)
+        public virtual void Initialize(bool update)
         {
-            if (tc == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             LoggerProvider.EnvironmentLogger.Info(
                 () => String.Format("Initializing resource [{0}]", this.Name));
 
@@ -192,19 +184,13 @@ namespace ObjectServer
 
             try
             {
-                obj = Activator.CreateInstance(t) as AbstractResource;
+                obj = (AbstractResource)Activator.CreateInstance(t);
+                return obj;
             }
             catch (TargetInvocationException ex)
             {
                 throw ex.InnerException;
             }
-
-            if (obj == null)
-            {
-                var msg = string.Format("类型 '{0}' 没有实现 IResource 接口", t.FullName);
-                throw new InvalidCastException(msg);
-            }
-            return obj;
         }
 
         //以后要支持 DLR，增加  CreateDynamicObjectInstance

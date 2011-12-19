@@ -31,9 +31,9 @@ namespace ObjectServer.Model
             return this.inheritedField.SetFieldValue(scope, value);
         }
 
-        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
+        public override object BrowseField(IDictionary<string, object> record)
         {
-            return this.inheritedField.BrowseField(scope, record);
+            return this.inheritedField.BrowseField(record);
         }
 
         public IField BaseField { get { return this.inheritedField; } }

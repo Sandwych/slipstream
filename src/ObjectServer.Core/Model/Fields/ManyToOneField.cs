@@ -71,8 +71,7 @@ namespace ObjectServer.Model
 
                 if (availableRecords.Any())
                 {
-                    var masterRecords = masterModel.ReadInternal(
-                        ctx, availableRecords.Select(ar => ar.MasterId).ToArray(), fields);
+                    var masterRecords = masterModel.ReadInternal(availableRecords.Select(ar => ar.MasterId).ToArray(), fields);
                     var masterNames = new Dictionary<long, string>(masterRecords.Length);
                     foreach (var mr in masterRecords)
                     {
@@ -113,13 +112,8 @@ namespace ObjectServer.Model
             return value;
         }
 
-        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
+        public override object BrowseField(IDictionary<string, object> record)
         {
-            if (scope == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
-
             if (record == null)
             {
                 throw new ArgumentNullException("record");
@@ -148,10 +142,10 @@ namespace ObjectServer.Model
             }
 
             var destModelName = this.Relation;
-            dynamic destMetaModel = scope.GetResource(destModelName);
+            dynamic destMetaModel = this.Model.DbDomain.GetResource(destModelName);
             //查询 ManyToOne 字段
-            var destRecord = destMetaModel.ReadInternal(scope, destIds, null)[0];
-            return new BrowsableRecord(scope, destMetaModel, destRecord);
+            var destRecord = destMetaModel.Read(destIds, null)[0];
+            return new BrowsableRecord(destMetaModel, destRecord);
         }
 
         public override bool IsRequired

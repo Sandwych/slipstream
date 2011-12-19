@@ -18,7 +18,7 @@ namespace ObjectServer.Model
 
         object SetFieldValue(IServiceContext scope, object value);
 
-        object BrowseField(IServiceContext scope, IDictionary<string, object> record);
+        object BrowseField(IDictionary<string, object> record);
 
         #region Fluent interface
 

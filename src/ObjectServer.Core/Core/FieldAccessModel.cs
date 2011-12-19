@@ -39,10 +39,9 @@ namespace ObjectServer.Core
         /// <param name="ctx"></param>
         /// <param name="userRecord"></param>
         /// <returns></returns>
-        public override long CreateInternal(
-            IServiceContext ctx, IDictionary<string, object> userRecord)
+        public override long CreateInternal(IDictionary<string, object> userRecord)
         {
-            return base.CreateInternal(ctx, userRecord);
+            return base.CreateInternal(userRecord);
         }
 
         /// <summary>
@@ -51,20 +50,13 @@ namespace ObjectServer.Core
         /// <param name="ctx"></param>
         /// <param name="id"></param>
         /// <param name="userRecord"></param>
-        public override void WriteInternal(
-            IServiceContext ctx, long id, IDictionary<string, object> userRecord)
+        public override void WriteInternal(long id, IDictionary<string, object> userRecord)
         {
-            base.WriteInternal(ctx, id, userRecord);
+            base.WriteInternal(id, userRecord);
         }
 
-        public IDictionary<string, bool> GetFieldAccess(
-            IServiceContext ctx, string modelName, IEnumerable<string> fields, string action)
+        public IDictionary<string, bool> GetFieldAccess(string modelName, IEnumerable<string> fields, string action)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (string.IsNullOrEmpty(modelName))
             {
                 throw new ArgumentNullException("modelName");
@@ -75,9 +67,9 @@ namespace ObjectServer.Core
                 throw new ArgumentOutOfRangeException("action");
             }
 
-            var modelModel = (IModel)ctx.GetResource("core.model");
-            var fieldModel = (IModel)ctx.GetResource("core.field");
-            var userRoleRelModel = (IModel)ctx.GetResource("core.user_role");
+            var modelModel = (IModel)this.DbDomain.GetResource("core.model");
+            var fieldModel = (IModel)this.DbDomain.GetResource("core.field");
+            var userRoleRelModel = (IModel)this.DbDomain.GetResource("core.user_role");
             var sql = String.Format(CultureInfo.InvariantCulture,
                 @"select ""f"".""name"" ""field_name"", (max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)) ""allow"" " +
                 @"from ""{1}"" ""a"" " +
@@ -88,6 +80,7 @@ namespace ObjectServer.Core
                 @"group by ""f"".""name"" ",
                 action, this.TableName, fieldModel.TableName, modelModel.TableName, userRoleRelModel.TableName);
 
+            var ctx = this.DbDomain.CurrentSession;
             Debug.Assert(ctx.UserSession != null);
             var userId = ctx.UserSession.UserId;
             var records = ctx.DataContext.QueryAsDictionary(SqlString.Parse(sql), modelName, userId);

@@ -52,20 +52,16 @@ namespace ObjectServer.Model
         /// 此函数要允许多次调用
         /// </summary>
         /// <param name="tc"></param>
-        public override void Initialize(IServiceContext tc, bool update)
+        public override void Initialize(bool update)
         {
-            if (tc == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
 
-            base.Initialize(tc, update);
-            this.InitializeInheritances(tc);
+            base.Initialize(update);
+            this.InitializeInheritances(this.DbDomain.CurrentSession);
             this.VerifyFields();
 
             if (update)
             {
-                this.SyncModel(tc.DataContext);
+                this.SyncModel(this.DbDomain.CurrentSession.DataContext);
             }
         }
 
@@ -387,17 +383,11 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         #region Service Methods
 
         [ServiceMethod("GetFieldDefaultValues")]
-        public static Dictionary<string, object> GetFieldDefaultValues(
-            IModel model, IServiceContext ctx, object[] clientFields)
+        public static Dictionary<string, object> GetFieldDefaultValues(IModel model, object[] clientFields)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
-            }
-
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
             }
 
             if (!model.CanRead)
@@ -410,25 +400,21 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new ArgumentNullException("clientFields");
             }
 
+            var ctx = model.DbDomain.CurrentSession;
+
             //这里不检查权限，也许是一个安全漏洞？
             var strFields = clientFields.Cast<string>().ToArray();
 
-            return model.GetFieldDefaultValuesInternal(ctx, strFields);
+            return model.GetFieldDefaultValuesInternal(strFields);
         }
 
 
         [ServiceMethod("Count")]
-        public static long Count(
-            IModel model, IServiceContext ctx, object[] constraint)
+        public static long Count(IModel model, object[] constraint)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
-            }
-
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
             }
 
             if (!model.CanRead)
@@ -436,26 +422,21 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new NotSupportedException();
             }
 
+            var ctx = model.DbDomain.CurrentSession;
             if (!ctx.CanReadModel(model.Name))
             {
                 throw new SecurityException("Access denied");
             }
 
-            return model.CountInternal(ctx, constraint);
+            return model.CountInternal(constraint);
         }
 
         [ServiceMethod("Search")]
-        public static long[] Search(
-            IModel model, IServiceContext ctx, object[] constraint, object[] order, long offset, long limit)
+        public static long[] Search(IModel model, object[] constraint, object[] order, long offset, long limit)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
-            }
-
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
             }
 
             if (!model.CanRead)
@@ -463,6 +444,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new NotSupportedException();
             }
 
+            var ctx = model.DbDomain.CurrentSession;
             if (!ctx.CanReadModel(model.Name))
             {
                 throw new SecurityException("Access denied");
@@ -484,21 +466,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 orderInfos = model.Order.ToArray();
             }
 
-            return model.SearchInternal(ctx, constraint, orderInfos, offset, limit);
+            return model.SearchInternal(constraint, orderInfos, offset, limit);
         }
 
         [ServiceMethod("Read")]
-        public static Record[] Read(
-            IModel model, IServiceContext ctx, dynamic clientIds, dynamic clientFields)
+        public static Record[] Read(IModel model, dynamic clientIds, dynamic clientFields)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
-            }
-
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
             }
 
             if (clientIds == null)
@@ -511,6 +487,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new NotSupportedException();
             }
 
+            var ctx = model.DbDomain.CurrentSession;
             if (!ctx.CanReadModel(model.Name))
             {
                 throw new SecurityException("Access denied");
@@ -537,21 +514,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             {
                 ids[i] = clientIds[i];
             }
-            return model.ReadInternal(ctx, ids, strFields);
+            return model.ReadInternal(ids, strFields);
         }
 
         [ServiceMethod("Create")]
-        public static long Create(
-            IModel model, IServiceContext ctx, IRecord propertyBag)
+        public static long Create(IModel model, IRecord propertyBag)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
-            }
-
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
             }
 
             if (!model.CanCreate)
@@ -559,6 +530,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new NotSupportedException();
             }
 
+            var ctx = model.DbDomain.CurrentSession;
             if (!ctx.CanCreateModel(model.Name))
             {
                 throw new SecurityException("Access denied");
@@ -566,12 +538,11 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
             VerifyFieldAccess(model, ctx, "write", propertyBag.Keys);
 
-            return model.CreateInternal(ctx, propertyBag);
+            return model.CreateInternal(propertyBag);
         }
 
         [ServiceMethod("Write")]
-        public static void Write(
-           IModel model, IServiceContext ctx, object id, IRecord userRecord)
+        public static void Write(IModel model, object id, IRecord userRecord)
         {
             //TODO 检查 id 类型
 
@@ -580,16 +551,12 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new ArgumentNullException("model");
             }
 
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (!model.CanWrite)
             {
                 throw new NotSupportedException();
             }
 
+            var ctx = model.DbDomain.CurrentSession;
             if (!ctx.CanWriteModel(model.Name))
             {
                 throw new SecurityException("Access denied");
@@ -597,21 +564,15 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
             VerifyFieldAccess(model, ctx, "write", userRecord.Keys);
 
-            model.WriteInternal(ctx, (long)id, userRecord);
+            model.WriteInternal((long)id, userRecord);
         }
 
         [ServiceMethod("Delete")]
-        public static void Delete(
-            IModel model, IServiceContext ctx, dynamic clientIDs)
+        public static void Delete(IModel model, dynamic clientIDs)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
-            }
-
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
             }
 
             if (!model.CanDelete)
@@ -619,6 +580,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new NotSupportedException();
             }
 
+            var ctx = model.DbDomain.CurrentSession;
             if (!ctx.CanDeleteModel(model.Name))
             {
                 throw new SecurityException("Access denied");
@@ -639,24 +601,19 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 }
             }
 
-            model.DeleteInternal(ctx, ids);
+            model.DeleteInternal(ids);
         }
 
         [ServiceMethod("GetFields")]
-        public static Dictionary<string, object>[] GetFields(
-            IModel model, IServiceContext ctx, string[] fields)
+        public static Dictionary<string, object>[] GetFields(IModel model, string[] fields)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (model == null)
             {
                 throw new ArgumentNullException("model");
             }
+            var ctx = model.DbDomain.CurrentSession;
 
-            return model.GetFieldsInternal(ctx, fields);
+            return model.GetFieldsInternal(fields);
         }
 
         #endregion
@@ -681,25 +638,17 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
         public virtual NameGetter NameGetter { get; protected set; }
 
-        public abstract long CountInternal(IServiceContext ctx, object[] constraints);
-        public abstract long[] SearchInternal(
-            IServiceContext ctx, object[] constraints, OrderExpression[] orders, long offset, long limit);
-        public abstract long CreateInternal(
-            IServiceContext ctx, IRecord record);
-        public abstract void WriteInternal(
-            IServiceContext ctx, long id, IRecord record);
-        public abstract Record[] ReadInternal(
-            IServiceContext ctx, long[] ids, string[] requiredFields);
-        public abstract void DeleteInternal(IServiceContext scope, long[] ids);
+        public abstract long CountInternal(object[] constraints);
+        public abstract long[] SearchInternal(object[] constraints, OrderExpression[] orders, long offset, long limit);
+        public abstract long CreateInternal(IRecord record);
+        public abstract void WriteInternal(long id, IRecord record);
+        public abstract Record[] ReadInternal(long[] ids, string[] requiredFields);
+        public abstract void DeleteInternal(long[] ids);
 
 
-        public Dictionary<string, object> GetFieldDefaultValuesInternal(
-            IServiceContext ctx, string[] fieldNames)
+        public Dictionary<string, object> GetFieldDefaultValuesInternal(string[] fieldNames)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
+            var ctx = this.DbDomain.CurrentSession;
 
             if (fieldNames == null)
             {
@@ -725,18 +674,18 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return result;
         }
 
-        public dynamic Browse(IServiceContext ctx, long id)
+        public dynamic Browse(long id)
         {
-            return new BrowsableRecord(ctx, this, id);
+            return new BrowsableRecord(this, id);
         }
 
-        public dynamic BrowseMany(IServiceContext ctx, long[] ids)
+        public dynamic BrowseMany(long[] ids)
         {
-            var records = this.ReadInternal(ctx, ids, null);
+            var records = this.ReadInternal(ids, null);
             dynamic browObjs = new dynamic[records.Length];
             for (int i = 0; i < browObjs.Length; i++)
             {
-                browObjs[i] = new BrowsableRecord(ctx, this, records[i]);
+                browObjs[i] = new BrowsableRecord(this, records[i]);
             }
             return browObjs;
         }
@@ -755,27 +704,23 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             return this;
         }
 
-        public virtual Dictionary<string, object>[] GetFieldsInternal(
-            IServiceContext ctx, string[] fieldNames)
+        public virtual Dictionary<string, object>[] GetFieldsInternal(string[] fieldNames)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
+            var ctx = this.DbDomain.CurrentSession;
 
-            var modelModel = (IModel)ctx.GetResource("core.model");
+            var modelModel = (IModel)this.DbDomain.GetResource("core.model");
 
-            var destModel = (AbstractModel)ctx.GetResource(this.Name);
+            var destModel = (AbstractModel)this.DbDomain.GetResource(this.Name);
 
             var modelDomain = new object[] { new object[] { "name", "=", this.Name } };
-            var modelIds = modelModel.SearchInternal(ctx, modelDomain, null, 0, 0);
+            var modelIds = modelModel.SearchInternal(modelDomain, null, 0, 0);
 
             //TODO 检查 IDS 错误，好好想一下要用数据库的字段信息还是用内存的字段信息
 
-            var fieldModel = (IModel)ctx.GetResource("core.field");
+            var fieldModel = (IModel)this.DbDomain.GetResource("core.field");
             var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
-            var fieldIds = fieldModel.SearchInternal(ctx, fieldDomain, null, 0, 0);
-            var records = fieldModel.ReadInternal(ctx, fieldIds, fieldNames);
+            var fieldIds = fieldModel.SearchInternal(fieldDomain, null, 0, 0);
+            var records = fieldModel.ReadInternal(fieldIds, fieldNames);
 
             foreach (var r in records)
             {
@@ -804,7 +749,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         {
             var availableFields = fields.Where(k => model.Fields.ContainsKey(k));
             var fam = (Core.FieldAccessModel)tc.GetResource("core.field_access");
-            var result = fam.GetFieldAccess(tc, model.Name, availableFields, action);
+            var result = fam.GetFieldAccess(model.Name, availableFields, action);
             foreach (var p in result)
             {
                 if (!p.Value)
@@ -814,14 +759,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             }
         }
 
-        public virtual void ImportRecord(
-              IServiceContext ctx, bool noUpdate, IDictionary<string, object> record, string key)
+        public virtual void ImportRecord(bool noUpdate, IDictionary<string, object> record, string key)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (record == null)
             {
                 throw new ArgumentNullException("record");
@@ -832,6 +771,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new ArgumentNullException("key");
             }
 
+            var ctx = this.DbDomain.CurrentSession;
             //查找 key 指定的记录看是否存在
             long? existedId = null;
             if (!string.IsNullOrEmpty(key))
@@ -842,7 +782,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
 
             if (existedId == null) // Create
             {
-                existedId = (long)this.CreateInternal(ctx, record);
+                existedId = (long)this.CreateInternal(record);
                 if (!string.IsNullOrEmpty(key))
                 {
                     Core.ModelDataModel.Create(
@@ -854,11 +794,11 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 if (this.Fields.ContainsKey(AbstractModel.VersionFieldName)) //处理版本
                 {
                     var fields = new string[] { AbstractModel.VersionFieldName };
-                    var read = this.ReadInternal(ctx, new long[] { existedId.Value }, fields)[0];
+                    var read = this.ReadInternal(new long[] { existedId.Value }, fields)[0];
                     record[AbstractModel.VersionFieldName] = read[AbstractModel.VersionFieldName];
                 }
 
-                this.WriteInternal(ctx, existedId.Value, record);
+                this.WriteInternal(existedId.Value, record);
                 Core.ModelDataModel.UpdateResourceId(
                     ctx.DataContext, this.Name, key, existedId.Value);
             }

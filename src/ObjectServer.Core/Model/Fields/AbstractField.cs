@@ -168,7 +168,7 @@ namespace ObjectServer.Model
 
         protected abstract object OnSetFieldValue(IServiceContext scope, object value);
 
-        public abstract object BrowseField(IServiceContext scope, IDictionary<string, object> record);
+        public abstract object BrowseField(IDictionary<string, object> record);
 
         public bool IsProperty
         {

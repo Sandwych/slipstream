@@ -521,7 +521,7 @@ namespace ObjectServer.Model
                 new object[] { AbstractModel.IdFieldName, "=", cr.Value }
             };
             var parentIDs = new long[] { (long)cr.Value };
-            var parents = joinModel.ReadInternal(this.serviceScope, parentIDs, TreeParentFields);
+            var parents = joinModel.ReadInternal(parentIDs, TreeParentFields);
             if (parents.Length != 1)
             {
                 var msg = string.Format(

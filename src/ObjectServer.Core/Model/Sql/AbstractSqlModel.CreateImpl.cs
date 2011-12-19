@@ -24,12 +24,14 @@ namespace ObjectServer.Model
 
     public abstract partial class AbstractSqlModel : AbstractModel
     {
-        public override long CreateInternal(IServiceContext scope, IRecord userRecord)
+        public override long CreateInternal(IRecord userRecord)
         {
             if (!this.CanCreate)
             {
                 throw new NotSupportedException();
             }
+
+            var scope = this.DbDomain.CurrentSession;
 
             if (userRecord.ContainsKey(AbstractModel.IdFieldName))
             {
@@ -70,7 +72,7 @@ namespace ObjectServer.Model
                 this.UpdateTreeForCreation(scope.DataContext, selfId, record);
             }
 
-            this.UpdateOneToManyFields(scope, selfId, record);
+            this.UpdateOneToManyFields(selfId, record);
 
             this.PostcreateManyToManyFields(scope, selfId, record);
 
@@ -99,7 +101,7 @@ namespace ObjectServer.Model
                         record.Remove(f.Key);
                     }
                 }
-                var baseId = baseModel.CreateInternal(scope, baseRecord);
+                var baseId = baseModel.CreateInternal(baseRecord);
                 record[i.RelatedField] = baseId;
             }
         }
@@ -131,7 +133,7 @@ namespace ObjectServer.Model
                     var targetRecord = new Record(2);
                     targetRecord[f.OriginField] = id;
                     targetRecord[f.RelatedField] = targetId;
-                    relModel.CreateInternal(tc, targetRecord);
+                    relModel.CreateInternal(targetRecord);
                 }
             }
         }

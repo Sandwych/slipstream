@@ -19,14 +19,12 @@ namespace ObjectServer
     internal sealed class SlipstreamService : ISlipstreamService
     {
         private readonly IDataProvider _dataProvider;
+        private readonly IDbDomainManager _dbDomainManager;
 
-        public SlipstreamService(IDataProvider dataProvider)
+        public SlipstreamService(IDataProvider dataProvider, IDbDomainManager dbDomainManager)
         {
-            if (dataProvider == null)
-            {
-                throw new ArgumentNullException("dataProvider");
-            }
             this._dataProvider = dataProvider;
+            this._dbDomainManager = dbDomainManager;
         }
 
         public string LogOn(string dbName, string username, string password)
@@ -46,10 +44,11 @@ namespace ObjectServer
                 throw new ArgumentNullException("password");
             }
 
-            using (var ctx = new ServiceContext(this._dataProvider, dbName))
+            var dbDomain = _dbDomainManager.GetDbDomain(dbName);
+            using (var ctx = dbDomain.OpenSystemSession())
             {
-                dynamic userModel = ctx.GetResource(UserModel.ModelName);
-                UserSession session = userModel.LogOn(ctx, dbName, username, password);
+                dynamic userModel = dbDomain.GetResource(UserModel.ModelName);
+                UserSession session = userModel.LogOn(dbName, username, password);
                 Debug.Assert(session != null);
                 return session.Token.ToString();
             }
@@ -60,7 +59,7 @@ namespace ObjectServer
         {
             if (string.IsNullOrEmpty(db))
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("db");
             }
 
             if (string.IsNullOrEmpty(sessionToken))
@@ -68,11 +67,11 @@ namespace ObjectServer
                 throw new ArgumentNullException("sessionToken");
             }
 
-            using (var ctx = new ServiceContext(this._dataProvider, db, sessionToken))
+            var dbDomain = _dbDomainManager.GetDbDomain(db);
+            using (var ctx = dbDomain.OpenSession(sessionToken))
             {
-
-                dynamic userModel = ctx.GetResource(UserModel.ModelName);
-                userModel.LogOff(ctx, sessionToken);
+                dynamic userModel = dbDomain.GetResource(UserModel.ModelName);
+                userModel.LogOff(sessionToken);
             }
         }
 
@@ -100,13 +99,12 @@ namespace ObjectServer
 
             //加入事务
             //REVIEW
-            //using (var txScope = new System.Transactions.TransactionScope())
-            using (var svcCtx = new ServiceContext(this._dataProvider, db, sessionToken))
+            var dbDomain = _dbDomainManager.GetDbDomain(db);
+            using (var ctx = dbDomain.OpenSession(sessionToken))
             {
-                dynamic res = svcCtx.GetResource(resource);
+                dynamic res = dbDomain.GetResource(resource);
                 var svc = res.GetService(method);
-                var result = svc.Invoke(res, svcCtx, args);
-                //txScope.Complete();
+                var result = svc.Invoke(res, args);
                 return result;
             }
         }

@@ -9,16 +9,16 @@ namespace ObjectServer.Model
     public interface IModel : IResource, IModelDescriptor
     {
         IField[] GetAllStorableFields();
-        Dictionary<string, object> GetFieldDefaultValuesInternal(IServiceContext ctx, string[] fields);
-        long CountInternal(IServiceContext ctx, object[] constraint);
-        long[] SearchInternal(IServiceContext ctx, object[] constraint, OrderExpression[] orders, long offset, long limit);
-        long CreateInternal(IServiceContext ctx, IDictionary<string, object> propertyBag);
-        void WriteInternal(IServiceContext ctx, long id, IDictionary<string, object> record);
-        Dictionary<string, object>[] ReadInternal(IServiceContext ctx, long[] ids, string[] requiredFields);
-        void DeleteInternal(IServiceContext ctx, long[] ids);
-        Dictionary<string, object>[] GetFieldsInternal(IServiceContext ctx, string[] fields);
-        dynamic Browse(IServiceContext ctx, long id);
-        dynamic BrowseMany(IServiceContext ctx, long[] ids);
-        void ImportRecord(IServiceContext ctx, bool noUpdate, IDictionary<string, object> record, string key);
+        Dictionary<string, object> GetFieldDefaultValuesInternal(string[] fields);
+        long CountInternal(object[] constraint);
+        long[] SearchInternal(object[] constraint, OrderExpression[] orders, long offset, long limit);
+        long CreateInternal(IDictionary<string, object> propertyBag);
+        void WriteInternal(long id, IDictionary<string, object> record);
+        Dictionary<string, object>[] ReadInternal(long[] ids, string[] requiredFields);
+        void DeleteInternal(long[] ids);
+        Dictionary<string, object>[] GetFieldsInternal(string[] fields);
+        dynamic Browse(long id);
+        dynamic BrowseMany(long[] ids);
+        void ImportRecord(bool noUpdate, IDictionary<string, object> record, string key);
     }
 }

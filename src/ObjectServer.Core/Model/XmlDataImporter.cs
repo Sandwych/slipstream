@@ -99,7 +99,7 @@ namespace ObjectServer.Model
 
             var record = new Dictionary<string, object>();
             this.ReadRecordFields(reader, model, record);
-            model.ImportRecord(this.context, noUpdate, record, key);
+            model.ImportRecord(noUpdate, record, key);
         }
 
         private void ReadRecordFields(XmlReader reader, dynamic model, Dictionary<string, object> record)

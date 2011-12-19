@@ -31,16 +31,11 @@ namespace ObjectServer.Core
 
         [ServiceMethod("GetView")]
         public static Dictionary<string, object> GetView(
-            IModel model, IServiceContext ctx, string modelName, string viewKind, long? viewId)
+            IModel model, string modelName, string viewKind, long? viewId)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
-            }
-
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
             }
 
             if (string.IsNullOrEmpty(viewKind))
@@ -59,11 +54,11 @@ namespace ObjectServer.Core
              * 
              * */
             Dictionary<string, object> result = null;
-            var destModel = ctx.GetResource(modelName) as IModel;
+            var destModel = model.DbDomain.GetResource(modelName) as IModel;
 
             if (viewId != null)
             {
-                var viewRecords = model.ReadInternal(ctx, new long[] { viewId.Value }, null);
+                var viewRecords = model.ReadInternal(new long[] { viewId.Value }, null);
                 result = viewRecords[0];
             }
             else
@@ -73,10 +68,10 @@ namespace ObjectServer.Core
                     new object[] { "model", "=", modelName },
                 };
 
-                var viewIDs = model.SearchInternal(ctx, constraint, null, 0, 0);
+                var viewIDs = model.SearchInternal(constraint, null, 0, 0);
                 if (viewIDs != null && viewIDs.Length > 0)
                 {
-                    result = model.ReadInternal(ctx, viewIDs, null)[0];
+                    result = model.ReadInternal(viewIDs, null)[0];
                 }
                 else
                 {

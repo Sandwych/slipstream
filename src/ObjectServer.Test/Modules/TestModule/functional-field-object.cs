@@ -27,7 +27,7 @@ namespace ObjectServer.Test
         private Dictionary<long, object> GetSum(IServiceContext ctx, IEnumerable<long> ids)
         {
             var fields = new string[] { "field1", "field2" };
-            var records = this.ReadInternal(ctx, ids.ToArray(), fields);
+            var records = this.ReadInternal(ids.ToArray(), fields);
             var result = new Dictionary<long, object>(ids.Count());
             foreach (var record in records)
             {
@@ -42,7 +42,7 @@ namespace ObjectServer.Test
 
         private Criterion[] ConvertSumFieldCriterion(IServiceContext ctx, Criterion cr)
         {
-            var ids = (long[])this.SearchInternal(ctx, null, null, 0, 0);
+            var ids = (long[])this.SearchInternal(null, null, 0, 0);
             var values = GetSum(ctx, ids);
 
             if (cr.Operator == "=")
@@ -65,7 +65,7 @@ namespace ObjectServer.Test
         {
             var userModel = (IModel)ctx.GetResource("core.user");
             var constraints = new object[][] { new object[] { "login", "=", "root" } };
-            var userIds = Search(userModel, ctx, constraints, null, 0, 0);
+            var userIds = Search(userModel, constraints, null, 0, 0);
             var rootId = userIds[0];
             var result = new Dictionary<long, object>();
             foreach (var id in ids)

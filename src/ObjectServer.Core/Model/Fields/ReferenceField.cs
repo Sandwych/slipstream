@@ -94,7 +94,7 @@ namespace ObjectServer.Model
                 string name = null;
                 if (masterModel.Fields.ContainsKey("name"))
                 {
-                    var record = masterModel.ReadInternal(ctx, ids, fields)[0];
+                    var record = masterModel.ReadInternal(ids, fields)[0];
                     name = (string)record["name"];
                 }
 
@@ -112,13 +112,8 @@ namespace ObjectServer.Model
             }
         }
 
-        public override object BrowseField(IServiceContext ctx, IDictionary<string, object> record)
+        public override object BrowseField(IDictionary<string, object> record)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (record == null || record.Count == 0)
             {
                 throw new ArgumentNullException("record");
@@ -126,10 +121,10 @@ namespace ObjectServer.Model
 
             var fieldValue = (object[])record[this.Name];
             var destModelName = (string)fieldValue[0];
-            var destMetaModel = (IModel)ctx.GetResource(destModelName);
+            var destMetaModel = (IModel)this.Model.DbDomain.GetResource(destModelName);
             var destIds = new long[] { (long)fieldValue[1] };
-            var destRecord = destMetaModel.ReadInternal(ctx, destIds, null)[0];
-            return new BrowsableRecord(ctx, destMetaModel, destRecord);
+            var destRecord = destMetaModel.ReadInternal(destIds, null)[0];
+            return new BrowsableRecord(destMetaModel, destRecord);
         }
 
         public override bool IsRequired

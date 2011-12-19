@@ -88,10 +88,9 @@ select max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)
         /// <param name="ctx"></param>
         /// <param name="userRecord"></param>
         /// <returns></returns>
-        public override long CreateInternal(
-            IServiceContext ctx, IDictionary<string, object> userRecord)
+        public override long CreateInternal(IDictionary<string, object> userRecord)
         {
-            return base.CreateInternal(ctx, userRecord);
+            return base.CreateInternal(userRecord);
         }
 
         /// <summary>
@@ -100,10 +99,9 @@ select max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)
         /// <param name="ctx"></param>
         /// <param name="id"></param>
         /// <param name="userRecord"></param>
-        public override void WriteInternal(
-            IServiceContext ctx, long id, IDictionary<string, object> userRecord)
+        public override void WriteInternal(long id, IDictionary<string, object> userRecord)
         {
-            base.WriteInternal(ctx, id, userRecord);
+            base.WriteInternal(id, userRecord);
         }
 
         /// <summary>
@@ -111,9 +109,9 @@ select max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="ids"></param>
-        public override void DeleteInternal(IServiceContext ctx, long[] ids)
+        public override void DeleteInternal(long[] ids)
         {
-            base.DeleteInternal(ctx, ids);
+            base.DeleteInternal(ids);
         }
     }
 }

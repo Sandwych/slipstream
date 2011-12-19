@@ -37,7 +37,8 @@ namespace ObjectServer.Core.Test
                 var orders = new OrderExpression[] {
                         new OrderExpression("name", SortDirection.Ascend) 
                     };
-                var ids = (long[])services.Execute(ServiceContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Search",
+                var ids = (long[])services.Execute(
+                    ServiceContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Search",
                     null, null, 0, 0);
                 Assert.AreEqual(expectedOrderNames.Length, ids.Length);
                 var records = (Dictionary<string, object>[])services.Execute(

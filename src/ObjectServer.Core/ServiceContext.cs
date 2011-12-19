@@ -18,6 +18,9 @@ namespace ObjectServer
     /// </summary>
     internal sealed class ServiceContext : IServiceContext
     {
+        [ThreadStatic]
+        private static IServiceContext s_currentContext;
+
         private bool disposed = false;
         private readonly IResourceContainer _resources;
         private readonly int _currentThreadID;
@@ -339,6 +342,18 @@ namespace ObjectServer
 
         #endregion
 
+
+        public IServiceContext Current
+        {
+            get
+            {
+                return s_currentContext;
+            }
+            internal set
+            {
+                s_currentContext = value;
+            }
+        }
     }
 
 }

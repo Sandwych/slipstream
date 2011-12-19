@@ -99,13 +99,8 @@ namespace ObjectServer.Model
             return value;
         }
 
-        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
+        public override object BrowseField(IDictionary<string, object> record)
         {
-            if (scope == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
-
             if (record == null)
             {
                 throw new ArgumentNullException("record");

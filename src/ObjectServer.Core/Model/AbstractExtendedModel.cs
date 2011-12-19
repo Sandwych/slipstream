@@ -27,17 +27,11 @@ namespace ObjectServer.Model
             this.fields = new FieldCollection(this);
         }
 
-        public override void Initialize(IServiceContext tc, bool update)
+        public override void Initialize(bool update)
         {
-            if (tc == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
+            var baseModel = this.DbDomain.GetResource(Name);
 
-            var baseModel = tc.GetResource(Name);
-
-            baseModel.Initialize(tc, update);
-
+            baseModel.Initialize(update);
         }
 
         public ICollection<InheritanceDescriptor> Inheritances
@@ -59,8 +53,7 @@ namespace ObjectServer.Model
             throw new NotSupportedException();
         }
 
-        public Dictionary<string, object> GetFieldDefaultValuesInternal(
-            IServiceContext ctx, string[] fields)
+        public Dictionary<string, object> GetFieldDefaultValuesInternal(string[] fields)
         {
             throw new NotSupportedException();
         }
@@ -125,60 +118,53 @@ namespace ObjectServer.Model
             get { throw new NotSupportedException(); }
         }
 
-        public long CountInternal(
-            IServiceContext ctx, object[] constraint)
+        public long CountInternal(object[] constraint)
         {
             throw new NotSupportedException();
         }
 
-        public long[] SearchInternal(
-            IServiceContext ctx, object[] constraints,
-            OrderExpression[] orders, long offset, long limit)
+        public long[] SearchInternal(object[] constraints, OrderExpression[] orders, long offset, long limit)
         {
             throw new NotSupportedException();
 
         }
 
-        public long CreateInternal(
-            IServiceContext ctx, IDictionary<string, object> propertyBag)
+        public long CreateInternal(IDictionary<string, object> propertyBag)
         {
             throw new NotSupportedException();
         }
 
-        public void WriteInternal(
-            IServiceContext scope, long id, IDictionary<string, object> record)
+        public void WriteInternal(long id, IDictionary<string, object> record)
         {
             throw new NotSupportedException();
         }
 
-        public Dictionary<string, object>[] ReadInternal(
-            IServiceContext scope, long[] ids, string[] requiredFields)
+        public Dictionary<string, object>[] ReadInternal(long[] ids, string[] requiredFields)
         {
             throw new NotSupportedException();
         }
 
-        public void DeleteInternal(IServiceContext scope, long[] ids)
+        public void DeleteInternal(long[] ids)
         {
             throw new NotSupportedException();
         }
 
-        public dynamic Browse(IServiceContext scope, long id)
+        public dynamic Browse(long id)
         {
             throw new NotSupportedException();
         }
 
-        public dynamic BrowseMany(IServiceContext scope, long[] ids)
+        public dynamic BrowseMany(long[] ids)
         {
             throw new NotSupportedException();
         }
 
-        public void ImportRecord(
-              IServiceContext ctx, bool noUpdate, IDictionary<string, object> record, string key)
+        public void ImportRecord(bool noUpdate, IDictionary<string, object> record, string key)
         {
             throw new NotSupportedException();
         }
 
-        public Dictionary<string, object>[] GetFieldsInternal(IServiceContext ctx, string[] fields)
+        public Dictionary<string, object>[] GetFieldsInternal(string[] fields)
         {
             throw new NotSupportedException();
         }

@@ -63,13 +63,8 @@ namespace ObjectServer.Model
             return value;
         }
 
-        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
+        public override object BrowseField(IDictionary<string, object> record)
         {
-            if (scope == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
-
             if (record == null)
             {
                 throw new ArgumentNullException("record");
@@ -84,15 +79,15 @@ namespace ObjectServer.Model
             {
                 var id = (long)record[AbstractModel.IdFieldName];
                 var fields = new string[] { this.Name };
-                var newRecord = ((Dictionary<string, object>[])this.Model.ReadInternal(scope, new long[] { id }, fields))[0];
+                var newRecord = ((Dictionary<string, object>[])this.Model.ReadInternal(new long[] { id }, fields))[0];
                 targetIds = (long[])newRecord[this.Name];
             }
 
-            var relationModel = (IModel)scope.GetResource(this.Relation);
+            var relationModel = (IModel)this.Model.DbDomain.GetResource(this.Relation);
             var targetModelName = relationModel.Fields[this.RelatedField].Relation;
-            var targetModel = (IModel)scope.GetResource(targetModelName);
-            var targetRecords = targetModel.ReadInternal(scope, targetIds, null);
-            return targetRecords.Select(tr => new BrowsableRecord(scope, targetModel, tr)).ToArray();
+            var targetModel = (IModel)this.Model.DbDomain.GetResource(targetModelName);
+            var targetRecords = targetModel.ReadInternal(targetIds, null);
+            return targetRecords.Select(tr => new BrowsableRecord(targetModel, tr)).ToArray();
         }
 
         public override bool IsColumn { get { return false; } }

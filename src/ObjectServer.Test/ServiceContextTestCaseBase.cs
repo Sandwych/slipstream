@@ -12,6 +12,8 @@ namespace ObjectServer
 {
     public abstract class ServiceContextTestCaseBase : ServiceTestCaseBase
     {
+        private IDbDomain _dbDomain;
+
         private void ClearTestUsers()
         {
             dynamic userModel = this.GetResource("core.user");
@@ -30,7 +32,7 @@ namespace ObjectServer
 
         protected dynamic GetResource(string resName)
         {
-            return this.Context.GetResource(resName);
+            return this._dbDomain.GetResource(resName);
         }
 
         [SetUp]
@@ -40,7 +42,8 @@ namespace ObjectServer
             Debug.Assert(!string.IsNullOrEmpty(this.SessionToken));
 
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<Data.IDataProvider>();
-            this.Context = new ServiceContext(dataProvider, TestingDatabaseName, this.SessionToken);
+            this._dbDomain = SlipstreamEnvironment.DbDomains.GetDbDomain(TestingDatabaseName);
+            this.Context = _dbDomain.OpenSession(this.SessionToken);
         }
 
         [TearDown]
@@ -68,10 +71,10 @@ namespace ObjectServer
         protected void ClearModel(string modelName)
         {
             dynamic model = this.GetResource(modelName);
-            var ids = model.Search(this.Context, null, null, 0, 0);
+            var ids = model.Search(null, null, 0, 0);
             if (ids.Length > 0)
             {
-                model.Delete(this.Context, ids);
+                model.Delete(ids);
             }
         }
 

@@ -18,7 +18,7 @@ namespace ObjectServer.Test
         public void TestMultithreadRead()
         {
 
-            var threadProc = new ThreadStart(this.TestProc);
+            var threadProc = new ThreadStart(this.SearchTestProc);
 
             //启动多个线程并发测试
             const int ThreadCount = 50;
@@ -37,18 +37,18 @@ namespace ObjectServer.Test
             }
         }
 
-        private void TestProc()
+        private void SearchTestProc()
         {
             var service = SlipstreamEnvironment.RootService;
-            var ids = (long[])service.Execute(TestingDatabaseName,
-                base.SessionToken, "core.menu", "Search",
-                null, null, 0, 0);
 
             //每个线程中读取5次
             const int ReadTimes = 5;
             for (int i = 0; i < ReadTimes; i++)
             {
-                dynamic records = service.Execute(TestingDatabaseName, base.SessionToken, "core.menu", "Read", ids, null);
+                var ids = (long[])service.Execute(
+                    TestingDatabaseName, base.SessionToken, "core.menu", "Search", null, null, 0, 0);
+                dynamic records = service.Execute(
+                    TestingDatabaseName, base.SessionToken, "core.menu", "Read", ids, null);
                 Assert.AreEqual(ids.Length, records.Length);
             }
         }

@@ -45,11 +45,6 @@ namespace ObjectServer.Core
 
         private static Dictionary<long, object> StateGetter(IServiceContext tc, long[] ids)
         {
-            if (tc == null)
-            {
-                throw new ArgumentNullException("tc");
-            }
-
             if (ids == null)
             {
                 throw new ArgumentNullException("ids");
@@ -61,13 +56,13 @@ namespace ObjectServer.Core
             var constraints = new object[][] { new object[] { "name", "=", null } };
             foreach (var depId in ids)
             {
-                dynamic dep = selfModel.Browse(tc, depId);
+                dynamic dep = selfModel.Browse(depId);
                 constraints[0][2] = dep.name;
-                var moduleIds = moduleModel.SearchInternal(tc, constraints, null, 0, 0);
+                var moduleIds = moduleModel.SearchInternal(constraints, null, 0, 0);
 
                 if (moduleIds.Length > 0)
                 {
-                    result[depId] = moduleModel.Browse(tc, moduleIds.First()).state;
+                    result[depId] = moduleModel.Browse(moduleIds.First()).state;
                 }
                 else
                 {

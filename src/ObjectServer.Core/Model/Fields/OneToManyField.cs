@@ -37,7 +37,7 @@ namespace ObjectServer.Model
                 var masterID = (long)master[AbstractModel.IdFieldName];
                 var constraint = new List<object[]>();
                 constraint.Add(new object[] { this.RelatedField, "=", masterID });
-                var childIDs = childModel.SearchInternal(ctx, constraint.ToArray(), null, 0, 0);
+                var childIDs = childModel.SearchInternal(constraint.ToArray(), null, 0, 0);
                 children[masterID] = childIDs;
             }
 
@@ -56,13 +56,8 @@ namespace ObjectServer.Model
             throw new NotSupportedException();
         }
 
-        public override object BrowseField(IServiceContext scope, IDictionary<string, object> record)
+        public override object BrowseField(IDictionary<string, object> record)
         {
-            if (scope == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
-
             if (record == null)
             {
                 throw new ArgumentNullException("record");
@@ -70,13 +65,13 @@ namespace ObjectServer.Model
 
             //TODO 重构成跟Many-to-many 一样的
             var targetModelName = this.Relation;
-            IModel targetModel = (IModel)scope.GetResource(targetModelName);
+            IModel targetModel = (IModel)this.Model.DbDomain.GetResource(targetModelName);
             var thisId = record[AbstractModel.IdFieldName];
             //TODO: 下面的条件可能还不够，差 active 等等
             var constraint = new object[][] { new object[] { this.RelatedField, "=", thisId } };
-            var destIds = targetModel.SearchInternal(scope, constraint, null, 0, 0);
-            var records = (Dictionary<string, object>[])targetModel.ReadInternal(scope, destIds, null);
-            return records.Select(r => new BrowsableRecord(scope, targetModel, r)).ToArray();
+            var destIds = targetModel.SearchInternal(constraint, null, 0, 0);
+            var records = (Dictionary<string, object>[])targetModel.ReadInternal(destIds, null);
+            return records.Select(r => new BrowsableRecord(targetModel, r)).ToArray();
         }
 
         public override bool IsColumn { get { return false; } }

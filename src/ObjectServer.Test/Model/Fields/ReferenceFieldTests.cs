@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Model.Fields.Test
+namespace ObjectServer.Model.Fields
 {
     [TestFixture]
     public class ReferenceFieldTests : ServiceContextTestCaseBase
@@ -31,28 +31,28 @@ namespace ObjectServer.Model.Fields.Test
             //创建 Master 与 Child 测试数据
             dynamic masterRecord1 = new ExpandoObject();
             masterRecord1.name = "master1";
-            var masterId1 = masterModel.Create(this.Context, masterRecord1);
+            var masterId1 = masterModel.Create(masterRecord1);
 
             dynamic childRecord1 = new ExpandoObject();
             childRecord1.name = "child1";
-            var childId1 = childModel.Create(this.Context, childRecord1);
+            var childId1 = childModel.Create(childRecord1);
 
             //创建测试数据 TestModel
             dynamic testRecord1 = new ExpandoObject();
             testRecord1.name = "test1";
             testRecord1.address = "address1";
             testRecord1.reference_field = new object[] { "test.master", masterId1 };
-            var testId1 = testModel.Create(this.Context, testRecord1);
+            var testId1 = testModel.Create(testRecord1);
 
             dynamic testRecord2 = new ExpandoObject();
             testRecord2.name = "test2";
             testRecord2.address = "address2";
             testRecord2.reference_field = new object[] { "test.child", childId1 };
-            var testId2 = testModel.Create(this.Context, testRecord2);
+            var testId2 = testModel.Create(testRecord2);
 
             var testIds = new object[] { testId1, testId2 };
             var fields = new object[] { "reference_field" };
-            var testRecords = testModel.Read(this.Context, testIds, fields);
+            var testRecords = testModel.Read(testIds, fields);
 
             Assert.AreEqual(2, testRecords.Length);
             Assert.IsInstanceOf(typeof(object[]), testRecords[0]["reference_field"]);
@@ -73,7 +73,7 @@ namespace ObjectServer.Model.Fields.Test
             Assert.AreEqual("child1", referenceField2[2]); //第三个元素是关联的 record 的 name 字段值
 
             //测试浏览 Reference 字段
-            dynamic test1 = testModel.Browse(this.Context, testId1);
+            dynamic test1 = testModel.Browse(testId1);
             Assert.AreEqual("master1", test1.reference_field.name);
         }
 
@@ -91,20 +91,20 @@ namespace ObjectServer.Model.Fields.Test
             //创建 Master 与 Child 测试数据
             dynamic masterRecord1 = new ExpandoObject();
             masterRecord1.name = "master1";
-            var masterId1 = masterModel.Create(this.Context, masterRecord1);
+            var masterId1 = masterModel.Create(masterRecord1);
 
             dynamic childRecord1 = new ExpandoObject();
             childRecord1.name = "child1";
-            var childId1 = childModel.Create(this.Context, childRecord1);
+            var childId1 = childModel.Create(childRecord1);
 
             //创建测试数据 TestModel
             dynamic testRecord1 = new ExpandoObject();
             testRecord1.name = "test1";
             testRecord1.address = "address1";
             testRecord1.reference_field = new object[] { "test.master", masterId1 };
-            var testId1 = testModel.Create(this.Context, testRecord1);
+            var testId1 = testModel.Create(testRecord1);
 
-            dynamic obj = testModel.Browse(this.Context, testId1);
+            dynamic obj = testModel.Browse(testId1);
 
             Assert.AreEqual("master1", obj.reference_field.name);
         }

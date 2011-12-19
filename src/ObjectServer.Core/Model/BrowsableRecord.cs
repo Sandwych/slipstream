@@ -12,15 +12,9 @@ namespace ObjectServer.Model
     {
         private IDictionary<string, object> record;
         private IModel metaModel;
-        private IServiceContext scope;
 
-        public BrowsableRecord(IServiceContext scope, IModel metaModel, long id)
+        public BrowsableRecord(IModel metaModel, long id)
         {
-            if (scope == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
-
             if (metaModel == null)
             {
                 throw new ArgumentNullException("metaModel");
@@ -32,18 +26,11 @@ namespace ObjectServer.Model
             }
 
             this.metaModel = metaModel;
-            this.scope = scope;
-            this.record = metaModel.ReadInternal(scope, new long[] { id }, null)[0];
+            this.record = metaModel.ReadInternal(new long[] { id }, null)[0];
         }
 
-        public BrowsableRecord(IServiceContext scope,
-            IModel metaModel, IDictionary<string, object> record)
+        public BrowsableRecord(IModel metaModel, IDictionary<string, object> record)
         {
-            if (scope == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
-
             if (metaModel == null)
             {
                 throw new ArgumentNullException("metaModel");
@@ -55,7 +42,6 @@ namespace ObjectServer.Model
             }
 
             this.metaModel = metaModel;
-            this.scope = scope;
             this.record = record;
         }
 
@@ -79,7 +65,6 @@ namespace ObjectServer.Model
         {
             Debug.Assert(this.record != null);
             Debug.Assert(this.metaModel != null);
-            Debug.Assert(this.scope != null);
 
             if (binder == null)
             {
@@ -99,7 +84,7 @@ namespace ObjectServer.Model
             }
 
             var metaField = metaModel.Fields[memberName];
-            result = metaField.BrowseField(this.scope, this.record);
+            result = metaField.BrowseField(this.record);
             return true;
         }
 

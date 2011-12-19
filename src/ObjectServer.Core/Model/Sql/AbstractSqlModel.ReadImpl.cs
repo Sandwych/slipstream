@@ -16,14 +16,8 @@ namespace ObjectServer.Model
 {
     public abstract partial class AbstractSqlModel : AbstractModel
     {
-        public override Dictionary<string, object>[] ReadInternal(
-                 IServiceContext scope, long[] ids, string[] requiredFields)
+        public override Dictionary<string, object>[] ReadInternal(long[] ids, string[] requiredFields)
         {
-            if (scope == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (ids == null)
             {
                 throw new ArgumentNullException("ids");
@@ -33,6 +27,8 @@ namespace ObjectServer.Model
             {
                 return new Dictionary<string, object>[] { };
             }
+
+            var scope = this.DbDomain.CurrentSession;
 
             //检查列是否有重复的
 
@@ -159,7 +155,7 @@ namespace ObjectServer.Model
                 var baseModel = (IModel)scope.GetResource(bm.BaseModel);
                 var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys).ToArray();
                 var baseIds = records.Select(r => (long)r[bm.RelatedField]).ToArray();
-                var baseRecords = baseModel.ReadInternal(scope, baseIds, baseFieldsToRead);
+                var baseRecords = baseModel.ReadInternal(baseIds, baseFieldsToRead);
                 //合并到结果中
                 for (int i = 0; i < baseRecords.Length; i++)
                 {

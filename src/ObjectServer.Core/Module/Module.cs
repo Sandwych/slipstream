@@ -62,7 +62,7 @@ namespace ObjectServer
             }
         }
 
-        public Module()
+        private Module()
         {
             //设置属性默认值
             this.Version = Version.Parse("0.0.0.0");
@@ -169,9 +169,9 @@ namespace ObjectServer
             }
         }
 
-        private void LoadAdditionalModule(IServiceContext scope, ModuleUpdateAction action)
+        private void LoadAdditionalModule(IServiceContext ctx, ModuleUpdateAction action)
         {
-            Debug.Assert(scope != null);
+            Debug.Assert(ctx != null);
 
             LoggerProvider.EnvironmentLogger.Info(() => "Loading precompiled assemblies...");
 
@@ -186,9 +186,9 @@ namespace ObjectServer
                 resources.AddRange(this.LoadDynamicAssembly());
             }
 
-            this.InitializeResources(scope, resources, action);
+            this.InitializeResources(ctx, resources, action);
 
-            this.LoadModuleData(scope, action);
+            this.LoadModuleData(ctx, action);
 
             LoggerProvider.EnvironmentLogger.Info(() => string.Format("Module [{0}] has been loaded.", this.Name));
         }
@@ -235,7 +235,7 @@ namespace ObjectServer
 
             foreach (var r in standaloneResources)
             {
-                r.Initialize(tc, action != ModuleUpdateAction.NoAction);
+                r.Initialize(action != ModuleUpdateAction.NoAction);
             }
         }
 

@@ -81,7 +81,7 @@ namespace ObjectServer.Test
         public Dictionary<long, object> GetField3(IServiceContext ctx, long[] ids)
         {
             var fieldNames = new string[] { "field1", "field2" };
-            var values = base.ReadInternal(ctx, ids, fieldNames);
+            var values = base.ReadInternal(ids, fieldNames);
             var rows = new Dictionary<long, object>(ids.Count());
             foreach (var r in values)
             {

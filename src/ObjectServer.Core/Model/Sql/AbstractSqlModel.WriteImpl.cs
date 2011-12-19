@@ -23,13 +23,8 @@ namespace ObjectServer.Model
     {
         private static readonly string[] SearchParentNodeFields = new string[] { IdFieldName, LeftFieldName, RightFieldName };
 
-        public override void WriteInternal(IServiceContext ctx, long id, IRecord userRecord)
+        public override void WriteInternal(long id, IRecord userRecord)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (userRecord == null || userRecord.Count == 0)
             {
                 throw new ArgumentNullException("userRecord");
@@ -40,6 +35,7 @@ namespace ObjectServer.Model
                 var msg = "Record contains one or more invalid field name";
                 throw new ArgumentOutOfRangeException(msg);
             }
+            var ctx = this.DbDomain.CurrentSession;
 
             //强制检查客户端时候送来了版本字段
             if (this.IsVersioned && !userRecord.ContainsKey(VersionFieldName))
@@ -90,11 +86,11 @@ namespace ObjectServer.Model
                     }
                 }
 
-                existedRecord = this.ReadInternal(ctx, new long[] { id }, fieldsToRead.ToArray()).First();
+                existedRecord = this.ReadInternal(new long[] { id }, fieldsToRead.ToArray()).First();
 
                 this.VerifyRecordVersion(id, userRecord, existedRecord);
 
-                this.PrewriteBaseModels(ctx, record, existedRecord);
+                this.PrewriteBaseModels(record, existedRecord);
 
                 if (userRecord.ContainsKey(ParentFieldName))
                 {
@@ -148,7 +144,7 @@ namespace ObjectServer.Model
                 this.NodeMoveTo(ctx, nodeLeft, nodeRight, nodeWidth, newParentID);
             }
 
-            UpdateOneToManyFields(ctx, id, record);
+            UpdateOneToManyFields(id, record);
 
             if (this.LogWriting)
             {
@@ -229,7 +225,7 @@ namespace ObjectServer.Model
             if (newParentID > 0)
             {
                 var ids = new long[] { newParentID };
-                var newParent = this.ReadInternal(ctx, ids, SearchParentNodeFields).First();
+                var newParent = this.ReadInternal(ids, SearchParentNodeFields).First();
                 insertPos = (long)newParent[LeftFieldName] + 1;
             }
             else
@@ -321,10 +317,10 @@ namespace ObjectServer.Model
             };
 
             //删掉原来的中间表记录重新插入
-            var relIds = relModel.SearchInternal(scope, constraints, null, 0, 0);
+            var relIds = relModel.SearchInternal(constraints, null, 0, 0);
             if (relIds.Length > 0)
             {
-                relModel.DeleteInternal(scope, relIds);
+                relModel.DeleteInternal(relIds);
 
                 var targetIds = (long[])record[f.Name];
                 foreach (var targetId in targetIds)
@@ -332,12 +328,12 @@ namespace ObjectServer.Model
                     var relRecord = new Record(2);
                     relRecord[f.OriginField] = id;
                     relRecord[f.RelatedField] = targetId;
-                    relModel.CreateInternal(scope, relRecord);
+                    relModel.CreateInternal(relRecord);
                 }
             }
         }
 
-        private void PrewriteBaseModels(IServiceContext ctx, IRecord record, IRecord existedRecord)
+        private void PrewriteBaseModels(IRecord record, IRecord existedRecord)
         {
             //处理继承表的策略
             //继承表写入的策略是这样的：
@@ -347,7 +343,7 @@ namespace ObjectServer.Model
             //3. 最后更新子表
             foreach (var inheritInfo in this.Inheritances)
             {
-                var baseModel = (IModel)ctx.GetResource(inheritInfo.BaseModel);
+                var baseModel = (IModel)this.DbDomain.GetResource(inheritInfo.BaseModel);
                 var relatedFieldValueObj = existedRecord[inheritInfo.RelatedField];
                 if (relatedFieldValueObj == null || !(relatedFieldValueObj is long))
                 {
@@ -363,7 +359,7 @@ namespace ObjectServer.Model
                 {
                     var baseRecord = record.Where(p => baseFields.Contains(p.Key))
                         .ToDictionary(p => p.Key, p => p.Value);
-                    baseModel.WriteInternal(ctx, baseId, baseRecord);
+                    baseModel.WriteInternal(baseId, baseRecord);
                 }
             }
         }
@@ -382,7 +378,7 @@ namespace ObjectServer.Model
                 }
             }
         }
-        
+
         private SqlString BuildVersionExpression(long originVersion)
         {
             if (originVersion < 0)

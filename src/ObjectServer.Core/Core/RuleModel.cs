@@ -80,11 +80,10 @@ namespace ObjectServer.Core
             }
         }
 
-        private static IList<Criterion[]> ConvertConstraints(
-            IServiceContext ctx, Dictionary<string, object>[] result)
+        private static IList<Criterion[]> ConvertConstraints(IServiceContext ctx, Dictionary<string, object>[] result)
         {
             var userModel = (UserModel)ctx.GetResource("core.user");
-            dynamic user = userModel.Browse(ctx, ctx.UserSession.UserId);
+            dynamic user = userModel.Browse(ctx.UserSession.UserId);
 
             var evaluator = ctx.RuleConstraintEvaluator;
             evaluator.SetVariable("user", user);

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Model.Fields.Test
+namespace ObjectServer.Model.Fields
 {
     [TestFixture]
     public class FunctionalFieldTests : ServiceContextTestCaseBase
@@ -24,13 +24,13 @@ namespace ObjectServer.Model.Fields.Test
             data.record1.name = "test1";
             data.record1.field1 = 1;
             data.record1.field2 = 2;
-            data.record1_id = model.Create(this.Context, data.record1);
+            data.record1_id = model.Create(data.record1);
 
             data.record2 = new ExpandoObject();
             data.record2.name = "test2";
             data.record2.field1 = 5;
             data.record2.field2 = 4;
-            data.record2_id = model.Create(this.Context, data.record2);
+            data.record2_id = model.Create(data.record2);
 
             return data;
         }
@@ -39,9 +39,9 @@ namespace ObjectServer.Model.Fields.Test
         public void ClearTestData()
         {
             dynamic model = this.GetResource(ModelName);
-            long[] ids = (long[])model.Search(this.Context, null, null, 0, 0);
+            long[] ids = (long[])model.Search(null, null, 0, 0);
             var idsToDel = ids.Select(o => (object)o).ToArray();
-            model.Delete(this.Context, idsToDel);
+            model.Delete(idsToDel);
         }
 
         [Test]
@@ -50,12 +50,11 @@ namespace ObjectServer.Model.Fields.Test
             var constraints = new object[][] { new object[] { "login", "=", "root" } };
             dynamic userModel = this.GetResource("core.user");
             dynamic model = this.GetResource(ModelName);
-            dynamic ids = userModel.Search(this.Context, constraints, null, 0, 0);
+            dynamic ids = userModel.Search(constraints, null, 0, 0);
 
             dynamic data = PrepareTestData();
 
-            dynamic records = model.Read(
-                this.Context, new object[] { data.record1_id }, null);
+            dynamic records = model.Read(new object[] { data.record1_id }, null);
 
             var userField0 = (object[])records[0]["user"];
             Assert.AreEqual(ids[0], userField0[0]);
@@ -68,7 +67,7 @@ namespace ObjectServer.Model.Fields.Test
             var constraint = new object[][] { new object[] { "sum_field", "=", 9 } };
             dynamic data = PrepareTestData();
 
-            dynamic n = model.Count(this.Context, constraint);
+            dynamic n = model.Count(constraint);
             Assert.AreEqual(1, n);
         }
     }

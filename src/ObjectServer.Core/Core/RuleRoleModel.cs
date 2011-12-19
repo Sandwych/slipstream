@@ -24,20 +24,18 @@ namespace ObjectServer.Core
                 .Required().OnDelete(OnDeleteAction.Cascade);
         }
 
-        public override void Initialize(IServiceContext tc, bool update)
+        public override void Initialize(bool update)
         {
-            if (tc == null)
+
+
+            base.Initialize(update);
+
+            var ctx = this.DbDomain.CurrentSession;
+            var tableCtx = ctx.DataContext.CreateTableContext(this.TableName);
+
+            if (update && !tableCtx.ConstraintExists(ctx.DataContext, UniqueConstraintName))
             {
-                throw new ArgumentNullException("tc");
-            }
-
-            base.Initialize(tc, update);
-
-            var tableCtx = tc.DataContext.CreateTableContext(this.TableName);
-
-            if (update && !tableCtx.ConstraintExists(tc.DataContext, UniqueConstraintName))
-            {
-                tableCtx.AddConstraint(tc.DataContext, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
+                tableCtx.AddConstraint(ctx.DataContext, UniqueConstraintName, "UNIQUE(\"role\", \"rule\")");
             }
         }
     }

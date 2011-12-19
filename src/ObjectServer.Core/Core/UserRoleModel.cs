@@ -25,12 +25,11 @@ namespace ObjectServer.Core
 
         }
 
-        public override void Initialize(IServiceContext ctx, bool update)
+        public override void Initialize(bool update)
         {
-            base.Initialize(ctx, update);
-
+            base.Initialize(update);
+            var ctx = this.DbDomain.CurrentSession;
             var tableCtx = ctx.DataContext.CreateTableContext(this.TableName);
-
             if (update && !tableCtx.ConstraintExists(ctx.DataContext, UniqueConstraintName))
             {
                 var userCol = DataProvider.Dialect.QuoteForColumnName("user");

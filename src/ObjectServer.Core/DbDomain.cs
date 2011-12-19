@@ -27,6 +27,9 @@ namespace ObjectServer
         private readonly IDataProvider _dataProvider;
         private readonly IModuleManager _modules;
 
+        [ThreadStatic]
+        private static IServiceContext s_currentServiceContext;
+
         /// <summary>
         /// 初始化一个数据库环境
         /// </summary>
@@ -59,15 +62,41 @@ namespace ObjectServer
 
         public void Initialize(bool isUpdate)
         {
-            using (var ctx = new ServiceContext(this._dataProvider, this.DatabaseName, this))
+            using (var ctx = this.OpenSystemSession())
             {
                 this._modules.UpdateModuleList(ctx.DataContext);
             }
 
-            using (var ctx = new ServiceContext(this._dataProvider, this.DatabaseName, this))
+            using (var ctx = this.OpenSystemSession())
             {
                 //加载其它模块
                 this._modules.LoadModules(ctx, isUpdate);
+            }
+        }
+
+        public IServiceContext OpenSession(string sessionToken)
+        {
+            var ctx = new ServiceContext(this._dataProvider, this._dbName, sessionToken);
+            s_currentServiceContext = ctx;
+            return ctx;
+        }
+
+        public IServiceContext OpenSystemSession()
+        {
+            var ctx = new ServiceContext(this._dataProvider, this._dbName, this);
+            s_currentServiceContext = ctx;
+            return ctx;
+        }
+
+        public IServiceContext CurrentSession
+        {
+            get
+            {
+                if (s_currentServiceContext == null)
+                {
+                    throw new InvalidOperationException();
+                }
+                return s_currentServiceContext;
             }
         }
 
@@ -122,6 +151,7 @@ namespace ObjectServer
                 else
                 {
                     merged = false;
+                    res.DbDomain = this;
                     this.resources.Add(res.Name, res);
                 }
                 return merged;

@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Model.Fields.Test
+namespace ObjectServer.Model.Fields
 {
     [TestFixture]
     public class ManyToOneFieldTests : ServiceContextTestCaseBase
@@ -27,12 +27,12 @@ namespace ObjectServer.Model.Fields.Test
                 { "master", null },
             };
 
-            var childModel = (IModel)this.Context.GetResource("test.child");
+            var childModel = (IModel)this.GetResource("test.child");
 
-            var id = childModel.CreateInternal(this.Context, child);
+            var id = childModel.CreateInternal(child);
 
             var children = childModel.ReadInternal(
-                this.Context, new long[] { id }, new string[] { "name", "master" });
+                new long[] { id }, new string[] { "name", "master" });
             var record = children[0];
 
             Assert.True(record["master"].IsNull());
@@ -51,14 +51,14 @@ namespace ObjectServer.Model.Fields.Test
                 { "master", null },
             };
 
-            dynamic childModel = this.Context.GetResource("test.child");
+            dynamic childModel = this.GetResource("test.child");
 
-            var id = childModel.Create(this.Context, child);
+            var id = childModel.Create(child);
 
-            var childRecord = childModel.Read(this.Context, new long[] { id }, null)[0];
+            var childRecord = childModel.Read(new long[] { id }, null)[0];
             child[AbstractModel.VersionFieldName] = childRecord[AbstractModel.VersionFieldName];
 
-            childModel.Write(this.Context, id, child);
+            childModel.Write(id, child);
         }
     }
 }

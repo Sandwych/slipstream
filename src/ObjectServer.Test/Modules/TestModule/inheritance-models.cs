@@ -36,7 +36,7 @@ namespace ObjectServer.Test
         {
             var record = new Dictionary<string, object>(propertyBag);
             record["age"] = 33;
-            return model.CreateInternal(ctx, record);
+            return model.CreateInternal(record);
         }
     }
 

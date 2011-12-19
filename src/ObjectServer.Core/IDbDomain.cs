@@ -11,6 +11,9 @@ namespace ObjectServer
     {
 
         void Initialize(bool isUpdate);
+        IServiceContext OpenSession(string sessionToken);
+        IServiceContext OpenSystemSession();
+        IServiceContext CurrentSession { get; }
 
     }
 }

@@ -98,11 +98,11 @@ namespace ObjectServer.Model
         /// <summary>
         /// 初始化数据库信息
         /// </summary>
-        public override void Initialize(IServiceContext tc, bool update)
+        public override void Initialize(bool update)
         {
             this.AddInternalFields();
 
-            base.Initialize(tc, update);
+            base.Initialize(update);
 
             if (this.NameGetter == null)
             {
@@ -118,7 +118,7 @@ namespace ObjectServer.Model
 
             if (update && this.AutoMigration)
             {
-                var migrator = new TableMigrator(tc, this);
+                var migrator = new TableMigrator(this.DbDomain.CurrentSession, this);
                 migrator.Migrate();
             }
         }
@@ -266,7 +266,7 @@ where   hp._id=? and hc._id<>?
             var result = new Dictionary<long, string>(ids.Count());
             if (this.Fields.ContainsKey("name"))
             {
-                var records = this.ReadInternal(ctx, ids, new string[] { IdFieldName, "name" });
+                var records = this.ReadInternal(ids, new string[] { IdFieldName, "name" });
                 foreach (var r in records)
                 {
                     var id = (long)r[IdFieldName];
@@ -293,8 +293,8 @@ where   hp._id=? and hc._id<>?
                     { "resource_id", id },
                     { "description", msg }
                 };
-            var res = (IModel)ctx.GetResource(Core.AuditLogModel.ModelName);
-            res.CreateInternal(ctx, logRecord);
+            var res = (IModel)this.DbDomain.GetResource(Core.AuditLogModel.ModelName);
+            res.CreateInternal(logRecord);
         }
 
         public static string ToColumnList<T>(IEnumerable<T> items)
@@ -338,9 +338,8 @@ where   hp._id=? and hc._id<>?
                 !SystemReadonlyFields.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
         }
 
-        private void UpdateOneToManyFields(IServiceContext ctx, long id, Record record)
+        private void UpdateOneToManyFields(long id, Record record)
         {
-            Debug.Assert(ctx != null);
             Debug.Assert(record != null);
             Debug.Assert(id > 0);
 
@@ -357,20 +356,20 @@ where   hp._id=? and hc._id<>?
             foreach (var p in o2mFields)
             {
                 var fieldInfo = this.Fields[p.Key];
-                var subModel = (IModel)ctx.GetResource(fieldInfo.Relation);
+                var subModel = (IModel)this.DbDomain.GetResource(fieldInfo.Relation);
 
                 //TODO 这里是否要检查其是否有修改子表权限？
                 subRecord[fieldInfo.RelatedField] = id;
                 var o2mIds = (p.Value as IEnumerable).Cast<long>();
                 foreach (var o2mId in o2mIds)
                 {
-                    subModel.WriteInternal(ctx, o2mId, subRecord);
+                    subModel.WriteInternal(o2mId, subRecord);
                 }
             }
         }
 
 
-  
+
 
     }
 }

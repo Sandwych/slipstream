@@ -23,13 +23,8 @@ namespace ObjectServer.Model
         private static readonly string[] HierarchyFields =
             new string[] { IdFieldName, LeftFieldName, RightFieldName };
 
-        public override void DeleteInternal(IServiceContext ctx, long[] ids)
+        public override void DeleteInternal(long[] ids)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (!this.CanDelete)
             {
                 throw new NotSupportedException();
@@ -45,6 +40,8 @@ namespace ObjectServer.Model
                 return;
             }
 
+            var scope = this.DbDomain.CurrentSession;
+
             //继承的删除策略很简单：先删除本尊，再删除各个基类表
             Dictionary<string, object>[] existedRecords = null;
             if (this.Inheritances.Count > 0)
@@ -54,11 +51,11 @@ namespace ObjectServer.Model
                     " where ", '"' + AbstractModel.IdFieldName + '"',
                     " in (", ids.ToCsv(), ")");
 
-                existedRecords = ctx.DataContext.QueryAsDictionary(sql);
+                existedRecords = this.DbDomain.CurrentSession.DataContext.QueryAsDictionary(sql);
             }
 
-            DeleteRows(ctx, ids, this);
-            this.ProcessBaseModelsDeletion(ctx, existedRecords);
+            DeleteRows(this.DbDomain.CurrentSession, ids, this);
+            this.ProcessBaseModelsDeletion(this.DbDomain.CurrentSession, existedRecords);
         }
 
         private void ProcessBaseModelsDeletion(IServiceContext scope, Dictionary<string, object>[] existedRecords)
@@ -116,7 +113,7 @@ namespace ObjectServer.Model
             IServiceContext ctx, long[] ids, AbstractSqlModel tableModel)
         {
             var records =
-                from r in tableModel.ReadInternal(ctx, ids, HierarchyFields)
+                from r in tableModel.ReadInternal(ids, HierarchyFields)
                 select new
                 {
                     ID = (long)r[IdFieldName],

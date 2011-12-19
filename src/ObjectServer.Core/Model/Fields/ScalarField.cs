@@ -46,13 +46,8 @@ namespace ObjectServer.Model
             return value;
         }
 
-        public override object BrowseField(IServiceContext ctx, IDictionary<string, object> record)
+        public override object BrowseField(IDictionary<string, object> record)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (record == null || record.Count == 0)
             {
                 throw new ArgumentNullException("record");

@@ -22,16 +22,11 @@ namespace ObjectServer.Model
             new List<Criterion[]>();
         private static readonly Criterion[] EmptyConstraint = { };
 
-        public override long[] SearchInternal(
-            IServiceContext tc, object[] constraint, OrderExpression[] order, long offset, long limit)
+        public override long[] SearchInternal(object[] constraint, OrderExpression[] order, long offset, long limit)
         {
-            if (tc == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
-
-            var translator = new SqlQueryBuilder(tc, this);
-            this.TranslateConstraint(tc, constraint, translator);
+            var ctx = this.DbDomain.CurrentSession;
+            var translator = new SqlQueryBuilder(ctx, this);
+            this.TranslateConstraint(ctx, constraint, translator);
 
             //处理排序
             if (order != null)
@@ -51,23 +46,20 @@ namespace ObjectServer.Model
                     querySql, new SqlString(offset.ToString()), new SqlString(limit.ToString()));
             }
 
-            return tc.DataContext.QueryAsArray<long>(querySql, translator.Values);
+            return ctx.DataContext.QueryAsArray<long>(querySql, translator.Values);
         }
 
 
-        public override long CountInternal(IServiceContext tx, object[] constraint)
+        public override long CountInternal(object[] constraint)
         {
-            if (tx == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
+            var ctx = this.DbDomain.CurrentSession;
 
-            var translator = new SqlQueryBuilder(tx, this);
-            this.TranslateConstraint(tx, constraint, translator);
+            var translator = new SqlQueryBuilder(ctx, this);
+            this.TranslateConstraint(ctx, constraint, translator);
 
             var querySql = translator.ToSqlString(true);
 
-            return Convert.ToInt64(tx.DataContext.QueryValue(querySql, translator.Values));
+            return Convert.ToInt64(ctx.DataContext.QueryValue(querySql, translator.Values));
         }
 
         private void TranslateConstraint(IServiceContext tc, object[] constraint, SqlQueryBuilder translator)

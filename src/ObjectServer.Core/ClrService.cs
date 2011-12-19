@@ -21,23 +21,16 @@ namespace ObjectServer
 
         #region IService Members
 
-        public object Invoke(IResource self, IServiceContext tc, params object[] parameters)
+        public object Invoke(IResource self, params object[] parameters)
         {
             if (self == null)
             {
                 throw new ArgumentNullException("self");
             }
-
-            if (tc == null)
-            {
-                throw new ArgumentNullException("tc");
-            }
-
             var userParamCount = parameters == null ? 0 : parameters.Length;
-            var args = new object[userParamCount + 2];
+            var args = new object[userParamCount + 1];
             args[0] = self;
-            args[1] = tc;
-            parameters.CopyTo(args, 2);
+            parameters.CopyTo(args, 1);
 
             try
             {
