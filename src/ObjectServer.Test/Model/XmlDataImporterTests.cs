@@ -34,11 +34,11 @@ namespace ObjectServer.Model.Test
 
                 importer.Import(xmlStream);
 
-                var ids = testObjectModel.SearchInternal(this.Context, null, null, 0, 0);
+                var ids = testObjectModel.Search(this.Context, null, null, 0, 0);
                 Assert.AreEqual(3, ids.Length);
 
                 var domain1 = new object[][] { new object[] { "name", "=", "name_changed" } };
-                ids = testObjectModel.SearchInternal(this.Context, domain1, null, 0, 0);
+                ids = testObjectModel.Search(this.Context, domain1, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
             }
 
@@ -50,7 +50,7 @@ namespace ObjectServer.Model.Test
                 importer.Import(xmlStream);
             }
 
-            var ids2 = testObjectModel.SearchInternal(this.Context, null, null, 0, 0);
+            var ids2 = testObjectModel.Search(this.Context, null, null, 0, 0);
             Assert.AreEqual(3, ids2.Length);
         }
 
@@ -124,13 +124,13 @@ namespace ObjectServer.Model.Test
             ClearModel("test.test_model");
         }
 
-        private void ClearAllModelData(IModel model, string modelName)
+        private void ClearAllModelData(dynamic model, string modelName)
         {
             var constraints = new object[][] { new object[] { "model", "=", modelName } };
-            var ids = model.SearchInternal(this.Context, constraints, null, 0, 0);
+            var ids = model.Search(this.Context, constraints, null, 0, 0);
             if (ids != null && ids.Length > 0)
             {
-                model.DeleteInternal(this.Context, ids);
+                model.Delete(this.Context, ids);
             }
         }
 
