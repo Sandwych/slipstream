@@ -14,8 +14,8 @@ namespace ObjectServer.Model
     [JsonArray]
     public class OrderExpression
     {
-        private static readonly OrderExpression[] DefaultOrders = new OrderExpression[] { 
-                new OrderExpression("_id", SortDirection.Ascend) };
+        private static readonly OrderExpression[] DefaultOrders =
+            new OrderExpression[] { new OrderExpression("_id", SortDirection.Ascend) };
 
         public OrderExpression(string field, SortDirection so)
         {

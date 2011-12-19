@@ -15,9 +15,6 @@ namespace ObjectServer.Model
         Descend
     }
 
-#if !SILVERLIGHT
-    [Serializable]
-#endif
     public static class SortDirectionParser
     {
         public static SortDirection Parser(string value)

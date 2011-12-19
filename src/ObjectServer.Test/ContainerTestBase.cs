@@ -5,7 +5,6 @@ namespace ObjectServer.Test
 {
     public class ContainerTestBase
     {
-
         protected IContainer _container;
 
         [SetUp]
