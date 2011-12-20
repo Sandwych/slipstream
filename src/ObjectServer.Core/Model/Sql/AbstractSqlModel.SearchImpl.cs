@@ -26,7 +26,7 @@ namespace ObjectServer.Model
         {
             var ctx = this.DbDomain.CurrentSession;
             var translator = new SqlQueryBuilder(ctx, this);
-            this.TranslateConstraint(ctx, constraint, translator);
+            this.TranslateConstraint(constraint, translator);
 
             //处理排序
             if (order != null)
@@ -55,14 +55,14 @@ namespace ObjectServer.Model
             var ctx = this.DbDomain.CurrentSession;
 
             var translator = new SqlQueryBuilder(ctx, this);
-            this.TranslateConstraint(ctx, constraint, translator);
+            this.TranslateConstraint(constraint, translator);
 
             var querySql = translator.ToSqlString(true);
 
             return Convert.ToInt64(ctx.DataContext.QueryValue(querySql, translator.Values));
         }
 
-        private void TranslateConstraint(IServiceContext tc, object[] constraint, SqlQueryBuilder translator)
+        private void TranslateConstraint(object[] constraint, SqlQueryBuilder translator)
         {
             //处理查询约束
             IEnumerable<Criterion> userConstraint = null;
@@ -80,23 +80,23 @@ namespace ObjectServer.Model
             translator.AddWhereFragment(new SqlString(" and "));
 
             //处理 Rule 约束
-            this.GenerateReadingRuleConstraints(tc, translator);
+            this.GenerateReadingRuleConstraints(translator);
         }
 
 
-        private void GenerateReadingRuleConstraints(IServiceContext scope, SqlQueryBuilder translator)
+        private void GenerateReadingRuleConstraints(SqlQueryBuilder translator)
         {
-            Debug.Assert(scope != null);
             Debug.Assert(translator != null);
+            var ctx = this.DbDomain.CurrentSession;
 
             //系统用户不检查访问规则
-            if (scope.UserSession.IsSystemUser)
+            if (ctx.UserSession.IsSystemUser)
             {
                 translator.AddConstraint(EmptyRules);
             }
             else
             {
-                var ruleConstraints = RuleModel.GetRuleConstraints(scope, this.Name, "read");
+                var ruleConstraints = RuleModel.GetRuleConstraints(ctx, this.Name, "read");
                 translator.AddConstraint(ruleConstraints);
             }
         }

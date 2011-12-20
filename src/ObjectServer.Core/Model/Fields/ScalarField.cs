@@ -36,12 +36,12 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-            IServiceContext session, ICollection<Dictionary<string, object>> records)
+            ICollection<Dictionary<string, object>> records)
         {
             return records.ExtractFieldValues(this.Name);
         }
 
-        protected override object OnSetFieldValue(IServiceContext scope, object value)
+        protected override object OnSetFieldValue(object value)
         {
             return value;
         }

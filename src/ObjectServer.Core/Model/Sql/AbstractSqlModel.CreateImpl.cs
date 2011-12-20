@@ -54,27 +54,27 @@ namespace ObjectServer.Model
                 ).ToDictionary(p => p.Key, p => p.Value);
 
             //处理用户没有给的默认值
-            this.AddDefaultValuesForCreation(scope, record);
+            this.AddDefaultValuesForCreation(record);
 
             //校验用户提供的值是否满足字段约束
             this.ValidateRecordForCreation(record);
 
             //创建被继承表的记录
-            this.PrecreateBaseRecords(scope, record);
+            this.PrecreateBaseRecords(record);
 
             //转换用户给的字段值到数据库原始类型
-            this.ConvertFieldToColumn(scope, record, record.Keys.ToArray());
+            this.ConvertFieldToColumn(record, record.Keys.ToArray());
 
-            var selfId = this.CreateSelf(scope, record);
+            var selfId = this.CreateSelf(record);
 
             if (this.Hierarchy)
             {
-                this.UpdateTreeForCreation(scope.DataContext, selfId, record);
+                this.UpdateTreeForCreation(selfId, record);
             }
 
             this.UpdateOneToManyFields(selfId, record);
 
-            this.PostcreateManyToManyFields(scope, selfId, record);
+            this.PostcreateManyToManyFields(selfId, record);
 
             if (this.LogCreation)
             {
@@ -85,11 +85,11 @@ namespace ObjectServer.Model
             return selfId;
         }
 
-        private void PrecreateBaseRecords(IServiceContext scope, IRecord record)
+        private void PrecreateBaseRecords(IRecord record)
         {
             foreach (var i in this.Inheritances)
             {
-                var baseModel = (IModel)scope.GetResource(i.BaseModel);
+                var baseModel = (IModel)this.DbDomain.GetResource(i.BaseModel);
                 var baseRecord = new Record();
 
                 foreach (var f in baseModel.Fields)
@@ -112,7 +112,7 @@ namespace ObjectServer.Model
         /// <param name="tc"></param>
         /// <param name="record"></param>
         /// <param name="id"></param>
-        private void PostcreateManyToManyFields(IServiceContext tc, long id, IRecord record)
+        private void PostcreateManyToManyFields(long id, IRecord record)
         {
 
             //处理 Many-to-many 字段
@@ -124,7 +124,7 @@ namespace ObjectServer.Model
 
             foreach (var f in manyToManyFields)
             {
-                var relModel = (IModel)tc.GetResource(f.Relation);
+                var relModel = (IModel)this.DbDomain.GetResource(f.Relation);
                 //写入
                 var targetIds = (long[])record[f.Name];
 
@@ -139,28 +139,26 @@ namespace ObjectServer.Model
         }
 
         #region 处理层次表的创建事宜
-        private void UpdateTreeForCreation(IDataContext dbctx, long id, Record record)
+        private void UpdateTreeForCreation(long id, Record record)
         {
             //如果支持存储过程就用存储/函数，那么直接调用预定义的存储过程或函数来处理
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
             if (dataProvider.IsSupportProcedure)
             {
-                this.UpdateTreeForCreationBySqlFunction(dbctx, id, record);
+                this.UpdateTreeForCreationBySqlFunction(id, record);
             }
             else
             {
-                this.UpdateTreeForCreationBySqlStatements(dbctx, id, record);
+                this.UpdateTreeForCreationBySqlStatements(id, record);
             }
         }
 
         /// <summary>
         /// 使用多条语句更新层次表，一般用于 SQLite 等不支持用户自定义存储过程或函数的数据库
         /// </summary>
-        /// <param name="dbctx"></param>
-        /// <param name="id"></param>
-        /// <param name="record"></param>
-        private void UpdateTreeForCreationBySqlStatements(IDataContext dbctx, long id, Record record)
+        private void UpdateTreeForCreationBySqlStatements(long id, Record record)
         {
+            var dbctx = this.DbDomain.CurrentSession.DataContext;
             //处理层次表
             long rhsValue = 0;
             //先检查是否给了 parent 字段的值
@@ -230,11 +228,9 @@ namespace ObjectServer.Model
         /// <summary>
         /// 如果数据库支持用户定义函数或存储过程的话就是用预定义函数或存储过程来更新表
         /// </summary>
-        /// <param name="dbctx"></param>
-        /// <param name="id"></param>
-        /// <param name="record"></param>
-        private void UpdateTreeForCreationBySqlFunction(IDataContext dbctx, long id, Record record)
+        private void UpdateTreeForCreationBySqlFunction(long id, Record record)
         {
+            var dbctx = this.DbDomain.CurrentSession.DataContext;
             using (var cmd = dbctx.CreateCommand(new SqlString("tree_update_for_creation")))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -267,9 +263,8 @@ namespace ObjectServer.Model
 
         #endregion
 
-        private long CreateSelf(IServiceContext ctx, IRecord values)
+        private long CreateSelf(IRecord values)
         {
-            Debug.Assert(ctx != null);
             Debug.Assert(values != null);
 
 
@@ -287,14 +282,14 @@ namespace ObjectServer.Model
 
             var sql = this.BuildInsertStatement(values, allColumnNames, colValues);
 
-            var rows = ctx.DataContext.Execute(sql, colValues);
+            var rows = this.DbDomain.CurrentSession.DataContext.Execute(sql, colValues);
             if (rows != 1)
             {
                 var msg = string.Format("Failed to insert row, SQL: {0}", sql);
                 throw new ObjectServer.Exceptions.DataException(msg);
             }
 
-            return ctx.DataContext.GetLastIdentity(this.TableName);
+            return this.DbDomain.CurrentSession.DataContext.GetLastIdentity(this.TableName);
         }
 
         private SqlString BuildInsertStatement(IRecord values, IEnumerable<string> allColumnNames, object[] colValues)
@@ -337,8 +332,10 @@ namespace ObjectServer.Model
         /// </summary>
         /// <param name="session"></param>
         /// <param name="values"></param>
-        private void AddDefaultValuesForCreation(IServiceContext ctx, IRecord propertyBag)
+        private void AddDefaultValuesForCreation(IRecord propertyBag)
         {
+            var ctx = this.DbDomain.CurrentSession;
+
             var defaultFields =
                 this.Fields.Values.Where(
                 d => (d.DefaultProc != null && !propertyBag.Keys.Contains(d.Name)));

@@ -7,7 +7,7 @@ using System.Dynamic;
 using Autofac;
 using NUnit.Framework;
 
-namespace ObjectServer.Model.Test
+namespace ObjectServer.Model
 {
     [TestFixture]
     public class ModelAccessTests : ServiceTestCaseBase
@@ -18,35 +18,35 @@ namespace ObjectServer.Model.Test
             var service = ObjectServer.SlipstreamEnvironment.RootService;
             var sessionToken = service.LogOn(TestingDatabaseName, "testuser", "testuser");
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<Data.IDataProvider>();
-
-            using (var ctx = new ServiceContext(dataProvider, TestingDatabaseName, sessionToken))
+            var dbDomain = SlipstreamEnvironment.DbDomains.GetDbDomain(TestingDatabaseName);
+            using (var ctx = dbDomain.OpenSession(sessionToken))
             {
-                dynamic userModel = ctx.GetResource("core.user");
+                dynamic userModel = dbDomain.GetResource("core.user");
 
                 Assert.DoesNotThrow(() =>
                 {
-                    var ids = userModel.Search(ctx, null, null, 0, 0);
+                    var ids = userModel.Search(null, null, 0, 0);
                     Assert.True(ids.Length > 0);
-                    userModel.Read(ctx, ids, null);
+                    userModel.Read(ids, null);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
                     record.login = "login";
-                    userModel.Create(ctx, record);
+                    userModel.Create(record);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
                     dynamic record = new ExpandoObject();
                     record.login = "login";
-                    userModel.Write(ctx, (long)1, record);
+                    userModel.Write((long)1, record);
                 });
 
                 Assert.Throws<ObjectServer.Exceptions.SecurityException>(() =>
                 {
-                    userModel.Delete(ctx, new long[] { (long)1 });
+                    userModel.Delete(new long[] { (long)1 });
                 });
 
             }

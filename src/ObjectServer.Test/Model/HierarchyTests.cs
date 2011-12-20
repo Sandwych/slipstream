@@ -20,7 +20,7 @@ namespace ObjectServer.Model.Test
         private IDictionary<string, object> ReadNode(long id)
         {
             var catModel = this.GetResource("test.category");
-            dynamic records = catModel.Read(this.Context, new object[] { id }, AssertNodeFields);
+            dynamic records = catModel.Read(new object[] { id }, AssertNodeFields);
             Assert.AreEqual(1, records.Length);
             var record = records[0];
             return (IDictionary<string, object>)record;
@@ -73,14 +73,14 @@ namespace ObjectServer.Model.Test
             dynamic node1 = new ExpandoObject();
             node1.name = "a node with null parent";
             node1.parent = null;
-            var id1 = (long)catModel.Create(this.Context, node1);
+            var id1 = (long)catModel.Create(node1);
             var record1 = this.ReadNode(id1);
             Assert.That((long)record1["_left"] == (long)record1["_right"] - 1);
             Assert.IsNull(record1["parent"]);
 
             dynamic node2 = new ExpandoObject();
             node2.name = "a node without parent field";
-            var id2 = catModel.Create(this.Context, node2);
+            var id2 = catModel.Create(node2);
             var record2 = this.ReadNode(id2);
             Assert.That((long)record2["_left"] == (long)record2["_right"] - 1);
             Assert.IsNull(record2["parent"]);
@@ -93,7 +93,7 @@ namespace ObjectServer.Model.Test
             dynamic catModel = this.GetResource("test.category");
 
             //删掉 3, 5 和 1
-            catModel.Delete(this.Context, new long[] { data.id3, data.id5, data.id1 });
+            catModel.Delete(new long[] { data.id3, data.id5, data.id1 });
 
             this.AssertChildren(data.id2, data.id4);
             this.AssertDescendants(data.id2, data.id4);
@@ -108,7 +108,7 @@ namespace ObjectServer.Model.Test
             //把node5 的父节点改成 node2
             dynamic record = new ExpandoObject();
             record.parent = data.id2;
-            catModel.Write(this.Context, data.id5, record);
+            catModel.Write(data.id5, record);
 
             AssertChildren(data.id2, data.id3, data.id4, data.id5);
         }
@@ -122,9 +122,9 @@ namespace ObjectServer.Model.Test
             //把node3 的父节点改成 node1
             dynamic record = new ExpandoObject();
             record.parent = data.id1;
-            catModel.Write(this.Context, data.id3, record);
+            catModel.Write(data.id3, record);
 
-            dynamic ids = catModel.Search(this.Context, null, null, 0, 0);
+            dynamic ids = catModel.Search(null, null, 0, 0);
             Assert.AreEqual(5, ids.Length);
 
             this.AssertChildren(data.id1, data.id3);
@@ -143,7 +143,7 @@ namespace ObjectServer.Model.Test
             //把节点3的上级设成 null
             dynamic node3 = new ExpandoObject();
             node3.parent = null;
-            catModel.Write(this.Context, data.id3, node3);
+            catModel.Write(data.id3, node3);
 
             this.AssertChildren(data.id2, data.id4);
             this.AssertDescendants(data.id2, data.id4);
@@ -159,13 +159,13 @@ namespace ObjectServer.Model.Test
             data.data6 = new ExpandoObject();
             data.data6.name = "node6";
             data.data6.parent = null;
-            data.id6 = catModel.Create(this.Context, data.data6);
+            data.id6 = catModel.Create(data.data6);
 
             Assert.That(data.id6 > 0);
 
             //把6 的上级改成 5
             data.data6.parent = data.id5;
-            catModel.Write(this.Context, data.id6, data.data6);
+            catModel.Write(data.id6, data.data6);
 
             this.AssertChildren(data.id5, data.id6);
             this.AssertDescendants(data.id5, data.id6);
@@ -183,7 +183,7 @@ namespace ObjectServer.Model.Test
             };
 
             var orders = new object[] { new object[] { "_id", "ASC" } };
-            dynamic ids1 = catModel.Search(this.Context, domain1, orders, 0, 0);
+            dynamic ids1 = catModel.Search(domain1, orders, 0, 0);
 
             Assert.AreEqual(3, ids1.Length);
             Assert.AreEqual(data.id3, ids1[0]);
@@ -195,7 +195,7 @@ namespace ObjectServer.Model.Test
                 new object[] { "_id", "childof", data.id3 }
             };
 
-            dynamic ids2 = catModel.Search(this.Context, domain2, orders, 0, 0);
+            dynamic ids2 = catModel.Search(domain2, orders, 0, 0);
 
             Assert.AreEqual(1, ids2.Length);
             Assert.AreEqual(data.id5, ids2[0]);
@@ -213,7 +213,7 @@ namespace ObjectServer.Model.Test
             };
 
             var orders = new object[] { new object[] { "_id", "ASC" } };
-            var ids1 = (long[])catModel.Search(this.Context, domain1, orders, 0, 0);
+            var ids1 = (long[])catModel.Search(domain1, orders, 0, 0);
 
             Assert.AreEqual(2, ids1.Length);
             Assert.AreEqual(data.id1, ids1[0]);
@@ -230,19 +230,19 @@ namespace ObjectServer.Model.Test
             record.parent = data.id3;
             Assert.Throws<Exceptions.DataException>(delegate
             {
-                catModel.Write(this.Context, data.id2, record);
+                catModel.Write(data.id2, record);
             });
 
             record.parent = data.id2;
             Assert.Throws<Exceptions.DataException>(delegate
             {
-                catModel.Write(this.Context, data.id2, record);
+                catModel.Write(data.id2, record);
             });
 
             record.parent = data.id5;
             Assert.Throws<Exceptions.DataException>(delegate
             {
-                catModel.Write(this.Context, data.id2, record);
+                catModel.Write(data.id2, record);
             });
         }
 
@@ -263,27 +263,27 @@ namespace ObjectServer.Model.Test
             //插入4个根节点，1，2作为根节点，3,4是2的子节点，5 是3的子节点
             data.node1 = new ExpandoObject();
             data.node1.name = "node1";
-            data.id1 = catModel.Create(this.Context, data.node1);
+            data.id1 = catModel.Create(data.node1);
 
             data.node2 = new ExpandoObject();
             data.node2.name = "node2";
-            data.id2 = catModel.Create(this.Context, data.node2);
+            data.id2 = catModel.Create(data.node2);
 
             //插入节点3的时候节点2还是叶子
             data.node3 = new ExpandoObject();
             data.node3.name = "node3";
             data.node3.parent = data.id2;
-            data.id3 = catModel.Create(this.Context, data.node3);
+            data.id3 = catModel.Create(data.node3);
 
             data.node4 = new ExpandoObject();
             data.node4.name = "node4";
             data.node4.parent = data.id2;
-            data.id4 = catModel.Create(this.Context, data.node4);
+            data.id4 = catModel.Create(data.node4);
 
             data.node5 = new ExpandoObject();
             data.node5.name = "node5";
             data.node5.parent = data.id3;
-            data.id5 = catModel.Create(this.Context, data.node5);
+            data.id5 = catModel.Create(data.node5);
 
             return data;
         }

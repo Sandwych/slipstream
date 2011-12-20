@@ -84,7 +84,7 @@ namespace ObjectServer
         {
             if (string.IsNullOrEmpty(db))
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (string.IsNullOrEmpty(sessionToken))

@@ -14,9 +14,9 @@ namespace ObjectServer.Model
         void VerifyDefinition();
 
         Dictionary<long, object> GetFieldValues(
-            IServiceContext scope, ICollection<Dictionary<string, object>> records);
+            ICollection<Dictionary<string, object>> records);
 
-        object SetFieldValue(IServiceContext scope, object value);
+        object SetFieldValue(object value);
 
         object BrowseField(IDictionary<string, object> record);
 

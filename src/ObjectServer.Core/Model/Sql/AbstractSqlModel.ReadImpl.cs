@@ -109,20 +109,19 @@ namespace ObjectServer.Model
             //先查找表里的简单字段数据
             var records = scope.DataContext.QueryAsDictionary(sql);
 
-            this.ReadBaseModels(scope, allFields, records);
+            this.ReadBaseModels(allFields, records);
 
-            this.PostProcessFieldValues(scope, allFields, records);
+            this.PostProcessFieldValues(allFields, records);
 
             return records.ToArray();
         }
 
-        private void PostProcessFieldValues(
-            IServiceContext scope, IList<string> allFields, IList<Dictionary<string, object>> records)
+        private void PostProcessFieldValues(IList<string> allFields, IList<Dictionary<string, object>> records)
         {
-            Debug.Assert(scope != null);
             Debug.Assert(allFields != null);
             Debug.Assert(records != null);
 
+            var ctx = this.DbDomain.CurrentSession;
             //TODO 处理字段读权限
             foreach (var fieldName in allFields)
             {
@@ -133,7 +132,7 @@ namespace ObjectServer.Model
                     continue;
                 }
 
-                var fieldValues = f.GetFieldValues(scope, records);
+                var fieldValues = f.GetFieldValues(records);
                 foreach (var record in records)
                 {
                     var id = (long)record[IdFieldName];
@@ -142,17 +141,15 @@ namespace ObjectServer.Model
             }
         }
 
-        private void ReadBaseModels(
-            IServiceContext scope, IList<string> allFields, Dictionary<string, object>[] records)
+        private void ReadBaseModels(IList<string> allFields, Dictionary<string, object>[] records)
         {
-            Debug.Assert(scope != null);
             Debug.Assert(allFields != null);
             Debug.Assert(records != null);
 
             //本尊及各个关联到基类模型的字段已经读出来了，现在读各个基类模型
             foreach (var bm in this.Inheritances)
             {
-                var baseModel = (IModel)scope.GetResource(bm.BaseModel);
+                var baseModel = (IModel)this.DbDomain.GetResource(bm.BaseModel);
                 var baseFieldsToRead = allFields.Intersect(baseModel.Fields.Keys).ToArray();
                 var baseIds = records.Select(r => (long)r[bm.RelatedField]).ToArray();
                 var baseRecords = baseModel.ReadInternal(baseIds, baseFieldsToRead);

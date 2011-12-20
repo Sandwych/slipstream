@@ -117,7 +117,7 @@ namespace ObjectServer.Model
                 }
 
                 //把“基类”模型的字段引用复制过来
-                var baseModel = (IModel)tc.GetResource(ii.BaseModel);
+                var baseModel = (IModel)this.DbDomain.GetResource(ii.BaseModel);
                 foreach (var baseField in baseModel.Fields)
                 {
                     if (!this.Fields.ContainsKey(baseField.Key))
@@ -748,7 +748,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             IModel model, IServiceContext tc, string action, IEnumerable<string> fields)
         {
             var availableFields = fields.Where(k => model.Fields.ContainsKey(k));
-            var fam = (Core.FieldAccessModel)tc.GetResource("core.field_access");
+            var fam = (Core.FieldAccessModel)model.DbDomain.GetResource("core.field_access");
             var result = fam.GetFieldAccess(model.Name, availableFields, action);
             foreach (var p in result)
             {

@@ -21,18 +21,18 @@ namespace ObjectServer.Model.Test
             {
                 { "name", "master-obj" },
             };
-            var masterId = (long)masterModel.Create(this.Context, masterPropBag);
+            var masterId = (long)masterModel.Create(masterPropBag);
             var childRecord = new Dictionary<string, object>()
             {
                 { "name", "child-obj" },
                 { "master", masterId },
             };
-            var childId = (long)childModel.Create(this.Context, childRecord);
+            var childId = (long)childModel.Create(childRecord);
 
-            dynamic dynamicChild = childModel.Browse(this.Context, childId);
+            dynamic dynamicChild = childModel.Browse(childId);
             Assert.AreEqual("master-obj", dynamicChild.master.name);
 
-            dynamic dynamicMaster = masterModel.Browse(this.Context, masterId);
+            dynamic dynamicMaster = masterModel.Browse(masterId);
             Assert.AreEqual(1, dynamicMaster.children.Length);
             Assert.AreEqual("child-obj", dynamicMaster.children[0].name);
         }

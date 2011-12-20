@@ -248,14 +248,13 @@ where   hp._id=? and hc._id<>?
             return ids.ToArray();
         }
 
-        private void ConvertFieldToColumn(
-            IServiceContext ctx, IRecord record, string[] updatableColumnFields)
+        private void ConvertFieldToColumn(IRecord record, string[] updatableColumnFields)
         {
 
             foreach (var f in updatableColumnFields)
             {
                 var fieldInfo = this.Fields[f];
-                var columnValue = fieldInfo.SetFieldValue(ctx, record[f]);
+                var columnValue = fieldInfo.SetFieldValue(record[f]);
                 record[f] = columnValue;
             }
         }

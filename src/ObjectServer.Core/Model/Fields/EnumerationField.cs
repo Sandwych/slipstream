@@ -43,14 +43,8 @@ namespace ObjectServer.Model
         }
 
 
-        protected override Dictionary<long, object> OnGetFieldValues(
-            IServiceContext session, ICollection<Dictionary<string, object>> records)
+        protected override Dictionary<long, object> OnGetFieldValues(ICollection<Dictionary<string, object>> records)
         {
-            if (session == null)
-            {
-                throw new ArgumentNullException("session");
-            }
-
             if (records == null)
             {
                 throw new ArgumentNullException("records");
@@ -84,12 +78,8 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override object OnSetFieldValue(IServiceContext scope, object value)
+        protected override object OnSetFieldValue(object value)
         {
-            if (scope == null)
-            {
-                throw new ArgumentNullException("svcCtx");
-            }
             if (value == null)
             {
                 throw new ArgumentNullException("value");

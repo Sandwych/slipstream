@@ -31,7 +31,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (string.IsNullOrEmpty(tableName))
@@ -54,7 +54,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (tableName == null)
@@ -82,7 +82,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (model == null)
@@ -129,7 +129,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (string.IsNullOrEmpty(tableName))
@@ -176,7 +176,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (field == null)
@@ -220,7 +220,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
             if (string.IsNullOrEmpty(columnName))
             {
@@ -242,7 +242,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (string.IsNullOrEmpty(columnName))
@@ -269,7 +269,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (string.IsNullOrEmpty(columnName))
@@ -329,7 +329,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
             if (string.IsNullOrEmpty(tableName))
             {
@@ -393,7 +393,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (dbctx == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (string.IsNullOrEmpty(constraintName))
@@ -412,7 +412,7 @@ namespace ObjectServer.Data.Mssql
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
             if (string.IsNullOrEmpty(constraintName))
             {
@@ -432,7 +432,7 @@ select coalesce(count(constraint_name), 0)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
             if (string.IsNullOrEmpty(columnName))
             {
@@ -461,7 +461,7 @@ select coalesce(count(constraint_name), 0)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
             if (string.IsNullOrEmpty(columnName))
             {
@@ -480,7 +480,7 @@ select coalesce(count(constraint_name), 0)
         {
             if (db == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
             if (string.IsNullOrEmpty(columnName))
             {

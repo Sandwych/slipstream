@@ -40,13 +40,8 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IServiceContext ctx, ICollection<Dictionary<string, object>> rawRecords)
+            ICollection<Dictionary<string, object>> rawRecords)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (rawRecords == null)
             {
                 throw new ArgumentNullException("rawRecords");
@@ -54,7 +49,7 @@ namespace ObjectServer.Model
 
             var fields = new string[] { "name" }; //TODO 改成静态变量
             var result = new Dictionary<long, object>(rawRecords.Count());
-            dynamic masterModel = ctx.GetResource(this.Relation);
+            dynamic masterModel = this.Model.DbDomain.GetResource(this.Relation);
             if (masterModel.ContainsField("name")) //如果有 name 字段
             {
                 var manyToOneFieldValues = rawRecords.ToDictionary(_ => (long)_[AbstractModel.IdFieldName]);
@@ -107,7 +102,7 @@ namespace ObjectServer.Model
         }
 
 
-        protected override object OnSetFieldValue(IServiceContext scope, object value)
+        protected override object OnSetFieldValue(object value)
         {
             return value;
         }

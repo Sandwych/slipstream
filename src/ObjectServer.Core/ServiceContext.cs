@@ -134,7 +134,7 @@ namespace ObjectServer
             }
             if (ctx == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
 

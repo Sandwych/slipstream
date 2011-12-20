@@ -25,10 +25,10 @@ namespace ObjectServer.Model.Test
             dynamic testModel = this.GetResource(modelName);
 
             //Delete all records first
-            var allIds = testModel.Search(this.Context, null, null, 0, 0);
+            var allIds = testModel.Search(null, null, 0, 0);
             if (allIds.Length > 0)
             {
-                testModel.Delete(this.Context, allIds);
+                testModel.Delete(allIds);
             }
 
             var values = new Dictionary<string, object>
@@ -38,28 +38,28 @@ namespace ObjectServer.Model.Test
                 { "field1", 123 },
                 { "field2", 100 },
             };
-            dynamic id = testModel.Create(this.Context, values);
+            dynamic id = testModel.Create(values);
             Assert.True(id > 0);
 
             var domain1 = new object[][] { new object[] { "name", "=", "sweet_name" } };
-            dynamic foundIds = testModel.Search(this.Context, domain1, null, 0, 100);
+            dynamic foundIds = testModel.Search(domain1, null, 0, 100);
             Assert.AreEqual(1, foundIds.Length);
             Assert.AreEqual(id, foundIds[0]);
 
             var newValues = new Dictionary<string, object> {
                 { "name", "changed_name" },
             };
-            testModel.Write(this.Context, id, newValues);
+            testModel.Write(id, newValues);
 
             var ids = new object[] { id };
-            dynamic data = testModel.Read(this.Context, ids, null);
+            dynamic data = testModel.Read(ids, null);
             Assert.AreEqual(1, data.Length);
             Assert.AreEqual("changed_name", data[0]["name"]);
             Assert.AreEqual(223, data[0]["field3"]); //检测函数字段的计算是否正确
 
-            testModel.Delete(this.Context, ids);
+            testModel.Delete(ids);
 
-            foundIds = testModel.Search(this.Context, domain1, null, 0, 100);
+            foundIds = testModel.Search(domain1, null, 0, 100);
             Assert.AreEqual(0, foundIds.Length);
         }
 
@@ -75,7 +75,7 @@ namespace ObjectServer.Model.Test
             {
                 { "name", "master-obj" },
             };
-            var masterId = masterModel.Create(this.Context, masterPropBag);
+            var masterId = masterModel.Create(masterPropBag);
 
             var childPropBag = new Dictionary<string, object>()
             {
@@ -83,10 +83,10 @@ namespace ObjectServer.Model.Test
                 { "master", masterId },
             };
 
-            var childId = (long)childModel.Create(this.Context, childPropBag);
+            var childId = (long)childModel.Create(childPropBag);
 
             var ids = new object[] { childId };
-            dynamic rows = childModel.Read(this.Context, ids, null);
+            dynamic rows = childModel.Read(ids, null);
             var masterField = rows[0]["master"];
             Assert.AreEqual(typeof(object[]), masterField.GetType());
             var one2ManyField = (object[])masterField;
@@ -94,7 +94,7 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(one2ManyField[1], "master-obj");
 
             var masterFieldNames = new string[] { "name", "children" };
-            var masterRows = masterModel.Read(this.Context, new object[] { masterId }, masterFieldNames);
+            var masterRows = masterModel.Read(new object[] { masterId }, masterFieldNames);
             var master = masterRows[0];
             var children = (long[])master["children"];
 
@@ -102,12 +102,12 @@ namespace ObjectServer.Model.Test
             Assert.AreEqual(childId, children[0]);
 
             //更新
-            var masterId2 = (long)masterModel.Create(this.Context, masterPropBag);
+            var masterId2 = (long)masterModel.Create(masterPropBag);
             childPropBag["master"] = masterId2;
             childPropBag[AbstractModel.VersionFieldName] = AbstractModel.FirstVersion;
-            childModel.Write(this.Context, childId, childPropBag);
+            childModel.Write(childId, childPropBag);
 
-            dynamic children2 = childModel.Read(this.Context, new object[] { childId }, new object[] { "master" });
+            dynamic children2 = childModel.Read(new object[] { childId }, new object[] { "master" });
             var masterField3 = (object[])children2[0]["master"];
             Assert.AreEqual(masterId2, masterField3[0]);
         }
@@ -120,9 +120,9 @@ namespace ObjectServer.Model.Test
             var master = new Dictionary<string, object>();
             dynamic masterModel = this.GetResource("test.master");
 
-            var id = masterModel.Create(this.Context, master);
+            var id = masterModel.Create(master);
 
-            dynamic masterRecords = masterModel.Read(this.Context, new object[] { id }, masterFields);
+            dynamic masterRecords = masterModel.Read(new object[] { id }, masterFields);
             var record = masterRecords[0];
 
             Assert.IsInstanceOf<long[]>(record["children"]);

@@ -73,7 +73,7 @@ namespace ObjectServer.Test
         }
 
         [ServiceMethod("GetNumberPlusResult")]
-        public static int GetNumberPlusResult(IModel self, IServiceContext scope, int x, int y)
+        public static int GetNumberPlusResult(IModel self, int x, int y)
         {
             return x + y;
         }

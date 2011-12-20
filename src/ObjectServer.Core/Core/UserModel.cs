@@ -270,7 +270,7 @@ namespace ObjectServer.Core
 
             if (ctx == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (String.IsNullOrEmpty(newPassword))

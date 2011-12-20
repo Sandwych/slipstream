@@ -24,15 +24,15 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IServiceContext scope, ICollection<Dictionary<string, object>> rawRecords)
+           ICollection<Dictionary<string, object>> rawRecords)
         {
             var result = new Dictionary<long, object>(rawRecords.Count());
-            this.LoadAllNames(scope, rawRecords, result);
+            this.LoadAllNames(rawRecords, result);
 
             return result;
         }
 
-        protected override object OnSetFieldValue(IServiceContext scope, object value)
+        protected override object OnSetFieldValue(object value)
         {
             var fieldValue = (object[])value as object[];
 
@@ -67,8 +67,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private void LoadAllNames(IServiceContext ctx,
-            ICollection<Dictionary<string, object>> rawRecords,
+        private void LoadAllNames(ICollection<Dictionary<string, object>> rawRecords,
             IDictionary<long, object> result)
         {
             //从原始记录里把所有该字段的值取出
@@ -89,7 +88,7 @@ namespace ObjectServer.Model
             {
                 this.VerifyModelName(r.Model);
 
-                var masterModel = (IModel)ctx.GetResource(r.Model);
+                var masterModel = (IModel)this.Model.DbDomain.GetResource(r.Model);
                 ids[0] = r.RefId;
                 string name = null;
                 if (masterModel.Fields.ContainsKey("name"))

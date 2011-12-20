@@ -19,7 +19,7 @@ namespace ObjectServer.Model
         {
             if (tc == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (model == null)

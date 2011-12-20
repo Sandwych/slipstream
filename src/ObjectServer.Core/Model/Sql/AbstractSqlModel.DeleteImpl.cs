@@ -54,14 +54,13 @@ namespace ObjectServer.Model
                 existedRecords = this.DbDomain.CurrentSession.DataContext.QueryAsDictionary(sql);
             }
 
-            DeleteRows(this.DbDomain.CurrentSession, ids, this);
-            this.ProcessBaseModelsDeletion(this.DbDomain.CurrentSession, existedRecords);
+            this.DeleteRows(ids, this);
+            this.ProcessBaseModelsDeletion(existedRecords);
         }
 
-        private void ProcessBaseModelsDeletion(IServiceContext scope, Dictionary<string, object>[] existedRecords)
+        private void ProcessBaseModelsDeletion(Dictionary<string, object>[] existedRecords)
         {
-            Debug.Assert(scope != null);
-
+            var ctx = this.DbDomain.CurrentSession;
             if (this.Inheritances.Count > 0)
             {
                 Debug.Assert(existedRecords != null);
@@ -75,24 +74,23 @@ namespace ObjectServer.Model
 
                     if (baseIds.Any())
                     {
-                        var baseModel = (AbstractSqlModel)scope
-                            .GetResource(inheritInfo.BaseModel);
-                        DeleteRows(scope, baseIds.ToArray(), baseModel);
+                        var baseModel = (AbstractSqlModel)this.DbDomain.GetResource(inheritInfo.BaseModel);
+                        DeleteRows(baseIds.ToArray(), baseModel);
                     }
                 }
             }
         }
 
-        private static void DeleteRows(
-            IServiceContext ctx, long[] ids, AbstractSqlModel tableModel)
+        private void DeleteRows(long[] ids, AbstractSqlModel tableModel)
         {
-            Debug.Assert(ctx != null);
             Debug.Assert(ids != null);
             Debug.Assert(tableModel != null);
 
+            var ctx = this.DbDomain.CurrentSession;
+
             if (tableModel.Hierarchy)
             {
-                UpdateTreeForDeletion(ctx, ids, tableModel);
+                UpdateTreeForDeletion(ids, tableModel);
             }
             else
             {
@@ -109,8 +107,7 @@ namespace ObjectServer.Model
             }
         }
 
-        private static void UpdateTreeForDeletion(
-            IServiceContext ctx, long[] ids, AbstractSqlModel tableModel)
+        private void UpdateTreeForDeletion(long[] ids, AbstractSqlModel tableModel)
         {
             var records =
                 from r in tableModel.ReadInternal(ids, HierarchyFields)
@@ -130,6 +127,7 @@ namespace ObjectServer.Model
                 orderby r.Right descending
                 select r;
 
+            var ctx = this.DbDomain.CurrentSession;
             ctx.DataContext.LockTable(tableModel.TableName);
 
             foreach (var record in parentRecords)

@@ -23,20 +23,15 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IServiceContext ctx, ICollection<Dictionary<string, object>> records)
+           ICollection<Dictionary<string, object>> records)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (records == null)
             {
                 throw new ArgumentNullException("records");
             }
 
             //中间表模型
-            var relationModel = (IModel)ctx.GetResource(this.Relation);
+            var relationModel = (IModel)this.Model.DbDomain.GetResource(this.Relation);
             var result = new Dictionary<long, object>();
             foreach (var rec in records)
             {
@@ -46,14 +41,14 @@ namespace ObjectServer.Model
                     " select ", '"' + this.RelatedField + '"',
                     " from ", '"' + relationModel.TableName + '"',
                     " where ", '"' + this.OriginField + '"', "=", Parameter.Placeholder);
-                var targetIds = ctx.DataContext.QueryAsArray<object>(sql, selfId);
+                var targetIds = this.Model.DbDomain.CurrentSession.DataContext.QueryAsArray<object>(sql, selfId);
                 result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }
 
             return result;
         }
 
-        protected override object OnSetFieldValue(IServiceContext scope, object value)
+        protected override object OnSetFieldValue(object value)
         {
             if (!(value is long[]))
             {

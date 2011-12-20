@@ -23,7 +23,7 @@ namespace ObjectServer.Model.Test
             dynamic dog = new ExpandoObject();
             dog.name = InitName;
             dog.dogfood = InitDogfood;
-            return dogModel.Create(this.Context, dog);
+            return dogModel.Create(dog);
         }
 
         [SetUp]
@@ -43,7 +43,7 @@ namespace ObjectServer.Model.Test
         [Test]
         public void CanOverrideSingleTableTransaction()
         {
-            dynamic inheritedModel = this.Context.GetResource("test.single_table");
+            dynamic inheritedModel = this.GetResource("test.single_table");
             Assert.True(inheritedModel.Fields.ContainsKey("age"));
 
             var propBag = new Dictionary<string, object>()
@@ -52,9 +52,9 @@ namespace ObjectServer.Model.Test
                     { "age", 44},
                 };
 
-            object id = inheritedModel.Create(this.Context, propBag);
+            object id = inheritedModel.Create(propBag);
 
-            var record = inheritedModel.Read(this.Context, new object[] { id }, null)[0];
+            var record = inheritedModel.Read(new object[] { id }, null)[0];
             Assert.AreEqual(33, record["age"]);
         }
 
@@ -69,14 +69,14 @@ namespace ObjectServer.Model.Test
 
             var animalModel = this.GetResource("test.animal");
             var dogModel = this.GetResource("test.dog");
-            long id = dogModel.Create(this.Context, dog);
-            var ids = dogModel.Search(this.Context, null, null, 0, 0);
+            long id = dogModel.Create(dog);
+            var ids = dogModel.Search(null, null, 0, 0);
             Assert.AreEqual(1, ids.Length);
             Assert.AreEqual(id, ids[0]);
-            Assert.AreEqual(1, animalModel.Count(this.Context, null));
+            Assert.AreEqual(1, animalModel.Count(null));
 
-            var dogObj = dogModel.Browse(this.Context, id);
-            var animal = animalModel.Browse(this.Context, dogObj.animal._id);
+            var dogObj = dogModel.Browse(id);
+            var animal = animalModel.Browse(dogObj.animal._id);
             Assert.AreEqual(dog.name, animal.name);
         }
 
@@ -88,7 +88,7 @@ namespace ObjectServer.Model.Test
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
 
-            var dog = dogModel.Read(this.Context, new long[] { id }, null)[0];
+            var dog = dogModel.Read(new long[] { id }, null)[0];
             Assert.AreEqual(InitName, (string)dog["name"]);
             Assert.AreEqual(InitDogfood, (string)dog["dogfood"]);
         }
@@ -101,7 +101,7 @@ namespace ObjectServer.Model.Test
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
 
-            var dog = dogModel.Browse(this.Context, id);
+            var dog = dogModel.Browse(id);
             Assert.AreEqual(InitName, dog.name);
             Assert.AreEqual(InitDogfood, dog.dogfood);
         }
@@ -115,9 +115,9 @@ namespace ObjectServer.Model.Test
             this.ClearData();
             var id = this.PrepareTestingData();
             Assert.That(id > 0);
-            dogModel.Delete(this.Context, new long[] { id });
-            Assert.AreEqual(0, animalModel.Count(this.Context, null));
-            Assert.AreEqual(0, dogModel.Count(this.Context, null));
+            dogModel.Delete(new long[] { id });
+            Assert.AreEqual(0, animalModel.Count(null));
+            Assert.AreEqual(0, dogModel.Count(null));
         }
 
         [Test]
@@ -131,9 +131,9 @@ namespace ObjectServer.Model.Test
             dynamic fieldValues = new ExpandoObject();
             fieldValues.name = "oldyellow";
             fieldValues.dogfood = "apple";
-            dogModel.Write(this.Context, id, fieldValues);
+            dogModel.Write(id, fieldValues);
 
-            var dog = dogModel.Read(this.Context, new long[] { id }, null)[0];
+            var dog = dogModel.Read(new long[] { id }, null)[0];
             Assert.AreEqual("oldyellow", (string)dog["name"]);
             Assert.AreEqual("apple", (string)dog["dogfood"]);
         }
@@ -153,8 +153,8 @@ namespace ObjectServer.Model.Test
             { 
                 new object[] { "name", "=", InitName } 
             };
-            var animalIds = animalModel.Search(this.Context, constraints, null, 0, 0);
-            var dogIds = dogModel.Search(this.Context, constraints, null, 0, 0);
+            var animalIds = animalModel.Search(constraints, null, 0, 0);
+            var dogIds = dogModel.Search(constraints, null, 0, 0);
 
             Assert.AreEqual(1, animalIds.Length);
             Assert.AreEqual(1, dogIds.Length);

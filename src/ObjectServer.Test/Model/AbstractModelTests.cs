@@ -27,12 +27,12 @@ namespace ObjectServer.Model.Test
 
             Assert.Throws<ArgumentException>(delegate
             {
-                var ids = model.Search(this.Context, constraints, null, 0, 0);
+                var ids = model.Search(constraints, null, 0, 0);
             });
 
             Assert.Throws<ArgumentException>(delegate
             {
-                var ids = model.Count(this.Context, constraints);
+                var ids = model.Count(constraints);
             });
 
         }
@@ -42,7 +42,7 @@ namespace ObjectServer.Model.Test
         {
             var modelName = "core.user";
             dynamic userModel = this.GetResource(modelName);
-            var result = userModel.GetFields(this.Context, null);
+            var result = userModel.GetFields(null);
             var records = ((object[])result).Select(i => (Dictionary<string, object>)i);
 
             Assert.IsTrue(records.Any());
@@ -58,7 +58,7 @@ namespace ObjectServer.Model.Test
             m1.name = "master1";
 
             //创建第一笔记录
-            var id1 = masterModel.Create(this.Context, m1);
+            var id1 = masterModel.Create(m1);
             var record1 = this.GetMasterRecordByName("master1");
 
             Assert.That(record1.ContainsKey(AbstractModel.VersionFieldName));
@@ -67,7 +67,7 @@ namespace ObjectServer.Model.Test
             //修改
             var name11 = "master1'1";
             record1["name"] = name11;
-            masterModel.Write(this.Context, record1[AbstractModel.IdFieldName], record1);
+            masterModel.Write(record1[AbstractModel.IdFieldName], record1);
             record1 = this.GetMasterRecordByName(name11);
 
             Assert.That(record1.ContainsKey(AbstractModel.VersionFieldName));
@@ -80,7 +80,7 @@ namespace ObjectServer.Model.Test
             record1[AbstractModel.VersionFieldName] = ver;
             Assert.Throws<Exceptions.ConcurrencyException>(delegate
             {
-                masterModel.Write(this.Context, record1[AbstractModel.IdFieldName], record1);
+                masterModel.Write(record1[AbstractModel.IdFieldName], record1);
             });
         }
 
@@ -96,7 +96,7 @@ namespace ObjectServer.Model.Test
 
             Assert.Throws<ArgumentOutOfRangeException>(delegate
             {
-                masterModel.Create(this.Context, m1);
+                masterModel.Create(m1);
             });
         }
 
@@ -108,8 +108,8 @@ namespace ObjectServer.Model.Test
 
             dynamic m1 = new ExpandoObject();
             m1.name = "master1";
-            long id = (long)masterModel.Create(this.Context, m1);
-            dynamic records = masterModel.Read(this.Context, new long[] { id }, null);
+            long id = (long)masterModel.Create(m1);
+            dynamic records = masterModel.Read(new long[] { id }, null);
 
             dynamic m2 = new ExpandoObject();
             m2._version = records[0]["_version"];
@@ -117,7 +117,7 @@ namespace ObjectServer.Model.Test
 
             Assert.Throws<ArgumentOutOfRangeException>(delegate
             {
-                masterModel.Write(this.Context, id, m2);
+                masterModel.Write(id, m2);
             });
         }
 
@@ -128,7 +128,7 @@ namespace ObjectServer.Model.Test
             var booleanFieldName = "boolean_field";
             var fields = new string[] { booleanFieldName };
 
-            var defaultValues = testModel.GetFieldDefaultValues(this.Context, fields);
+            var defaultValues = testModel.GetFieldDefaultValues(fields);
 
             Assert.AreEqual(1, defaultValues.Count);
             Assert.AreEqual(true, defaultValues[booleanFieldName]);
@@ -141,8 +141,8 @@ namespace ObjectServer.Model.Test
             var constraint = new object[][] {
                 new object[] { "name", "=", name }
             };
-            long[] ids = (long[])masterModel.Search(this.Context, constraint, null, 0, 0);
-            var records = (Dictionary<string, object>[])masterModel.Read(this.Context, ids, fields);
+            long[] ids = (long[])masterModel.Search(constraint, null, 0, 0);
+            var records = (Dictionary<string, object>[])masterModel.Read(ids, fields);
             return records.First();
         }
     }

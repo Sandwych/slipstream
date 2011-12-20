@@ -16,20 +16,15 @@ namespace ObjectServer.Model
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(
-           IServiceContext ctx, ICollection<Dictionary<string, object>> records)
+           ICollection<Dictionary<string, object>> records)
         {
-            if (ctx == null)
-            {
-                throw new ArgumentNullException("ctx");
-            }
-
             if (records == null)
             {
                 throw new ArgumentNullException("records");
             }
 
             //查询字表
-            IModel childModel = (IModel)ctx.GetResource(this.Relation);
+            IModel childModel = (IModel)this.Model.DbDomain.GetResource(this.Relation);
 
             var children = new Dictionary<long, long[]>();
             foreach (var master in records)
@@ -51,7 +46,7 @@ namespace ObjectServer.Model
             return result;
         }
 
-        protected override object OnSetFieldValue(IServiceContext scope, object value)
+        protected override object OnSetFieldValue(object value)
         {
             throw new NotSupportedException();
         }

@@ -55,7 +55,7 @@ select max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)
         {
             if (ctx == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             if (string.IsNullOrEmpty(model))

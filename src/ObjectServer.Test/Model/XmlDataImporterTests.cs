@@ -22,7 +22,7 @@ namespace ObjectServer.Model.Test
             this.ClearTestModelTable();
 
             //删除所有记录
-            dynamic testObjectModel = this.Context.GetResource("test.test_model");
+            dynamic testObjectModel = this.GetResource("test.test_model");
 
             var constraints = new object[][] { new object[] { "model", "=", "test.test_model" } };
 
@@ -34,11 +34,11 @@ namespace ObjectServer.Model.Test
 
                 importer.Import(xmlStream);
 
-                var ids = testObjectModel.Search(this.Context, null, null, 0, 0);
+                var ids = testObjectModel.Search(null, null, 0, 0);
                 Assert.AreEqual(3, ids.Length);
 
                 var domain1 = new object[][] { new object[] { "name", "=", "name_changed" } };
-                ids = testObjectModel.Search(this.Context, domain1, null, 0, 0);
+                ids = testObjectModel.Search(domain1, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
             }
 
@@ -50,7 +50,7 @@ namespace ObjectServer.Model.Test
                 importer.Import(xmlStream);
             }
 
-            var ids2 = testObjectModel.Search(this.Context, null, null, 0, 0);
+            var ids2 = testObjectModel.Search(null, null, 0, 0);
             Assert.AreEqual(3, ids2.Length);
         }
 
@@ -62,8 +62,8 @@ namespace ObjectServer.Model.Test
             this.ClearAllModelData();
             //删除所有导入记录
 
-            dynamic childModel = this.Context.GetResource("test.child");
-            dynamic masterModel = this.Context.GetResource("test.master");
+            dynamic childModel = this.GetResource("test.child");
+            dynamic masterModel = this.GetResource("test.master");
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(MasterChildXmlResourcePath))
@@ -75,9 +75,9 @@ namespace ObjectServer.Model.Test
                 object[][] constraints;
 
                 constraints = new object[][] { new object[] { "name", "=", "master1" } };
-                var ids = masterModel.Search(this.Context, constraints, null, 0, 0);
+                var ids = masterModel.Search(constraints, null, 0, 0);
                 Assert.AreEqual(1, ids.Length);
-                dynamic master1 = masterModel.Browse(this.Context, ids[0]);
+                dynamic master1 = masterModel.Browse(ids[0]);
                 Assert.AreEqual(2, master1.children.Length);
             }
         }
@@ -90,8 +90,8 @@ namespace ObjectServer.Model.Test
             this.ClearAllModelData();
             //删除所有导入记录
 
-            dynamic testModel = this.Context.GetResource("test.test_model");
-            dynamic masterModel = this.Context.GetResource("test.master");
+            dynamic testModel = this.GetResource("test.test_model");
+            dynamic masterModel = this.GetResource("test.master");
 
             using (var xmlStream = Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(ReferenceFieldXmlResourcePath))
@@ -100,20 +100,20 @@ namespace ObjectServer.Model.Test
 
                 importer.Import(xmlStream);
 
-                var masterIds = masterModel.Search(this.Context, null, null, 0, 0);
+                var masterIds = masterModel.Search(null, null, 0, 0);
                 Assert.AreEqual(1, masterIds.Length);
 
-                var testModelIds = testModel.Search(this.Context, null, null, 0, 0);
+                var testModelIds = testModel.Search(null, null, 0, 0);
                 Assert.AreEqual(1, testModelIds.Length);
 
-                dynamic testModelRecord = testModel.Browse(this.Context, testModelIds[0]);
+                dynamic testModelRecord = testModel.Browse(testModelIds[0]);
                 Assert.AreEqual("master1", testModelRecord.reference_field.name);
             }
         }
 
         private void ClearAllModelData()
         {
-            var model = (IModel)this.Context.GetResource("core.model_data");
+            var model = (IModel)this.GetResource("core.model_data");
 
             ClearAllModelData(model, "test.master");
             ClearAllModelData(model, "test.child");
@@ -127,10 +127,10 @@ namespace ObjectServer.Model.Test
         private void ClearAllModelData(dynamic model, string modelName)
         {
             var constraints = new object[][] { new object[] { "model", "=", modelName } };
-            var ids = model.Search(this.Context, constraints, null, 0, 0);
+            var ids = model.Search(constraints, null, 0, 0);
             if (ids != null && ids.Length > 0)
             {
-                model.Delete(this.Context, ids);
+                model.Delete(ids);
             }
         }
 

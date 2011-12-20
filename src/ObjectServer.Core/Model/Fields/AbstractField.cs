@@ -138,20 +138,19 @@ namespace ObjectServer.Model
             }
         }
 
-        public Dictionary<long, object> GetFieldValues(
-            IServiceContext scope, ICollection<Dictionary<string, object>> records)
+        public Dictionary<long, object> GetFieldValues(ICollection<Dictionary<string, object>> records)
         {
             if (this.IsFunctional)
             {
-                return this.GetFieldValuesFunctional(scope, records);
+                return this.GetFieldValuesFunctional(records);
             }
             else
             {
-                return this.OnGetFieldValues(scope, records);
+                return this.OnGetFieldValues(records);
             }
         }
 
-        public object SetFieldValue(IServiceContext scope, object value)
+        public object SetFieldValue(object value)
         {
             if (this.IsFunctional)
             {
@@ -159,14 +158,13 @@ namespace ObjectServer.Model
             }
             else
             {
-                return this.OnSetFieldValue(scope, value);
+                return this.OnSetFieldValue(value);
             }
         }
 
-        protected abstract Dictionary<long, object> OnGetFieldValues(
-            IServiceContext scope, ICollection<Dictionary<string, object>> records);
+        protected abstract Dictionary<long, object> OnGetFieldValues(ICollection<Dictionary<string, object>> records);
 
-        protected abstract object OnSetFieldValue(IServiceContext scope, object value);
+        protected abstract object OnSetFieldValue(object value);
 
         public abstract object BrowseField(IDictionary<string, object> record);
 
@@ -191,22 +189,20 @@ namespace ObjectServer.Model
         }
 
         private static Dictionary<long, object>
-            GetPropertyValues(IServiceContext session, IEnumerable<long> ids)
+            GetPropertyValues(IEnumerable<long> ids)
         {
             throw new NotImplementedException();
         }
 
         #endregion
 
-        private Dictionary<long, object> GetFieldValuesFunctional(
-            IServiceContext ctx, ICollection<Dictionary<string, object>> records)
+        private Dictionary<long, object> GetFieldValuesFunctional(ICollection<Dictionary<string, object>> records)
         {
-            Debug.Assert(ctx != null);
             Debug.Assert(records != null);
 
             var ids = records.Select(p => (long)p[AbstractModel.IdFieldName]).ToArray();
 
-            var result = this.ValueGetter(ctx, ids);
+            var result = this.ValueGetter(this.Model.DbDomain.CurrentSession, ids);
 
             return result;
         }

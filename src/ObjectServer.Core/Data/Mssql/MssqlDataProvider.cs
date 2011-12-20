@@ -16,8 +16,8 @@ namespace ObjectServer.Data.Mssql
         private readonly DriverBase _driver = new SqlClientDriver();
 
         private static readonly SqlString ListDatabasesSql = SqlString.Parse(@"
-select ctx.name from sys.sysdatabases ctx
-inner join sys.syslogins l on l.sid = ctx.sid
+select session.name from sys.sysdatabases session
+inner join sys.syslogins l on l.sid = session.sid
 where l.name = ?
 order by l.name asc
 ");

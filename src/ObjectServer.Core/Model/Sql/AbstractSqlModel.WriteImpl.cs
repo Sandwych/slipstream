@@ -108,7 +108,7 @@ namespace ObjectServer.Model
                 }
             }
 
-            var rowsAffected = this.WriteSelf(ctx, id, record);
+            var rowsAffected = this.WriteSelf(id, record);
 
             //检查更新结果
             if (rowsAffected != 1)
@@ -141,7 +141,7 @@ namespace ObjectServer.Model
                 }
 
                 ctx.DataContext.LockTable(this.TableName); //层次表移动节点的时候需要锁表，因为涉及不止一行
-                this.NodeMoveTo(ctx, nodeLeft, nodeRight, nodeWidth, newParentID);
+                this.NodeMoveTo(nodeLeft, nodeRight, nodeWidth, newParentID);
             }
 
             UpdateOneToManyFields(id, record);
@@ -153,12 +153,12 @@ namespace ObjectServer.Model
         }
 
 
-        private int WriteSelf(IServiceContext ctx, long id, Record record)
+        private int WriteSelf(long id, Record record)
         {
             var allFields = record.Keys; //记录中的所有字段
 
             //先写入 many-to-many 字段
-            this.PrewriteManyToManyFields(ctx, id, record, allFields);
+            this.PrewriteManyToManyFields(id, record, allFields);
 
             long originVersion = 0;
             //更新版本号
@@ -169,7 +169,7 @@ namespace ObjectServer.Model
                 record[VersionFieldName] = version + 1;
             }
 
-            this.SetModificationInfo(ctx, record);
+            this.SetModificationInfo(record);
 
             //所有可更新的字段
             var updatableColumnFields =
@@ -178,7 +178,7 @@ namespace ObjectServer.Model
                  where fieldInfo.IsColumn && !fieldInfo.IsReadonly
                  select f).ToArray();
 
-            this.ConvertFieldToColumn(ctx, record, updatableColumnFields);
+            this.ConvertFieldToColumn(record, updatableColumnFields);
 
             var sqlBuilder = new SqlStringBuilder();
             sqlBuilder.Add("update ");
@@ -211,13 +211,13 @@ namespace ObjectServer.Model
             sqlBuilder.Add(this.BuildVersionExpression(originVersion));
 
             var sql = sqlBuilder.ToSqlString();
-            var rowsAffected = ctx.DataContext.Execute(sql, args);
+            var rowsAffected = this.DbDomain.CurrentSession.DataContext.Execute(sql, args);
             return rowsAffected;
         }
 
-        private void NodeMoveTo(IServiceContext ctx, long nodeLeft, long nodeRight, long nodeWidth, long newParentID)
+        private void NodeMoveTo(long nodeLeft, long nodeRight, long nodeWidth, long newParentID)
         {
-            Debug.Assert(ctx != null);
+            var session = this.DbDomain.CurrentSession;
 
             //TODO 检查父节点不存在的异常
             long insertPos = 0;
@@ -246,13 +246,13 @@ namespace ObjectServer.Model
                 CultureInfo.InvariantCulture,
                 "update {0} set _left=_left+{1} where _left>={2}",
                 this.quotedTableName, nodeWidth, insertPos);
-            ctx.DataContext.Execute(SqlString.Parse(sql));
+            session.DataContext.Execute(SqlString.Parse(sql));
 
             sql = String.Format(
                 CultureInfo.InvariantCulture,
                 "update {0} set _right=_right+{1} where _right>={2}",
                 this.quotedTableName, nodeWidth, insertPos);
-            ctx.DataContext.Execute(SqlString.Parse(sql));
+            session.DataContext.Execute(SqlString.Parse(sql));
 
             if (nodeLeft < insertPos) //往左移动
             {
@@ -261,7 +261,7 @@ namespace ObjectServer.Model
                     CultureInfo.InvariantCulture,
                     "update {0} set _left=_left+{1}, _right=_right+{1} where _left>={2} and _left<{3}",
                     this.quotedTableName, moveDistance, nodeLeft, nodeRight);
-                ctx.DataContext.Execute(SqlString.Parse(sql));
+                session.DataContext.Execute(SqlString.Parse(sql));
             }
             else //往右移动
             {
@@ -270,29 +270,29 @@ namespace ObjectServer.Model
                     CultureInfo.InvariantCulture,
                     "update {0} set _left=_left-{1}, _right=_right-{1} where _left>={2} and _left<{3}",
                     this.quotedTableName, moveDistance + nodeWidth, nodeLeft + nodeWidth, nodeRight + nodeWidth);
-                ctx.DataContext.Execute(SqlString.Parse(sql));
+                session.DataContext.Execute(SqlString.Parse(sql));
             }
 
             //最后一步不需要执行了，之前已经更新过 parent
         }
 
-        private void SetModificationInfo(IServiceContext scope, IRecord record)
+        private void SetModificationInfo(IRecord record)
         {
+            var ctx = this.DbDomain.CurrentSession;
             //处理最近更新用户与最近更新时间字段            
             if (this.ContainsField(UpdatedTimeFieldName))
             {
                 record[UpdatedTimeFieldName] = DateTime.Now;
             }
             if (this.ContainsField(UpdatedUserFieldName) &&
-                scope.UserSession != null &&
-                scope.UserSession.UserId > 0)
+                ctx.UserSession != null &&
+                ctx.UserSession.UserId > 0)
             {
-                record[UpdatedUserFieldName] = scope.UserSession.UserId;
+                record[UpdatedUserFieldName] = ctx.UserSession.UserId;
             }
         }
 
-        private void PrewriteManyToManyFields(
-            IServiceContext scope, long id, IRecord record, ICollection<string> allFields)
+        private void PrewriteManyToManyFields(long id, IRecord record, ICollection<string> allFields)
         {
             //过滤所有可以更新的 many2many 字段
             var writableManyToManyFields =
@@ -304,13 +304,13 @@ namespace ObjectServer.Model
             foreach (var f in writableManyToManyFields)
             {
                 //中间表
-                PrewriteManyToManyField(scope, id, record, f);
+                PrewriteManyToManyField(id, record, f);
             }
         }
 
-        private static void PrewriteManyToManyField(IServiceContext scope, long id, IRecord record, IField f)
+        private void PrewriteManyToManyField(long id, IRecord record, IField f)
         {
-            var relModel = (IModel)scope.GetResource(f.Relation);
+            var relModel = (IModel)this.DbDomain.GetResource(f.Relation);
             var constraints = new object[][]  
             { 
                 new object[] { f.OriginField, "=", id }

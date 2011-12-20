@@ -153,7 +153,7 @@ namespace ObjectServer
         {
             if (ctx == null)
             {
-                throw new ArgumentNullException("ctx");
+                throw new ArgumentNullException("session");
             }
 
             LoggerProvider.EnvironmentLogger.Info("Loading _modules...");
