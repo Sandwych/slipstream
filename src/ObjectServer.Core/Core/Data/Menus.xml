@@ -4,24 +4,28 @@
   <record model="core.menu" key="menu_admin_root">
     <field name="name">System Administration</field>
     <field name="ordinal">9999</field>
+    <field name="icon">setting</field>
   </record>
 
   <record model="core.menu" key="menu_admin_org">
     <field name="name">Organization Structure</field>
     <field name="parent" ref-key="menu_admin_root" />
     <field name="ordinal">1000</field>
+    <field name="icon">tree</field>
   </record>
 
   <record model="core.menu" key="menu_admin_security">
     <field name="name">Security</field>
     <field name="parent" ref-key="menu_admin_root" />
     <field name="ordinal">9999</field>
+    <field name="icon">key</field>
   </record>
 
   <record model="core.menu" key="menu_admin_base">
     <field name="parent" ref-key="menu_admin_root" />
     <field name="name">Base System</field>
     <field name="ordinal">0</field>
+    <field name="icon">setting</field>
   </record>
 
   <record model="core.menu" key="menu_admin_module">
@@ -29,6 +33,7 @@
     <field name="name">Module Management</field>
     <field name="ordinal">0</field>
     <field name="action" ref-model="core.action_window" ref-key="module_menu_action" />
+    <field name="icon">setting</field>
   </record>
 
   <record model="core.menu" key="menu_base_model">
@@ -50,6 +55,7 @@
     <field name="name">Role Management</field>
     <field name="ordinal">0</field>
     <field name="action" ref-model="core.action_window" ref-key="role_menu_action" />
+    <field name="icon">people</field>
   </record>
 
   <record model="core.menu" key="menu_admin_user">
@@ -57,6 +63,7 @@
     <field name="name">User Management</field>
     <field name="ordinal">1</field>
     <field name="action" ref-model="core.action_window" ref-key="user_menu_action" />
+    <field name="icon">people</field>
   </record>
    
   <record model="core.menu" key="menu_admin_menu">

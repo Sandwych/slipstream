@@ -21,6 +21,7 @@ namespace ObjectServer.Core
             Fields.Integer("ordinal").SetLabel("Ordinal Number")
                 .Required().SetDefaultValueGetter(arg => 0);
             Fields.ManyToOne("parent", "core.menu").SetLabel("Parent Menu").NotRequired();
+            Fields.Chars("icon").SetLabel("Icon Name").NotRequired();
             Fields.Boolean("active").SetLabel("Active").Required().SetDefaultValueGetter(arg => true);
             Fields.Reference("action").SetLabel("Action").NotRequired().SetOptions(
                    new Dictionary<string, string>()
