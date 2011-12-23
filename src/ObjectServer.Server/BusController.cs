@@ -11,7 +11,7 @@ namespace ObjectServer.Server
     public sealed class BusController : IDisposable
     {
         private readonly Socket broadcastSocket = new Socket(SocketType.PUB);
-        private bool started = false;
+        private volatile bool started = false;
         private bool disposed = false;
 
 

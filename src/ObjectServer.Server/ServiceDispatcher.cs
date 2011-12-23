@@ -23,7 +23,7 @@ namespace ObjectServer.Server
         private static readonly Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
         private static readonly ISlipstreamService s_service = SlipstreamEnvironment.RootService;
         private static readonly object s_lockObj = new object();
-        private static bool s_running = false;
+        private static volatile bool s_running = false;
 
         static ServiceDispatcher()
         {
