@@ -158,7 +158,7 @@ namespace ObjectServer
                 catch (Exception ex)
                 {
                     var msg = "Failed to load core module";
-                    LoggerProvider.EnvironmentLogger.Fatal(msg, ex);
+                    LoggerProvider.EnvironmentLogger.FatalException(msg, ex);
                     throw new Exceptions.InitializationException(msg, ex);
                 }
 #endif
