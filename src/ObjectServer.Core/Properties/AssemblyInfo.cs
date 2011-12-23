@@ -8,11 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ObjectServer")]
 [assembly: AssemblyDescription("ObjectServer Framework Assembly")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Wei Li")]
-[assembly: AssemblyProduct("Malt ObjectServer Framework")]
-[assembly: AssemblyCopyright("Copyright ©  2011-TODAY Wei Li")]
-[assembly: AssemblyTrademark("All rights reserved.")]
-[assembly: AssemblyCulture("")]
 [assembly: System.CLSCompliant(true)]
 [assembly: InternalsVisibleTo("ObjectServer.Test")]
 
@@ -23,16 +18,3 @@ using System.Runtime.InteropServices;
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
 [assembly: Guid("84eeecc3-05e8-46c4-bfda-22eb7e27f31f")]
-
-// 程序集的版本信息由下面四个值组成:
-//
-//      主版本
-//      次版本 
-//      内部版本号
-//      修订号
-//
-// 可以指定所有这些值，也可以使用“内部版本号”和“修订号”的默认值，
-// 方法是按如下所示使用“*”:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.*")]
-[assembly: AssemblyFileVersion("0.1.0.0")]

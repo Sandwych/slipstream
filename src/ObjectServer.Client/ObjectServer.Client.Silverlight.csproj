@@ -53,6 +53,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="IObjectServerClient.cs" />
     <Compile Include="IRootService.cs" />
     <Compile Include="Model\Entity.cs" />
@@ -66,11 +69,9 @@
     <Compile Include="Model\MenuEntity.cs" />
     <Compile Include="Model\ModelHelper.cs" />
     <Compile Include="ObjectServerClient.cs" />
-    <Compile Include="AssemblyInfo.Silverlight.cs" />
+    <Compile Include="Properties\AssemblyInfo.Silverlight.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Malt.Common\Malt.Common.Silverlight.csproj">
       <Project>{073A04A8-05F5-424D-BEB5-0BA61365F891}</Project>

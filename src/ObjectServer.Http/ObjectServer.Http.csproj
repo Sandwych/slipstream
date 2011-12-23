@@ -51,6 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Anna\HttpServer.cs" />
     <Compile Include="Anna\Observables\ObservableFromFile.cs" />
     <Compile Include="Anna\Observers\UnhandledRouteObserver.cs" />

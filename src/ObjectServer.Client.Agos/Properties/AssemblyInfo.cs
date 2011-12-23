@@ -9,11 +9,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ObjectServer.Client.Agos")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Wei Li")]
-[assembly: AssemblyProduct("ObjectServer.Client.Agos")]
-[assembly: AssemblyCopyright("Copyright © Wei Li 2011-TODAY")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
@@ -24,15 +19,3 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("9ec41c7f-86c4-4799-a625-e2648b2870ad")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
