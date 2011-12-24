@@ -13,7 +13,7 @@ namespace ObjectServer.Data
 
         string SqlType { get; }
 
-        long Length { get; }
+        int Length { get; }
 
         int Precision { get; }
     }

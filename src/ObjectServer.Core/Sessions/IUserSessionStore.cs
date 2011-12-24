@@ -7,7 +7,7 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    public interface IUserSessionService
+    public interface IUserSessionStore
     {
         UserSession GetByToken(string token);
         UserSession GetByUserId(long userId);

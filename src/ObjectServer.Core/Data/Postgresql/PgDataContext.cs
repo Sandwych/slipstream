@@ -8,18 +8,14 @@ using System.Globalization;
 
 using NHibernate.SqlCommand;
 
-namespace ObjectServer.Data.Postgresql
-{
-    internal sealed class PgDataContext : AbstractDataContext, IDataContext
-    {
+namespace ObjectServer.Data.Postgresql {
+    internal sealed class PgDataContext : AbstractDataContext, IDataContext {
         private readonly static Type pgt = typeof(Npgsql.NpgsqlCommand);
 
         private const string INITDB = "ObjectServer.Data.Postgresql.initdb.sql";
 
-        public PgDataContext(string dbName)
-        {
-            if (string.IsNullOrEmpty(dbName))
-            {
+        public PgDataContext(string dbName) {
+            if (string.IsNullOrEmpty(dbName)) {
                 throw new ArgumentNullException("_dbName");
             }
 
@@ -40,16 +36,13 @@ namespace ObjectServer.Data.Postgresql
         }
 
         public PgDataContext()
-            : this("template1")
-        {
+            : this("template1") {
         }
 
         #region IDatabase 成员
 
-        public override void Create(string dbName)
-        {
-            if (string.IsNullOrEmpty(dbName))
-            {
+        public override void Create(string dbName) {
+            if (string.IsNullOrEmpty(dbName)) {
                 throw new ArgumentNullException("_dbName");
             }
 
@@ -64,32 +57,26 @@ namespace ObjectServer.Data.Postgresql
                 String.Format("Database [{0}] has been created.", dbName));
         }
 
-        public override void Setup()
-        {
+        public override void Setup() {
             LoggerProvider.EnvironmentLogger.Info(
                 String.Format("Executing the database initialization script [{0}]...", INITDB));
 
             //执行初始化数据库脚本
             var assembly = Assembly.GetExecutingAssembly();
             using (var resStream = assembly.GetManifestResourceStream(INITDB))
-            using (var sr = new StreamReader(resStream, Encoding.UTF8))
-            {
+            using (var sr = new StreamReader(resStream, Encoding.UTF8)) {
                 string line = null;
                 var sb = new SqlStringBuilder();
-                while ((line = sr.ReadLine()) != null)
-                {
-                    if (string.IsNullOrEmpty(line) || line.Trim().Length == 0)
-                    {
+                while ((line = sr.ReadLine()) != null) {
+                    if (string.IsNullOrEmpty(line) || line.Trim().Length == 0) {
                         continue;
                     }
 
-                    if (line.Trim().ToUpperInvariant() == "GO")
-                    {
+                    if (line.Trim().ToUpperInvariant() == "GO") {
                         this.Execute(sb.ToSqlString());
                         sb.Clear();
                     }
-                    else
-                    {
+                    else {
                         sb.Add(line + '\n');
                     }
                 }
@@ -99,8 +86,7 @@ namespace ObjectServer.Data.Postgresql
             LoggerProvider.EnvironmentLogger.Info("The database scheme has been _initialized.");
         }
 
-        public override bool IsInitialized()
-        {
+        public override bool IsInitialized() {
             var sql = SqlString.Parse(@"
 select distinct count(table_name) 
     from information_schema.tables 
@@ -112,31 +98,25 @@ select distinct count(table_name)
 
         #endregion
 
-        public override ITableContext CreateTableContext(string tableName)
-        {
-            if (string.IsNullOrEmpty(tableName))
-            {
+        public override ITableContext CreateTableContext(string tableName) {
+            if (string.IsNullOrEmpty(tableName)) {
                 throw new ArgumentNullException("tableName");
             }
 
             return new PgTableContext(this, tableName);
         }
 
-        public override void LockTable(string tableName)
-        {
-            if (string.IsNullOrEmpty(tableName))
-            {
+        public override void LockTable(string tableName) {
+            if (string.IsNullOrEmpty(tableName)) {
                 throw new ArgumentNullException("tableName");
             }
 
-            var sql = new SqlString("lock ", DataProvider.Dialect.QuoteForTableName(tableName));
+            var sql = new SqlString("lock ", '"' + tableName + '"');
             this.Execute(sql);
         }
 
-        public override long GetLastIdentity(string tableName)
-        {
-            if (string.IsNullOrEmpty(tableName))
-            {
+        public override long GetLastIdentity(string tableName) {
+            if (string.IsNullOrEmpty(tableName)) {
                 throw new ArgumentNullException("tableName");
             }
 

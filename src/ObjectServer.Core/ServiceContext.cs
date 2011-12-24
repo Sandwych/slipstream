@@ -11,65 +11,59 @@ using Autofac;
 using ObjectServer.Runtime;
 using ObjectServer.Data;
 
-namespace ObjectServer
-{
+namespace ObjectServer {
     /// <summary>
     /// 但凡是需要 RPC 的方法都需要用此类包裹
     /// </summary>
-    internal sealed class ServiceContext : IServiceContext
-    {
+    internal sealed class ServiceContext : IServiceContext {
         [ThreadStatic]
         private static IServiceContext s_currentContext;
 
+        private readonly IDbDomain _dbDomain;
         private bool disposed = false;
-        private readonly IResourceContainer _resources;
         private readonly int _currentThreadID;
 
         /// <summary>
         /// 安全的创建 Context，会检查 session 等
         /// </summary>
         /// <param name="sessionToken"></param>
-        public ServiceContext(IDataProvider dataProvider, string dbName, string sessionToken)
-        {
-            if (string.IsNullOrEmpty(dbName))
-            {
+        public ServiceContext(IDbDomain dbDomain, string dbName, string sessionToken) {
+
+            if (dbDomain == null) {
+                throw new ArgumentNullException("dbDomain");
+            }
+            if (string.IsNullOrEmpty(dbName)) {
                 throw new ArgumentNullException("_dbName");
             }
-            if (string.IsNullOrEmpty(sessionToken))
-            {
+            if (string.IsNullOrEmpty(sessionToken)) {
                 throw new ArgumentNullException("sessionToken");
             }
 
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
-            this._dataContext = dataProvider.OpenDataContext(dbName);
-            this.UserSessionService = new DbUserSessionService(this._dataContext);
+            this._dbDomain = dbDomain;
+            this._dataContext = dbDomain.DataProvider.OpenDataContext(dbName);
+            this.UserSessionService = new SqlUserSessionStore(this._dataContext);
 
             var session = this.UserSessionService.GetByToken(sessionToken);
-            if (session == null || !session.IsActive)
-            {
+            if (session == null || !session.IsActive) {
                 //删掉无效的 Session
                 this.UserSessionService.Remove(session.Token);
                 throw new ObjectServer.Exceptions.SecurityException("Not logged!");
             }
 
-            try
-            {
+            try {
                 this._transaction = this.DataContext.BeginTransaction();
-                try
-                {
+                try {
                     this.UserSessionService.Pulse(sessionToken);
-                    this._resources = SlipstreamEnvironment.DbDomains.GetDbDomain(dbName);
                     this.UserSession = session;
                 }
-                catch
-                {
+                catch {
                     this.DbTransaction.Rollback();
                     this.DbTransaction.Dispose();
                     throw;
                 }
             }
-            catch
-            {
+            catch {
                 this.DataContext.Close();
                 this.disposed = true;
                 throw;
@@ -82,40 +76,36 @@ namespace ObjectServer
         /// </summary>
         /// <param name="dbName"></param>
         public ServiceContext(IDataProvider dataProvider, string dbName)
-            : this(dataProvider, dbName, SlipstreamEnvironment.DbDomains.GetDbDomain(dbName))
-        {
+            : this(SlipstreamEnvironment.DbDomains.GetDbDomain(dbName), dbName) {
         }
 
-        public ServiceContext(IDataProvider dataProvider, string dbName, IResourceContainer resourceContainer)
-        {
-            if (string.IsNullOrEmpty(dbName))
-            {
+        public ServiceContext(IDbDomain dbDomain, string dbName) {
+            if (dbDomain == null) {
+                throw new ArgumentNullException("dbDomain");
+            }
+            if (string.IsNullOrEmpty(dbName)) {
                 throw new ArgumentNullException("_dbName");
             }
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
 
-            this._resources = resourceContainer;
-            this._dataContext = dataProvider.OpenDataContext(dbName);
-            this.UserSessionService = new DbUserSessionService(this._dataContext);
+            this._dbDomain = dbDomain;
+            this._dataContext = dbDomain.DataProvider.OpenDataContext(dbName);
+            this.UserSessionService = new SqlUserSessionStore(this._dataContext);
 
-            try
-            {
+            try {
                 this._transaction = this.DataContext.BeginTransaction();
-                try
-                {
+                try {
                     this.UserSession = UserSession.CreateSystemUserSession();
                     this.UserSessionService.Put(this.UserSession);
                 }
-                catch
-                {
+                catch {
                     this.DbTransaction.Rollback();
                     this.DbTransaction.Dispose();
                     throw;
                 }
 
             }
-            catch
-            {
+            catch {
                 this.DataContext.Close();
                 this.disposed = true;
                 throw;
@@ -126,90 +116,72 @@ namespace ObjectServer
         /// 构造一个使用 'system' 用户登录的 ServiceScope
         /// </summary>
         /// <param name="ctx"></param>
-        public ServiceContext(IDataProvider dataProvider, IDataContext ctx)
-        {
-            if (dataProvider == null)
-            {
-                throw new ArgumentNullException("dataProvider");
+        public ServiceContext(IDbDomain dbDomain, IDataContext ctx) {
+            if (dbDomain == null) {
+                throw new ArgumentNullException("dbDomain");
             }
-            if (ctx == null)
-            {
+            if (ctx == null) {
                 throw new ArgumentNullException("session");
             }
             this._currentThreadID = Thread.CurrentThread.ManagedThreadId;
-
-            this._resources = SlipstreamEnvironment.DbDomains.GetDbDomain(ctx.DatabaseName);
+            this._dbDomain = dbDomain;
             this._dataContext = ctx;
-            this.UserSessionService = new DbUserSessionService(this._dataContext);
+            this.UserSessionService = new SqlUserSessionStore(this._dataContext);
 
-            try
-            {
+            try {
                 this._transaction = this.DataContext.BeginTransaction();
-                try
-                {
+                try {
                     this.UserSession = UserSession.CreateSystemUserSession();
                     this.UserSessionService.Put(this.UserSession);
                 }
-                catch
-                {
+                catch {
                     this.DbTransaction.Rollback();
                     this.DbTransaction.Dispose();
                     throw;
                 }
             }
-            catch
-            {
+            catch {
                 this.DataContext.Close();
                 this.disposed = true;
                 throw;
             }
         }
 
-        ~ServiceContext()
-        {
+        ~ServiceContext() {
             this.Dispose(false);
         }
 
-        public IResource GetResource(string resName)
-        {
-            if (string.IsNullOrEmpty(resName))
-            {
+        public IResource GetResource(string resName) {
+            if (string.IsNullOrEmpty(resName)) {
                 throw new ArgumentNullException("resName");
             }
 
-            if (this.disposed)
-            {
+            if (this.disposed) {
                 throw new ObjectDisposedException("ServiceContext");
             }
             Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-            return this._resources.GetResource(resName);
+            return this._dbDomain.GetResource(resName);
         }
 
-        public int GetResourceDependencyWeight(string resName)
-        {
-            if (string.IsNullOrEmpty(resName))
-            {
+        public int GetResourceDependencyWeight(string resName) {
+            if (string.IsNullOrEmpty(resName)) {
                 throw new ArgumentNullException("resName");
             }
 
-            if (this.disposed)
-            {
+            if (this.disposed) {
                 throw new ObjectDisposedException("ServiceContext");
             }
 
             Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-            return this._resources.GetResourceDependencyWeight(resName);
+            return this._dbDomain.GetResourceDependencyWeight(resName);
         }
 
         private readonly IDataContext _dataContext;
-        public IDataContext DataContext
-        {
-            get
-            {
-                if (this.disposed)
-                {
+        public IDataContext DataContext {
+            get {
+                if (this.disposed) {
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
@@ -220,30 +192,24 @@ namespace ObjectServer
             }
         }
 
-        public IResourceContainer Resources
-        {
-            get
-            {
-                if (this.disposed)
-                {
+        public IResourceContainer Resources {
+            get {
+                if (this.disposed) {
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
-                Debug.Assert(this._resources != null);
+                Debug.Assert(this._dbDomain != null);
                 Debug.Assert(this._dataContext != null);
                 Debug.Assert(this._currentThreadID == Thread.CurrentThread.ManagedThreadId);
 
-                return this._resources;
+                return this._dbDomain;
             }
         }
 
         private readonly IDbTransaction _transaction;
-        public IDbTransaction DbTransaction
-        {
-            get
-            {
-                if (this.disposed)
-                {
+        public IDbTransaction DbTransaction {
+            get {
+                if (this.disposed) {
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
@@ -255,12 +221,9 @@ namespace ObjectServer
         }
 
         private readonly ILogger m_bizLogger = LoggerProvider.BizLogger;
-        public ILogger BizLogger
-        {
-            get
-            {
-                if (this.disposed)
-                {
+        public ILogger BizLogger {
+            get {
+                if (this.disposed) {
                     throw new ObjectDisposedException("ServiceContext");
                 }
 
@@ -275,43 +238,34 @@ namespace ObjectServer
 
         private readonly Lazy<IRuleConstraintEvaluator> _ruleConstraintEvaluator =
             new Lazy<IRuleConstraintEvaluator>(() => new RubyRuleConstraintEvaluator(), false);
-        public IRuleConstraintEvaluator RuleConstraintEvaluator
-        {
-            get
-            {
+        public IRuleConstraintEvaluator RuleConstraintEvaluator {
+            get {
                 return _ruleConstraintEvaluator.Value;
             }
         }
 
-        public IUserSessionService UserSessionService { get; private set; }
+        public IUserSessionStore UserSessionService { get; private set; }
 
         #region IDisposable 成员
 
-        private void Dispose(bool isDisposing)
-        {
-            if (!this.disposed)
-            {
-                if (isDisposing)
-                {
+        private void Dispose(bool isDisposing) {
+            if (!this.disposed) {
+                if (isDisposing) {
                     //处置托管对象
                 }
 
-                try
-                {
+                try {
                     //处置非托管对象
-                    if (this.UserSession.IsSystemUser)
-                    {
+                    if (this.UserSession.IsSystemUser) {
                         this.UserSessionService.Remove(this.UserSession.Token);
                     }
 
                     this.DbTransaction.Commit();
                 }
-                catch
-                {
+                catch {
                     this.DbTransaction.Rollback();
                 }
-                finally
-                {
+                finally {
                     this.DbTransaction.Dispose();
                     this.DataContext.Close();
                     this.disposed = true;
@@ -320,8 +274,7 @@ namespace ObjectServer
             }
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -330,10 +283,8 @@ namespace ObjectServer
 
         #region IEquatable<IContext> 成员
 
-        public bool Equals(IServiceContext other)
-        {
-            if (other == null)
-            {
+        public bool Equals(IServiceContext other) {
+            if (other == null) {
                 throw new ArgumentNullException("other");
             }
 
@@ -343,14 +294,11 @@ namespace ObjectServer
         #endregion
 
 
-        public IServiceContext Current
-        {
-            get
-            {
+        public IServiceContext Current {
+            get {
                 return s_currentContext;
             }
-            internal set
-            {
+            internal set {
                 s_currentContext = value;
             }
         }

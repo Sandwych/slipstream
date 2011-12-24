@@ -8,36 +8,31 @@ using Autofac;
 
 using ObjectServer.Data;
 
-namespace ObjectServer.Sessions.Test
-{
+namespace ObjectServer.Sessions.Test {
     [TestFixture]
-    public class DbUserSessionServiceTests
-    {
+    public class DbUserSessionServiceTests {
         private IDataContext _dataContext;
 
         [SetUp]
-        public void Init()
-        {
+        public void Init() {
             SlipstreamEnvironment.Initialize();
 
-            this._dataContext = ObjectServer.Data.DataProvider
-                .OpenDataContext(ServiceContextTestCaseBase.TestingDatabaseName);
+            var TestingDatabaseName = "osdb_test";
+            var dbDomain = SlipstreamEnvironment.DbDomains.GetDbDomain(TestingDatabaseName);
+            this._dataContext = dbDomain.DataProvider.OpenDataContext(TestingDatabaseName);
         }
 
         [TearDown]
-        public void Cleanup()
-        {
-            if (this._dataContext != null)
-            {
+        public void Cleanup() {
+            if (this._dataContext != null) {
                 this._dataContext.Close();
                 this._dataContext = null;
             }
         }
 
         [Test]
-        public void CheckPutAndGet()
-        {
-            var svc = new DbUserSessionService(this._dataContext);
+        public void CheckPutAndGet() {
+            var svc = new SqlUserSessionStore(this._dataContext);
             var sess = new UserSession("session_test", 9999);
             svc.Put(sess);
 
@@ -50,9 +45,8 @@ namespace ObjectServer.Sessions.Test
         }
 
         [Test]
-        public void PulseShouldBeSuccessfully()
-        {
-            var svc = new DbUserSessionService(this._dataContext);
+        public void PulseShouldBeSuccessfully() {
+            var svc = new SqlUserSessionStore(this._dataContext);
             var sess = new UserSession("session_test", 9999);
             svc.Put(sess);
             svc.Pulse(sess.Token);

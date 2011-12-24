@@ -8,10 +8,8 @@ using NHibernate.SqlCommand;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 
-namespace ObjectServer.Data.Postgresql
-{
-    internal class PgDataProvider : IDataProvider
-    {
+namespace ObjectServer.Data.Postgresql {
+    internal class PgDataProvider : IDataProvider {
         private readonly Dialect _dialect = new PostgreSQL82Dialect();
         private readonly DriverBase _driver = new NpgsqlDriver();
 
@@ -24,27 +22,22 @@ select datname from pg_database
 
         #region IDataProvider 成员
 
-        public IDataContext OpenDataContext()
-        {
+        public IDataContext OpenDataContext() {
             return new PgDataContext();
         }
 
-        public IDataContext OpenDataContext(string dbName)
-        {
-            if (string.IsNullOrEmpty(dbName))
-            {
+        public IDataContext OpenDataContext(string dbName) {
+            if (string.IsNullOrEmpty(dbName)) {
                 throw new ArgumentNullException("_dbName");
             }
 
             return new PgDataContext(dbName);
         }
 
-        public string[] ListDatabases()
-        {
+        public string[] ListDatabases() {
             var dbUser = SlipstreamEnvironment.Settings.DbUser;
 
-            using (var ctx = this.OpenDataContext())
-            {
+            using (var ctx = this.OpenDataContext()) {
                 var result = ctx.QueryAsDictionary(ListDatabasesSql, dbUser);
                 ctx.Close();
 
@@ -52,26 +45,22 @@ select datname from pg_database
             }
         }
 
-        public void CreateDatabase(string dbName)
-        {
-            if (string.IsNullOrEmpty(dbName))
-            {
+        public void CreateDatabase(string dbName) {
+            if (string.IsNullOrEmpty(dbName)) {
                 throw new ArgumentNullException("_dbName");
             }
 
             var msg = String.Format("Creating Database: [{0}]...", dbName);
             LoggerProvider.EnvironmentLogger.Info(msg);
 
-            using (var conn = new PgDataContext())
-            {
+            using (var conn = new PgDataContext()) {
                 var sql = new SqlString(
                     " create database ", '"' + dbName + '"',
                     " template template0 encoding 'unicode'");
                 conn.Execute(sql);
             }
 
-            using (var conn = new PgDataContext(dbName))
-            {
+            using (var conn = new PgDataContext(dbName)) {
                 LoggerProvider.EnvironmentLogger.Info("Initializing Database...");
                 conn.Setup();
             }
@@ -79,32 +68,25 @@ select datname from pg_database
 
         }
 
-        public void DeleteDatabase(string dbName)
-        {
-            if (string.IsNullOrEmpty(dbName))
-            {
+        public void DeleteDatabase(string dbName) {
+            if (string.IsNullOrEmpty(dbName)) {
                 throw new ArgumentNullException("_dbName");
             }
 
-            var sql = new SqlString(
-                  "drop database ",
-                  DataProvider.Dialect.QuoteForSchemaName(dbName));
+            var sql = new SqlString("drop database " + '"' + dbName + '"');
 
             Npgsql.NpgsqlConnection.ClearAllPools();
-            using (var conn = this.OpenDataContext())
-            {
+            using (var conn = this.OpenDataContext()) {
                 conn.Execute(sql);
                 conn.Close();
             }
         }
 
-        public Dialect Dialect
-        {
+        public Dialect Dialect {
             get { return _dialect; }
         }
 
-        public IDriver Driver
-        {
+        public IDriver Driver {
             get { return _driver; }
         }
 

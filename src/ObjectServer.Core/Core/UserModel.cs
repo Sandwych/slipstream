@@ -293,7 +293,7 @@ namespace ObjectServer.Core
 
 
         private UserSession FetchOrCreateSession(
-            IUserSessionService sessionService, string dbName, string login, IDictionary<string, object> userFields)
+            IUserSessionStore sessionService, string dbName, string login, IDictionary<string, object> userFields)
         {
             Debug.Assert(sessionService != null);
             Debug.Assert(userFields.ContainsKey("password"));

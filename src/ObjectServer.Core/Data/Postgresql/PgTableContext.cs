@@ -12,10 +12,8 @@ using NHibernate.SqlCommand;
 
 using ObjectServer.Model;
 
-namespace ObjectServer.Data.Postgresql
-{
-    internal sealed class PgTableContext : ITableContext
-    {
+namespace ObjectServer.Data.Postgresql {
+    internal sealed class PgTableContext : ITableContext {
         private IDictionary<string, IColumnMetadata> columns = new Dictionary<string, IColumnMetadata>();
         private readonly static IDictionary<OnDeleteAction, string> OnDeleteMapping =
             new Dictionary<OnDeleteAction, string>()
@@ -26,20 +24,16 @@ namespace ObjectServer.Data.Postgresql
                 { OnDeleteAction.NoAction, "NO ACTION" },
             };
 
-        public PgTableContext(IDataContext db, string tableName)
-        {
-            if (db == null)
-            {
+        public PgTableContext(IDataContext db, string tableName) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
 
-            if (string.IsNullOrEmpty(tableName))
-            {
+            if (string.IsNullOrEmpty(tableName)) {
                 throw new ArgumentNullException("tableName");
             }
 
-            if (!NamingRule.IsValidSqlName(tableName))
-            {
+            if (!NamingRule.IsValidSqlName(tableName)) {
                 throw new ArgumentOutOfRangeException("tableName");
             }
 
@@ -49,20 +43,16 @@ namespace ObjectServer.Data.Postgresql
 
         public string Name { get; private set; }
 
-        public bool TableExists(IDataContext db, string tableName)
-        {
-            if (db == null)
-            {
+        public bool TableExists(IDataContext db, string tableName) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
 
-            if (tableName == null)
-            {
+            if (tableName == null) {
                 throw new ArgumentNullException("tableName");
             }
 
-            if (!NamingRule.IsValidSqlName(tableName))
-            {
+            if (!NamingRule.IsValidSqlName(tableName)) {
                 throw new ArgumentOutOfRangeException("tableName");
             }
 
@@ -77,15 +67,12 @@ namespace ObjectServer.Data.Postgresql
             return n > 0;
         }
 
-        public void CreateTable(IDataContext db, IModelDescriptor model, string label)
-        {
-            if (db == null)
-            {
+        public void CreateTable(IDataContext db, IModelDescriptor model, string label) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
 
-            if (model == null)
-            {
+            if (model == null) {
                 throw new ArgumentNullException("model");
             }
 
@@ -101,15 +88,13 @@ namespace ObjectServer.Data.Postgresql
             sb.Add("(");
 
             var commaNeeded = false;
-            foreach (var f in fieldsWithoutId)
-            {
-                if (commaNeeded)
-                {
+            foreach (var f in fieldsWithoutId) {
+                if (commaNeeded) {
                     sb.Add(", ");
                 }
                 commaNeeded = true;
 
-                sb.Add(DataProvider.Dialect.QuoteForColumnName(f.Name));
+                sb.Add('"' + f.Name + '"');
                 sb.Add(" ");
                 var sqlType = PgSqlTypeConverter.GetSqlType(f);
                 sb.Add(sqlType);
@@ -123,20 +108,16 @@ namespace ObjectServer.Data.Postgresql
             SetTableComment(db, tableName, label);
         }
 
-        public void CreateTable(IDataContext db, string tableName, string label)
-        {
-            if (db == null)
-            {
+        public void CreateTable(IDataContext db, string tableName, string label) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
 
-            if (string.IsNullOrEmpty(tableName))
-            {
+            if (string.IsNullOrEmpty(tableName)) {
                 throw new ArgumentNullException("tableName");
             }
 
-            if (!NamingRule.IsValidSqlName(tableName))
-            {
+            if (!NamingRule.IsValidSqlName(tableName)) {
                 throw new ArgumentOutOfRangeException("tableName");
             }
 
@@ -145,7 +126,7 @@ namespace ObjectServer.Data.Postgresql
             tableName = tableName.SqlEscape();
             var sb = new SqlStringBuilder();
             sb.Add("create table ");
-            sb.Add(DataProvider.Dialect.QuoteForTableName(tableName));
+            sb.Add('"' + tableName + '"');
             sb.Add("(");
             sb.Add("_id");
             sb.Add(" ");
@@ -160,10 +141,8 @@ namespace ObjectServer.Data.Postgresql
             SetTableComment(db, tableName, label);
         }
 
-        private static void SetTableComment(IDataContext db, string tableName, string label)
-        {
-            if (!String.IsNullOrEmpty(label))
-            {
+        private static void SetTableComment(IDataContext db, string tableName, string label) {
+            if (!String.IsNullOrEmpty(label)) {
                 label = label.SqlEscape();
                 var sql = String.Format(CultureInfo.InvariantCulture,
                     @"comment on table ""{0}"" is '{1}'", tableName, label.SqlEscape());
@@ -172,15 +151,12 @@ namespace ObjectServer.Data.Postgresql
             }
         }
 
-        public void AddColumn(IDataContext db, IFieldDescriptor field)
-        {
-            if (db == null)
-            {
+        public void AddColumn(IDataContext db, IFieldDescriptor field) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
 
-            if (field == null)
-            {
+            if (field == null) {
                 throw new ArgumentNullException("field");
             }
 
@@ -193,16 +169,13 @@ namespace ObjectServer.Data.Postgresql
 
             this.SetColumnComment(db, field);
 
-            if (field.IsUnique)
-            {
+            if (field.IsUnique) {
                 this.AddUniqueConstraint(db, field.Name);
             }
         }
 
-        private void SetColumnComment(IDataContext db, IFieldDescriptor field)
-        {
-            if (!string.IsNullOrEmpty(field.Label))
-            {
+        private void SetColumnComment(IDataContext db, IFieldDescriptor field) {
+            if (!string.IsNullOrEmpty(field.Label)) {
                 //添加注释
                 var commentSql = String.Format(CultureInfo.InvariantCulture,
                      @"comment on column ""{0}"".""{1}"" is '{2}'",
@@ -211,19 +184,15 @@ namespace ObjectServer.Data.Postgresql
             }
         }
 
-        public void DeleteColumn(IDataContext db, string columnName)
-        {
-            if (db == null)
-            {
+        public void DeleteColumn(IDataContext db, string columnName) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
-            if (string.IsNullOrEmpty(columnName))
-            {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
@@ -233,20 +202,16 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void AlterColumnNullable(IDataContext db, string columnName, bool nullable)
-        {
-            if (db == null)
-            {
+        public void AlterColumnNullable(IDataContext db, string columnName, bool nullable) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
 
-            if (string.IsNullOrEmpty(columnName))
-            {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
@@ -257,20 +222,16 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public void AlterColumnType(IDataContext db, string columnName, string sqlType)
-        {
-            if (db == null)
-            {
+        public void AlterColumnType(IDataContext db, string columnName, string sqlType) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
 
-            if (string.IsNullOrEmpty(columnName))
-            {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
@@ -280,55 +241,44 @@ namespace ObjectServer.Data.Postgresql
             db.Execute(SqlString.Parse(sql));
         }
 
-        public bool ColumnExists(string columnName)
-        {
-            if (string.IsNullOrEmpty(columnName))
-            {
+        public bool ColumnExists(string columnName) {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
             return this.columns.ContainsKey(columnName);
         }
 
-        public IColumnMetadata GetColumn(string columnName)
-        {
-            if (string.IsNullOrEmpty(columnName))
-            {
+        public IColumnMetadata GetColumn(string columnName) {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
 
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
             return this.columns[columnName];
         }
 
-        public IColumnMetadata[] GetAllColumns()
-        {
+        public IColumnMetadata[] GetAllColumns() {
             Debug.Assert(this.columns != null);
 
             return this.columns.Values.ToArray();
         }
 
-        private void LoadColumns(IDataContext db, string tableName)
-        {
-            if (db == null)
-            {
+        private void LoadColumns(IDataContext db, string tableName) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
-            if (string.IsNullOrEmpty(tableName))
-            {
+            if (string.IsNullOrEmpty(tableName)) {
                 throw new ArgumentNullException("tableName");
             }
-            if (!NamingRule.IsValidSqlName(tableName))
-            {
+            if (!NamingRule.IsValidSqlName(tableName)) {
                 throw new ArgumentOutOfRangeException("tableName");
             }
 
@@ -340,16 +290,14 @@ namespace ObjectServer.Data.Postgresql
 
             var records = db.QueryAsDictionary(sql, tableName);
             this.columns.Clear();
-            foreach (var r in records)
-            {
+            foreach (var r in records) {
                 var column = new PgColumnMetadata(r);
                 this.columns.Add(column.Name, column);
             }
 
         }
 
-        private void AddUniqueConstraint(IDataContext db, string column)
-        {
+        private void AddUniqueConstraint(IDataContext db, string column) {
             Debug.Assert(db != null);
             Debug.Assert(!string.IsNullOrEmpty(column));
 
@@ -359,20 +307,16 @@ namespace ObjectServer.Data.Postgresql
         }
 
 
-        public void AddConstraint(IDataContext dbctx, string constraintName, string constraint)
-        {
-            if (dbctx == null)
-            {
+        public void AddConstraint(IDataContext dbctx, string constraintName, string constraint) {
+            if (dbctx == null) {
                 throw new ArgumentNullException("_datactx");
             }
 
-            if (string.IsNullOrEmpty(constraintName))
-            {
+            if (string.IsNullOrEmpty(constraintName)) {
                 throw new ArgumentNullException("constraintName");
             }
 
-            if (string.IsNullOrEmpty(constraint))
-            {
+            if (string.IsNullOrEmpty(constraint)) {
                 throw new ArgumentNullException("constraint");
             }
 
@@ -381,15 +325,12 @@ namespace ObjectServer.Data.Postgresql
             dbctx.Execute(SqlString.Parse(sql));
         }
 
-        public void DeleteConstraint(IDataContext dbctx, string constraintName)
-        {
-            if (dbctx == null)
-            {
+        public void DeleteConstraint(IDataContext dbctx, string constraintName) {
+            if (dbctx == null) {
                 throw new ArgumentNullException("session");
             }
 
-            if (string.IsNullOrEmpty(constraintName))
-            {
+            if (string.IsNullOrEmpty(constraintName)) {
                 throw new ArgumentNullException("constraintName");
             }
 
@@ -400,14 +341,11 @@ namespace ObjectServer.Data.Postgresql
         }
 
 
-        public bool ConstraintExists(IDataContext db, string constraintName)
-        {
-            if (db == null)
-            {
+        public bool ConstraintExists(IDataContext db, string constraintName) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
-            if (string.IsNullOrEmpty(constraintName))
-            {
+            if (string.IsNullOrEmpty(constraintName)) {
                 throw new ArgumentNullException("constraintName");
             }
 
@@ -420,22 +358,17 @@ select coalesce(count(constraint_name), 0)
             return n > 0;
         }
 
-        public void AddFK(IDataContext db, string columnName, string refTable, OnDeleteAction act)
-        {
-            if (db == null)
-            {
+        public void AddFK(IDataContext db, string columnName, string refTable, OnDeleteAction act) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
-            if (string.IsNullOrEmpty(columnName))
-            {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
-            if (string.IsNullOrEmpty(refTable))
-            {
+            if (string.IsNullOrEmpty(refTable)) {
                 throw new ArgumentNullException("refTable");
             }
 
@@ -449,18 +382,14 @@ select coalesce(count(constraint_name), 0)
         }
 
 
-        public void DeleteFK(IDataContext db, string columnName)
-        {
-            if (db == null)
-            {
+        public void DeleteFK(IDataContext db, string columnName) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
-            if (string.IsNullOrEmpty(columnName))
-            {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
@@ -468,18 +397,14 @@ select coalesce(count(constraint_name), 0)
             this.DeleteConstraint(db, fkName);
         }
 
-        public bool FKExists(IDataContext db, string columnName)
-        {
-            if (db == null)
-            {
+        public bool FKExists(IDataContext db, string columnName) {
+            if (db == null) {
                 throw new ArgumentNullException("session");
             }
-            if (string.IsNullOrEmpty(columnName))
-            {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
 
@@ -492,14 +417,11 @@ select coalesce(count(constraint_name), 0)
             return n > 0;
         }
 
-        private string GenerateFkName(string columnName)
-        {
-            if (string.IsNullOrEmpty(columnName))
-            {
+        private string GenerateFkName(string columnName) {
+            if (string.IsNullOrEmpty(columnName)) {
                 throw new ArgumentNullException("columnName");
             }
-            if (!NamingRule.IsValidSqlName(columnName))
-            {
+            if (!NamingRule.IsValidSqlName(columnName)) {
                 throw new ArgumentOutOfRangeException("columnName");
             }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.Composition;
 
 using NHibernate.SqlCommand;
 
@@ -9,7 +10,8 @@ using ObjectServer.Data;
 
 namespace ObjectServer
 {
-    internal class DbUserSessionService : IUserSessionService
+    [Export("sql", typeof(IUserSessionStore))]
+    internal class SqlUserSessionStore : IUserSessionStore
     {
         private static readonly SqlString SelectByIdSql =
                  new SqlString(@"select * from ""core_session"" where ""token"" = ", Parameter.Placeholder);
@@ -20,7 +22,7 @@ namespace ObjectServer
 
         private readonly IDataContext _dataContext;
 
-        public DbUserSessionService(IDataContext dataContext)
+        public SqlUserSessionStore(IDataContext dataContext)
         {
             this._dataContext = dataContext;
         }

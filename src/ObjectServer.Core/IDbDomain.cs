@@ -14,6 +14,6 @@ namespace ObjectServer
         IServiceContext OpenSession(string sessionToken);
         IServiceContext OpenSystemSession();
         IServiceContext CurrentSession { get; }
-
+        IDataProvider DataProvider { get; }
     }
 }

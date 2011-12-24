@@ -13,7 +13,7 @@ namespace ObjectServer
     {
         UserSession UserSession { get; }
         IRuleConstraintEvaluator RuleConstraintEvaluator { get; }
-        IUserSessionService UserSessionService { get; }
+        IUserSessionStore UserSessionService { get; }
         IResource GetResource(string resName);
         int GetResourceDependencyWeight(string resName);
         IDataContext DataContext { get; }

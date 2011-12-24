@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.Composition;
 
 namespace ObjectServer.Sessions
 {
-    public class InMemoryUserSessionService : IUserSessionService
+    [Export("memory", typeof(IUserSessionStore))]
+    public class MemoryUserSessionStore : IUserSessionStore
     {
-        #region IUserSessionService 成员
+        #region IUserSessionStore 成员
+
         private static readonly HashSet<UserSession> s_sessions =
             new HashSet<UserSession>();
 

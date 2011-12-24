@@ -91,6 +91,7 @@
     </Reference>
     <Reference Include="System">
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="System.Runtime.Remoting">
@@ -121,22 +122,22 @@
     <Compile Include="..\Shared\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Caching\ICache.cs" />
     <Compile Include="Core\ModuleDependencyModule.cs" />
     <Compile Include="Core\FieldAccessModel.cs" />
     <Compile Include="Core\WindowActionViewModel.cs" />
     <Compile Include="Data\AbstractDataContext.cs" />
+    <Compile Include="Data\IColumnMetadata.cs" />
     <Compile Include="Data\Mssql\MssqlColumnMetadata.cs" />
     <Compile Include="Data\Mssql\MssqlDataProvider.cs" />
     <Compile Include="Data\Mssql\MssqlDataContext.cs" />
     <Compile Include="Data\Mssql\MssqlSqlTypeConverter.cs" />
     <Compile Include="Data\Mssql\MssqlTableContext.cs" />
     <Compile Include="Data\DatabaseType.cs" />
-    <Compile Include="Data\DataProvider.cs" />
     <Compile Include="Data\DynamicRecord.cs" />
     <Compile Include="Data\IDataContext.cs" />
     <Compile Include="Data\IDataProvider.cs" />
     <Compile Include="Data\ITableContext.cs" />
-    <Compile Include="Data\IColumnMetadata.cs" />
     <Compile Include="Data\Postgresql\PgColumnMetadata.cs" />
     <Compile Include="Data\Postgresql\PgDataContext.cs" />
     <Compile Include="Data\Postgresql\PgDataProvider.cs" />
@@ -225,9 +226,9 @@
     <Compile Include="Runtime\IRuleConstraintEvaluator.cs" />
     <Compile Include="Runtime\MSBuildProjectBuildEngine.cs" />
     <Compile Include="Runtime\RubyRuleConstraintEvaluator.cs" />
-    <Compile Include="Sessions\DbUserSessionService.cs" />
-    <Compile Include="Sessions\InMemoryUserSessionService.cs" />
-    <Compile Include="Sessions\IUserSessionService.cs" />
+    <Compile Include="Sessions\SqlUserSessionStore.cs" />
+    <Compile Include="Sessions\MemoryUserSessionStore.cs" />
+    <Compile Include="Sessions\IUserSessionStore.cs" />
     <Compile Include="Sessions\UserSession.cs" />
     <Compile Include="AbstractResource.cs" />
     <Compile Include="ResourceAttribute.cs" />

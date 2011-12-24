@@ -6,20 +6,21 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Reflection;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 
 using Autofac;
+using Autofac.Integration.Mef;
 using Newtonsoft.Json;
 
 using ObjectServer.Exceptions;
 
-namespace ObjectServer
-{
+namespace ObjectServer {
     /// <summary>
     /// SINGLETON
     /// 平台的全局入口点
     /// </summary>
-    public sealed class SlipstreamEnvironment : IDisposable
-    {
+    public sealed class SlipstreamEnvironment : IDisposable {
         private static SlipstreamEnvironment s_instance;
 
         private bool _disposed = false;
@@ -30,8 +31,7 @@ namespace ObjectServer
         private bool _initialized;
         private readonly ISlipstreamService _exportedService;
 
-        private SlipstreamEnvironment(ShellSettings cfg)
-        {
+        private SlipstreamEnvironment(ShellSettings cfg) {
             var containerBuilder = new Autofac.ContainerBuilder();
             RegisterInsideComponents(containerBuilder, cfg);
 
@@ -43,8 +43,7 @@ namespace ObjectServer
             this._exportedService = this._rootContainer.Resolve<ISlipstreamService>();
         }
 
-        private static void RegisterInsideComponents(ContainerBuilder containerBuilder, ShellSettings cfg)
-        {
+        private static void RegisterInsideComponents(ContainerBuilder containerBuilder, ShellSettings cfg) {
             containerBuilder.RegisterInstance(cfg).SingleInstance();
             containerBuilder.RegisterType<DbDomainManager>()
                 .As<IDbDomainManager>().SingleInstance();
@@ -52,9 +51,29 @@ namespace ObjectServer
                 .As<IModuleManager>().SingleInstance();
             containerBuilder.RegisterType<SlipstreamService>()
                 .As<ISlipstreamService>().SingleInstance();
-            containerBuilder.RegisterInstance<Data.IDataProvider>(Data.DataProvider.CreateDataProvider(cfg.DbType))
+
+            Data.IDataProvider dataProvider = null;
+            switch (cfg.DbType) {
+                case "mssql":
+                    dataProvider = new Data.Mssql.MssqlDataProvider();
+                    break;
+
+                case "postgres":
+                    dataProvider = new Data.Postgresql.PgDataProvider();
+                    break;
+
+                default:
+                    throw new NotSupportedException("Not supported database: " + cfg.DbType);
+            }
+
+            containerBuilder.RegisterInstance<Data.IDataProvider>(dataProvider)
                 .SingleInstance();
 
+            //加注册 MEF 管理的插件
+
+            //TODO 目前都是放在一个 dll 里，以后要分开
+            //var selfCatalog = new AssemblyCatalog(System.Reflection.Assembly.GetExecutingAssembly());
+            //containerBuilder.RegisterComposablePartCatalog(selfCatalog);           
             //加载内置的 DataProviders
             /*
             var assemblies = new Assembly[] {
@@ -66,19 +85,15 @@ namespace ObjectServer
             */
         }
 
-        ~SlipstreamEnvironment()
-        {
+        ~SlipstreamEnvironment() {
             Dispose(false);
         }
 
         #region IDisposable Members
 
-        private void Dispose(bool disposing)
-        {
-            if (!this._disposed)
-            {
-                if (disposing)
-                {
+        private void Dispose(bool disposing) {
+            if (!this._disposed) {
+                if (disposing) {
                     //处置托管资源
                 }
 
@@ -90,8 +105,7 @@ namespace ObjectServer
             }
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -100,8 +114,7 @@ namespace ObjectServer
 
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void Initialize(string configPath)
-        {
+        public static void Initialize(string configPath) {
             var json = File.ReadAllText(configPath, Encoding.UTF8);
             var cfg = JsonConvert.DeserializeObject<ShellSettings>(json);
             TryInitialize(cfg);
@@ -112,8 +125,7 @@ namespace ObjectServer
         /// </summary>
         /// <param name="config"></param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void Initialize(ShellSettings config)
-        {
+        public static void Initialize(ShellSettings config) {
             TryInitialize(config);
         }
 
@@ -122,23 +134,18 @@ namespace ObjectServer
         /// 为调试及测试而初始化
         /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void Initialize()
-        {
-            if (s_instance != null && s_instance._initialized)
-            {
+        public static void Initialize() {
+            if (s_instance != null && s_instance._initialized) {
                 return;
             }
-            else
-            {
+            else {
                 var cfg = new ShellSettings();
                 TryInitialize(cfg);
             }
         }
 
-        private static void TryInitialize(ShellSettings shellSettings)
-        {
-            if (shellSettings == null)
-            {
+        private static void TryInitialize(ShellSettings shellSettings) {
+            if (shellSettings == null) {
                 throw new ArgumentNullException("shellSettings");
             }
 
@@ -154,29 +161,23 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Info(() => "Runtime environment successfully initialized.");
         }
 
-        public static void Shutdown()
-        {
+        public static void Shutdown() {
             LoggerProvider.EnvironmentLogger.Info("The whole system will be halt...");
-            if (s_instance._initialized)
-            {
+            if (s_instance._initialized) {
                 s_instance.Dispose(true);
             }
         }
 
 
-        public static bool Initialized
-        {
-            get
-            {
+        public static bool Initialized {
+            get {
                 return s_instance != null && s_instance._initialized;
             }
         }
 
 
-        internal static IDbDomainManager DbDomains
-        {
-            get
-            {
+        internal static IDbDomainManager DbDomains {
+            get {
                 return Instance._dbDomains;
             }
         }
@@ -191,40 +192,31 @@ namespace ObjectServer
         }
         */
 
-        private static void ConfigurateLogger(ShellSettings cfg)
-        {
+        private static void ConfigurateLogger(ShellSettings cfg) {
             LoggerProvider.Configurate(cfg);
         }
 
 
-        public static ShellSettings Settings
-        {
-            get
-            {
+        public static ShellSettings Settings {
+            get {
                 return Instance._shellSettings;
             }
         }
 
-        public static ISlipstreamService RootService
-        {
-            get
-            {
+        public static ISlipstreamService RootService {
+            get {
                 return Instance._exportedService;
 
             }
         }
 
-        public static Autofac.IContainer RootContainer
-        {
+        public static Autofac.IContainer RootContainer {
             get { return Instance._rootContainer; }
         }
 
-        private static SlipstreamEnvironment Instance
-        {
-            get
-            {
-                if (s_instance == null || !s_instance._initialized)
-                {
+        private static SlipstreamEnvironment Instance {
+            get {
+                if (s_instance == null || !s_instance._initialized) {
                     throw new Exception(
                         "尚未初始化系统，请调用 SlipstreamEnvironment.Initialize() 初始化");
                 }

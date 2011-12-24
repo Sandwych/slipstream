@@ -27,7 +27,7 @@ namespace ObjectServer.Sessions.Test
         [Test]
         public void CheckPutAndGet()
         {
-            var svc = new InMemoryUserSessionService();
+            var svc = new MemoryUserSessionStore();
             var sess = new UserSession("session_test", 9999);
             svc.Put(sess);
 
@@ -42,7 +42,7 @@ namespace ObjectServer.Sessions.Test
         [Test]
         public void PulseShouldBeSuccessfully()
         {
-            var svc = new InMemoryUserSessionService();
+            var svc = new MemoryUserSessionStore();
             var sess = new UserSession("session_test", 9999);
             svc.Put(sess);
             svc.Pulse(sess.Token);

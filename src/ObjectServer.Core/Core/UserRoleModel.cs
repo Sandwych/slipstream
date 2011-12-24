@@ -8,16 +8,13 @@ using System.Globalization;
 using ObjectServer.Model;
 using ObjectServer.Data;
 
-namespace ObjectServer.Core
-{
+namespace ObjectServer.Core {
     [Resource]
-    public sealed class UserRoleModel : AbstractSqlModel
-    {
+    public sealed class UserRoleModel : AbstractSqlModel {
         private const string UniqueConstraintName = "unique_core_user_role";
 
         public UserRoleModel()
-            : base("core.user_role")
-        {
+            : base("core.user_role") {
             this.TableName = "core_user_role_rel";
 
             Fields.ManyToOne("user", "core.user").SetLabel("User").Required();
@@ -25,15 +22,13 @@ namespace ObjectServer.Core
 
         }
 
-        public override void Initialize(bool update)
-        {
+        public override void Initialize(bool update) {
             base.Initialize(update);
             var ctx = this.DbDomain.CurrentSession;
             var tableCtx = ctx.DataContext.CreateTableContext(this.TableName);
-            if (update && !tableCtx.ConstraintExists(ctx.DataContext, UniqueConstraintName))
-            {
-                var userCol = DataProvider.Dialect.QuoteForColumnName("user");
-                var roleCol = DataProvider.Dialect.QuoteForColumnName("role");
+            if (update && !tableCtx.ConstraintExists(ctx.DataContext, UniqueConstraintName)) {
+                var userCol = this.DbDomain.DataProvider.Dialect.QuoteForColumnName("user");
+                var roleCol = this.DbDomain.DataProvider.Dialect.QuoteForColumnName("role");
                 var sql = string.Format(CultureInfo.InvariantCulture,
                     "UNIQUE({0}, {1})", userCol, roleCol);
 
