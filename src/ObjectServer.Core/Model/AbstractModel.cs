@@ -749,7 +749,7 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 fieldIds = fieldModel.SearchInternal(fieldDomain, null, 0, 0);
             }
 
-            var records = fieldModel.ReadInternal(fieldIds, fieldNames);
+            var records = fieldModel.ReadInternal(fieldIds, null);
 
             foreach (var r in records)
             {
