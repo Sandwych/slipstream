@@ -605,15 +605,27 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         }
 
         [ServiceMethod("GetFields")]
-        public static Dictionary<string, object>[] GetFields(IModel model, string[] fields)
+        public static Dictionary<string, object>[] GetFields(IModel model, object[] fields)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
             }
+
+            if (fields != null && fields.Any(o => !(o is string)))
+            {
+                throw new ArgumentOutOfRangeException("Bad argument type of parameter 'fields'");
+            }
+
             var ctx = model.DbDomain.CurrentSession;
 
-            return model.GetFieldsInternal(fields);
+            string[] fieldNames = null;
+            if (fields != null)
+            {
+                fieldNames = fields.Cast<string>().ToArray();
+            }
+
+            return model.GetFieldsInternal(fieldNames);
         }
 
         #endregion
