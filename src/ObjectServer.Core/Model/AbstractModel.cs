@@ -730,8 +730,25 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             //TODO 检查 IDS 错误，好好想一下要用数据库的字段信息还是用内存的字段信息
 
             var fieldModel = (IModel)this.DbDomain.GetResource("core.field");
-            var fieldDomain = new object[] { new object[] { "model", "=", modelIds[0] } };
-            var fieldIds = fieldModel.SearchInternal(fieldDomain, null, 0, 0);
+            long[] fieldIds = null;
+            if (fieldNames == null || fieldNames.Length == 0)
+            {
+                var fieldDomain = new object[] 
+                {
+                    new object[] { "model", "=", modelIds.First() } 
+                };
+                fieldIds = fieldModel.SearchInternal(fieldDomain, null, 0, 0);
+            }
+            else
+            {
+                var fieldDomain = new object[] 
+                { 
+                    new object[] { "model", "=", modelIds.First() } ,
+                    new object[] { "name", "in", fieldNames },
+                };
+                fieldIds = fieldModel.SearchInternal(fieldDomain, null, 0, 0);
+            }
+
             var records = fieldModel.ReadInternal(fieldIds, fieldNames);
 
             foreach (var r in records)
