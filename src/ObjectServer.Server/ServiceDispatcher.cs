@@ -172,22 +172,48 @@ namespace ObjectServer.Server
             Debug.Assert(json != null);
 
             var jreq = (IDictionary<string, object>)PlainJsonConvert.Parse(json);
-            //TODO 检查 jreq 格式
 
             //执行调用
-            var id = jreq[JsonRpcProtocol.Id];
-            var methodName = (string)jreq[JsonRpcProtocol.Method];
-            var method = s_methods[methodName];
-
-            if (method == null)
+            object id;
+            if (!jreq.TryGetValue(JsonRpcProtocol.Id, out id))
             {
-                throw new InvalidOperationException("Invalid method: " + methodName);
+                return GenerateResponse(new JsonRpcResponse() { Error = JsonRpcError.InvalidRequest, });
+            }
+
+            object methodNameObj;
+            if (!jreq.TryGetValue(JsonRpcProtocol.Method, out methodNameObj))
+            {
+                return GenerateResponse(new JsonRpcResponse()
+                {
+                    Id = id,
+                    Error = JsonRpcError.InvalidRpcMethod
+                });
+            }
+            string methodName = (string)methodNameObj;
+
+            MethodInfo method;
+            if (!s_methods.TryGetValue(methodName, out method) || method == null)
+            {
+                return GenerateResponse(new JsonRpcResponse()
+                {
+                    Id = id,
+                    Error = JsonRpcError.InvalidRpcMethod
+                });
             }
 
             JsonRpcError error = null;
             object result = null;
 
-            var args = (object[])jreq[JsonRpcProtocol.Params];
+            object argsObj;
+            if (!jreq.TryGetValue(JsonRpcProtocol.Params, out argsObj))
+            {
+                return GenerateResponse(new JsonRpcResponse()
+                {
+                    Id = id,
+                    Error = JsonRpcError.InvalidRpcMethod
+                });
+            }
+            var args = (object[])argsObj;
 
             LoggerProvider.RpcLogger.Debug(() =>
                 string.Format("JSON-RPC: method=[{0}], params=[{1}]", methodName, args));
@@ -268,6 +294,11 @@ namespace ObjectServer.Server
                 Result = result
             };
 
+            return GenerateResponse(jresponse);
+        }
+
+        private static byte[] GenerateResponse(JsonRpcResponse jresponse)
+        {
             var jsonResponse = PlainJsonConvert.Generate(jresponse);
             return Encoding.UTF8.GetBytes(jsonResponse);
         }

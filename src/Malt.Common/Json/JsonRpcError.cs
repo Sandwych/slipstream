@@ -100,5 +100,11 @@ namespace Malt.Json
 
         public static readonly JsonRpcError DBError =
             new JsonRpcError("0009", "数据库操作异常，请与系统管理员联系");
+
+        public static readonly JsonRpcError InvalidRpcMethod =
+            new JsonRpcError("0010", "Invalid name of RPC method");
+
+        public static readonly JsonRpcError InvalidRequest =
+            new JsonRpcError("0011", "Invalid request");
     }
 }
