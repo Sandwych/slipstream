@@ -6,6 +6,7 @@ using System.Reflection;
 using System.IO;
 using System.Globalization;
 using System.Data.SqlClient;
+using System.Data;
 
 using NHibernate.SqlCommand;
 
@@ -146,6 +147,17 @@ select distinct count(table_name)
             var sql = new SqlString("SELECT CAST(IDENT_CURRENT('", tableName, "') AS BIGINT)");
             var value = this.QueryValue(sql);
             return (long)value;
+        }
+
+        public override IDbCommand CreateCommand(string sql)
+        {
+            var sqlCommand = new SqlCommand(sql, (SqlConnection)this._conn);
+            if (this._transaction != null)
+            {
+                sqlCommand.Transaction = (SqlTransaction)this._transaction;
+            }
+
+            return sqlCommand;
         }
 
     }

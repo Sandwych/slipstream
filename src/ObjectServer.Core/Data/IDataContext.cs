@@ -37,6 +37,7 @@ namespace ObjectServer.Data
         void LockTable(string tableName);
 
         IDbCommand CreateCommand(SqlString sql);
+        IDbCommand CreateCommand(string sql);
         IDbTransaction Transaction { get; }
         IDbTransaction BeginTransaction();
     }

@@ -14,10 +14,10 @@ using ObjectServer.Model;
 namespace ObjectServer.Data
 {
     internal abstract class AbstractDataContext : IDataContext
-    {        
+    {
         protected IDbConnection _conn;
-        private bool _disposed = false;
-        private IDbTransaction _transaction;
+        protected bool _disposed = false;
+        protected IDbTransaction _transaction;
 
         public AbstractDataContext()
         {
@@ -259,7 +259,7 @@ namespace ObjectServer.Data
         }
 
         public IDbCommand CreateCommand(SqlString sql)
-        {           
+        {
             //TODO 改成依赖的
             var dataProvider = SlipstreamEnvironment.RootContainer.Resolve<IDataProvider>();
             var sqlCommand = dataProvider.Driver.GenerateCommand(
@@ -272,6 +272,8 @@ namespace ObjectServer.Data
 
             return sqlCommand;
         }
+
+        public abstract IDbCommand CreateCommand(string sql);
 
         private static void PrepareNamedParameters(IDbCommand sqlCommand, object[] args)
         {

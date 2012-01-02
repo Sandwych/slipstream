@@ -5,15 +5,19 @@ using System.Text;
 
 using Malt;
 
-namespace ObjectServer.Data.Postgresql {
-    internal sealed class PgColumnMetadata : IColumnMetadata {
-        public PgColumnMetadata(IDictionary<string, object> row) {
+namespace ObjectServer.Data.Postgresql
+{
+    internal sealed class PgColumnMetadata : IColumnMetadata
+    {
+        public PgColumnMetadata(IDictionary<string, object> row)
+        {
             this.Name = (string)row["column_name"];
             this.Nullable = (string)row["is_nullable"] == "YES";
             this.SqlType = (string)row["data_type"];
 
             var charsMaxLength = row["character_maximum_length"];
-            if (!charsMaxLength.IsNull()) {
+            if (!charsMaxLength.IsNull())
+            {
                 this.Length = Convert.ToInt32(charsMaxLength);
             }
         }
