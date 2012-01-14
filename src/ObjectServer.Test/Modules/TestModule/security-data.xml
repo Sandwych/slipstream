@@ -69,7 +69,7 @@
     <field name="name">销售员可以访问所有尚未设置所属部门的销售订单</field>
     <field name="model" ref-key="model_test_sales_order" />
     <field name="global">false</field>
-    <field name="constraint">[ ["organization", "=", nil] ]</field>
+    <field name="constraint">[ ["organization", "=", None] ]</field>
   </record>
 
   <record model="core.rule_role" key="rg_salesmen">

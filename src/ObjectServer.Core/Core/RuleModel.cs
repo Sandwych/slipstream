@@ -9,10 +9,6 @@ using System.Reflection;
 
 using NHibernate.SqlCommand;
 
-using Microsoft.Scripting;
-using Microsoft.Scripting.Hosting;
-using IronRuby;
-
 using ObjectServer.Model;
 using ObjectServer.Runtime;
 

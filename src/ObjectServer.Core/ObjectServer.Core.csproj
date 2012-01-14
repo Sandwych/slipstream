@@ -61,14 +61,11 @@
     <Reference Include="Autofac.Integration.Mef">
       <HintPath>..\..\lib\net40\autofac\Autofac.Integration.Mef.dll</HintPath>
     </Reference>
-    <Reference Include="IronRuby">
-      <HintPath>..\..\lib\ironruby\bin\IronRuby.dll</HintPath>
+    <Reference Include="IronPython">
+      <HintPath>..\..\lib\ironpython\IronPython.dll</HintPath>
     </Reference>
-    <Reference Include="IronRuby.Libraries">
-      <HintPath>..\..\lib\ironruby\bin\IronRuby.Libraries.dll</HintPath>
-    </Reference>
-    <Reference Include="IronRuby.Libraries.Yaml">
-      <HintPath>..\..\lib\ironruby\bin\IronRuby.Libraries.Yaml.dll</HintPath>
+    <Reference Include="IronPython.Modules">
+      <HintPath>..\..\lib\ironpython\IronPython.Modules.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Engine" />
@@ -77,14 +74,17 @@
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.CSharp">
     </Reference>
-    <Reference Include="Microsoft.Dynamic">
-      <HintPath>..\..\lib\ironruby\bin\Microsoft.Dynamic.dll</HintPath>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ironpython\Microsoft.Dynamic.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Scripting">
-      <HintPath>..\..\lib\ironruby\bin\Microsoft.Scripting.dll</HintPath>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ironpython\Microsoft.Scripting.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Scripting.Metadata">
-      <HintPath>..\..\lib\ironruby\bin\Microsoft.Scripting.Metadata.dll</HintPath>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ironpython\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
@@ -225,7 +225,7 @@
     <Compile Include="Runtime\IProjectBuildEngine.cs" />
     <Compile Include="Runtime\IRuleConstraintEvaluator.cs" />
     <Compile Include="Runtime\MSBuildProjectBuildEngine.cs" />
-    <Compile Include="Runtime\RubyRuleConstraintEvaluator.cs" />
+    <Compile Include="Runtime\PythonRuleConstraintEvaluator.cs" />
     <Compile Include="Sessions\SqlUserSessionStore.cs" />
     <Compile Include="Sessions\MemoryUserSessionStore.cs" />
     <Compile Include="Sessions\IUserSessionStore.cs" />

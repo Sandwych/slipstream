@@ -5,22 +5,23 @@ using System.Text;
 
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
-using IronRuby;
+using IronPython;
+using IronPython.Hosting;
 
 using ObjectServer.Core;
 
 namespace ObjectServer.Runtime
 {
-    internal class RubyRuleConstraintEvaluator : IRuleConstraintEvaluator
+    internal class PythonRuleConstraintEvaluator : IRuleConstraintEvaluator
     {
-        private readonly static Type _rubyHashOpsType = typeof(IronRuby.Builtins.HashOps);
-        private readonly static ScriptRuntime s_runtime = Ruby.CreateRuntime();
+        private readonly static Type _IronPythonBultin = typeof(IronPython.Modules.Builtin);
+        private readonly static ScriptRuntime s_runtime = Python.CreateRuntime();
         private readonly ScriptEngine _engine;
         private readonly ScriptScope _scope;
 
-        public RubyRuleConstraintEvaluator()
+        public PythonRuleConstraintEvaluator()
         {
-            this._engine = Ruby.GetEngine(s_runtime);
+            this._engine = Python.GetEngine(s_runtime);
             this._scope = this._engine.CreateScope();
         }
 

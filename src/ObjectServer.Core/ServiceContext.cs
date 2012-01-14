@@ -237,7 +237,7 @@ namespace ObjectServer {
         public UserSession UserSession { get; private set; }
 
         private readonly Lazy<IRuleConstraintEvaluator> _ruleConstraintEvaluator =
-            new Lazy<IRuleConstraintEvaluator>(() => new RubyRuleConstraintEvaluator(), false);
+            new Lazy<IRuleConstraintEvaluator>(() => new PythonRuleConstraintEvaluator(), false);
         public IRuleConstraintEvaluator RuleConstraintEvaluator {
             get {
                 return _ruleConstraintEvaluator.Value;
