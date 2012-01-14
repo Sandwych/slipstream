@@ -438,7 +438,7 @@ namespace ObjectServer
             var msbuild = new MSBuildProjectBuildEngine();
             var outDir = System.IO.Path.Combine(this.Path, "bin");
             var modulePath = SlipstreamEnvironment.Settings.ModulePath;
-            var projPath = System.IO.Path.Combine(modulePath, this.Path, this.ProjectFile);
+            var projPath = System.IO.Path.Combine(modulePath, this.Path, this.ProjectFile);            
             var buildResult = msbuild.Build(projPath, outDir);
             if (!buildResult)
             {

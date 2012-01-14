@@ -21,6 +21,7 @@ namespace ObjectServer.Runtime
             var options = new Dictionary<string, string>();
             using (var buildEngine = new ProjectCollection(options))
             {
+                buildEngine.RegisterLogger(new Microsoft.Build.Logging.ConsoleLogger());
                 //TODO 添加 logger
                 var project = buildEngine.LoadProject(projPath);
                 var buildResult = project.Build();
