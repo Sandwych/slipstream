@@ -77,10 +77,10 @@ namespace ObjectServer.Server
                     var serverThread = new Thread(serverThreadProc);
                     serverThread.Start();
 
-                    Console.WriteLine("开始等待客户端请求...");
+                    Console.WriteLine("Waiting for client requests...");
                     WaitToQuit();
 
-                    Console.WriteLine("开始广播停止命令...");
+                    Console.WriteLine("Starting to broadcast the TERMINATE command...");
                     var role = SlipstreamEnvironment.Settings.Role;
                     if (role == ServerRoles.Standalone || role == ServerRoles.Controller)
                     {
@@ -95,7 +95,7 @@ namespace ObjectServer.Server
                         server.BeginStopRpcWorkers();
                     }
 
-                    Console.WriteLine("服务器终止进程开始...");
+                    Console.WriteLine("Terminating...");
                 }
 
                 return 0;
@@ -104,16 +104,16 @@ namespace ObjectServer.Server
             {
                 Console.WriteLine("Bad argument(s): ");
                 Console.WriteLine(ex.Message);
-                Console.WriteLine("Try `osdevsvr.exe --help' for more information.");
+                Console.WriteLine("Try `slipserver.exe --help' for more information.");
                 return -1;
             }
             catch (Exception ex)
             {
                 LoggerProvider.EnvironmentLogger.ErrorException(
-                    "Uncached Exception: " + ex.Message, ex);
+                    "Unhandled Exception: " + ex.Message, ex);
                 var oldColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("未捕获的服务器异常：[{0}]", ex.Message);
+                Console.WriteLine("Unhandled exception:\n{0}", ex.Message);
                 Console.ForegroundColor = oldColor;
                 return -1;
             }
@@ -127,7 +127,7 @@ namespace ObjectServer.Server
         {
             do
             {
-                Console.WriteLine("按 'Q' 键终止服务");
+                Console.WriteLine("Press 'Q' to stop.");
             } while (Char.ToUpperInvariant(Console.ReadKey(true).KeyChar) != 'Q');
         }
 
@@ -139,12 +139,12 @@ namespace ObjectServer.Server
             var cfg = CreateSettingsFromProgramArgs(args);
             cfg.LogToConsole = true;
 
-            Console.WriteLine("正在初始化 ObjectServer 框架 ...");
+            Console.WriteLine("Initializing Slipstream framework...");
             SlipstreamEnvironment.Initialize(cfg);
 
-            Console.WriteLine("ObjectServer 框架已经成功初始化");
+            Console.WriteLine("Slipstream framework has benn initialized.");
 
-            Console.WriteLine("日志文件目录=[{0}]，应用服务器主机 URL=[{1}]",
+            Console.WriteLine("Log Directory=[{0}]，Application Server URL=[{1}]",
                 SlipstreamEnvironment.Settings.LogPath,
                 SlipstreamEnvironment.Settings.RpcBusUrl);
         }
