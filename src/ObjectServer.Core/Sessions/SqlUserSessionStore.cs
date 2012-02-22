@@ -13,12 +13,12 @@ namespace ObjectServer
     [Export("sql", typeof(IUserSessionStore))]
     internal class SqlUserSessionStore : IUserSessionStore
     {
-        private static readonly SqlString SelectByIdSql =
-                 new SqlString(@"select * from ""core_session"" where ""token"" = ", Parameter.Placeholder);
-        private static readonly SqlString SelectByUserIdSql =
-            new SqlString(@"select * from ""core_session"" where ""userid"" = ", Parameter.Placeholder);
-        private static readonly SqlString UpdateLastActivityTimeSql = SqlString.Parse(
-            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""token"" = ?");
+        private static readonly string SelectByIdSql =
+            @"select * from ""core_session"" where ""token"" = ?";
+        private static readonly string SelectByUserIdSql =
+            @"select * from ""core_session"" where ""userid"" = ?";
+        private static readonly string UpdateLastActivityTimeSql =
+            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""token"" = ?";
 
         private readonly IDataContext _dataContext;
 
@@ -77,8 +77,9 @@ namespace ObjectServer
             }
 
             //TODO 移为静态变量
-            var sql = SqlString.Parse(
-                @"insert into ""core_session""(""token"", ""start_time"", ""last_activity_time"", ""userid"", ""login"") values(?,?,?,?,?)");
+            var sql =
+                @"insert into ""core_session""(""token"", ""start_time"", ""last_activity_time"", ""userid"", ""login"") 
+                    values(?,?,?,?,?)";
             var n = this._dataContext.Execute(sql, session.Token, session.StartTime, session.LastActivityTime, session.UserId, session.Login);
             if (n != 1)
             {
@@ -93,7 +94,7 @@ namespace ObjectServer
                 throw new ArgumentNullException("token");
             }
 
-            var sql = SqlString.Parse("delete from core_session where token=?");
+            var sql = @"delete from ""core_session"" where ""token""=?";
             var n = this._dataContext.Execute(sql, token);
             if (n != 1)
             {

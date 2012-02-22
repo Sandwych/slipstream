@@ -71,40 +71,40 @@ namespace ObjectServer.Model
 
             columnFields = columnFields.Union(this.Inheritances.Select(i => i.RelatedField));
 
-            var selectStmt = new SqlStringBuilder();
-            selectStmt.Add("select ");
+            var selectStmt = new StringBuilder();
+            selectStmt.Append("select ");
 
             bool commaNeeded = false;
             foreach (var col in columnFields)
             {
                 if (commaNeeded)
                 {
-                    selectStmt.Add(",");
+                    selectStmt.Append(",");
                 }
                 commaNeeded = true;
 
-                selectStmt.Add('"' + col + '"');
+                selectStmt.Append('"' + col + '"');
             }
 
-            selectStmt.Add(" from ");
-            selectStmt.Add(this.TableName);
-            selectStmt.Add(@" where ""_id"" in (");
+            selectStmt.Append(" from ");
+            selectStmt.Append('"' + this.TableName + '"');
+            selectStmt.Append(@" where ""_id"" in (");
 
             commaNeeded = false;
             foreach (var id in ids)
             {
                 if (commaNeeded)
                 {
-                    selectStmt.Add(",");
+                    selectStmt.Append(",");
                 }
                 commaNeeded = true;
 
-                selectStmt.Add(id.ToString());
+                selectStmt.Append(id.ToString());
             }
 
-            selectStmt.Add(")");
+            selectStmt.Append(")");
 
-            var sql = selectStmt.ToSqlString();
+            var sql = selectStmt.ToString();
 
             //先查找表里的简单字段数据
             var records = scope.DataContext.QueryAsDictionary(sql);

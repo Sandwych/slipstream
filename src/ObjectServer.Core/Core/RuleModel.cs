@@ -55,14 +55,14 @@ namespace ObjectServer.Core
             Debug.Assert(!string.IsNullOrEmpty(action));
             Debug.Assert(action == "read" || action == "write" || action == "delete" || action == "create");
 
-            var sql = new SqlString(
-                @"select distinct ""r"".""_id"", ""r"".""name"", ""r"".""constraint"" from ""core_rule"" ""r"" ",
-                @"inner join ""core_model"" ""m"" on (""r"".""model"" = ""m"".""_id"") ",
-                @"where ""m"".""name""=", Parameter.Placeholder,
-                    @" and (""r"".""on_" + action + @""" = '1') and ((""r"".""global"" = '1') or (""r"".""_id"" in ",
-                    @"(select ""rr"".""rule"" from ""core_rule_role_rel"" ""rr"" ",
-                        @"inner join ""core_user_role_rel"" ""ur"" on (""rr"".""role"" = ""ur"".""role"") ",
-                        @"where ""ur"".""user"" =", Parameter.Placeholder, @" )))");
+            var sql =
+                @"select distinct ""r"".""_id"", ""r"".""name"", ""r"".""constraint"" from ""core_rule"" ""r"" " +
+                @"inner join ""core_model"" ""m"" on (""r"".""model"" = ""m"".""_id"") " +
+                @"where ""m"".""name""= ? " +
+                    @" and (""r"".""on_" + action + @""" = '1') and ((""r"".""global"" = '1') or (""r"".""_id"" in " +
+                    @"(select ""rr"".""rule"" from ""core_rule_role_rel"" ""rr"" " +
+                        @"inner join ""core_user_role_rel"" ""ur"" on (""rr"".""role"" = ""ur"".""role"") " +
+                        @"where ""ur"".""user""=? )))";
 
             var result = ctx.DataContext.QueryAsDictionary(sql, modelName, ctx.UserSession.UserId);
 

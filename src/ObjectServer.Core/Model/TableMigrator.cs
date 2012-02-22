@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -167,9 +168,8 @@ namespace ObjectServer.Model
             if (hasRow && field.DefaultProc != null)
             {
                 var defaultValue = field.DefaultProc(this.context);
-                var sql = new SqlString(
-                    " update ", '"' + table.Name + '"',
-                    " set ", '"' + field.Name + '"', " = ", Parameter.Placeholder);
+                var sql = string.Format(CultureInfo.InvariantCulture,
+                    "update \"{0}\" set \"{1}\"=?", table.Name, field.Name);
                 this.context.DataContext.Execute(sql, defaultValue);
                 table.AlterColumnNullable(this.context.DataContext, field.Name, false);
             }
@@ -182,7 +182,8 @@ namespace ObjectServer.Model
 
         private bool TableHasRow(string tableName)
         {
-            var sql = new SqlString("select count(*) from ", '"' + tableName + '"');
+            var sql = string.Format(CultureInfo.InvariantCulture,
+                "select count(*) from \"{0}\"", tableName);
             var rowCount = Convert.ToInt32(this.context.DataContext.QueryValue(sql));
             return rowCount > 0;
         }

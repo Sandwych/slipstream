@@ -191,6 +191,49 @@ namespace ObjectServer.Data
 
         #endregion
 
+
+        #region Query methods with plain sql string
+
+        public virtual object QueryValue(string commandText, params object[] args)
+        {
+            return this.QueryValue(SqlString.Parse(commandText), args);
+        }
+
+        public virtual int Execute(string commandText, params object[] args)
+        {
+            return this.Execute(SqlString.Parse(commandText), args);
+        }
+
+        public virtual DataTable QueryAsDataTable(string commandText, params object[] args)
+        {
+            return this.QueryAsDataTable(SqlString.Parse(commandText), args);
+        }
+
+        public virtual Dictionary<string, object>[] QueryAsDictionary(
+            string commandText, params object[] args)
+        {
+            return this.QueryAsDictionary(SqlString.Parse(commandText), args);
+        }
+
+        public virtual dynamic[] QueryAsDynamic(string commandText, params object[] args)
+        {
+            return this.QueryAsDynamic(SqlString.Parse(commandText), args);
+        }
+
+
+        public virtual T[] QueryAsArray<T>(string commandText, params object[] args)
+        {
+            return this.QueryAsArray<T>(SqlString.Parse(commandText), args);
+        }
+
+        public virtual IDataReader QueryAsReader(string commandText, params object[] args)
+        {
+            return this.QueryAsReader(SqlString.Parse(commandText), args);
+        }
+
+
+        #endregion
+
         #region IDisposable 成员
 
         public void Dispose()

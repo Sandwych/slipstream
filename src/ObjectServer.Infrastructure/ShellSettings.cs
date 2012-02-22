@@ -28,10 +28,10 @@ namespace ObjectServer
             this.ModulePath = Path.Combine(Environment.CurrentDirectory, "Modules");
 
             this.Role = ServerRoles.Standalone;
-            this.DbType = "postgres";
-            this.DbHost = @"localhost";
-            this.DbUser = "objectserver";
-            this.DbPassword = "objectserver";
+            this.DbType = "mssql";
+            this.DbHost = @".";
+            this.DbUser = "slipstream";
+            this.DbPassword = "slipstream";
 
             this.MaxRequestSize = 1024 * 1024 * 4;
 

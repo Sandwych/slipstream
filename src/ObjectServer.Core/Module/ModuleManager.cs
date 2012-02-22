@@ -136,7 +136,7 @@ namespace ObjectServer
 
             this.LookupAllModules(this._shellSettings.ModulePath);
 
-            var sql = new SqlString("select name from core_module");
+            var sql = @"select ""name"" from ""core_module"" ";
             var moduleNames = new HashSet<string>(dbctx.QueryAsArray<string>(sql));
 
             foreach (var m in allModules)
@@ -164,7 +164,7 @@ namespace ObjectServer
             //SQL: select _id, name from core_module where state='activated'
 
             //加载已安装的模块
-            var sql = new SqlString("select _id, name, state from core_module");
+            var sql = @"select ""_id"", ""name"", ""state"" from ""core_module"" ";
 
             //TODO: 模块依赖排序
             var modules = ctx.DataContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
@@ -228,8 +228,7 @@ namespace ObjectServer
             Debug.Assert(dbctx != null);
             Debug.Assert(!string.IsNullOrEmpty(state));
 
-            var sql = new SqlString("update core_module set state=", Parameter.Placeholder,
-                " where _id=", Parameter.Placeholder);
+            var sql = @"update ""core_module"" set ""state""=? where ""_id""=?";
             dbctx.Execute(sql, state, moduleID);
         }
 

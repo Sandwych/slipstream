@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 using NHibernate.SqlCommand;
 
@@ -37,11 +38,12 @@ namespace ObjectServer.Model
             {
                 var selfId = (long)rec[AbstractModel.IdFieldName];
                 //中间表没有记录，返回空
-                var sql = new SqlString(
-                    " select ", '"' + this.RelatedField + '"',
-                    " from ", '"' + relationModel.TableName + '"',
-                    " where ", '"' + this.OriginField + '"', "=", Parameter.Placeholder);
-                var targetIds = this.Model.DbDomain.CurrentSession.DataContext.QueryAsArray<object>(sql, selfId);
+                var sql = 
+                    String.Format(CultureInfo.InvariantCulture, 
+                        @"select ""{0}"" from ""{1}"" where ""{2}""=?",
+                        this.RelatedField, relationModel.TableName, this.OriginField);
+                var targetIds = this.Model.DbDomain.CurrentSession
+                    .DataContext.QueryAsArray<object>(sql, selfId);
                 result[selfId] = targetIds.Select(o => (long)o).ToArray();
             }
 

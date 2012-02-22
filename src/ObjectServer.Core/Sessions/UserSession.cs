@@ -13,12 +13,12 @@ namespace ObjectServer
     [Serializable]
     public sealed class UserSession
     {
-        private static readonly SqlString SelectByIdSql =
-            new SqlString(@"select * from ""core_session"" where ""token"" = ", Parameter.Placeholder);
-        private static readonly SqlString SelectByUserIdSql =
-            new SqlString(@"select * from ""core_session"" where ""userid"" = ", Parameter.Placeholder);
-        private static readonly SqlString UpdateLastActivityTimeSql = SqlString.Parse(
-            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""token"" = ?");
+        private static readonly string SelectByIdSql =
+            @"select * from ""core_session"" where ""token"" = ?";
+        private static readonly string SelectByUserIdSql =
+            @"select * from ""core_session"" where ""userid"" = ?";
+        private static readonly string UpdateLastActivityTimeSql = 
+            @"update ""core_session"" set ""last_activity_time"" = ? where ""last_activity_time"" < ? and ""token"" = ?";
 
         public const int TokenLength = 16;
         public const string SystemUserName = "system";

@@ -180,7 +180,7 @@ namespace ObjectServer.Model
             Debug.Assert(db != null);
 
             //同步代码定义的字段与数据库 core_model_field 表里记录的字段信息
-            var sqlQuery = SqlString.Parse("select * from core_field where module=? and model=?");
+            var sqlQuery = "select * from core_field where module=? and model=?";
 
             var dbFields = db.QueryAsDictionary(sqlQuery, this.Module, modelId);
             var dbFieldsNames = (from f in dbFields select (string)f["name"]).ToArray();
@@ -189,23 +189,21 @@ namespace ObjectServer.Model
             var sql = @"
 insert into core_field(module, model, name, required, readonly, relation, label, type, help) 
     values(?,?,?,?,?,?,?,?,?)";
-            var sqlInsert = SqlString.Parse(sql);
             var fieldsToAppend = this.Fields.Keys.Except(dbFieldsNames);
             foreach (var fieldName in fieldsToAppend)
             {
                 var field = this.Fields[fieldName];
-                db.Execute(sqlInsert,
+                db.Execute(sql,
                     this.Module, modelId, fieldName, field.IsRequired, field.IsReadonly,
                     field.Relation, field.Label, field.Type.ToKeyString(), "");
             }
 
             //删除数据库存在，但代码未定义的
             var fieldsToDelete = dbFieldsNames.Except(this.Fields.Keys);
-            sql = @"delete from core_field where name=? and module=? and model=?";
-            var sqlDelete = SqlString.Parse(sql);
+            sql = @"delete from ""core_field"" where ""name""=? and ""module""=? and ""model""=?";
             foreach (var f in fieldsToDelete)
             {
-                db.Execute(sqlDelete, f, this.Module, modelId);
+                db.Execute(sql, f, this.Module, modelId);
             }
 
             //更新现存的（交集）
@@ -254,15 +252,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 ""help""=@3  WHERE ""_id""=@4";
                 */
                 var sql =
-                    new SqlString(
-                        "update core_field set ",
-                        "type=", Parameter.Placeholder, ",",
-                        "required=", Parameter.Placeholder, ",",
-                        "readonly=", Parameter.Placeholder, ",",
-                        "relation=", Parameter.Placeholder, ",",
-                        "label=", Parameter.Placeholder, ",",
-                        "help=", Parameter.Placeholder,
-                        " where _id=", Parameter.Placeholder);
+                    @"update ""core_field"" set 
+                        ""type""=?, ""required""=?, ""readonly""=?, ""relation""=?, ""label""=?, ""help""=?
+                        where ""_id""=?";
                 db.Execute(
                     sql, metaFieldType, metaField.IsRequired, metaField.IsReadonly,
                     metaField.Relation, metaField.Label, metaField.Help, fieldId);
@@ -275,8 +267,8 @@ insert into core_field(module, model, name, required, readonly, relation, label,
             Debug.Assert(db != null);
 
             //var sql = "SELECT MAX(\"_id\") FROM core_model WHERE name=@0";
-            var sql = new SqlString(
-                @"select max(""_id"") from ""core_model"" where ""name""=", Parameter.Placeholder);
+            var sql =
+                @"select max(""_id"") from ""core_model"" where ""name""=?";
             var o = db.QueryValue(sql, this.Name);
             if (o.IsNull())
             {
@@ -292,11 +284,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
         {
             Debug.Assert(db != null);
 
-            var sql = new SqlString(
-                "insert into core_model(name, module, label) values(",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ")");
+            var sql =
+                @"insert into ""core_model""(""name"", ""module"", ""label"") 
+                    values(?, ?, ?)";
             var rowCount = db.Execute(sql, this.Name, this.Module, this.Label);
 
             if (rowCount != 1)
@@ -304,9 +294,9 @@ insert into core_field(module, model, name, required, readonly, relation, label,
                 throw new ObjectServer.Exceptions.DataException("Failed to insert record of table core_model");
             }
 
-            sql = new SqlString(
-                @"select max(""_id"") from ""core_model""  where ""name"" =", Parameter.Placeholder,
-                @" and ""module""=", Parameter.Placeholder);
+            sql = 
+                @"select max(""_id"") from ""core_model""  
+                    where ""name""=? and ""module""=? ";
 
             var modelId = (long)db.QueryValue(sql, this.Name, this.Module);
 

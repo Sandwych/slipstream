@@ -54,8 +54,8 @@ namespace ObjectServer.Core
 
         private static bool UserExists(IDataContext dbctx, string login)
         {
-            var sql = new SqlString(
-                @"select count(*) from ""core_user"" where ""login"" = ", Parameter.Placeholder);
+            var sql =
+                @"select count(*) from ""core_user"" where ""login"" = ?";
 
             var rowCount = dbctx.QueryValue(sql, login);
             var isRootUserExisted = rowCount.IsNull() || Convert.ToInt32(rowCount) <= 0;
@@ -66,22 +66,12 @@ namespace ObjectServer.Core
         {
             Debug.Assert(dbctx != null);
 
-            /*
-                    insert into core_user(_version, ""name"", ""login"", ""password"", ""admin"", _created_time, salt)
-                    values(?,?,?,?,?,?,?)
-             */
 
-            var sql = new SqlString(
-                @"insert into ""core_user""( ""_version"", ""name"", ""login"", ""password"", ""admin"", ""active"", ""_created_time"", ""salt"")",
-                @" values(",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ",",
-                Parameter.Placeholder, ")");
+            var sql =
+                @"insert into ""core_user""( 
+                    ""_version"", ""name"", ""login"", ""password"", ""admin"", 
+                    ""active"", ""_created_time"", ""salt"")
+                 values(?,?,?,?,?,?,?,?)";
 
             //创建 root 用户
             var rootPassword = SlipstreamEnvironment.Settings.ServerPassword;

@@ -69,8 +69,7 @@ select max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)
             }
 
             var sql = String.Format(CultureInfo.InvariantCulture, SqlToQuery, action);
-            var sqlStr = SqlString.Parse(sql);
-            var result = ctx.DataContext.QueryValue(sqlStr, model, ctx.UserSession.UserId);
+            var result = ctx.DataContext.QueryValue(sql, model, ctx.UserSession.UserId);
 
             if (!result.IsNull())
             {

@@ -31,11 +31,11 @@ namespace ObjectServer.Model
                 new Criterion("organization.code", "=", "orgcode1"),
             };
 
-            var sql1 = new SqlString(
-                "select _t0._id from core_user _t0  ",
-                "left outer join core_organization _t1 on _t0.organization=_t1._id ",
-                "where  ( _t0.login = ?  and  _t1.name = ?  and  _t1.code = ? ) ",
-                "order by  _t0.login ASC,  _t0.name ASC");
+            var sql1 = 
+                "select _t0._id from core_user _t0  " + 
+                "left outer join core_organization _t1 on _t0.organization=_t1._id " +
+                "where  ( _t0.login = ?  and  _t1.name = ?  and  _t1.code = ? ) " +
+                "order by  _t0.login ASC,  _t0.name ASC";
 
             var cb = new SqlQueryBuilder(this.Context, "core.user");
             cb.AddCriteria(criteria);

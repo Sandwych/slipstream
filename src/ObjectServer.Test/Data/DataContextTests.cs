@@ -10,13 +10,17 @@ using Malt;
 
 using ObjectServer.Data;
 
-namespace ObjectServer.Data.Test {
+namespace ObjectServer.Data.Test
+{
     [TestFixture]
-    public class DataContextTests : ServiceContextTestCaseBase {
+    public class DataContextTests : ServiceContextTestCaseBase
+    {
         [Test]
-        public void Query_as_dictionary() {
-            using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName)) {
-                var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
+        public void Query_as_dictionary()
+        {
+            using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName))
+            {
+                var sql = "SELECT _id, name FROM core_model WHERE name=?";
                 var rows = db.QueryAsDictionary(sql, "core.model");
                 Assert.NotNull(rows);
                 Assert.AreEqual(1, rows.Length);
@@ -25,9 +29,11 @@ namespace ObjectServer.Data.Test {
         }
 
         [Test]
-        public void Query_as_datatable() {
-            using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName)) {
-                var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
+        public void Query_as_datatable()
+        {
+            using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName))
+            {
+                var sql = "SELECT _id, name FROM core_model WHERE name=?";
                 var dt = db.QueryAsDataTable(sql, "core.model");
                 Assert.NotNull(dt);
 
@@ -41,9 +47,11 @@ namespace ObjectServer.Data.Test {
         }
 
         [Test]
-        public void Query_as_dynamic() {
-            using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName)) {
-                var sql = SqlString.Parse("SELECT _id, name FROM core_model WHERE name=?");
+        public void Query_as_dynamic()
+        {
+            using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName))
+            {
+                var sql = "SELECT _id, name FROM core_model WHERE name=?";
                 var records = db.QueryAsDynamic(sql, "core.model");
                 Assert.NotNull(records);
 
@@ -54,9 +62,11 @@ namespace ObjectServer.Data.Test {
 
 
         [Test]
-        public void Query_as_array() {
-            using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName)) {
-                var sql = SqlString.Parse("SELECT name FROM core_model WHERE name=?");
+        public void Query_as_array()
+        {
+            using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName))
+            {
+                var sql = "SELECT name FROM core_model WHERE name=?";
                 var names = db.QueryAsArray<string>(sql, "core.model");
 
                 Assert.NotNull(names);
@@ -66,7 +76,8 @@ namespace ObjectServer.Data.Test {
         }
 
         [Ignore]
-        public void Create_and_delete_database() {
+        public void Create_and_delete_database()
+        {
             var dbName = "oo_testdb";
             SlipstreamEnvironment.Initialize();
             var hash = SlipstreamEnvironment.Settings.ServerPassword.ToSha();

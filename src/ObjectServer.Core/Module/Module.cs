@@ -391,15 +391,15 @@ namespace ObjectServer
                 state = ModuleModel.States.ToInstall;
             }
 
-            var insertSql = SqlString.Parse(
-                "insert into core_module(name, state, label, version, demo, author, info) values(?,?,?,?,?,?,?)");
+            var insertSql =
+                "insert into core_module(name, state, label, version, demo, author, info) values(?,?,?,?,?,?,?)";
             dbctx.Execute(insertSql,
                 this.Name, state, this.Label, this.Version.ToString(), this.IsDemo, this.Author, this.Info);
             var serial = dbctx.GetLastIdentity("core_module");
 
             //插入依赖
-            var insertDependSql = SqlString.Parse(
-                "insert into core_module_dependency(module, name) values(?,?)");
+            var insertDependSql =
+                "insert into core_module_dependency(module, name) values(?,?)";
             foreach (var req in this.Requires)
             {
                 dbctx.Execute(insertDependSql, serial, req);
@@ -438,7 +438,7 @@ namespace ObjectServer
             var msbuild = new MSBuildProjectBuildEngine();
             var outDir = System.IO.Path.Combine(this.Path, "bin");
             var modulePath = SlipstreamEnvironment.Settings.ModulePath;
-            var projPath = System.IO.Path.Combine(modulePath, this.Path, this.ProjectFile);            
+            var projPath = System.IO.Path.Combine(modulePath, this.Path, this.ProjectFile);
             var buildResult = msbuild.Build(projPath, outDir);
             if (!buildResult)
             {
