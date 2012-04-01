@@ -22,10 +22,13 @@ namespace ObjectServer
 
         public ShellSettings()
         {
+            var binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var appPath = Path.GetDirectoryName(binPath);
+
             this.AppDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 AppDataDirectoryName);
-            this.ModulePath = Path.Combine(Environment.CurrentDirectory, "Modules");
+            this.ModulePath = Path.Combine(appPath, "Modules");
 
             this.Role = ServerRoles.Standalone;
             this.DbType = "mssql";

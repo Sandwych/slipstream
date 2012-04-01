@@ -11,6 +11,9 @@ target init:
     rmdir("build")
 
 target clean:
+    solution_file = "src/Slipstream.sln"
+    msbuild(file: solution_file, configuration: "debug", targets: ("clean",))
+    msbuild(file: solution_file, configuration: "release", targets: ("clean",))
     rmdir("build")
 
 desc "Compiles the solution"
@@ -25,23 +28,30 @@ target test:
     nunit(assembly: "src/ObjectServer.Client.Test/bin/${configuration}/ObjectServer.Client.Test.dll")
 
 desc "Copies the binaries to the 'build' directory"
-target deploy:
-    print "Copying to build dir"
+target deploy, (compile):
+#print "Removing 'build' directory"
+#    rmdir('build')
 
-    print "Copying Slipstream Server"
-    with FileList("src/ObjectServer.DevServer/bin/${configuration}"):
+    print "Copying to build dir"
+    print "Copying Slipstream Server..."
+    with FileList("src/ObjectServer.DevServer/bin"):
         .Include("*.{dll,exe}")
         .ForEach def(file):
-            file.CopyToDirectory("build/${configuration}/DevServer")
+            file.CopyToDirectory("build/s2/bin")
 
-    print "Copying ZeroMQ's DLL"
+    print "Copying ZeroMQ's DLL..."
     with FileList("lib/zmq"):
         .Include("libzmq.dll")
         .ForEach def(file):
-            file.CopyToDirectory("build/${configuration}/DevServer")
+            file.CopyToDirectory("build/s2/bin")
 
+    print "Copying internal modules..."
+    with FileList("src/ObjectServer.DevServer/Modules/"):
+        .Include("**")
+        .ForEach def(file):
+            file.CopyToDirectory("build/s2/Modules")
       
 desc "Creates zip package"
-target package:
-  zip("build/${configuration}", 'build/Slipstream-Server.zip')
+target package, (deploy):
+  zip("build/s2", 'build/s2-platform.zip')
 

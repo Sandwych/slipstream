@@ -2,6 +2,7 @@
 [Bb]in
 !/lib/**
 !/build/**
+!/build/*
 *.user
 *.suo
 *.[Cc]ache

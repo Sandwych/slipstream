@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="ContainerTestBase.cs" />
     <Compile Include="Model\AbstractModelTests.cs" />
+    <Compile Include="Runtime\DynamicProjectBuilderTests.cs" />
     <Compile Include="ServiceTestCaseBase.cs" />
     <Compile Include="Data\DataContextTests.cs" />
     <Compile Include="Core\RuleTest.cs" />
@@ -166,7 +167,9 @@
     <Content Include="ObjectServer.PartCover.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Runtime\" />
+    <Content Include="DemoModule.csproj.test">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

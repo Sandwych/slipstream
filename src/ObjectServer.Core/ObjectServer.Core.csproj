@@ -67,11 +67,6 @@
     <Reference Include="IronPython.Modules">
       <HintPath>..\..\lib\ironpython\IronPython.Modules.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Build" />
-    <Reference Include="Microsoft.Build.Engine" />
-    <Reference Include="Microsoft.Build.Framework" />
-    <Reference Include="Microsoft.Build.Tasks.v4.0" />
-    <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="Microsoft.CSharp">
     </Reference>
     <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
@@ -222,9 +217,10 @@
     <Compile Include="Model\TableMigrator.cs" />
     <Compile Include="Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Runtime\CompileException.cs" />
-    <Compile Include="Runtime\IProjectBuildEngine.cs" />
+    <Compile Include="Runtime\DefaultProjectFileParser.cs" />
+    <Compile Include="Runtime\IProjectFileParser.cs" />
     <Compile Include="Runtime\IRuleConstraintEvaluator.cs" />
-    <Compile Include="Runtime\MSBuildProjectBuildEngine.cs" />
+    <Compile Include="Runtime\ProjectDescriptor.cs" />
     <Compile Include="Runtime\PythonRuleConstraintEvaluator.cs" />
     <Compile Include="Sessions\SqlUserSessionStore.cs" />
     <Compile Include="Sessions\MemoryUserSessionStore.cs" />

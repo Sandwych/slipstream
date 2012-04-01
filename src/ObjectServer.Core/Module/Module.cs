@@ -49,6 +49,7 @@ namespace ObjectServer
                 Version = asm.GetName().Version,
                 Info = "Core Module",
                 Author = string.Empty,
+                SourceLanguage = "csharp",
             };
 
             var asmAttrs = asm.GetCustomAttributes(false);
@@ -69,6 +70,7 @@ namespace ObjectServer
             this.Dlls = new string[] { };
             this.IsDemo = false;
             this.Requires = new string[] { };
+            this.SourceLanguage = "csharp";
         }
 
         #region Serializable Fields
@@ -275,19 +277,17 @@ namespace ObjectServer
         {
             var resources = new List<IResource>();
 
-            if (this.SourceFiles != null && this.SourceFiles.Length > 0)
+            if (!string.IsNullOrEmpty(this.ProjectFile) 
+                || (this.SourceFiles != null && this.SourceFiles.Length > 0))
             {
                 var a = this.CompileSourceFiles();
-                resources.AddRange(this.GetResourcesInAssembly(a));
-                this.AllAssemblies.Add(a);
+                if (a != null)
+                {
+                    resources.AddRange(this.GetResourcesInAssembly(a));
+                    this.AllAssemblies.Add(a);
+                }
             }
 
-            if (!string.IsNullOrEmpty(this.ProjectFile))
-            {
-                var a = this.BuildProjectFile();
-                resources.AddRange(this.GetResourcesInAssembly(a));
-                this.AllAssemblies.Add(a);
-            }
             return resources.ToArray();
         }
 
@@ -413,40 +413,44 @@ namespace ObjectServer
             LoggerProvider.EnvironmentLogger.Info(String.Format(
                 "Compiling source files of the module [{0}]...", this.Name));
 
-            var sourceFiles = new List<string>();
-            foreach (var file in this.SourceFiles)
+            var sourceFiles = new HashSet<string>();
+
+            if (!string.IsNullOrEmpty(this.ProjectFile))
             {
-                sourceFiles.Add(System.IO.Path.Combine(this.Path, file));
+                var projectParser = new DefaultProjectFileParser();
+                var pfd = projectParser.Parse(System.IO.Path.Combine(this.Path, this.ProjectFile));
+                foreach (var sourceFile in pfd.SourceFilenames)
+                {
+                    sourceFiles.Add(System.IO.Path.Combine(this.Path, sourceFile));
+                }
+            }
+
+            if (this.SourceFiles != null)
+            {
+                foreach (var file in this.SourceFiles)
+                {
+                    sourceFiles.Add(System.IO.Path.Combine(this.Path, file));
+                }
             }
 
             //编译模块程序
-            var compiler = CompilerProvider.GetCompiler(this.SourceLanguage);
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var a = compiler.CompileFromFile(sourceFiles);
-            stopwatch.Stop();
-            var time = stopwatch.Elapsed;
-            LoggerProvider.EnvironmentLogger.Info(String.Format("Elapsed time: [{0}]", time));
-            LoggerProvider.EnvironmentLogger.Info(String.Format(
-                "The module [{0}] has been compiled successfully.", this.Name));
-            return a;
-        }
-
-        private Assembly BuildProjectFile()
-        {
-            LoggerProvider.EnvironmentLogger.InfoFormat("Building project: [{0}]", this.ProjectFile);
-            var msbuild = new MSBuildProjectBuildEngine();
-            var outDir = System.IO.Path.Combine(this.Path, "bin");
-            var modulePath = SlipstreamEnvironment.Settings.ModulePath;
-            var projPath = System.IO.Path.Combine(modulePath, this.Path, this.ProjectFile);
-            var buildResult = msbuild.Build(projPath, outDir);
-            if (!buildResult)
+            if (sourceFiles.Count > 0)
             {
-                throw new CompileException("Failed to compile", null);
+                var compiler = CompilerProvider.GetCompiler(this.SourceLanguage);
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                var a = compiler.CompileFromFile(sourceFiles);
+                stopwatch.Stop();
+                var time = stopwatch.Elapsed;
+                LoggerProvider.EnvironmentLogger.Info(String.Format("Elapsed time: [{0}]", time));
+                LoggerProvider.EnvironmentLogger.Info(String.Format(
+                    "The module [{0}] has been compiled successfully.", this.Name));
+                return a;
             }
-            var assemblyName = this.Name.Trim() + ".dll";
-            var assemblyPath = System.IO.Path.Combine(outDir, assemblyName);
-            return Assembly.LoadFile(assemblyPath);
+            else
+            {
+                return null;
+            }
         }
 
         private static void ResourceDependencySort(IList<IResource> resList)

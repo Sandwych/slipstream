@@ -24,10 +24,6 @@ namespace ObjectServer.Runtime
 
         public static ICompiler GetCompiler(string language)
         {
-            if (string.IsNullOrEmpty(language))
-            {
-                return s_instance.compilers["boo"];
-            }
 
             if (!s_instance.compilers.ContainsKey(language.Trim().ToLowerInvariant()))
             {
