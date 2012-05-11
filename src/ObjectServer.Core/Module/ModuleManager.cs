@@ -98,12 +98,32 @@ namespace ObjectServer
             var modules = new List<Module>();
             modules.Add(Module.CoreModule);
 
-            if (string.IsNullOrEmpty(modulePath) || !Directory.Exists(modulePath))
+            if (string.IsNullOrEmpty(modulePath))
             {
                 return;
             }
 
+            var dirs = modulePath.Split(',', ';');
+            foreach (var dir in dirs)
+            {
+                if ((!String.IsNullOrEmpty(dir)) && (dir.Trim().Length > 1))
+                {
+                    LookupModulesUnderDirectory(modulePath, modules);
+                }
+            }
+
+            modules.DependencySort(m => m.Name, m => m.Requires);
+            this.allModules = modules;
+        }
+
+        private static void LookupModulesUnderDirectory(string modulePath, List<Module> modules)
+        {
             var moduleDirs = Directory.GetDirectories(modulePath);
+
+            LoggerProvider.EnvironmentLogger.Info(() => string.Format(
+                CultureInfo.CurrentCulture,
+                "Looking up module under directory: [{0}]", modulePath));
+
             foreach (var moduleDir in moduleDirs)
             {
                 var moduleFilePath = System.IO.Path.Combine(moduleDir, ModuleMetaDataFileName);
@@ -118,9 +138,6 @@ namespace ObjectServer
                     "Additional module found: [{0}], Path=[{1}]",
                         module.Name, module.Path));
             }
-
-            modules.DependencySort(m => m.Name, m => m.Requires);
-            this.allModules = modules;
         }
 
 
