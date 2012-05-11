@@ -8,13 +8,7 @@
   </info>
   <auto-load>true</auto-load>
   <source-language>csharp</source-language>
-  <sources>
-    <file>simple-models.cs</file>
-    <file>many-to-many-models.cs</file>
-    <file>functional-field-object.cs</file>
-    <file>inheritance-models.cs</file>
-    <file>tree-models.cs</file>
-  </sources>
+  <project-file>ObjectServer.TestModule.csproj</project-file>
 
   <init-files>
     <file>security-data.xml</file>

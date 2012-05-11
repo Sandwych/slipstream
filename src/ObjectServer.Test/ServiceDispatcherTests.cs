@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Dynamic;
+using System.IO;
 
 using Malt.Utility;
 using NUnit.Framework;
@@ -22,6 +23,7 @@ namespace ObjectServer.Test
                 SlipstreamEnvironment.Initialize(cfg);
             }
 
+            cfg.ModulePath = Path.Combine(Environment.CurrentDirectory, "Modules");
             var dbName = "os-testdb";
             var adminPassword = "root";
             var hashedRootPassword = SlipstreamEnvironment.Settings.ServerPassword.ToSha();

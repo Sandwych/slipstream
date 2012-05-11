@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Reflection;
+using System.IO;
 
 using Malt.Utility;
 using Malt;
@@ -20,6 +22,7 @@ namespace ObjectServer
         {
             var cfg = new ShellSettings();
             cfg.DbName = TestingDatabaseName;
+            cfg.ModulePath = Path.Combine(Environment.CurrentDirectory, "Modules");
 
             if (!SlipstreamEnvironment.Initialized)
             {

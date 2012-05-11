@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 namespace ObjectServer.Data
 {
@@ -11,7 +12,7 @@ namespace ObjectServer.Data
 
         bool Nullable { get; }
 
-        string SqlType { get; }
+        SqlDbType SqlType { get; }
 
         int Length { get; }
 

@@ -103,6 +103,21 @@
     </Compile>
     <Compile Include="ContainerTestBase.cs" />
     <Compile Include="Model\AbstractModelTests.cs" />
+    <Content Include="Modules\ObjectServer.TestModule\functional-field-object.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\ObjectServer.TestModule\inheritance-models.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\ObjectServer.TestModule\many-to-many-models.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="Modules\ObjectServer.TestModule\simple-models.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Modules\ObjectServer.TestModule\tree-models.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Runtime\DynamicProjectBuilderTests.cs" />
     <Compile Include="ServiceTestCaseBase.cs" />
     <Compile Include="Data\DataContextTests.cs" />
@@ -115,9 +130,6 @@
     <Compile Include="Model\ModelValidatorTests.cs" />
     <Compile Include="Model\Sql\SqlQueryBuilderTests.cs" />
     <Compile Include="Model\HierarchyTests.cs" />
-    <Compile Include="Modules\TestModule\tree-models.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
     <Compile Include="Security\ModelAccessTests.cs" />
     <Compile Include="Model\Fields\ManyToOneFieldTests.cs" />
     <Compile Include="Model\Fields\ManyToManyFieldTests.cs" />
@@ -135,28 +147,7 @@
     <EmbeddedResource Include="XmlFiles\master-child-data.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="Modules\TestModule\security-data.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Modules\TestModule\data.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Modules\TestModule\module.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Compile Include="Model\XmlDataImporterTests.cs" />
-    <Compile Include="Modules\TestModule\inheritance-models.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Modules\TestModule\many-to-many-models.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Modules\TestModule\functional-field-object.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Modules\TestModule\simple-models.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceDispatcherTests.cs" />
     <Compile Include="ServiceContextTestCaseBase.cs" />
@@ -164,6 +155,19 @@
     <Compile Include="Sessions\InMemoryUserSessionServiceTests.cs" />
     <Compile Include="Rpc\JsonSerializedCallingTests.cs" />
     <Compile Include="Rpc\RpcTestBase.cs" />
+    <Content Include="Modules\ObjectServer.TestModule\data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\ObjectServer.TestModule\module.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\ObjectServer.TestModule\ObjectServer.TestModule.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\ObjectServer.TestModule\Properties\AssemblyInfo.cs" />
+    <Content Include="Modules\ObjectServer.TestModule\security-data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ObjectServer.PartCover.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -209,6 +213,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
