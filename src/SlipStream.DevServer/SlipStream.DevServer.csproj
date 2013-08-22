@@ -42,6 +42,9 @@
     <StartupObject>SlipStream.Server.DevServerProgram</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Portable.Desktop">
+      <HintPath>..\..\lib\pclc\Portable.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

@@ -11,7 +11,7 @@
   <author>Wei Li [oldrev@gmail.com]</author>
   <version>0.01</version>
   <auto-load>true</auto-load>
-  <project-file>ObjectServer.DemoModule.csproj</project-file>
+  <project-file>SlipStream.DemoModule.csproj</project-file>
   <init-files>
     <file>ui.xml</file>
     <file>demo-data.xml</file>

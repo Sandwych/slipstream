@@ -39,7 +39,7 @@ namespace SlipStream.Client.Agos {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ObjectServer.Client.Agos.Assets.Resources.ApplicationStrings", typeof(ApplicationStrings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SlipStream.Client.Agos.Assets.Resources.ApplicationStrings", typeof(ApplicationStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

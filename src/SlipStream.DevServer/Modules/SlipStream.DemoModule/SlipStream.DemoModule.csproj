@@ -58,18 +58,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SlipStream.Core\SlipStream.Core.csproj">
-      <Project>{443baeca-181d-45b8-9eb8-fca3a35051e1}</Project>
-      <Name>SlipStream.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\SlipStream.Infrastructure\SlipStream.Infrastructure.csproj">
-      <Project>{e8850de8-0ed2-4ff9-a08f-6644573c63b4}</Project>
-      <Name>SlipStream.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\SlipStream.Shared\SlipStream.Shared.csproj">
-      <Project>{b86ac0f3-b9b4-4667-9c7c-da157eb67551}</Project>
-      <Name>SlipStream.Shared</Name>
-    </ProjectReference>
+   <Reference Include="SlipStream.Core, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SlipStream.Core\bin\Debug\SlipStream.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
