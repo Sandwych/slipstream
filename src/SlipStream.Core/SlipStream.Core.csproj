@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{443BAECA-181D-45B8-9EB8-FCA3A35051E1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SlipStream</RootNamespace>
+    <AssemblyName>SlipStream.Core</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\net40\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\..\lib\net40\autofac\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mef">
+      <HintPath>..\..\lib\net40\autofac\Autofac.Integration.Mef.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython">
+      <HintPath>..\..\lib\ironpython\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules">
+      <HintPath>..\..\lib\ironpython\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NHibernate">
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="Microsoft.Dynamic">
+      <HintPath>..\..\lib\ironpython\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\..\lib\ironpython\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata">
+      <HintPath>..\..\lib\ironpython\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Json\Net4\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\..\lib\npgsql\Npgsql.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Shared\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Caching\ICache.cs" />
+    <Compile Include="Core\ModuleDependencyModule.cs" />
+    <Compile Include="Core\FieldAccessModel.cs" />
+    <Compile Include="Core\WindowActionViewModel.cs" />
+    <Compile Include="Data\AbstractDataContext.cs" />
+    <Compile Include="Data\IColumnMetadata.cs" />
+    <Compile Include="Data\Mssql\MssqlColumnMetadata.cs" />
+    <Compile Include="Data\Mssql\MssqlDataProvider.cs" />
+    <Compile Include="Data\Mssql\MssqlDataContext.cs" />
+    <Compile Include="Data\Mssql\MssqlSqlTypeConverter.cs" />
+    <Compile Include="Data\Mssql\MssqlTableContext.cs" />
+    <Compile Include="Data\DatabaseType.cs" />
+    <Compile Include="Data\DynamicRecord.cs" />
+    <Compile Include="Data\IDataContext.cs" />
+    <Compile Include="Data\IDataProvider.cs" />
+    <Compile Include="Data\ITableContext.cs" />
+    <Compile Include="Data\Postgresql\PgColumnMetadata.cs" />
+    <Compile Include="Data\Postgresql\PgDataContext.cs" />
+    <Compile Include="Data\Postgresql\PgDataProvider.cs" />
+    <Compile Include="Data\Postgresql\PgSqlTypeConverter.cs" />
+    <Compile Include="Data\Postgresql\PgTableContext.cs" />
+    <Compile Include="Caching\CachedMethodAttribute.cs" />
+    <Compile Include="ClrService.cs" />
+    <Compile Include="Core\RuleRoleModel.cs" />
+    <Compile Include="Data\ScopedTransaction.cs" />
+    <Compile Include="Exceptions\SecurityException.cs" />
+    <Compile Include="Exceptions\DataException.cs" />
+    <Compile Include="Exceptions\ResourceException.cs" />
+    <Compile Include="IDbDomainManager.cs" />
+    <Compile Include="Model\Fields\CriterionConverter.cs" />
+    <Compile Include="Model\ModelValidator.cs" />
+    <Compile Include="Module\ModuleUpdateAction.cs" />
+    <Compile Include="Model\Sql\SqlQueryBuilder.cs" />
+    <Compile Include="Model\Sql\SqlStringExtensions.cs" />
+    <Compile Include="Model\Sql\TableJoinInfo.cs" />
+    <Compile Include="Exceptions\RecordNotFoundException.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Core\AttachmentModel.cs" />
+    <Compile Include="Core\ModelAccessModel.cs" />
+    <Compile Include="Core\OrganizationModel.cs" />
+    <Compile Include="Core\PropertyModel.cs" />
+    <Compile Include="Core\WindowActionModel.cs" />
+    <Compile Include="Core\UserRoleModel.cs" />
+    <Compile Include="Exceptions\FatalException.cs" />
+    <Compile Include="Exceptions\InitializationException.cs" />
+    <Compile Include="IService.cs" />
+    <Compile Include="Model\AbstractExtendedModel.cs" />
+    <Compile Include="Model\Sql\AbstractSqlModel.CreateImpl.cs" />
+    <Compile Include="Model\Sql\AbstractSqlModel.ReadImpl.cs" />
+    <Compile Include="Model\Sql\AbstractSqlModel.WriteImpl.cs" />
+    <Compile Include="Model\Sql\AbstractSqlModel.SearchImpl.cs" />
+    <Compile Include="Model\Sql\AbstractSqlModel.DeleteImpl.cs" />
+    <Compile Include="Model\Fields\IFieldDescriptor.cs" />
+    <Compile Include="Model\Fields\IField.cs" />
+    <Compile Include="Model\Fields\IFieldCollection.cs" />
+    <Compile Include="Model\Fields\InheritedField.cs" />
+    <Compile Include="Model\IModelDescriptor.cs" />
+    <Compile Include="Model\InheritanceCollection.cs" />
+    <Compile Include="Model\InheritanceDescriptor.cs" />
+    <Compile Include="Model\ModelSecurityExtensions.cs" />
+    <Compile Include="Model\RecordExtensions.cs" />
+    <Compile Include="Model\ViewBuilder.cs" />
+    <Compile Include="Model\ViewGenerator.cs" />
+    <Compile Include="Core\AuditLogModel.cs" />
+    <Compile Include="Core\WizardActionModel.cs" />
+    <Compile Include="Core\RoleModel.cs" />
+    <Compile Include="Core\ActionModel.cs" />
+    <Compile Include="Core\RuleModel.cs" />
+    <Compile Include="Core\ViewModel.cs" />
+    <Compile Include="Core\MenuModel.cs" />
+    <Compile Include="Core\CronModel.cs" />
+    <Compile Include="Core\ModelDataModel.cs" />
+    <Compile Include="DbDomain.cs" />
+    <Compile Include="Exceptions\ConcurrencyException.cs" />
+    <Compile Include="Exceptions\ResourceNotFoundException.cs" />
+    <Compile Include="Exceptions\MigrationException.cs" />
+    <Compile Include="Exceptions\UserDoesNotExistException.cs" />
+    <Compile Include="Exceptions\DatabaseNotFoundException.cs" />
+    <Compile Include="IDbDomain.cs" />
+    <Compile Include="IResourceContainer.cs" />
+    <Compile Include="Model\BrowsableRecord.cs" />
+    <Compile Include="Model\XmlDataImporter.cs" />
+    <Compile Include="Model\Fields\FieldCollection.cs" />
+    <Compile Include="Model\Fields\ReferenceField.cs" />
+    <Compile Include="Model\Fields\EnumerationField.cs" />
+    <Compile Include="ISlipstreamService.cs" />
+    <Compile Include="IResource.cs" />
+    <Compile Include="Model\NameGetter.cs" />
+    <Compile Include="Model\Fields\FieldDefaultValueGetter.cs" />
+    <Compile Include="Model\Fields\ManyToOneField.cs" />
+    <Compile Include="Model\Fields\OneToManyField.cs" />
+    <Compile Include="Model\Fields\ScalarField.cs" />
+    <Compile Include="Model\Fields\ManyToManyField.cs" />
+    <Compile Include="Model\IModel.cs" />
+    <Compile Include="Model\AbstractModel.cs" />
+    <Compile Include="Model\OnDeleteAction.cs" />
+    <Compile Include="Model\TableMigrator.cs" />
+    <Compile Include="Exceptions\ModuleNotFoundException.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Runtime\CompileException.cs" />
+    <Compile Include="Runtime\DefaultProjectFileParser.cs" />
+    <Compile Include="Runtime\IProjectFileParser.cs" />
+    <Compile Include="Runtime\IRuleConstraintEvaluator.cs" />
+    <Compile Include="Runtime\ProjectDescriptor.cs" />
+    <Compile Include="Runtime\PythonRuleConstraintEvaluator.cs" />
+    <Compile Include="Sessions\SqlUserSessionStore.cs" />
+    <Compile Include="Sessions\MemoryUserSessionStore.cs" />
+    <Compile Include="Sessions\IUserSessionStore.cs" />
+    <Compile Include="Sessions\UserSession.cs" />
+    <Compile Include="AbstractResource.cs" />
+    <Compile Include="ResourceAttribute.cs" />
+    <Compile Include="Model\Sql\AbstractSqlModel.cs" />
+    <Compile Include="Core\ModuleModel.cs" />
+    <Compile Include="Module\Module.cs" />
+    <Compile Include="SlipstreamService.cs" />
+    <Compile Include="SlipstreamEnvironment.cs" />
+    <Compile Include="DbDomainManager.cs" />
+    <Compile Include="Core\UserModel.cs" />
+    <Compile Include="IServiceContext.cs" />
+    <Compile Include="Core\FieldModel.cs" />
+    <Compile Include="Core\ModelModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runtime\CompilerProvider.cs" />
+    <Compile Include="Runtime\ICompiler.cs" />
+    <Compile Include="ServiceMethodAttribute.cs" />
+    <Compile Include="ServiceContext.cs" />
+    <Compile Include="Model\Fields\AbstractField.cs" />
+    <Compile Include="Model\Fields\FieldValueGetter.cs" />
+    <Compile Include="Model\Fields\FieldType.cs" />
+    <Compile Include="Module\ModuleManager.cs" />
+    <Compile Include="Exceptions\BadServiceMEthodException.cs" />
+    <Compile Include="Runtime\CsharpCompiler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Postgresql\initdb.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Core\Data\Menus.xml" />
+    <EmbeddedResource Include="Core\Data\Views.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Data\InitData.xml" />
+    <EmbeddedResource Include="Core\Data\Security.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\Mssql\initdb.sql" />
+    <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Report\" />
+    <Folder Include="Wizard\" />
+    <Folder Include="Workflow\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sandwych.Common\Sandwych.Common.csproj">
+      <Project>{07985178-a057-4095-a181-b7b08e2b5432}</Project>
+      <Name>Sandwych.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlipStream.Infrastructure\SlipStream.Infrastructure.csproj">
+      <Project>{E8850DE8-0ED2-4FF9-A08F-6644573C63B4}</Project>
+      <Name>SlipStream.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlipStream.Shared\SlipStream.Shared.csproj">
+      <Project>{b86ac0f3-b9b4-4667-9c7c-da157eb67551}</Project>
+      <Name>SlipStream.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

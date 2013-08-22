@@ -1,0 +1,119 @@
+﻿<ResourceDictionary xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" 
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+  xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+  xmlns:appControls="clr-namespace:SlipStream.Client.Agos.Controls"
+  xmlns:fw="clr-namespace:System.Windows.Controls;assembly=FloatableWindow"
+  xmlns:fields="clr-namespace:SlipStream.Client.Agos.Windows.FormView"
+  xmlns:queryFields="clr-namespace:SlipStream.Client.Agos.Windows.TreeView.QueryFieldControls"
+  xmlns:dataInput="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input">
+
+    <!-- 查询条件表单 -->
+    <Style TargetType="queryFields:BooleanQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="Auto" />
+    </Style>
+
+    <Style TargetType="queryFields:StringQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+    </Style>
+
+    <Style TargetType="queryFields:EnumerationQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+    </Style>
+
+    <Style TargetType="queryFields:DateQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+    </Style>
+
+    <Style TargetType="queryFields:Int32QueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="queryFields:Int32QueryFieldControl">
+                    <Grid x:Name="Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <appControls:NullableInt32UpDown x:Name="LowUpDown" Grid.Column="0"  />
+                        <!-- TODO 国际化 -->
+                        <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
+                        <appControls:NullableInt32UpDown x:Name="HighUpDown" Grid.Column="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="queryFields:Int64QueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="queryFields:Int64QueryFieldControl">
+                    <Grid x:Name="Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <appControls:NullableInt64UpDown x:Name="LowUpDown" Grid.Column="0"  />
+                        <!-- TODO 国际化 -->
+                        <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
+                        <appControls:NullableInt64UpDown x:Name="HighUpDown" Grid.Column="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="queryFields:DecimalQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="queryFields:DecimalQueryFieldControl">
+                    <Grid x:Name="Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <appControls:NullableDecimalUpDown x:Name="LowUpDown" Grid.Column="0"  />
+                        <!-- TODO 国际化 -->
+                        <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
+                        <appControls:NullableDecimalUpDown x:Name="HighUpDown" Grid.Column="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="queryFields:FloatQueryFieldControl">
+        <Setter Property="Margin" Value="5,3,5,3" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="queryFields:FloatQueryFieldControl">
+                    <Grid x:Name="Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <appControls:NullableFloatUpDown x:Name="LowUpDown" Grid.Column="0"  />
+                        <!-- TODO 国际化 -->
+                        <TextBlock Text="至" Grid.Column="1" VerticalAlignment="Center" Margin="3,0,3,0"  />
+                        <appControls:NullableFloatUpDown x:Name="HighUpDown" Grid.Column="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<module-metadata>
+  <name>test</name>
+  <label>Module for unit test</label>
+  <info>
+    <![CDATA[
+   ]]>
+  </info>
+  <auto-load>true</auto-load>
+  <source-language>csharp</source-language>
+  <project-file>SlipStream.TestModule.csproj</project-file>
+
+  <init-files>
+    <file>security-data.xml</file>
+    <file>data.xml</file>
+  </init-files>
+
+  <requires>
+    <module>core</module>
+  </requires>
+
+</module-metadata>

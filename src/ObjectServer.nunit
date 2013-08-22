@@ -1,9 +1,0 @@
-﻿<NUnitProject>
-  <Settings activeconfig="Debug" />
-  <Config name="Debug" binpathtype="Auto">
-    <assembly path="ObjectServer.Test\bin\Debug\ObjectServer.Test.dll" />
-    <assembly path="ObjectServer.Client.Test\bin\Debug\ObjectServer.Client.Test.dll" />
-    <assembly path="Malt.Common.Test\bin\Debug\Malt.Common.Test.dll" />
-  </Config>
-  <Config name="Release" binpathtype="Auto" />
-</NUnitProject>

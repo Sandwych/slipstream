@@ -24,8 +24,8 @@ target compile:
 desc "Executes tests"
 target test:
     nunit(assembly: "src/Malt.Common.Test/bin/${configuration}/Malt.Common.Test.dll")
-    nunit(assembly: "src/ObjectServer.Test/bin/${configuration}/ObjectServer.Test.dll")
-    nunit(assembly: "src/ObjectServer.Client.Test/bin/${configuration}/ObjectServer.Client.Test.dll")
+    nunit(assembly: "src/SlipStream.Test/bin/${configuration}/SlipStream.Test.dll")
+    nunit(assembly: "src/SlipStream.Client.Test/bin/${configuration}/SlipStream.Client.Test.dll")
 
 desc "Copies the binaries to the 'build' directory"
 target deploy, (compile):
@@ -34,7 +34,7 @@ target deploy, (compile):
 
     print "Copying to build dir"
     print "Copying Slipstream Server..."
-    with FileList("src/ObjectServer.DevServer/bin"):
+    with FileList("src/SlipStream.DevServer/bin"):
         .Include("*.{dll,exe}")
         .ForEach def(file):
             file.CopyToDirectory("build/s2/bin")
@@ -46,7 +46,7 @@ target deploy, (compile):
             file.CopyToDirectory("build/s2/bin")
 
     print "Copying internal modules..."
-    with FileList("src/ObjectServer.DevServer/Modules/"):
+    with FileList("src/SlipStream.DevServer/Modules/"):
         .Include("**")
         .ForEach def(file):
             file.CopyToDirectory("build/s2/Modules")

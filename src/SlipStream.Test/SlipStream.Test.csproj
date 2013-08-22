@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{94E3674D-7478-4B48-B1DD-9ACA057E69B8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SlipStream.Test</RootNamespace>
+    <AssemblyName>SlipStream.Test</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\..\lib\net40\autofac\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mef">
+      <HintPath>..\..\lib\net40\autofac\Autofac.Integration.Mef.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\lib\nhibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\lib\Json\Net4\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Portable.Desktop">
+      <HintPath>..\..\lib\pclc\Portable.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\net40\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Shared\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="ContainerTestBase.cs" />
+    <Compile Include="Model\AbstractModelTests.cs" />
+    <Content Include="Modules\SlipStream.TestModule\functional-field-object.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\SlipStream.TestModule\inheritance-models.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\SlipStream.TestModule\many-to-many-models.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\SlipStream.TestModule\Properties\AssemblyInfo.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\SlipStream.TestModule\simple-models.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\SlipStream.TestModule\SlipStream.TestModule.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\SlipStream.TestModule\tree-models.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="MonoOptionsTests.cs" />
+    <Compile Include="Runtime\DynamicProjectBuilderTests.cs" />
+    <Compile Include="ServiceTestCaseBase.cs" />
+    <Compile Include="Data\DataContextTests.cs" />
+    <Compile Include="Core\RuleTest.cs" />
+    <Compile Include="Core\ModelTest.cs" />
+    <Compile Include="Core\UserTest.cs" />
+    <Compile Include="Model\BrowseModelTests.cs" />
+    <Compile Include="ServiceConcurrencyTests.cs" />
+    <Compile Include="Model\Fields\BinaryFieldTests.cs" />
+    <Compile Include="Model\ModelValidatorTests.cs" />
+    <Compile Include="Model\Sql\SqlQueryBuilderTests.cs" />
+    <Compile Include="Model\HierarchyTests.cs" />
+    <Compile Include="Security\ModelAccessTests.cs" />
+    <Compile Include="Model\Fields\ManyToOneFieldTests.cs" />
+    <Compile Include="Model\Fields\ManyToManyFieldTests.cs" />
+    <Compile Include="Model\Fields\ReferenceFieldTests.cs" />
+    <Compile Include="Model\InheritanceTests.cs" />
+    <Compile Include="Model\Fields\FunctionalFieldTests.cs" />
+    <Compile Include="Model\SearchTests.cs" />
+    <Compile Include="Model\TableModelTests.cs" />
+    <EmbeddedResource Include="XmlFiles\reference-field-data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XmlFiles\test-model-data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XmlFiles\master-child-data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Compile Include="Model\XmlDataImporterTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceDispatcherTests.cs" />
+    <Compile Include="ServiceContextTestCaseBase.cs" />
+    <Compile Include="Sessions\DbUserSessionServiceTests.cs" />
+    <Compile Include="Sessions\InMemoryUserSessionServiceTests.cs" />
+    <Compile Include="Rpc\JsonSerializedCallingTests.cs" />
+    <Compile Include="Rpc\RpcTestBase.cs" />
+    <Content Include="Modules\SlipStream.TestModule\data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\SlipStream.TestModule\module.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\SlipStream.TestModule\security-data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ObjectServer.PartCover.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DemoModule.csproj.test">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sandwych.Common\Sandwych.Common.csproj">
+      <Project>{07985178-a057-4095-a181-b7b08e2b5432}</Project>
+      <Name>Sandwych.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlipStream.Core\SlipStream.Core.csproj">
+      <Project>{443baeca-181d-45b8-9eb8-fca3a35051e1}</Project>
+      <Name>SlipStream.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlipStream.Infrastructure\SlipStream.Infrastructure.csproj">
+      <Project>{e8850de8-0ed2-4ff9-a08f-6644573c63b4}</Project>
+      <Name>SlipStream.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SlipStream.Shared\SlipStream.Shared.csproj">
+      <Project>{b86ac0f3-b9b4-4667-9c7c-da157eb67551}</Project>
+      <Name>SlipStream.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

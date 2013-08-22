@@ -1,0 +1,72 @@
+﻿<UserControl xmlns:my="clr-namespace:SlipStream.Client.Agos.Windows.TreeView"  x:Class="SlipStream.Client.Agos.Windows.TreeView.WindowActionWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="480" d:DesignWidth="640">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource LighterBrush}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"  />
+            <RowDefinition Height="Auto"  />
+            <RowDefinition Height="*"  />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" x:Name="Toolbar" Style="{StaticResource ToolbarStyle}">
+            <StackPanel Orientation="Horizontal" >
+                <Button Name="NewButton" Height="25" Click="NewButton_Click" Style="{StaticResource FlatButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/SlipStream.Client.Agos;component/Assets/Icons/16x16/document-new.png" />
+                            <Rectangle Width="5" />
+                            <TextBlock>新建</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Rectangle Width="3"/>
+                <Button Name="EditButton" Height="25" Click="EditButton_Click" Style="{StaticResource FlatButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/SlipStream.Client.Agos;component/Assets/Icons/16x16/accessories-text-editor.png" />
+                            <Rectangle Width="5" />
+                            <TextBlock>编辑</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Rectangle Width="3"/>
+                <Button Height="25" Name="DeleteButton" Click="DeleteButton_Click" Style="{StaticResource FlatButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/SlipStream.Client.Agos;component/Assets/Icons/16x16/user-trash.png" />
+                            <Rectangle Width="5" />
+                            <TextBlock>删除</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Rectangle Width="15" />
+                <Button Height="25" Name="QueryButton" Click="QueryButton_Click" Style="{StaticResource FlatButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/SlipStream.Client.Agos;component/Assets/Icons/16x16/system-search.png" />
+                            <Rectangle Width="5" />
+                            <TextBlock>查询</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Rectangle Width="3"/>
+                <Button Height="25" Name="ClearConstraintsButton" Click="ClearConstraintsButton_Click" Style="{StaticResource FlatButtonStyle}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Stretch="None" Source="/SlipStream.Client.Agos;component/Assets/Icons/16x16/edit-clear.png" />
+                            <Rectangle Width="5" />
+                            <TextBlock>清除</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Rectangle Width="15"/>
+                <ComboBox x:Name="ViewsComboBox" />
+            </StackPanel>
+        </Border>
+        <Rectangle  Grid.Row="1"  Height="1" Fill="{StaticResource LineBrush}" ></Rectangle>
+        <my:TreeView Grid.Row="2"  x:Name="TreeView"/>
+    </Grid>
+</UserControl>

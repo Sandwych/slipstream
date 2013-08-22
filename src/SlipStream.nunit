@@ -1,0 +1,9 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" binpathtype="Auto">
+    <assembly path="SlipStream.Test\bin\Debug\SlipStream.Test.dll" />
+    <assembly path="SlipStream.Client.Test\bin\Debug\SlipStream.Client.Test.dll" />
+    <assembly path="Sandwych.Common.Test\bin\Debug\Sandwych.Common.Test.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto" />
+</NUnitProject>
