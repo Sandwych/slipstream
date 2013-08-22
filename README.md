@@ -27,6 +27,6 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 版权所有 (C) 2010 至今 昆明维智众源企业管理咨询有限公司。
 保留所有权利。
 
-昆明维智众源企业管理咨询有限公司
-http://www.sandwych.com
-contact@sandwych.com
+昆明维智众源企业管理咨询有限公司  
+http://www.sandwych.com  
+contact@sandwych.com  
