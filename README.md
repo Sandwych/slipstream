@@ -20,6 +20,113 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 3. 默认服务器用户名及密码均为“root”。
 
 
+# 如何编写业务模块
+
+请参考 src/SlipStream.DevServer/Modules/SlipStream.Demo
+
+## module.xml
+
+此文件所有模块都必须包含，示例如下：
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<module-metadata>
+  <name>demo</name>
+  <label>演示模块</label>
+  <info>
+    <![CDATA[
+      此模块演示一个最小化的 ObjectServer 业务模块应该怎么编写
+   ]]>
+  </info>
+  <demo>true</demo>
+  <author>Wei Li [oldrev@gmail.com]</author>
+  <version>0.01</version>
+  <auto-load>true</auto-load>
+  <project-file>SlipStream.DemoModule.csproj</project-file>
+  <init-files>
+    <file>ui.xml</file>
+    <file>demo-data.xml</file>
+  </init-files>
+
+  <requires>
+    <module>core</module>
+  </requires>
+
+</module-metadata>
+```
+## 实体类
+
+实体类使用 ActiveRecord 模型，定义表结构及业务：
+
+```C#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using SlipStream.Model;
+
+namespace SlipStream.DemoModule
+{
+    [Resource]
+    public sealed class EmployeeModel : AbstractSqlModel
+    {
+        public EmployeeModel()
+            : base("demo.employee")
+        {
+            Fields.Chars("name").SetLabel("姓名").Required();
+            Fields.Chars("address").SetLabel("地址");
+            Fields.Double("salary").SetLabel("月薪");
+            Fields.Date("birthdate").SetLabel("出生日期");
+        }
+    }
+}
+```
+
+## 定义界面相关数据
+
+界面及初始化数据同样使用 XML 文档定义，这里我们省掉了 employee 类的表单定义，因为简单的表单布局可由系统自动生成：
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<data noupdate="true">
+
+  <!-- 创建员工的列表视图 -->
+  <record model="core.view" key="employee_tree_view">
+    <field name="name">员工管理</field>
+    <field name="model">demo.employee</field>
+    <field name="kind">tree</field>
+    <field name="layout">
+      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <tree label="员工管理">
+        <field name="name" where="basic" />
+        <field name="address" where="basic" />
+        <field name="salary" where="basic" />
+        <field name="birthdate" where="basic" />
+      </tree>
+      ]]>
+    </field>
+  </record>
+
+  <!-- 创建点击菜单的动作 -->
+  <record  model="core.action_window" key="employee_menu_action">
+    <field name="name">员工管理</field>
+    <field name="type">core.action_window</field>
+    <field name="view" ref-key="employee_tree_view" />
+    <field name="model">demo.employee</field>
+  </record>
+
+  <!-- 创建一个菜单 -->
+  <record model="core.menu" key="menu_employees">
+    <field name="name">员工管理</field>
+    <field name="ordinal">0</field>
+    <field name="action" ref-model="core.action_window" ref-key="employee_menu_action" />
+  </record>
+
+
+</data>
+```
+
+到这里就完成了整个模块的编写，将模块放入服务器的 Modules 目录中并在系统中安装即可。
+
 # 版权
 
 本项目的授权方式为 AGPL3。
