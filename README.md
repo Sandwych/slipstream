@@ -14,7 +14,7 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 默认使用 SQL Server Express，需要建立用户名及密码均为 slipstream 的用户。
 
 # 如何运行
-
+0. 首先确保 slipstream/lib/zmq/libzmq.dll 放置到 PATH 环境变量能找到的目录中，如 windows/system32，Linux 系统则是确保系统中安装了 libzmq.so。
 1. 启动 SlipStream.DevServer 项目
 2. 启动 SlipStream.Client.Agos 项目
 3. 默认服务器用户名及密码均为“root”。
