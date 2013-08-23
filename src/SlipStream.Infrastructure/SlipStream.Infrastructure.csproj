@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\Json\Net4\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\lib\Json\Net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\..\lib\net40\nlog\NLog.dll</HintPath>

@@ -66,7 +66,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\Json\Net4\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\lib\Json\Net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
