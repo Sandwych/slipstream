@@ -130,8 +130,13 @@ namespace SlipStream.DemoModule
 ## 运行截图
 
 ### 登录
+![登录](https://github.com/Sandwych/slipstream/raw/master/doc/static/images/demo/login.png)
 
-![登录](https://github.com/Sandwych/slipstream/blob/master/doc/static/images/demo/login.png)
+### 列表视图
+![列表视图](https://github.com/Sandwych/slipstream/raw/master/doc/static/images/demo/list-view.png)
+
+### 表单视图
+![表单视图](https://github.com/Sandwych/slipstream/raw/master/doc/static/images/demo/formview.png)
 
 # 版权
 
