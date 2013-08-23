@@ -1,2 +1,3 @@
 .*.swp
 [Tt]est[Rr]esult.xml
+/build/*
