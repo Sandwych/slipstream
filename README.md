@@ -127,6 +127,12 @@ namespace SlipStream.DemoModule
 
 到这里就完成了整个模块的编写，将模块放入服务器的 Modules 目录中并在系统中安装即可。
 
+## 运行截图
+
+### 登录
+
+![登录](https://github.com/Sandwych/slipstream/blob/master/doc/static/images/demo/login.png)
+
 # 版权
 
 本项目的授权方式为 AGPL3。
