@@ -6,6 +6,7 @@ require 'json'
 require 'benchmark'
 require 'rpcjson'
 
+#注意：运行此脚本需要名为 slipstreamdb 的数据库，且用户名密码均为“root”
 
 if RUBY_PLATFORM.downcase.include?("mswin") or RUBY_PLATFORM.downcase.include?("mingw") then
   STDOUT.set_encoding Encoding.locale_charmap
@@ -118,7 +119,7 @@ puts "列出系统方法:"
 puts proxy.listMethods()
 
 #尝试登录
-proxy.logOn("osdb", "root", "root")
+proxy.logOn("slipstreamdb", "root", "root")
 
 #尝试查询模块表里的核心模块
 domain = [["name","like","core%"]]
