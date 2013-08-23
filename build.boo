@@ -23,7 +23,7 @@ target compile:
 
 desc "Executes tests"
 target test:
-    nunit(assembly: "src/Malt.Common.Test/bin/${configuration}/Malt.Common.Test.dll")
+    nunit(assembly: "src/Sandwych.Common.Test/bin/${configuration}/Sandwych.Common.Test.dll")
     nunit(assembly: "src/SlipStream.Test/bin/${configuration}/SlipStream.Test.dll")
     nunit(assembly: "src/SlipStream.Client.Test/bin/${configuration}/SlipStream.Client.Test.dll")
 
