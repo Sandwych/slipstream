@@ -71,6 +71,10 @@
       <HintPath>..\..\lib\ironpython\IronPython.Modules.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Json\Net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\..\lib\nhibernate\NHibernate.dll</HintPath>
     </Reference>
@@ -93,9 +97,6 @@
     </Reference>
     <Reference Include="Microsoft.Scripting.Metadata">
       <HintPath>..\..\lib\ironpython\Microsoft.Scripting.Metadata.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\Json\Net4\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql">
       <HintPath>..\..\lib\npgsql\Npgsql.dll</HintPath>
