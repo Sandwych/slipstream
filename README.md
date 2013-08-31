@@ -38,7 +38,7 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
    ]]>
   </info>
   <demo>true</demo>
-  <author>Wei Li [oldrev@gmail.com]</author>
+  <author>Wei Li [liwei@sandwych.com]</author>
   <version>0.01</version>
   <auto-load>true</auto-load>
   <project-file>SlipStream.DemoModule.csproj</project-file>
