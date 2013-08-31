@@ -34,7 +34,7 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
   <label>演示模块</label>
   <info>
     <![CDATA[
-      此模块演示一个最小化的 ObjectServer 业务模块应该怎么编写
+      此模块演示一个最小化的 SlipStream 业务模块应该怎么编写
    ]]>
   </info>
   <demo>true</demo>
