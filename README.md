@@ -8,16 +8,17 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 
 * 内置 CRUD 操作，只需定义列表及表单界面的布局，系统自动处理数据提交、保存、并发冲突等
 * 易于创建业务方法及 RPC 方法
-* 内置基于版本的并发冲突处理
-* 基于 ZMQ 的高性能服务器，高吞吐量
+* 内置基于版本的数据库字段乐观并发冲突处理
+* 高性能异步 HTTP 服务器及基于 ZeroMQ 的工作线程池技术，高吞吐量
 * 各种 one-to-many, many-to-many 等复杂字段支持
 * 根据实体类的定义自动调整数据库架构，自动迁移
 * 权限支持访问控制列表、字段过滤等，且基于可配置而非硬编码代码
 
 # 需求
 
+* 64 位操作系统环境（若是 32 位系统请修改项目依赖的 ClrZMQ 库版本）
 * Microsoft Visual Studio 2012
-* Microsoft SQL Server Express 2005+ 数据库或 PostgreSQL 8.2+ 数据库。
+* Microsoft SQL Server Express 2005+ 数据库或 PostgreSQL 9.0+ 数据库
 * ZeroMQ 消息队列库
 * Silverlight 5
 
