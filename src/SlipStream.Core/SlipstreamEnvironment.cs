@@ -6,8 +6,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Reflection;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 
 using Autofac;
 using Autofac.Integration.Mef;
