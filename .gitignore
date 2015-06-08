@@ -1,3 +1,4 @@
 .*.swp
 [Tt]est[Rr]esult.xml
 /build/*
+/src/packages/*

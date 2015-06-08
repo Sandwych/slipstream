@@ -10,7 +10,6 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 
 using Autofac;
-using Autofac.Integration.Mef;
 using Newtonsoft.Json;
 
 using SlipStream.Exceptions;

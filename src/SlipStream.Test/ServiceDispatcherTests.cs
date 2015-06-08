@@ -13,7 +13,6 @@ namespace SlipStream.Test
     [TestFixture]
     public class ServiceDispatcherTests
     {
-        [Ignore]
         public void CreateAndDeleteDatabaseShouldBeSuccessfully()
         {
             var cfg = new ShellSettings();

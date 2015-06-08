@@ -8,10 +8,8 @@ using NUnit.Framework;
 
 namespace SlipStream.Test.Web
 {
-    [Ignore]
     public class JsonSerializedCallingTests : RpcTestBase
     {
-        [Ignore]
         public void CrudShouldBeSuccessfully()
         {
             var constraints = new object[][] 

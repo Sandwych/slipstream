@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
-using Autofac;
 
 using SlipStream.Data;
 

@@ -75,7 +75,6 @@ namespace SlipStream.Data.Test
             }
         }
 
-        [Ignore]
         public void Create_and_delete_database()
         {
             var dbName = "oo_testdb";
