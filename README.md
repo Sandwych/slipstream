@@ -4,20 +4,30 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 
 代码实现参考了 OpenERP、Orchard 等开源项目。
 
+## 项目特性
+
+* 内置 CRUD 操作，只需定义列表及表单界面的布局，系统自动处理数据提交、保存、并发冲突等
+* 易于创建业务方法及 RPC 方法
+* 内置基于版本的数据库字段乐观并发冲突处理
+* 高性能异步 HTTP 服务器及基于 ZeroMQ 的工作线程池技术，高吞吐量
+* 各种 one-to-many, many-to-many 等复杂字段支持
+* 根据实体类的定义自动调整数据库架构，自动迁移
+* 权限支持访问控制列表、字段过滤等，且基于可配置而非硬编码代码
+
 # 需求
 
+* 64 位操作系统环境（若是 32 位系统请修改项目依赖的 ClrZMQ 库版本）
 * Microsoft Visual Studio 2012
-* Microsoft SQL Server Express 2005+ 数据库或 PostgreSQL 8.2+ 数据库。
+* Microsoft SQL Server Express 2005+ 数据库或 PostgreSQL 9.0+ 数据库
 * ZeroMQ 消息队列库
 * Silverlight 5
 
-默认使用 SQL Server Express，需要建立用户名及密码均为 slipstream 的用户。
+调试环境系统默认使用 SQL Server Express，需要建立用户名及密码均为“slipstream”的数据库角色。
 
 # 如何运行
-0. 首先确保 slipstream/lib/zmq/libzmq.dll 放置到 PATH 环境变量能找到的目录中，如 windows/system32，Linux 系统则是确保系统中安装了 libzmq.so。
 1. 启动 SlipStream.DevServer 项目
 2. 启动 SlipStream.Client.Agos 项目
-3. 默认服务器用户名及密码均为“root”。
+3. 默认服务器用户名及密码均为“root”
 
 
 # 如何编写业务模块
@@ -34,11 +44,11 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
   <label>演示模块</label>
   <info>
     <![CDATA[
-      此模块演示一个最小化的 ObjectServer 业务模块应该怎么编写
+      此模块演示一个最小化的 SlipStream 业务模块应该怎么编写
    ]]>
   </info>
   <demo>true</demo>
-  <author>Wei Li [oldrev@gmail.com]</author>
+  <author>Wei Li [liwei@sandwych.com]</author>
   <version>0.01</version>
   <auto-load>true</auto-load>
   <project-file>SlipStream.DemoModule.csproj</project-file>
@@ -125,7 +135,9 @@ namespace SlipStream.DemoModule
 </data>
 ```
 
-到这里就完成了整个模块的编写，将模块放入服务器的 Modules 目录中并在系统中安装即可。
+到这里就完成了整个模块的编写，将模块放入服务器的 Modules 目录并重启服务器程序，系统就会自动发现并编译、安装此模块。
+
+随后登录系统即可看到新增加的操作菜单。
 
 ## 运行截图
 
@@ -141,6 +153,8 @@ namespace SlipStream.DemoModule
 # 版权
 
 本项目的授权方式为 AGPL3。
+第三方对此项目贡献的代码视为将代码版权转移给昆明维智众源企业管理咨询有限公司，
+昆明维智众源企业管理咨询有限公司遵循 AGPL3 协议将本项目开源，但保留以本项目为基础开发商业软件的权利。
 
 版权所有 (C) 2010 至今 昆明维智众源企业管理咨询有限公司。
 保留所有权利。

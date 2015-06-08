@@ -17,7 +17,7 @@ namespace SlipStream
     {
         public const string TestingDatabaseName = "slipstream_testdb";
 
-        [TestFixtureSetUp()]
+        [OneTimeSetUp]
         public virtual void InitFramework()
         {
             var cfg = new ShellSettings();
@@ -41,7 +41,7 @@ namespace SlipStream
             this.SessionToken = service.LogOn(TestingDatabaseName, "root", "root");
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public virtual void DisposeFramework()
         {
             var service = SlipstreamEnvironment.RootService;

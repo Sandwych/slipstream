@@ -9,6 +9,7 @@ using Autofac;
 using NUnit.Framework;
 
 namespace SlipStream {
+
     public abstract class ServiceContextTestCaseBase : ServiceTestCaseBase {
         private IDbDomain _dbDomain;
 

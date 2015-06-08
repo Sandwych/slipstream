@@ -14,7 +14,7 @@ namespace SlipStream
 {
     public abstract class RpcTestBase
     {
-        [TestFixtureSetUp()]
+        [OneTimeSetUp]
         public virtual void InitFramework()
         {
             var args = new object[] { "slipstream", "root", "root" };

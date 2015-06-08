@@ -13,7 +13,7 @@ namespace SlipStream.Model
     [TestFixture]
     public sealed class SqlQueryBuilderTests : ServiceContextTestCaseBase
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetup()
         {
             if (!SlipstreamEnvironment.Initialized)

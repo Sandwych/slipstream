@@ -113,6 +113,7 @@
     <Content Include="Modules\SlipStream.TestModule\tree-models.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="ShellSettingsTests.cs" />
     <Compile Include="MonoOptionsTests.cs" />
     <Compile Include="Runtime\DynamicProjectBuilderTests.cs" />
     <Compile Include="ServiceTestCaseBase.cs" />
