@@ -22,7 +22,6 @@ namespace SlipStream.Test
                 SlipstreamEnvironment.Initialize(cfg);
             }
 
-            cfg.ModulePath = Path.Combine(Environment.CurrentDirectory, "Modules");
             var dbName = "os-testdb";
             var adminPassword = "root";
             var hashedRootPassword = SlipstreamEnvironment.Settings.ServerPassword.ToSha();

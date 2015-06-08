@@ -23,7 +23,7 @@ namespace SlipStream
         public ShellSettings()
         {
             var binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var appPath = Path.GetDirectoryName(binPath);
+            var appPath = binPath;
 
             this.AppDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),

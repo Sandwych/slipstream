@@ -22,7 +22,6 @@ namespace SlipStream
         {
             var cfg = new ShellSettings();
             cfg.DbName = TestingDatabaseName;
-            cfg.ModulePath = Path.Combine(Environment.CurrentDirectory, "Modules");
 
             if (!SlipstreamEnvironment.Initialized)
             {
