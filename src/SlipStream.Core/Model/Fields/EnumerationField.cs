@@ -6,32 +6,25 @@ using System.Diagnostics;
 
 using Sandwych;
 
-namespace SlipStream.Model
-{
-    internal sealed class EnumerationField : AbstractField
-    {
+namespace SlipStream.Model {
+    internal sealed class EnumerationField : AbstractField {
         private Dictionary<string, string> options = new Dictionary<string, string>();
 
         public const int MaxSize = 60;
         public const int DefaultSize = 16;
 
         public EnumerationField(IModel model, string name, IDictionary<string, string> options)
-            : base(model, name, FieldType.Enumeration)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
+            : base(model, name, FieldType.Enumeration) {
+            if (string.IsNullOrEmpty(name)) {
                 throw new ArgumentNullException("name");
             }
 
-            if (options == null || options.Count() <= 0)
-            {
+            if (options == null || options.Count() <= 0) {
                 throw new ArgumentNullException("options");
             }
 
-            foreach (var p in options)
-            {
-                if (string.IsNullOrEmpty(p.Key) || string.IsNullOrEmpty(p.Value))
-                {
+            foreach (var p in options) {
+                if (string.IsNullOrEmpty(p.Key) || string.IsNullOrEmpty(p.Value)) {
                     throw new ArgumentOutOfRangeException("options");
                 }
 
@@ -43,34 +36,25 @@ namespace SlipStream.Model
         }
 
 
-        protected override Dictionary<long, object> OnGetFieldValues(ICollection<Dictionary<string, object>> records)
-        {
-            if (records == null)
-            {
+        protected override Dictionary<long, object> OnGetFieldValues(ICollection<Dictionary<string, object>> records) {
+            if (records == null) {
                 throw new ArgumentNullException("records");
             }
 
             var result = new Dictionary<long, object>(records.Count);
-            foreach (var r in records)
-            {
+            foreach (var r in records) {
                 var id = (long)r[AbstractModel.IdFieldName];
                 var colValue = r[this.Name];
-                if (!colValue.IsNull())
-                {
+                if (!colValue.IsNull()) {
                     var enumKey = (string)colValue;
                     string value;
-                    if (this.Options.TryGetValue(enumKey, out value))
-                    {
+                    if (this.Options.TryGetValue(enumKey, out value)) {
                         var fieldValue = new string[] { enumKey, value };
                         result.Add(id, fieldValue);
-                    }
-                    else
-                    {
+                    } else {
                         throw new SlipStream.Exceptions.DataException("Invalid enumeration item: " + enumKey);
                     }
-                }
-                else
-                {
+                } else {
                     result.Add(id, null);
                 }
             }
@@ -78,21 +62,19 @@ namespace SlipStream.Model
             return result;
         }
 
-        protected override object OnSetFieldValue(object value)
-        {
-            if (value == null)
-            {
+        protected override object OnSetFieldValue(object value) {
+            if (value == null || !(value is string)) {
                 throw new ArgumentNullException("value");
             }
-            //TODO 检查是否在范围内
+            if (this.options.Keys.Contains(value as string)) {
+                throw new ArgumentOutOfRangeException("value");
+            }
 
             return value;
         }
 
-        public override object BrowseField(IDictionary<string, object> record)
-        {
-            if (record == null)
-            {
+        public override object BrowseField(IDictionary<string, object> record) {
+            if (record == null) {
                 throw new ArgumentNullException("record");
             }
 
@@ -101,44 +83,34 @@ namespace SlipStream.Model
 
         public override bool IsColumn { get { return !this.IsFunctional; } }
 
-        public override bool IsScalar
-        {
+        public override bool IsScalar {
             get { return true; }
         }
 
-        public override SlipStream.Model.OnDeleteAction OnDeleteAction
-        {
-            get
-            {
+        public override SlipStream.Model.OnDeleteAction OnDeleteAction {
+            get {
                 throw new NotImplementedException();
             }
-            set
-            {
+            set {
                 throw new NotImplementedException();
             }
         }
 
-        public override IDictionary<string, string> Options
-        {
-            get
-            {
+        public override IDictionary<string, string> Options {
+            get {
                 return this.options;
             }
-            set
-            {
+            set {
                 throw new NotSupportedException();
             }
         }
 
-        public override void VerifyDefinition()
-        {
+        public override void VerifyDefinition() {
             base.VerifyDefinition();
 
             //检查用户提供的枚举选项
-            foreach (var p in this.options)
-            {
-                if (string.IsNullOrEmpty(p.Key) || p.Key.Length > MaxSize || string.IsNullOrEmpty(p.Value))
-                {
+            foreach (var p in this.options) {
+                if (string.IsNullOrEmpty(p.Key) || p.Key.Length > MaxSize || string.IsNullOrEmpty(p.Value)) {
                     throw new Exceptions.ResourceException(
                         string.Format("Bad enumeration options in field {0}", this));
                 }
