@@ -66,7 +66,7 @@ namespace SlipStream.Model {
             if (value == null || !(value is string)) {
                 throw new ArgumentNullException("value");
             }
-            if (this.options.Keys.Contains(value as string)) {
+            if (!this.options.Keys.Contains(value as string)) {
                 throw new ArgumentOutOfRangeException("value");
             }
 
