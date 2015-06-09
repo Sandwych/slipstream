@@ -27,6 +27,7 @@ namespace SlipStream.Data.Mssql
                 { FieldType.Double, f => "float" },
                 { FieldType.Decimal, f => "decimal" },
                 { FieldType.Text, f => "ntext" },
+                { FieldType.Xml, f => "xml" },
                 { FieldType.Binary, f =>  "varbinary(max)" },
                 { FieldType.ManyToOne, f => "bigint" },
                 { FieldType.Chars, f => f.Size > 0 ? string.Format("nvarchar({0})", f.Size) : "nvarchar(max)" },

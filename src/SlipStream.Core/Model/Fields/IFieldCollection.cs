@@ -17,6 +17,7 @@ namespace SlipStream.Model
         IField Time(string name);
         IField Chars(string name);
         IField Text(string name);
+        IField Xml(string name);
         IField Binary(string name);
 
 

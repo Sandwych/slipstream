@@ -27,6 +27,7 @@ namespace SlipStream.Data
                 { FieldType.Double, f => "float8" },
                 { FieldType.Decimal, f => "decimal" },
                 { FieldType.Text, f => "text" },
+                { FieldType.Xml, f => "xml" },
                 { FieldType.Binary, f =>  "bytea" },
                 { FieldType.ManyToOne, f => "int8" },
                 { FieldType.Chars, f => f.Size > 0 ? string.Format("varchar({0})", f.Size) : "varchar" },

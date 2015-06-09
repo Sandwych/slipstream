@@ -136,6 +136,7 @@
     <Compile Include="Exceptions\ResourceException.cs" />
     <Compile Include="IDbDomainManager.cs" />
     <Compile Include="Model\Fields\CriterionConverter.cs" />
+    <Compile Include="Model\Fields\XmlField.cs" />
     <Compile Include="Model\ModelValidator.cs" />
     <Compile Include="Module\ModuleUpdateAction.cs" />
     <Compile Include="Model\Sql\SqlQueryBuilder.cs" />

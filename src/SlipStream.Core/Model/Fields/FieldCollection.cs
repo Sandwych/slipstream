@@ -63,6 +63,13 @@ namespace SlipStream.Model
             return field;
         }
 
+        public IField Xml(string name)
+        {
+            var field = new XmlField(this.model, name);
+            this.Add(name, field);
+            return field;
+        }
+
         public IField Binary(string name)
         {
             var field = new ScalarField(this.model, name, FieldType.Binary);

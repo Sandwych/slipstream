@@ -43,6 +43,9 @@ namespace SlipStream.Model
         [EnumStringValue("text")]
         Text,
 
+        [EnumStringValue("xml")]
+        Xml,
+
         [EnumStringValue("binary")]
         Binary,
 

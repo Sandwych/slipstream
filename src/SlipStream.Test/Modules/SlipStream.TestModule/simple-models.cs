@@ -54,6 +54,7 @@ namespace SlipStream.Test
             Fields.BigInteger("big_int_field").SetLabel("Bit Int Field");
             Fields.Boolean("boolean_field").SetLabel("Boolean Field").Required().SetDefaultValueGetter(s => true);
             Fields.Text("text_field").SetLabel("Text Field");
+            Fields.Xml("xml_field").SetLabel("XML Field");
             Fields.Double("double_field").SetLabel("Double Field");
             Fields.Decimal("money_field").SetLabel("Decimal Field");
 
