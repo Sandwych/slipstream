@@ -12,7 +12,7 @@ namespace SlipStream.Data
 
         bool Nullable { get; }
 
-        SqlDbType SqlType { get; }
+        DbType DbType { get; }
 
         int Length { get; }
 

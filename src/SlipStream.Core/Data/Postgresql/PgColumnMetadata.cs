@@ -12,7 +12,7 @@ namespace SlipStream.Data.Postgresql {
             this.Name = (string)row["column_name"];
             this.Nullable = (string)row["is_nullable"] == "YES";
             var sqlTypeStr = (string)row["data_type"];
-            this.SqlType = ConvertPgTypeToSqlDbType(sqlTypeStr);
+            this.DbType = ConvertPgTypeToDbType(sqlTypeStr);
 
             var charsMaxLength = row["character_maximum_length"];
             if (!charsMaxLength.IsNull()) {
@@ -23,78 +23,56 @@ namespace SlipStream.Data.Postgresql {
 
         public string Name { get; private set; }
         public bool Nullable { get; private set; }
-        public SqlDbType SqlType { get; private set; }
+        public DbType DbType { get; private set; }
         public int Length { get; private set; }
         public int Precision { get; private set; }
 
-        private static SqlDbType ConvertPgTypeToSqlDbType(String pgTypeStr) {
-            /*
-                { FieldType.Identifier, f => "bigserial not null primary key" },
-                { FieldType.Boolean, f => "boolean" },
-                { FieldType.Integer, f => "integer"  },
-                { FieldType.BigInteger, f => "bigint"  },
-                { FieldType.DateTime, f => "timestamp" },
-                { FieldType.Date, f => "date" },
-                { FieldType.Time, f => "time" },
-                { FieldType.Double, f => "float8" },
-                { FieldType.Decimal, f => "decimal" },
-                { FieldType.Text, f => "text" },
-                { FieldType.Xml, f => "xml" },
-                { FieldType.Binary, f =>  "bytea" },
-                { FieldType.ManyToOne, f => "int8" },
-                { FieldType.Chars, f => f.Size > 0 ? string.Format("varchar({0})", f.Size) : "varchar" },
-                { FieldType.Enumeration, f => string.Format("varchar({0})", f.Size) },
-                { FieldType.Reference, f => "varchar(128)" },
-        */
-
-            SqlDbType sdt = SqlDbType.UniqueIdentifier;
+        private static DbType ConvertPgTypeToDbType(String pgTypeStr) {
+            DbType sdt = DbType.Int32;
             switch (pgTypeStr) {
                 case "boolean":
-                    sdt = SqlDbType.Bit;
+                    sdt = DbType.Boolean;
                     break;
 
                 case "integer":
-                    sdt = SqlDbType.Int;
+                    sdt = DbType.Int32;
                     break;
 
                 case "bigint":
-                    sdt = SqlDbType.BigInt;
+                    sdt = DbType.Int64;
                     break;
 
                 case "timestamp without time zone":
-                    sdt = SqlDbType.DateTime;
+                    sdt = DbType.DateTime;
                     break;
 
                 case "date":
-                    sdt = SqlDbType.Date;
+                    sdt = DbType.Date;
                     break;
 
                 case "time":
-                    sdt = SqlDbType.Time;
+                    sdt = DbType.Time;
                     break;
 
                 case "float8":
-                    sdt = SqlDbType.Real;
+                    sdt = DbType.Double;
                     break;
 
                 case "decimal":
-                    sdt = SqlDbType.Decimal;
+                    sdt = DbType.Decimal;
                     break;
 
                 case "character varying":
-                    sdt = SqlDbType.VarChar;
-                    break;
-
                 case "text":
-                    sdt = SqlDbType.Text;
+                    sdt = DbType.String;
                     break;
 
                 case "xml":
-                    sdt = SqlDbType.Xml;
+                    sdt = DbType.Xml;
                     break;
 
                 case "bytea":
-                    sdt = SqlDbType.VarBinary;
+                    sdt = DbType.Binary;
                     break;
 
                 default:
