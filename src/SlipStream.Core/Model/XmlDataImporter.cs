@@ -169,6 +169,7 @@ namespace SlipStream.Model
 
                 case FieldType.Chars:
                 case FieldType.Text:
+                case FieldType.Xml:
                 case FieldType.Enumeration:
                     fieldValue = reader.ReadElementContentAsString().Trim();
                     break;

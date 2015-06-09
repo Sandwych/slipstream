@@ -7,7 +7,7 @@
     <field name="model">core.module</field>
     <field name="kind">tree</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <tree label="Modules">
         <field name="name" where="basic" />
         <field name="label" where="advanced" />
@@ -27,7 +27,7 @@
     <field name="model">core.module</field>
     <field name="kind">form</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <form label="Modules">
         <notebook>
           <page label="General">
@@ -76,7 +76,7 @@
     <field name="model">core.user</field>
     <field name="kind">tree</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <tree label="Users">
         <field name="name" where="basic" />
         <field name="login" where="basic" />
@@ -93,7 +93,7 @@
     <field name="model">core.user</field>
     <field name="kind">form</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <form label="Users" width="640" height="400">
         <notebook>
           <page label="General">
@@ -140,7 +140,7 @@
     <field name="model">core.model</field>
     <field name="kind">tree</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <tree label="Models">
         <field name="name" where="basic" />
         <field name="label" where="basic" />
@@ -163,7 +163,7 @@
     <field name="model">core.role</field>
     <field name="kind">tree</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <tree label="User Roles">
         <field name="name" where="basic" />
       </tree>
@@ -183,7 +183,7 @@
     <field name="model">core.role</field>
     <field name="kind">form</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <form label="Role" width="640" height="400">
         <label field="name" />
         <input field="name" />
@@ -213,7 +213,7 @@
     <field name="model">core.menu</field>
     <field name="kind">tree</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <tree label="Menus">
         <field name="name" where="basic" />
         <field name="ordinal" where="basic" />
@@ -230,7 +230,7 @@
     <field name="model">core.view</field>
     <field name="kind">tree</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <tree label="Views">
         <field name="name" where="basic" />
         <field name="model" where="basic" />

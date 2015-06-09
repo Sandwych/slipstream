@@ -26,7 +26,7 @@ namespace SlipStream.Core
                     { "chart", "Chart View" },
                 })
                 .SetLabel("View Kind").Required();
-            Fields.Text("layout").SetLabel("Layout");
+            Fields.Xml("layout").SetLabel("Layout");
         }
 
         [ServiceMethod("GetView")]

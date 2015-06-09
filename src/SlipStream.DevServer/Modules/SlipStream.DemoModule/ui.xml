@@ -7,7 +7,7 @@
     <field name="model">demo.employee</field>
     <field name="kind">tree</field>
     <field name="layout">
-      <![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+      <![CDATA[
       <tree label="员工管理">
         <field name="name" where="basic" />
         <field name="address" where="basic" />
