@@ -71,8 +71,7 @@ namespace SlipStream.Model
             }
             set
             {
-                throw new NotSupportedException(
-                    string.Format("Scalar field [{0}] does not support OnDeleteAction", this));
+                throw new NotSupportedException();
             }
         }
 

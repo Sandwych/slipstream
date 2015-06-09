@@ -89,10 +89,10 @@ namespace SlipStream.Model {
 
         public override SlipStream.Model.OnDeleteAction OnDeleteAction {
             get {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
             set {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 
