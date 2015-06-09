@@ -244,18 +244,14 @@ namespace SlipStream.Model
                 paramSelfId.Value = id;
                 cmd.Parameters.Add(paramSelfId);
 
-                var paramParentId = cmd.CreateParameter();
-                paramParentId.ParameterName = "parent_id";
                 object parentId = null;
-                if (record.TryGetValue(ParentFieldName, out parentId) && parentId != null)
+                if (record.TryGetValue(ParentFieldName, out parentId) && parentId != null) 
                 {
+                    var paramParentId = cmd.CreateParameter();
+                    paramParentId.ParameterName = "parent_id";
                     paramParentId.Value = parentId;
+                    cmd.Parameters.Add(paramParentId);
                 }
-                else
-                {
-                    paramParentId.Value = null;
-                }
-                cmd.Parameters.Add(paramParentId);
 
                 cmd.ExecuteNonQuery();
             }
@@ -305,7 +301,7 @@ namespace SlipStream.Model
             {
                 colValues[index] = values[f];
                 if (index != 0)
-                {
+                {                    
                     sqlBuilder.Add(",");
                 }
                 sqlBuilder.Add('"' + f + '"');

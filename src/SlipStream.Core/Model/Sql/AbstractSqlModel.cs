@@ -228,8 +228,20 @@ where   hp._id=? and hc._id<>?
 
             foreach (var f in updatableColumnFields) {
                 var fieldInfo = this.Fields[f];
-                var columnValue = fieldInfo.SetFieldValue(record[f]);
-                record[f] = columnValue;
+                object columnValue = fieldInfo.SetFieldValue(record[f]);
+                //.NET 类型无法直接映射到 SQL 的类型需要特殊处理
+                switch (fieldInfo.Type) {
+
+                    case FieldType.Xml:
+                        record[f] = new SqlCommandParameter(DbType.Xml, columnValue);
+                        break;
+
+                    default:
+                        record[f] = columnValue;
+                        break;
+
+                }
+
             }
         }
 
@@ -242,8 +254,7 @@ where   hp._id=? and hc._id<>?
                     var id = (long)r[IdFieldName];
                     result.Add(id, (string)r["name"]);
                 }
-            }
-            else {
+            } else {
                 foreach (long id in ids) {
                     result.Add(id, string.Empty);
                 }
@@ -274,8 +285,7 @@ where   hp._id=? and hc._id<>?
             foreach (var item in items) {
                 if (flag) {
                     flag = false;
-                }
-                else {
+                } else {
                     sb.Append(",");
                 }
 

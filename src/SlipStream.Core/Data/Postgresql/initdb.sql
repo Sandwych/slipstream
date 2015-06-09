@@ -135,7 +135,8 @@ GO
 
 -- 处理树的函数
 
-CREATE OR REPLACE FUNCTION tree_update_for_creation(table_name VARCHAR, self_id BIGINT, parent_id BIGINT) 
+CREATE OR REPLACE FUNCTION tree_update_for_creation(
+	table_name VARCHAR, self_id BIGINT, parent_id BIGINT DEFAULT NULL) 
 RETURNS VOID AS $$
 DECLARE
     _left BIGINT;

@@ -131,6 +131,7 @@
     <Compile Include="ClrService.cs" />
     <Compile Include="Core\RuleRoleModel.cs" />
     <Compile Include="Data\ScopedTransaction.cs" />
+    <Compile Include="Data\SqlCommandParameter.cs" />
     <Compile Include="Exceptions\SecurityException.cs" />
     <Compile Include="Exceptions\DataException.cs" />
     <Compile Include="Exceptions\ResourceException.cs" />

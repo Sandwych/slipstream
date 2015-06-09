@@ -31,8 +31,8 @@ namespace SlipStream
             this.ModulePath = Path.Combine(appPath, "Modules");
 
             this.Role = ServerRoles.Standalone;
-            this.DbType = "mssql";
-            this.DbHost = @".\SQLEXPRESS";
+            this.DbType = "postgres";
+            this.DbHost = "localhost"; //@".\SQLEXPRESS";
             this.DbUser = "slipstream";
             this.DbPassword = "slipstream";
 

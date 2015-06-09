@@ -29,7 +29,6 @@ namespace SlipStream.Data.Postgresql
               CultureInfo.InvariantCulture,
               "Server={0};" +
               "Database={3};" +
-              "Encoding=UNICODE;" +
               "User ID={1};" +
               "Password={2};",
               cfg.DbHost, cfg.DbUser, cfg.DbPassword, dbName);

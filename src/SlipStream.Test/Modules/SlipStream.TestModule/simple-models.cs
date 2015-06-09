@@ -57,6 +57,9 @@ namespace SlipStream.Test
             Fields.Xml("xml_field").SetLabel("XML Field");
             Fields.Double("double_field").SetLabel("Double Field");
             Fields.Decimal("money_field").SetLabel("Decimal Field");
+            Fields.Date("date_field").SetLabel("Date Field");
+            Fields.Time("time_field").SetLabel("Time Field");
+            Fields.DateTime("datetime_field").SetLabel("DateTime Field");
 
             Fields.Enumeration("enum_field",
                 new Dictionary<string, string>() { { "state1", "State 1" }, { "state2", "State2" } })
