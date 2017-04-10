@@ -1,4 +1,4 @@
-# 简介
+# Slipstream 快速数据库应用开发平台
 
 SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 
@@ -14,27 +14,28 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 * 根据实体类的定义自动调整数据库架构，自动迁移
 * 权限支持访问控制列表、字段过滤等，且基于可配置而非硬编码代码
 
-# 需求
+## 快速开始
+
+### 需求
 
 * 64 位操作系统环境（若是 32 位系统请修改项目依赖的 ClrZMQ 库版本）
-* Microsoft Visual Studio 2012
+* Microsoft Visual Studio 2017
 * Microsoft SQL Server Express 2005+ 数据库或 PostgreSQL 9.0+ 数据库
-* ZeroMQ 消息队列库
-* Silverlight 5
 
 调试环境系统默认使用 SQL Server Express，需要建立用户名及密码均为“slipstream”的数据库角色。
 
-# 如何运行
-1. 启动 SlipStream.DevServer 项目
-2. 启动 SlipStream.Client.Agos 项目
-3. 默认服务器用户名及密码均为“root”
+### 如何运行 Demo
+
+#. 启动 SlipStream.DevServer 项目
+#. 启动 SlipStream.Client.Agos 项目
+#. 默认服务器用户名及密码均为“root”
 
 
-# 如何编写业务模块
+## 如何编写业务模块
 
-请参考 src/SlipStream.DevServer/Modules/SlipStream.Demo
+请参考 src/SlipStream.HostApp/Modules/SlipStream.Demo
 
-## module.xml
+### module.xml
 
 此文件所有模块都必须包含，示例如下：
 ```xml
@@ -63,11 +64,11 @@ SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 
 </module-metadata>
 ```
-## 实体类
+### 实体类
 
-实体类使用 ActiveRecord 模型，定义表结构及业务：
+实体类使用类似 ActiveRecord 模型，定义数据库表结构及 RPC 形式的业务方法：
 
-```C#
+```csharp
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,7 +93,7 @@ namespace SlipStream.DemoModule
 }
 ```
 
-## 定义界面相关数据
+### 定义界面相关数据
 
 界面及初始化数据同样使用 XML 文档定义，这里我们省掉了 employee 类的表单定义，因为简单的表单布局可由系统自动生成：
 ```xml
@@ -139,26 +140,27 @@ namespace SlipStream.DemoModule
 
 随后登录系统即可看到新增加的操作菜单。
 
-## 运行截图
+### 运行截图
 
-### 登录
+#### 登录
 ![登录](https://github.com/Sandwych/slipstream/raw/master/doc/static/images/demo/login.png)
 
-### 列表视图
+#### 列表视图
 ![列表视图](https://github.com/Sandwych/slipstream/raw/master/doc/static/images/demo/list-view.png)
 
-### 表单视图
+#### 表单视图
 ![表单视图](https://github.com/Sandwych/slipstream/raw/master/doc/static/images/demo/formview.png)
 
-# 版权
+## 版权
 
 本项目的授权方式为 AGPL3。
+
 第三方对此项目贡献的代码视为将代码版权转移给昆明维智众源企业管理咨询有限公司，
 昆明维智众源企业管理咨询有限公司遵循 AGPL3 协议将本项目开源，但保留以本项目为基础开发商业软件的权利。
 
 版权所有 (C) 2010 至今 昆明维智众源企业管理咨询有限公司。
 保留所有权利。
 
-昆明维智众源企业管理咨询有限公司  
-http://www.sandwych.com  
-contact@sandwych.com  
+* 昆明维智众源企业管理咨询有限公司  
+* http://www.sandwych.com  
+* contact@sandwych.com  
