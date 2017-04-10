@@ -64,37 +64,13 @@ namespace SlipStream.Server
 
             try
             {
-                InitializeFramework(args);
+                var cfg = InitializeFramework(args);
                 AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnExit);
 
-                using (var server = new ServerProcess())
+                using (var server = new HttpServer(cfg.HttpListenUrl))
                 {
-                    var serverThreadProc = new ThreadStart(delegate
-                    {
-                        server.Run();
-                    });
-
-                    var serverThread = new Thread(serverThreadProc);
-                    serverThread.Start();
-
-                    Console.WriteLine("Waiting for client requests...");
-                    WaitToQuit();
-
+                    server.Start(WaitToQuit);
                     Console.WriteLine("Starting to broadcast the TERMINATE command...");
-                    var role = SlipstreamEnvironment.Settings.Role;
-                    if (role == ServerRoles.Standalone || role == ServerRoles.Controller)
-                    {
-                        server.BeginStopAll();
-                    }
-                    else if (role == ServerRoles.HttpServer)
-                    {
-                        server.BeginStopHttpServer();
-                    }
-                    else if (role == ServerRoles.Worker)
-                    {
-                        server.BeginStopRpcWorkers();
-                    }
-
                     Console.WriteLine("Terminating...");
                 }
 
@@ -131,7 +107,7 @@ namespace SlipStream.Server
             } while (Char.ToUpperInvariant(Console.ReadKey(true).KeyChar) != 'Q');
         }
 
-        private static void InitializeFramework(string[] args)
+        private static ShellSettings InitializeFramework(string[] args)
         {
 
             Debug.Assert(!SlipstreamEnvironment.Initialized);
@@ -147,6 +123,7 @@ namespace SlipStream.Server
             Console.WriteLine("Log Directory=[{0}]，Application Server URL=[{1}]",
                 SlipstreamEnvironment.Settings.LogPath,
                 SlipstreamEnvironment.Settings.RpcBusUrl);
+            return cfg;
         }
 
     }

@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
 
-using ZMQ;
-using ZMQ.ZMQExt;
 using Newtonsoft.Json;
 
 using SlipStream.Exceptions;
@@ -23,7 +21,6 @@ namespace SlipStream.Server
         private static readonly Dictionary<string, MethodInfo> s_methods = new Dictionary<string, MethodInfo>();
         private static readonly ISlipstreamService s_service = SlipstreamEnvironment.RootService;
         private static readonly object s_lockObj = new object();
-        private static volatile bool s_running = false;
 
         static ServiceDispatcher()
         {
@@ -95,79 +92,7 @@ namespace SlipStream.Server
 
         #endregion
 
-        public static void ProcessingLoop()
-        {
-            if (!SlipstreamEnvironment.Initialized)
-            {
-                throw new InvalidOperationException(
-                    "Unable to start PRC-Handler thread, please initialize the environment first.");
-            }
-
-            var broadcastUrl = SlipstreamEnvironment.Settings.BroadcastUrl;
-            var rpcHandlerUrl = SlipstreamEnvironment.Settings.RpcHandlerUrl;
-            var id = Guid.NewGuid();
-            LoggerProvider.EnvironmentLogger.Debug(
-                () => string.Format("Starting RpcHandler thread[{0}] URL=[{1}] ...", id, rpcHandlerUrl));
-
-            using (var broadcastSocket = new ZMQ.Socket(ZMQ.SocketType.SUB))
-            using (var receiver = new ZMQ.Socket(ZMQ.SocketType.REP))
-            {
-                broadcastSocket.Connect(broadcastUrl);
-                broadcastSocket.Subscribe("STOP-RPC", Encoding.UTF8);
-                LoggerProvider.EnvironmentLogger.Debug(
-                    () => string.Format("RpcHandler thread[{0}] is connected to the Commander URL[{1}]", id, broadcastUrl));
-
-                receiver.Connect(rpcHandlerUrl);
-
-                var items = new PollItem[2];
-                items[0] = broadcastSocket.CreatePollItem(IOMultiPlex.POLLIN);
-                items[0].PollInHandler += new PollHandler(BusControllerPollInHandler);
-
-                items[1] = receiver.CreatePollItem(IOMultiPlex.POLLIN);
-                items[1].PollInHandler += new PollHandler(ReceiverPollInHandler);
-
-                lock (s_lockObj)
-                {
-                    s_running = true;
-                }
-
-                //  Process messages from both sockets
-                while (s_running)
-                {
-                    Context.Poller(items, -1);
-                }
-
-                LoggerProvider.EnvironmentLogger.Debug(
-                    () => string.Format("The RpcHandler thread[{0}] is stopped", id));
-            }
-        }
-
-        private static void BusControllerPollInHandler(Socket socket, IOMultiPlex revents)
-        {
-            Debug.Assert(socket != null);
-
-            var cmd = socket.Recv(Encoding.UTF8);
-
-            if (cmd == "STOP-RPC" && s_running)
-            {
-                LoggerProvider.EnvironmentLogger.Info("The [STOP-RPC] command received, try to stop all RPC-Handlers");
-                lock (s_lockObj)
-                {
-                    s_running = false;
-                }
-            }
-        }
-
-        private static void ReceiverPollInHandler(Socket socket, IOMultiPlex revents)
-        {
-            Debug.Assert(socket != null);
-
-            var message = socket.Recv();
-            var result = InvokeJsonRpc(message);
-            socket.Send(result);
-        }
-
-        private static byte[] InvokeJsonRpc(byte[] json)
+        public static byte[] InvokeJsonRpc(byte[] json)
         {
             Debug.Assert(json != null);
 

@@ -7,12 +7,10 @@ using System.Diagnostics;
 using System.Threading;
 using Anna;
 
-using ZMQ;
-using ZMQ.ZMQExt;
-
 using SlipStream;
+using System.Reactive.Concurrency;
 
-namespace SlipStream.Http
+namespace SlipStream.Server
 {
 
     /// <summary>
@@ -33,25 +31,12 @@ namespace SlipStream.Http
             "<allow-access-from domain=\"*\" />" +
             "</cross-domain-policy>";
 
-        private readonly ZMQ.Socket broadcastSocket = new ZMQ.Socket(ZMQ.SocketType.SUB);
-        private readonly ZMQ.Socket senderSocket = new ZMQ.Socket(ZMQ.SocketType.REQ);
-        private readonly string rpcReqUrl;
-        private readonly string httpHostUrl;
+        private readonly string _httpHostUri;
 
         private bool disposed = false;
 
-        public HttpServer(string busControllerUrl, string rpcHostUrl, string httpUrl)
+        public HttpServer(string httpUrl)
         {
-            if (string.IsNullOrEmpty(busControllerUrl))
-            {
-                throw new ArgumentNullException("busControllerUrl");
-            }
-
-            if (string.IsNullOrEmpty(rpcHostUrl))
-            {
-                throw new ArgumentNullException("rpcHostUrl");
-            }
-
             if (string.IsNullOrEmpty(httpUrl))
             {
                 throw new ArgumentNullException("httpUrl");
@@ -59,19 +44,15 @@ namespace SlipStream.Http
 
             LoggerProvider.EnvironmentLogger.Info("Starting HTTP Server...");
 
-            broadcastSocket.Connect(busControllerUrl);
-            broadcastSocket.Subscribe("STOP-HTTPD", Encoding.UTF8);
 
             if (!httpUrl.EndsWith("/"))
             {
                 httpUrl += '/';
             }
 
-            this.httpHostUrl = httpUrl;
+            this._httpHostUri = httpUrl;
             LoggerProvider.EnvironmentLogger.Info(String.Format("HTTP Listen: [{0}]", httpUrl));
 
-            this.rpcReqUrl = rpcHostUrl;
-            LoggerProvider.EnvironmentLogger.Info("Connecting to MQ: [" + this.rpcReqUrl + "]");
         }
 
         ~HttpServer()
@@ -79,20 +60,16 @@ namespace SlipStream.Http
             this.Dispose(false);
         }
 
-        public void Start()
+        public void Start(Action waitingBlocker)
         {
-            Debug.Assert(this.senderSocket != null);
-
-            this.senderSocket.Connect(this.rpcReqUrl);
-
             LoggerProvider.EnvironmentLogger.Info(
-                String.Format("Starting the HTTP Server [{0}]...", this.httpHostUrl));
+                String.Format("Starting the HTTP Server [{0}]...", this._httpHostUri));
 
-            using (var httpd = new Anna.HttpServer(this.httpHostUrl))
+            using (var eventLoop = new EventLoopScheduler())
+            using (var httpd = new Anna.HttpServer(this._httpHostUri, eventLoop))
             {
                 this.RegisterRequestHandlers(httpd);
-
-                this.WaitForStopCommand();
+                waitingBlocker();
             }
 
             LoggerProvider.EnvironmentLogger.Info("The HTTP server is stopped.");
@@ -110,23 +87,6 @@ namespace SlipStream.Http
                 var repData = this.HandleJsonRpcRequest(context.Request);
                 context.Response(repData, 200).Send();
             });
-        }
-
-        private void WaitForStopCommand()
-        {
-
-            while (true)
-            {
-                var cmd = this.broadcastSocket.Recv(Encoding.UTF8);
-
-                if (cmd == "STOP-HTTPD")
-                {
-                    LoggerProvider.EnvironmentLogger.Info(
-                        "Received command [STOP-HTTPD], try to stop HTTP Server...");
-                    break;
-                }
-            }
-
         }
 
         /// <summary>
@@ -159,7 +119,7 @@ namespace SlipStream.Http
                 return string.Format("JSON Request=[{0}]", reqStr);
             });
 
-            var jresponse = this.CallJsonRpc(reqData);
+            var jresponse = ServiceDispatcher.InvokeJsonRpc(reqData);
 
             LoggerProvider.RpcLogger.Debug(() =>
             {
@@ -168,23 +128,6 @@ namespace SlipStream.Http
             });
 
             return jresponse;
-        }
-
-        private byte[] CallJsonRpc(byte[] reqData)
-        {
-            Debug.Assert(reqData != null);
-
-            var startTime = Stopwatch.GetTimestamp();
-
-            this.senderSocket.Send(reqData);
-            var rep = this.senderSocket.Recv();
-
-            var endTime = Stopwatch.GetTimestamp();
-            var costTime = endTime - startTime;
-            LoggerProvider.RpcLogger.Debug(
-                () => String.Format("MQ RPC costed time: [{0:N0}ms]", costTime * 1000 / Stopwatch.Frequency));
-
-            return rep;
         }
 
         #region IDisposable Members
@@ -200,11 +143,7 @@ namespace SlipStream.Http
                     //释放托管资源
                 }
 
-                //释放非托管资源
-
-                this.senderSocket.Dispose();
-                this.broadcastSocket.Dispose();
-
+                //释放非托管资源 
                 this.disposed = true;
             }
         }
