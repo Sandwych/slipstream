@@ -18,10 +18,10 @@ namespace SlipStream.Core
         {
             this.TableName = "core_rule_role_rel";
 
-            Fields.ManyToOne("role", "core.role").SetLabel("Role")
-                .Required().OnDelete(OnDeleteAction.Cascade);
-            Fields.ManyToOne("rule", "core.rule").SetLabel("Rule")
-                .Required().OnDelete(OnDeleteAction.Cascade);
+            Fields.ManyToOne("role", "core.role").WithLabel("Role")
+                .WithRequired().OnDelete(OnDeleteAction.Cascade);
+            Fields.ManyToOne("rule", "core.rule").WithLabel("Rule")
+                .WithRequired().OnDelete(OnDeleteAction.Cascade);
         }
 
         public override void Initialize(bool update)

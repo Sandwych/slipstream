@@ -17,16 +17,16 @@ namespace SlipStream.Core
             : base("core.view")
         {
 
-            Fields.Chars("name").SetLabel("Name").SetSize(64).Required();
-            Fields.Chars("model").SetLabel("Model").SetSize(128).Required();
+            Fields.Chars("name").WithLabel("Name").WithSize(64).WithRequired();
+            Fields.Chars("model").WithLabel("Model").WithSize(128).WithRequired();
             Fields.Enumeration("kind",
                 new Dictionary<string, string>() { 
                     { "form", "Form View" }, 
                     { "tree", "Tree View" },
                     { "chart", "Chart View" },
                 })
-                .SetLabel("View Kind").Required();
-            Fields.Xml("layout").SetLabel("Layout");
+                .WithLabel("View Kind").WithRequired();
+            Fields.Xml("layout").WithLabel("Layout");
         }
 
         [ServiceMethod("GetView")]

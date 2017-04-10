@@ -19,13 +19,13 @@ namespace SlipStream.Core
             : base("core.role")
         {
 
-            Fields.Chars("name").SetLabel("Name").SetSize(128).Required();
-            Fields.ManyToMany("users", "core.user_role", "role", "user").SetLabel("Users");
-            Fields.ManyToMany("rules", "core.rule_role", "role", "rule").SetLabel("Rules");
+            Fields.Chars("name").WithLabel("Name").WithSize(128).WithRequired();
+            Fields.ManyToMany("users", "core.user_role", "role", "user").WithLabel("Users");
+            Fields.ManyToMany("rules", "core.rule_role", "role", "rule").WithLabel("Rules");
             Fields.OneToMany("model_access_entries", "core.model_access", "role")
-                .SetLabel("Model Access Control");
+                .WithLabel("Model Access Control");
             Fields.OneToMany("field_access_entries", "core.field_access", "role")
-                .SetLabel("Field Access Control");
+                .WithLabel("Field Access Control");
         }
 
     }

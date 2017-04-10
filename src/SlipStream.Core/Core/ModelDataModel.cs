@@ -33,11 +33,11 @@ namespace SlipStream.Core
         {
             this.IsVersioned = false;
 
-            Fields.Chars("name").SetLabel("Key").Required().SetSize(128);
-            Fields.Chars("module").SetLabel("Module").Required().SetSize(64);
-            Fields.Chars("model").SetLabel("Model").Required().SetSize(64);
-            Fields.BigInteger("ref_id").SetLabel("Referenced ID").Required();
-            Fields.Text("value").SetLabel("Value");
+            Fields.Chars("name").WithLabel("Key").WithRequired().WithSize(128);
+            Fields.Chars("module").WithLabel("Module").WithRequired().WithSize(64);
+            Fields.Chars("model").WithLabel("Model").WithRequired().WithSize(64);
+            Fields.BigInteger("ref_id").WithLabel("Referenced ID").WithRequired();
+            Fields.Text("value").WithLabel("Value");
         }
 
         internal static void Create(

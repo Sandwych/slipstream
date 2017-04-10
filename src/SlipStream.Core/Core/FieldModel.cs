@@ -18,15 +18,15 @@ namespace SlipStream.Core
         {
             this.IsVersioned = false;
 
-            Fields.ManyToOne("model", "core.model").SetLabel("Model")
-                .Required().OnDelete(OnDeleteAction.Cascade);
-            Fields.Chars("name").SetLabel("Name").SetSize(64).Required();
-            Fields.Chars("label").SetLabel("Label").SetSize(256).NotRequired();
-            Fields.Boolean("required").SetLabel("Required").Required();
-            Fields.Boolean("readonly").SetLabel("Read Only").Required();
-            Fields.Chars("relation").SetLabel("Relation").SetSize(256).NotRequired();
-            Fields.Chars("type").SetLabel("Type").SetSize(32).Required();
-            Fields.Chars("help").SetLabel("Help").SetSize(256).NotRequired();
+            Fields.ManyToOne("model", "core.model").WithLabel("Model")
+                .WithRequired().OnDelete(OnDeleteAction.Cascade);
+            Fields.Chars("name").WithLabel("Name").WithSize(64).WithRequired();
+            Fields.Chars("label").WithLabel("Label").WithSize(256).WithNotRequired();
+            Fields.Boolean("required").WithLabel("Required").WithRequired();
+            Fields.Boolean("readonly").WithLabel("Read Only").WithRequired();
+            Fields.Chars("relation").WithLabel("Relation").WithSize(256).WithNotRequired();
+            Fields.Chars("type").WithLabel("Type").WithSize(32).WithRequired();
+            Fields.Chars("help").WithLabel("Help").WithSize(256).WithNotRequired();
         }
 
         //TODO 拦截 WriteInternal DeleteInternal CreateInternal

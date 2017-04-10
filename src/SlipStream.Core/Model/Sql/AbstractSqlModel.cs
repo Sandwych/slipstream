@@ -116,19 +116,19 @@ namespace SlipStream.Model {
 
             //只有非继承的模型才添加内置字段
             if (this.AutoMigration) {
-                Fields.DateTime(CreatedTimeFieldName).SetLabel("Created")
-                    .NotRequired().SetDefaultValueGetter(ctx => DateTime.Now).Readonly();
+                Fields.DateTime(CreatedTimeFieldName).WithLabel("Created")
+                    .WithNotRequired().WithDefaultValueGetter(ctx => DateTime.Now).Readonly();
 
-                Fields.DateTime(UpdatedTimeFieldName).SetLabel("Last Modified")
-                    .NotRequired().SetDefaultValueGetter(ctx => DateTime.Now);
+                Fields.DateTime(UpdatedTimeFieldName).WithLabel("Last Modified")
+                    .WithNotRequired().WithDefaultValueGetter(ctx => DateTime.Now);
 
-                Fields.ManyToOne(CreatedUserFieldName, "core.user").SetLabel("Creator")
-                    .NotRequired().Readonly()
-                    .SetDefaultValueGetter(ctx => ctx.UserSession.UserId > 0 ? (object)ctx.UserSession.UserId : null);
+                Fields.ManyToOne(CreatedUserFieldName, "core.user").WithLabel("Creator")
+                    .WithNotRequired().Readonly()
+                    .WithDefaultValueGetter(ctx => ctx.UserSession.UserId > 0 ? (object)ctx.UserSession.UserId : null);
 
-                Fields.ManyToOne(UpdatedUserFieldName, "core.user").SetLabel("Modifier")
-                    .NotRequired()
-                    .SetDefaultValueGetter(ctx => ctx.UserSession.UserId > 0 ? (object)ctx.UserSession.UserId : null);
+                Fields.ManyToOne(UpdatedUserFieldName, "core.user").WithLabel("Modifier")
+                    .WithNotRequired()
+                    .WithDefaultValueGetter(ctx => ctx.UserSession.UserId > 0 ? (object)ctx.UserSession.UserId : null);
 
                 if (this.Hierarchy) {
                     this.AddHierarchyInternalFields();
@@ -136,8 +136,8 @@ namespace SlipStream.Model {
             }
 
             if (this.IsVersioned) {
-                Fields.BigInteger(VersionFieldName).Required()
-                    .SetLabel("Row Version").SetDefaultValueGetter(v => 0);
+                Fields.BigInteger(VersionFieldName).WithRequired()
+                    .WithLabel("Row Version").WithDefaultValueGetter(v => 0);
             }
         }
 
@@ -146,20 +146,20 @@ namespace SlipStream.Model {
             Debug.Assert(!this.Fields.ContainsKey(LeftFieldName));
             Debug.Assert(!this.Fields.ContainsKey(RightFieldName));
 
-            Fields.BigInteger(LeftFieldName).SetLabel("Left Value")
-                .Required().SetDefaultValueGetter(ctx => -1);
+            Fields.BigInteger(LeftFieldName).WithLabel("Left Value")
+                .WithRequired().WithDefaultValueGetter(ctx => -1);
 
-            Fields.BigInteger(RightFieldName).SetLabel("Right Value")
-                .Required().SetDefaultValueGetter(ctx => -1);
+            Fields.BigInteger(RightFieldName).WithLabel("Right Value")
+                .WithRequired().WithDefaultValueGetter(ctx => -1);
 
             //这里通过 SQL 查询返回
             if (!Fields.ContainsKey(ParentFieldName)) {
                 Fields.ManyToOne(ParentFieldName, this.Name)
-                    .SetLabel("Parent").NotRequired().OnDelete(OnDeleteAction.SetNull);
+                    .WithLabel("Parent").WithNotRequired().OnDelete(OnDeleteAction.SetNull);
             }
 
             Fields.OneToMany(ChildrenFieldName, this.Name, ParentFieldName)
-                .SetLabel("Children")
+                .WithLabel("Children")
                 .SetValueGetter((scope, ids) => {
                     var result = new Dictionary<long, object>(ids.Length);
                     foreach (var id in ids) {
@@ -171,7 +171,7 @@ namespace SlipStream.Model {
                 });
 
             Fields.OneToMany(DescendantsFieldName, this.Name, ParentFieldName)
-                .SetLabel("Descendants")
+                .WithLabel("Descendants")
                 .SetValueGetter((scope, ids) => {
                     var result = new Dictionary<long, object>(ids.Length);
                     foreach (var id in ids) {

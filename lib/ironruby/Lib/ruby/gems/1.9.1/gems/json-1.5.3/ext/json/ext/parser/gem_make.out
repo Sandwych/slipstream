@@ -1,7 +1,0 @@
-D:/dev/dotnet/object-server/lib/ironruby/bin/ir.exe extconf.rb
-D:/dev/dotnet/object-server/lib/ironruby/Lib/ruby/1.9.1/mkmf.rb:9:in `const_missing': uninitialized constant RbConfig::MAKEFILE_CONFIG (NameError)
-	from D:/dev/dotnet/object-server/lib/ironruby/Lib/ruby/1.9.1/mkmf.rb:9
-	from D:/dev/dotnet/object-server/lib/ironruby/Lib/ruby/1.9.1/rubygems/custom_require.rb:29:in `require'
-	from D:/dev/dotnet/object-server/lib/ironruby/Lib/ruby/1.9.1/rubygems/custom_require.rb:29:in `require'
-	from extconf.rb:1
-

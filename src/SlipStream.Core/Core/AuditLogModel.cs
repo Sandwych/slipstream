@@ -18,13 +18,13 @@ namespace SlipStream.Core
         public AuditLogModel()
             : base(ModelName)
         {
-            Fields.ManyToOne("user", "core.user").SetLabel("User");
-            Fields.Boolean("marked").SetLabel("Marked As Read")
-                .Required().SetDefaultValueGetter(ctx => false);
-            Fields.Chars("resource").SetLabel("Resource Name").SetSize(64).Required();
-            Fields.BigInteger("resource_id").SetLabel("Resource ID").Required();
-            Fields.Chars("description").SetLabel("Description")
-                .Required().SetSize(256);
+            Fields.ManyToOne("user", "core.user").WithLabel("User");
+            Fields.Boolean("marked").WithLabel("Marked As Read")
+                .WithRequired().WithDefaultValueGetter(ctx => false);
+            Fields.Chars("resource").WithLabel("Resource Name").WithSize(64).WithRequired();
+            Fields.BigInteger("resource_id").WithLabel("Resource ID").WithRequired();
+            Fields.Chars("description").WithLabel("Description")
+                .WithRequired().WithSize(256);
         }
 
     }

@@ -134,9 +134,7 @@ namespace SlipStream
                 modules.Add(module);
 
                 LoggerProvider.EnvironmentLogger.Info(() => string.Format(
-                    CultureInfo.CurrentCulture,
-                    "Additional module found: [{0}], Path=[{1}]",
-                        module.Name, module.Path));
+                    "Additional module found: [{0}], Path=[{1}]", module.Name, module.Path));
             }
         }
 

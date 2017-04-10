@@ -18,10 +18,10 @@ namespace SlipStream.Core
         public WindowActionViewModel()
             : base("core.action_window_view")
         {
-            Fields.Integer("ordinal").Required().SetLabel("Ordinal");
-            Fields.ManyToOne("view", "core.view").SetLabel("Related View").Required();
+            Fields.Integer("ordinal").WithRequired().WithLabel("Ordinal");
+            Fields.ManyToOne("view", "core.view").WithLabel("Related View").WithRequired();
             Fields.ManyToOne("window_action", "core.action_window")
-                .SetLabel("Related Window Action").Required();
+                .WithLabel("Related Window Action").WithRequired();
         }
 
     }

@@ -16,8 +16,8 @@ namespace SlipStream.Core
         {
             Hierarchy = true;
 
-            Fields.Chars("code").SetLabel("Code").SetSize(64).Required().Unique();
-            Fields.Chars("name").SetLabel("Name").Required();
+            Fields.Chars("code").WithLabel("Code").WithSize(64).WithRequired().WithUnique();
+            Fields.Chars("name").WithLabel("Name").WithRequired();
         }
 
         /// <summary>

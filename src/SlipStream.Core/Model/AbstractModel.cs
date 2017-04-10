@@ -87,7 +87,7 @@ namespace SlipStream.Model
             Debug.Assert(!this.Fields.ContainsKey(IdFieldName));
 
             var idField = new ScalarField(this, IdFieldName, FieldType.Identifier)
-                .Required().Readonly();
+                .WithRequired().Readonly();
             this.fields.Add(IdFieldName, idField);
         }
 

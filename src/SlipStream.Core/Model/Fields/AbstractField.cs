@@ -210,7 +210,7 @@ namespace SlipStream.Model
 
         #region Fluent interface for options
 
-        public IField SetLabel(string label)
+        public IField WithLabel(string label)
         {
             if (String.IsNullOrEmpty(label))
             {
@@ -221,13 +221,13 @@ namespace SlipStream.Model
             return this;
         }
 
-        public virtual IField Required()
+        public virtual IField WithRequired()
         {
             this.IsRequired = true;
             return this;
         }
 
-        public virtual IField NotRequired()
+        public virtual IField WithNotRequired()
         {
             this.IsRequired = false;
             return this;
@@ -244,7 +244,7 @@ namespace SlipStream.Model
             return this;
         }
 
-        public IField SetDefaultValueGetter(FieldDefaultValueGetter defaultProc)
+        public IField WithDefaultValueGetter(FieldDefaultValueGetter defaultProc)
         {
             if (defaultProc == null)
             {
@@ -266,7 +266,7 @@ namespace SlipStream.Model
             return this;
         }
 
-        public IField SetSize(int size)
+        public IField WithSize(int size)
         {
             if (size <= 0)
             {
@@ -317,7 +317,7 @@ namespace SlipStream.Model
             return this;
         }
 
-        public IField Unique()
+        public IField WithUnique()
         {
             this.IsUnique = true;
             return this;

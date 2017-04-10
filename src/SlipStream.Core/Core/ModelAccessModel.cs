@@ -30,17 +30,17 @@ select max(case when ""a"".""allow_{0}"" = '1' then 1 else 0 end)
         public ModelAccessModel()
             : base(ModelName)
         {
-            Fields.ManyToOne("role", "core.role").Required().SetLabel("Role");
-            Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
-            Fields.Chars("name").SetLabel("Name");
-            Fields.Boolean("allow_create").SetLabel("Allow Creation")
-                .Required().SetDefaultValueGetter(s => true);
-            Fields.Boolean("allow_read").SetLabel("Allow Reading")
-                .Required().SetDefaultValueGetter(s => true);
-            Fields.Boolean("allow_write").SetLabel("Allow Writing")
-                .Required().SetDefaultValueGetter(s => true);
-            Fields.Boolean("allow_delete").SetLabel("Allrow Deletion")
-                .Required().SetDefaultValueGetter(s => true);
+            Fields.ManyToOne("role", "core.role").WithRequired().WithLabel("Role");
+            Fields.ManyToOne("model", "core.model").WithRequired().WithLabel("Model");
+            Fields.Chars("name").WithLabel("Name");
+            Fields.Boolean("allow_create").WithLabel("Allow Creation")
+                .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.Boolean("allow_read").WithLabel("Allow Reading")
+                .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.Boolean("allow_write").WithLabel("Allow Writing")
+                .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.Boolean("allow_delete").WithLabel("Allrow Deletion")
+                .WithRequired().WithDefaultValueGetter(s => true);
         }
 
         /// <summary>

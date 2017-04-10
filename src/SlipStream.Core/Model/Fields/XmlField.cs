@@ -39,7 +39,7 @@ namespace SlipStream.Model
 
         public override bool IsScalar
         {
-            get { return false; }
+            get { return true; }
         }
 
         public override SlipStream.Model.OnDeleteAction OnDeleteAction

@@ -17,8 +17,8 @@ namespace SlipStream.Core {
             : base("core.user_role") {
             this.TableName = "core_user_role_rel";
 
-            Fields.ManyToOne("user", "core.user").SetLabel("User").Required();
-            Fields.ManyToOne("role", "core.role").SetLabel("Role").Required();
+            Fields.ManyToOne("user", "core.user").WithLabel("User").WithRequired();
+            Fields.ManyToOne("role", "core.role").WithLabel("Role").WithRequired();
 
         }
 

@@ -19,11 +19,11 @@ namespace SlipStream.Core
         {
             this.IsVersioned = false;
 
-            Fields.Chars("name").SetLabel("Name").SetSize(256).Required().Unique().Readonly();
-            Fields.Chars("label").SetLabel("Label").SetSize(256);
-            Fields.Text("info").SetLabel("Information");
-            Fields.Chars("module").SetLabel("Module").SetSize(128).Required();
-            Fields.OneToMany("fields", "core.field", "model").SetLabel("Fields");
+            Fields.Chars("name").WithLabel("Name").WithSize(256).WithRequired().WithUnique().Readonly();
+            Fields.Chars("label").WithLabel("Label").WithSize(256);
+            Fields.Text("info").WithLabel("Information");
+            Fields.Chars("module").WithLabel("Module").WithSize(128).WithRequired();
+            Fields.OneToMany("fields", "core.field", "model").WithLabel("Fields");
         }
 
     }

@@ -22,20 +22,20 @@ namespace SlipStream.Core
         public RuleModel()
             : base("core.rule")
         {
-            Fields.Chars("name").SetLabel("Name").Required();
-            Fields.ManyToOne("model", "core.model").Required().SetLabel("Model");
-            Fields.Boolean("global").SetLabel("Global")
-                .Required().SetDefaultValueGetter(s => true);
-            Fields.Boolean("on_create").SetLabel("Apply for Creation")
-               .Required().SetDefaultValueGetter(s => true);
-            Fields.Boolean("on_read").SetLabel("Apply for Reading")
-                .Required().SetDefaultValueGetter(s => true);
-            Fields.Boolean("on_write").SetLabel("Apply for Writing")
-                .Required().SetDefaultValueGetter(s => true);
-            Fields.Boolean("on_delete").SetLabel("Apply for Deleting")
-                .Required().SetDefaultValueGetter(s => true);
-            Fields.ManyToMany("roles", "core.rule_role", "rule", "role").SetLabel("Roles");
-            Fields.Chars("constraint").Required().SetLabel("Constraint");
+            Fields.Chars("name").WithLabel("Name").WithRequired();
+            Fields.ManyToOne("model", "core.model").WithRequired().WithLabel("Model");
+            Fields.Boolean("global").WithLabel("Global")
+                .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.Boolean("on_create").WithLabel("Apply for Creation")
+               .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.Boolean("on_read").WithLabel("Apply for Reading")
+                .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.Boolean("on_write").WithLabel("Apply for Writing")
+                .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.Boolean("on_delete").WithLabel("Apply for Deleting")
+                .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.ManyToMany("roles", "core.rule_role", "rule", "role").WithLabel("Roles");
+            Fields.Chars("constraint").WithRequired().WithLabel("Constraint");
         }
 
         /// <summary>

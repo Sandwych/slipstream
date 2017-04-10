@@ -36,9 +36,9 @@ namespace SlipStream.Core
         {
             this.IsVersioned = false;
 
-            Fields.Chars("name").SetLabel("Name").Required().SetSize(128).Unique().Readonly();
-            Fields.ManyToOne("module", "core.module").SetLabel("Module").Required().Readonly();
-            Fields.Enumeration("state", StateOptions).SetLabel("State").Required().Readonly()
+            Fields.Chars("name").WithLabel("Name").WithRequired().WithSize(128).WithUnique().Readonly();
+            Fields.ManyToOne("module", "core.module").WithLabel("Module").WithRequired().Readonly();
+            Fields.Enumeration("state", StateOptions).WithLabel("State").WithRequired().Readonly()
                 .SetValueGetter(StateGetter);
 
         }

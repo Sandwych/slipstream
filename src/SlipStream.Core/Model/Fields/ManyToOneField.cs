@@ -36,7 +36,7 @@ namespace SlipStream.Model
 
             this.Relation = masterModel;
             this.OnDeleteAction = OnDeleteAction.Cascade;
-            this.Required();
+            this.WithRequired();
         }
 
         protected override Dictionary<long, object> OnGetFieldValues(

@@ -14,8 +14,8 @@ namespace SlipStream.Core
         public ActionModel()
             : base("core.action")
         {
-            Fields.Chars("name").SetLabel("Action Name").Required();
-            Fields.Chars("type").SetLabel("Action Type").Required();
+            Fields.Chars("name").WithLabel("Action Name").WithRequired();
+            Fields.Chars("type").WithLabel("Action Type").WithRequired();
         }
 
     }

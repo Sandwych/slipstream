@@ -8,11 +8,13 @@
   </info>
   <auto-load>true</auto-load>
   <source-language>csharp</source-language>
-  <project-file>SlipStream.TestModule.csproj</project-file>
+  <dlls>
+    <file>bin\SlipStream.TestModule.dll</file>
+  </dlls>
 
   <init-files>
-    <file>security-data.xml</file>
-    <file>data.xml</file>
+    <file>data\security-data.xml</file>
+    <file>data\data.xml</file>
   </init-files>
 
   <requires>

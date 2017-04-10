@@ -8,6 +8,6 @@ namespace SlipStream.Runtime
 {
     public interface ICompiler
     {
-        Assembly CompileFromFile(IEnumerable<string> sourceFiles);
+        Assembly BuildProject(string projectFile);
     }
 }

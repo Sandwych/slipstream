@@ -111,7 +111,7 @@ namespace SlipStream.Server
 
             var serverThread = new Thread(() =>
             {
-                using (var cs = new SlipStream.Http.AnnaHttpServer(
+                using (var cs = new SlipStream.Http.HttpServer(
                     SlipstreamEnvironment.Settings.BroadcastUrl,
                     SlipstreamEnvironment.Settings.RpcBusUrl,
                     SlipstreamEnvironment.Settings.HttpListenUrl))

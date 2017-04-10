@@ -22,15 +22,15 @@ namespace SlipStream.Core
         public FieldAccessModel()
             : base(ModelName)
         {
-            Fields.Chars("name").SetLabel("Name");
+            Fields.Chars("name").WithLabel("Name");
             Fields.ManyToOne("role", "core.role")
-                .OnDelete(OnDeleteAction.Cascade).SetLabel("Role");
-            Fields.ManyToOne("field", "core.field").Required()
-                .OnDelete(OnDeleteAction.Cascade).SetLabel("Field");
-            Fields.Boolean("allow_read").SetLabel("Allow Reading")
-                .Required().SetDefaultValueGetter(s => true);
-            Fields.Boolean("allow_write").SetLabel("Allow Writing")
-                .Required().SetDefaultValueGetter(s => true);
+                .OnDelete(OnDeleteAction.Cascade).WithLabel("Role");
+            Fields.ManyToOne("field", "core.field").WithRequired()
+                .OnDelete(OnDeleteAction.Cascade).WithLabel("Field");
+            Fields.Boolean("allow_read").WithLabel("Allow Reading")
+                .WithRequired().WithDefaultValueGetter(s => true);
+            Fields.Boolean("allow_write").WithLabel("Allow Writing")
+                .WithRequired().WithDefaultValueGetter(s => true);
         }
 
         /// <summary>

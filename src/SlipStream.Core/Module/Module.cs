@@ -183,10 +183,12 @@ namespace SlipStream
                 resources.AddRange(this.LoadStaticAssemblies());
             }
 
+            /* FIXME dynamic load
             if (!string.IsNullOrEmpty(this.Path))
             {
                 resources.AddRange(this.LoadDynamicAssembly());
             }
+            */
 
             this.InitializeResources(ctx, resources, action);
 
@@ -334,7 +336,8 @@ namespace SlipStream
             var resources = new List<IResource>();
             foreach (var dll in this.Dlls)
             {
-                var a = Assembly.LoadFile(dll);
+                var dllPath = System.IO.Path.Combine(this.Path, dll);
+                var a = Assembly.LoadFile(dllPath);
                 this.allAssembly.Add(a);
                 var res = this.GetResourcesInAssembly(a);
                 resources.AddRange(res);
@@ -439,7 +442,8 @@ namespace SlipStream
                 var compiler = CompilerProvider.GetCompiler(this.SourceLanguage);
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
-                var a = compiler.CompileFromFile(sourceFiles);
+                var projectFilePath = System.IO.Path.Combine(this.Path, this.ProjectFile);
+                var a = compiler.BuildProject(projectFilePath);
                 stopwatch.Stop();
                 var time = stopwatch.Elapsed;
                 LoggerProvider.EnvironmentLogger.Info(String.Format("Elapsed time: [{0}]", time));

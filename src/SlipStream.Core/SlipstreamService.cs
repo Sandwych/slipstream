@@ -135,7 +135,7 @@ namespace SlipStream
         private static void VerifyRootPassword(string rootPasswordHash)
         {
             var cfgRootPasswordHash = SlipstreamEnvironment.Settings.ServerPassword.ToSha();
-            if (rootPasswordHash != cfgRootPasswordHash)
+            if (rootPasswordHash.ToLowerInvariant() != cfgRootPasswordHash.ToLowerInvariant())
             {
                 throw new SlipStream.Exceptions.SecurityException("Invalid password of root user");
             }

@@ -15,13 +15,13 @@ namespace SlipStream.Core
             : base("core.attachment")
         {
             
-            Fields.Chars("name").SetLabel("Name");
-            Fields.Chars("res_name").SetLabel("Related Resource");
-            Fields.BigInteger("res_id").SetLabel("Related Resource ID.");
-            Fields.Text("description").SetLabel("Description");
-            Fields.Chars("link").SetLabel("Link");
-            Fields.Binary("content").SetLabel("Content");
-            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
+            Fields.Chars("name").WithLabel("Name");
+            Fields.Chars("res_name").WithLabel("Related Resource");
+            Fields.BigInteger("res_id").WithLabel("Related Resource ID.");
+            Fields.Text("description").WithLabel("Description");
+            Fields.Chars("link").WithLabel("Link");
+            Fields.Binary("content").WithLabel("Content");
+            Fields.ManyToOne("organization", "core.organization").WithLabel("Organization");
         }
 
 

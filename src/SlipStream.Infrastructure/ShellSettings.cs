@@ -15,10 +15,10 @@ namespace SlipStream
     /// <remarks>多个线程将会读取此类实例的字段</remarks>
     /// </summary>
     [Serializable]
-    [XmlRoot("objectserver-config")]
+    [XmlRoot("slipstream-config")]
     public sealed class ShellSettings
     {
-        public const string AppDataDirectoryName = "ObjectServer";
+        public const string AppDataDirectoryName = "SlipstreamAppData";
 
         public ShellSettings()
         {
@@ -28,11 +28,12 @@ namespace SlipStream
             this.AppDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 AppDataDirectoryName);
-            this.ModulePath = Path.Combine(appPath, "Modules");
+            this.ModulePath = Path.Combine(appPath, "..", "Modules");
+            this.ModuleDynamicLoad = false;
 
             this.Role = ServerRoles.Standalone;
-            this.DbType = "postgres";
-            this.DbHost = "localhost"; //@".\SQLEXPRESS";
+            this.DbType = "mssql";
+            this.DbHost = @"(localdb)\MSSQLLocalDB"; //@".\SQLEXPRESS";
             this.DbUser = "slipstream";
             this.DbPassword = "slipstream";
 
@@ -98,6 +99,9 @@ namespace SlipStream
 
         [XmlElement("module-path")]
         public string ModulePath { get; set; }
+
+        [XmlElement("module-dynamic-load")]
+        public bool ModuleDynamicLoad { get; set; }
 
         [XmlElement("debug")]
         public bool Debug { get; set; }

@@ -17,11 +17,11 @@ namespace SlipStream.Core
         {
             Inherit("core.action", "action");
             Fields.ManyToOne("action", "core.action")
-                .SetLabel("Base Action").Required().OnDelete(OnDeleteAction.Cascade);
+                .WithLabel("Base Action").WithRequired().OnDelete(OnDeleteAction.Cascade);
 
-            Fields.Chars("model").SetLabel("Related Model").Required().SetSize(128);
-            Fields.ManyToOne("view", "core.view").SetLabel("Master View");
-            Fields.OneToMany("views", "core.action_window_view", "window_action").SetLabel("Views");
+            Fields.Chars("model").WithLabel("Related Model").WithRequired().WithSize(128);
+            Fields.ManyToOne("view", "core.view").WithLabel("Master View");
+            Fields.OneToMany("views", "core.action_window_view", "window_action").WithLabel("Views");
         }
 
     }

@@ -40,8 +40,8 @@ namespace SlipStream.Core
         {
             this.IsVersioned = false;
 
-            Fields.Chars("name").SetLabel("Name").Required().SetSize(128).Unique().Readonly();
-            Fields.Chars("label").SetLabel("Short Description").SetSize(256).Readonly();
+            Fields.Chars("name").WithLabel("Name").WithRequired().WithSize(128).WithUnique().Readonly();
+            Fields.Chars("label").WithLabel("Short Description").WithSize(256).Readonly();
             Fields.Enumeration("state", new Dictionary<string, string>()
             {
                 { States.Uninstalled, "Uninstalled" },
@@ -49,15 +49,15 @@ namespace SlipStream.Core
                 { States.ToInstall, "To Install" },
                 { States.ToUpgrade, "To Upgrade" },
                 { States.ToUninstall, "To Uninstall" },
-            }).Required().SetLabel("State").Readonly();
-            Fields.Boolean("demo").SetLabel("Demostration?").Required().Readonly().SetDefaultValueGetter(getter => false);
-            Fields.Chars("author").SetLabel("Author").SetSize(128).Readonly();
-            Fields.Chars("url").SetLabel("Web Site").SetSize(128).Readonly();
-            Fields.Chars("version").SetLabel("Version").SetSize(64).Readonly();
-            Fields.Chars("license").SetLabel("License").SetSize(32).Readonly();
+            }).WithRequired().WithLabel("State").Readonly();
+            Fields.Boolean("demo").WithLabel("Demostration?").WithRequired().Readonly().WithDefaultValueGetter(getter => false);
+            Fields.Chars("author").WithLabel("Author").WithSize(128).Readonly();
+            Fields.Chars("url").WithLabel("Web Site").WithSize(128).Readonly();
+            Fields.Chars("version").WithLabel("Version").WithSize(64).Readonly();
+            Fields.Chars("license").WithLabel("License").WithSize(32).Readonly();
             Fields.OneToMany("depends", "core.module_dependency", "module")
-                .SetLabel("Dependencies");
-            Fields.Text("info").SetLabel("Information").Readonly();
+                .WithLabel("Dependencies");
+            Fields.Text("info").WithLabel("Information").Readonly();
         }
 
 

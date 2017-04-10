@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using SlipStream.Model;
+
+namespace SlipStream.DemoModule
+{
+    [Resource]
+    public sealed class EmployeeModel : AbstractSqlModel
+    {
+        public EmployeeModel()
+            : base("demo.employee")
+        {
+            Fields.Chars("name").WithLabel("姓名").WithRequired();
+            Fields.Chars("address").WithLabel("地址");
+            Fields.Double("salary").WithLabel("月薪");
+            Fields.Date("birthdate").WithLabel("出生日期");
+        }
+    }
+}

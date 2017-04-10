@@ -14,7 +14,7 @@ namespace SlipStream.Core
         public PropertyModel()
             : base("core.property")
         {
-            Fields.Chars("name").SetSize(64).SetLabel("Name").Required();
+            Fields.Chars("name").WithSize(64).WithLabel("Name").WithRequired();
             Fields.Enumeration("type", new Dictionary<string, string>()
             {
                 { "integer", "Integer" },
@@ -22,14 +22,14 @@ namespace SlipStream.Core
                 { "binary", "Binary"},
                 { "datetime", "Date Time"},
                 { "text", "Text"},
-            }).SetLabel("Type").Required();
+            }).WithLabel("Type").WithRequired();
 
-            Fields.Binary("value_binary").NotReadonly().SetLabel("Binary Value");
-            Fields.Double("value_float").NotReadonly().SetLabel("Double Float Value");
-            Fields.BigInteger("value_integer").NotReadonly().SetLabel("Integer Value");
-            Fields.DateTime("value_datetime").NotReadonly().SetLabel("Datetime Value");
-            Fields.Text("value_text").NotReadonly().SetLabel("Text Value");
-            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization");
+            Fields.Binary("value_binary").NotReadonly().WithLabel("Binary Value");
+            Fields.Double("value_float").NotReadonly().WithLabel("Double Float Value");
+            Fields.BigInteger("value_integer").NotReadonly().WithLabel("Integer Value");
+            Fields.DateTime("value_datetime").NotReadonly().WithLabel("Datetime Value");
+            Fields.Text("value_text").NotReadonly().WithLabel("Text Value");
+            Fields.ManyToOne("organization", "core.organization").WithLabel("Organization");
         }
 
     }

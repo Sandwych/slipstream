@@ -22,20 +22,20 @@ namespace SlipStream.Model
 
         #region Fluent interface
 
-        IField SetLabel(string label);
-        IField Required();
-        IField NotRequired();
+        IField WithLabel(string label);
+        IField WithRequired();
+        IField WithNotRequired();
         IField SetValueGetter(FieldValueGetter fieldGetter);
-        IField SetDefaultValueGetter(FieldDefaultValueGetter defaultProc);
+        IField WithDefaultValueGetter(FieldDefaultValueGetter defaultProc);
         IField SetCriterionConverter(CriterionConverter convProc);
-        IField SetSize(int size);
+        IField WithSize(int size);
         IField SetHelp(string help);
         IField Readonly();
         IField NotReadonly();
         IField OnDelete(OnDeleteAction act);
         IField BeProperty();
         IField SetOptions(IDictionary<string, string> options);
-        IField Unique();
+        IField WithUnique();
         IField NotUnique();
 
         #endregion

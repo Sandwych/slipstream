@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Reflection;
 using System.Diagnostics;
-
-using Sandwych;
+using System.IO;
 using Microsoft.CSharp;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.MSBuild;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace SlipStream.Runtime
 {
@@ -16,36 +18,41 @@ namespace SlipStream.Runtime
     {
         #region ICompiler 成员
 
-        public Assembly CompileFromFile(IEnumerable<string> sourceFiles)
+        public Assembly BuildProject(string projectFile)
         {
-            if (sourceFiles == null)
+            if (string.IsNullOrEmpty(projectFile))
             {
-                throw new ArgumentNullException("sourceFiles");
+                throw new ArgumentNullException(nameof(projectFile));
             }
-
-            using (var provider = CreateCodeProvider())
+            using (var workspace = MSBuildWorkspace.Create())
             {
-                var options = CreateCompilerParameters();
-                var result = provider.CompileAssemblyFromFile(options, sourceFiles.ToArray());
-
-                if (result.Errors.Count != 0)
+                var proj = workspace.OpenProjectAsync(projectFile).Result;
+                var options = proj.CompilationOptions.WithOutputKind(OutputKind.DynamicallyLinkedLibrary);
+                var _ = typeof(Microsoft.CodeAnalysis.CSharp.Formatting.CSharpFormattingOptions);
+                var pc = proj.GetCompilationAsync().Result
+                    .WithOptions(options);
+                if (pc != null && !string.IsNullOrEmpty(pc.AssemblyName))
                 {
-                    LogErrors(result.Errors);
-
-                    throw new CompileException("Failed to compile files", result.Errors);
+                    using (var ms = new MemoryStream())
+                    {
+                        var emitResult = pc.Emit(ms);
+                        if (emitResult.Success)
+                        {
+                            ms.Seek(0, SeekOrigin.Begin);
+                            return Assembly.Load(ms.ToArray());
+                        }
+                        else
+                        {
+                            throw new CompileException("Failed to emit assembly: " + projectFile, null);
+                        }
+                    }
                 }
-
-                return result.CompiledAssembly;
+                else
+                {
+                    throw new CompileException("Failed to compile project: " + projectFile, null);
+                }
             }
-        }
 
-        private static CSharpCodeProvider CreateCodeProvider()
-        {
-            var additionalOptions = new Dictionary<string, string>() 
-            {
-                { "CompilerVersion", "v4.0" } 
-            };
-            return new CSharpCodeProvider(additionalOptions);
         }
 
         private static CompilerParameters CreateCompilerParameters()
@@ -98,4 +105,5 @@ namespace SlipStream.Runtime
             }
         }
     }
+
 }

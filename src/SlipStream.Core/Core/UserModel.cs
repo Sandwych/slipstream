@@ -27,16 +27,16 @@ namespace SlipStream.Core
         public UserModel()
             : base(ModelName)
         {
-            Fields.Chars("login").SetLabel("User Name").SetSize(64).Required().Unique();
-            Fields.Chars("password").SetLabel("Password").SetSize(64).Required();
-            Fields.Chars("salt").SetLabel("Salt").SetSize(64).Required();
-            Fields.Boolean("admin").SetLabel("Administrator?").Required().SetDefaultValueGetter(r => false);
-            Fields.Chars("name").SetLabel("Name").Required().SetSize(64);
-            Fields.ManyToMany("roles", "core.user_role", "user", "role").SetLabel("Roles");
-            Fields.ManyToOne("organization", "core.organization").SetLabel("Organization").NotRequired();
-            Fields.ManyToOne("home_action", "core.action").SetLabel("Home Action").NotRequired();
-            Fields.Chars("email").SetLabel("Email").NotRequired().SetSize(256);
-            Fields.Boolean("active").SetLabel("Active?").Required().SetDefaultValueGetter(r => true);
+            Fields.Chars("login").WithLabel("User Name").WithSize(64).WithRequired().WithUnique();
+            Fields.Chars("password").WithLabel("Password").WithSize(64).WithRequired();
+            Fields.Chars("salt").WithLabel("Salt").WithSize(64).WithRequired();
+            Fields.Boolean("admin").WithLabel("Administrator?").WithRequired().WithDefaultValueGetter(r => false);
+            Fields.Chars("name").WithLabel("Name").WithRequired().WithSize(64);
+            Fields.ManyToMany("roles", "core.user_role", "user", "role").WithLabel("Roles");
+            Fields.ManyToOne("organization", "core.organization").WithLabel("Organization").WithNotRequired();
+            Fields.ManyToOne("home_action", "core.action").WithLabel("Home Action").WithNotRequired();
+            Fields.Chars("email").WithLabel("Email").WithNotRequired().WithSize(256);
+            Fields.Boolean("active").WithLabel("Active?").WithRequired().WithDefaultValueGetter(r => true);
         }
 
         public override void Initialize(bool update)
