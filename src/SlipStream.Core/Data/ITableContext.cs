@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using SlipStream.Model;
+using SlipStream.Entity;
 
 namespace SlipStream.Data
 {
@@ -21,7 +21,7 @@ namespace SlipStream.Data
 
         bool TableExists(IDataContext db, string tableName);
         void CreateTable(IDataContext db, string tableName, string label);
-        void CreateTable(IDataContext db, IModelDescriptor model, string label);
+        void CreateTable(IDataContext db, IEntityDescriptor model, string label);
 
         void AddConstraint(IDataContext db, string constraintName, string constraint);
         void DeleteConstraint(IDataContext db, string constraintName);

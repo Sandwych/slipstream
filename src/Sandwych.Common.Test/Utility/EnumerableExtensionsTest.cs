@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Sandwych.Utility.Test
 {
-    [TestFixture]
+    [TestFixture(Category = "Infrastructure")]
     public class EnumerableExtensionsTest
     {
 

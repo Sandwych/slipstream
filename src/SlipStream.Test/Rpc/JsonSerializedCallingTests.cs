@@ -14,10 +14,10 @@ namespace SlipStream.Test.Web
         {
             var constraints = new object[][] 
             { 
-                new object[] { "name", "=", "core.model"}
+                new object[] { "name", "=", "core.meta_entity"}
             };
 
-            var result = JsonRpc("Execute", this.SessionToken, "core.model", "Search", constraints, 0, 0);
+            var result = JsonRpc("Execute", this.SessionToken, "core.meta_entity", "Search", constraints, 0, 0);
             var ids = (object[])result["result"];
 
             Assert.AreEqual(1, ids.Length);

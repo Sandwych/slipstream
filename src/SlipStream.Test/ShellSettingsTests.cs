@@ -12,7 +12,7 @@ using SlipStream;
 
 namespace SlipStream.Test
 {
-    [TestFixture]
+    [TestFixture(Category = "Environment")]
     public class ShellSettingsTests
     {
         [Test]

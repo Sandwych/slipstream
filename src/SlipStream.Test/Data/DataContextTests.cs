@@ -12,7 +12,7 @@ using SlipStream.Data;
 
 namespace SlipStream.Data.Test
 {
-    [TestFixture]
+    [TestFixture(Category = "ORM")]
     public class DataContextTests : ServiceContextTestCaseBase
     {
         [Test]
@@ -20,11 +20,11 @@ namespace SlipStream.Data.Test
         {
             using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName))
             {
-                var sql = "SELECT _id, name FROM core_model WHERE name=?";
-                var rows = db.QueryAsDictionary(sql, "core.model");
+                var sql = "SELECT _id, name FROM core_meta_entity WHERE name=?";
+                var rows = db.QueryAsDictionary(sql, Core.MetaEntityEntity.EntityName);
                 Assert.NotNull(rows);
                 Assert.AreEqual(1, rows.Length);
-                Assert.AreEqual("core.model", rows[0]["name"]);
+                Assert.AreEqual(Core.MetaEntityEntity.EntityName, rows[0]["name"]);
             }
         }
 
@@ -33,8 +33,8 @@ namespace SlipStream.Data.Test
         {
             using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName))
             {
-                var sql = "SELECT _id, name FROM core_model WHERE name=?";
-                var dt = db.QueryAsDataTable(sql, "core.model");
+                var sql = "SELECT _id, name FROM core_meta_entity WHERE name=?";
+                var dt = db.QueryAsDataTable(sql, Core.MetaEntityEntity.EntityName);
                 Assert.NotNull(dt);
 
                 Assert.AreEqual(2, dt.Columns.Count);
@@ -42,7 +42,7 @@ namespace SlipStream.Data.Test
                 Assert.AreEqual("name", dt.Columns[1].ColumnName);
 
                 Assert.AreEqual(1, dt.Rows.Count);
-                Assert.AreEqual("core.model", dt.Rows[0]["name"]);
+                Assert.AreEqual(Core.MetaEntityEntity.EntityName, dt.Rows[0]["name"]);
             }
         }
 
@@ -51,12 +51,12 @@ namespace SlipStream.Data.Test
         {
             using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName))
             {
-                var sql = "SELECT _id, name FROM core_model WHERE name=?";
-                var records = db.QueryAsDynamic(sql, "core.model");
+                var sql = "SELECT _id, name FROM core_meta_entity WHERE name=?";
+                var records = db.QueryAsDynamic(sql, Core.MetaEntityEntity.EntityName);
                 Assert.NotNull(records);
 
                 Assert.AreEqual(1, records.Length);
-                Assert.AreEqual("core.model", records[0].name);
+                Assert.AreEqual(Core.MetaEntityEntity.EntityName, records[0].name);
             }
         }
 
@@ -66,12 +66,12 @@ namespace SlipStream.Data.Test
         {
             using (var db = this.DbDomain.DataProvider.OpenDataContext(TestingDatabaseName))
             {
-                var sql = "SELECT name FROM core_model WHERE name=?";
-                var names = db.QueryAsArray<string>(sql, "core.model");
+                var sql = "SELECT name FROM core_meta_entity WHERE name=?";
+                var names = db.QueryAsArray<string>(sql, Core.MetaEntityEntity.EntityName);
 
                 Assert.NotNull(names);
                 Assert.AreEqual(1, names.Length);
-                Assert.AreEqual("core.model", names[0]);
+                Assert.AreEqual(Core.MetaEntityEntity.EntityName, names[0]);
             }
         }
 

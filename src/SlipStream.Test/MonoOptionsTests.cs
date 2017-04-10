@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace SlipStream.Test
 {
-    [TestFixture]
+    [TestFixture(Category = "Infrastructure")]
     public class MonoOptionsTests
     {
         [Test]
@@ -19,8 +19,8 @@ namespace SlipStream.Test
             var unknownArg1 = "-c db_port=1234";
             var unknownArg2 = "-c db_user=demo";
             var args = new string[] {
-                "--version", 
-                "-h", 
+                "--version",
+                "-h",
                 unknownArg1,
                 unknownArg2,
             };
@@ -41,8 +41,8 @@ namespace SlipStream.Test
             var unknownArg1 = "-c db_port=1234";
             var unknownArg2 = "-c db_user=demo";
             var args = new string[] {
-                "--version", 
-                "-h", 
+                "--version",
+                "-h",
                 unknownArg1,
                 unknownArg2,
             };

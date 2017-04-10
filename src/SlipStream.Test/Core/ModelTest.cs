@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace SlipStream.Core.Test
 {
 
-    public sealed class ModelTest : ServiceContextTestCaseBase
+    public sealed class EntityTest : ServiceContextTestCaseBase
     {
 
 

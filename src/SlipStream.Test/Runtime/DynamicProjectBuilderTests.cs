@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace SlipStream.Runtime
 {
-    [TestFixture]
+    [TestFixture(Category = "Runtime")]
     public class DynamicProjectBuilderTests
     {
 

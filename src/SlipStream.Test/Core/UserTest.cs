@@ -8,20 +8,20 @@ using NUnit.Framework;
 namespace SlipStream.Core.Test
 {
 
-    [TestFixture]
+    [TestFixture(Category = "CoreModule")]
     public sealed class UserTest : ServiceContextTestCaseBase
     {
         [Test]
         public void CanNotGetPasswordAndSalt()
         {
 
-            dynamic userModel = this.GetResource("core.user");
+            dynamic userEntity = this.GetResource(Core.UserEntity.EntityName);
 
             var searchDomain = new object[][] { new object[] { "login", "=", "test" } };
-            var ids = userModel.Search(searchDomain, null, 0, 0);
+            var ids = userEntity.Search(searchDomain, null, 0, 0);
             if (ids.Length > 0)
             {
-                userModel.Delete(ids);
+                userEntity.Delete(ids);
             }
 
             var userRecord = new Dictionary<string, object>()
@@ -34,8 +34,8 @@ namespace SlipStream.Core.Test
 
             var fields = new string[] { "name", "login", "password", "salt" };
 
-            var uid = userModel.Create(userRecord);
-            dynamic records = userModel.Read(new object[] { uid }, fields);
+            var uid = userEntity.Create(userRecord);
+            dynamic records = userEntity.Read(new object[] { uid }, fields);
             var user1 = records[0];
             var salt = (string)user1["salt"];
             Assert.IsNull(salt);

@@ -8,13 +8,16 @@ using Autofac;
 
 using SlipStream.Data;
 
-namespace SlipStream.Sessions.Test {
-    [TestFixture]
-    public class DbUserSessionServiceTests {
+namespace SlipStream.Sessions.Test
+{
+    [TestFixture(Category = "Security")]
+    public class DbUserSessionServiceTests
+    {
         private IDataContext _dataContext;
 
         [SetUp]
-        public void Init() {
+        public void Init()
+        {
             SlipstreamEnvironment.Initialize();
 
             var TestingDatabaseName = ServiceTestCaseBase.TestingDatabaseName;
@@ -23,15 +26,18 @@ namespace SlipStream.Sessions.Test {
         }
 
         [TearDown]
-        public void Cleanup() {
-            if (this._dataContext != null) {
+        public void Cleanup()
+        {
+            if (this._dataContext != null)
+            {
                 this._dataContext.Close();
                 this._dataContext = null;
             }
         }
 
         [Test]
-        public void CheckPutAndGet() {
+        public void CheckPutAndGet()
+        {
             var svc = new SqlUserSessionStore(this._dataContext);
             var sess = new UserSession("session_test", 9999);
             svc.Put(sess);
@@ -45,7 +51,8 @@ namespace SlipStream.Sessions.Test {
         }
 
         [Test]
-        public void PulseShouldBeSuccessfully() {
+        public void PulseShouldBeSuccessfully()
+        {
             var svc = new SqlUserSessionStore(this._dataContext);
             var sess = new UserSession("session_test", 9999);
             svc.Put(sess);

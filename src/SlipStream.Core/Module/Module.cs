@@ -201,7 +201,7 @@ namespace SlipStream
         {
             Debug.Assert(tc != null);
 
-            var a = typeof(SlipStream.Core.ModuleModel).Assembly;
+            var a = typeof(ModuleEntity).Assembly;
             var resources = this.GetResourcesInAssembly(a);
             this.InitializeResources(tc, resources, action);
 
@@ -209,7 +209,7 @@ namespace SlipStream
             if (action == ModuleUpdateAction.ToInstall)
             {
                 LoggerProvider.EnvironmentLogger.Info(() => "Importing data for the Core Module...");
-                var importer = new Model.XmlDataImporter(tc, this.Name);
+                var importer = new Entity.XmlDataImporter(tc, this.Name);
                 foreach (var resPath in s_coreInitDataFiles)
                 {
                     using (var resStream = a.GetManifestResourceStream(resPath))
@@ -266,7 +266,7 @@ namespace SlipStream
 
         private void ImportDataFiles(IServiceContext scope, string[] files)
         {
-            var importer = new Model.XmlDataImporter(scope, this.Name);
+            var importer = new Entity.XmlDataImporter(scope, this.Name);
             foreach (var dataFile in files)
             {
                 var dataFilePath = System.IO.Path.Combine(this.Path, dataFile);
@@ -388,10 +388,10 @@ namespace SlipStream
                 throw new ArgumentNullException("_datactx");
             }
 
-            var state = ModuleModel.States.Uninstalled;
+            var state = ModuleEntity.States.Uninstalled;
             if (this.AutoLoad)
             {
-                state = ModuleModel.States.ToInstall;
+                state = ModuleEntity.States.ToInstall;
             }
 
             var insertSql =

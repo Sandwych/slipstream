@@ -9,7 +9,7 @@ using SlipStream.Data;
 
 namespace SlipStream.Sessions.Test
 {
-    [TestFixture]
+    [TestFixture(Category = "Security")]
     public class InMemoryUserSessionServiceTests
     {
         [SetUp]

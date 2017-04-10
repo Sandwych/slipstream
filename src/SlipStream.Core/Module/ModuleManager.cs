@@ -13,7 +13,7 @@ using Sandwych;
 using Sandwych.Utility;
 
 using SlipStream.Exceptions;
-using SlipStream.Model;
+using SlipStream.Entity;
 using SlipStream.Runtime;
 using SlipStream.Data;
 using SlipStream.Core;
@@ -182,7 +182,7 @@ namespace SlipStream
             var sql = @"select ""_id"", ""name"", ""state"" from ""core_module"" ";
 
             //TODO: 模块依赖排序
-            var modules = ctx.DataContext.QueryAsDictionary(sql, ModuleModel.States.Installed);
+            var modules = ctx.DataContext.QueryAsDictionary(sql, ModuleEntity.States.Installed);
 
             var coreModule = modules.Where(m => (string)m["name"] == "core");
             var sortedModules = modules.Where(m => (string)m["name"] != "core");
@@ -192,7 +192,7 @@ namespace SlipStream
             {
                 var moduleName = (string)m["name"];
                 var module = this.allModules.SingleOrDefault(i => i.Name == moduleName);
-                var moduleId = (long)m[AbstractModel.IdFieldName];
+                var moduleId = (long)m[AbstractEntity.IdFieldName];
 
 
                 if (module != null)
@@ -202,7 +202,7 @@ namespace SlipStream
                 }
                 else
                 {
-                    this.UpdateModuleState(ctx.DataContext, moduleId, ModuleModel.States.Uninstalled);
+                    this.UpdateModuleState(ctx.DataContext, moduleId, ModuleEntity.States.Uninstalled);
                     LoggerProvider.EnvironmentLogger.Warn(() => string.Format(
                         CultureInfo.CurrentCulture,
                         "Warning: Cannot found module '{0}', it will be deactivated.", moduleName));
@@ -213,21 +213,21 @@ namespace SlipStream
 
         private void InstallOrUpgradeModule(IServiceContext ctx, Module module, long moduleId, string state, bool isUpdate)
         {
-            if (isUpdate && state == ModuleModel.States.ToInstall)
+            if (isUpdate && state == ModuleEntity.States.ToInstall)
             {
                 module.Load(ctx, ModuleUpdateAction.ToInstall);
-                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleModel.States.Installed);
+                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleEntity.States.Installed);
             }
-            else if (isUpdate && state == ModuleModel.States.ToUpgrade)
+            else if (isUpdate && state == ModuleEntity.States.ToUpgrade)
             {
                 module.Load(ctx, ModuleUpdateAction.ToUpgrade);
-                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleModel.States.Installed);
+                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleEntity.States.Installed);
             }
-            else if (isUpdate && state == ModuleModel.States.ToUninstall)
+            else if (isUpdate && state == ModuleEntity.States.ToUninstall)
             {
-                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleModel.States.Uninstalled);
+                this.UpdateModuleState(ctx.DataContext, moduleId, ModuleEntity.States.Uninstalled);
             }
-            else if (state == ModuleModel.States.Installed)
+            else if (state == ModuleEntity.States.Installed)
             {
                 module.Load(ctx, ModuleUpdateAction.NoAction);
             }

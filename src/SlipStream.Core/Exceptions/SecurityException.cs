@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-using SlipStream.Model;
+using SlipStream.Entity;
 
 namespace SlipStream.Exceptions
 {

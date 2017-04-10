@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace SlipStream.Test
 {
-    [TestFixture]
+    [TestFixture(Category = "Environment")]
     public class ServiceDispatcherTests
     {
         public void CreateAndDeleteDatabaseShouldBeSuccessfully()

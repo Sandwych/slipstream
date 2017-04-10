@@ -59,7 +59,7 @@ namespace SlipStream.Runtime
         {
             var selfAssembly = Assembly.GetExecutingAssembly();
             var infrastructureAssembly = typeof(ShellSettings).Assembly;
-            var sharedAssembly = typeof(SlipStream.Model.Criterion).Assembly;
+            var sharedAssembly = typeof(SlipStream.Entity.Criterion).Assembly;
             var maltAssembly = typeof(ObjectExtensions).Assembly;
 
             //设置编译参数，加入所需的组件 

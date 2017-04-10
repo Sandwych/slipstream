@@ -14,7 +14,7 @@ namespace Sandwych.Utility.Test
     }
 
 
-    [TestFixture]
+    [TestFixture(Category = "Infrastructure")]
     public class DependencySorterTest
     {
         [Datapoint]
@@ -40,7 +40,7 @@ namespace Sandwych.Utility.Test
                 {
                     Name = "group",
                     Depend = new string[] { "user" }
-                },              
+                },
             };
 
         [Datapoint]

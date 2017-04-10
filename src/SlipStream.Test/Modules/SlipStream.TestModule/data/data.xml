@@ -3,25 +3,25 @@
 
   <!-- Sales Orders -->
 
-  <record model="test.sales_order" key="test_sales_order1">
+  <record entity="test.sales_order" key="test_sales_order1">
     <field name="name">S/0001</field>
     <field name="order_date">2011-03-01T07:33:23</field>
     <field name="organization" ref-key="org_sales_dept1" />
   </record>
 
-  <record model="test.sales_order" key="test_sales_order2">
+  <record entity="test.sales_order" key="test_sales_order2">
     <field name="name">S/0002</field>
     <field name="order_date">2011-03-01T07:33:23</field>
     <field name="organization" ref-key="org_sales_dept2" />
   </record>
 
-  <record model="test.sales_order" key="test_sales_order3">
+  <record entity="test.sales_order" key="test_sales_order3">
     <field name="name">S/0003</field>
     <field name="order_date">2011-03-01T07:33:23</field>
     <field name="organization" ref-key="org_sales_dept2" />
   </record>
 
-  <record model="test.sales_order" key="test_sales_order4">
+  <record entity="test.sales_order" key="test_sales_order4">
     <field name="name">S/0004</field>
     <field name="order_date">2011-03-01T07:33:23</field>
   </record>

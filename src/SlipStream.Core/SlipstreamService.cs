@@ -31,24 +31,24 @@ namespace SlipStream
         {
             if (string.IsNullOrEmpty(dbName))
             {
-                throw new ArgumentNullException("_dbName");
+                throw new ArgumentNullException(nameof(dbName));
             }
 
             if (string.IsNullOrEmpty(username))
             {
-                throw new ArgumentNullException("username");
+                throw new ArgumentNullException(nameof(username));
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                throw new ArgumentNullException("password");
+                throw new ArgumentNullException(nameof(password));
             }
 
             var dbDomain = _dbDomainManager.GetDbDomain(dbName);
             using (var ctx = dbDomain.OpenSystemSession())
             {
-                dynamic userModel = dbDomain.GetResource(UserModel.ModelName);
-                UserSession session = userModel.LogOn(dbName, username, password);
+                dynamic userEntity = dbDomain.GetResource(UserEntity.EntityName);
+                UserSession session = userEntity.LogOn(dbName, username, password);
                 Debug.Assert(session != null);
                 return session.Token.ToString();
             }
@@ -59,19 +59,19 @@ namespace SlipStream
         {
             if (string.IsNullOrEmpty(db))
             {
-                throw new ArgumentNullException("db");
+                throw new ArgumentNullException(nameof(db));
             }
 
             if (string.IsNullOrEmpty(sessionToken))
             {
-                throw new ArgumentNullException("sessionToken");
+                throw new ArgumentNullException(nameof(sessionToken));
             }
 
             var dbDomain = _dbDomainManager.GetDbDomain(db);
             using (var ctx = dbDomain.OpenSession(sessionToken))
             {
-                dynamic userModel = dbDomain.GetResource(UserModel.ModelName);
-                userModel.LogOff(sessionToken);
+                dynamic userEntity = dbDomain.GetResource(UserEntity.EntityName);
+                userEntity.LogOff(sessionToken);
             }
         }
 
@@ -84,17 +84,22 @@ namespace SlipStream
         {
             if (string.IsNullOrEmpty(db))
             {
-                throw new ArgumentNullException("session");
+                throw new ArgumentNullException(nameof(db));
             }
 
             if (string.IsNullOrEmpty(sessionToken))
             {
-                throw new ArgumentNullException("userSessionId");
+                throw new ArgumentNullException(nameof(sessionToken));
             }
 
             if (string.IsNullOrEmpty(resource))
             {
-                throw new ArgumentNullException("resource");
+                throw new ArgumentNullException(nameof(resource));
+            }
+
+            if (string.IsNullOrEmpty(method))
+            {
+                throw new ArgumentNullException(nameof(method));
             }
 
             //加入事务
@@ -144,41 +149,37 @@ namespace SlipStream
         #endregion
 
 
-        #region Model methods
-
-        public long CreateModel(string db, string sessionToken, string modelName, IRecord record)
+        public long CreateEntity(string db, string sessionToken, string entityName, IRecord record)
         {
-            return (long)Execute(db, sessionToken, modelName, "Create", new object[] { record });
+            return (long)Execute(db, sessionToken, entityName, "Create", new object[] { record });
         }
 
-        public long CountModel(string db, string sessionToken, string modelName, object[] constraints)
+        public long CountEntity(string db, string sessionToken, string entityName, object[] constraints)
         {
-            return (long)Execute(db, sessionToken, modelName, "Count", new object[] { constraints });
+            return (long)Execute(db, sessionToken, entityName, "Count", new object[] { constraints });
         }
 
-        public long[] SearchModel(
-            string db, string sessionToken, string modelName, object[] constraints, object[] order, long offset, long limit)
+        public long[] SearchEntity(
+            string db, string sessionToken, string entityName, object[] constraints, object[] order, long offset, long limit)
         {
-            return (long[])Execute(db, sessionToken, modelName, "Search", new object[] { constraints, order, offset, limit });
+            return (long[])Execute(db, sessionToken, entityName, "Search", new object[] { constraints, order, offset, limit });
         }
 
-        public Record[] ReadModel(string db, string sessionToken, string modelName, object[] ids, object[] fields)
+        public Record[] ReadEntity(string db, string sessionToken, string entityName, object[] ids, object[] fields)
         {
-            return (Record[])Execute(db, sessionToken, modelName, "Read", new object[] { ids, fields });
+            return (Record[])Execute(db, sessionToken, entityName, "Read", new object[] { ids, fields });
         }
 
-        public void WriteModel(
-            string db, string sessionToken, string modelName, object id, IRecord record)
+        public void WriteEntity(
+            string db, string sessionToken, string entityName, object id, IRecord record)
         {
-            Execute(db, sessionToken, modelName, "Write", new object[] { id, record });
+            Execute(db, sessionToken, entityName, "Write", new object[] { id, record });
         }
 
-        public void DeleteModel(string db, string sessionToken, string modelName, object[] ids)
+        public void DeleteEntity(string db, string sessionToken, string entityName, object[] ids)
         {
-            Execute(db, sessionToken, modelName, "Delete", new object[] { ids });
+            Execute(db, sessionToken, entityName, "Delete", new object[] { ids });
         }
-
-        #endregion
 
     }
 }

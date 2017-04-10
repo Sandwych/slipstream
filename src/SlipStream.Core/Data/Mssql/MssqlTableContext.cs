@@ -11,7 +11,7 @@ using Sandwych;
 using Sandwych.Utility;
 using NHibernate.SqlCommand;
 
-using SlipStream.Model;
+using SlipStream.Entity;
 
 namespace SlipStream.Data.Mssql
 {
@@ -78,7 +78,7 @@ namespace SlipStream.Data.Mssql
             return n > 0;
         }
 
-        public void CreateTable(IDataContext db, IModelDescriptor model, string label)
+        public void CreateTable(IDataContext db, IEntityDescriptor model, string label)
         {
             if (db == null)
             {

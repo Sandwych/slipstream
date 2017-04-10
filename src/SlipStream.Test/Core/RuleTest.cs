@@ -5,12 +5,12 @@ using System.Text;
 
 using NUnit.Framework;
 
-using SlipStream.Model;
+using SlipStream.Entity;
 
 namespace SlipStream.Core.Test
 {
 
-    [TestFixture]
+    [TestFixture(Category = "CoreModule")]
     public sealed class RuleTest : ServiceTestCaseBase
     {
         [Test]
@@ -29,13 +29,11 @@ namespace SlipStream.Core.Test
             var services = SlipstreamEnvironment.RootService;
 
             var sid = services.LogOn(TestingDatabaseName, login, password);
-            //var ruleModel = (RuleModel)this.TransactionContext.GetResource("core.rule");
-            //var salesOrderModel = (IModel)this.TransactionContext.GetResource("test.sales_order");
 
             try
             {
                 var orders = new OrderExpression[] {
-                        new OrderExpression("name", SortDirection.Ascend) 
+                        new OrderExpression("name", SortDirection.Ascend)
                     };
                 var ids = (long[])services.Execute(
                     ServiceContextTestCaseBase.TestingDatabaseName, sid, "test.sales_order", "Search",

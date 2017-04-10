@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 using Newtonsoft.Json;
 
-namespace SlipStream.Model
+namespace SlipStream.Entity
 {
     /// <summary>
     /// 用于表示三元组形式的约束表达式： (field,"=", value)

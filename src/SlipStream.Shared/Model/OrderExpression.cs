@@ -5,7 +5,7 @@ using System.Text;
 
 using Newtonsoft.Json;
 
-namespace SlipStream.Model
+namespace SlipStream.Entity
 {
 
     public class OrderExpression

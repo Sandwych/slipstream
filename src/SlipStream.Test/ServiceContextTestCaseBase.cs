@@ -49,19 +49,19 @@ namespace SlipStream {
             this.Context = null;
         }
 
-        protected void ClearTestModelTable() {
+        protected void ClearTestEntityTable() {
             Debug.Assert(this.Context != null);
-            this.ClearModel("test.test_model");
+            this.ClearEntity("test.test_entity");
         }
 
 
         protected void ClearMasterAndChildTable() {
             Debug.Assert(this.Context != null);
-            this.ClearModel("test.child");
-            this.ClearModel("test.master");
+            this.ClearEntity("test.child");
+            this.ClearEntity("test.master");
         }
 
-        protected void ClearModel(string modelName) {
+        protected void ClearEntity(string modelName) {
             dynamic model = this.GetResource(modelName);
             var ids = model.Search(null, null, 0, 0);
             if (ids.Length > 0) {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace SlipStream.Model
+namespace SlipStream.Entity
 {
     public enum SortDirection
     {

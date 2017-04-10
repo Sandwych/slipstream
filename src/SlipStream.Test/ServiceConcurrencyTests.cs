@@ -7,11 +7,11 @@ using System.Threading;
 
 using NUnit.Framework;
 
-using SlipStream.Model;
+using SlipStream.Entity;
 
 namespace SlipStream.Test
 {
-    [TestFixture]
+    [TestFixture(Category = "RPC")]
     public sealed class ServiceConcurrencyTests : ServiceTestCaseBase
     {
         [Test]

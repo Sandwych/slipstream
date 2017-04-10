@@ -9,7 +9,7 @@ using System.Diagnostics;
 using Autofac;
 using NHibernate.SqlCommand;
 
-using SlipStream.Model;
+using SlipStream.Entity;
 
 namespace SlipStream.Data {
     internal abstract class AbstractDataContext : IDataContext {

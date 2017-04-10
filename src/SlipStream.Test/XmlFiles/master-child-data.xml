@@ -3,34 +3,34 @@
 
   <!-- Master & Child data -->
 
-  <record model="test.master" key="m1">
+  <record entity="test.master" key="m1">
     <field name="name">master-tmp</field>
   </record>
 
   <!-- 测试重复创建 -->
-  <record model="test.master" key="m1">
+  <record entity="test.master" key="m1">
     <field name="name">master1</field>
   </record>
 
-  <record model="test.master" key="m2">
+  <record entity="test.master" key="m2">
     <field name="name">master2</field>
   </record>
 
-  <record model="test.master" key="m3">
+  <record entity="test.master" key="m3">
     <field name="name">master3</field>
   </record>
 
-  <record model="test.child" key="c1" >
+  <record entity="test.child" key="c1" >
     <field name="name">child1</field>
     <field name="master" ref-key="m1" />
   </record>
 
-  <record model="test.child" key="c2" >
+  <record entity="test.child" key="c2" >
     <field name="name">child2</field>
     <field name="master" ref-key="m1" />
   </record>
 
-  <record model="test.child" key="c3" >
+  <record entity="test.child" key="c3" >
     <field name="name">child3</field>
     <field name="master" ref-key="m2" />
   </record>

@@ -43,12 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\functional-field-object.cs" />
-    <Compile Include="Models\inheritance-models.cs" />
-    <Compile Include="Models\many-to-many-models.cs" />
+    <Compile Include="Entities\FunctionalFieldEntities.cs" />
+    <Compile Include="Entities\InheritanceEntities.cs" />
+    <Compile Include="Entities\ManyToManyEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\simple-models.cs" />
-    <Compile Include="Models\tree-models.cs" />
+    <Compile Include="Entities\SimpleEntities.cs" />
+    <Compile Include="Entities\TreeEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="data\data.xml" />

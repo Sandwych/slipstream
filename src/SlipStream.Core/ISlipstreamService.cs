@@ -48,12 +48,12 @@ namespace SlipStream
         void CreateDatabase(string rootPasswordHash, string dbName, string adminPassword);
         void DeleteDatabase(string rootPasswordHash, string dbName);
 
-        long CreateModel(string db, string sessionToken, string modelName, IRecord propertyBag);
-        long CountModel(string db, string sessionToken, string modelName, object[] constraints = null);
-        long[] SearchModel(string db, string sessionToken, string modelName, object[] constraints = null,
+        long CreateEntity(string db, string sessionToken, string entityName, IRecord propertyBag);
+        long CountEntity(string db, string sessionToken, string entityName, object[] constraints = null);
+        long[] SearchEntity(string db, string sessionToken, string entityName, object[] constraints = null,
             object[] order = null, long offset = 0, long limit = 0);
-        Record[] ReadModel(string db, string sessionToken, string modelName, object[] ids, object[] fields = null);
-        void WriteModel(string db, string sessionToken, string modelName, object id, IRecord record);
-        void DeleteModel(string db, string sessionToken, string modelName, object[] ids);
+        Record[] ReadEntity(string db, string sessionToken, string entityName, object[] ids, object[] fields = null);
+        void WriteEntity(string db, string sessionToken, string entityName, object id, IRecord record);
+        void DeleteEntity(string db, string sessionToken, string entityName, object[] ids);
     }
 }

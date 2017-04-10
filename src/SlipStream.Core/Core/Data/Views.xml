@@ -2,9 +2,9 @@
 <data noupdate="true">
 
   <!-- Modules's View -->
-  <record model="core.view" key="module_tree_view">
+  <record entity="core.view" key="module_tree_view">
     <field name="name">Modules</field>
-    <field name="model">core.module</field>
+    <field name="entity">core.module</field>
     <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[
@@ -22,9 +22,9 @@
     </field>
   </record>
 
-  <record model="core.view" key="module_form_view">
+  <record entity="core.view" key="module_form_view">
     <field name="name">Modules</field>
-    <field name="model">core.module</field>
+    <field name="entity">core.module</field>
     <field name="kind">form</field>
     <field name="layout">
       <![CDATA[
@@ -62,18 +62,18 @@
     </field>
   </record>
 
-  <record  model="core.action_window" key="module_menu_action">
+  <record  entity="core.action_window" key="module_menu_action">
     <field name="name">Modules</field>
     <field name="type">core.action_window</field>
     <field name="view" ref-key="module_tree_view" />
-    <field name="model">core.module</field>
+    <field name="entity">core.module</field>
   </record>
 
   <!-- User's View -->
 
-  <record model="core.view" key="user_tree_view">
+  <record entity="core.view" key="user_tree_view">
     <field name="name">Users</field>
-    <field name="model">core.user</field>
+    <field name="entity">core.user</field>
     <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[
@@ -88,9 +88,9 @@
     </field>
   </record>
 
-  <record model="core.view" key="user_form_view">
+  <record entity="core.view" key="user_form_view">
     <field name="name">Users</field>
-    <field name="model">core.user</field>
+    <field name="entity">core.user</field>
     <field name="kind">form</field>
     <field name="layout">
       <![CDATA[
@@ -121,27 +121,27 @@
     </field>
   </record>
 
-  <record  model="core.action_window" key="user_menu_action">
+  <record  entity="core.action_window" key="user_menu_action">
     <field name="name">Users Management</field>
     <field name="type">core.action_window</field>
     <field name="view" ref-key="user_tree_view" />
-    <field name="model">core.user</field>
+    <field name="entity">core.user</field>
   </record>
 
-  <record  model="core.action_window_view" key="user_form_view_ref">
+  <record  entity="core.action_window_view" key="user_form_view_ref">
     <field name="ordinal">1</field>
     <field name="view" ref-key="user_form_view" />
     <field name="window_action" ref-key="user_menu_action" />
   </record>
 
-  <!-- Model's View -->
-  <record model="core.view" key="model_tree_view">
-    <field name="name">Models</field>
-    <field name="model">core.model</field>
+  <!-- entity's View -->
+  <record entity="core.view" key="entity_tree_view">
+    <field name="name">entitys</field>
+    <field name="entity">core.entity</field>
     <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[
-      <tree label="Models">
+      <tree label="entitys">
         <field name="name" where="basic" />
         <field name="label" where="basic" />
         <field name="module" where="basic" />
@@ -150,17 +150,17 @@
     </field>
   </record>
 
-  <record  model="core.action_window" key="model_menu_action">
-    <field name="name">Models</field>
+  <record  entity="core.action_window" key="entity_menu_action">
+    <field name="name">entitys</field>
     <field name="type">core.action_window</field>
-    <field name="view" ref-key="model_tree_view" />
-    <field name="model">core.model</field>
+    <field name="view" ref-key="entity_tree_view" />
+    <field name="entity">core.entity</field>
   </record>
 
   <!-- User Role's View -->
-  <record model="core.view" key="role_tree_view">
+  <record entity="core.view" key="role_tree_view">
     <field name="name">User Roles</field>
-    <field name="model">core.role</field>
+    <field name="entity">core.role</field>
     <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[
@@ -171,16 +171,16 @@
     </field>
   </record>
 
-  <record  model="core.action_window" key="role_menu_action">
+  <record  entity="core.action_window" key="role_menu_action">
     <field name="name">Roles</field>
     <field name="type">core.action_window</field>
     <field name="view" ref-key="role_tree_view" />
-    <field name="model">core.role</field>
+    <field name="entity">core.role</field>
   </record>
 
-  <record model="core.view" key="role_form_view">
+  <record entity="core.view" key="role_form_view">
     <field name="name">Role</field>
-    <field name="model">core.role</field>
+    <field name="entity">core.role</field>
     <field name="kind">form</field>
     <field name="layout">
       <![CDATA[
@@ -193,9 +193,9 @@
             <input field="users" colspan="4" fill="true" />
           </page>
           <page label="Access Permissions">
-            <hr text="Model Access Entries" colspan="4" />
-            <input field="model_access_entries" colspan="4" fill="true" />
-            <hr text="Model Field Access Entries" colspan="4" />
+            <hr text="entity Access Entries" colspan="4" />
+            <input field="entity_access_entries" colspan="4" fill="true" />
+            <hr text="entity Field Access Entries" colspan="4" />
             <input field="field_access_entries" colspan="4" fill="true" />
           </page>
           <page label="Access Rules">
@@ -208,9 +208,9 @@
   </record>
 
   <!-- Menu's View -->
-  <record model="core.view" key="menu_tree_view">
+  <record entity="core.view" key="menu_tree_view">
     <field name="name">Menus</field>
-    <field name="model">core.menu</field>
+    <field name="entity">core.menu</field>
     <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[
@@ -225,32 +225,32 @@
   </record>
 
   <!-- View's View -->
-  <record model="core.view" key="view_tree_view">
+  <record entity="core.view" key="view_tree_view">
     <field name="name">Views</field>
-    <field name="model">core.view</field>
+    <field name="entity">core.view</field>
     <field name="kind">tree</field>
     <field name="layout">
       <![CDATA[
       <tree label="Views">
         <field name="name" where="basic" />
-        <field name="model" where="basic" />
+        <field name="entity" where="basic" />
         <field name="kind" where="basic" />
       </tree>
       ]]>
     </field>
   </record>
 
-  <record  model="core.action_window" key="menu_menu_action">
+  <record  entity="core.action_window" key="menu_menu_action">
     <field name="name">Menus</field>
     <field name="type">core.action_window</field>
     <field name="view" ref-key="menu_tree_view" />
-    <field name="model">core.menu</field>
+    <field name="entity">core.menu</field>
   </record>
 
-  <record  model="core.action_window" key="view_menu_action">
+  <record  entity="core.action_window" key="view_menu_action">
     <field name="name">Views</field>
     <field name="type">core.action_window</field>
-    <field name="model">core.view</field>
+    <field name="entity">core.view</field>
     <field name="view" ref-key="view_tree_view" />
   </record>
 

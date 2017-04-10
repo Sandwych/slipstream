@@ -1,83 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data>
 
-  <record model="core.organization" key="org_sales_dept1">
+  <record entity="core.organization" key="org_sales_dept1">
     <field name="code">sales-dept1</field>
     <field name="name">Sales Department #1</field>
     <field name="parent" ref-key="org_root" />
   </record>
 
-  <record model="core.organization" key="org_sales_dept2">
+  <record entity="core.organization" key="org_sales_dept2">
     <field name="code">sales-dept2</field>
     <field name="name">Sales Department #2</field>
     <field name="parent" ref-key="org_root" />
   </record>
 
-  <record model="core.role" key="role_salesmen">
+  <record entity="core.role" key="role_salesmen">
     <field name="name">Salesmen</field>
   </record>
 
-  <record model="core.user" key="user_testuser">
+  <record entity="core.user" key="user_testuser">
     <field name="login">testuser</field>
     <field name="password">testuser</field>
     <field name="name">Test User</field>
   </record>
 
-  <record model="core.user" key="user_user1">
+  <record entity="core.user" key="user_user1">
     <field name="login">user1</field>
     <field name="name">User1</field>
     <field name="organization" ref-key="org_sales_dept1" />
     <field name="password">user1</field>
   </record>
 
-  <record model="core.user" key="user_user2">
+  <record entity="core.user" key="user_user2">
     <field name="login">user2</field>
     <field name="name">User2</field>
     <field name="organization" ref-key="org_sales_dept2" />
     <field name="password">user2</field>
   </record>
 
-  <record model="core.user" key="user_user3">
+  <record entity="core.user" key="user_user3">
     <field name="login">user3</field>
     <field name="name">User3</field>
     <field name="password">user3</field>
   </record>
 
-  <record model="core.user_role" key="ug_testuser">
+  <record entity="core.user_role" key="ug_testuser">
     <field name="role" ref-key="role_user" />
     <field name="user" ref-key="user_testuser" />
   </record>
 
-  <record model="core.user_role" key="ug_user1_salesmen">
+  <record entity="core.user_role" key="ug_user1_salesmen">
     <field name="role" ref-key="role_salesmen" />
     <field name="user" ref-key="user_user1" />
   </record>
 
-  <record model="core.user_role" key="ug_user2_salesmen">
+  <record entity="core.user_role" key="ug_user2_salesmen">
     <field name="role" ref-key="role_salesmen" />
     <field name="user" ref-key="user_user2" />
   </record>
 
-  <record model="core.rule" key="rule_salesmen_company" >
+  <record entity="core.rule" key="rule_salesmen_company" >
     <field name="name">销售员只能访问所在部门的销售订单</field>
-    <field name="model" ref-key="model_test_sales_order" />
+    <field name="meta_entity" ref-key="entity_test_sales_order" />
     <field name="global">false</field>
     <field name="constraint">[ ["organization._id", "=", user.organization._id] ]</field>
   </record>
 
-  <record model="core.rule" key="rule_salesmen_access_all" >
+  <record entity="core.rule" key="rule_salesmen_access_all" >
     <field name="name">销售员可以访问所有尚未设置所属部门的销售订单</field>
-    <field name="model" ref-key="model_test_sales_order" />
+    <field name="meta_entity" ref-key="entity_test_sales_order" />
     <field name="global">false</field>
     <field name="constraint">[ ["organization", "=", None] ]</field>
   </record>
 
-  <record model="core.rule_role" key="rg_salesmen">
+  <record entity="core.rule_role" key="rg_salesmen">
     <field name="role" ref-key="role_salesmen" />
     <field name="rule" ref-key="rule_salesmen_company" />
   </record>
 
-  <record model="core.rule_role" key="rg_salesmen_access_all">
+  <record entity="core.rule_role" key="rg_salesmen_access_all">
     <field name="role" ref-key="role_salesmen" />
     <field name="rule" ref-key="rule_salesmen_access_all" />
   </record>

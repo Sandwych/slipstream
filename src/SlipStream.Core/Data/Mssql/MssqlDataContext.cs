@@ -106,7 +106,7 @@ namespace SlipStream.Data.Mssql
             var sql = SqlString.Parse(@"
 select distinct count(table_name) 
     from information_schema.tables 
-    where table_name in ('core_module', 'core_model', 'core_field', 'core_session')
+    where table_name in ('core_module', 'core_meta_entity', 'core_meta_field', 'core_session')
 ");
             var rowCount = Convert.ToInt32(this.QueryValue(sql));
             return rowCount == 3;

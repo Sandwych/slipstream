@@ -91,9 +91,9 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ContainerTestBase.cs" />
-    <Compile Include="Model\AbstractModelTests.cs" />
-    <Compile Include="Model\Fields\ScalarFieldTests.cs" />
-    <Compile Include="Model\Fields\XmlFieldTests.cs" />
+    <Compile Include="Entity\AbstractEntityTests.cs" />
+    <Compile Include="Entity\Fields\ScalarFieldTests.cs" />
+    <Compile Include="Entity\Fields\XmlFieldTests.cs" />
     <Compile Include="ShellSettingsTests.cs" />
     <Compile Include="MonoOptionsTests.cs" />
     <Compile Include="Runtime\DynamicProjectBuilderTests.cs" />
@@ -102,20 +102,20 @@
     <Compile Include="Core\RuleTest.cs" />
     <Compile Include="Core\ModelTest.cs" />
     <Compile Include="Core\UserTest.cs" />
-    <Compile Include="Model\BrowseModelTests.cs" />
+    <Compile Include="Entity\BrowseEntityTests.cs" />
     <Compile Include="ServiceConcurrencyTests.cs" />
-    <Compile Include="Model\Fields\BinaryFieldTests.cs" />
-    <Compile Include="Model\ModelValidatorTests.cs" />
-    <Compile Include="Model\Sql\SqlQueryBuilderTests.cs" />
-    <Compile Include="Model\HierarchyTests.cs" />
-    <Compile Include="Security\ModelAccessTests.cs" />
-    <Compile Include="Model\Fields\ManyToOneFieldTests.cs" />
-    <Compile Include="Model\Fields\ManyToManyFieldTests.cs" />
-    <Compile Include="Model\Fields\ReferenceFieldTests.cs" />
-    <Compile Include="Model\InheritanceTests.cs" />
-    <Compile Include="Model\Fields\FunctionalFieldTests.cs" />
-    <Compile Include="Model\SearchTests.cs" />
-    <Compile Include="Model\TableModelTests.cs" />
+    <Compile Include="Entity\Fields\BinaryFieldTests.cs" />
+    <Compile Include="Entity\ModelValidatorTests.cs" />
+    <Compile Include="Entity\Sql\SqlQueryBuilderTests.cs" />
+    <Compile Include="Entity\HierarchyTests.cs" />
+    <Compile Include="Security\EntityAccessTests.cs" />
+    <Compile Include="Entity\Fields\ManyToOneFieldTests.cs" />
+    <Compile Include="Entity\Fields\ManyToManyFieldTests.cs" />
+    <Compile Include="Entity\Fields\ReferenceFieldTests.cs" />
+    <Compile Include="Entity\InheritanceTests.cs" />
+    <Compile Include="Entity\Fields\FunctionalFieldTests.cs" />
+    <Compile Include="Entity\SearchTests.cs" />
+    <Compile Include="Entity\TableModelTests.cs" />
     <EmbeddedResource Include="XmlFiles\reference-field-data.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -125,7 +125,7 @@
     <EmbeddedResource Include="XmlFiles\master-child-data.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Compile Include="Model\XmlDataImporterTests.cs" />
+    <Compile Include="Entity\XmlDataImporterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceDispatcherTests.cs" />
     <Compile Include="ServiceContextTestCaseBase.cs" />

@@ -12,7 +12,7 @@ using Sandwych.Json;
 
 namespace SlipStream.Test
 {
-    [TestFixture]
+    [TestFixture(Category = "Infrastructure")]
     public class JsonTest
     {
         [Test]

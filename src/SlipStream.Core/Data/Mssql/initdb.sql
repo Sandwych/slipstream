@@ -1,7 +1,7 @@
 ﻿-- 注意，此文件中，尽管“GO”语句不是 PostgreSQL 支持的 SQL 语言的一部分，
 -- 但是每个 SQL 语句之后仍然需要一个 GO 命令将其与其它语句隔开
 
-CREATE TABLE core_model (
+CREATE TABLE core_meta_entity (
     _id BIGINT NOT NULL IDENTITY(1,1),
     [name] NVARCHAR(256) NOT NULL UNIQUE,
     label NVARCHAR(256) NULL,
@@ -11,13 +11,13 @@ CREATE TABLE core_model (
 );
 GO
 
-CREATE INDEX index_core_model_name ON core_model ([name]);
+CREATE INDEX index_core_meta_entity_name ON core_meta_entity ([name]);
 GO
 
-CREATE TABLE core_field (
+CREATE TABLE core_meta_field (
     _id BIGINT NOT NULL IDENTITY(1,1),
     [module] NVARCHAR(128) NOT NULL,
-    model BIGINT NOT NULL,
+    meta_entity BIGINT NOT NULL,
     [name] NVARCHAR(64) NOT NULL,
     [required] BIT NOT NULL,
     [readonly] BIT NOT NULL,
@@ -26,11 +26,11 @@ CREATE TABLE core_field (
     [type] NVARCHAR(32) NOT NULL,
     help NTEXT NULL,
     PRIMARY KEY(_id),
-    FOREIGN KEY(model) REFERENCES core_model(_id) ON DELETE CASCADE
+    FOREIGN KEY(meta_entity) REFERENCES core_meta_entity(_id) ON DELETE CASCADE
 );
 GO
 
-CREATE INDEX index_core_field_name ON core_field ([name]);
+CREATE INDEX index_core_meta_field_name ON core_meta_field ([name]);
 GO
 
 CREATE TABLE core_module (
@@ -76,18 +76,18 @@ CREATE TABLE core_organization (
 GO
 
 
-CREATE TABLE core_model_data (
+CREATE TABLE core_entity_data (
 	_id BIGINT NOT NULL IDENTITY(1,1),
 	name NVARCHAR(128) NOT NULL,
 	module NVARCHAR(64) NOT NULL,
-	model NVARCHAR(64) NOT NULL,
+	entity NVARCHAR(64) NOT NULL,
 	ref_id BIGINT NOT NULL,
 	value NTEXT NULL,
 	PRIMARY KEY(_id)
 );
 GO
 
-CREATE UNIQUE INDEX index_core_model_data_name ON core_model_data ([name]);
+CREATE UNIQUE INDEX index_core_entity_data_name ON core_entity_data ([name]);
 GO
 
 CREATE TABLE [core_session] (

@@ -3,21 +3,21 @@
 
   <!-- 初始化演示数据 -->
   
-  <record model="demo.employee" key="employee1">
+  <record entity="demo.employee" key="employee1">
     <field name="name">Michael Scott</field>
     <field name="address">Wall ST.</field>
     <field name="salary">6000</field>
     <field name="birthdate">1972-01-01</field>
   </record>
 
-  <record model="demo.employee" key="employee2">
+  <record entity="demo.employee" key="employee2">
     <field name="name">Dwight Schrute</field>
     <field name="address">Wall ST.</field>
     <field name="salary">5000</field>
     <field name="birthdate">1973-05-01</field>
   </record>
 
-  <record model="demo.employee" key="employee3">
+  <record entity="demo.employee" key="employee3">
     <field name="name">Pam Beesly</field>
     <field name="address">Wall ST.</field>
     <field name="salary">3000</field>
