@@ -1,5 +1,8 @@
 # Slipstream 快速数据库应用开发平台
 
+[![Build status](https://ci.appveyor.com/api/projects/status/rrwcg81bs32xhekp/branch/master?svg=true)](https://ci.appveyor.com/project/oldrev/slipstream/branch/master)
+
+
 SlipStream 是一个用 C# 实现的数据库应用快速开发平台原型。
 
 代码实现参考了 OpenERP、Orchard 等开源项目。
